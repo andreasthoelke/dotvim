@@ -1,0 +1,137 @@
+color scheme notes 8.12.2018
+
+-- purescriptFunction -> Function
+highlight! Function guifg=#D1FA71 " default green"
+highlight! Function guifg=#FF1744
+highlight! Function guifg=#114B5F
+highlight! Function guifg=#00AF5F "flash green"
+highlight! Function guifg=#45C48A " ocean green"
+highlight! Function guifg=#0087AF "munsell blue"
+
+-- purescriptBacktick -> Operator (prefix(?) function)
+highlight! def link purescriptBacktick purescriptIdentifier 
+highlight! def link purescriptBacktick Operator 
+-- purescriptType -> Type
+highlight! Type guifg=#72BCD6 " old vim blue"
+highlight! Type guifg=#FF80AB
+highlight! Type guifg=#FF1744 "awesome red"
+highlight! Type guifg=#92D7A1 " eton blue"
+highlight! Type guifg=#F46036 "protland orange"
+highlight! Type guifg=#0087AF "munsell blue"
+highlight! Type guifg=#76E0D9 "middle blue"
+-- purescriptIdentifier -> purescriptIdentifier
+--                         purescriptIdentifier xxx cleared
+-- purescriptConstructor -> Function
+highlight! def link purescriptConstructor Macro 
+highlight! Macro guifg=#C4BE89
+highlight! Macro guifg=#FF80AB "tickle be pink"
+highlight! Macro guifg=#B0E3C9 "magic mint" (too similar to middle blue)
+highlight! Macro guifg=#D7C674 "straw yellow"
+highlight! Macro guifg=#FFFFFF ".."
+highlight! Macro guifg=#F6DC69 "vim flashy yellow"
+highlight! Macro guifg=#FF80AB "tickle be pink"
+highlight! Macro guifg=#C03B56 "awesome .."
+highlight! Macro guifg=#A5324A "awesome .."
+highlight! Macro guifg=#8C0D26 "awesome dark"
+highlight! Macro guifg=#A53E54 "english red - awesome sweetspot"
+
+-- purescriptTypeVar -> Identifier
+highlight! Identifier guifg=#96D9F1 "greyblue"
+highlight! Identifier guifg=#46A4C5 "greyblue"
+highlight! Identifier guifg=#92D7A1 "eton blue - match ming and ocean" 
+highlight! Identifier guifg=#39A171 "medium sea green" 
+highlight! Identifier guifg=#C4BE89 "Sage - ex vim Macro. nicely pale - better than straw yellow"
+
+
+-- purescriptIdentifier -> purescriptIdentifier
+highlight! purescriptIdentifier guifg=#E6E6E6 ".."
+highlight! purescriptIdentifier guifg=#FFFFFF ".."
+highlight! purescriptIdentifier guifg=#E7F4F7 "anti flash white"
+
+-- purescriptStructure -> Keyword (data)
+highlight! Keyword guifg=#50D6EF
+highlight! Keyword guifg=#FF1744
+highlight! Keyword guifg=#76E0D9
+highlight! Keyword guifg=#FF80AB
+highlight! Keyword guifg=#109648
+highlight! Keyword guifg=#265B6D
+highlight! Keyword guifg=#3C6B7C "ming"
+-- purescriptOperator -> Operator
+highlight! Operator guifg=#FFFFC9
+highlight! Operator guifg=#FF80AB
+highlight! Operator guifg=#FF1744
+highlight! Operator guifg=#5BB276
+highlight! Operator guifg=#3C6B7C "ming"
+-- purescriptOperatorType -> Operator
+-- purescriptOperatorFunction -> Operator (lambda)
+-- purescriptDelimiter -> Delimiter
+highlight! Delimiter guifg=#F7F7F7
+highlight! Delimiter guifg=#3C6B7C "ming"
+-- purescriptStatement -> Statement (do and let can be dimmed)
+highlight! Statement guifg=#D1FA71 "old soft green"
+highlight! Statement guifg=#3C6B7C  "ming"
+
+-- purescriptWhere -> Keyword
+-- purescriptNumber -> Number
+highlight! Number guifg=#F6DC69 "vim flashy yellow"
+highlight! Number guifg=#C4BE89 
+highlight! Number guifg=#065143   "sacramentostate green"
+
+-- purescriptFloat -> Float
+highlight! Float guifg=#065143   "sacramentostate green"
+-- purescriptString -> String
+highlight! String guifg=#F6DC69 "old yellow"
+highlight! String guifg=#C6DABF "pastel gray"
+highlight! String guifg=#F46036 "protland orange"
+highlight! String guifg=#C4BE89   "pastel gray"
+highlight! String guifg=#78606F   "middle red purple"
+highlight! String guifg=#074F57   "midnight green"
+highlight! String guifg=#065143   "sacramentostate green"
+-- purescriptBoolean -> Boolean
+highlight! Boolean guifg=#065143   "sacramentostate green"
+
+
+green flush
+-- purescriptFunction -> Function
+highlight! Function guifg=#D1FA71
+highlight! Function guifg=#FF1744
+highlight! Function guifg=#0087AF
+highlight! Function guifg=#114B5F
+highlight! Function guifg=#00AF5F
+highlight! Function guifg=#45C48A
+
+-- purescriptBacktick -> Operator (prefix(?) function)
+-- purescriptType -> Type
+highlight! Type guifg=#72BCD6
+highlight! Type guifg=#FF80AB
+highlight! Type guifg=#FF1744
+highlight! Type guifg=#76E0D9
+highlight! Type guifg=#92D7A1
+-- purescriptIdentifier -> purescriptIdentifier
+--                         purescriptIdentifier xxx cleared
+-- purescriptConstructor -> Function
+-- purescriptTypeVar -> Identifier
+-- purescriptStructure -> Keyword (data)
+highlight! Keyword guifg=#50D6EF
+highlight! Keyword guifg=#FF1744
+highlight! Keyword guifg=#76E0D9
+highlight! Keyword guifg=#FF80AB
+highlight! Keyword guifg=#109648
+highlight! Keyword guifg=#265B6D
+highlight! Keyword guifg=#3C6B7C
+-- purescriptOperator -> Operator
+highlight! Operator guifg=#FFFFC9
+highlight! Operator guifg=#FF80AB
+highlight! Operator guifg=#FF1744
+highlight! Operator guifg=#5BB276
+highlight! Operator guifg=#3C6B7C
+-- purescriptOperatorType -> Operator
+-- purescriptOperatorFunction -> Operator (lambda)
+-- purescriptDelimiter -> Delimiter
+highlight! Delimiter guifg=#F7F7F7
+highlight! Delimiter guifg=#3C6B7C
+-- purescriptWhere -> Keyword
+-- purescriptNumber -> Number
+-- purescriptFloat -> Float
+-- purescriptString -> String
+

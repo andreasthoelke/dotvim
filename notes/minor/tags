@@ -1,0 +1,63 @@
+!_TAG_FILE_FORMAT	2
+!_TAG_FILE_SORTED	1
+Arrage Tabs	notes29-09.md	/^#### Arrage Tabs$/;"	s	line:314	section:Navigate Containers|Nav V-Tabs
+Arrange Windows	notes29-09.md	/^#### Arrange Windows$/;"	s	line:319	section:Navigate Containers|Nav V-Windows
+Buffers	notes29-09.md	/^## Buffers$/;"	s	line:333	section:Navigate Containers
+Changes	notes29-09.md	/^### Changes$/;"	s	line:405	section:Navigate Containers|Code navigation
+Chrome Bookmarks:	notes29-09.md	/^## Chrome Bookmarks: $/;"	s	line:19
+Chromium	notes29-09.md	/^## Chromium$/;"	s	line:272
+Close V-Tab	notes29-09.md	/^### Close V-Tab$/;"	s	line:306	section:Navigate Containers
+Close V-Window	notes29-09.md	/^### Close V-Window$/;"	s	line:300	section:Navigate Containers
+Code Motions	notes29-09.md	/^## Code Motions$/;"	s	line:12
+Code Navigation	notes29-09.md	/^## Code Navigation$/;"	s	line:439	section:Navigate Containers
+Code navigation	notes29-09.md	/^## Code navigation$/;"	s	line:402	section:Navigate Containers
+Config path	notes29-09.md	/^### Config path $/;"	s	line:256	section:Karabiner
+Create a Karabiner complex modifications mapping	notes29-09.md	/^### Create a Karabiner complex modifications mapping$/;"	s	line:259	section:Karabiner
+CtrlP	notes29-09.md	/^## CtrlP$/;"	s	line:192
+Done	notes29-09.md	/^## Done$/;"	s	line:1
+Editing commands in terminal mode and the shell	notes29-09.md	/^## Editing commands in terminal mode and the shell$/;"	s	line:33
+Files	notes29-09.md	/^## Files$/;"	s	line:328	section:Navigate Containers
+Folds, Folding	notes29-09.md	/^## Folds, Folding$/;"	s	line:418	section:Navigate Containers
+Git	notes29-09.md	/^## Git$/;"	s	line:76
+Github	notes29-09.md	/^## Github$/;"	s	line:590	section:Navigate Containers
+Inserts	notes29-09.md	/^### Inserts$/;"	s	line:408	section:Navigate Containers|Code navigation
+Jumps	notes29-09.md	/^### Jumps$/;"	s	line:410	section:Navigate Containers|Code navigation
+Karabiner	notes29-09.md	/^## Karabiner$/;"	s	line:254
+Key Codes	notes29-09.md	/^## Key Codes$/;"	s	line:268
+List Buffers	notes29-09.md	/^### List Buffers$/;"	s	line:340	section:Navigate Containers|Buffers
+Load Open Buffer	notes29-09.md	/^#### Load Open Buffer$/;"	s	line:361	section:Navigate Containers|Buffers|Nav Buffers
+MARKS	notes29-09.md	/^## MARKS$/;"	s	line:414	section:Navigate Containers
+Markdown	notes29-09.md	/^## Markdown$/;"	s	line:63
+NOTES .MD EDITOR	notes29-09.md	/^## NOTES .MD EDITOR$/;"	s	line:39
+Nav Buffers	notes29-09.md	/^### Nav Buffers$/;"	s	line:357	section:Navigate Containers|Buffers
+Nav V-Tabs	notes29-09.md	/^### Nav V-Tabs$/;"	s	line:312	section:Navigate Containers
+Nav V-Windows	notes29-09.md	/^### Nav V-Windows$/;"	s	line:317	section:Navigate Containers
+Navigate Containers	notes29-09.md	/^# Navigate Containers$/;"	s	line:276
+New V-Buffer	notes29-09.md	/^### New V-Buffer$/;"	s	line:372	section:Navigate Containers|Buffers
+New V-Tab	notes29-09.md	/^### New V-Tab$/;"	s	line:292	section:Navigate Containers
+New V-Window:	notes29-09.md	/^### New V-Window:$/;"	s	line:282	section:Navigate Containers
+Next:	notes29-09.md	/^## Next:$/;"	s	line:515	section:Navigate Containers
+Pandoc	notes29-09.md	/^## Pandoc$/;"	s	line:82
+Prob:	notes29-09.md	/^## Prob:$/;"	s	line:603	section:next/prev through bufferlist where to show?
+Resize Windows	notes29-09.md	/^#### Resize Windows$/;"	s	line:323	section:Navigate Containers|Nav V-Windows
+Searching	notes29-09.md	/^## Searching$/;"	s	line:7
+Sessions	notes29-09.md	/^## Sessions$/;"	s	line:457	section:Navigate Containers
+Small Minor optimizations	notes29-09.md	/^### Small Minor optimizations$/;"	s	line:460	section:Navigate Containers|Sessions
+Syntax Tricks	notes29-09.md	/^## Syntax Tricks$/;"	s	line:99
+Tags	notes29-09.md	/^### Tags$/;"	s	line:403	section:Navigate Containers|Code navigation
+Todos	notes29-09.md	/^## Todos$/;"	s	line:119
+Unlist Buffers	notes29-09.md	/^#### Unlist Buffers$/;"	s	line:355	section:Navigate Containers|Buffers|List Buffers
+Vimium	notes29-09.md	/^## Vimium$/;"	s	line:113
+close buffer	notes29-09.md	/^### close buffer$/;"	s	line:386	section:Navigate Containers|Buffers
+make TermCursor visible:	notes29-09.md	/^# make TermCursor visible:$/;"	s	line:632
+navigate MacOS App windows	notes29-09.md	/^### navigate MacOS App windows$/;"	s	line:391	section:Navigate Containers|Buffers
+navigate MacOS Apps	notes29-09.md	/^### navigate MacOS Apps$/;"	s	line:395	section:Navigate Containers|Buffers
+next/prev through bufferlist where to show?	notes29-09.md	/^# next/prev through bufferlist where to show?$/;"	s	line:599
+not show bufferline buffer names!	notes29-09.md	/^# not show bufferline buffer names!$/;"	s	line:610
+open	notes29-09.md	/^### open$/;"	s	line:193	section:CtrlP
+rather show buffername in statusline (per window!)	notes29-09.md	/^# rather show buffername in statusline (per window!)$/;"	s	line:612
+rename tab!	notes29-09.md	/^# rename tab!$/;"	s	line:609
+set foldmethod=manual	notes29-09.md	/^### set foldmethod=manual$/;"	s	line:434	section:Navigate Containers|Folds, Folding
+set foldmethod=marker	notes29-09.md	/^### set foldmethod=marker$/;"	s	line:426	section:Navigate Containers|Folds, Folding
+set foldmethod=syntax	notes29-09.md	/^### set foldmethod=syntax$/;"	s	line:431	section:Navigate Containers|Folds, Folding
+tab and buffer	notes29-09.md	/^#### tab and buffer$/;"	s	line:309	section:Navigate Containers|Close V-Tab

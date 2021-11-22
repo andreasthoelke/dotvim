@@ -1,0 +1,112 @@
+http://purescript.org
+https://www.stackage.org/lts-14.1/hoogle?q=map
+
+relay-test3: ~/Documents/PS/A/GraphQL/relay-test3/package.json#/"name".%20"relay-test3",
+PORT=3003 yarn start
+http://localhost:3003
+http://localhost:3003
+
+https://relay.dev/docs/en/experimental/a-guided-tour-of-relay
+Relay-examples Todo:
+yarn update-schema
+yarn build
+yarn start
+http://localhost:3000
+http://localhost:3001
+
+
+Concur, Halogen, tailwind project: ~/Documents/PS/A/TestsA/wp2/src/App/Widgets.purs#/module%20App.Widgets%20where
+npm run serve
+http://localhost:8080
+http://localhost:9090
+http://localhost:1234
+
+ps-react-rw (based on ry-starter-spa, incl storybook, emotion, webpack)
+npx yarn start
+npx yarn storybook
+http://localhost:9000
+~/Documents/PS/A/TestsA/ps-react-rw/src/App/Page/Home/View.purs#/component%20∷%20ReactComponent
+
+React-Basic, Storybook, Emotion starter project: ~/Documents/PS/A/TestsA/ry-starter-spa/src/App/Page/Home/View.purs#/,%20children.%20[
+npx yarn start
+http://localhost:9099
+
+React-Basic-Real-World
+yarn serve
+http://localhost:1234
+~/Documents/PS/A/purescript-react-realworld/src/Main.purs#/main%20=%20do
+
+Gatsby
+yarn dev
+http://localhost:8000
+~/Documents/PS/A/TestsA/gatsby-purescript-example/app/Components/Navigation.purs#/mkNavigation%20..%20Effect
+
+NextJs
+yarn build
+yarn dev
+http://localhost:3000
+~/Documents/PS/A/TestsA/next-purescript-example/src/Components/Navigation.purs#/navigation%20=
+
+https://leanpub.com/lenses/read_sample
+https://thomashoneyman.com/articles/practical-profunctor-lenses-optics/
+https://github.com/purescript-concur/purescript-concur-react
+https://github.com/ajnsit/concur-documentation/blob/master/README.md
+https://github.com/purescript-concur/purescript-concur-starter/blob/master/src/Main.purs
+https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+https://github.com/purescript-halogen/purescript-halogen/tree/master/docs/guide
+https://milesfrain.github.io/purescript-halogen/guide/03-Performing-Effects.html
+https://github.com/purescript-halogen/purescript-halogen/blob/master/docs/guide/03-Performing-Effects.md
+https://tailwindcss.com/course/setting-up-tailwind-and-postcss
+
+HTML DOM API
+https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API
+
+JS Events
+https://javascript.info/introduction-browser-events
+
+Asyc & Aff
+https://blog.drewolson.org/asynchronous-purescript
+https://www.youtube.com/watch?v=dbM72ap30TE
+
+Functors
+https://cvlad.info/
+
+Ghc features
+https://github.com/i-am-tom/haskell-exercises
+
+Events/ Behaviors
+https://try.ps.ai/?github=JordanMartinez/purescript-cookbook/master/recipes/BehaviorSuperCircleJs/src/Main.purs
+
+DOM/ parcel test project:
+npm run serve
+http://localhost:1234
+http://localhost:62287
+/Users/andreas.thoelke/Documents/PS/A/TestsA/dom-html1/src/DomUtils.purs
+/Users/andreas.thoelke/Documents/PS/A/TestsA/dom-html1/src/Main.purs
+
+Event-explain       ~/Documents/PS/2/purescript-behaviors22/src/FRP/Event/Mouse.js
+Behariors-review    ~/Documents/PS/3/purescript-super-circles/src/Main.purs
+Collection-Buffer   ~/Documents/PS/2/purescript-behaviors22/src/Coll.purs
+
+https://medium.com/@KevinBGreene/functional-programming-for-the-web-getting-started-with-purescript-7387f8888318
+https://medium.com/@KevinBGreene/functional-programming-for-the-web-monads-and-basic-dom-manipulation-in-purescript-fa662fe57a4c
+https://medium.com/@KevinBGreene/functional-programming-for-the-web-purescript-foreign-import-and-dom-events-8c76f6f5a16e
+node -e "require('./output/Main/index').main()"
+echo system( "node -e " . shellescape("require('./output/Main/index').main()")
+
+Todo: Highlight imported identifiers ~/.vim/plugin/code-haskell.vim#/get%20text%20within
+
+Type level - RowtoList:
+https://speakerdeck.com/justinwoo/rowlist-fun-with-purescript?slide=5
+
+Test API: GIPHY
+https://developers.giphy.com/dashboard/
+O3IF5xP5d6zKqaJe1AbKnq6p5zvOrsxQ
+Example ~/Documents/PS/A/TestsA/ps-react-rw/src/App/Page/Home/View.purs#/"https.//api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
+
+
+
+
+
+
+
