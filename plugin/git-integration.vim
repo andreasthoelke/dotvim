@@ -24,12 +24,28 @@ command! -nargs=* GitpublishQuick call GitPublish(<q-args>)
 " git status:
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
-nnoremap <leader><leader>gA :call ShellReturn( 'git add -A' )<cr>
+nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
 nnoremap <leader><leader>gC :call GitCommit( input( 'Commit message: ' ) )<cr>
 vnoremap <leader><leader>gC :<c-u>call GitCommit( input( 'Commit message: ', GetVisSel() ) )<cr>
+nnoremap <leader><leader>gc :call ShellReturn( 'git commit -m "' . input('Commit message') '"' )<cr>
 " git push:
 nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
+" View in Github desktop:
+nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
+
+
+func! GetGitRoot()
+  return systemlist('git root')[0]
+  " echo systemlist('git root')[0]
+  " This is using a git alias: git config --global alias.root 'rev-parse --show-toplevel'
+endfunc
+
+
+func! OpenRepoInGithubDesktop( path )
+  echo systemlist('github ' . a:path)
+endfunc
+" call OpenRepoInGithubDesktop( GetGitRoot() )
 
 
 " Note: No quotes needed to enter multiple words

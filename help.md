@@ -259,6 +259,11 @@ leader og   - Git magit. Also :GitcommitAuthor
             - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file, then `CC` to write a
             commit message, `:w` to commit.
 leader oG   - Git Flog viewer (return on commit to view div, 'q' to close)
+### Quick save shortcuts
+lead lead gS - git status in float win
+lead lead gC - git commit -a (all changes! - not just staged)
+lead lead gP - git push
+
 
 ### Github integration
 TODO `gh --help` - create GH issues: https://cli.github.com/manual/examples
