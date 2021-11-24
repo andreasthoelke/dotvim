@@ -8,7 +8,7 @@ let g:accountsGithub = readfile( expand( '~/.accounts/github' ) )[0:0][0]
 " git remote add origin https://github.com/andreasthoelke/dotfiles.git",
 " git push -u origin master" `-u` add upstream tracking(!?)
 " git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
-" another test
+" 
 " 
 
 
@@ -17,15 +17,20 @@ let g:accountsGithub = readfile( expand( '~/.accounts/github' ) )[0:0][0]
 
 command!          Gitpush   call ShellReturn( 'git push' )
 command!          Gitstatus call ShellReturn( 'git status' )
+command!          Gitstatus call ShellReturn( 'git status' )
 command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 command! -nargs=* GitpublishQuick call GitPublish(<q-args>)
 
-nnoremap <leader><leader>gs :call ShellReturn( 'git status' )<cr>
-nnoremap <leader><leader>gp :call ShellReturn( 'git push' )<cr>
-nnoremap <leader><leader>gP :call GitPublish( input( 'Commit message: ' ) )<cr>
-vnoremap <leader><leader>gP :<c-u>call GitPublish( input( 'Commit message: ', GetVisSel() ) )<cr>
-nnoremap <leader><leader>gc :call GitCommit( input( 'Commit message: ' ) )<cr>
-vnoremap <leader><leader>gc :<c-u>call GitCommit( input( 'Commit message: ', GetVisSel() ) )<cr>
+" git status:
+nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
+" git add -A:
+nnoremap <leader><leader>gA :call ShellReturn( 'git add -A' )<cr>
+" git commit:
+nnoremap <leader><leader>gC :call GitCommit( input( 'Commit message: ' ) )<cr>
+vnoremap <leader><leader>gC :<c-u>call GitCommit( input( 'Commit message: ', GetVisSel() ) )<cr>
+" git push:
+nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
+
 
 " Note: No quotes needed to enter multiple words
 func! GitCommitOverload( ... )
@@ -43,6 +48,7 @@ func! GitCommit( commitMessage )
   call ShellReturn( cmd )
 endfunc
 
+" This is strange: No idea where a 'git publish ' command came from - this was probl a typo.
 func! GitPublish( commitMessage )
   let cmd = 'git publish "' . a:commitMessage . '"'
   call ShellReturn( cmd )

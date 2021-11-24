@@ -36,7 +36,7 @@ Link a local repo to a github repo:
   * `git remote add upstream` ..
   * `git remote -v` to view remote repos
   * `git remote show` and `git remote show origin` to show infos
-
+  * `git push` -u origin main
 
 ## Save Changes To Repo
   * create new file: `echo "test content dd" >> src/dd.txt`

@@ -4,8 +4,9 @@
 brew list | grep python
 brew info python
 
-## Config files tracking with vcsh
+## Git control of Config files
 
+do-next
 https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
 
 
@@ -259,6 +260,10 @@ leader og   - Git magit. Also :GitcommitAuthor
             commit message, `:w` to commit.
 leader oG   - Git Flog viewer (return on commit to view div, 'q' to close)
 
+### Github integration
+TODO `gh --help` - create GH issues: https://cli.github.com/manual/examples
+     search:  https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax
+     track local history: https://docs.github.com/en/desktop
 
 ## Intero Errors or Warnings
 leader qq   - open QFL
@@ -454,21 +459,27 @@ see g:rel_http nmap
 
 leader fpc - copy current file path
 
-## Terminal
+
+### Shell / ZSH
+Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
+reload shell settings with 'exec $0' or 'source ~/.zshrc'
+'which'/'type -a' <shell-cmd>   - shows info about a shell command
+
+lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
+
+
+### Terminal buffer
 glT     - open a new terminal buffer in project root (also works in dirvish)
 glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
 gLt/T   - to prefill and edit line command string to running it in a hidden/visible term-buffer
 :Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
 <ctl>\n      - to leave terminal insert mode but stay in buffer. to e.g. scroll/copy text
-               need to keep control pressed for both successive key strockes: \ and n
+               need to keep control pressed for both successive key strokes: \ and n
 c-w-c   - cancels the terminal process and deletes the terminal buffer
           when in terminal insert mode, else just closes the window.
 
-### Shell / ZSH
-Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
-reload shell settings with 'exec $0' or 'source ~/.zshrc'
-
-lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
+#### Terminal maps
+c-r     - to search through past commands in terminal. (use repeatedly)
 
 ## Spell Checking
 Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off

@@ -43,7 +43,7 @@ endfunc
 " HOW TO SEARCH:
 " http://vimdoc.sourceforge.net/htmldoc/pattern.html
 
-" Silver searcher
+" Silver searcher -
 " --------------------------------------------------------------------------------
 let g:ag_highlight=1
 
