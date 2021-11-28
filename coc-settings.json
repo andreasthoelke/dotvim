@@ -1,4 +1,6 @@
 {
+  "jedi.enable": true,
+  "jedi.startupMessage": false,
   "languageserver": {
     "haskell": {
       "command": "haskell-language-server-wrapper",
@@ -89,6 +91,6 @@
   "snippet": "\ue60b",
   "typeParameter": "\uf728",
   "default": "\uf29c"
-}
+ }
 }
 

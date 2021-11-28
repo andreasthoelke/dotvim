@@ -298,11 +298,20 @@ Plug 'neomake/neomake'
 " Plug 'vim-syntastic/syntastic'
 
 
-" IDE features:
+" coc nvim:
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'FrigoEU/psc-ide-vim'
-Plug 'sriharshachilakapati/vimmer-ps'
+"  https://blog.claude.nl/tech/howto/Setup-Neovim-as-Python-IDE-with-virtualenvs/
+" Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+" runtime coc-init.vim
+
+
+
+" Plug 'FrigoEU/psc-ide-vim'
+" Plug 'sriharshachilakapati/vimmer-ps'
 Plug 'takiyu/lightline-languageclient.vim'
 
 " does this really echo PS diagnostics?
@@ -350,7 +359,7 @@ augroup ag
   au!
 augroup end
 
-
+" 
 
 
 " This needs to be set early in the vimrc, as the mappings below will refer to it!
@@ -366,8 +375,10 @@ filetype plugin on
 " Will write a log file with debug level 9
 " vim -V9myVim.log
 
-let g:python_host_prog = '/usr/bin/python2'
-let g:python3_host_prog = '/opt/homebrew/bin/python3'
+" let g:python_host_prog = '/usr/bin/python2'
+" let g:python3_host_prog = '/opt/homebrew/bin/python3'
+let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
+let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
 
 
 " TODO experiment with textobject?

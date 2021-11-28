@@ -268,6 +268,11 @@ func! IndentLevelWordStarts( lineNum )
 endfunc
 " echo IndentLevelWordStarts(line('.'))
 
+func! GetLineFromCursor()
+  return getline('.')[col('.')-1:]
+endfunc
+" echo GetLineFromCursor()
+
 " Return the character under the cursor
 func! GetCharAtCursor()
   return getline('.')[col('.')-1]

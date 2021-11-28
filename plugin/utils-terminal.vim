@@ -10,8 +10,12 @@ nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
 " nnoremap <silent><expr> gLt (':Term ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 " nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
-nnoremap grt :call ShellReturn( getline('.') )<cr>
-nnoremap grT :call ShellReturn( input('Cmd: ', getline('.')) )<cr>
+
+nnoremap grt :call ShellReturn( GetLineFromCursor() )<cr>
+vnoremap grt :<c-u>call ShellReturn( GetVisSel() )<cr>
+nnoremap grT :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
+
+
 
 hi! TermCursorNC guibg=grey guifg=white
 

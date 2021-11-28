@@ -13,20 +13,6 @@ https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/
 
-## Using paths
-
-c-x c-f  - works only on paths without space. but now testing :set isfname+=32 .
-c-w c-f  - to open this path in dirvish. note this does not work with the "% 20" formatting of the whitespace in the second line
-           vis-sel of the path text will also make the 3rd line (with the plain whitepace) work!
-gk       - (rel-link) to open the second path in vertical divish. Note this *only* works with the "% 20" formatting of the whitespace!
-/Users/at/Library/Application\ Support/
-/Users/at/Library/Application%20Support/
-/Users/at/Library/Application Support/Google/AndroidStudioPreview2021.2/plugins/IdeaVim/lib/
-"/Users/at/Library/Application Support/"
-
-  TODO test this option: :set isfname+=32 ~/.vim/vimrc#/Makes%20whitespace%20be
-this lets me use spaces in paths! and complete with c-x c-f. but now paths have to start at the beginning of the line.
-
 
 Old attemps bak:
 Now using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
@@ -74,11 +60,19 @@ geT         - get type of identifier under cursor in do-bind. also gst, gsT
 ~/.vim/plugin/tools-langClientHIE-completion.vim#/Get%20types%20and
 
 ### Coc
+CocConfig
 CocList symbols  - allows to fuzzy-search and jump to all loaded symbols!
 CocList commands
 CocList sources  - how to prioritise completion sources!
 CocList <c-i> - to see all useful! options
-CocList extensions   https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+CocList extensions
+extensions are installed here: ~/.config/coc/extensions/node_modules/
+note ~/.config/coc/
+
+CocList marketplace  - search and install extensions. or use:
+CocInstall coc-jedi  - install an extension
+all extensions: https://www.npmjs.com/search?q=keywords%3Acoc.nvim
+                https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
 
 ## Fonts
@@ -229,6 +223,19 @@ T           - expands a the folder under the cursor.
 c-w v c-w = - make 3 columns
 c-w |       - go to the next 'last window', then c-w h/l, then 'p' to fill the previous win with the content of the node
 TODO some simple maps/commands for 'p' could achieve a basic ranger functionality!?
+
+## Using file-paths
+c-x c-f  - works only on paths without space. but now testing :set isfname+=32 .
+c-w c-f  - to open this path in dirvish. note this does not work with the "% 20" formatting of the whitespace in the second line
+           vis-sel of the path text will also make the 3rd line (with the plain whitepace) work!
+gk       - (rel-link) to open the second path in vertical divish. Note this *only* works with the "% 20" formatting of the whitespace!
+/Users/at/Library/Application\ Support/
+/Users/at/Library/Application%20Support/
+/Users/at/Library/Application Support/Google/AndroidStudioPreview2021.2/plugins/IdeaVim/lib/
+"/Users/at/Library/Application Support/"
+
+  TODO test this option: :set isfname+=32 ~/.vim/vimrc#/Makes%20whitespace%20be
+this lets me use spaces in paths! and complete with c-x c-f. but now paths have to start at the beginning of the line.
 
 ### Filepaths Urls
 c-w f       - (on filepath) preview file content in horz-split
@@ -455,6 +462,20 @@ Note we are using pyenv: /Users/at/.zshrc#/#%20Use%20pyenv
 and: alias python=/opt/homebrew/bin/python3 to use the most current homebrew installed python 3 version as whenever 'python' is called
 You can install Python packages with pip3 install <package> They will install into the site-package directory /opt/homebrew/lib/python3.9/site-packages
 
+### Pyenv
+https://github.com/pyenv/pyenv-virtualenv/blob/master/README.md
+pyenv versions
+show system version | set the global system version
+pyenv global && pyenv global 3.10.0
+
+Example from https://neovim.io/doc/user/provider.html
+pyenv install 3.4.4
+pyenv virtualenv 3.4.4 py3nvim
+pyenv activate py3nvim
+python3 -m pip install pynvim
+pyenv which python  # Note the path
+The last command reports the interpreter path, add it to your init.vim:
+let g:python3_host_prog = '/path/to/py3nvim/bin/python'
 
 
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
@@ -504,6 +525,10 @@ c-w-c   - cancels the terminal process and deletes the terminal buffer
 
 #### Terminal maps
 c-r     - to search through past commands in terminal. (use repeatedly)
+
+### Vim -> terminal commands
+grt     - run command in terminal (command is string in line from cursor or vis-sel)
+grT     - with editable command string
 
 ## Spell Checking
 Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
