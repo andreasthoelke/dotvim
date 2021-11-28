@@ -711,6 +711,10 @@ set shiftwidth=2
 set softtabstop=2
 " http://vim.wikia.com/wiki/Indenting_source_code
 
+" Makes whitespace be considered part to a filepath. this enables to use c-x c-f repeadedly to drill into paths.
+" Issue: but now paths have to start at the beginning of the line.
+set isfname+=32
+
 " prevents unnecessary execution when sourcing vimrc
 if !exists("g:syntax_on")
   syntax enable

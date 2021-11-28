@@ -7,7 +7,7 @@ func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColu
   let lines[0]  = lines[0][a:startColumn - 1:]
   return lines
 endfunc
-" echo GetTextWithinLineColumns_asLines( 1575, 1, 1577, 10 )
+" echo GetTextWithinLineColumns_asLines( 10, 1, 10, 10 )
 
 function! Get_visual_selection()
   let [lnum1, col1] = getpos("'<")[1:2]

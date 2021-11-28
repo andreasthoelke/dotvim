@@ -1,18 +1,36 @@
 
 
 ## Homebrew
+brew list
 brew list | grep python
 brew info python
 
 ## Git control of Config files
 
-do-next
+# do-next
 https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
+
+vs code command line options - jump to cursor lock in vscode and back to nvim
+manage /Library/Application Support/
+
+## Using paths
+
+c-x c-f  - works only on paths without space. but now testing :set isfname+=32 .
+c-w c-f  - to open this path in dirvish. note this does not work with the "% 20" formatting of the whitespace in the second line
+           vis-sel of the path text will also make the 3rd line (with the plain whitepace) work!
+gk       - (rel-link) to open the second path in vertical divish. Note this *only* works with the "% 20" formatting of the whitespace!
+/Users/at/Library/Application\ Support/
+/Users/at/Library/Application%20Support/
+/Users/at/Library/Application Support/Google/AndroidStudioPreview2021.2/plugins/IdeaVim/lib/
+"/Users/at/Library/Application Support/"
+
+  TODO test this option: :set isfname+=32 ~/.vim/vimrc#/Makes%20whitespace%20be
+this lets me use spaces in paths! and complete with c-x c-f. but now paths have to start at the beginning of the line.
 
 
 Old attemps bak:
 Now using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
-Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config' 
+Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config'
 Run git commands, e.g.:
 vcsh vim config --local status.showUntrackedFiles no
 vcsh vim status
@@ -62,11 +80,6 @@ CocList sources  - how to prioritise completion sources!
 CocList <c-i> - to see all useful! options
 CocList extensions   https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
-## Kitty Terminal settings
-cmd ,  - to open Kitty settings
-crt cmd ,  - to refresh settings
-c-z    - to suspend vim and go to the terminal - then if done in the terminal do fg ('foregr') to resume the vim session
-c-s-t  - new tab in kitty! use ctrl+shift + arrows l/r to navigate tabs. see: https://sw.kovidgoyal.net/kitty/overview/ 
 
 ## Fonts
 Custom fonts
@@ -473,6 +486,12 @@ reload shell settings with 'exec $0' or 'source ~/.zshrc'
 lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
 
 
+## Kitty Terminal settings
+cmd ,  - to open Kitty settings
+crt cmd ,  - to refresh settings
+c-z    - to suspend vim and go to the terminal - then if done in the terminal do fg ('foregr') to resume the vim session
+c-s-t  - new tab in kitty! use ctrl+shift + arrows l/r to navigate tabs. see: https://sw.kovidgoyal.net/kitty/overview/ 
+
 ### Terminal buffer
 glT     - open a new terminal buffer in project root (also works in dirvish)
 glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
@@ -499,6 +518,10 @@ leader bd/D - delete the buffer. bD for :bd! is not needed
 leader oS af/ip/\j or visSel - put lines into a scratch window
 note this alternative:
 leader wp af/ip ..
+
+## Sessions
+leader Sd   - load default session
+leader Ss   - save to default session
 
 ## Infos
 leader2 lc[iB/ip] - count lines of code
