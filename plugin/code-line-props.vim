@@ -271,7 +271,7 @@ endfunc
 func! GetLineFromCursor()
   return getline('.')[col('.')-1:]
 endfunc
-" echo GetLineFromCursor()
+echo GetLineFromCursor()
 
 " Return the character under the cursor
 func! GetCharAtCursor()

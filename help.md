@@ -1,4 +1,7 @@
 
+## help
+More help/comments: ~/.vim/notes/notes-navigation.md#/#%20Navigate%20Containers
+                    ~/.vim/notes/releases.md#/##%20Release%20notes
 
 ## Homebrew
 brew list
@@ -196,7 +199,7 @@ leader wp[ap/af] - pin a function/paragraph (or imports) to the top
 c-w dk      - close the window above
 c-w \       - to jump to rightmost/mark/tag bar window
 c-w p       - to jump back
-\t]         - TabmoveRight /Left
+\t]         - TabmoveRight /Left (this works with . repeat command!)
 leader wi/I - Pin [and jump to cword] Haskell imports
 c-w I       - resize/fit floatwin height width
 c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
@@ -229,6 +232,11 @@ vis-sel .   - doesn't insert the full path: https://github.com/justinmk/vim-dirv
 :!touch %newFile  .. :!mkdir %newfolder
 g;          - to get :!  in the vim command panel.
 T           - expands a the folder under the cursor.
+:vs ~/Doc.. - then use <c-i> to expand path
+I           - edit divish buffer to execute shell commands with path
+
+
+Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvish_config
 
 ### Ranger-like setup
 "Win navigate right to left and use 'p'"
@@ -466,7 +474,12 @@ leader vo/O - open current file/PS folder in new vim instance
   Find color: nnoremap <leader><leader>hsc :call SyntaxColor()<CR>
   Find syntax: nnoremap <leader><leader>hhsg :call SyntaxStack()<CR>
 
-Alacritty config file: .config/alacritty/alacritty.yml
+## Sourcing vim files
+leader so  - source the current file
+leader se  - source/run the current line
+leader leader sv - :so $MYVIMRC
+leader saf/p     - source function or paragraph
+~/.vim/plugin/utils-vimscript-tools.vim#/Sourcing%20Parts%20Of
 
 ## Python
 ### Installation

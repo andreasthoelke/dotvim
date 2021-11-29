@@ -4,19 +4,19 @@
 " nnoremap <silent> glt :below 20Term<cr>
 " Demo Expression Map:
 " In dirvish buffers use the filename % to cd terminal to this folder
-nnoremap <expr> glT (&ft=='dirvish') ? ':below 10Term! cd %<CR>' : ':below 10Term!<CR>'
+nnoremap <expr> glT (&ft=='dirvish') ? ':below 20Term! cd %<CR>' : ':below 20Term!<CR>'
 
-nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
+" nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
+nnoremap <silent><expr> glt (':Term ' . input( 'Cmd: ' ) . ' ' . GetLineFromCursor() . '<cr>')
 " nnoremap <silent><expr> gLt (':Term ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
-" nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
+nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
 
 nnoremap grt :call ShellReturn( GetLineFromCursor() )<cr>
 vnoremap grt :<c-u>call ShellReturn( GetVisSel() )<cr>
 nnoremap grT :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 
-
-
+" Else the cursor in the termanal is red when not in insert mode .. which is informative - but how to adjust the color/look?
 hi! TermCursorNC guibg=grey guifg=white
 
 " Terminal: ------------------------------------------------------------------------

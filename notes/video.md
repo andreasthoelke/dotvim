@@ -6,11 +6,27 @@ vlc --help
 
 ## ytdl
 
+next:
+- edit divish buffer to execute shell commands with path
+- ytdl write info json
+- view json in vscode - not blocking vim
+
+
+Test file: /Users/at/Documents/tests/YT-dls/myvideo.mp4
+           /Users/at/Documents/tests/YT-dls/test.json
+
 
 ls
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" | mpv -
+ytdl "W86cTIoMv2U" | mpv -
+ytdl W86cTIoMv2U | mpv -
+ytdl W86cTIoMv2U | vlc -
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" | vlc -
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" > myvideo.mp4
+
+ytdl W86cTIoMv2U --info
+ytdl W86cTIoMv2U --info-json
+
 ls
 mpv myvideo.mp4
 mpv help
