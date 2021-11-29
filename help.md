@@ -4,6 +4,19 @@
 brew list
 brew list | grep python
 brew info python
+brew ls
+brew ls -t -l
+brew ls ffmpeg
+brew ls gh
+brew ls --casks
+brew ls --formulae --versions
+
+## Node
+npm list -g
+npm list -g --depth 0
+sudo npm uninstall -g moment
+
+
 
 ## Git control of Config files
 
@@ -524,7 +537,8 @@ c-w-c   - cancels the terminal process and deletes the terminal buffer
           when in terminal insert mode, else just closes the window.
 
 #### Terminal maps
-c-r     - to search through past commands in terminal. (use repeatedly)
+c-r     - to search through past commands in terminal. (use repeatedly! to search further)
+          note: ~/.zsh_history
 
 ### Vim -> terminal commands
 grt     - run command in terminal (command is string in line from cursor or vis-sel)
