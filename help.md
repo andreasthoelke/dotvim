@@ -1,7 +1,7 @@
 
 ## help
 More help/comments: ~/.vim/notes/notes-navigation.md#/#%20Navigate%20Containers
-                    ~/.vim/notes/releases.md#/##%20Release%20notes
+~/.vim/notes/releases.md#/##%20Release%20notes
 
 ## Homebrew
 brew list
@@ -23,7 +23,7 @@ sudo npm uninstall -g moment
 
 ## Git control of Config files
 
-# do-next
+## do-next
 https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
 
 vs code command line options - jump to cursor lock in vscode and back to nvim
@@ -37,9 +37,14 @@ Run git commands, e.g.:
 vcsh vim config --local status.showUntrackedFiles no
 vcsh vim status
 
+## Markdown
+help vim-markdown-folding
+plugin confic: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
+
+
 ## Video
-We now have 'mpv -h' and 'vlc -h' installed!
- -> test these!
+see notes/video.md
+
 
 ## MySQL, H2
 ~/Documents/DBs/Projects1/mysqltest1/steps.md
@@ -167,7 +172,6 @@ leader ehd  - delete/strip heading/section
 leader K    - Vim help. Use ':hg nnoremap'<cr> for a text search
 gsR/r       - Grep search in the current repo! cursor-word editable.
               use { and } to navigate found contexts. 'o' to open an item in the left split. <cr> to close
-              see  /Users/at/.vim/plugin/search.vim#/Vim%20Grepper.%20------------------------------
 Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** 
             - use single quotes for :Frepo 'multiple words'
 }{          - jump files on search results
@@ -234,6 +238,8 @@ g;          - to get :!  in the vim command panel.
 T           - expands a the folder under the cursor.
 :vs ~/Doc.. - then use <c-i> to expand path
 I           - edit divish buffer to execute shell commands with path
+y$          - copy file name - note the cursor is at a specific pos in the *concealed* file path!
+0y$         - yank abs file path! - note the cursor is now at the start of the (concealed) line
 
 
 Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvish_config
@@ -307,7 +313,6 @@ lead lead gP - git push
 
 
 ### Github integration
-TODO `gh --help` - create GH issues: https://cli.github.com/manual/examples
      search:  https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax
      track local history: https://docs.github.com/en/desktop
 
@@ -347,6 +352,9 @@ leader sb/n - break line at cursor, indent to cursor col
               TODO: use visual-sel to intent from a specific point of the line string. ~/.vim/plugin/utils-align.vim#/TODO.%20use%20visual-sel
 Note: the custom indentexpr that is used: ~/.vim/indent/purescript.vim#/setlocal%20indentexpr=GetHaskellIndent..
 yow         - to toggle line wrapping
+
+Align templates using UserChoiceAction/ quickmenu: ~/.vim/plugin/utils-align.vim#/Align%20Templates
+
 
 ## Purs Browse Module
 
@@ -462,6 +470,17 @@ leader rb   - to rename a binding and its occurences
 # Vim
 leader Sm   - :MessagesShow - show past vim echoed text (show messages) in preview window
             - output of any single command: RedirMessagesWin verb set comments?
+
+## List of commands, maps and vim-sets (settings)
+:set <c-i>    - list of vim settings: /Users/at/.vim/notes/vimdump-set.txt
+:verb command [first letter: T] <c-i>  - list of commands: /Users/at/.vim/notes/vimdump-command.txt
+:verb map [first key: g]<c-i>      - list of vim-maps: /Users/at/.vim/notes/vimdump-map.txt
+                                   - then use <c-n/p> to navigate all mappings starting with e.g. 'g'
+
+toggle vim settings: ~/.vim/vimrc#/function.%20ToggleOption.option_name,%20....
+
+## Vim-commands
+leader .   - releat last command
 verb command Colo<c-n> - get a list of commands and where they are defined
 verb map Colo<c-n> - get a list of maps and where they are defined
 \sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.
@@ -480,6 +499,11 @@ leader se  - source/run the current line
 leader leader sv - :so $MYVIMRC
 leader saf/p     - source function or paragraph
 ~/.vim/plugin/utils-vimscript-tools.vim#/Sourcing%20Parts%20Of
+
+### Vim Quickmenu / UserChoiceAction
+~/.vim/plugin/ui-userChoiceAction.vim#/User%20Choice%20Menu
+
+
 
 ## Python
 ### Installation
@@ -586,7 +610,6 @@ search in :ChromeBookmarks
 tabline should show dirvish foldername
 
 highlight standalone 'state' and onClick. on(capital letter) - 'on' dark - but a lighter color for the rest
-~/Documents/PS/A/TestsA/webpack-reload/src/App/RandNum.purs#/--%20TODO.%20highlight
 
 ### Todo:
 highlight halogen and react-basic hooks functions

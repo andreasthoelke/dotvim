@@ -12,8 +12,8 @@ next:
 - view json in vscode - not blocking vim
 
 
-Test file: /Users/at/Documents/tests/YT-dls/myvideo.mp4
-           /Users/at/Documents/tests/YT-dls/test.json
+Test paths: /Users/at/Documents/tests/YT-dls/myvideo.mp4
+            /Users/at/Documents/tests/YT-dls/test.json
 
 
 ls

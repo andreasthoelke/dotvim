@@ -4,7 +4,14 @@
 " that item checked. it now can be un-checked or other items can be added to the selection. 'submit' would need a
 " separate command
 
+
+
 " ─   User Choice Menu and Action                        ■
+
+" Example menu: map 'gso'  ~/.vim/plugin/HsAPI-searchSites.vim#/nnoremap%20gso%20.call
+" Nice use case: ~/.vim/plugin/utils-align.vim#/call%20UserChoiceAction.'Align%20to.',
+
+" Info:
 " Any function (action!) can be supplied with a user selected last argument/value.
 " The user-selected option value will be passed as the last arg to the continuation function. Only string values are
 " supported for now. (the list of continuation args will be supplied to any starting args of the continuation function)
@@ -24,7 +31,7 @@ func! UserChoiceAction( userPromptText, optUserPromtValue_andFirstArg, choices, 
   call UserChoiceDialog_show( a:userPromptText, a:optUserPromtValue_andFirstArg, a:choices, windowPos )
 endfunc
 
-" The 'choice' objects are expected to have a 'label' key. an underscore (_) at the beginning indicates the the first ■
+" The 'choice' objects are expected to have a 'label' key. an underscore (_) at the beginning indicates that the first ■
 " char should be used as a shortcut key instead of the index number. 'sections keys create quickmenu sections.
 let g:choicesTest1 = [{'label':'choice 1', 'otherData':111}, {'label':'choice 2', 'otherData':222}]
 let g:choicesTest2 = [{'label':'_Google', 'url':'http://www.google.de/search?q='}, {'section':'Local search:'}, {'label':'_In Hask dir', 'comm':'Fhask'}]

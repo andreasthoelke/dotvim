@@ -1,9 +1,4 @@
 
-func! ShellReturn( cmd )
-  " let resultLines = split( system( a:cmd ), '\n' )
-  let resultLines = systemlist( a:cmd )
-  call FloatWinAndVirtText( resultLines )
-endfunc
 
 " ----------------------------------------------------------------------------------
 "  Launching external apps

@@ -33,7 +33,7 @@ call g:quickmenu#append('Tagbar' , 'TagbarToggle'  , 'list tags' , '' , 0 , 't')
 
 noremap <silent><leader><leader>q :call quickmenu#bottom(0)<cr>
 noremap <silent><leader><leader>q :call quickmenu#toggle(0)<cr>
-noremap <silent><leader>, :call quickmenu#bottom(1)<cr>
+" noremap <silent><leader>, :call quickmenu#bottom(1)<cr>
 
 
 " Other

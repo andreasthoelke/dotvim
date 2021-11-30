@@ -181,11 +181,6 @@ Plug 'pantharshit00/vim-prisma'
 
 Plug 'inkarkat/vim-SyntaxRange'
 
-" Markdown: -------------
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
-
-Plug 'jszakmeister/markdown2ctags'
-Plug 'aklt/rel.vim'
 
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
@@ -234,6 +229,15 @@ Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 " Sorting lines by vis-sel column :Vissort
 Plug 'navicore/vissort.vim'
+
+" Markdown: -------------
+" Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+" depends on 'godlygeek/tabular' coming first(?)
+Plug 'plasticboy/vim-markdown'
+
+Plug 'jszakmeister/markdown2ctags'
+Plug 'aklt/rel.vim'
+
 
 " Plug 'purescript-contrib/purescript-vim'
 " TODO this was causing a mapping for 'w' and "e" that would jump across ":" and "."
@@ -677,6 +681,18 @@ let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 nnoremap <leader>sw :StripWhitespace<cr>
 nnoremap <leader><leader>sw :StripWhitespace<cr>
 nnoremap yoW :ToggleWhitespace<cr>
+
+
+noremap <leader><leader>ytw :call ToggleOption('wrap')<cr>
+function! ToggleOption(option_name, ...)
+  let option_scope = 'local'
+  if a:0 | let option_scope = '' | endif
+  exe 'let enabled = &' . a:option_name
+  let option_prefix = enabled ? 'no' : ''
+  exe 'set' . option_scope . ' ' . option_prefix . a:option_name
+endfunction
+
+
 
 " Tested: unprintable chars, tabs, show trailing whitespace chars
 " set list

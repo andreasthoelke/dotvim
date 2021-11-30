@@ -409,7 +409,10 @@ hi link QuickmenuNumber hsTypeComment
 " hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
 " hi Normal          guifg=#F8F8F2 guibg=#151719
 " hi Normal          guifg=#48636E guibg=#151719
-hi Normal          guifg=#3F5C66 guibg=#151719
+" hi Normal          guifg=#3F5C66 guibg=#151719
+" Just slightly darkened the background color to increase contrast with comment text and achieve a more modern look
+" hi Normal          guifg=#3F5C66 guibg=#131517
+hi Normal          guifg=#3F5C66 guibg=#121416
 " I made the Normal color a 'default grey' - similar to how Comment was before
 " to distinguish I dimmed down the comment brightness
 
@@ -428,7 +431,9 @@ hi Cursor          guifg=#000000 guibg=#F8F8F0
 hi iCursor         guibg=#727272
 
 " Contrast Of CursorLine:
-hi CursorLine                    guibg=#1C2020
+" hi CursorLine                    guibg=#1C2020
+" Made the cursor line bg darker to increase contrast with commented text
+hi CursorLine                    guibg=#181C1C
 
 hi CursorLineNr    guifg=#FD971F               gui=none
 hi LineNr          guifg=#303030
@@ -439,7 +444,9 @@ hi SpecialKey      guifg=#465457
 hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
 
 " Visual selection
-hi Visual guibg=#2E2E2E gui=none
+" hi Visual guibg=#2E2E2E gui=none
+" Made the visual selection line bg darker to increase contrast with commented text
+hi Visual guibg=#282828 gui=none
 
 " Hides the tilde at non-existent lines at the end of the buffer
 hi! EndOfBuffer guifg=bg

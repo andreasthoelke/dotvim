@@ -150,10 +150,11 @@ nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword
 
 
 " TODO temp purescript version
-nnoremap gso :call UserChoiceAction( 'Run query on site', {'identifier': HsCursorKeyword()},                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-nnoremap gsO :call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap gso :call UserChoiceAction( 'Run query on site', {'identifier': HsCursorKeyword()},       g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap gsO :call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')}, g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetVisSel()},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+" vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+
 
 
 " ─   Search Params                                     ──
@@ -172,7 +173,7 @@ vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': Ge
 " options
 
 " siteProps are selected via UserChoiceAction
-" searchParams are the first (user shown) arg of this/the contiuation function (second arg of UserChoiceAction)
+" searchParams are the first (user shown) arg of this/the continuation function (second arg of UserChoiceAction)
 func! RunSearch ( searchParams, browser, siteProps )
   let mainTermQuery = ''
   let packageQuery = ''
