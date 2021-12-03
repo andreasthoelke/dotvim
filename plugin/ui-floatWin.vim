@@ -16,7 +16,6 @@ func! CocCustomFloatStyle()
   call nvim_win_set_option( g:coc_last_float_win, 'syntax', 'purescript1')
 endfunc
 
-
 " optional: change highlight, otherwise Pmenu is used
 " call nvim_win_set_option(win, 'winhl', 'Normal:MyHighlight')
 
@@ -63,7 +62,12 @@ nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
 nnoremap <silent> <c-w>[ :call FloatWin_close()<cr>
 " there is also a "<c-[>" map
 " nnoremap <c-w>i :call nvim_set_current_win( g:coc_last_float_win )<cr>
-nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>gg
+
+" Initialize this - else the map below causes an error
+let g:coc_last_float_win = 1
+
+nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>
+" nnoremap <silent> <c-w>i :call nvim_set_current_win( g:floatWin_win )<cr>gg
 " nnoremap <c-w>i <Plug>(coc-float-jump)
 
 nnoremap <silent> <c-w>I :call FloatWin_FitWidthHeight()<cr>
@@ -107,7 +111,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
   if !g:floatWin_scratchBuf_Id
     " unlisted-buffer & scratch-buffer (nobuflisted, buftype=nofile, bufhidden=hide, noswapfile)
     let g:floatWin_scratchBuf_Id = nvim_create_buf( v:false, v:true )
-    call nvim_buf_set_option( g:floatWin_scratchBuf_Id, 'syntax', 'purescript1')
+    " call nvim_buf_set_option( g:floatWin_scratchBuf_Id, 'syntax', 'markbar')
   endif
 
   " Just push the text into the buffer:
@@ -159,7 +163,6 @@ func! FloatWin_ShowLines( linesToShow, ... )
 
   silent doautocmd <nomodeline> User FloatPreviewWinOpen
 
-  echo 'hi'
   call FloatWin_FitWidthHeight()
   return g:floatWin_win
 endfunc
@@ -318,8 +321,8 @@ func! FloatingBuffer( filePath )
   let g:floatWin_win_Pers = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
   " let g:floatWin_win = nvim_open_win(l:textbuf, v:true, opts)
 endfunc
-" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2" )
-" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links" )
+" call FloatingBuffer( "/Users/at/.vim/notes/links2" )
+" call FloatingBuffer( "/Users/at/.vim/notes/links" )
 " let g:floatWin_win = nvim_open_win( "/Users/andreas.thoelke/.vim/notes/links", v:true, opts)
 " call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
 

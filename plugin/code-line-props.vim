@@ -174,8 +174,8 @@ nnoremap <leader><leader>lc      :let g:opProcessAction=['LinesOfCodeCount',[],'
 vnoremap <leader><leader>lc :<c-u>let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:call Gen_opfunc2(0,1)<cr>g@
 command! -range=% LinesOfCodeCount echo LinesOfCodeCount( <line1>, <line2> )
 
-" An opFunction (operation on lines of code (very common in vim!)) has to be an action/side-effect
-" This allows to write processing code into a pure/resusabel function and then run action on result.
+" An opFunction (operation on lines of code (very common in vim!)) has to be an action/side-effect.
+" This allows to write processing code into a pure/resusabel function and then run an action just on the result.
 func! Gen_opfunc2( _, ...)
   " First arg is sent via op-fn. presence of second arg indicates visual-sel
   let [startLine, endLine] = a:0 ? [line("'<"), line("'>")] : [line("'["), line("']")]

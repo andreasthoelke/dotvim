@@ -20,7 +20,7 @@
 " The forth (optional) arg can either be 'showRight' (default) or 'showBottom'
 " optUserPromtValue_andFirstArg (if not empty!) will be shown in the dialog *and* be used as the first arg to the continuation
 func! UserChoiceAction( userPromptText, optUserPromtValue_andFirstArg, choices, continuationFn, contOtherArgs, ... )
-  let windowPos = (a:0 == 6) ? a:4 : "showRight"
+  let windowPos = a:0 ? "showBottom" : "showRight"
   " Store continuation fn+args so the "UserChoiceAction_resume" can run it
   let g:userChoiceContinuationData = { 'fn': a:continuationFn }
   let g:userChoiceContinuationData.firstArgs = (a:optUserPromtValue_andFirstArg != {}) ?

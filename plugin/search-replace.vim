@@ -1,4 +1,6 @@
 
+" note you can just use :.,$s/old/new/g  to replace to the end of the file
+
 " This uses a list of lines, not a range in the code like below
 " Note: this returns lines list and needs to replace in the buffer
 fun! SubstituteInLines ( lines, origDelim, newDelim )
@@ -40,7 +42,7 @@ func! ReplaceStringsInRange( listListMap ) range
 endfunc
 command! -range -nargs=1 ReplaceStringsInRange :<line1>,<line2>call ReplaceStringsInRange( <args> )
 " source (<leader>se) the following line to test
-" .+1,.+2MapStringsInRange [['ab', 'CD'], ['x', 'Y']]
+" .+1,.+2ReplaceStringsInRange [['ab', 'CD'], ['x', 'Y']]
 " test ab cd ef xyz
 " test gh ab xf xab
 " Note the "\%V" flag/atom makes the pattern effective only in the visual selection
@@ -56,7 +58,7 @@ command! -range -nargs=1 ReplaceStringsInRange :<line1>,<line2>call ReplaceStrin
 " copy motion below paragraph
 " ====
 
-" Operator And Movement: {{{
+" ─   Operator And Movement                              ■
 " Operator pending map: to fill in the movement after an operator key has been pressed
 " - If your operator-pending mapping ends with some text visually selected, Vim will operate on that text.
 " - Otherwise, Vim will operate on the text between the original cursor position and the new position.
@@ -85,7 +87,9 @@ onoremap ih :<c-u>execute "normal! ?^.*:\rv$"<cr>
 " exec "normal! gg" . '/for .\+ in .\+:' . "\<cr>"
 " Note Question: why does the very magic mode not work here? vimscript book chapter 31
 " exec "normal! gg" . '/\vfor .\+ in .\+:' . "\<cr>"
-" }}}
+
+" ─^  Operator And Movement                              ▲
+
 
 " Operator Map: The operator key map "\r" should be followed by a motion (e.g. W, $ or 'a) or textobject "af/ip/iv/iB ..".
 " It's a function that operates on a range of text from a motion, textobj or vis-selection. It then transforms that text or does some other side effect.

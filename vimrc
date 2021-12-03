@@ -154,7 +154,10 @@ Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in 
 Plug '907th/vim-auto-save'
 " Plug 'skywind3000/quickmenu.vim'
 " This fork allows to define letter shorcuts per menu-item
+Plug 'skywind3000/vim-quickui'
 Plug 'CharlesGueunet/quickmenu.vim'
+" A modified version. Just local for now
+Plug 'andreasthoelke/quickmenu_ix'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'

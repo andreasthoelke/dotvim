@@ -395,6 +395,21 @@ hi link QuickmenuBracket Comment
 hi link QuickmenuSection Comment
 hi link QuickmenuOption purescriptIdentifier
 hi link QuickmenuNumber hsTypeComment
+
+hi link Quickmenu_ixHeader htmlLink
+hi link Quickmenu_ixBracket Comment
+hi link Quickmenu_ixSection Comment
+hi link Quickmenu_ixOption purescriptIdentifier
+hi link Quickmenu_ixNumber hsTypeComment
+
+hi link QuickBG Normal
+" hi link QuickSel cterm=bold ctermfg=0 ctermbg=2 gui=bold guibg=brown guifg=gray
+" hi link QuickKey term=bold ctermfg=9 gui=bold guifg=#f92772
+" hi link QuickOff ctermfg=59 guifg=#75715e
+" hi link QuickHelp ctermfg=247 guifg=#959173
+
+
+
 " QuickmenuSelect			Title
 " QuickmenuSection		Statement
 " QuickmenuSelect			Title
@@ -404,8 +419,9 @@ hi link QuickmenuNumber hsTypeComment
 " QuickmenuOption			Identifier
 " QuickmenuHelp			Comment
 
-" Vim Native HighlighGroups:
+" ─   " Vim Native HighlighGroups:                      ──
 " This is where to set the main background color
+" Normal text and BACKGROUND color:
 " hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
 " hi Normal          guifg=#F8F8F2 guibg=#151719
 " hi Normal          guifg=#48636E guibg=#151719

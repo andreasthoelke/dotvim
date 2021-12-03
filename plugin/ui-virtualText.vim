@@ -56,6 +56,6 @@ endfunction
 " Flash Highlight A Region: Note the nvim highlight does not easily work across lines
 " call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 1000)
 
-vnoremap <leader>ab :<c-u>echo getpos("'<")<cr>
-vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
+" vnoremap <leader>ab :<c-u>echo getpos("'<")<cr>
+" vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
 

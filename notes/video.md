@@ -11,7 +11,6 @@ next:
 - ytdl write info json
 - view json in vscode - not blocking vim
 
-
 Test paths: /Users/at/Documents/tests/YT-dls/myvideo.mp4
             /Users/at/Documents/tests/YT-dls/test.json
 
@@ -40,9 +39,7 @@ mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
 
 youtube-dl W86cTIoMv2U -e --get-title
 youtube-dl W86cTIoMv2U -e --get-title --get-description
-youtube-dl W86cTIoMv2U -e -get-description
-youtube-dl W86cTIoMv2U -e --get-description
-youtube-dl W86cTIoMv2U -e --get-thummbnail
+youtube-dl W86cTIoMv2U -e --get-description --get-thumbnail
 youtube-dl W86cTIoMv2U -e --get-thumbnail
 youtube-dl W86cTIoMv2U --get-format
 -j --dump-json

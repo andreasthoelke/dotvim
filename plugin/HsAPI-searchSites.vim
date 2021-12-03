@@ -355,7 +355,7 @@ let g:searchSites += [ {'label':'Hs Code Explorer (Hackage search + browse)'
       \}]
 
 " https://codesearch.aelve.com/haskell/search?query=fromLeft&filter=Data.Either
-let g:searchSites += [ {'label':'Aelve (Hackage code search)'
+let g:searchSites += [ {'label':"Run %{expand('%:t')}"
       \, 'baseUrl':'https://codesearch.aelve.com/haskell/'
       \, 'mainTerm':'search?query='
       \, 'module':'&filter='

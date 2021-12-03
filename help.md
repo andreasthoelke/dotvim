@@ -161,7 +161,7 @@ leader et   - create inline test stub
 leader ea   - create assertion
 
 ## Code Markup
-Note this does not work properly in .vim files!
+Note this does not work properly in .vim files! .. just tested it here and it worked: ~/.vim/plugin/search-replace.vim#/Operator%20And%20Movement
 leader ehs  - heading
 leader ehe  - close section (does not include the header text in the end?)
 leader ehr  - refresh heading/section (currently on this updates the end text)
@@ -169,7 +169,6 @@ leader ehd  - delete/strip heading/section
 
 
 ## Search & Docs
-leader K    - Vim help. Use ':hg nnoremap'<cr> for a text search
 gsR/r       - Grep search in the current repo! cursor-word editable.
               use { and } to navigate found contexts. 'o' to open an item in the left split. <cr> to close
 Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** 
@@ -241,6 +240,11 @@ I           - edit divish buffer to execute shell commands with path
 y$          - copy file name - note the cursor is at a specific pos in the *concealed* file path!
 0y$         - yank abs file path! - note the cursor is now at the start of the (concealed) line
 
+### Tricks
+:cd %      - set working dir to the current dirvish folder
+:%!ls       - to replace the text is the current buffer with 
+:'<,>call delete(getline('.'))
+
 
 Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvish_config
 
@@ -252,6 +256,7 @@ c-w |       - go to the next 'last window', then c-w h/l, then 'p' to fill the p
 TODO some simple maps/commands for 'p' could achieve a basic ranger functionality!?
 
 ## Using file-paths
+c-i      - autocompeting filepaths only works at the beginning of the line. c-i is prefered as it allows fuzzy-filtering the suggested filenames. BTW the autocomplete menu shows the [F] at the end of the item.
 c-x c-f  - works only on paths without space. but now testing :set isfname+=32 .
 c-w c-f  - to open this path in dirvish. note this does not work with the "% 20" formatting of the whitespace in the second line
            vis-sel of the path text will also make the 3rd line (with the plain whitepace) work!
@@ -288,6 +293,18 @@ assisted:
   - run the shell command with leader mv
   - alternatively preview/edit the command with leader mV
   detailed description: ~/.vim/plugin/file-manage.vim#/Move%20Files
+
+### Move / copy text (vim registers)
+" Vim clipboard features: Delete is not yank, substitute operator, yank buffer.
+vim-easyclip plugin: ~/.vim/vimrc#/Vim%20clipboard%20features.   https://github.com/svermeulen/vim-easyclip
+help easyclip
+
+
+
+https://www.brianstorti.com/vim-registers/
+help reg
+leader"         - show register bar (vim-peekaboo: https://github.com/junegunn/vim-peekaboo)
+\"pyiw          - yank into the 'parameter'
 
 
 ## Command window
@@ -462,20 +479,42 @@ leader oP :tabe ~/Documents/PS/A/
 noremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
-## Rename
+## Rename, replace, substitute
+<!-- '<,'>s/old/new/g -->
+.+1,.+2s/old/new/g
+eins old
+old zwei
+drei old
+
+### Commandline-ranges
+help cmdline-ranges
+https://vim.fandom.com/wiki/Ranges
+
+### Replace variable names
 leader lr/m - rename symbol with all it's live/active references
 ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
 leader rb   - to rename a binding and its occurences
 
+
 # Vim
+:Help w<c-i> - complete help terms
+leader K    - Vim help. Use :HelpGrep .. ':hg nnoremap'<cr> for a text search
+
 leader Sm   - :MessagesShow - show past vim echoed text (show messages) in preview window
             - output of any single command: RedirMessagesWin verb set comments?
+put =g:maplocalleader - put the content of a variable into the buffer!
 
 ## List of commands, maps and vim-sets (settings)
+    Find where a vim-command, function or map is defined
+:RedirMessagesWin verb map  - put any vim command echo text into a new buffer
 :set <c-i>    - list of vim settings: /Users/at/.vim/notes/vimdump-set.txt
 :verb command [first letter: T] <c-i>  - list of commands: /Users/at/.vim/notes/vimdump-command.txt
+:verb function [fist letter: S] <c-i>  - list of function: /Users/at/.vim/notes/vimdump-functions.txt
 :verb map [first key: g]<c-i>      - list of vim-maps: /Users/at/.vim/notes/vimdump-map.txt
-                                   - then use <c-n/p> to navigate all mappings starting with e.g. 'g'
+                                     then use <c-n/p> to navigate all mappings starting with e.g. 'g'
+:scriptnames - List of vim-script files: ~/.vim/notes/vimdump-scriptnames.txt
+
+:echo g:mapl<c-i>   - list of g:/global variable starting with mapl .. maplocalleader
 
 toggle vim settings: ~/.vim/vimrc#/function.%20ToggleOption.option_name,%20....
 
@@ -503,6 +542,13 @@ leader saf/p     - source function or paragraph
 ### Vim Quickmenu / UserChoiceAction
 ~/.vim/plugin/ui-userChoiceAction.vim#/User%20Choice%20Menu
 
+### Defining operator maps
+help map-operator
+
+Basic example: ~/.vim/plugin/utils-vimscript-tools.vim#/func.%20OpSourceVimL.%20motionType,   ~/.vim/plugin/search-replace.vim#/Operator%20Map.%20The
+Examples with generic operator functions
+* template for opfunc mappings (+vis-sel +command range) is here: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
+* Gen_opfunc2: applying a function via an operator map, visual selection and command  ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 
 ## Python
@@ -587,7 +633,7 @@ Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
 " "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
 " add to dictionary: "zg" undo "zug"
 
-## Scratch window
+## Scratch window, temp notes file
 leader os  - ScratchWindow
 <c-w>c     - just close the window / buffer will reopen after leader os
 leader bd/D - delete the buffer. bD for :bd! is not needed

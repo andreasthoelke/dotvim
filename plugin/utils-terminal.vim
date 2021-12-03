@@ -1,26 +1,6 @@
 
 
 
-" Syc & show: Run terminal command and show result in float-win
-" - return result of command to float win. example 'ls -a'
-" Async launch: Launch an app/service. Pass params, no return vals, no interaction
-" - vs code, mpv
-" - ytdl, youtube-dl  - they should notify when done. but may take a long time to finish. and there may be a list. - progress indicator in terminal
-" Interactive:
-" - node repl
-
-" Input param: (visible in menu)
-" a single path, url or strings
-" - vis sel
-" - from cursor to end of line
-
-" Commands:
-" i'll list all commands (including tricky options).
-" most commands will only have one useful mode - syc with return, asyn (with progress or without),
-" interactive - so this will be encoded in the menu option
-
-
-" TODO the RunShellCommand function can have option flags with if test and then get this param by input()
 
 " Terminal: ------------------------------------------------------------------------
 " open a terminal window

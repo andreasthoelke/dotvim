@@ -65,13 +65,13 @@ let g:haskellmode_completion_ghc = 1
 " nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
 " nnoremap <silent> <localleader>gw :InteroTypeInsert<cr>
 " does not echo any more (changed this in Intero) outputs gentype only in Repl
-map <localleader>tt <Plug>InteroType
+" map <localleader>tt <Plug>InteroType
 
-map <localleader>tg <Plug>InteroGenTypeInsert
-vnoremap <localleader>tg :InteroGenTypeInsert<cr>
+" map <localleader>tg <Plug>InteroGenTypeInsert
+" vnoremap <localleader>tg :InteroGenTypeInsert<cr>
 " map <localleader>tg <Plug>InteroGenericType
-nnoremap <localleader>ti :InteroInfoInsert<cr>
-vnoremap <localleader>ti :InteroInfoInsert<cr>
+" nnoremap <localleader>ti :InteroInfoInsert<cr>
+" vnoremap <localleader>ti :InteroInfoInsert<cr>
 " ─^  Legacy Intero Types: TODO                          ▲
 
 
@@ -94,15 +94,15 @@ func! FloatWin_stripToType( lines )
 endfunc
 
 " Use Intero to insert type
-nnoremap <silent> ,gw :InteroTypeInsert<cr>
+" nnoremap <silent> ,gw :InteroTypeInsert<cr>
 
 " Or use a custom intero :type repl evel
 " Get repl :type/:kind info for cword / vis-sel:
-nnoremap ,get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+" nnoremap ,get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
 " nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
-vnoremap ,get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
-nnoremap ,gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-vnoremap ,gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+" vnoremap ,get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+" nnoremap ,gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+" vnoremap ,gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 
 " nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
 
@@ -154,8 +154,8 @@ endfunc
 " treat/format it accordingly
 
 " Repl mutiple lines:
-nnoremap gel      :let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap gel :<c-u>let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+" nnoremap gel      :let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+" vnoremap gel :<c-u>let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! ReplEvalLines( ... )
   let startLine = a:0 ? a:1 : 1
@@ -172,19 +172,19 @@ endfunc
 
 " ─   New Purescript REPL                                ■
 
-nnoremap <silent> <leader>ro :call ReplStart()<cr>
-nnoremap <silent> <leader>rq :call ReplStop()<cr>
-nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
+" nnoremap <silent> <leader>ro :call ReplStart()<cr>
+" nnoremap <silent> <leader>rq :call ReplStop()<cr>
+" nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
 " nnoremap <silent> dr         :call ReplEval(':reload')<cr>:call ReplReload_Refreshed( expand('%') )<cr>
-nnoremap <silent> dr         :call ReplReload()<cr>
-nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
+" nnoremap <silent> dr         :call ReplReload()<cr>
+" nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
 " Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses
 " nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
 " vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
-nnoremap <silent> gei      :silent call ReplEval( GetReplExpr() )<cr>
-vnoremap <silent> gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
+" nnoremap <silent> gei      :silent call ReplEval( GetReplExpr() )<cr>
+" vnoremap <silent> gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
 
 " now moved to ~/.vim/plugin/HsAPI.vim#/Get%20.type%20from
 " nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
@@ -540,7 +540,7 @@ func! LanguageClient_workspace_executeCmd(...)
 endfunc
 
 " just for testing - not sure when this might be useful
-nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
+" nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 " alternative to PSCIDEgetKeyword()
 " ─^  Other tools Langserver                             ▲
 
@@ -562,7 +562,7 @@ func! InteroEval( expr, renderFnName, alignFnName ) abort
   call intero#repl#eval( a:expr )
 endfunc
 
-nnoremap <leader>ic :InteroCancelRunningProcessInGhci<cr>:InteroHide<cr>:call FloatWin_close()<cr>
+" nnoremap <leader>ic :InteroCancelRunningProcessInGhci<cr>:InteroHide<cr>:call FloatWin_close()<cr>
 
 command! InteroCancelRunningProcessInGhci call jobsend(g:intero_job_id, "\<C-c>")
 

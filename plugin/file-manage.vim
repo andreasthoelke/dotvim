@@ -121,7 +121,6 @@ let g:dirvish_mode = ':sort ,^.*[\/],'
 
 " let g:dirvish_relative_paths = 1
 
-nnoremap _ :call LeftFloater()<cr>
 
 augroup dirvish_config
   autocmd!
@@ -161,18 +160,22 @@ let g:dirvish_git_indicators = {
       \ 'Ignored'   : '☒',
       \ 'Unknown'   : '?'
       \ }
+" (btw, nice unicode symbols)
 
-function! LeftFloater()
-  let height = float2nr(&lines)
-  let width = float2nr(&columns * 0.34)
-  let horizontal = float2nr(width - &columns)
-  let vertical = 1
-  let opts = { 'relative': 'editor', 'row': vertical, 'col': horizontal, 'width': width, 'style': 'minimal', 'height': height }
-  let buf = nvim_create_buf(v:false, v:true)
-  let win = nvim_open_win(buf, v:true, opts)
-  call setwinvar(win, '&winhl', 'NormalFloat:TabLine')
-  :Dirvish
-endfunction
+" nnoremap _ :call LeftFloater()<cr>
+
+" Not using this, just example code
+" function! LeftFloater()
+"   let height = float2nr(&lines)
+"   let width = float2nr(&columns * 0.34)
+"   let horizontal = float2nr(width - &columns)
+"   let vertical = 1
+"   let opts = { 'relative': 'editor', 'row': vertical, 'col': horizontal, 'width': width, 'style': 'minimal', 'height': height }
+"   let buf = nvim_create_buf(v:false, v:true)
+"   let win = nvim_open_win(buf, v:true, opts)
+"   call setwinvar(win, '&winhl', 'NormalFloat:TabLine')
+"   :Dirvish
+" endfunction
 
 " Using the float win: https://github.com/justinmk/vim-dirvish/issues/167
 nmap <silent> - :call Dirvish_toggle()<CR>
@@ -216,6 +219,7 @@ function! Dirvish_toggle() abort
 endfunction
 
 augroup vimrc
+    autocmd!
     autocmd FileType dirvish nmap <silent> <buffer> <CR>  :call Dirvish_open('edit'   , 0)<CR>
     " autocmd FileType dirvish nmap <silent> <buffer> v     :call Dirvish_open('vsplit' , 0)<CR>
     " autocmd FileType dirvish nmap <silent> <buffer> V     :call Dirvish_open('vsplit' , 1)<CR>
@@ -224,7 +228,7 @@ augroup vimrc
     autocmd FileType dirvish nmap <silent> <buffer> t     :call Dirvish_open('tabedit', 0)<CR>
     autocmd FileType dirvish nmap <silent> <buffer> T     :call Dirvish_open('tabedit', 1)<CR>
     autocmd FileType dirvish nmap <silent> <buffer> -     <Plug>(dirvish_up)
-    autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
+    " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
     autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
     autocmd FileType dirvish nnoremap <silent> <buffer> I I
 augroup END
