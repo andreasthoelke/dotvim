@@ -1,5 +1,5 @@
 " Utils And Docs: ----------
- 
+
 " TODO:
 " show a type mismatch error in two lines in the code view:
 " redirect command echo text to register: :redir @t,
@@ -280,11 +280,8 @@
 " use ":hg<space to expand HelpGrep> <searchterm>", "]q/[q[Q" to browse. it uses ":cwindow" to fill the quickfix list!
 " Redirecting Messages: run "RedirMessagesTab messages"
 " Temp Split Buffer: - "<c-w>N"
-" Check Error Messages: quick error messages that occur on startup can be seen
-" with ":messages" command, and then copied, etc.
-" Question: how can I copy echoed text?
-" Open Url In Browser: "glb" "Go launch browser" on the visual selection of
-" the URL
+" Check Error Messages: quick error messages that occur on startup can be seen with ":messages" command, and then copied, etc.
+" Question: how can I copy echoed text?  Open Url In Browser: "glb" "Go launch browser" on the visual selection of the URL
 " Insert Mode Movement: Use Fn Key + "h,j,k,l" to navigate in insert mode (see Karabiner setup: )
 " normal movement while in insert mode: use this prefix/leaderkeystroke: "<c-o>" then e.g. "$"/"0"/"b"
 " Find Commands: use e.g. ":filter Intero command"
@@ -300,7 +297,7 @@
 " Insert File Context: - ":r <path-to-file>" to insert the content of a file!
 " Command Suggestions: after "<Tab>" highlighted the first command suggestions, you can "<shift-tab>" to go back the the text you entered and type more chars to get better suggestions.
 " Change Inner Big Word: - "abc" or (abc) can be changed nicely with "ciW"!
-" Toggle Line Number And Wrap: - "yol", "yow"
+" Toggle Line Number And Wrap: - "yon", "yow"
 " Repeat Last Command: - "<leader>." or just "@:"
 " Find In Code Search: - "gsb" / "gsf" on code-word or visual selection to search buffers or project root files
 "                        ":f " → ":Find " search from project root or ":fb " → ":Findb " to search in buffer

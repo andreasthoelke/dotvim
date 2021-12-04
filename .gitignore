@@ -1,4 +1,8 @@
 plugged/
 spell/
 sessions/
-__Tagbar__.1
+__Tagbar__*
+notes/vimdump-*
+scratch/
+notes/*-bk
+notes/test*

@@ -189,6 +189,9 @@ Go to search root folder in Dirvish then
 :Ag searchterm %**
 <c-n/p> to navigate results quickfixlist
 
+### Search in select files with :vimgrep
+collect the files and folder in the arglist  ~/.vim/help.md#/###%20Arglist
+
 
 ## Mac apps
 tab '       - Mac app/task manager, next app
@@ -222,6 +225,9 @@ zt/b        - bottom/top
 gp <c-o>v   - browse-open recent file in a split e.g. from a different project
 
 ## Dirvish
+a           - open file in right split, then use ]f [f to go back forth the files in the dir!
+x           - add some files to the arglist that you want to work with. then open the first file (with a or i), then use
+]a [a [A ]A - to go through the marked files (instead of opening tabs for all files)
 t           - open in new tab
 leader of   - open file under cursor in float-win. curson is in float win so you can scroll right away.
 P           - preview in float-win
@@ -275,9 +281,25 @@ leader of   - open filepath under cursor in float win
 glc         - open Url in line in Chromium
 leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath
 ### Arglist
-,x          - toggle to from arglist (x, vis-sel, line-motion)
+leader oa   - to show. or :ar<cr>
+dirvish x   - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
             leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
+
+:arg *.html or :argadd **/*md
+
+help argument-list
+[a     :previous
+]a     :next
+[A     :first
+]A     :last
+
+Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
+
+### Quickfixlist
+
+
+
 
 ### Move / Copy files
 manual/low level:
@@ -415,6 +437,11 @@ z] z[ zk    - beginning/end of current fold/prev fold
 g]/g[       - first/last char of prev yanked text
 \e          - move to the end of the previous word
 
+### Command Insert Mode Movement
+c-f        - into command edit mode!! test with <leader>s$: call append('.', input('--: ', 'eins zwei'))
+Use Fn Key + "h,j,k,l" to navigate in insert mode (see Karabiner setup: ). normal movement while in insert mode: use this prefix/leaderkeystroke: "<c-o>" then e.g. "$"/"0"/"b"
+Insert Mode motions: - "c-x" - "c-w" - "c-g, c-k"
+
 
 ## Actions Changes Edits
 S$          - substitute / replace to the end of the line
@@ -485,6 +512,7 @@ nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 eins old
 old zwei
 drei old
+More tricks: ~/.vim/plugin/notes-workflow.vim#/Substitute%20Replace%20Text.
 
 ### Commandline-ranges
 help cmdline-ranges
@@ -505,6 +533,7 @@ leader Sm   - :MessagesShow - show past vim echoed text (show messages) in previ
 put =g:maplocalleader - put the content of a variable into the buffer!
 
 ## List of commands, maps and vim-sets (settings)
+: filter function *stat<c-i>   - just text seach in function names
     Find where a vim-command, function or map is defined
 :RedirMessagesWin verb map  - put any vim command echo text into a new buffer
 :set <c-i>    - list of vim settings: /Users/at/.vim/notes/vimdump-set.txt

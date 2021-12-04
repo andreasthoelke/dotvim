@@ -178,8 +178,8 @@ let g:dirvish_git_indicators = {
 " endfunction
 
 " Using the float win: https://github.com/justinmk/vim-dirvish/issues/167
-nmap <silent> - :call Dirvish_toggle()<CR>
-nmap <silent> _ <Plug>(dirvish_up)
+nmap <silent> - <Plug>(dirvish_up)
+nmap <silent> _ :call Dirvish_toggle()<CR>
 
 function! Dirvish_open(cmd, bg) abort
     let path = getline('.')

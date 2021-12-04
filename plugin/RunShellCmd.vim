@@ -40,10 +40,10 @@ nnoremap <leader><leader>R :unlet g:commendArgument1<cr>
 " ─^  Operater Map Example                              ▲
 
 
-
-
 nnoremap <leader>r    m':let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
 vnoremap <leader>r :<c-u>let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
+
+
 
 
 
