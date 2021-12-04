@@ -156,7 +156,6 @@ Plug '907th/vim-auto-save'
 " This fork allows to define letter shorcuts per menu-item
 Plug 'skywind3000/vim-quickui'
 Plug 'CharlesGueunet/quickmenu.vim'
-" A modified version. Just local for now
 Plug 'andreasthoelke/quickmenu_ix'
 
 " Mappings: -----------------
@@ -1543,11 +1542,12 @@ autocmd! ag BufWinEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
-  else
-    let dirname = projectroot#guess( a:path )
-    if isdirectory( dirname )
-      exec 'lcd' dirname
-    endif
+    " TODO " test not using auto local project roots
+  " else
+  "   let dirname = projectroot#guess( a:path )
+  "   if isdirectory( dirname )
+  "     exec 'lcd' dirname
+  "   endif
   endif
 endfunc
 
