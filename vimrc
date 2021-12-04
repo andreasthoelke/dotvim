@@ -19,6 +19,7 @@ Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePl
 " Plug 'kshenoy/vim-ctrlp-args'
 
 Plug 'justinmk/vim-dirvish'
+" TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 Plug 'kristijanhusak/vim-dirvish-git'
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window
 " Plug 'andreasthoelke/vim-dirvish'

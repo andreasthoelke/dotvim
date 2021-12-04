@@ -25,6 +25,18 @@ nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
 nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
 nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
+
+func! PreviewPathInFloatWin( filePath )
+  if isdirectory( a:filePath )
+    let lines = systemlist( 'ls ' . a:filePath )
+  else
+    let lines = readfile( a:filePath, "\n" )
+  endif
+  call FloatWin_ShowLines( lines )
+endfunc
+" call PreviewPathInFloatWin( "/Users/at/.vim/notes/links" )
+" call PreviewPathInFloatWin( "/Users/at/.vim/notes/" )
+
 func! PreviewFileInFloatWin( filePath )
   call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
 endfunc
@@ -132,10 +144,11 @@ augroup dirvish_config
   " Map `gr` to reload.
   " autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
   autocmd FileType dirvish nnoremap <silent><buffer> X :argadd getline('.')<cr>
-  autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewFileInFloatWin( getline('.') )<cr>
+  autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewPathInFloatWin( getline('.') )<cr>
   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
   autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
   autocmd FileType dirvish nnoremap <silent><buffer> T ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>
+
   " autocmd FileType dirvish nmap <silent><buffer> /
   " Todo: set a meaningful buffername to be seen in tabline
   " autocmd FileType dirvish exe "keepalt file" fnamemodify(bufname(), ':.')

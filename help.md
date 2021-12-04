@@ -228,6 +228,9 @@ gp <c-o>v   - browse-open recent file in a split e.g. from a different project
 a           - open file in right split, then use ]f [f to go back forth the files in the dir!
 x           - add some files to the arglist that you want to work with. then open the first file (with a or i), then use
 ]a [a [A ]A - to go through the marked files (instead of opening tabs for all files)
+2\.         - to go to Shdo! prompt
+.           - on a file, then 'rm' or 'mv %..' to delete, more file.
+
 t           - open in new tab
 leader of   - open file under cursor in float-win. curson is in float win so you can scroll right away.
 P           - preview in float-win
@@ -235,7 +238,6 @@ p           - preview in (currently open?) split. only good if there is no other
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 g?          - show help
 K           - file info/ dir size/ last write
-.           - on a file, then 'rm' or 'mv %..' to delete, more file.
 leader df   - delete file with relative path
 vis-sel .   - doesn't insert the full path: https://github.com/justinmk/vim-dirvish/issues/188
 :!touch %newFile  .. :!mkdir %newfolder
@@ -251,8 +253,9 @@ y$          - copy file name - note the cursor is at a specific pos in the *conc
 :%!ls       - to replace the text is the current buffer with 
 :'<,>call delete(getline('.'))
 
-
 Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvish_config
+
+" TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 
 ### Ranger-like setup
 "Win navigate right to left and use 'p'"
@@ -651,10 +654,15 @@ c-w-c   - cancels the terminal process and deletes the terminal buffer
 #### Terminal maps
 c-r     - to search through past commands in terminal. (use repeatedly! to search further)
           note: ~/.zsh_history
+c-w h   - to delete the last word in insert mode. this is needed bc c-w jumps to buffer above
 
 ### Vim -> terminal commands
 grt     - run command in terminal (command is string in line from cursor or vis-sel)
 grT     - with editable command string
+
+:%!     - execute all lines if the current buffer as shell commands!
+:put =system('ls')<cr>   - put the return value of 'ls' into the current buffer!
+
 
 ## Spell Checking
 Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off

@@ -125,6 +125,7 @@ nnoremap <leader>ag :cd <c-r>"<cr>
 " jump window up from terminal mode
 tnoremap <c-w>k <C-\><C-n><c-w>k
 tnoremap <c-w>j <C-\><C-n><c-w>j
+tnoremap <c-w>h <c-w>
 " Wipe the terminal buffer
 tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
 nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
