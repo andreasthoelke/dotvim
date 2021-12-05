@@ -39,7 +39,7 @@ vcsh vim status
 
 ## Markdown
 help vim-markdown-folding
-plugin confic: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
+plugin config: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
 
 
 ## Video
@@ -282,14 +282,15 @@ this lets me use spaces in paths! and complete with c-x c-f. but now paths have 
 c-w f       - (on filepath) preview file content in horz-split
 leader of   - open filepath under cursor in float win
 glc         - open Url in line in Chromium
-leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath
+leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@%  and let @*=@% )
+
 ### Arglist
 leader oa   - to show. or :ar<cr>
 dirvish x   - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
             leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
 
-:arg *.html or :argadd **/*md
+:arg *.html or :argadd \**/*md
 
 help argument-list
 [a     :previous
@@ -302,7 +303,11 @@ Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 ### Quickfixlist
 
 
-
+### Change Working Directory CWD Project Root
+leader dpr ":lcd " . projectroot#guess() . "\n"
+leader dpR ":cd "  . projectroot#guess() . "\n"
+" Also consider using ":ProjectRootCD"
+~/.vim/vimrc#/Change%20Working%20Directory.
 
 ### Move / Copy files
 manual/low level:
@@ -324,13 +329,14 @@ assisted:
 vim-easyclip plugin: ~/.vim/vimrc#/Vim%20clipboard%20features.   https://github.com/svermeulen/vim-easyclip
 help easyclip
 
-
-
 https://www.brianstorti.com/vim-registers/
 help reg
 leader"         - show register bar (vim-peekaboo: https://github.com/junegunn/vim-peekaboo)
 \"pyiw          - yank into the 'parameter'
-
+put =@"         - put/refer to the content of a register
+:@"             - execute the content of the register (needs two <cr><cr> .. don't know why)
+:@0/1/2/a/b     - run a specific register
+leader sr       - exec the string in the normal \" register
 
 ## Command window
 ;           - then c-n and c-i and c-x c-f for completion.
@@ -353,6 +359,8 @@ lead lead gS - git status in float win
 lead lead gC - git commit -a (all changes! - not just staged)
 lead lead gP - git push
 
+### Useful git commands
+git ls-remote  - to show the URL of the github repo
 
 ### Github integration
      search:  https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax
@@ -538,7 +546,7 @@ put =g:maplocalleader - put the content of a variable into the buffer!
 ## List of commands, maps and vim-sets (settings)
 : filter function *stat<c-i>   - just text seach in function names
     Find where a vim-command, function or map is defined
-:RedirMessagesWin verb map  - put any vim command echo text into a new buffer
+
 :set <c-i>    - list of vim settings: /Users/at/.vim/notes/vimdump-set.txt
 :verb command [first letter: T] <c-i>  - list of commands: /Users/at/.vim/notes/vimdump-command.txt
 :verb function [fist letter: S] <c-i>  - list of function: /Users/at/.vim/notes/vimdump-functions.txt
@@ -547,6 +555,12 @@ put =g:maplocalleader - put the content of a variable into the buffer!
 :scriptnames - List of vim-script files: ~/.vim/notes/vimdump-scriptnames.txt
 
 :echo g:mapl<c-i>   - list of g:/global variable starting with mapl .. maplocalleader
+
+### vimdump files updating
+:RedirMessagesWin verb map  - put any vim command echo text into a new buffer
+  Substitude vim echoed locations with rel-lins: %s/ line /#:/  e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
+  Collapse two lines into one: %s/\n.*Last set from/ | /
+
 
 toggle vim settings: ~/.vim/vimrc#/function.%20ToggleOption.option_name,%20....
 
@@ -574,13 +588,17 @@ leader saf/p     - source function or paragraph
 ### Vim Quickmenu / UserChoiceAction
 ~/.vim/plugin/ui-userChoiceAction.vim#/User%20Choice%20Menu
 
-### Defining operator maps
+### Maps, Mappings, Expression maps
+~/.vim/plugin/notes-workflow.vim#/Mappings.
+
+#### Defining operator maps
 help map-operator
 
 Basic example: ~/.vim/plugin/utils-vimscript-tools.vim#/func.%20OpSourceVimL.%20motionType,   ~/.vim/plugin/search-replace.vim#/Operator%20Map.%20The
 Examples with generic operator functions
 * template for opfunc mappings (+vis-sel +command range) is here: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
 * Gen_opfunc2: applying a function via an operator map, visual selection and command  ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
+
 
 
 ## Python
@@ -611,7 +629,7 @@ let g:python3_host_prog = '/path/to/py3nvim/bin/python'
 ### Notes
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
-## Links / code links
+## Links / code links / vim rel-link
 glc         - open Url in line in Chromium
 glb         - open URL in browser
 leader ol   - open 'links' file in float-win, then glc to view in Chromium
@@ -622,8 +640,8 @@ gd ,gd     - go to definition /in split
 
 leader cl  - to copy a rel-link to the clipboard
 ~/.vim/plugin/general-helpers.vim#/func.%20LinkRefToClipBoard..
-see g:rel_http nmap
-
+help Rel
+Substitude vim echoed locations with rel-lins: %s/ line /#:/  e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
 leader fpc - copy current file path
 
 

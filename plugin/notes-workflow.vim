@@ -328,7 +328,7 @@
 " Use Last Search Pattern: - do "/abc<cr>" (a normal search), then "vim /<c-r>/g %" → "c-r" will expand to the last search
 " Proposed Workflow: - 1. Test search expression with regular search, then 2. use the same expression with vimgrep
 
-" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @*=@% Also:  put =@%
+" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @% let @*=@% Also:  put =@%
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
 
@@ -612,8 +612,8 @@ nnoremap <localleader>SP :set syntax=python<cr>
 nnoremap <localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
-nnoremap <leader>sp :set syntax=purescript<cr>:call HaskellSyntaxAdditions()<cr>
-nnoremap <leader>sP :set syntax=purescript1<cr>:call HaskellSyntaxAdditions()<cr>
+" nnoremap <leader>sp :set syntax=purescript<cr>:call HaskellSyntaxAdditions()<cr>
+" nnoremap <leader>sP :set syntax=purescript1<cr>:call HaskellSyntaxAdditions()<cr>
 
 " demos:
 abbrev mul Multiple<CR>lines
@@ -623,7 +623,7 @@ abbrev mul Multiple<CR>lines
 
 " Defining Commands And Utility Example Commands: -----------------------------------------------------
 " Rename the current buffer
-command! -nargs=1 -bang -complete=file RenameBuffer f <args>|w<bang>
+command! -nargs=1 -bang -complete=file RenameBuffer file <args>|w<bang>
 " Replace a range with the contents of a file
 command! -range -nargs=1 -complete=file Replace <line1>-pu_|<line1>,<line2>d|r <args>|<line1>d
 " Count the number of lines in the range
