@@ -68,6 +68,9 @@ let g:vim_markdown_no_extensions_in_markdown = 0
 let g:vim_markdown_anchorexpr = "'# '.v:anchor"
 let g:vim_markdown_anchorexpr = "v:anchor"
 
+let g:vim_markdown_folding_level = 2
+" let g:vim_markdown_folding_disabled = 1
+
 augroup markdown_config
   autocmd!
   " Example: buffer local maps. Note: <Plug> maps don't work with "noremap"!

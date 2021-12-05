@@ -498,7 +498,10 @@ endfunc
 
 " new maps!
 nnoremap <leader>Sd :SessionOpen! default<cr>
+nnoremap <leader>So :SessionOpen 
+nnoremap <leader>SS :SessionSave 
 nnoremap <leader>Ss :SessionSave<cr>
+nnoremap <leader>SC :bufdo bwipeout<cr>
 
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!
@@ -622,22 +625,6 @@ if !exists('g:colors_name')
   set background=dark
   colorscheme munsell-blue-molokai
 endif
-
-" set background=light
-" colorscheme PaperColor
-
-" let g:airline_theme = 'papercolor'
-" let g:lightline = { 'colorscheme': 'PaperColor' }
-
-" colorscheme github
-" let g:github_colors_soft = 0
-
-" if has("termguicolors")
-"     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-"     set termguicolors
-" else
-"     set t_Co=256
-" endif
 
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -1543,7 +1530,7 @@ autocmd! ag BufWinEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
-    " TODO " test not using auto local project roots
+    " TODO " test not using auto local project roots. Could reactivate this for everything under e.g. ~/Documents/
   " else
   "   let dirname = projectroot#guess( a:path )
   "   if isdirectory( dirname )
@@ -1563,7 +1550,8 @@ endfunc
 nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
 nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
-
+nnoremap <leader>Sp :echo getcwd()<cr>
+nnoremap <leader>sp :echo getcwd()<cr>
 
 " set to current file path
 nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>

@@ -27,14 +27,18 @@ func! TagInStatusline()
   call lightline#update()
 endfunc
 
+source ~/.vim/colors/wombat_2.vim
+
 let g:lightline = {}
-let g:lightline.colorscheme = 'wombat1'
+let g:lightline.colorscheme = 'wombat_2'
 " let g:lightline.colorscheme = 'default'
 
 let g:lightline.active = {}
 let g:lightline.inactive = {}
-let g:lightline.active.left = [ ['relativepath'] ]
-let g:lightline.inactive.left = [ ['relativepath'] ]
+" let g:lightline.active.left   = [ ['projectRootFolderName', 'relativepath'] ]
+" let g:lightline.inactive.left = [ ['projectRootFolderName', 'relativepath'] ]
+let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
+let g:lightline.inactive.left   = [ ['projectRootFolderName'], ['relativepath'] ]
 
 " let g:lightline.active.right = [ ['lineinfo', 'percent']
 "                              \ , ['fpathBNum', 'percent']
@@ -54,8 +58,12 @@ let g:lightline.tabline.left  = [ [ 'tabs' ] ]
 let g:lightline.tabline.right = []
 
 let g:lightline.tab = {
-      \ 'active':   [ 'tabnum', 'filename', 'modified' ],
-      \ 'inactive': [ 'tabnum', 'filename', 'modified' ] }
+      \ 'active':   [ 'tabnum', 'fnameOrFolder', 'modified' ],
+      \ 'inactive': [ 'tabnum', 'fnameOrFolder', 'modified' ] }
+
+      " \ 'active':   [ 'tabnum', 'filename', 'modified' ],
+      " \ 'inactive': [ 'tabnum', 'filename', 'modified' ] }
+
 
 " let g:lightline.subseparator = { 'left': '|', 'right': '|' }
 let g:lightline.subseparator = { 'left': '', 'right': '|' }
@@ -65,11 +73,24 @@ let g:lightline.subseparator = { 'left': '', 'right': '|' }
 let g:lightline.component = {}
 let g:lightline.component.helloworld = 'hi there!'
 let g:lightline.component.fpathBNum = '%f%n'
+let g:lightline.component.projectRootFolderName = '%{ProjectRootFolderName()}'
+let g:lightline.component.relativepath_fresh = '%{CurrentRelativeFilePath()}'
 
 let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
+let g:lightline.component_function.hithere = 'Testthere'
+let g:lightline.component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
+
+let g:lightline.tab_component_function = {}
+let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+
+
+func! Testthere()
+  return col('.')
+endfunc
 
 func! LightlineScrollbar()
   return noscrollbar#statusline(20,' ','■')

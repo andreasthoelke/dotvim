@@ -29,6 +29,8 @@ nnoremap <leader>se :exec getline('.')<cr>
 " same as above, but clutters the register
 " nnoremap <leader>si "tyy:@t<cr>
 
+nnoremap <leader>sr :exec @"<cr>
+
 " free mappings? <leader>s..
 " TODO these map don't seem ideal. mnemonic not destinct enough?
 command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>

@@ -446,6 +446,10 @@ hi Cursor          guifg=#000000 guibg=#F8F8F0
 " Only bg color seems to have an effect in nvim + Alacritty
 hi iCursor         guibg=#727272
 
+hi MsgArea guifg=#558E94
+
+" Notice: Statusline & Tabline | Lighline: ~/.vim/colors/wombat_2.vim#/let%20s.searchBg%20=
+
 " Contrast Of CursorLine:
 " hi CursorLine                    guibg=#1C2020
 " Made the cursor line bg darker to increase contrast with commented text

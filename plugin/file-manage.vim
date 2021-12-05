@@ -401,8 +401,47 @@ endfunc
 
 
 func! IsFolderPath ( path )
+  " return isdirectory( a:path )
+  " This is technically faster as it's not checking the existence of the folder in the file system but only tests the last character of the string
   return (a:path[-1:] == '/')
 endfunc
+
+func! GetLastComponentFromPath (folderpath)
+  let components = split( a:folderpath, '/' )[-1:]
+  return !empty(components) ? components[0] : ''
+endfunc
+
+func! ProjectRootFolderName ()
+  return GetLastComponentFromPath( getcwd() )
+endfunc
+
+" When opening a file with Dirvish the filepath is not relative. This makes sure it is.
+func! CurrentRelativeFilePath ()
+  let path = expand('%:p')
+  let cwd = getcwd()
+  let relPath = substitute( path, cwd, '', '' )
+  return relPath
+endfunc
+" echo CurrentRelativeFilePath()
+
+func! GetFilenameOrFolderStrFromPath (path)
+  let lastSegment = GetLastComponentFromPath( a:path )
+  if IsFolderPath( a:path )
+    let lastSegment .= '/'
+  endif
+  return lastSegment
+endfunc
+" echo GetFilenameOrFolderStrFromPath('/Users/at/.vim/plugged/csv.vim/')
+" echo GetFilenameOrFolderStrFromPath('/Users/at/.vim/plugged/csv.vim/test.txt')
+
+func! FilenameOrFolderStrOfCurrentBuffer (tab_count)
+  let buflist = tabpagebuflist(a:tab_count)
+  let winnr = tabpagewinnr(a:tab_count)
+  let path = expand('#' . buflist[winnr - 1])
+  return GetFilenameOrFolderStrFromPath( path )
+endfunction
+" echo FilenameOrFolderStrOfCurrentBuffer( tabpagenr() )
+" From ~/.vim/plugged/lightline.vim/autoload/lightline/tab.vim#/function.%20lightline#tab#filename.n.%20abort
 
 
 func! SetArglistfilesFolder( newFolder )
