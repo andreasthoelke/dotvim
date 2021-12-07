@@ -278,6 +278,13 @@ gk       - (rel-link) to open the second path in vertical divish. Note this *onl
   TODO test this option: :set isfname+=32 ~/.vim/vimrc#/Makes%20whitespace%20be
 this lets me use spaces in paths! and complete with c-x c-f. but now paths have to start at the beginning of the line.
 
+### Network volumes / Google Drive
+:sp /Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt   - load a Google Drive file with quoted spaces
+/Volumes/GoogleDrive/My%20Drive/Sample%20upload.txt   - this line works with 'gk' map. Note the hidden % 20
+The next line/path only works with <c-w>f  !
+/Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt
+
+
 ### Filepaths Urls
 c-w f       - (on filepath) preview file content in horz-split
 leader of   - open filepath under cursor in float win
@@ -652,6 +659,10 @@ reload shell settings with 'exec $0' or 'source ~/.zshrc'
 
 lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
 
+#### Zshrc & Oh-my-zsh
+lst          - ls/list tee. Some alias's (e.g. for tree/lst) use 'exa': ~/.zshrc#/alias%20lst='exa%20--sort=type
+
+Plugins are installed via git here: /Users/at/.oh-my-zsh/custom/plugins/
 
 ## Kitty Terminal settings
 cmd ,  - to open Kitty settings

@@ -26,9 +26,19 @@ nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
 nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
 
+" func! PreviewPathInFloatWin( filePath )
+"   if isdirectory( a:filePath )
+"     let lines = systemlist( 'ls ' . a:filePath )
+"   else
+"     let lines = readfile( a:filePath, "\n" )
+"   endif
+"   call FloatWin_ShowLines( lines )
+" endfunc
+
 func! PreviewPathInFloatWin( filePath )
-  if isdirectory( a:filePath )
-    let lines = systemlist( 'ls ' . a:filePath )
+  let fp = fnameescape( a:filePath )
+  if IsFolderPath( fp )
+    let lines = systemlist( 'ls ' . fp )
   else
     let lines = readfile( a:filePath, "\n" )
   endif
@@ -38,11 +48,14 @@ endfunc
 " call PreviewPathInFloatWin( "/Users/at/.vim/notes/" )
 
 func! PreviewFileInFloatWin( filePath )
-  call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
+  " call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
+  call FloatWin_ShowLines( readfile( fnameescape(a:filePath), "\n" ) )
 endfunc
-" call PreviewFileInFloatWin( "/Users/at/.vim/notes/links" )
-
-
+" call PreviewPathInFloatWin( '/Users/at/.vim/notes/links' )
+" call PreviewPathInFloatWin( '/Users/at/.vim/notes/my folder/' )
+" call PreviewPathInFloatWin( '/Users/at/.vim/notes/my folder/ei.txt' )
+" call PreviewPathInFloatWin( '/Volumes/GoogleDrive/My Drive/temp/' )
+" call PreviewPathInFloatWin( '/Volumes/GoogleDrive/My Drive/temp/drei.txt' )
 
 " ─   CtrlP                                              ■
 
