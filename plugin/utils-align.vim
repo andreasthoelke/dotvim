@@ -111,7 +111,7 @@ endfunc
 
 " Push shift text to the right:
 " nnoremap <localleader>> i <esc>
-nnoremap <localleader>> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
+nnoremap ,> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
 " nnoremap <localleader>> i <Esc>
 " Make it repeatable so the cursor follows the text to the right
 " Followup: it just does this. not sure what the problem was before
@@ -157,9 +157,10 @@ nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><E
 
 " `leader >>` + motion or vis-sel with "v" indents the lines to the current cursor-horz position
 " nnoremap <silent> <leader>>> :set opfunc=Indent_op<cr>g@
-nnoremap <silent> <localleader>, :set opfunc=Indent_op<cr>g@
+" nnoremap <silent> <localleader>, :set opfunc=Indent_op<cr>g@
+nnoremap <silent> ,, :set opfunc=Indent_op<cr>g@
 " vnoremap <silent> <leader>>> :<c-u>call Indent_op( visualmode(), 1)<cr>
-vnoremap <silent> <localleader>, :<c-u>call Indent_op( visualmode(), 1)<cr>
+vnoremap <silent> ,, :<c-u>call Indent_op( visualmode(), 1)<cr>
 " Note: This does not work with "V"/ Visual-Block mode
 
 " TODO: use visual-sel to intent from a specific point of the line string. example

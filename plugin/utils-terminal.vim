@@ -6,16 +6,19 @@
 " Demo Expression Map:
 " In dirvish buffers use the filename % to cd terminal to this folder
 " nnoremap <expr> glT (&ft=='dirvish') ? ':below 20Term! cd %<CR>' : ':below 20Term!<CR>'
-nnoremap <expr> glT (&ft=='dirvish') ? ':call TermInNextFolder()<cr>' : ':below 20Term!<cr>'
+nnoremap <expr> glt (&ft=='dirvish') ? ':call TermInNextFolder(20)<cr>' : ':below 20Term!<cr>'
+nnoremap <expr> glT (&ft=='dirvish') ? ':call TermInNextFolder(v:false)<cr>' : ':below Term!<cr>'
 
-func! TermInNextFolder ()
+func! TermInNextFolder (winsize)
   let folderpath = shellescape( CurrentNextFolderPath() )
-  call Term( "cd " . folderpath, 20, v:true)
+  call Term( "cd " . folderpath, a:winsize, v:true)
   " call Term("cd '/Volumes/GoogleDrive/My Drive/temp'", 10, v:true)
 endfunc
 
+" TODO: Run commands in hidden buffers!
+" glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
 " nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
-nnoremap <silent><expr> glt (':Term ' . input( 'Cmd: ' ) . ' ' . GetLineFromCursor() . '<cr>')
+" nnoremap <silent><expr> glt (':Term ' . input( 'Cmd: ' ) . ' ' . GetLineFromCursor() . '<cr>')
 " nnoremap <silent><expr> gLt (':Term ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
@@ -72,7 +75,7 @@ let g:termCount = 0
 command! -bang -count -nargs=* Term call Term(<q-args>, <count>, <bang>0)
 fun! Term(args, count, bang)
   let cmd = "split "
-  let count = a:count ? a:count : 7
+  let count = a:count ? a:count : ''
   let cmd = count . cmd
   if a:args == ""
     let cmd = cmd . 'term://zsh'

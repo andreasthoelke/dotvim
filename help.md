@@ -25,7 +25,25 @@ sudo npm uninstall -g moment
 
 ## do-next
 
-brew install fzf
+## Fuzzy file selection
+vim \**<TAB>       - Files under the current directory - You can select multiple items with TAB key
+vim ../fzf**<TAB>  - Files under parent directory that match `fzf`
+cd \**<TAB>        - Directories under current directory (single-selection)
+
+### 'fzf.vim'
+Has simple commands that open in a split. see help fzf-vim
+Commands: Files, BLines, Lines(?), GFiles?, BCommits, Maps, Helptags ~/.vim/plugged/fzf.vim/doc/fzf-vim.txt#/Command%20|%20List
+GFiles? - all changed files
+
+### 'fzf preview'
+Uses the floating-window. See help fzf-preview-vim
+CocCommand fzf-preview.ProjectFiles
+CocCommand fzf-preview.GitStatus
+
+# Directories under ~/github that match `fzf`
+cd ~/github/fzf**<TAB>
+
+
  ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
 To use fzf in Vim, add the following line to your .vimrc:
   set rtp+=/opt/homebrew/opt/fzf
@@ -398,7 +416,8 @@ p           - does not work! .. could set up a split?
 censor/filter warnings:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/\%20,%20'censorWarnings'.
 
 ## Align, Indent, format
-\,l/j/}     - indent range of lines to current cursor-column
+,,l/j/}     - indent range of lines to current cursor-column
+              .. idea/todo: align/push only the vis-selected part of the line
 dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
 ,a(motion)(sel) - run a multi-col align template on motion or vis sel
@@ -410,9 +429,9 @@ leader t<motion> - tabularise type sig
                 TODO leader haiB show missing function
 leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 ]e,[e       - move/shift line. (lines using vis-sel)
-\>          - push / shift text to the right  ~/.vim/plugin/utils-align.vim#/Push%20shift%20text
+,>          - push / shift text to the right  ~/.vim/plugin/utils-align.vim#/Push%20shift%20text
 leader sb/n - break line at cursor, indent to cursor col
-\,l/}       - intent the line to the current cursor col
+,,l/}       - intent the line to the current cursor col
               TODO: use visual-sel to intent from a specific point of the line string. ~/.vim/plugin/utils-align.vim#/TODO.%20use%20visual-sel
 Note: the custom indentexpr that is used: ~/.vim/indent/purescript.vim#/setlocal%20indentexpr=GetHaskellIndent..
 yow         - to toggle line wrapping
@@ -678,14 +697,17 @@ c-z    - to suspend vim and go to the terminal - then if done in the terminal do
 c-s-t  - new tab in kitty! use ctrl+shift + arrows l/r to navigate tabs. see: https://sw.kovidgoyal.net/kitty/overview/ 
 
 ### Terminal buffer
-glT     - open a new terminal buffer in project root (also works in dirvish)
-glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
-gLt/T   - to prefill and edit line command string to running it in a hidden/visible term-buffer
+glt/T     - open a new terminal buffer in project root (also works in dirvish)
+gLt/T     - to prefill and edit line command string to running it in a hidden/visible term-buffer
 :Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
 <ctl>\n      - to leave terminal insert mode but stay in buffer. to e.g. scroll/copy text
                need to keep control pressed for both successive key strokes: \ and n
 c-w-c   - cancels the terminal process and deletes the terminal buffer
           when in terminal insert mode, else just closes the window.
+
+" TODO: Run commands in hidden buffers!
+glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
+
 
 #### Terminal maps
 c-r     - to search through past commands in terminal. (use repeatedly! to search further)

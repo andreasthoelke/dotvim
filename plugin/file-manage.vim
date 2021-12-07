@@ -341,9 +341,7 @@ endfunc
 
 
 " ─   fzf                                                ■
-
-" Use: BLines, Lines(?), GFiles?, BCommits, Maps, Helptags
-" ~/.vim/plugged/fzf.vim/doc/fzf-vim.txt#/Command%20|%20List
+" 
 
 let g:fzf_layout = { 'up': '~40%' }
 

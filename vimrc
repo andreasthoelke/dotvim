@@ -9,11 +9,14 @@ Plug 'junegunn/vim-plug'
 " File Selectors Browsers: ------------------------------------------
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
-Plug '/usr/local/opt/fzf'
-" Plug 'junegunn/fzf.vim'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
+Plug '/opt/homebrew/opt/fzf'
+"  This is the same as: rtp+=/opt/homebrew/opt/fzf
+Plug 'junegunn/fzf.vim'
+
+" Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
+Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
@@ -33,6 +36,10 @@ Plug 'majutsushi/tagbar'
 " this showed channel errors after quitting nvim
 " Plug 'ludovicchabant/vim-gutentags'
 " Make the preview window more convienient to use. use in quickfix via 'p'
+
+" Also for Tags, but from language server
+Plug 'liuchengxu/vista.vim'
+
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
 Plug 'junegunn/vim-peekaboo'
@@ -1681,7 +1688,8 @@ set noshowmode
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>ot :TagbarToggle<cr>
+nnoremap <leader>ot :Vista!!<cr>
+nnoremap <leader>oT :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
