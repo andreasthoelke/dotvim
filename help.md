@@ -24,6 +24,13 @@ sudo npm uninstall -g moment
 ## Git control of Config files
 
 ## do-next
+
+brew install fzf
+ ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
+To use fzf in Vim, add the following line to your .vimrc:
+  set rtp+=/opt/homebrew/opt/fzf
+
+
 https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
 
 vs code command line options - jump to cursor lock in vscode and back to nvim

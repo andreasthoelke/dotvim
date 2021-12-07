@@ -325,6 +325,7 @@ endfunc
 
 " ─^  Arglist                                            ▲
 
+
 " ─   fzf                                                ■
 
 " Use: BLines, Lines(?), GFiles?, BCommits, Maps, Helptags
@@ -333,8 +334,6 @@ endfunc
 let g:fzf_layout = { 'up': '~40%' }
 
 command! -bang Args call fzf#run(fzf#wrap('args', {'source': argv()}, <bang>0))
-
-
 
 
 " ─^  fzf                                                ▲
@@ -412,6 +411,8 @@ func! MoveFilesFromLeftWinToRightWin( prompt )
   " wincmd w
 endfunc
 
+" ─^  Move Files                                         ▲
+
 
 func! IsFolderPath ( path )
   " return isdirectory( a:path )
@@ -436,6 +437,15 @@ func! CurrentRelativeFilePath ()
   return relPath
 endfunc
 " echo CurrentRelativeFilePath()
+
+" A dirvish buffer will be the 'next folder path'
+func! CurrentNextFolderPath ()
+  let path = expand('%:p')
+  let filename = expand('%:t') " filename in empty in Dirvish
+  let folderpath = substitute( path, filename, '', '' )
+  return folderpath
+endfunc
+" echo CurrentNextFolderPath()
 
 func! GetFilenameOrFolderStrFromPath (path)
   let lastSegment = GetLastComponentFromPath( a:path )
@@ -476,8 +486,12 @@ func! RunBufferAsShellScript()
   endif
 endfunc
 
-
-" ─^  Move Files                                         ▲
+func! SetExecutableFlag ( path, val )
+  let cmd = a:val ? 'chmod u+x ' : 'chmod u-x '
+  call system( cmd . fnameescape(a:path) )
+endfunc
+" call SetExecutableFlag('/Users/at/.vim/notes/my folder/ei.txt', v:false)
+" call SetExecutableFlag('/Users/at/.vim/notes/my folder/ei.txt', v:true)
 
 
 

@@ -7,7 +7,14 @@
 " nnoremap <silent> glt :below 20Term<cr>
 " Demo Expression Map:
 " In dirvish buffers use the filename % to cd terminal to this folder
-nnoremap <expr> glT (&ft=='dirvish') ? ':below 20Term! cd %<CR>' : ':below 20Term!<CR>'
+" nnoremap <expr> glT (&ft=='dirvish') ? ':below 20Term! cd %<CR>' : ':below 20Term!<CR>'
+nnoremap <expr> glT (&ft=='dirvish') ? ':call TermInNextFolder()<cr>' : ':below 20Term!<cr>'
+
+func! TermInNextFolder ()
+  let folderpath = shellescape( CurrentNextFolderPath() )
+  call Term( "cd " . folderpath, 20, v:true)
+  " call Term("cd '/Volumes/GoogleDrive/My Drive/temp'", 10, v:true)
+endfunc
 
 " nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
 nnoremap <silent><expr> glt (':Term ' . input( 'Cmd: ' ) . ' ' . GetLineFromCursor() . '<cr>')
