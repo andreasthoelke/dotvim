@@ -38,7 +38,8 @@ nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 func! PreviewPathInFloatWin( filePath )
   let fp = fnameescape( a:filePath )
   if IsFolderPath( fp )
-    let lines = systemlist( 'ls ' . fp )
+    " let lines = systemlist( 'ls ' . fp )
+    let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
   else
     let lines = readfile( a:filePath, "\n" )
   endif
@@ -56,6 +57,18 @@ endfunc
 " call PreviewPathInFloatWin( '/Users/at/.vim/notes/my folder/ei.txt' )
 " call PreviewPathInFloatWin( '/Volumes/GoogleDrive/My Drive/temp/' )
 " call PreviewPathInFloatWin( '/Volumes/GoogleDrive/My Drive/temp/drei.txt' )
+
+func! PreviewFolderDetailedFloatWin( filePath )
+  let fp = fnameescape( a:filePath )
+  if IsFolderPath( fp )
+    " let lines = systemlist( 'ls ' . fp )
+    let lines = systemlist( 'exa -T --git --long --icons --level=2 ' . fp )
+  else
+    let lines = readfile( a:filePath, "\n" )
+  endif
+  call FloatWin_ShowLines( lines )
+endfunc
+
 
 " ─   CtrlP                                              ■
 
@@ -158,6 +171,7 @@ augroup dirvish_config
   " autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
   autocmd FileType dirvish nnoremap <silent><buffer> X :argadd getline('.')<cr>
   autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewPathInFloatWin( getline('.') )<cr>
+  autocmd FileType dirvish nnoremap <silent><buffer> <leader>P :call PreviewFolderDetailedFloatWin( getline('.') )<cr>
   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
   autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
   autocmd FileType dirvish nnoremap <silent><buffer> T ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>

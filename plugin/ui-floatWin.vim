@@ -203,10 +203,11 @@ endfunc
 
 func! FloatWin_FitWidthHeight()
   let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  " let lines = nvim_buf_get_lines( g:floatWin_win, 0, line('$'), 0 )
   let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
-  if newWidth
+  " if newWidth
     call nvim_win_set_config( g:floatWin_win, { 'width' : newWidth, 'height': len( lines ) } )
-  endif
+  " endif
 endfunc
 
 

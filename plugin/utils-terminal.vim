@@ -1,7 +1,5 @@
 
 
-
-
 " Terminal: ------------------------------------------------------------------------
 " open a terminal window
 " nnoremap <silent> glt :below 20Term<cr>
