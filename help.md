@@ -30,15 +30,78 @@ vim \**<TAB>       - Files under the current directory - You can select multiple
 vim ../fzf**<TAB>  - Files under parent directory that match `fzf`
 cd \**<TAB>        - Directories under current directory (single-selection)
 
+'      - exact matches
+.sh$   - match at the end of the string
+!vim   - negate matching
+
+Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
+More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
+
+
+#### Unix pipe examples
+echo 'one two three' | xargs mkdir
+find . -name '*.txt' | xargs rm
+fzf | xargs ls -l
+nvim -l `fzf`                                                                                           main
+cd **   or cd ../**
+kill -9   .. then <c-i> .. e.g. 'textEdit'<cr> .. to end the app
+find * -type f | fzf -m > selected
+
+c-t     - use ctrl-t in terminal at an argument position in say 'cp myfile.txt <c-t>..' to fill in a path.
+
 ### 'fzf.vim'
-Has simple commands that open in a split. see help fzf-vim
+Has simple commands that open in a split. see
+help fzf-vim
 Commands: Files, BLines, Lines(?), GFiles?, BCommits, Maps, Helptags ~/.vim/plugged/fzf.vim/doc/fzf-vim.txt#/Command%20|%20List
 GFiles? - all changed files
 
+### Multi-files lines search (grep & co)
+Step1: Full text search using Rg (ripgrep) and Ag (silversearcher), Step 2: Preview & filter found lines with fzf.
+FzfAg marks
+FzfRg marks
+vim /v\^gs.*web **
+Ag divish /Users/at/.vim/**
+Ag divish %**
+FzfRg dirvish **
+FzfAg dirvish **
+FzfAg marks **
+FzfAg marks 
+FzfAg marks %**
+GGrep marks **
+!mv 'vimrc' vimrc.vim
+FzfAg dirvish
+FzfFiletypes
+FzfFiles
+FzfFiles!
+FzfHelptags bang
+
+
+### Seach syntax
+sbtrkt	fuzzy-match
+'wild	exact-match (quoted)             - use the --exact flag to invert the meaning of '!
+^music	prefix-exact-match
+.mp3$	suffix-exact-match
+!fire	inverse-exact-match
+!^music	inverse-prefix-exact-match
+!.mp3$	inverse-suffix-exact-match
+^core go$ | rb$ | py$     - start with core and end with either go, rb, or py.
+
+
+
 ### 'fzf preview'
-Uses the floating-window. See help fzf-preview-vim
+Uses the floating-window. See
+help fzf-preview-vim
 CocCommand fzf-preview.ProjectFiles
 CocCommand fzf-preview.GitStatus
+CocCommand fzf-preview.GitActions
+  CocCommand fzf-preview.VistaCtags
+  CocCommand fzf-preview.CocReferences
+CocCommand fzf-preview.Marks
+
+### Preview a file in terminal/shell with cat -> bat
+Note you can scroll and search like in vim.
+
+
 
 # Directories under ~/github that match `fzf`
 cd ~/github/fzf**<TAB>
@@ -192,6 +255,9 @@ leader ehe  - close section (does not include the header text in the end?)
 leader ehr  - refresh heading/section (currently on this updates the end text)
 leader ehd  - delete/strip heading/section
 
+### Motions & text-objects
+q/Q         - Label/ Heading motion
+ihc         - 'inside heading content' text object
 
 ## Search & Docs
 gsR/r       - Grep search in the current repo! cursor-word editable.
@@ -214,14 +280,16 @@ Go to search root folder in Dirvish then
 :Ag searchterm %**
 <c-n/p> to navigate results quickfixlist
 
-### Search in select files with :vimgrep
+### Search in select files with vimgrep
+vim dirvish **      -- seach for 'dirvish' in all files. then use :cw/copen and ]q[q
 collect the files and folder in the arglist  ~/.vim/help.md#/###%20Arglist
 
 
-## Mac apps
-tab '       - Mac app/task manager, next app
 ## Karabiner Key maps
-~/.vim/keymaps-karabiner/rules-array-13-10-2018.json#/"description".%20"Left%20Control
+c-'         - Next Mac app. See definition here: ~/.config/karabiner/karabiner.json#/"description".%20"Left%20Control
+
+Older config (with tab remap?) /Users/at/.config/karabiner/karabiner.json.bak
+
 
 ## Window, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
@@ -235,10 +303,14 @@ leader wi/I - Pin [and jump to cword] Haskell imports
 c-w I       - resize/fit floatwin height width
 c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
   1<c-w>x     - swap window with the one above/at top of screen (2 is below)
+
+### Buffers
 go    - bufferlist:
   c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
   c-ov/h to open offer in split
 \^ <c-^>     - to load the alternate (past) file or \e3 <c-^>
+
+:BufferDeleteInactive or :Bdi   - to wipe out all buffers not open in a window!
 
 ### Window scrolling
 c-e/y       - up/down
@@ -318,6 +390,7 @@ leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@%  and let @*=@% )
 
 ### Arglist
 leader oa   - to show. or :ar<cr>
+leader X    - to reset/clear arglist
 dirvish x   - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
             leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
@@ -333,7 +406,7 @@ help argument-list
 Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 
 ### Quickfixlist
-
+copen  / cw[indow] / cclose   - to open/close the quickfix list
 
 ### Change Working Directory CWD Project Root
 leader dpr ":lcd " . projectroot#guess() . "\n"
@@ -369,6 +442,12 @@ put =@"         - put/refer to the content of a register
 :@"             - execute the content of the register (needs two <cr><cr> .. don't know why)
 :@0/1/2/a/b     - run a specific register
 leader sr       - exec the string in the normal \" register
+
+### Shell system clipbord
+Simple usecase of how to use pbcopy:
+cat .gitignore | pbcopy
+pbpaste | bat
+ls -l | fzf | pbcopy
 
 ## Command window
 ;           - then c-n and c-i and c-x c-f for completion.
@@ -481,6 +560,13 @@ z] z[ zk    - beginning/end of current fold/prev fold
 g]/g[       - first/last char of prev yanked text
 \e          - move to the end of the previous word
 
+q/Q         - Label/ Heading motion
+ihc         - 'inside heading content' text object
+
+## Text-objects
+help text-objects
+iB         - inside entire buffer  ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
+
 ### Command Insert Mode Movement
 c-f        - into command edit mode!! test with <leader>s$: call append('.', input('--: ', 'eins zwei'))
 Use Fn Key + "h,j,k,l" to navigate in insert mode (see Karabiner setup: ). normal movement while in insert mode: use this prefix/leaderkeystroke: "<c-o>" then e.g. "$"/"0"/"b"
@@ -529,7 +615,12 @@ c-n/p       - next/prev mark
 o           - open mark at cursor
 c-x         - delete mark
 DelLocalMarks, DelGlobalMarks
-gz'M        - use empty floating win with marks jumps: e.g. gz'M
+gz'M        - Open a mark position in a floating-win. Use empty floating win with marks jumps: e.g. gz'M
+
+Todo: checkout  https://github.com/MattesGroeger/vim-bookmarks
+
+### Jumplist
+leader c-o   - FzfPreviewJumps
 
 ## Bookmarks Shortcuts / Popular links
 ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
@@ -577,7 +668,8 @@ leader Sm   - :MessagesShow - show past vim echoed text (show messages) in previ
 put =g:maplocalleader - put the content of a variable into the buffer!
 
 ## List of commands, maps and vim-sets (settings)
-: filter function *stat<c-i>   - just text seach in function names
+FzfMaps
+:filter function *stat<c-i>   - just text seach in function names
     Find where a vim-command, function or map is defined
 
 :set <c-i>    - list of vim settings: /Users/at/.vim/notes/vimdump-set.txt
@@ -641,6 +733,7 @@ Note we are using pyenv: /Users/at/.zshrc#/#%20Use%20pyenv
 and: alias python=/opt/homebrew/bin/python3 to use the most current homebrew installed python 3 version as whenever 'python' is called
 You can install Python packages with pip3 install <package> They will install into the site-package directory /opt/homebrew/lib/python3.9/site-packages
 
+Todo: there is still about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
 ### Pyenv
 https://github.com/pyenv/pyenv-virtualenv/blob/master/README.md
 pyenv versions

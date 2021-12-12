@@ -1,0 +1,54 @@
+
+" Main readme: https://github.com/junegunn/fzf
+
+" Vim readme: https://github.com/junegunn/fzf.vim/blob/master/README.md
+" Commands: https://github.com/junegunn/fzf.vim/blob/master/README.md#commands
+" Functions: https://github.com/junegunn/fzf.vim/blob/master/README.md#vim-functions
+" Basics vim: https://github.com/junegunn/fzf/blob/master/README-VIM.md
+
+" Examples: integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
+" More technical usecases: https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
+
+set filetype=purescript_scratch
+set syntax=purescript1
+
+
+leader f gs/ga maps are great
+" Todo: configure the preview - hidden, size 60, linenum highlighted!
+note that leader fga shows recursive use (mult step selection process)
+
+FzfRg dirvish
+TestRg dirvish
+(really the same but might allow more customizations?)
+FzfAg dirvish
+
+FzfGFiles?
+(shows ok diffs)
+
+
+
+the above just need better highlighting of the secondary search terms via g:colors..
+
+edit/refesh the original ribgreb search term
+how to switch sources in the prompt?
+
+Maps:
+history
+gitstatus
+all project git files
+grep project lines with cursor word
+
+--
+FzfHelptags
+just a quick map. sadly takes no args.
+
+FzfHistory
+can tab multi sel. can use c-t or cv to open multiple wins/tabs. or! .. us <c-q> to open a single new tab with the
+quickfix list open and ]q ready to go through the selected files.
+
+FzfFiles
+can take a path. else it works the same as History!!
+
+
+
+

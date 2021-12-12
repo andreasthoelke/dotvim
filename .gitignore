@@ -1,3 +1,4 @@
+.git
 plugged/
 spell/
 sessions/
@@ -6,3 +7,4 @@ notes/vimdump-*
 scratch/
 notes/*-bk
 notes/test*
+tags

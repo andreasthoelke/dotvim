@@ -1,7 +1,7 @@
 
 " LINE COLLECTOR: ---------------
 " "leader cli" To start collecting lines, "leader cll" to collect the visual selection
-nnoremap <leader>cli :call CollectLinesInit()<cr>
+nnoremap <leader><leader>cli :call CollectLinesInit()<cr>
 func! CollectLinesInit()
   " let g:colLinesFileName = tempname()
   let g:colLinesFileName = $HOME . '/.vim/notes/CollectedLines7.txt'
@@ -13,7 +13,7 @@ func! CollectLinesInit()
   " checktime
   wincmd p
 endfunc
-vnoremap <leader>cll :call CollectLine()<cr>
+vnoremap <leader><leader>cll :call CollectLine()<cr>
 func! CollectLine() range
   let l:selText = Get_visual_selection()
   " * This actually uses the selected text not the lines

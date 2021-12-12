@@ -12,11 +12,14 @@ Plug 'mattn/ctrlp-mark'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug '/opt/homebrew/opt/fzf'
-"  This is the same as: rtp+=/opt/homebrew/opt/fzf
+"  This does the same as: rtp+=/opt/homebrew/opt/fzf
 Plug 'junegunn/fzf.vim'
 
 " Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
-Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
+
+Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
+
+
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
@@ -395,6 +398,12 @@ let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
 let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
 
 
+" Perl provider: current error from checkhealth - Command error (job=108, exit code 2): `/opt/homebrew/bin/perl -W '-MApp::cpanminus' -e ` (in '/Users/at/Documents')
+"  Does't seem to have an effect:-
+" let g:perl_host_prog = '/opt/homebrew/bin/perl'
+" let g:perl_host_prog = 'perl'
+
+
 " TODO experiment with textobject?
 " /Users/at/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
 " let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
@@ -574,11 +583,15 @@ function! LoadShada()
     exec       ':e ~/.local/share/nvim/shada/main.shada'
 endfunction
 
-" define what is saved/restored from ~/.local/share/nvim/shada/main.shada
-if has('nvim')
-  " set shada=",'10,f1,<10,h
-  " set shada="!,'100,<50,s10,h,f0"
-endif
+" The "help shada" options defines what is saved/restored from ~/.local/share/nvim/shada/main.shada
+" This was the default setting:
+" put =&shada
+" !,'100,<50,s10,h
+set shada=!,'200,<50,s10,h
+
+" Example settings:
+" set shada=",'10,f1,<10,h
+" set shada="!,'100,<50,s10,h,f0"
 " only save marks of 10 files, save global marks and only 10 lines in registers
 " see: *21.3*	Remembering information; ShaDa
 

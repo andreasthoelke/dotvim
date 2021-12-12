@@ -50,7 +50,8 @@ let g:labelPttn = '\v^\s*("|--|\#)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,50}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
-nnoremap œ :call HeadingForw()<cr>
+nnoremap q :call HeadingForw()<cr>
+" nnoremap œ :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
   call search( g:headingPttn, 'W' )
@@ -59,14 +60,16 @@ func! HeadingForw()
   " horizontal/ is too narrow.
 endfunc
 
-nnoremap Œ :call HeadingBackw()<cr>
+nnoremap Q :call HeadingBackw()<cr>
+" nnoremap Œ :call HeadingBackw()<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()
   call search( g:headingPttn, 'bW' )
   call ScrollUpFromMiddle( 10 )
 endfunc
 
-nnoremap ,œ :call GoSectionEndAbort('')<cr>
+nnoremap \q :call GoSectionEndAbort('')<cr>
+" nnoremap ,œ :call GoSectionEndAbort('')<cr>
 " Go to specific (via name) or current section end
 " func! GoSectionEndAbort( headerText )
 func! GoSectionEndAbort( ... )
@@ -92,12 +95,13 @@ endfunc
 
 
 " ─   Labels                                             ■
-nnoremap q :call LabelForw()<cr>
+" 10e
+nnoremap ,q :call LabelForw()<cr>
 func! LabelForw()
   call search( g:headingOrLabelPttn, 'W' )
 endfunc
 
-nnoremap Q :call LabelBackw()<cr>
+nnoremap ,Q :call LabelBackw()<cr>
 func! LabelBackw()
   call search( g:headingOrLabelPttn, 'bW' )
 endfunc

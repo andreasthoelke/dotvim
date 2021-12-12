@@ -1,4 +1,5 @@
 
+
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
 nnoremap <leader>or :vnew ~/.vim/plugin/<cr>
@@ -23,7 +24,7 @@ nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
 
 
 nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
-nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
+" nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
 
 " func! PreviewPathInFloatWin( filePath )
@@ -68,6 +69,29 @@ func! PreviewFolderDetailedFloatWin( filePath )
   endif
   call FloatWin_ShowLines( lines )
 endfunc
+
+
+" https://stackoverflow.com/questions/1534835/how-do-i-close-all-buffers-that-arent-shown-in-a-window-in-vim
+function! DeleteInactiveBufs()
+    "From tabpagebuflist() help, get a list of all buffers in all tabs
+    let tablist = []
+    for i in range(tabpagenr('$'))
+        call extend(tablist, tabpagebuflist(i + 1))
+    endfor
+    "Below originally inspired by Hara Krishna Dara and Keith Roberts
+    "http://tech.groups.yahoo.com/group/vim/message/56425
+    let nWipeouts = 0
+    for i in range(1, bufnr('$'))
+        if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
+        "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
+            silent exec 'bwipeout!' i
+            let nWipeouts = nWipeouts + 1
+        endif
+    endfor
+    echomsg nWipeouts . ' buffer(s) wiped out'
+endfunction
+command! Bdi :call DeleteInactiveBufs()
+command! BufferDeleteInactive :call DeleteInactiveBufs()
 
 
 " ─   CtrlP                                              ■
@@ -425,6 +449,23 @@ endfunc
 
 " ─^  Move Files                                         ▲
 
+
+func! ExpandListGlobsToListFilespaths ( listOfGlobs )
+  let listOfListsPaths = functional#map( 'GlobToPaths', a:listOfGlobs )
+  return functional#concat( listOfListsPaths )
+endfunc
+" echo ExpandListGlobsToListFilespaths( g:testVimGlobs )
+" echo glob( 'notes/*txt', v:true, v:true )
+" echo globpath( join(['notes/', './'], ','), '*vim*' )
+" echo map( ExpandListGlobsToListFilespaths(g:testVimGlobs), 'fnamemodify(v:val, ":t:r")' )
+
+" let g:testVimGlobs = ['notes/*.txt', 'autoload/**.old', 'syntax/h*', 'plugin/*ma*']
+" let g:testVimFilesnames = map( ExpandListGlobsToListFilespaths(g:testVimGlobs), 'fnamemodify(v:val, ":t:r")' )
+
+
+func! GlobToPaths (glob)
+  return glob( a:glob, v:true, v:true )
+endfunc
 
 func! IsFolderPath ( path )
   " return isdirectory( a:path )

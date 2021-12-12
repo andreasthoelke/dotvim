@@ -1,5 +1,6 @@
 
 
+
 " Somewhat simplifies running a command on a range of lines
 func! ExecRange( cmd, startLine, endLine )
   let rangeStr = a:startLine . ',' . a:endLine
@@ -247,8 +248,8 @@ nnoremap <leader>aab :ls<cr>:b<space>
 " Insert mode: i<c-r>%
 
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
-nnoremap <leader>fpc :let @* = @%<cr>:let @" = @%<cr>
-nnoremap <leader>fpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>
+nnoremap <leader>Fpc :let @* = @%<cr>:let @" = @%<cr>
+nnoremap <leader>FpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>
 command! FilepathCopy    let @* = @%            | let @" = @%
 command! FilepathCopyAbs let @* = expand("%:p") | let @" = expand("%:p")
 

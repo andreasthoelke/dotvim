@@ -40,7 +40,7 @@ endfunc
 " echo functional#map( 'toupper', ['eins', 'zwei'] )
 " echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
 " echo Mapped( {a -> a . 'aa'}, ['bb', 'aa', 'cc'])
-" Could also use an separate function reference ■
+" Could also use a separate function reference ■
 " let Fn2 = {_, x -> a:fn( x ) }
 " call map(new_list, Fn2) ▲
 
@@ -64,6 +64,11 @@ endfun
 " echo Foldr( {a, b -> a + b}, 0, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 10, 6] )
+
+func! functional#concat( listOfLists )
+  return functional#foldr( {a, b -> a + b}, [], functional#reversed( a:listOfLists ) )
+endfunc
+" echo functional#concat( [[2, 3], [5, 6, 7], [11, 12]] )
 
 func! functional#sum(list)
   return functional#foldr( {a,b->a+b}, 0, a:list )
