@@ -35,7 +35,7 @@ vcsh vim status
 
 ## do-next
 vs code command line options - jump to cursor lock in vscode and back to nvim
-manage /Library/Application Support/
+manage /Library/Application Support/ in source control?
 
 ## Fuzzy file selection
 vim \**<TAB>       - Files under the current directory - You can select multiple items with TAB key
@@ -446,24 +446,37 @@ ls -l | fzf | pbcopy
             mkCounter = component "Counter " \props -> Hooks.do
 
 # Git
-leader gg   - GitGutterToggle
-]c [c       - GitGutter Next/Prev Hunk
-GitGutter.. UndoHunk, ..PreviewHunk
-leader leader gc - Quick git commit (opt with vis-sel text)
-leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-external.vim#/Git
+
+## Status & author commit
+leader og   - is now FzfPreviewGitStatus
 :G          - fugitive git status/autor. s to stage. cc to create commit.
-leader og   - Git magit. Also :GitcommitAuthor
+leader2 og  - Git magit to look into Hunks! Also :GitcommitAuthor
             - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
 leader fgs  - FzfPreviewGitStatus looks like a quicker alternative - but it flickers a bit(?)
-            commit message, `:w` to commit.
-leader oG   - Git :Flog viewer (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
-            - FzfCommits seems to be a less powerful but smoother alternative?
+              commit message, `:w` to commit.
 
+## Git commit log
+leader leader og  - now uses FzfPreviewGitLogs  (seems better than FzfCommits/ BCommits/ GF?)
+            - Git :Flog viewer (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
+            - FzfCommits seems to be a less powerful but smoother alternative?
 
 ### Quick save shortcuts
 lead lead gS - git status in float win
 lead lead gC - git commit -a (all changes! - not just staged)
 lead lead gP - git push
+leader leader gc - Quick git commit (opt with vis-sel text)
+leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-external.vim#/Git
+
+## Gutter
+leader gg   - GitGutterToggle
+]c [c       - GitGutter Next/Prev Hunk
+GitGutter.. UndoHunk, ..PreviewHunk
+
+
+## Diffs
+windo diffoff  - to exit vimdiff mode
+now uninstalled git-delta viewer (bc of ugly colors)
+
 
 ### Useful git commands
 git ls-remote  - to show the URL of the github repo
@@ -557,6 +570,13 @@ g]/g[       - first/last char of prev yanked text
 
 q/Q         - Label/ Heading motion
 ihc         - 'inside heading content' text object
+
+## Sneak & easymotion
+f/F         - f<char> to jump to next char. L/H to next
+              ~/.vim/vimrc.vim#/Sneak%20Code%20Navigation.
+\j/k        - line motion
+\f          - then type first char, then the label keys that show up. Use then when you have already found/read a particular word.
+              ~/.vim/vimrc.vim#/Easymotion%20Code%20Navigation
 
 ## Text-objects
 help text-objects

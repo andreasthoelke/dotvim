@@ -1,5 +1,5 @@
-if exists("b:did_ftplugin")
-  finish
+i~/.vim/vimrc.vim#/Sneak%20Code%20Navigation.f exists("b:did_ftplugin") ■
+  finish " ▲
 endif
 let b:did_ftplugin = 1
 

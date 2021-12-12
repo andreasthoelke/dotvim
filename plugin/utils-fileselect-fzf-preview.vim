@@ -7,6 +7,7 @@ xmap <Leader>f [fzf-p]
 " I don't know how to switch the resources.
 nnoremap <silent> [fzf-p]p     :<C-u>FzfPreviewFromResources project_mru git<CR>
 nnoremap <silent> [fzf-p]gs    :<C-u>FzfPreviewGitStatus<CR>
+nnoremap <silent> [fzf-p]gl    :<C-u>FzfPreviewGitLogs<CR>
 nnoremap <silent> [fzf-p]ga    :<C-u>FzfPreviewGitActions<CR>
 nnoremap <silent> [fzf-p]b     :<C-u>FzfPreviewBuffers<CR>
 nnoremap <silent> [fzf-p]B     :<C-u>FzfPreviewAllBuffers<CR>

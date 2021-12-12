@@ -24,7 +24,7 @@ FzfAg dirvish
 
 FzfGFiles?
 (shows ok diffs)
-
+FzfBCommits has *actions* that allow to yank commit hashes. and (caution!) launch a vimdiff
 
 
 the above just need better highlighting of the secondary search terms via g:colors..
