@@ -454,9 +454,8 @@ leader2 og  - Git magit to look into Hunks! Also :GitcommitAuthor
             - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
 
 ## Git commit log
-leader2 gl  - now uses FzfPreviewGitLogs  (seems better than FzfCommits/ BCommits/ GF?)
+leader2 gl  - now uses FzfPreviewGitLogs. Enter shows a diff.
 leader2 gL  - :Flog (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
-
 
 ### Quick save shortcuts
 lead lead gS - git status in float win
