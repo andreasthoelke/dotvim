@@ -1,5 +1,9 @@
 
 
+" autocmd FileType vista,vista_kind nnoremap <buffer> <silent> <leader>/ :<c-u>call vista#finder#fzf#Run()<CR>
+
+nnoremap <silent> <leader>/ :<c-u>call vista#finder#fzf#Run()<CR>
+
 highlight default link TagbarHighlight  Cursor
 
 let g:tagbar_sort = 0

@@ -249,6 +249,8 @@ q/Q         - Label/ Heading motion
 ihc         - 'inside heading content' text object
 
 ## Search & Docs
+
+
 gsR/r       - Grep search in the current repo! cursor-word editable.
               use { and } to navigate found contexts. 'o' to open an item in the left split. <cr> to close
 Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** 
@@ -611,11 +613,16 @@ leader om   - Markbar
 leader oU   - Undo tree (Mundo)
 :StripWhitespace - removes whitespace
 
-## Tagbar
-leader ot   - open
-c-w \       - jump to it from leftmost win (c-w p to jump back to prev win)
-? in win    - show help
-p in win    - to jump to tag but cursor stays in tagbar
+## Tags, Vista, Tagbar
+leader /    - Search for tags
+leader ?    - FzfPreviewBufferTags
+leader2     - FzfTags - searches tags everywhere?!
+
+leader ot/T  - open Vista / Tagbar
+c-w \        - jump to it from leftmost win (c-w p to jump back to prev win)
+? in win     - show help
+p in win     - to jump to tag but cursor stays in tagbar
+
 
 ## Marks
 leader om   - open Markbar

@@ -96,6 +96,9 @@ command! -bang -nargs=* GGrep
 
 " ─^  fzf-vim                                            ▲
 
+" doesn't really work well. can't set
+command! -bang -nargs=* TestFzfTags call fzf#vim#tags(<q-args>, fzf#vim#with_preview({ "placeholder": "--tag {2}:{-1}:{3..}" }), <bang>0)
+
 " command -nargs=? -bang TestGrep call fzf#vim#grep(command, [has_column bool], [spec dict], [fullscreen bool])
 
 command! -bang -nargs=* TestRg
@@ -147,6 +150,8 @@ let g:fzf_command_prefix = 'Fzf'
 
 " Preview window on the upper side of the window with 40% height, hidden by default, ctrl-/ to toggle
 let g:fzf_preview_window = ['down:60%:hidden', 'ctrl-/']
+
+let g:vista_fzf_preview = ['down:50%']
 
 " This is the default extra key bindings
 " let g:fzf_action = {
