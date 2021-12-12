@@ -19,11 +19,23 @@ npm list -g
 npm list -g --depth 0
 sudo npm uninstall -g moment
 
-
-
 ## Git control of Config files
+ ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
+To use fzf in Vim, add the following line to your .vimrc:
+  set rtp+=/opt/homebrew/opt/fzf
+
+https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
+
+Old attemps bak:
+Now using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
+Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config'
+Run git commands, e.g.:
+vcsh vim config --local status.showUntrackedFiles no
+vcsh vim status
 
 ## do-next
+vs code command line options - jump to cursor lock in vscode and back to nvim
+manage /Library/Application Support/
 
 ## Fuzzy file selection
 vim \**<TAB>       - Files under the current directory - You can select multiple items with TAB key
@@ -101,29 +113,6 @@ CocCommand fzf-preview.Marks
 ### Preview a file in terminal/shell with cat -> bat
 Note you can scroll and search like in vim.
 
-
-
-# Directories under ~/github that match `fzf`
-cd ~/github/fzf**<TAB>
-
-
- ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
-To use fzf in Vim, add the following line to your .vimrc:
-  set rtp+=/opt/homebrew/opt/fzf
-
-
-https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
-
-vs code command line options - jump to cursor lock in vscode and back to nvim
-manage /Library/Application Support/
-
-
-Old attemps bak:
-Now using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
-Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config'
-Run git commands, e.g.:
-vcsh vim config --local status.showUntrackedFiles no
-vcsh vim status
 
 ## Markdown
 help vim-markdown-folding
@@ -381,12 +370,13 @@ this lets me use spaces in paths! and complete with c-x c-f. but now paths have 
 The next line/path only works with <c-w>f  !
 /Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt
 
-
-### Filepaths Urls
-c-w f       - (on filepath) preview file content in horz-split
+### Filepaths & Urls
+c-w f       - (on path or vis-sel) preview file content in horz-split
+leader P    - (on path or vis-sel) preview file or folder(!) in float-win
 leader of   - open filepath under cursor in float win
 glc         - open Url in line in Chromium
 leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@%  and let @*=@% )
+
 
 ### Arglist
 leader oa   - to show. or :ar<cr>
@@ -455,16 +445,21 @@ ls -l | fzf | pbcopy
 
             mkCounter = component "Counter " \props -> Hooks.do
 
-## Git
+# Git
 leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
 GitGutter.. UndoHunk, ..PreviewHunk
 leader leader gc - Quick git commit (opt with vis-sel text)
 leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-external.vim#/Git
+:G          - fugitive git status/autor. s to stage. cc to create commit.
 leader og   - Git magit. Also :GitcommitAuthor
-            - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file, then `CC` to write a
+            - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
+leader fgs  - FzfPreviewGitStatus looks like a quicker alternative - but it flickers a bit(?)
             commit message, `:w` to commit.
-leader oG   - Git Flog viewer (return on commit to view div, 'q' to close)
+leader oG   - Git :Flog viewer (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
+            - FzfCommits seems to be a less powerful but smoother alternative?
+
+
 ### Quick save shortcuts
 lead lead gS - git status in float win
 lead lead gC - git commit -a (all changes! - not just staged)

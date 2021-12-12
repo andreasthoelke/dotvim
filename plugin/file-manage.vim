@@ -22,10 +22,9 @@ nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
 
-
-nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
+nnoremap <leader>P :call PreviewPathInFloatWin( getline('.') )<cr>
+xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
 " nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
-
 
 " func! PreviewPathInFloatWin( filePath )
 "   if isdirectory( a:filePath )
@@ -36,18 +35,23 @@ nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
 "   call FloatWin_ShowLines( lines )
 " endfunc
 
+func! PreviewPathInFloatWin_vs()
+  call PreviewPathInFloatWin( GetVisSel() )
+endfunc
+
 func! PreviewPathInFloatWin( filePath )
-  let fp = fnameescape( a:filePath )
+  let fp = fnameescape( fnamemodify( a:filePath, ":p") )
   if IsFolderPath( fp )
     " let lines = systemlist( 'ls ' . fp )
     let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
   else
-    let lines = readfile( a:filePath, "\n" )
+    let lines = readfile( fp, "\n" )
   endif
   call FloatWin_ShowLines( lines )
 endfunc
 " call PreviewPathInFloatWin( "/Users/at/.vim/notes/links" )
 " call PreviewPathInFloatWin( "/Users/at/.vim/notes/" )
+" call PreviewPathInFloatWin( "~/.config/karabiner/karabiner.json" )
 
 func! PreviewFileInFloatWin( filePath )
   " call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
