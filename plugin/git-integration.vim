@@ -22,6 +22,7 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 command! -nargs=* GitpublishQuick call GitPublish(<q-args>)
 
 " git status:
+nnoremap <leader>og         :FzfPreviewGitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
@@ -104,15 +105,16 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 " echo FugitiveDetect('~/.config/vcsh/repo.d/vim.git/config')
 " echo FugitiveDetect(expand('~/.config/vcsh/repo.d/vim.git/'))
 
-" Z Maps Unimpaired:
+" Z Maps Unimpaired
 " There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
 " nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap yoG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
-nnoremap <leader>og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
+nnoremap <leader><leader>og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap <leader>oG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
 " GitV => now using Flog to show a git tree
-nnoremap <leader>oG :Flogsplit<cr>
+nnoremap <leader><leader>gl :FzfPreviewGitLogs<cr>
+nnoremap <leader><leader>gL :Flogsplit<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 
