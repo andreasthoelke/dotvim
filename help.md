@@ -300,6 +300,10 @@ c-w I       - resize/fit floatwin height width
 c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
   1<c-w>x     - swap window with the one above/at top of screen (2 is below)
 
+### Window scrolling
+c-e/y       - up/down
+zt/b        - bottom/top
+
 ### Buffers
 go    - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
   c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
@@ -308,15 +312,18 @@ go    - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 
 :BufferDeleteInactive or :Bdi   - to wipe out all buffers not open in a window!
 
-### Window scrolling
-c-e/y       - up/down
-zt/b        - bottom/top
-
-## Files
+## Files open
 \v \T       - browse-open file in new split/tab from the same project
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
-gp <c-o>v   - browse-open recent file in a split e.g. from a different project
-~/.vim/plugin/file-manage.vim#/New%20file%20openers.
+
+### Files fuzzy open
+op          - FzfPreviewFromResources project_mru. has nice color syntax
+oP          - FzfHistory
+              can tab multi sel. can use c-t or cv to open multiple wins/tabs. or! .. us <c-q> to open a single new tab with the
+              quickfix list open and ]q ready to go through the selected files.
+              ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
+leader gp   - ctrlP. use <c-o>v   - browse-open recent file in a split e.g. from a different project
+
 
 ## Dirvish
 a           - open file in right split, then use ]f [f to go back forth the files in the dir!

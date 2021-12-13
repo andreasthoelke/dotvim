@@ -42,9 +42,6 @@ grep project lines with cursor word
 FzfHelptags
 just a quick map. sadly takes no args.
 
-FzfHistory
-can tab multi sel. can use c-t or cv to open multiple wins/tabs. or! .. us <c-q> to open a single new tab with the
-quickfix list open and ]q ready to go through the selected files.
 
 FzfFiles
 can take a path. else it works the same as History!!
