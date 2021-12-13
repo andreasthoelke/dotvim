@@ -22,7 +22,7 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 command! -nargs=* GitpublishQuick call GitPublish(<q-args>)
 
 " git status:
-nnoremap <leader>og         :FzfPreviewGitStatus<cr>
+nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
@@ -112,7 +112,7 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 nnoremap ,og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap <leader>oG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
-nnoremap <leader>oG :FzfGFiles?<cr>
+nnoremap <leader>og :FzfGFiles?<cr>
 
 " GitV => now using Flog to show a git tree
 nnoremap <leader><leader>gL :FzfPreviewGitLogs<cr>

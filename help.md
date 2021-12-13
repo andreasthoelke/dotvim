@@ -56,6 +56,7 @@ Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/
 More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
 
 ### telescope.nvim
+~/.vim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
 
 ### treesitter
 TSInstallInfo
@@ -506,7 +507,7 @@ leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-exte
 ## Gutter
 leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
-GitGutter.. UndoHunk, ..PreviewHunk
+GitGutterUndoHunk, ..PreviewHunk
 
 
 ## Diffs

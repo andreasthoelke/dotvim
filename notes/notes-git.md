@@ -49,7 +49,7 @@ Link a local repo to a github repo:
   * `git log -c -S'missingtext' [pathToFile]` or `git log -p` and then `/missing code` in the 'less' app using `n`/`N` to navigate
 
 ## Make a git commit to dotfiles of .vimrc
-  etc to https://github.com/andreasthoelke/dotfiles  
+  etc to https://github.com/andreasthoelke/dotfiles
   Git Commit: (using Fugitive)
 1. "Gstatus" then use "-" to stage/unstage a changed file.
 2. Review Changes: "D" (diff) on the file to view what has changed compared to the last commit.
