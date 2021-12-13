@@ -55,7 +55,11 @@ cd \**<TAB>        - Directories under current directory (single-selection)
 Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
 More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
 
-telescope.nvim
+### telescope.nvim
+
+### treesitter
+TSInstallInfo
+TSInstall <language>
 
 #### Unix pipe examples
 echo 'one two three' | xargs mkdir
@@ -124,6 +128,16 @@ Note you can scroll and search like in vim.
 ## Markdown
 help vim-markdown-folding
 plugin config: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
+
+## Pandoc markdown docx conversion
+~/.vim/notes/docx-markdown#/we%20would%20need
+
+### Markdown live preview
+glm        - start markdown preview
+gsm        - stop markdown preview
+             ~/.vim/plugin/tools-markdown.vim#/Markdown-Preview
+
+mdbook  https://rust-lang.github.io/mdBook/format/mdbook.html#including-portions-of-a-file
 
 
 ## Video
@@ -778,12 +792,24 @@ Note we are using pyenv: /Users/at/.zshrc#/#%20Use%20pyenv
 and: alias python=/opt/homebrew/bin/python3 to use the most current homebrew installed python 3 version as whenever 'python' is called
 You can install Python packages with pip3 install <package> They will install into the site-package directory /opt/homebrew/lib/python3.9/site-packages
 
-Todo: there is still about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
+Todo: there is still a note about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
 ### Pyenv
 https://github.com/pyenv/pyenv-virtualenv/blob/master/README.md
-pyenv versions
-show system version | set the global system version
-pyenv global && pyenv global 3.10.0
+pyenv versions      - show what environment is currently active
+pyenv global        - only shows the current system version | set the global system version pyenv global && pyenv global 3.10.0
+pip list            - what is installed in the current environment! output as of 2021-12-13:
+                      Package    Version
+                      ---------- -------
+                      greenlet   1.1.2
+                      msgpack    1.0.3
+                      pip        21.3.1
+                      pynvim     0.4.3
+                      setuptools 57.4.0
+
+
+#### pyenv virtualenv
+https://opensource.com/article/19/6/python-virtual-environments-mac
+pyenv virtualenvs   - show virtual envs
 
 Example from https://neovim.io/doc/user/provider.html
 pyenv install 3.4.4
@@ -905,6 +931,4 @@ https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-v
 
 Show purescript syntax in Coc completion menu
 
-Markdown live preview
-mdbook  https://rust-lang.github.io/mdBook/format/mdbook.html#including-portions-of-a-file
 

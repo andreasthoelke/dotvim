@@ -104,9 +104,9 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 " New file openers:
 " nnoremap <silent> gp :<C-u>FzfPreviewFromResources project_mru<CR>
 " nnoremap <silent> gp :<C-u>FzfPreviewProjectMrwFiles<CR>
-nnoremap <silent> gp :<C-u>FzfPreviewProjectMruFiles<CR>
+nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
 " This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
-nnoremap <silent> gP :<C-u>FzfHistory<CR>
+nnoremap <silent> gp :<C-u>FzfHistory<CR>
 nnoremap <silent> go :<C-u>FzfBuffer<cr>
 
 
