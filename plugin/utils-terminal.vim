@@ -36,8 +36,10 @@ hi! TermCursorNC guibg=grey guifg=white
 func! ShellReturn( cmd )
   " let resultLines = split( system( a:cmd ), '\n' )
   let resultLines = systemlist( a:cmd )
-  call FloatWinAndVirtText( resultLines )
+  call FloatWin_ShowLines( resultLines )
 endfunc
+" call ShellReturn( 'ls' )
+" echo systemlist( 'ls' )
 
 " TODO testing this as off!
 " Keep term buffers running/open when closing the window

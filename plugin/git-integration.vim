@@ -121,6 +121,9 @@ nnoremap <leader><leader>gl :FzfCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 
+nnoremap <leader><leader>ga :FzfPreviewGitActions<cr>
+nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
+
 let g:Gitv_CustomMappings = {
       \'update': 'r',
       \}

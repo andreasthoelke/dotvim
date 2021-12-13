@@ -55,6 +55,7 @@ cd \**<TAB>        - Directories under current directory (single-selection)
 Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
 More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
 
+telescope.nvim
 
 #### Unix pipe examples
 echo 'one two three' | xargs mkdir
@@ -472,6 +473,9 @@ leader oG   - FzfGFiles? Now shows gread diffs. For review before commit: use ta
 ,og         - Git magit can nicely stage Hunks. Also :GitcommitAuthor
             - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
 :G          - fugitive git status/autor. s to stage. cc to create commit.
+
+leader2 ga  - git actions
+leader2 gb  - git branches
 
 ## Git commit log
 leader2 gl  - FzfCommits
