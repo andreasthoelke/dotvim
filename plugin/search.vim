@@ -109,6 +109,8 @@ command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
 
 nnoremap <leader>K K
+nnoremap <leader>vh :FzfHelptags<cr>
+nnoremap <leader>vm :FzfMaps<cr>
 
 fun! OpenFinder()
   exec 'silent !open .'
@@ -198,6 +200,7 @@ endfunc
 " vim Grepper: ------------------------------
 
 " Repo files:
+" command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
 command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
 " Open buffers:
 command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <args>
@@ -269,14 +272,16 @@ fun! GrepSearch(selType, mode)
   if a:mode == "buffers"
     exec 'Fbuffers "' . keyw . '"'
   else
-    exec 'Frepo "' . keyw . '"'
+    " exec 'Frepo "' . keyw . '"'
+    exec 'FzfRg ' . keyw
   endif
 endfun
 
 nnoremap gsR :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
 
 fun! SearchRepo( keyw )
-  exec 'Frepo "' . a:keyw . '"'
+  " exec 'Frepo "' . a:keyw . '"'
+  exec 'FzfRg ' . a:keyw
 endfunc
 
 " Vim Grepper: ------------------------------

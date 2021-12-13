@@ -688,15 +688,18 @@ leader rb   - to rename a binding and its occurences
 
 
 # Vim
-:Help w<c-i> - complete help terms
+### vim help
 leader K    - Vim help. Use :HelpGrep .. ':hg nnoremap'<cr> for a text search
+leader vh   - FzfHelptags only allow a simple <enter>. no preview. it's still good.
+:Help w<c-i> - complete help terms
 
+### vim-infos
 leader Sm   - :MessagesShow - show past vim echoed text (show messages) in preview window
             - output of any single command: RedirMessagesWin verb set comments?
 put =g:maplocalleader - put the content of a variable into the buffer!
 
 ## List of commands, maps and vim-sets (settings)
-FzfMaps
+leader vm   - FzfMaps
 :filter function *stat<c-i>   - just text seach in function names
     Find where a vim-command, function or map is defined
 
