@@ -1,0 +1,23 @@
+
+
+pandoc -s MANUAL.txt -o example29.docx
+pandoc -s example30.docx -t markdown -o example35.md
+
+panodc -s /Users/at/Google Drive/My Drive/Docs/video-browsing.docx
+
+pandoc -s video-browsing.docx -t markdown -o video-browsing.md
+pandoc -s video-browsing.md -o video-browsing1.docx
+
+
+see test file: (use vis-sel & c-w f)
+/Volumes/GoogleDrive/My Drive/Docs/
+/Volumes/GoogleDrive/My Drive/Docs/video-browsing.md
+
+Todo:
+Whenever I attempt to open a docx file, convert it to an .md file.
+how do I maintain images?
+
+we would need some nice word template that can be applied to the changed text and structure.
+still would not overwrite the original docx. but a created docx could be used in docs.google.com then.
+
+
