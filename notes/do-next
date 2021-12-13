@@ -1,0 +1,14 @@
+
+
+search and sel a git working dir (open divish folder and set lcd)
+note that ctrlp has a directory selector using c-f in the window.
+
+all maps/ commands into fzf and qucklist supprt
+
+revisit my process for applying commands to paths
+
+
+
+
+
+

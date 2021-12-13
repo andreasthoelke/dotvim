@@ -39,6 +39,7 @@ vcsh vim config --local status.showUntrackedFiles no
 vcsh vim status
 
 ## do-next
+notes/do-next
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
 
@@ -315,6 +316,8 @@ go    - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 ## Files open
 \v \T       - browse-open file in new split/tab from the same project
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
+leader of   - FzfPreviewGitFiles
+leader oF   - FzfGFiles
 
 ### Files fuzzy open
 op          - FzfPreviewFromResources project_mru. has nice color syntax

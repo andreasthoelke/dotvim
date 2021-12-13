@@ -17,32 +17,6 @@ leader f gs/ga maps are great
 " Todo: configure the preview - hidden, size 60, linenum highlighted!
 note that leader fga shows recursive use (mult step selection process)
 
-FzfRg dirvish
-TestRg dirvish
-(really the same but might allow more customizations?)
-FzfAg dirvish
-
-FzfGFiles?
-(shows ok diffs)
-FzfBCommits has *actions* that allow to yank commit hashes. and (caution!) launch a vimdiff
-
-
-the above just need better highlighting of the secondary search terms via g:colors..
-
-edit/refesh the original ribgreb search term
-how to switch sources in the prompt?
-
-Maps:
-history
-gitstatus
-all project git files
-grep project lines with cursor word
-
---
-FzfHelptags
-just a quick map. sadly takes no args.
-
-
 FzfFiles
 can take a path. else it works the same as History!!
 

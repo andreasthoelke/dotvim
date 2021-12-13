@@ -20,6 +20,9 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
+nnoremap <leader>of :FzfPreviewGitFiles<cr>
+nnoremap <leader>oF :FzfGFiles<cr>
+
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
 
 nnoremap <leader>P :call PreviewPathInFloatWin( getline('.') )<cr>
@@ -99,7 +102,9 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 
 
 " New file openers:
-nnoremap <silent> gp :<C-u>FzfPreviewFromResources project_mru git<CR>
+" nnoremap <silent> gp :<C-u>FzfPreviewFromResources project_mru<CR>
+" nnoremap <silent> gp :<C-u>FzfPreviewProjectMrwFiles<CR>
+nnoremap <silent> gp :<C-u>FzfPreviewProjectMruFiles<CR>
 " This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
 nnoremap <silent> gP :<C-u>FzfHistory<CR>
 nnoremap <silent> go :<C-u>FzfBuffer<cr>
