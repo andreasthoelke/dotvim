@@ -98,6 +98,11 @@ command! Bdi :call DeleteInactiveBufs()
 command! BufferDeleteInactive :call DeleteInactiveBufs()
 
 
+" New file openers:
+nnoremap <silent> gp :<C-u>FzfPreviewFromResources project_mru git<CR>
+nnoremap <silent> go :<C-u>FzfBuffer<cr>
+
+
 " ─   CtrlP                                              ■
 
 " Notes:
@@ -106,8 +111,8 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 let g:ctrlp_cmd = 'CtrlPBuffer'
 " let g:ctrlp_cmd = 'CtrlPMRU'
 " let g:ctrlp_map = '<localleader>a'
-let g:ctrlp_map = 'go'
-nnoremap gp :CtrlPMRU<cr>
+let g:ctrlp_map = 'gO'
+nnoremap gP :CtrlPMRU<cr>
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {

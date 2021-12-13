@@ -14,6 +14,11 @@ brew ls gh
 brew ls --casks
 brew ls --formulae --versions
 
+brew install --HEAD luajit
+brew install --HEAD neovim
+to update: brew reinstall neovim
+
+
 ## Node
 npm list -g
 npm list -g --depth 0
@@ -296,7 +301,7 @@ c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
   1<c-w>x     - swap window with the one above/at top of screen (2 is below)
 
 ### Buffers
-go    - bufferlist:
+go    - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
   c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
   c-ov/h to open offer in split
 \^ <c-^>     - to load the alternate (past) file or \e3 <c-^>
@@ -311,6 +316,7 @@ zt/b        - bottom/top
 \v \T       - browse-open file in new split/tab from the same project
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 gp <c-o>v   - browse-open recent file in a split e.g. from a different project
+~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 
 ## Dirvish
 a           - open file in right split, then use ]f [f to go back forth the files in the dir!
@@ -450,14 +456,17 @@ ls -l | fzf | pbcopy
 # Git
 
 ## Status & author commit
-leader og   - is now FzfPreviewGitStatus
-:G          - fugitive git status/autor. s to stage. cc to create commit.
-leader2 og  - Git magit to look into Hunks! Also :GitcommitAuthor
+leader og   - FzfPreviewGitStatus allows quick staging per file
+leader oG   - FzfGFiles? Now shows gread diffs. For review before commit: use tab to add. then c-q will show only the files in quickfix list. 
+              but can use ]c [c to navigate hunks. also use leader gg / gutter.
+,og         - Git magit can nicely stage Hunks. Also :GitcommitAuthor
             - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
+:G          - fugitive git status/autor. s to stage. cc to create commit.
 
 ## Git commit log
-leader2 gl  - now uses FzfPreviewGitLogs. Enter shows a diff.
-leader2 gL  - :Flog (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
+leader2 gl  - FzfCommits
+leader2 gL  - now uses FzfPreviewGitLogs. Enter shows a diff.
+:Flog (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
 
 ### Quick save shortcuts
 lead lead gS - git status in float win
@@ -474,8 +483,8 @@ GitGutter.. UndoHunk, ..PreviewHunk
 
 ## Diffs
 windo diffoff  - to exit vimdiff mode
-now uninstalled git-delta viewer (bc of ugly colors)
-
+git-delta viewer config: ~/.gitconfig#/path%20=%20~/.config/git-delta/themes.gitconfig
+                         https://github.com/dandavison/delta#choosing-colors-styles
 
 ### Useful git commands
 git ls-remote  - to show the URL of the github repo

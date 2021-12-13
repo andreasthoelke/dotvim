@@ -670,6 +670,17 @@ cnoremap <C-x>_ <C-r>=split(histget('cmd', -1))[-1]<cr>
 " Insert filename under the cursor
 nnoremap <silent> <Leader>gf :pedit <C-r><C-f><cr>
 
+" using counts in a map
+" :map _x :<C-U>echo "the count is " . v:count<CR>
+" nnoremap <silent> <Plug>(dirvish_up) :<C-U>exe 'Dirvish %:p'.repeat(':h',v:count1)<CR>
+" echo repeat('hi', 0)
+" echo v:count1
+" echo v:count
+
+
+
+
+
 " copy a folder: cp -a /source/. /dest/
 
 " "<Plug>" is setting up a reference to a (public/API) function in a Plugin that can be called from a mapping like this:
