@@ -9,6 +9,39 @@ revisit my process for applying commands to paths
 
 
 
+# Syc & show: Run terminal command and show result in float-win
+- return result of command to float win. example 'ls -a'
+Async launch: Launch an app/service. Pass params, no return vals, no interaction
+- vs code, mpv
+- ytdl, youtube-dl  - they should notify when done. but may take a long time to finish. and there may be a list. - progress indicator in terminal
+Interactive:
+- node repl
+
+# Input param: (visible in menu)
+a single path, url or strings
+- vis sel
+- from cursor to end of line
+
+# Commands:
+i'll list all commands (including tricky options).
+most commands will only have one useful mode - syc with return, asyn (with progress or without),
+interactive - so this will be encoded in the menu option
+
+# Shell execution
+i can put a list of filepaths in a scratchbuffer and :setf dirvish
+the i can collect into the arglist ('x' in dirvish) can collect arguments
+then i'd do :Shdo! cp {} {}-bk to get:
+cp 'test2' 'test2'-bk
+cp 'vimdump-map.txt' 'vimdump-map.txt'-bk
+
+i could use linescollector to add to a buffer of file paths
+tryout :2Shdo of a selection of paths
+
+ls ~/Documents/tests/YT-dls/
+
+
+
+
 
 
 

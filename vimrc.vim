@@ -19,10 +19,14 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
 
+
+" Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 
+Plug 'nvim-telescope/telescope-github.nvim'
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
@@ -178,6 +182,10 @@ Plug 'tpope/vim-repeat'
 
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+" LSP Language server / client:
+Plug 'neovim/nvim-lspconfig'
+
 
 " Language Support: -----------------------------------------------------
 Plug 'jelera/vim-javascript-syntax'
@@ -335,20 +343,20 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Plug 'FrigoEU/psc-ide-vim'
 " Plug 'sriharshachilakapati/vimmer-ps'
-Plug 'takiyu/lightline-languageclient.vim'
+" Plug 'takiyu/lightline-languageclient.vim'
 
 " does this really echo PS diagnostics?
-Plug 'Shougo/echodoc.vim'
+" Plug 'Shougo/echodoc.vim'
 
 " old:
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
 
 
 " Haskell IDE Engine HIE:
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': './install.sh'
-      \ }
+" Plug 'autozimu/LanguageClient-neovim', {
+"       \ 'branch': 'next',
+"       \ 'do': './install.sh'
+"       \ }
 
 " backup old: HIE and deoplete
 " if has('nvim')

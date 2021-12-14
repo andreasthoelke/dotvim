@@ -1,9 +1,9 @@
 
-## help
+# help
 More help/comments: ~/.vim/notes/notes-navigation.md#/#%20Navigate%20Containers
 ~/.vim/notes/releases.md#/##%20Release%20notes
 
-## Homebrew
+# Homebrew
 brew list
 brew list | grep python
 brew info python
@@ -19,12 +19,12 @@ brew install --HEAD neovim
 to update: brew reinstall neovim
 
 
-## Node
+# Node, NPM
 npm list -g
 npm list -g --depth 0
 sudo npm uninstall -g moment
 
-## Git control of Config files
+# Git control of Config files
  ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
 To use fzf in Vim, add the following line to your .vimrc:
   set rtp+=/opt/homebrew/opt/fzf
@@ -38,12 +38,12 @@ Run git commands, e.g.:
 vcsh vim config --local status.showUntrackedFiles no
 vcsh vim status
 
-## do-next
+# do-next
 notes/do-next
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
 
-## Fuzzy file selection
+# Fuzzy file selection
 vim \**<TAB>       - Files under the current directory - You can select multiple items with TAB key
 vim ../fzf**<TAB>  - Files under parent directory that match `fzf`
 cd \**<TAB>        - Directories under current directory (single-selection)
@@ -55,14 +55,7 @@ cd \**<TAB>        - Directories under current directory (single-selection)
 Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
 More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
 
-### telescope.nvim
-~/.vim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
-
-### treesitter
-TSInstallInfo
-TSInstall <language>
-
-#### Unix pipe examples
+### Unix pipe examples
 echo 'one two three' | xargs mkdir
 find . -name '*.txt' | xargs rm
 fzf | xargs ls -l
@@ -72,6 +65,9 @@ kill -9   .. then <c-i> .. e.g. 'textEdit'<cr> .. to end the app
 find * -type f | fzf -m > selected
 
 c-t     - use ctrl-t in terminal at an argument position in say 'cp myfile.txt <c-t>..' to fill in a path.
+
+$_      - the last argument given to the previous command. As in `mkdir pytest1 && $_`
+
 
 ### 'fzf.vim'
 Has simple commands that open in a split. see
@@ -122,6 +118,21 @@ CocCommand fzf-preview.GitActions
   CocCommand fzf-preview.CocReferences
 CocCommand fzf-preview.Marks
 
+
+
+## telescope.nvim
+Telescope <c-i>
+Telescope gh gist
+~/.vim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
+https://github.com/nvim-telescope/telescope.nvim\#default-mappings
+https://github.com/nvim-telescope/telescope.nvim/blob/master/README.md\#default-mappings
+
+
+# Lua
+https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
+https://neovim.io/doc/user/lua.html
+https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
+
 ### Preview a file in terminal/shell with cat -> bat
 Note you can scroll and search like in vim.
 
@@ -153,7 +164,33 @@ Path to Android Studio config files:
 ~ Library / ApplicationSupport / Google / AndroidStudioPreview2020.3  git add colors/Munsell-blue\ Kotlin.icls -f                                        master
 
 
-## Language client
+# LSP Language server / client
+LspInfo
+help lspconfig-server-configurations
+plugin/setup-lsp.vim
+
+Do i need null-ls.nvim? https://github.com/jose-elias-alvarez/null-ls.nvim
+
+
+## Python lsp
+
+
+## Treesitter
+TSInstallInfo
+TSInstall <language>
+help nvim-treesitter-commands
+
+### other python tools
+Black
+i could at some point try a normal formatter:  pip install black
+isort manages/sorts import lines
+flake8 style enforcement
+mypy static typing
+
+### pyenv virtualenv
+General maintainance notes: ~/.vim/notes/notes-python.md#/###%20pyenv%20virtualenv
+
+## Language client (old)
 [g / ]g     - prev/next error/warning
 ged         - show diagnostic message in float-win (Lang client)
 gsi         - coc diagnostic - the same as above?
@@ -410,6 +447,22 @@ leader P    - (on path or vis-sel) preview file or folder(!) in float-win
 leader of   - open filepath under cursor in float win
 glc         - open Url in line in Chromium
 leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@%  and let @*=@% )
+
+## Links / code links / vim rel-link
+glc         - open Url in line in Chromium
+glb         - open URL in browser (note: hashes for anchor-links need to be quoted by \
+              https://github.com/nvim-telescope/telescope.nvim\#default-mappings
+leader ol   - open 'links' file in float-win, then glc to view in Chromium
+
+gk          - follow rel-link
+lead lg/lG  - go to definition/ in split
+gd ,gd     - go to definition /in split
+
+leader cl  - to copy a rel-link to the clipboard
+~/.vim/plugin/general-helpers.vim#/func.%20LinkRefToClipBoard..
+help Rel
+Substitude vim echoed locations with rel-lins: %s/ line /#:/  e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
+leader fpc - copy current file path
 
 
 ### Arglist
@@ -785,83 +838,28 @@ Examples with generic operator functions
 * Gen_opfunc2: applying a function via an operator map, visual selection and command  ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 
-
-## Python
-### Installation
-https://opensource.com/article/19/5/python-3-default-mac
-Note we are using pyenv: /Users/at/.zshrc#/#%20Use%20pyenv
-and: alias python=/opt/homebrew/bin/python3 to use the most current homebrew installed python 3 version as whenever 'python' is called
-You can install Python packages with pip3 install <package> They will install into the site-package directory /opt/homebrew/lib/python3.9/site-packages
-
-Todo: there is still a note about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
-### Pyenv
-https://github.com/pyenv/pyenv-virtualenv/blob/master/README.md
-pyenv versions      - show what environment is currently active
-pyenv global        - only shows the current system version | set the global system version pyenv global && pyenv global 3.10.0
-pip list            - what is installed in the current environment! output as of 2021-12-13:
-                      Package    Version
-                      ---------- -------
-                      greenlet   1.1.2
-                      msgpack    1.0.3
-                      pip        21.3.1
-                      pynvim     0.4.3
-                      setuptools 57.4.0
-
-
-#### pyenv virtualenv
-https://opensource.com/article/19/6/python-virtual-environments-mac
-pyenv virtualenvs   - show virtual envs
-
-Example from https://neovim.io/doc/user/provider.html
-pyenv install 3.4.4
-pyenv virtualenv 3.4.4 py3nvim
-pyenv activate py3nvim
-python3 -m pip install pynvim
-pyenv which python  # Note the path
-The last command reports the interpreter path, add it to your init.vim:
-let g:python3_host_prog = '/path/to/py3nvim/bin/python'
-
-
-" Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
-
-### Notes
+# Notes
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
-## Links / code links / vim rel-link
-glc         - open Url in line in Chromium
-glb         - open URL in browser
-leader ol   - open 'links' file in float-win, then glc to view in Chromium
-
-gk          - follow rel-link
-lead lg/lG  - go to definition/ in split
-gd ,gd     - go to definition /in split
-
-leader cl  - to copy a rel-link to the clipboard
-~/.vim/plugin/general-helpers.vim#/func.%20LinkRefToClipBoard..
-help Rel
-Substitude vim echoed locations with rel-lins: %s/ line /#:/  e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
-leader fpc - copy current file path
-
-
-### Shell / ZSH
+# Shell / ZSH
 Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
 reload shell settings with 'exec $0' or 'source ~/.zshrc'
 'which'/'type -a' <shell-cmd>   - shows info about a shell command
 
 lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
 
-#### Zshrc & Oh-my-zsh
+## Zshrc & Oh-my-zsh
 lst          - ls/list tee. Some alias's (e.g. for tree/lst) use 'exa': ~/.zshrc#/alias%20lst='exa%20--sort=type
 
 Plugins are installed via git here: /Users/at/.oh-my-zsh/custom/plugins/
 
-## Kitty Terminal settings
+# Kitty Terminal settings
 cmd ,  - to open Kitty settings
 crt cmd ,  - to refresh settings
 c-z    - to suspend vim and go to the terminal - then if done in the terminal do fg ('foregr') to resume the vim session
 c-s-t  - new tab in kitty! use ctrl+shift + arrows l/r to navigate tabs. see: https://sw.kovidgoyal.net/kitty/overview/ 
 
-### Terminal buffer
+# Terminal buffer
 glt/T     - open a new terminal buffer in project root (also works in dirvish)
 gLt/T     - to prefill and edit line command string to running it in a hidden/visible term-buffer
 :Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
@@ -893,7 +891,7 @@ Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
 " "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
 " add to dictionary: "zg" undo "zug"
 
-## Scratch window, temp notes file
+# Scratch window, temp notes file
 leader os  - ScratchWindow
 <c-w>c     - just close the window / buffer will reopen after leader os
 leader bd/D - delete the buffer. bD for :bd! is not needed
