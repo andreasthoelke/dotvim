@@ -22,7 +22,8 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 command! -nargs=* GitpublishQuick call GitPublish(<q-args>)
 
 " git status:
-nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
+" nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
+nnoremap <leader>oG         :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
@@ -115,14 +116,17 @@ nnoremap ,og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<
 nnoremap <leader>og :FzfGFiles?<cr>
 
 " GitV => now using Flog to show a git tree
-nnoremap <leader><leader>gL :FzfPreviewGitLogs<cr>
+" nnoremap <leader><leader>gL :FzfPreviewGitLogs<cr>
+nnoremap <leader><leader>gL :CocCommand fzf-preview.GitLogs<cr>
 " nnoremap <leader><leader>gL :Flogsplit<cr>
 nnoremap <leader><leader>gl :FzfCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 
-nnoremap <leader><leader>ga :FzfPreviewGitActions<cr>
-nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
+" nnoremap <leader><leader>ga :FzfPreviewGitActions<cr>
+nnoremap <leader><leader>ga :CocCommand fzf-preview.GitActions<cr>
+" nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
+nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
 
 let g:Gitv_CustomMappings = {
       \'update': 'r',

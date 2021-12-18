@@ -531,6 +531,9 @@ nnoremap <leader>Sd :SessionOpen! default<cr>
 nnoremap <leader>So :SessionOpen 
 nnoremap <leader>SS :SessionSave 
 nnoremap <leader>Ss :SessionSave<cr>
+nnoremap <leader>Sn :SessionShowName<cr>
+
+" ?
 nnoremap <leader>SC :bufdo bwipeout<cr>
 
 " Load locked session after a vim crash

@@ -1,7 +1,12 @@
 
 func! GetLangCommentStr()
-  return trim( split(&commentstring, '%s')[0] )
-  " This trims leadging and trailing whitespace
+  let cstr = &commentstring
+  if empty( cstr )
+    return ""
+  else
+    return trim( split(&commentstring, '%s')[0] )
+    " This trims leadging and trailing whitespace
+  endif
 endfunc
 " put =GetLangCommentStr()
 

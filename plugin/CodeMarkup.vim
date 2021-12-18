@@ -36,8 +36,9 @@ endfunc
 
 " TODO
 " set commentstring=\ --\ \%s
+" dynamically use GetLangCommentStr()
 
-let g:headingPttn = '\v^("|--)\s─\s'
+let g:headingPttn = '\v^("|--)?\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
 " let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
 
@@ -55,7 +56,7 @@ nnoremap q :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
   call search( g:headingPttn, 'W' )
-  call ScrollUpFromMiddle( 10 )
+  " call ScrollUpFromMiddle( 10 )
   " Issue: I used 20 as a convenient offset form the middle - but that prevented proper movement when window is split
   " horizontal/ is too narrow.
 endfunc
@@ -65,10 +66,10 @@ nnoremap Q :call HeadingBackw()<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()
   call search( g:headingPttn, 'bW' )
-  call ScrollUpFromMiddle( 10 )
+  " call ScrollUpFromMiddle( 10 )
 endfunc
 
-nnoremap \q :call GoSectionEndAbort('')<cr>
+nnoremap <localleader>q :call GoSectionEndAbort('')<cr>
 " nnoremap ,œ :call GoSectionEndAbort('')<cr>
 " Go to specific (via name) or current section end
 " func! GoSectionEndAbort( headerText )
@@ -269,7 +270,7 @@ endfunc
 
 " Extract headline text from section header line
 func! GetHeadingTextFromHeadingLine( lineNum )
-  return matchstr( getline(a:lineNum), '\v^("|--)\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
+  return matchstr( getline(a:lineNum), '\v^("|--)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
 endfunc
 " echo GetHeadingTextFromHeadingLine( line('.') +1 )
 " ─^  Some Hxadline Text                                ──

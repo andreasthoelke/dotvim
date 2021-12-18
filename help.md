@@ -128,6 +128,10 @@ https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 https://github.com/nvim-telescope/telescope.nvim/blob/master/README.md\#default-mappings
 
 
+# Lunavim
+notes/notes-lunarvim
+
+
 # Lua
 https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 https://neovim.io/doc/user/lua.html
@@ -169,11 +173,17 @@ LspInfo
 help lspconfig-server-configurations
 plugin/setup-lsp.vim
 
+Install location for language servers: ~/.local/share/nvim/lsp_servers/
+Other local app settings: ~/.local/share/
+installer used on lunarvim:
+https://github.com/williamboman/nvim-lsp-installer
+
 Do i need null-ls.nvim? https://github.com/jose-elias-alvarez/null-ls.nvim
 
 
 ## Python lsp
 
+https://develop.spacemacs.org/layers/+lang/python/README.html#backends
 
 ## Treesitter
 TSInstallInfo
@@ -187,7 +197,16 @@ isort manages/sorts import lines
 flake8 style enforcement
 mypy static typing
 
-### pyenv virtualenv
+### pyenv virtualenv pip & conda
+before running `pip install` <app>:
+check what environment you are in: `pyenv virtualenvs`
+(note the activated virtual env might autochange in a dir than contains a `.python-version` file)
+run `pyenv activate <env>` e.g. my nvim python environment "py3nvim"
+you can also `pyenv deactivate` any env - so it's not globally active.
+then pip install should install in the currently active environment. (also notes `which pip` is now managed as a
+pyenv shim
+
+
 General maintainance notes: ~/.vim/notes/notes-python.md#/###%20pyenv%20virtualenv
 
 ## Language client (old)
@@ -296,12 +315,14 @@ leader eif  - add an index/num to the signature-symbol name
 leader et   - create inline test stub
 leader ea   - create assertion
 
-## Code Markup
-Note this does not work properly in .vim files! .. just tested it here and it worked: ~/.vim/plugin/search-replace.vim#/Operator%20And%20Movement
+## Code Markup & headings
 leader ehs  - heading
 leader ehe  - close section (does not include the header text in the end?)
 leader ehr  - refresh heading/section (currently on this updates the end text)
 leader ehd  - delete/strip heading/section
+
+Might need to adapt this search pattern per language: ~/.vim/plugin/CodeMarkup.vim#/let%20g.headingPttn%20=
+  .. just tested it here and it worked: ~/.vim/plugin/search-replace.vim#/Operator%20And%20Movement
 
 ### Motions & text-objects
 q/Q         - Label/ Heading motion
@@ -568,6 +589,9 @@ windo diffoff  - to exit vimdiff mode
 git-delta viewer config: ~/.gitconfig#/path%20=%20~/.config/git-delta/themes.gitconfig
                          https://github.com/dandavison/delta#choosing-colors-styles
 
+You can nicely diff two files like this:
+git diff --no-index filepath1 filepath2
+
 ### Useful git commands
 git ls-remote  - to show the URL of the github repo
 
@@ -769,6 +793,11 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 leader rb   - to rename a binding and its occurences
 
 
+## Patterns & regex
+help pattern.txt
+  Extract string from a line example: ~/.vim/plugin/CodeMarkup.vim#/Extract%20headline%20text
+
+
 # Vim
 ### vim help
 leader K    - Vim help. Use :HelpGrep .. ':hg nnoremap'<cr> for a text search
@@ -842,9 +871,12 @@ Examples with generic operator functions
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
 # Shell / ZSH
-Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
-reload shell settings with 'exec $0' or 'source ~/.zshrc'
-'which'/'type -a' <shell-cmd>   - shows info about a shell command
+
+## Command line $PATH
+To set the system-wide $PATH, run "sudo nvim /etc/paths"
+~/.zshrc#/#%20Previous%20$PATH.
+https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7
+
 
 lead lead ls   - uses ShellReturn() to show the result of 'ls'  ~/.vim/plugin/tools-external.vim#/func.%20ShellReturn.%20cmd
 
@@ -854,6 +886,10 @@ lst          - ls/list tee. Some alias's (e.g. for tree/lst) use 'exa': ~/.zshrc
 Plugins are installed via git here: /Users/at/.oh-my-zsh/custom/plugins/
 
 # Kitty Terminal settings
+Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
+reload shell settings with 'exec $0' or 'source ~/.zshrc'
+'which'/'type -a' <shell-cmd>   - shows info about a shell command
+
 cmd ,  - to open Kitty settings
 crt cmd ,  - to refresh settings
 c-z    - to suspend vim and go to the terminal - then if done in the terminal do fg ('foregr') to resume the vim session

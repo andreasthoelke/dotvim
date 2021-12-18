@@ -25,7 +25,7 @@ nnoremap <leader>oF :FzfGFiles<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
 
-nnoremap <leader>P :call PreviewPathInFloatWin( getline('.') )<cr>
+nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor() )<cr>
 xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
 " nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
@@ -43,8 +43,10 @@ func! PreviewPathInFloatWin_vs()
 endfunc
 
 func! PreviewPathInFloatWin( filePath )
-  let fp = fnameescape( fnamemodify( a:filePath, ":p") )
-  if IsFolderPath( fp )
+  " let fp = fnameescape( fnamemodify( a:filePath, ":p") )
+  let fp = fnamemodify( a:filePath, ":p")
+  " if IsFolderPath( fp )
+  if isdirectory( fp )
     " let lines = systemlist( 'ls ' . fp )
     let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
   else
