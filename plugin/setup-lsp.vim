@@ -2,7 +2,7 @@
 lua << EOF
 
 require'lspconfig'.pyright.setup{}
-require'lspconfig'.sumneko.setup{}
+require'lspconfig'.sumneko_lua.setup{}
 
 EOF
 

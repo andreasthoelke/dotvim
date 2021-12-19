@@ -40,6 +40,7 @@ vcsh vim status
 
 # do-next
 notes/do-next
+rm should move file to Trash
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
 
@@ -182,6 +183,12 @@ Do i need null-ls.nvim? https://github.com/jose-elias-alvarez/null-ls.nvim
 
 
 ## Python lsp
+
+activating and using python virtual envs for nvim lsp
+https://www.reddit.com/r/neovim/comments/n5gcsx/pyright_luaconfig_not_getting_my_pyenv_environment/
+https://www.xvideos.com/video52220285/step_sister_wants_to_runaway_part_1_
+https://www.reddit.com/r/neovim/comments/ca91hq/pipenv_for_neovim_pythondependencies_what_is_the/
+https://github.com/LunarVim/LunarVim/issues/1357
 
 https://develop.spacemacs.org/layers/+lang/python/README.html#backends
 
@@ -591,6 +598,11 @@ git-delta viewer config: ~/.gitconfig#/path%20=%20~/.config/git-delta/themes.git
 
 You can nicely diff two files like this:
 git diff --no-index filepath1 filepath2
+
+## Branches and merge
+leader2 gb    - FzfPreviewGitBranches
+how can i see a diff between branches or specific commits?
+To merge a branch: First commit everything on both branches. Then `git checkout main`, `git merger <featurebranch>`
 
 ### Useful git commands
 git ls-remote  - to show the URL of the github repo

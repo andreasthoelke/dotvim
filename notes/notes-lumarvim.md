@@ -1,13 +1,13 @@
 
 
- ─   Install locations:                               ──
+# Install locations:
 ~/.config/lvim/
 ~/.local/bin
 
-Executable shell wrapper:
+# Executable shell wrapper:
 /Users/at/.local/bin/lvim
 
- ─   Previous $PATH:                                  ──
+Previous $PATH:
 /Users/at/perl5/bin
 /opt/homebrew/Cellar/pyenv-virtualenv/1.1.5/shims
 /Users/at/.pyenv/shims
@@ -24,7 +24,7 @@ Executable shell wrapper:
 /opt/homebrew/opt/fzf/bin
 
 
- ─   Defined in /etc/paths:                           ──
+Defined in /etc/paths:
 /Users/at/.cargo/bin
 /usr/local/bin
 /usr/bin
@@ -33,7 +33,7 @@ Executable shell wrapper:
 /sbin
 
 
- ─   Configuration:                                     ──
+# Configuration:
 lvim configuration files (basically the .vim folder):
 ~/.config/lvim/
 folder with plugins:
@@ -88,10 +88,21 @@ This is just a backup of the original config file.
 ~/.local/share/lunarvim/lvim/utils/installer/config.example.lua
 cp ~/.local/share/lunarvim/lvim/utils/installer/config.example.lua ~/.config/lvim/config.lua
 
-" ─   Internal settings list                            ──
+# Internal settings list
 lvim --headless +'lua require("lvim.utils").generate_settings()' +qa && sort -o lv-settings.lua{,}
 
 /Users/at/.config/lvim/lv-settings.lua
+
+
+
+
+
+
+
+
+
+
+
 
 
 

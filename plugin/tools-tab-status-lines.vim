@@ -149,12 +149,14 @@ endfunc
 let g:promptline_preset = {
       \'b' : [ '$vim_mode' ],
       \'c' : [ promptline#slices#cwd({ 'dir_limit': 3 }) ],
+      \'x' : [ promptline#slices#python_virtualenv() ],
       \'y' : [ promptline#slices#vcs_branch() ],
       \'z' : [ promptline#slices#jobs() ],
       \'warn' : [ promptline#slices#last_exit_code() ]}
 
 hi PromptlineB_vimMode    guifg=#EAEAEA guibg=#284954
 hi PromptlineC_folderPath guifg=#42606B guibg=#0E0E0E
+hi PromptlineX_python_virtualenv  guifg=#42606B guibg=#0E0E0E
 hi PromptlineY_gitBranch  guifg=#EFEFEF guibg=#2F2F2F
 hi PromptlineZ_bgJobs     guifg=#3C6B7C guibg=#030303
 hi PromptlineWarn         guifg=#A22E44 guibg=#030303
@@ -162,6 +164,7 @@ hi PromptlineWarn         guifg=#A22E44 guibg=#030303
 let g:promptline_theme =  {
       \'b'    : GetHiGuiColorList( 'PromptlineB_vimMode' ),
       \'c'    : GetHiGuiColorList( 'PromptlineC_folderPath' ),
+      \'x'    : GetHiGuiColorList( 'PromptlineX_python_virtualenv' ),
       \'y'    : GetHiGuiColorList( 'PromptlineY_gitBranch' ),
       \'z'    : GetHiGuiColorList( 'PromptlineZ_bgJobs' ),
       \'warn' : GetHiGuiColorList( 'PromptlineWarn' )}
