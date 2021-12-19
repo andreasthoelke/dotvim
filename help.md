@@ -24,19 +24,8 @@ npm list -g
 npm list -g --depth 0
 sudo npm uninstall -g moment
 
-# Git control of Config files
- ~/.vim/plugin/file-manage.vim#/Use.%20BLines,%20Lines.?.,
-To use fzf in Vim, add the following line to your .vimrc:
-  set rtp+=/opt/homebrew/opt/fzf
-
-https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
-
-Old attemps bak:
-Now using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
-Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config'
-Run git commands, e.g.:
-vcsh vim config --local status.showUntrackedFiles no
-vcsh vim status
+# Git control of Config files using stow
+/Users/at/.vim/notes/notes-stow-config_git.md
 
 # do-next
 notes/do-next

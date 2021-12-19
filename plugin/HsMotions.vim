@@ -828,9 +828,9 @@ endfunc
 " Test: viW, vaW, yiW, yaW
 " hello >>= Just 123  >> Just 43 <*> map eins
 
-nnoremap <silent> W :call ExprOuterStartForw()<cr>
-onoremap <silent> W :call ExprOuterStartForw()<cr>
-vnoremap <silent> W <esc>:call ChangeVisSel(function('ExprOuterStartForw'))<cr>
+" nnoremap <silent> W :call ExprOuterStartForw()<cr>
+" onoremap <silent> W :call ExprOuterStartForw()<cr>
+" vnoremap <silent> W <esc>:call ChangeVisSel(function('ExprOuterStartForw'))<cr>
 " Test: vB,WoWW    v     |           v        ← cursor on "|", result sel on "v"
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc 33 . split 2 <*> Ab
 func! ExprOuterStartForw() " ■
