@@ -20,15 +20,21 @@ to update: brew reinstall neovim
 
 
 # Node, NPM
-npm list -g
-npm list -g --depth 0
-sudo npm uninstall -g moment
+/Users/at/.vim/notes/notes-node-npm.md
+
+# JS React Gatsby NextJS
+notes/notes-js-react-gatsby.md
+
 
 # Git control of Config files using stow
 /Users/at/.vim/notes/notes-stow-config_git.md
 
 # do-next
 notes/do-next
+currently indent guides are visible - don't know how to turn them off(!)
+also this jumplist autocommand on CursorHold was useful(?). But had to turn it off bc it was raising an error when launching a terminal with glT
+also the terminal cursor does not show upon re-entry into the term buffer.
+~/.vim/vimrc.vim#/augroup%20JumplistTimeout
 rm should move file to Trash
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
@@ -95,7 +101,6 @@ sbtrkt	fuzzy-match
 !^music	inverse-prefix-exact-match
 !.mp3$	inverse-suffix-exact-match
 ^core go$ | rb$ | py$     - start with core and end with either go, rb, or py.
-
 
 
 ### 'fzf preview'
@@ -874,6 +879,11 @@ Examples with generic operator functions
 # Shell / ZSH
 
 ## Command line $PATH
+
+(note that I'm now using ~/.zprofile like this to add to my $PATH)
+~/.vim/notes/notes-node-npm.md#/.note%20that%20I
+
+Previous approach:
 To set the system-wide $PATH, run "sudo nvim /etc/paths"
 ~/.zshrc#/#%20Previous%20$PATH.
 https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7
@@ -937,6 +947,22 @@ note this alternative:
 leader wp af/ip ..
 
 ## Sessions
+leader So <c-i>  - open a named session
+leader Sn        - show name of the current session
+leader Ss        - save/update the currently active session
+Rather do this: Save useful tab layout with a descriptive name:
+  SessionTabSave nvim-lua-config
+  SessionTabSave gatsby-tut1
+  SessionTabSave nextjs-tut1
+You can open them as a session
+  SessionOpen gatsby-tut1
+But this would switch out the current session:
+  SessionOpen nextjs-tut1
+You could rather do this:
+  tabn
+  SessionTabOpen gatsby-tut1
+i.e. load an additional tab layout into a new tab
+
 leader Sd   - load default session
 leader Ss   - save to default session
 

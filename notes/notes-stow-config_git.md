@@ -14,6 +14,7 @@ Create the folder in-between: (cd ~/.config/karabiner)
 !mv /Users/at/.config/karabiner/karabiner.json %
 mkdir -p ~/.config/karabiner/.config; mv karabiner.json $_:h
 
+## Easy repeatable process!
 mkdir -p ~/.config_git/kitty/.config; mv ~/.config/kitty/ $_
 mkdir -p ~/.config_git/lvim/.config; mv ~/.config/lvim/ $_
 mkdir -p ~/.config_git/zsh; mv ~/.zshrc $_
