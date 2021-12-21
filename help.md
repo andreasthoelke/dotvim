@@ -124,7 +124,7 @@ https://github.com/nvim-telescope/telescope.nvim/blob/master/README.md\#default-
 
 
 # Lunavim
-notes/notes-lunarvim
+notes/notes-lunarvim.md
 
 
 # Lua

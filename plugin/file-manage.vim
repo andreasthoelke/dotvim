@@ -207,8 +207,8 @@ augroup dirvish_config
   " Map `t` to open in new tab.
   " Example: buffer local maps
   autocmd FileType dirvish
-        \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
-        \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+        \  nnoremap <silent><buffer> t :exec "tabe " . getline('.')<cr>
+        \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 1)<CR>
   " Map `gr` to reload.
   " autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
   autocmd FileType dirvish nnoremap <silent><buffer> X :argadd getline('.')<cr>
@@ -224,7 +224,22 @@ augroup dirvish_config
 
   " autocmd FileType dirvish nnoremap <nowait><buffer><silent><C-V> :call dirvish#open("vsplit", 1)<CR>:q<CR>
 
+  autocmd FileType dirvish nmap <silent> <buffer> <CR>  :call Dirvish_open('edit'   , 0)<CR>
+  " autocmd FileType dirvish nmap <silent> <buffer> v     :call Dirvish_open('vsplit' , 0)<CR>
+  " autocmd FileType dirvish nmap <silent> <buffer> V     :call Dirvish_open('vsplit' , 1)<CR>
+  autocmd FileType dirvish nmap <silent> <buffer> s     :call Dirvish_open('split'  , 0)<CR>
+  autocmd FileType dirvish nmap <silent> <buffer> S     :call Dirvish_open('split'  , 1)<CR>
+  " autocmd FileType dirvish nmap <silent> <buffer> t     :call Dirvish_open('tabedit', 1)<CR>
+  " autocmd FileType dirvish nmap <silent> <buffer> T     :call Dirvish_open('tabedit', 1)<CR>
+  autocmd FileType dirvish nmap <silent> <buffer> -     <Plug>(dirvish_up)
+  " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
+  autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
+  autocmd FileType dirvish nnoremap <silent> <buffer> I I
+
+
 augroup END
+
+
 
 " TODO: i tried to overwrite dirvishes custom search mapping here. Instead i've now just commented
 " this out in the source here  ~/.vim/plugged/vim-dirvish/ftplugin/dirvish.vim#/if%20s.sep%20==
@@ -300,20 +315,6 @@ function! Dirvish_toggle() abort
     endif
 endfunction
 
-augroup vimrc
-    autocmd!
-    autocmd FileType dirvish nmap <silent> <buffer> <CR>  :call Dirvish_open('edit'   , 0)<CR>
-    " autocmd FileType dirvish nmap <silent> <buffer> v     :call Dirvish_open('vsplit' , 0)<CR>
-    " autocmd FileType dirvish nmap <silent> <buffer> V     :call Dirvish_open('vsplit' , 1)<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> s     :call Dirvish_open('split'  , 0)<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> S     :call Dirvish_open('split'  , 1)<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> t     :call Dirvish_open('tabedit', 0)<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> T     :call Dirvish_open('tabedit', 1)<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> -     <Plug>(dirvish_up)
-    " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
-    autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
-    autocmd FileType dirvish nnoremap <silent> <buffer> I I
-augroup END
 
 
 
