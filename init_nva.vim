@@ -181,7 +181,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 " LSP Language server / client:
 Plug 'neovim/nvim-lspconfig'
@@ -669,10 +669,8 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
+" highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
-
-let g:colorizer_use_virtual_text = 1
 
 " Style Colors: ----------------------------{{{
 " Change colors in the colorscheme: Open vimfiles/colors/molokai
@@ -891,13 +889,13 @@ set t_vb=
 
 " windows should not be kept at equal size
 set noequalalways
-set nostartofline
+" set nostartofline
 
 
 " COMMAND HISTORY: --------------------------------------------
 " Use c-n and c-i and c-x c-f for completion.
 " c-cr/return to commit in insert mode. leader se in normal mode
-noremap : q:i
+noremap : q:
 noremap ; :
 " noremap ; q:i
 noremap <leader>; :!

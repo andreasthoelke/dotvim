@@ -29,8 +29,11 @@ notes/notes-js-react-gatsby.md
 # Git control of Config files using stow
 /Users/at/.vim/notes/notes-stow-config_git.md
 
+
+
 # do-next
 notes/do-next
+
 currently indent guides are visible - don't know how to turn them off(!)
 also this jumplist autocommand on CursorHold was useful(?). But had to turn it off bc it was raising an error when launching a terminal with glT
 also the terminal cursor does not show upon re-entry into the term buffer.
@@ -190,6 +193,7 @@ https://develop.spacemacs.org/layers/+lang/python/README.html#backends
 TSInstallInfo
 TSInstall <language>
 help nvim-treesitter-commands
+TSModuleInfo
 
 ### other python tools
 Black
@@ -542,6 +546,12 @@ put =@"         - put/refer to the content of a register
 :@0/1/2/a/b     - run a specific register
 leader sr       - exec the string in the normal \" register
 
+some test text
+let @* = getline(line('.')-1)
+let @* = 'just a test'
+put =@"*
+put =@"
+
 ### Shell system clipbord
 Simple usecase of how to use pbcopy:
 cat .gitignore | pbcopy
@@ -828,6 +838,12 @@ leader vm   - FzfMaps
 :scriptnames - List of vim-script files: ~/.vim/notes/vimdump-scriptnames.txt
 
 :echo g:mapl<c-i>   - list of g:/global variable starting with mapl .. maplocalleader
+
+### Show internal lists/ paths
+put =&packpath
+/Users/at/.vim,/Users/at/.config/nvim,/etc/xdg/nvim,/Users/at/.local/share/nvim/site,/usr/local/share/nvim/site,/usr/share/nvim/site,/opt/homebrew/Cellar/neovim/0.6.0/share/nvim/runtime,/opt/homebrew/Cellar/neovim/0.6.0/lib/nvim,/usr/share/nvim/site/after,/usr/local/share/nvim/site/after,/Users/at/.local/share/nvim/site/after,/etc/xdg/nvim/after,/Users/at/.config/nvim/after,/Users/at/.vim/after
+put =split(getline(line('.')-1), ',')
+
 
 ### vimdump files updating
 :RedirMessagesWin verb map  - put any vim command echo text into a new buffer
