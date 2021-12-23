@@ -20,7 +20,9 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
-nnoremap <leader>of :FzfPreviewGitFiles<cr>
+" nnoremap <leader>of :FzfPreviewGitFiles<cr>
+nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
+
 nnoremap <leader>oF :FzfGFiles<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>

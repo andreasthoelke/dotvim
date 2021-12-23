@@ -18,6 +18,10 @@ set updatetime=300
 " Don't pass messages to |ins-completion-menu|
 set shortmess+=c
 
+" ─   Completion                                        ──
+
+let g:coc_config_home = '~/.vim'
+
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -396,9 +400,9 @@ set completeopt=noinsert,menuone,noselect
 " set completeopt+=noinsert
 
 " TODO Not sure what effect this has
-set completefunc=LanguageClient#complete
+" set completefunc=LanguageClient#complete
 
-set omnifunc=LanguageClient#complete
+" set omnifunc=LanguageClient#complete
 " set omnifunc=syntaxcomplete#Complete
 " set omnifunc=lsp#complete
 

@@ -324,7 +324,7 @@ Plug 'sbdchd/neoformat'
 " Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 " TODO: do I still need syntasic when having coc-vim
 " Plug 'vim-syntastic/syntastic'
 
@@ -1083,14 +1083,14 @@ endfunc
 " Jumplist: --------------------------------------
 
 " Add cursor-rests to jumplist
-" augroup JumplistTimeout
-"   au!
-"   autocmd CursorHold * exec "normal! m'"
-"   " Example Debug Jumplist:
-"   " autocmd CursorHold * call JumpsToQuickfix()
-"   " autocmd CursorHold * exec "normal! m'" | call JumpsToQuickfix()
-"   " autocmd CursorHold * exec "normal! m'" | echo localtime()
-" augroup END
+augroup JumplistTimeout
+  au!
+  autocmd CursorHold * exec "normal! m'"
+  " Example Debug Jumplist:
+  " autocmd CursorHold * call JumpsToQuickfix()
+  " autocmd CursorHold * exec "normal! m'" | call JumpsToQuickfix()
+  " autocmd CursorHold * exec "normal! m'" | echo localtime()
+augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
 set updatetime=300

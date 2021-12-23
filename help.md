@@ -11,13 +11,15 @@ brew ls
 brew ls -t -l
 brew ls ffmpeg
 brew ls gh
-brew ls --casks
+brew ls --casks --version
 brew ls --formulae --versions
 
 brew install --HEAD luajit
 brew install --HEAD neovim
 to update: brew reinstall neovim
 
+Install location: /opt/homebrew/bin
+notes/brew-list-dump-2021-12-23.txt
 
 # Node, NPM
 /Users/at/.vim/notes/notes-node-npm.md
@@ -27,6 +29,39 @@ notes/notes-js-react-gatsby.md
 
 
 # Git control of Config files using stow
+## Controlled apps
+lst --level=4 /Users/at/.config_git/
+     /Users/at/.config_git
+    ├──  alacritty
+    │  └──  .config
+    │     └──  alacritty
+    │        └──  alacritty.yml
+    ├──  git
+    │  └──  .gitconfig
+    ├──  ideavim
+    │  └──  .ideavimrc
+    ├──  karabiner
+    │  └──  .config
+    │     └──  karabiner
+    │        ├──  assets
+    │        └──  karabiner.json
+    ├──  kitty
+    │  └──  .config
+    │     └──  kitty
+    │        └──  kitty.conf
+    ├──  lvim
+    │  └──  .config
+    │     └──  lvim
+    │        ├──  plugin
+    │        ├──  config.lua
+    │        └──  lv-settings.lua
+    ├──  zsh
+    │  ├──  .zprofile
+    │  ├──  .zshenv
+    │  └──  .zshrc
+    └──  README.md
+
+
 /Users/at/.vim/notes/notes-stow-config_git.md
 
 
@@ -34,11 +69,20 @@ notes/notes-js-react-gatsby.md
 # do-next
 notes/do-next
 
-currently indent guides are visible - don't know how to turn them off(!)
-also this jumplist autocommand on CursorHold was useful(?). But had to turn it off bc it was raising an error when launching a terminal with glT
-also the terminal cursor does not show upon re-entry into the term buffer.
-~/.vim/vimrc.vim#/augroup%20JumplistTimeout
-rm should move file to Trash
+fzf preview area in kitty not in alacritty!! how is bat working?
+gsr does not work in vis-sel mode?!
+FzfPreviewGitFiles map space-of
+
+statusbar scroll character bigger/bold?
+
+## the current cursor in alacritty
+* the current cursor has these shifting colors depending on the foreground color the cursor is on.
+* and when I leave instert mode and jump somewhere it blinks once!!
+* and it becomes hollow when the window is not active.
+- still, a slightly thicker insert mode cursor
+
+
+
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
 
@@ -69,10 +113,13 @@ $_      - the last argument given to the previous command. As in `mkdir pytest1 
 
 
 ### 'fzf.vim'
-Has simple commands that open in a split. see
-help fzf-vim
-Commands: Files, BLines, Lines(?), GFiles?, BCommits, Maps, Helptags ~/.vim/plugged/fzf.vim/doc/fzf-vim.txt#/Command%20|%20List
-GFiles? - all changed files
+See maps here: ~/.vim/help.md#/##%20Files%20open
+
+Previous notes:
+  Has simple commands that open in a split. see
+  help fzf-vim
+  Commands: Files, BLines, Lines(?), GFiles?, BCommits, Maps, Helptags ~/.vim/plugged/fzf.vim/doc/fzf-vim.txt#/Command%20|%20List
+  GFiles? - all changed files
 
 ### Multi-files lines search (grep & co)
 Step1: Full text search using Rg (ripgrep) and Ag (silversearcher), Step 2: Preview & filter found lines with fzf.
@@ -131,6 +178,7 @@ notes/notes-lunarvim.md
 
 
 # Lua
+https://teukka.tech/luanvim.html
 https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 https://neovim.io/doc/user/lua.html
 https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
@@ -240,8 +288,8 @@ get         - get types of in scope/context bindings at cursor position
 geT         - get type of identifier under cursor in do-bind. also gst, gsT
 ~/.vim/plugin/tools-langClientHIE-completion.vim#/Get%20types%20and
 
-### Coc
-CocConfig
+### Coc completion
+CocConfig   - opens ~/.vim/coc-settings.json, defined by let g:coc_config_home = '~/.vim'
 CocList symbols  - allows to fuzzy-search and jump to all loaded symbols!
 CocList commands
 CocList sources  - how to prioritise completion sources!
@@ -254,6 +302,9 @@ CocList marketplace  - search and install extensions. or use:
 CocInstall coc-jedi  - install an extension
 all extensions: https://www.npmjs.com/search?q=keywords%3Acoc.nvim
                 https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+
+Config: ~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
+
 
 
 ## Fonts
@@ -912,7 +963,15 @@ lst          - ls/list tee. Some alias's (e.g. for tree/lst) use 'exa': ~/.zshrc
 
 Plugins are installed via git here: /Users/at/.oh-my-zsh/custom/plugins/
 
-# Kitty Terminal settings
+# Terminal settings
+## Alacritty
+/Users/at/.config/alacritty/alacritty.yml
+Man alacritty
+:!alacritty     - to open a new Alacritty MacOS App!/ window
+grt on "alacritty" will launch   - alacritty
+Install locations via brew   - /opt/homebrew/bin/alacritty
+
+## Kitty
 Kitty uses the system shell which is set to zsh: echo $SHELL .. /bin/zsh
 reload shell settings with 'exec $0' or 'source ~/.zshrc'
 'which'/'type -a' <shell-cmd>   - shows info about a shell command

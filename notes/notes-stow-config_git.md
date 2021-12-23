@@ -1,4 +1,10 @@
 
+
+lsg /Users/at/.config_git/
+lst /Users/at/.config_git/
+lst --level=4 /Users/at/.config_git/
+
+
 # Git control of Config files
 now using stow inside of ~/.config_git/
 https://alexpearce.me/2016/02/managing-dotfiles-with-stow/
@@ -43,8 +49,15 @@ I  ~ / .config_git / karabiner  ls -T
       │     └── 1526293903.json
       └── karabiner.json
 
+## TODO: Integrate this process into a script
+this can also include the 'stow' command, see:
+    -d DIR, --dir=DIR     Set stow dir to DIR (default is current dir)
+    -t DIR, --target=DIR  Set target to DIR (default is parent of stow dir)
 
-Old attemps bak:
+stow --help
+Man stow
+
+### Old attemps bak
 Using vcsh at ~/.config/vcsh/repo.d/vim.git/ to git-version control config files
 Alternative: :! config  - to interact with git version control of dotfiles in ~/.cfg see: /Users/at/.zshrc#/#%20using%20'config'
 Run git commands, e.g.:
