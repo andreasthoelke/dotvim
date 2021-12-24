@@ -1,5 +1,10 @@
 
 
+
+nnoremap <silent> ,tn :tabnew<cr>
+nnoremap ,ts :SessionTabSave tab-
+nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
+
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
 nnoremap <leader>or :vnew ~/.vim/plugin/<cr>

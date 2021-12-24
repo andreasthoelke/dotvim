@@ -69,7 +69,11 @@ lst --level=4 /Users/at/.config_git/
 # do-next
 notes/do-next
 
-poetry
+a tabnew map
+rather a tab save, open process
+and tab save
+
+HsMotions should be reworked using treesitter.  ~/.vim/plugin/HsMotions.vim#/TODO%20make%20a
 
 ## the current cursor in alacritty
 * the current cursor has these shifting colors depending on the foreground color the cursor is on.
@@ -814,6 +818,10 @@ c-w \        - jump to it from leftmost win (c-w p to jump back to prev win)
 ? in win     - show help
 p in win     - to jump to tag but cursor stays in tagbar
 
+### Vista usage
+use fold interaction: ~/.vim/help.md#/##%20Folds,%20Folding
+
+config: ~/.vim/init_nva.vim#/Vista.
 
 ## Marks
 leader om   - open Markbar

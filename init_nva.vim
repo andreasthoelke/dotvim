@@ -1710,6 +1710,28 @@ set noshowmode
 " -----------------------------------------------------------------
 " -----------------------------------------------------------------
 
+" Vista:
+
+let g:vista_floating_delay = 10000
+" autocmd FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call vista#finder#fzf#Run()<CR>
+" autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call VistaJumpToLineButStayInBar()<CR>
+
+func! VistaJumpToLineButStayInBar ()
+   call vista#jump#TagLine( GetInfoUnderCursor()[0] )
+   " wincmd p
+   " call vista#sidebar#Open()
+   " call vista#cursor#ShowTag()
+   call vista#cursor#ShowTagFor(line('.'))
+endfunc
+
+
+function! GetInfoUnderCursor() abort
+  if g:vista.provider ==# 'ctags'
+    return vista#cursor#ctags#GetInfo()
+  else
+    return vista#cursor#lsp#GetInfo()
+  endif
+endfunction
 
 
 " Tagbar: --------------------------------------------------------------------------
@@ -1717,8 +1739,8 @@ set noshowmode
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>ot :Vista!!<cr>
-nnoremap <leader>oT :TagbarToggle<cr>
+nnoremap <leader>oT :Vista!!<cr>
+nnoremap <leader>ot :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>

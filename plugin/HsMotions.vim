@@ -115,14 +115,16 @@ endfunc
 
 " ─   TopLevel                                           ■
 
-" TODO make a local map for vim?
+" TODO make a local map for vim? -> this should probl use treesitter
 nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+" nnoremap <silent> <c-n> :call vista#jump#NextTopLevel()<cr>
 func! TopLevBindingForw()
   normal! }
   call search( g:topLevBind, 'W' )
 endfunc
 
 nnoremap <silent> <c-p> :call TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+" nnoremap <silent> <c-n> :call vista#jump#PrevTopLevel()<cr>
 func! TopLevBindingBackw()
   call search( g:topLevBind, 'bW' )
   normal! {
