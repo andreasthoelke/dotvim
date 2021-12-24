@@ -1,0 +1,918 @@
+ /opt/homebrew/bin
+├──  2to3 -> ../Cellar/python@3.9/3.9.9/bin/2to3
+├──  2to3-3.9 -> ../Cellar/python@3.9/3.9.9/bin/2to3-3.9
+├──  addbuiltin -> ../Cellar/nss/3.73/bin/addbuiltin
+├──  affixcompress -> ../Cellar/hunspell/1.7.0_2/bin/affixcompress
+├──  ag -> ../Cellar/the_silver_searcher/2.2.0/bin/ag
+├──  alacritty -> /Applications/Alacritty.app/Contents/MacOS/alacritty
+├──  analyze -> ../Cellar/hunspell/1.7.0_2/bin/analyze
+├──  androiddeployqt -> ../Cellar/qt/6.2.2/bin/androiddeployqt
+├──  androidtestrunner -> ../Cellar/qt/6.2.2/bin/androidtestrunner
+├──  aomdec -> ../Cellar/aom/3.2.0_2/bin/aomdec
+├──  aomenc -> ../Cellar/aom/3.2.0_2/bin/aomenc
+├──  asn1Coding -> ../Cellar/libtasn1/4.18.0/bin/asn1Coding
+├──  asn1Decoding -> ../Cellar/libtasn1/4.18.0/bin/asn1Decoding
+├──  asn1Parser -> ../Cellar/libtasn1/4.18.0/bin/asn1Parser
+├──  assimp -> ../Cellar/assimp/5.1.2/bin/assimp
+├──  Assistant -> ../Cellar/qt/6.2.2/bin/Assistant
+├──  atob -> ../Cellar/nss/3.73/bin/atob
+├──  autoconf -> ../Cellar/autoconf/2.71/bin/autoconf
+├──  autoheader -> ../Cellar/autoconf/2.71/bin/autoheader
+├──  autom4te -> ../Cellar/autoconf/2.71/bin/autom4te
+├──  autopoint -> ../Cellar/gettext/0.21/bin/autopoint
+├──  autoreconf -> ../Cellar/autoconf/2.71/bin/autoreconf
+├──  autoscan -> ../Cellar/autoconf/2.71/bin/autoscan
+├──  autoupdate -> ../Cellar/autoconf/2.71/bin/autoupdate
+├──  aviocat -> ../Cellar/ffmpeg/4.4.1_3/bin/aviocat
+├──  b2sum -> ../Cellar/coreutils/9.0/bin/b2sum
+├──  baddbdir -> ../Cellar/nss/3.73/bin/baddbdir
+├──  balsam -> ../Cellar/qt/6.2.2/bin/balsam
+├──  balsamui -> ../Cellar/qt/6.2.2/bin/balsamui
+├──  base32 -> ../Cellar/coreutils/9.0/bin/base32
+├──  basenc -> ../Cellar/coreutils/9.0/bin/basenc
+├──  bat -> ../Cellar/bat/0.18.3/bin/bat
+├──  bd_info -> ../Cellar/libbluray/1.3.0/bin/bd_info
+├──  bd_list_titles -> ../Cellar/libbluray/1.3.0/bin/bd_list_titles
+├──  bd_splice -> ../Cellar/libbluray/1.3.0/bin/bd_splice
+├──  benchmark_xl -> ../Cellar/jpeg-xl/0.6.1/bin/benchmark_xl
+├──  bisect-create -> ../Cellar/ffmpeg/4.4.1_3/bin/bisect-create
+├──  bltest -> ../Cellar/nss/3.73/bin/bltest
+├──  brew
+├──  brotli -> ../Cellar/brotli/1.0.9/bin/brotli
+├──  btoa -> ../Cellar/nss/3.73/bin/btoa
+├──  cairo-sphinx -> ../Cellar/cairo/1.16.0_5/bin/cairo-sphinx
+├──  cairo-trace -> ../Cellar/cairo/1.16.0_5/bin/cairo-trace
+├──  canbusutil -> ../Cellar/qt/6.2.2/bin/canbusutil
+├──  cargo -> ../Cellar/rust/1.56.1/bin/cargo
+├──  cert_app -> ../Cellar/mbedtls/3.0.0/bin/cert_app
+├──  cert_req -> ../Cellar/mbedtls/3.0.0/bin/cert_req
+├──  cert_write -> ../Cellar/mbedtls/3.0.0/bin/cert_write
+├──  certdb_gtest -> ../Cellar/nss/3.73/bin/certdb_gtest
+├──  certhigh_gtest -> ../Cellar/nss/3.73/bin/certhigh_gtest
+├──  certutil -> ../Cellar/nss/3.73/bin/certutil
+├──  chcon -> ../Cellar/coreutils/9.0/bin/chcon
+├──  chkstow -> ../Cellar/stow/2.3.1/bin/chkstow
+├──  chktest -> ../Cellar/nss/3.73/bin/chktest
+├──  chmorph -> ../Cellar/hunspell/1.7.0_2/bin/chmorph
+├──  cjpeg -> ../Cellar/jpeg/9d/bin/cjpeg
+├──  cjxl -> ../Cellar/jpeg-xl/0.6.1/bin/cjxl
+├──  cl2c -> ../Cellar/ffmpeg/4.4.1_3/bin/cl2c
+├──  clean-diff -> ../Cellar/ffmpeg/4.4.1_3/bin/clean-diff
+├──  cmsutil -> ../Cellar/nss/3.73/bin/cmsutil
+├──  code -> /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
+├──  conflict -> ../Cellar/nss/3.73/bin/conflict
+├──  convertfilestopdf -> ../Cellar/leptonica/1.82.0/bin/convertfilestopdf
+├──  convertfilestops -> ../Cellar/leptonica/1.82.0/bin/convertfilestops
+├──  convertformat -> ../Cellar/leptonica/1.82.0/bin/convertformat
+├──  convertsegfilestopdf -> ../Cellar/leptonica/1.82.0/bin/convertsegfilestopdf
+├──  convertsegfilestops -> ../Cellar/leptonica/1.82.0/bin/convertsegfilestops
+├──  converttopdf -> ../Cellar/leptonica/1.82.0/bin/converttopdf
+├──  converttops -> ../Cellar/leptonica/1.82.0/bin/converttops
+├──  corelist -> ../Cellar/perl/5.34.0/bin/corelist
+├──  cpan -> ../Cellar/perl/5.34.0/bin/cpan
+├──  cpanm -> ../Cellar/cpanminus/1.9019/bin/cpanm
+├──  crl_app -> ../Cellar/mbedtls/3.0.0/bin/crl_app
+├──  crlutil -> ../Cellar/nss/3.73/bin/crlutil
+├──  crmftest -> ../Cellar/nss/3.73/bin/crmftest
+├──  crypt_and_hash -> ../Cellar/mbedtls/3.0.0/bin/crypt_and_hash
+├──  crypto_bench -> ../Cellar/ffmpeg/4.4.1_3/bin/crypto_bench
+├──  crypto_examples -> ../Cellar/mbedtls/3.0.0/bin/crypto_examples
+├──  cryptohi_gtest -> ../Cellar/nss/3.73/bin/cryptohi_gtest
+├──  ctags -> ../Cellar/universal-ctags/p5.9.20211024.0/bin/ctags
+├──  curve_keygen -> ../Cellar/zeromq/4.3.4/bin/curve_keygen
+├──  cwebp -> ../Cellar/webp/1.2.1_1/bin/cwebp
+├──  cws2fws -> ../Cellar/ffmpeg/4.4.1_3/bin/cws2fws
+├──  danetool -> ../Cellar/gnutls/3.6.16_1/bin/danetool
+├──  dav1d -> ../Cellar/dav1d/0.9.2/bin/dav1d
+├──  db_archive -> ../Cellar/berkeley-db/18.1.40/bin/db_archive
+├──  db_checkpoint -> ../Cellar/berkeley-db/18.1.40/bin/db_checkpoint
+├──  db_convert -> ../Cellar/berkeley-db/18.1.40/bin/db_convert
+├──  db_deadlock -> ../Cellar/berkeley-db/18.1.40/bin/db_deadlock
+├──  db_dump -> ../Cellar/berkeley-db/18.1.40/bin/db_dump
+├──  db_hotbackup -> ../Cellar/berkeley-db/18.1.40/bin/db_hotbackup
+├──  db_load -> ../Cellar/berkeley-db/18.1.40/bin/db_load
+├──  db_log_verify -> ../Cellar/berkeley-db/18.1.40/bin/db_log_verify
+├──  db_printlog -> ../Cellar/berkeley-db/18.1.40/bin/db_printlog
+├──  db_recover -> ../Cellar/berkeley-db/18.1.40/bin/db_recover
+├──  db_replicate -> ../Cellar/berkeley-db/18.1.40/bin/db_replicate
+├──  db_stat -> ../Cellar/berkeley-db/18.1.40/bin/db_stat
+├──  db_tuner -> ../Cellar/berkeley-db/18.1.40/bin/db_tuner
+├──  db_upgrade -> ../Cellar/berkeley-db/18.1.40/bin/db_upgrade
+├──  db_verify -> ../Cellar/berkeley-db/18.1.40/bin/db_verify
+├──  dbtest -> ../Cellar/nss/3.73/bin/dbtest
+├──  dbus-cleanup-sockets -> ../Cellar/dbus/1.12.20/bin/dbus-cleanup-sockets
+├──  dbus-daemon -> ../Cellar/dbus/1.12.20/bin/dbus-daemon
+├──  dbus-launch -> ../Cellar/dbus/1.12.20/bin/dbus-launch
+├──  dbus-monitor -> ../Cellar/dbus/1.12.20/bin/dbus-monitor
+├──  dbus-run-session -> ../Cellar/dbus/1.12.20/bin/dbus-run-session
+├──  dbus-send -> ../Cellar/dbus/1.12.20/bin/dbus-send
+├──  dbus-test-tool -> ../Cellar/dbus/1.12.20/bin/dbus-test-tool
+├──  dbus-update-activation-environment -> ../Cellar/dbus/1.12.20/bin/dbus-update-activation-environment
+├──  dbus-uuidgen -> ../Cellar/dbus/1.12.20/bin/dbus-uuidgen
+├──  delta -> ../Cellar/git-delta/0.11.2/bin/delta
+├──  der_gtest -> ../Cellar/nss/3.73/bin/der_gtest
+├──  derdump -> ../Cellar/nss/3.73/bin/derdump
+├──  dertimetest -> ../Cellar/nss/3.73/bin/dertimetest
+├──  Designer -> ../Cellar/qt/6.2.2/bin/Designer
+├──  dh_client -> ../Cellar/mbedtls/3.0.0/bin/dh_client
+├──  dh_genprime -> ../Cellar/mbedtls/3.0.0/bin/dh_genprime
+├──  dh_server -> ../Cellar/mbedtls/3.0.0/bin/dh_server
+├──  diff-so-fancy -> ../Cellar/diff-so-fancy/1.4.3/bin/diff-so-fancy
+├──  digest -> ../Cellar/nss/3.73/bin/digest
+├──  djpeg -> ../Cellar/jpeg/9d/bin/djpeg
+├──  djxl -> ../Cellar/jpeg-xl/0.6.1/bin/djxl
+├──  dtls_client -> ../Cellar/mbedtls/3.0.0/bin/dtls_client
+├──  dtls_server -> ../Cellar/mbedtls/3.0.0/bin/dtls_server
+├──  dvd2concat -> ../Cellar/ffmpeg/4.4.1_3/bin/dvd2concat
+├──  dwebp -> ../Cellar/webp/1.2.1_1/bin/dwebp
+├──  ecdh_curve25519 -> ../Cellar/mbedtls/3.0.0/bin/ecdh_curve25519
+├──  ecdsa -> ../Cellar/mbedtls/3.0.0/bin/ecdsa
+├──  ecperf -> ../Cellar/nss/3.73/bin/ecperf
+├──  enc2xs -> ../Cellar/perl/5.34.0/bin/enc2xs
+├──  encguess -> ../Cellar/perl/5.34.0/bin/encguess
+├──  encodeinttest -> ../Cellar/nss/3.73/bin/encodeinttest
+├──  enum_options -> ../Cellar/ffmpeg/4.4.1_3/bin/enum_options
+├──  envsubst -> ../Cellar/gettext/0.21/bin/envsubst
+├──  event_rpcgen.py -> ../Cellar/libevent/2.1.12/bin/event_rpcgen.py
+├──  exa -> ../Cellar/exa/0.10.1/bin/exa
+├──  exr2aces -> ../Cellar/openexr/3.1.3/bin/exr2aces
+├──  exrenvmap -> ../Cellar/openexr/3.1.3/bin/exrenvmap
+├──  exrheader -> ../Cellar/openexr/3.1.3/bin/exrheader
+├──  exrinfo -> ../Cellar/openexr/3.1.3/bin/exrinfo
+├──  exrmakepreview -> ../Cellar/openexr/3.1.3/bin/exrmakepreview
+├──  exrmaketiled -> ../Cellar/openexr/3.1.3/bin/exrmaketiled
+├──  exrmultipart -> ../Cellar/openexr/3.1.3/bin/exrmultipart
+├──  exrmultiview -> ../Cellar/openexr/3.1.3/bin/exrmultiview
+├──  exrstdattr -> ../Cellar/openexr/3.1.3/bin/exrstdattr
+├──  factor -> ../Cellar/coreutils/9.0/bin/factor
+├──  fax2ps -> ../Cellar/libtiff/4.3.0/bin/fax2ps
+├──  fax2tiff -> ../Cellar/libtiff/4.3.0/bin/fax2tiff
+├──  fbectest -> ../Cellar/nss/3.73/bin/fbectest
+├──  fc-cache -> ../Cellar/fontconfig/2.13.1/bin/fc-cache
+├──  fc-cat -> ../Cellar/fontconfig/2.13.1/bin/fc-cat
+├──  fc-conflist -> ../Cellar/fontconfig/2.13.1/bin/fc-conflist
+├──  fc-list -> ../Cellar/fontconfig/2.13.1/bin/fc-list
+├──  fc-match -> ../Cellar/fontconfig/2.13.1/bin/fc-match
+├──  fc-pattern -> ../Cellar/fontconfig/2.13.1/bin/fc-pattern
+├──  fc-query -> ../Cellar/fontconfig/2.13.1/bin/fc-query
+├──  fc-scan -> ../Cellar/fontconfig/2.13.1/bin/fc-scan
+├──  fc-validate -> ../Cellar/fontconfig/2.13.1/bin/fc-validate
+├──  fd -> ../Cellar/fd/8.3.0/bin/fd
+├──  ffescape -> ../Cellar/ffmpeg/4.4.1_3/bin/ffescape
+├──  ffeval -> ../Cellar/ffmpeg/4.4.1_3/bin/ffeval
+├──  ffhash -> ../Cellar/ffmpeg/4.4.1_3/bin/ffhash
+├──  ffmpeg -> ../Cellar/ffmpeg/4.4.1_3/bin/ffmpeg
+├──  ffplay -> ../Cellar/ffmpeg/4.4.1_3/bin/ffplay
+├──  ffprobe -> ../Cellar/ffmpeg/4.4.1_3/bin/ffprobe
+├──  fileinfo -> ../Cellar/leptonica/1.82.0/bin/fileinfo
+├──  fipstest -> ../Cellar/nss/3.73/bin/fipstest
+├──  flac -> ../Cellar/flac/1.3.3/bin/flac
+├──  fourcc2pixfmt -> ../Cellar/ffmpeg/4.4.1_3/bin/fourcc2pixfmt
+├──  freebl_gtest -> ../Cellar/nss/3.73/bin/freebl_gtest
+├──  freetype-config -> ../Cellar/freetype/2.11.0/bin/freetype-config
+├──  fribidi -> ../Cellar/fribidi/1.0.11/bin/fribidi
+├──  fzf -> ../Cellar/fzf/0.28.0/bin/fzf
+├──  fzf-tmux -> ../Cellar/fzf/0.28.0/bin/fzf-tmux
+├──  g-ir-annotation-tool -> ../Cellar/gobject-introspection/1.70.0_2/bin/g-ir-annotation-tool
+├──  g-ir-compiler -> ../Cellar/gobject-introspection/1.70.0_2/bin/g-ir-compiler
+├──  g-ir-generate -> ../Cellar/gobject-introspection/1.70.0_2/bin/g-ir-generate
+├──  g-ir-inspect -> ../Cellar/gobject-introspection/1.70.0_2/bin/g-ir-inspect
+├──  g-ir-scanner -> ../Cellar/gobject-introspection/1.70.0_2/bin/g-ir-scanner
+├──  g[ -> ../Cellar/coreutils/9.0/bin/g[
+├──  gb2sum -> ../Cellar/coreutils/9.0/bin/gb2sum
+├──  gbase32 -> ../Cellar/coreutils/9.0/bin/gbase32
+├──  gbase64 -> ../Cellar/coreutils/9.0/bin/gbase64
+├──  gbasename -> ../Cellar/coreutils/9.0/bin/gbasename
+├──  gbasenc -> ../Cellar/coreutils/9.0/bin/gbasenc
+├──  gcat -> ../Cellar/coreutils/9.0/bin/gcat
+├──  gchcon -> ../Cellar/coreutils/9.0/bin/gchcon
+├──  gchgrp -> ../Cellar/coreutils/9.0/bin/gchgrp
+├──  gchmod -> ../Cellar/coreutils/9.0/bin/gchmod
+├──  gchown -> ../Cellar/coreutils/9.0/bin/gchown
+├──  gchroot -> ../Cellar/coreutils/9.0/bin/gchroot
+├──  gcksum -> ../Cellar/coreutils/9.0/bin/gcksum
+├──  gcomm -> ../Cellar/coreutils/9.0/bin/gcomm
+├──  gcp -> ../Cellar/coreutils/9.0/bin/gcp
+├──  gcsplit -> ../Cellar/coreutils/9.0/bin/gcsplit
+├──  gcut -> ../Cellar/coreutils/9.0/bin/gcut
+├──  gdate -> ../Cellar/coreutils/9.0/bin/gdate
+├──  gdbm_dump -> ../Cellar/gdbm/1.22/bin/gdbm_dump
+├──  gdbm_load -> ../Cellar/gdbm/1.22/bin/gdbm_load
+├──  gdbmtool -> ../Cellar/gdbm/1.22/bin/gdbmtool
+├──  gdbus -> ../Cellar/glib/2.70.2/bin/gdbus
+├──  gdbus-codegen -> ../Cellar/glib/2.70.2/bin/gdbus-codegen
+├──  gdd -> ../Cellar/coreutils/9.0/bin/gdd
+├──  gdf -> ../Cellar/coreutils/9.0/bin/gdf
+├──  gdir -> ../Cellar/coreutils/9.0/bin/gdir
+├──  gdircolors -> ../Cellar/coreutils/9.0/bin/gdircolors
+├──  gdirname -> ../Cellar/coreutils/9.0/bin/gdirname
+├──  gdu -> ../Cellar/coreutils/9.0/bin/gdu
+├──  gecho -> ../Cellar/coreutils/9.0/bin/gecho
+├──  gen-rc -> ../Cellar/ffmpeg/4.4.1_3/bin/gen-rc
+├──  gen_entropy -> ../Cellar/mbedtls/3.0.0/bin/gen_entropy
+├──  gen_key -> ../Cellar/mbedtls/3.0.0/bin/gen_key
+├──  gen_random_ctr_drbg -> ../Cellar/mbedtls/3.0.0/bin/gen_random_ctr_drbg
+├──  generic_sum -> ../Cellar/mbedtls/3.0.0/bin/generic_sum
+├──  genv -> ../Cellar/coreutils/9.0/bin/genv
+├──  gettext -> ../Cellar/gettext/0.21/bin/gettext
+├──  gettext.sh -> ../Cellar/gettext/0.21/bin/gettext.sh
+├──  gettextize -> ../Cellar/gettext/0.21/bin/gettextize
+├──  gexpand -> ../Cellar/coreutils/9.0/bin/gexpand
+├──  gexpr -> ../Cellar/coreutils/9.0/bin/gexpr
+├──  gfactor -> ../Cellar/coreutils/9.0/bin/gfactor
+├──  gfalse -> ../Cellar/coreutils/9.0/bin/gfalse
+├──  gfmt -> ../Cellar/coreutils/9.0/bin/gfmt
+├──  gfold -> ../Cellar/coreutils/9.0/bin/gfold
+├──  ggroups -> ../Cellar/coreutils/9.0/bin/ggroups
+├──  gh -> ../Cellar/gh/2.2.0/bin/gh
+├──  ghead -> ../Cellar/coreutils/9.0/bin/ghead
+├──  ghostid -> ../Cellar/coreutils/9.0/bin/ghostid
+├──  gid -> ../Cellar/coreutils/9.0/bin/gid
+├──  gif2rgb -> ../Cellar/giflib/5.2.1/bin/gif2rgb
+├──  gif2webp -> ../Cellar/webp/1.2.1_1/bin/gif2webp
+├──  gifbuild -> ../Cellar/giflib/5.2.1/bin/gifbuild
+├──  gifclrmp -> ../Cellar/giflib/5.2.1/bin/gifclrmp
+├──  giffix -> ../Cellar/giflib/5.2.1/bin/giffix
+├──  giftext -> ../Cellar/giflib/5.2.1/bin/giftext
+├──  giftool -> ../Cellar/giflib/5.2.1/bin/giftool
+├──  ginstall -> ../Cellar/coreutils/9.0/bin/ginstall
+├──  gio -> ../Cellar/glib/2.70.2/bin/gio
+├──  gio-querymodules -> ../Cellar/glib/2.70.2/bin/gio-querymodules
+├──  git -> ../Cellar/git/2.33.1_1/bin/git
+├──  git-cvsserver -> ../Cellar/git/2.33.1_1/bin/git-cvsserver
+├──  git-receive-pack -> ../Cellar/git/2.33.1_1/bin/git-receive-pack
+├──  git-shell -> ../Cellar/git/2.33.1_1/bin/git-shell
+├──  git-upload-archive -> ../Cellar/git/2.33.1_1/bin/git-upload-archive
+├──  git-upload-pack -> ../Cellar/git/2.33.1_1/bin/git-upload-pack
+├──  gjoin -> ../Cellar/coreutils/9.0/bin/gjoin
+├──  gkill -> ../Cellar/coreutils/9.0/bin/gkill
+├──  glib-compile-resources -> ../Cellar/glib/2.70.2/bin/glib-compile-resources
+├──  glib-compile-schemas -> ../Cellar/glib/2.70.2/bin/glib-compile-schemas
+├──  glib-genmarshal -> ../Cellar/glib/2.70.2/bin/glib-genmarshal
+├──  glib-gettextize -> ../Cellar/glib/2.70.2/bin/glib-gettextize
+├──  glib-mkenums -> ../Cellar/glib/2.70.2/bin/glib-mkenums
+├──  glibtool -> ../Cellar/libtool/2.4.6_4/bin/glibtool
+├──  glibtoolize -> ../Cellar/libtool/2.4.6_4/bin/glibtoolize
+├──  glink -> ../Cellar/coreutils/9.0/bin/glink
+├──  gln -> ../Cellar/coreutils/9.0/bin/gln
+├──  glogname -> ../Cellar/coreutils/9.0/bin/glogname
+├──  gls -> ../Cellar/coreutils/9.0/bin/gls
+├──  gmd5sum -> ../Cellar/coreutils/9.0/bin/gmd5sum
+├──  gmkdir -> ../Cellar/coreutils/9.0/bin/gmkdir
+├──  gmkfifo -> ../Cellar/coreutils/9.0/bin/gmkfifo
+├──  gmknod -> ../Cellar/coreutils/9.0/bin/gmknod
+├──  gmktemp -> ../Cellar/coreutils/9.0/bin/gmktemp
+├──  gmv -> ../Cellar/coreutils/9.0/bin/gmv
+├──  gnice -> ../Cellar/coreutils/9.0/bin/gnice
+├──  gnl -> ../Cellar/coreutils/9.0/bin/gnl
+├──  gnohup -> ../Cellar/coreutils/9.0/bin/gnohup
+├──  gnproc -> ../Cellar/coreutils/9.0/bin/gnproc
+├──  gnumfmt -> ../Cellar/coreutils/9.0/bin/gnumfmt
+├──  gnutls-certtool -> ../Cellar/gnutls/3.6.16_1/bin/gnutls-certtool
+├──  gnutls-cli -> ../Cellar/gnutls/3.6.16_1/bin/gnutls-cli
+├──  gnutls-cli-debug -> ../Cellar/gnutls/3.6.16_1/bin/gnutls-cli-debug
+├──  gnutls-serv -> ../Cellar/gnutls/3.6.16_1/bin/gnutls-serv
+├──  gobject-query -> ../Cellar/glib/2.70.2/bin/gobject-query
+├──  god -> ../Cellar/coreutils/9.0/bin/god
+├──  gpaste -> ../Cellar/coreutils/9.0/bin/gpaste
+├──  gpathchk -> ../Cellar/coreutils/9.0/bin/gpathchk
+├──  gpinky -> ../Cellar/coreutils/9.0/bin/gpinky
+├──  gpr -> ../Cellar/coreutils/9.0/bin/gpr
+├──  gprintenv -> ../Cellar/coreutils/9.0/bin/gprintenv
+├──  gprintf -> ../Cellar/coreutils/9.0/bin/gprintf
+├──  gptx -> ../Cellar/coreutils/9.0/bin/gptx
+├──  gpwd -> ../Cellar/coreutils/9.0/bin/gpwd
+├──  gr2fonttest -> ../Cellar/graphite2/1.3.14/bin/gr2fonttest
+├──  graph2dot -> ../Cellar/ffmpeg/4.4.1_3/bin/graph2dot
+├──  greadlink -> ../Cellar/coreutils/9.0/bin/greadlink
+├──  grealpath -> ../Cellar/coreutils/9.0/bin/grealpath
+├──  gresource -> ../Cellar/glib/2.70.2/bin/gresource
+├──  grm -> ../Cellar/coreutils/9.0/bin/grm
+├──  grmdir -> ../Cellar/coreutils/9.0/bin/grmdir
+├──  gruncon -> ../Cellar/coreutils/9.0/bin/gruncon
+├──  gseq -> ../Cellar/coreutils/9.0/bin/gseq
+├──  gsettings -> ../Cellar/glib/2.70.2/bin/gsettings
+├──  gsha1sum -> ../Cellar/coreutils/9.0/bin/gsha1sum
+├──  gsha224sum -> ../Cellar/coreutils/9.0/bin/gsha224sum
+├──  gsha256sum -> ../Cellar/coreutils/9.0/bin/gsha256sum
+├──  gsha384sum -> ../Cellar/coreutils/9.0/bin/gsha384sum
+├──  gsha512sum -> ../Cellar/coreutils/9.0/bin/gsha512sum
+├──  gshred -> ../Cellar/coreutils/9.0/bin/gshred
+├──  gshuf -> ../Cellar/coreutils/9.0/bin/gshuf
+├──  gsleep -> ../Cellar/coreutils/9.0/bin/gsleep
+├──  gsort -> ../Cellar/coreutils/9.0/bin/gsort
+├──  gsplit -> ../Cellar/coreutils/9.0/bin/gsplit
+├──  gstat -> ../Cellar/coreutils/9.0/bin/gstat
+├──  gstdbuf -> ../Cellar/coreutils/9.0/bin/gstdbuf
+├──  gstty -> ../Cellar/coreutils/9.0/bin/gstty
+├──  gsum -> ../Cellar/coreutils/9.0/bin/gsum
+├──  gsync -> ../Cellar/coreutils/9.0/bin/gsync
+├──  gtac -> ../Cellar/coreutils/9.0/bin/gtac
+├──  gtail -> ../Cellar/coreutils/9.0/bin/gtail
+├──  gtee -> ../Cellar/coreutils/9.0/bin/gtee
+├──  gtest -> ../Cellar/coreutils/9.0/bin/gtest
+├──  gtester -> ../Cellar/glib/2.70.2/bin/gtester
+├──  gtester-report -> ../Cellar/glib/2.70.2/bin/gtester-report
+├──  gtimeout -> ../Cellar/coreutils/9.0/bin/gtimeout
+├──  gtouch -> ../Cellar/coreutils/9.0/bin/gtouch
+├──  gtr -> ../Cellar/coreutils/9.0/bin/gtr
+├──  gtrue -> ../Cellar/coreutils/9.0/bin/gtrue
+├──  gtruncate -> ../Cellar/coreutils/9.0/bin/gtruncate
+├──  gtsort -> ../Cellar/coreutils/9.0/bin/gtsort
+├──  gtty -> ../Cellar/coreutils/9.0/bin/gtty
+├──  guild -> ../Cellar/guile/3.0.7_2/bin/guild
+├──  guile -> ../Cellar/guile/3.0.7_2/bin/guile
+├──  guile-config -> ../Cellar/guile/3.0.7_2/bin/guile-config
+├──  guile-snarf -> ../Cellar/guile/3.0.7_2/bin/guile-snarf
+├──  guile-tools -> ../Cellar/guile/3.0.7_2/bin/guile-tools
+├──  guname -> ../Cellar/coreutils/9.0/bin/guname
+├──  gunexpand -> ../Cellar/coreutils/9.0/bin/gunexpand
+├──  guniq -> ../Cellar/coreutils/9.0/bin/guniq
+├──  gunlink -> ../Cellar/coreutils/9.0/bin/gunlink
+├──  guptime -> ../Cellar/coreutils/9.0/bin/guptime
+├──  gusers -> ../Cellar/coreutils/9.0/bin/gusers
+├──  gvdir -> ../Cellar/coreutils/9.0/bin/gvdir
+├──  gwc -> ../Cellar/coreutils/9.0/bin/gwc
+├──  gwho -> ../Cellar/coreutils/9.0/bin/gwho
+├──  gwhoami -> ../Cellar/coreutils/9.0/bin/gwhoami
+├──  gyes -> ../Cellar/coreutils/9.0/bin/gyes
+├──  h2ph -> ../Cellar/perl/5.34.0/bin/h2ph
+├──  h2xs -> ../Cellar/perl/5.34.0/bin/h2xs
+├──  hb-ot-shape-closure -> ../Cellar/harfbuzz/3.1.2/bin/hb-ot-shape-closure
+├──  hb-shape -> ../Cellar/harfbuzz/3.1.2/bin/hb-shape
+├──  hb-subset -> ../Cellar/harfbuzz/3.1.2/bin/hb-subset
+├──  hb-view -> ../Cellar/harfbuzz/3.1.2/bin/hb-view
+├──  hostid -> ../Cellar/coreutils/9.0/bin/hostid
+├──  httpserv -> ../Cellar/nss/3.73/bin/httpserv
+├──  hunspell -> ../Cellar/hunspell/1.7.0_2/bin/hunspell
+├──  hunzip -> ../Cellar/hunspell/1.7.0_2/bin/hunzip
+├──  hzip -> ../Cellar/hunspell/1.7.0_2/bin/hzip
+├──  idle3 -> ../Cellar/python@3.9/3.9.9/bin/idle3
+├──  idle3.9 -> ../Cellar/python@3.9/3.9.9/bin/idle3.9
+├──  idn2 -> ../Cellar/libidn2/2.3.2/bin/idn2
+├──  ifnames -> ../Cellar/autoconf/2.71/bin/ifnames
+├──  imagetops -> ../Cellar/leptonica/1.82.0/bin/imagetops
+├──  img2webp -> ../Cellar/webp/1.2.1_1/bin/img2webp
+├──  imgcmp -> ../Cellar/jasper/2.0.33/bin/imgcmp
+├──  imginfo -> ../Cellar/jasper/2.0.33/bin/imginfo
+├──  instancer -> ../Cellar/qt/6.2.2/bin/instancer
+├──  instmodsh -> ../Cellar/perl/5.34.0/bin/instmodsh
+├──  ismindex -> ../Cellar/ffmpeg/4.4.1_3/bin/ismindex
+├──  ispellaff2myspell -> ../Cellar/hunspell/1.7.0_2/bin/ispellaff2myspell
+├──  jasper -> ../Cellar/jasper/2.0.33/bin/jasper
+├──  jiv -> ../Cellar/jasper/2.0.33/bin/jiv
+├──  jpegtran -> ../Cellar/jpeg/9d/bin/jpegtran
+├──  jpgicc -> ../Cellar/little-cms2/2.12/bin/jpgicc
+├──  jq -> ../Cellar/jq/1.6/bin/jq
+├──  json_pp -> ../Cellar/perl/5.34.0/bin/json_pp
+├──  key_app -> ../Cellar/mbedtls/3.0.0/bin/key_app
+├──  key_app_writer -> ../Cellar/mbedtls/3.0.0/bin/key_app_writer
+├──  key_ladder_demo -> ../Cellar/mbedtls/3.0.0/bin/key_ladder_demo
+├──  key_ladder_demo.sh -> ../Cellar/mbedtls/3.0.0/bin/key_ladder_demo.sh
+├──  kitty -> /opt/homebrew/Caskroom/kitty/0.23.1/kitty.wrapper.sh
+├──  lame -> ../Cellar/lame/3.100/bin/lame
+├──  lazygit -> ../Cellar/lazygit/0.31.4/bin/lazygit
+├──  lconvert -> ../Cellar/qt/6.2.2/bin/lconvert
+├──  less -> ../Cellar/less/590/bin/less
+├──  lessecho -> ../Cellar/less/590/bin/lessecho
+├──  lesskey -> ../Cellar/less/590/bin/lesskey
+├──  libav-merge-next-commit -> ../Cellar/ffmpeg/4.4.1_3/bin/libav-merge-next-commit
+├──  libnetcfg -> ../Cellar/perl/5.34.0/bin/libnetcfg
+├──  libpng-config -> ../Cellar/libpng/1.6.37/bin/libpng-config
+├──  libpng16-config -> ../Cellar/libpng/1.6.37/bin/libpng16-config
+├──  Linguist -> ../Cellar/qt/6.2.2/bin/Linguist
+├──  linkicc -> ../Cellar/little-cms2/2.12/bin/linkicc
+├──  listsuites -> ../Cellar/nss/3.73/bin/listsuites
+├──  loudnorm.rb -> ../Cellar/ffmpeg/4.4.1_3/bin/loudnorm.rb
+├──  lrelease -> ../Cellar/qt/6.2.2/bin/lrelease
+├──  lupdate -> ../Cellar/qt/6.2.2/bin/lupdate
+├──  lz4 -> ../Cellar/lz4/1.9.3/bin/lz4
+├──  lz4c -> ../Cellar/lz4/1.9.3/bin/lz4c
+├──  lz4cat -> ../Cellar/lz4/1.9.3/bin/lz4cat
+├──  lzcat -> ../Cellar/xz/5.2.5/bin/lzcat
+├──  lzcmp -> ../Cellar/xz/5.2.5/bin/lzcmp
+├──  lzdiff -> ../Cellar/xz/5.2.5/bin/lzdiff
+├──  lzegrep -> ../Cellar/xz/5.2.5/bin/lzegrep
+├──  lzfgrep -> ../Cellar/xz/5.2.5/bin/lzfgrep
+├──  lzgrep -> ../Cellar/xz/5.2.5/bin/lzgrep
+├──  lzless -> ../Cellar/xz/5.2.5/bin/lzless
+├──  lzma -> ../Cellar/xz/5.2.5/bin/lzma
+├──  lzmadec -> ../Cellar/xz/5.2.5/bin/lzmadec
+├──  lzmainfo -> ../Cellar/xz/5.2.5/bin/lzmainfo
+├──  lzmore -> ../Cellar/xz/5.2.5/bin/lzmore
+├──  macdeployqt -> ../Cellar/qt/6.2.2/bin/macdeployqt
+├──  make_chlayout_test -> ../Cellar/ffmpeg/4.4.1_3/bin/make_chlayout_test
+├──  makealias -> ../Cellar/hunspell/1.7.0_2/bin/makealias
+├──  makepqg -> ../Cellar/nss/3.73/bin/makepqg
+├──  mangle -> ../Cellar/nss/3.73/bin/mangle
+├──  mbedtls-benchmark -> ../Cellar/mbedtls/3.0.0/bin/mbedtls-benchmark
+├──  mbedtls-selftest -> ../Cellar/mbedtls/3.0.0/bin/mbedtls-selftest
+├──  md2html -> ../Cellar/md4c/0.4.8/bin/md2html
+├──  md5sum -> ../Cellar/coreutils/9.0/bin/md5sum
+├──  meshdebug -> ../Cellar/qt/6.2.2/bin/meshdebug
+├──  metaflac -> ../Cellar/flac/1.3.3/bin/metaflac
+├──  mini_client -> ../Cellar/mbedtls/3.0.0/bin/mini_client
+├──  missing_codec_desc -> ../Cellar/ffmpeg/4.4.1_3/bin/missing_codec_desc
+├──  modutil -> ../Cellar/nss/3.73/bin/modutil
+├──  mpv -> ../Cellar/mpv/0.34.0_1/bin/mpv
+├──  msgattrib -> ../Cellar/gettext/0.21/bin/msgattrib
+├──  msgcat -> ../Cellar/gettext/0.21/bin/msgcat
+├──  msgcmp -> ../Cellar/gettext/0.21/bin/msgcmp
+├──  msgcomm -> ../Cellar/gettext/0.21/bin/msgcomm
+├──  msgconv -> ../Cellar/gettext/0.21/bin/msgconv
+├──  msgen -> ../Cellar/gettext/0.21/bin/msgen
+├──  msgexec -> ../Cellar/gettext/0.21/bin/msgexec
+├──  msgfilter -> ../Cellar/gettext/0.21/bin/msgfilter
+├──  msgfmt -> ../Cellar/gettext/0.21/bin/msgfmt
+├──  msggrep -> ../Cellar/gettext/0.21/bin/msggrep
+├──  msginit -> ../Cellar/gettext/0.21/bin/msginit
+├──  msgmerge -> ../Cellar/gettext/0.21/bin/msgmerge
+├──  msgunfmt -> ../Cellar/gettext/0.21/bin/msgunfmt
+├──  msguniq -> ../Cellar/gettext/0.21/bin/msguniq
+├──  mujs -> ../Cellar/mujs/1.2.0/bin/mujs
+├──  multinit -> ../Cellar/nss/3.73/bin/multinit
+├──  munch -> ../Cellar/hunspell/1.7.0_2/bin/munch
+├──  murge -> ../Cellar/ffmpeg/4.4.1_3/bin/murge
+├──  n -> ../Cellar/n/8.0.0/bin/n
+├──  nettle-hash -> ../Cellar/nettle/3.7.3/bin/nettle-hash
+├──  nettle-lfib-stream -> ../Cellar/nettle/3.7.3/bin/nettle-lfib-stream
+├──  nettle-pbkdf2 -> ../Cellar/nettle/3.7.3/bin/nettle-pbkdf2
+├──  ngettext -> ../Cellar/gettext/0.21/bin/ngettext
+├──  nonspr10 -> ../Cellar/nss/3.73/bin/nonspr10
+├──  normalize.py -> ../Cellar/ffmpeg/4.4.1_3/bin/normalize.py
+├──  nproc -> ../Cellar/coreutils/9.0/bin/nproc
+├──  nspr-config -> ../Cellar/nspr/4.32/bin/nspr-config
+├──  nss-config -> ../Cellar/nss/3.73/bin/nss-config
+├──  nss-policy-check -> ../Cellar/nss/3.73/bin/nss-policy-check
+├──  nss_bogo_shim -> ../Cellar/nss/3.73/bin/nss_bogo_shim
+├──  numfmt -> ../Cellar/coreutils/9.0/bin/numfmt
+├──  nvim -> ../Cellar/neovim/0.6.0/bin/nvim
+├──  nvr
+├──  ocspclnt -> ../Cellar/nss/3.73/bin/ocspclnt
+├──  ocspresp -> ../Cellar/nss/3.73/bin/ocspresp
+├──  ocsptool -> ../Cellar/gnutls/3.6.16_1/bin/ocsptool
+├──  oidcalc -> ../Cellar/nss/3.73/bin/oidcalc
+├──  onig-config -> ../Cellar/oniguruma/6.9.7.1/bin/onig-config
+├──  opj_compress -> ../Cellar/openjpeg/2.4.0/bin/opj_compress
+├──  opj_decompress -> ../Cellar/openjpeg/2.4.0/bin/opj_decompress
+├──  opj_dump -> ../Cellar/openjpeg/2.4.0/bin/opj_dump
+├──  optscript -> ../Cellar/universal-ctags/p5.9.20211024.0/bin/optscript
+├──  p7content -> ../Cellar/nss/3.73/bin/p7content
+├──  p7env -> ../Cellar/nss/3.73/bin/p7env
+├──  p7sign -> ../Cellar/nss/3.73/bin/p7sign
+├──  p7verify -> ../Cellar/nss/3.73/bin/p7verify
+├──  p11-kit -> ../Cellar/p11-kit/0.24.0_1/bin/p11-kit
+├──  p11tool -> ../Cellar/gnutls/3.6.16_1/bin/p11tool
+├──  pal2rgb -> ../Cellar/libtiff/4.3.0/bin/pal2rgb
+├──  pandoc -> ../Cellar/pandoc/2.16.2/bin/pandoc
+├──  patcheck -> ../Cellar/ffmpeg/4.4.1_3/bin/patcheck
+├──  pcre-config -> ../Cellar/pcre/8.45/bin/pcre-config
+├──  pcre2-config -> ../Cellar/pcre2/10.39/bin/pcre2-config
+├──  pcre2grep -> ../Cellar/pcre2/10.39/bin/pcre2grep
+├──  pcre2test -> ../Cellar/pcre2/10.39/bin/pcre2test
+├──  pcregrep -> ../Cellar/pcre/8.45/bin/pcregrep
+├──  pcretest -> ../Cellar/pcre/8.45/bin/pcretest
+├──  pdfattach -> ../Cellar/poppler/21.12.0/bin/pdfattach
+├──  pdfdetach -> ../Cellar/poppler/21.12.0/bin/pdfdetach
+├──  pdffonts -> ../Cellar/poppler/21.12.0/bin/pdffonts
+├──  pdfimages -> ../Cellar/poppler/21.12.0/bin/pdfimages
+├──  pdfinfo -> ../Cellar/poppler/21.12.0/bin/pdfinfo
+├──  pdfseparate -> ../Cellar/poppler/21.12.0/bin/pdfseparate
+├──  pdfsig -> ../Cellar/poppler/21.12.0/bin/pdfsig
+├──  pdftocairo -> ../Cellar/poppler/21.12.0/bin/pdftocairo
+├──  pdftohtml -> ../Cellar/poppler/21.12.0/bin/pdftohtml
+├──  pdftoppm -> ../Cellar/poppler/21.12.0/bin/pdftoppm
+├──  pdftops -> ../Cellar/poppler/21.12.0/bin/pdftops
+├──  pdftotext -> ../Cellar/poppler/21.12.0/bin/pdftotext
+├──  pdfunite -> ../Cellar/poppler/21.12.0/bin/pdfunite
+├──  pem2der -> ../Cellar/mbedtls/3.0.0/bin/pem2der
+├──  perl -> ../Cellar/perl/5.34.0/bin/perl
+├──  perl5.34.0 -> ../Cellar/perl/5.34.0/bin/perl5.34.0
+├──  perlbug -> ../Cellar/perl/5.34.0/bin/perlbug
+├──  perldoc -> ../Cellar/perl/5.34.0/bin/perldoc
+├──  perlivp -> ../Cellar/perl/5.34.0/bin/perlivp
+├──  perlthanks -> ../Cellar/perl/5.34.0/bin/perlthanks
+├──  piconv -> ../Cellar/perl/5.34.0/bin/piconv
+├──  pinky -> ../Cellar/coreutils/9.0/bin/pinky
+├──  pip3 -> ../Cellar/python@3.9/3.9.9/bin/pip3
+├──  pip3.9 -> ../Cellar/python@3.9/3.9.9/bin/pip3.9
+├──  pixeltool -> ../Cellar/qt/6.2.2/bin/pixeltool
+├──  pk1sign -> ../Cellar/nss/3.73/bin/pk1sign
+├──  pk11_gtest -> ../Cellar/nss/3.73/bin/pk11_gtest
+├──  pk11ectest -> ../Cellar/nss/3.73/bin/pk11ectest
+├──  pk11gcmtest -> ../Cellar/nss/3.73/bin/pk11gcmtest
+├──  pk11importtest -> ../Cellar/nss/3.73/bin/pk11importtest
+├──  pk11mode -> ../Cellar/nss/3.73/bin/pk11mode
+├──  pk12util -> ../Cellar/nss/3.73/bin/pk12util
+├──  pk_decrypt -> ../Cellar/mbedtls/3.0.0/bin/pk_decrypt
+├──  pk_encrypt -> ../Cellar/mbedtls/3.0.0/bin/pk_encrypt
+├──  pk_sign -> ../Cellar/mbedtls/3.0.0/bin/pk_sign
+├──  pk_verify -> ../Cellar/mbedtls/3.0.0/bin/pk_verify
+├──  pkcs1-conv -> ../Cellar/nettle/3.7.3/bin/pkcs1-conv
+├──  pkg-config -> ../Cellar/pkg-config/0.29.2_3/bin/pkg-config
+├──  pkix-errcodes -> ../Cellar/nss/3.73/bin/pkix-errcodes
+├──  pktdumper -> ../Cellar/ffmpeg/4.4.1_3/bin/pktdumper
+├──  pl2pm -> ../Cellar/perl/5.34.0/bin/pl2pm
+├──  plotframes -> ../Cellar/ffmpeg/4.4.1_3/bin/plotframes
+├──  png-fix-itxt -> ../Cellar/libpng/1.6.37/bin/png-fix-itxt
+├──  pngfix -> ../Cellar/libpng/1.6.37/bin/pngfix
+├──  pod2html -> ../Cellar/perl/5.34.0/bin/pod2html
+├──  pod2man -> ../Cellar/perl/5.34.0/bin/pod2man
+├──  pod2text -> ../Cellar/perl/5.34.0/bin/pod2text
+├──  pod2usage -> ../Cellar/perl/5.34.0/bin/pod2usage
+├──  podchecker -> ../Cellar/perl/5.34.0/bin/podchecker
+├──  pp -> ../Cellar/nss/3.73/bin/pp
+├──  ppm2tiff -> ../Cellar/libtiff/4.3.0/bin/ppm2tiff
+├──  probetest -> ../Cellar/ffmpeg/4.4.1_3/bin/probetest
+├──  prove -> ../Cellar/perl/5.34.0/bin/prove
+├──  psa_constant_names -> ../Cellar/mbedtls/3.0.0/bin/psa_constant_names
+├──  psicc -> ../Cellar/little-cms2/2.12/bin/psicc
+├──  psktool -> ../Cellar/gnutls/3.6.16_1/bin/psktool
+├──  ptar -> ../Cellar/perl/5.34.0/bin/ptar
+├──  ptardiff -> ../Cellar/perl/5.34.0/bin/ptardiff
+├──  ptargrep -> ../Cellar/perl/5.34.0/bin/ptargrep
+├──  ptx -> ../Cellar/coreutils/9.0/bin/ptx
+├──  pwdecrypt -> ../Cellar/nss/3.73/bin/pwdecrypt
+├──  pydoc3 -> ../Cellar/python@3.9/3.9.9/bin/pydoc3
+├──  pydoc3.9 -> ../Cellar/python@3.9/3.9.9/bin/pydoc3.9
+├──  pyenv -> ../Cellar/pyenv/2.2.0/bin/pyenv
+├──  pyenv-activate -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-activate
+├──  pyenv-deactivate -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-deactivate
+├──  pyenv-install -> ../Cellar/pyenv/2.2.0/bin/pyenv-install
+├──  pyenv-sh-activate -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-sh-activate
+├──  pyenv-sh-deactivate -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-sh-deactivate
+├──  pyenv-uninstall -> ../Cellar/pyenv/2.2.0/bin/pyenv-uninstall
+├──  pyenv-virtualenv -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-virtualenv
+├──  pyenv-virtualenv-delete -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-virtualenv-delete
+├──  pyenv-virtualenv-init -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-virtualenv-init
+├──  pyenv-virtualenv-prefix -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-virtualenv-prefix
+├──  pyenv-virtualenvs -> ../Cellar/pyenv-virtualenv/1.1.5/bin/pyenv-virtualenvs
+├──  python-build -> ../Cellar/pyenv/2.2.0/bin/python-build
+├──  python3 -> ../Cellar/python@3.9/3.9.9/bin/python3
+├──  python3-config -> ../Cellar/python@3.9/3.9.9/bin/python3-config
+├──  python3.9 -> ../Cellar/python@3.9/3.9.9/bin/python3.9
+├──  python3.9-config -> ../Cellar/python@3.9/3.9.9/bin/python3.9-config
+├──  pzstd -> ../Cellar/zstd/1.5.0/bin/pzstd
+├──  qdbus -> ../Cellar/qt/6.2.2/bin/qdbus
+├──  qdbuscpp2xml -> ../Cellar/qt/6.2.2/bin/qdbuscpp2xml
+├──  qdbusviewer -> ../Cellar/qt/6.2.2/bin/qdbusviewer
+├──  qdbusxml2cpp -> ../Cellar/qt/6.2.2/bin/qdbusxml2cpp
+├──  qdistancefieldgenerator -> ../Cellar/qt/6.2.2/bin/qdistancefieldgenerator
+├──  qhelpgenerator -> ../Cellar/qt/6.2.2/bin/qhelpgenerator
+├──  qmake -> ../Cellar/qt/6.2.2/bin/qmake
+├──  qmake6 -> ../Cellar/qt/6.2.2/bin/qmake6
+├──  qml -> ../Cellar/qt/6.2.2/bin/qml
+├──  qmldom -> ../Cellar/qt/6.2.2/bin/qmldom
+├──  qmleasing -> ../Cellar/qt/6.2.2/bin/qmleasing
+├──  qmlformat -> ../Cellar/qt/6.2.2/bin/qmlformat
+├──  qmllint -> ../Cellar/qt/6.2.2/bin/qmllint
+├──  qmlplugindump -> ../Cellar/qt/6.2.2/bin/qmlplugindump
+├──  qmlpreview -> ../Cellar/qt/6.2.2/bin/qmlpreview
+├──  qmlprofiler -> ../Cellar/qt/6.2.2/bin/qmlprofiler
+├──  qmlscene -> ../Cellar/qt/6.2.2/bin/qmlscene
+├──  qmltestrunner -> ../Cellar/qt/6.2.2/bin/qmltestrunner
+├──  qmltime -> ../Cellar/qt/6.2.2/bin/qmltime
+├──  qsb -> ../Cellar/qt/6.2.2/bin/qsb
+├──  qscxmlc -> ../Cellar/qt/6.2.2/bin/qscxmlc
+├──  qt-cmake -> ../Cellar/qt/6.2.2/bin/qt-cmake
+├──  qt-cmake-private -> ../Cellar/qt/6.2.2/bin/qt-cmake-private
+├──  qt-cmake-standalone-test -> ../Cellar/qt/6.2.2/bin/qt-cmake-standalone-test
+├──  qt-configure-module -> ../Cellar/qt/6.2.2/bin/qt-configure-module
+├──  qt-faststart -> ../Cellar/ffmpeg/4.4.1_3/bin/qt-faststart
+├──  qtdiag -> ../Cellar/qt/6.2.2/bin/qtdiag
+├──  qtdiag6 -> ../Cellar/qt/6.2.2/bin/qtdiag6
+├──  qtpaths -> ../Cellar/qt/6.2.2/bin/qtpaths
+├──  qtpaths6 -> ../Cellar/qt/6.2.2/bin/qtpaths6
+├──  qtplugininfo -> ../Cellar/qt/6.2.2/bin/qtplugininfo
+├──  query_compile_time_config -> ../Cellar/mbedtls/3.0.0/bin/query_compile_time_config
+├──  rav1e -> ../Cellar/rav1e/0.5.0/bin/rav1e
+├──  raw2tiff -> ../Cellar/libtiff/4.3.0/bin/raw2tiff
+├──  rdjpgcom -> ../Cellar/jpeg/9d/bin/rdjpgcom
+├──  readtags -> ../Cellar/universal-ctags/p5.9.20211024.0/bin/readtags
+├──  realpath -> ../Cellar/coreutils/9.0/bin/realpath
+├──  recode-sr-latin -> ../Cellar/gettext/0.21/bin/recode-sr-latin
+├──  remtest -> ../Cellar/nss/3.73/bin/remtest
+├──  req_app -> ../Cellar/mbedtls/3.0.0/bin/req_app
+├──  rg -> ../Cellar/ripgrep/13.0.0/bin/rg
+├──  rga -> ../Cellar/ripgrep-all/0.9.6/bin/rga
+├──  rga-preproc -> ../Cellar/ripgrep-all/0.9.6/bin/rga-preproc
+├──  rist2rist -> ../Cellar/librist/0.2.6/bin/rist2rist
+├──  ristreceiver -> ../Cellar/librist/0.2.6/bin/ristreceiver
+├──  ristsender -> ../Cellar/librist/0.2.6/bin/ristsender
+├──  ristsrppasswd -> ../Cellar/librist/0.2.6/bin/ristsrppasswd
+├──  rsa_decrypt -> ../Cellar/mbedtls/3.0.0/bin/rsa_decrypt
+├──  rsa_encrypt -> ../Cellar/mbedtls/3.0.0/bin/rsa_encrypt
+├──  rsa_genkey -> ../Cellar/mbedtls/3.0.0/bin/rsa_genkey
+├──  rsa_sign -> ../Cellar/mbedtls/3.0.0/bin/rsa_sign
+├──  rsa_sign_pss -> ../Cellar/mbedtls/3.0.0/bin/rsa_sign_pss
+├──  rsa_verify -> ../Cellar/mbedtls/3.0.0/bin/rsa_verify
+├──  rsa_verify_pss -> ../Cellar/mbedtls/3.0.0/bin/rsa_verify_pss
+├──  rsaperf -> ../Cellar/nss/3.73/bin/rsaperf
+├──  rsapoptst -> ../Cellar/nss/3.73/bin/rsapoptst
+├──  rubberband -> ../Cellar/rubberband/2.0.0/bin/rubberband
+├──  runcon -> ../Cellar/coreutils/9.0/bin/runcon
+├──  rust-gdb -> ../Cellar/rust/1.56.1/bin/rust-gdb
+├──  rust-gdbgui -> ../Cellar/rust/1.56.1/bin/rust-gdbgui
+├──  rust-lldb -> ../Cellar/rust/1.56.1/bin/rust-lldb
+├──  rustc -> ../Cellar/rust/1.56.1/bin/rustc
+├──  rustdoc -> ../Cellar/rust/1.56.1/bin/rustdoc
+├──  sdbthreadtst -> ../Cellar/nss/3.73/bin/sdbthreadtst
+├──  sdl2-config -> ../Cellar/sdl2/2.0.18/bin/sdl2-config
+├──  sdrtest -> ../Cellar/nss/3.73/bin/sdrtest
+├──  secmodtest -> ../Cellar/nss/3.73/bin/secmodtest
+├──  seek_print -> ../Cellar/ffmpeg/4.4.1_3/bin/seek_print
+├──  selfserv -> ../Cellar/nss/3.73/bin/selfserv
+├──  sexp-conv -> ../Cellar/nettle/3.7.3/bin/sexp-conv
+├──  sha1sum -> ../Cellar/coreutils/9.0/bin/sha1sum
+├──  sha224sum -> ../Cellar/coreutils/9.0/bin/sha224sum
+├──  sha256sum -> ../Cellar/coreutils/9.0/bin/sha256sum
+├──  sha384sum -> ../Cellar/coreutils/9.0/bin/sha384sum
+├──  sha512sum -> ../Cellar/coreutils/9.0/bin/sha512sum
+├──  shadergen -> ../Cellar/qt/6.2.2/bin/shadergen
+├──  shasum -> ../Cellar/perl/5.34.0/bin/shasum
+├──  shlibsign -> ../Cellar/nss/3.73/bin/shlibsign
+├──  shred -> ../Cellar/coreutils/9.0/bin/shred
+├──  shuf -> ../Cellar/coreutils/9.0/bin/shuf
+├──  sidxindex -> ../Cellar/ffmpeg/4.4.1_3/bin/sidxindex
+├──  signtool -> ../Cellar/nss/3.73/bin/signtool
+├──  signver -> ../Cellar/nss/3.73/bin/signver
+├──  smime_gtest -> ../Cellar/nss/3.73/bin/smime_gtest
+├──  sndfile-cmp -> ../Cellar/libsndfile/1.0.31/bin/sndfile-cmp
+├──  sndfile-concat -> ../Cellar/libsndfile/1.0.31/bin/sndfile-concat
+├──  sndfile-convert -> ../Cellar/libsndfile/1.0.31/bin/sndfile-convert
+├──  sndfile-deinterleave -> ../Cellar/libsndfile/1.0.31/bin/sndfile-deinterleave
+├──  sndfile-info -> ../Cellar/libsndfile/1.0.31/bin/sndfile-info
+├──  sndfile-interleave -> ../Cellar/libsndfile/1.0.31/bin/sndfile-interleave
+├──  sndfile-metadata-get -> ../Cellar/libsndfile/1.0.31/bin/sndfile-metadata-get
+├──  sndfile-metadata-set -> ../Cellar/libsndfile/1.0.31/bin/sndfile-metadata-set
+├──  sndfile-play -> ../Cellar/libsndfile/1.0.31/bin/sndfile-play
+├──  sndfile-resample -> ../Cellar/libsamplerate/0.1.9_1/bin/sndfile-resample
+├──  sndfile-salvage -> ../Cellar/libsndfile/1.0.31/bin/sndfile-salvage
+├──  softoken_gtest -> ../Cellar/nss/3.73/bin/softoken_gtest
+├──  splain -> ../Cellar/perl/5.34.0/bin/splain
+├──  srptool -> ../Cellar/gnutls/3.6.16_1/bin/srptool
+├──  srt-ffplay -> ../Cellar/srt/1.4.4/bin/srt-ffplay
+├──  srt-file-transmit -> ../Cellar/srt/1.4.4/bin/srt-file-transmit
+├──  srt-live-transmit -> ../Cellar/srt/1.4.4/bin/srt-live-transmit
+├──  srt-tunnel -> ../Cellar/srt/1.4.4/bin/srt-tunnel
+├──  ssl_client1 -> ../Cellar/mbedtls/3.0.0/bin/ssl_client1
+├──  ssl_client2 -> ../Cellar/mbedtls/3.0.0/bin/ssl_client2
+├──  ssl_context_info -> ../Cellar/mbedtls/3.0.0/bin/ssl_context_info
+├──  ssl_fork_server -> ../Cellar/mbedtls/3.0.0/bin/ssl_fork_server
+├──  ssl_gtest -> ../Cellar/nss/3.73/bin/ssl_gtest
+├──  ssl_mail_client -> ../Cellar/mbedtls/3.0.0/bin/ssl_mail_client
+├──  ssl_pthread_server -> ../Cellar/mbedtls/3.0.0/bin/ssl_pthread_server
+├──  ssl_server -> ../Cellar/mbedtls/3.0.0/bin/ssl_server
+├──  ssl_server2 -> ../Cellar/mbedtls/3.0.0/bin/ssl_server2
+├──  ssltap -> ../Cellar/nss/3.73/bin/ssltap
+├──  stdbuf -> ../Cellar/coreutils/9.0/bin/stdbuf
+├──  stow -> ../Cellar/stow/2.3.1/bin/stow
+├──  streamzip -> ../Cellar/perl/5.34.0/bin/streamzip
+├──  strerror -> ../Cellar/mbedtls/3.0.0/bin/strerror
+├──  strsclnt -> ../Cellar/nss/3.73/bin/strsclnt
+├──  symkeyutil -> ../Cellar/nss/3.73/bin/symkeyutil
+├──  tac -> ../Cellar/coreutils/9.0/bin/tac
+├──  target_dec_fate.sh -> ../Cellar/ffmpeg/4.4.1_3/bin/target_dec_fate.sh
+├──  tesseract -> ../Cellar/tesseract/4.1.3/bin/tesseract
+├──  tiff2bw -> ../Cellar/libtiff/4.3.0/bin/tiff2bw
+├──  tiff2pdf -> ../Cellar/libtiff/4.3.0/bin/tiff2pdf
+├──  tiff2ps -> ../Cellar/libtiff/4.3.0/bin/tiff2ps
+├──  tiff2rgba -> ../Cellar/libtiff/4.3.0/bin/tiff2rgba
+├──  tiffcmp -> ../Cellar/libtiff/4.3.0/bin/tiffcmp
+├──  tiffcp -> ../Cellar/libtiff/4.3.0/bin/tiffcp
+├──  tiffcrop -> ../Cellar/libtiff/4.3.0/bin/tiffcrop
+├──  tiffdither -> ../Cellar/libtiff/4.3.0/bin/tiffdither
+├──  tiffdump -> ../Cellar/libtiff/4.3.0/bin/tiffdump
+├──  tiffinfo -> ../Cellar/libtiff/4.3.0/bin/tiffinfo
+├──  tiffmedian -> ../Cellar/libtiff/4.3.0/bin/tiffmedian
+├──  tiffset -> ../Cellar/libtiff/4.3.0/bin/tiffset
+├──  tiffsplit -> ../Cellar/libtiff/4.3.0/bin/tiffsplit
+├──  tificc -> ../Cellar/little-cms2/2.12/bin/tificc
+├──  timeout -> ../Cellar/coreutils/9.0/bin/timeout
+├──  tmux -> ../Cellar/tmux/3.2a/bin/tmux
+├──  transicc -> ../Cellar/little-cms2/2.12/bin/transicc
+├──  trash -> ../Cellar/trash/0.9.2/bin/trash
+├──  trasher -> ../Cellar/ffmpeg/4.4.1_3/bin/trasher
+├──  tree -> ../Cellar/tree/1.8.0/bin/tree
+├──  tree-sitter -> ../Cellar/tree-sitter/0.20.1/bin/tree-sitter
+├──  truncate -> ../Cellar/coreutils/9.0/bin/truncate
+├──  tstclnt -> ../Cellar/nss/3.73/bin/tstclnt
+├──  uchardet -> ../Cellar/uchardet/0.0.7/bin/uchardet
+├──  udp_proxy -> ../Cellar/mbedtls/3.0.0/bin/udp_proxy
+├──  uncoded_frame -> ../Cellar/ffmpeg/4.4.1_3/bin/uncoded_frame
+├──  unlz4 -> ../Cellar/lz4/1.9.3/bin/unlz4
+├──  unlzma -> ../Cellar/xz/5.2.5/bin/unlzma
+├──  unmunch -> ../Cellar/hunspell/1.7.0_2/bin/unmunch
+├──  unwrap-diff -> ../Cellar/ffmpeg/4.4.1_3/bin/unwrap-diff
+├──  unxz -> ../Cellar/xz/5.2.5/bin/unxz
+├──  unzstd -> ../Cellar/zstd/1.5.0/bin/unzstd
+├──  util_gtest -> ../Cellar/nss/3.73/bin/util_gtest
+├──  validation -> ../Cellar/nss/3.73/bin/validation
+├──  vcsh -> ../Cellar/vcsh/2.0.4/bin/vcsh
+├──  venc_data_dump -> ../Cellar/ffmpeg/4.4.1_3/bin/venc_data_dump
+├──  vfychain -> ../Cellar/nss/3.73/bin/vfychain
+├──  vfyserv -> ../Cellar/nss/3.73/bin/vfyserv
+├──  vlc -> /opt/homebrew/Caskroom/vlc/3.0.16/vlc.wrapper.sh
+├──  vmaf -> ../Cellar/libvmaf/2.3.0_1/bin/vmaf
+├──  vspipe -> ../Cellar/vapoursynth/57/bin/vspipe
+├──  webpinfo -> ../Cellar/webp/1.2.1_1/bin/webpinfo
+├──  webpmux -> ../Cellar/webp/1.2.1_1/bin/webpmux
+├──  wget -> ../Cellar/wget/1.21.2/bin/wget
+├──  wheel3 -> ../Cellar/python@3.9/3.9.9/bin/wheel3
+├──  wordforms -> ../Cellar/hunspell/1.7.0_2/bin/wordforms
+├──  wordlist2hunspell -> ../Cellar/hunspell/1.7.0_2/bin/wordlist2hunspell
+├──  wrjpgcom -> ../Cellar/jpeg/9d/bin/wrjpgcom
+├──  x264 -> ../Cellar/x264/r3060/bin/x264
+├──  x265 -> ../Cellar/x265/3.5/bin/x265
+├──  xgettext -> ../Cellar/gettext/0.21/bin/xgettext
+├──  xsubpp -> ../Cellar/perl/5.34.0/bin/xsubpp
+├──  xtractprotos -> ../Cellar/leptonica/1.82.0/bin/xtractprotos
+├──  xz -> ../Cellar/xz/5.2.5/bin/xz
+├──  xzcat -> ../Cellar/xz/5.2.5/bin/xzcat
+├──  xzcmp -> ../Cellar/xz/5.2.5/bin/xzcmp
+├──  xzdec -> ../Cellar/xz/5.2.5/bin/xzdec
+├──  xzdiff -> ../Cellar/xz/5.2.5/bin/xzdiff
+├──  xzegrep -> ../Cellar/xz/5.2.5/bin/xzegrep
+├──  xzfgrep -> ../Cellar/xz/5.2.5/bin/xzfgrep
+├──  xzgrep -> ../Cellar/xz/5.2.5/bin/xzgrep
+├──  xzless -> ../Cellar/xz/5.2.5/bin/xzless
+├──  xzmore -> ../Cellar/xz/5.2.5/bin/xzmore
+├──  youtube-dl -> ../Cellar/youtube-dl/2021.6.6/bin/youtube-dl
+├──  yt-dlp -> ../Cellar/yt-dlp/2021.12.1/bin/yt-dlp
+├──  zeroize -> ../Cellar/mbedtls/3.0.0/bin/zeroize
+├──  zipdetails -> ../Cellar/perl/5.34.0/bin/zipdetails
+├──  zmqsend -> ../Cellar/ffmpeg/4.4.1_3/bin/zmqsend
+├──  zmqshell.py -> ../Cellar/ffmpeg/4.4.1_3/bin/zmqshell.py
+├──  zstd -> ../Cellar/zstd/1.5.0/bin/zstd
+├──  zstdcat -> ../Cellar/zstd/1.5.0/bin/zstdcat
+├──  zstdgrep -> ../Cellar/zstd/1.5.0/bin/zstdgrep
+├──  zstdless -> ../Cellar/zstd/1.5.0/bin/zstdless
+└──  zstdmt -> ../Cellar/zstd/1.5.0/bin/zstdmt
+
+aom 3.2.0_2
+assimp 5.1.2
+autoconf 2.71
+bat 0.18.3
+bdw-gc 8.0.6
+berkeley-db 18.1.40
+brotli 1.0.9
+ca-certificates 2021-10-26
+cairo 1.16.0_5
+cjson 1.7.15
+cmocka 1.1.5
+coreutils 9.0
+cpanminus 1.9019
+dav1d 0.9.2
+dbus 1.12.20
+diff-so-fancy 1.4.3
+double-conversion 3.1.6
+exa 0.10.1
+fd 8.3.0
+ffmpeg 4.4.1_3
+flac 1.3.3
+fontconfig 2.13.1
+freetype 2.11.0
+frei0r 1.7.0
+fribidi 1.0.11
+fzf 0.28.0
+gdbm 1.22
+gettext 0.21
+gh 2.2.0
+giflib 5.2.1
+git 2.33.1_1
+git-delta 0.11.2
+glib 2.70.2 2.70.1
+gmp 6.2.1_1
+gnutls 3.6.16_1
+gobject-introspection 1.70.0_2
+graphite2 1.3.14
+guile 3.0.7_2
+harfbuzz 3.1.2
+hunspell 1.7.0_2
+icu4c 69.1
+imath 3.1.3
+jansson 2.14
+jasper 2.0.33
+jpeg 9d
+jpeg-xl 0.6.1
+jq 1.6
+lame 3.100
+lazygit 0.31.4
+leptonica 1.82.0
+less 590
+libarchive 3.5.2
+libass 0.15.2
+libb2 0.98.1
+libbluray 1.3.0
+libevent 2.1.12
+libffi 3.4.2
+libidn2 2.3.2
+libnghttp2 1.46.0
+libogg 1.3.5
+libpng 1.6.37
+libpthread-stubs 0.4
+librist 0.2.6
+libsamplerate 0.1.9_1
+libsndfile 1.0.31
+libsodium 1.0.18_1
+libsoxr 0.1.3
+libssh2 1.10.0
+libtasn1 4.18.0
+libtermkey 0.22
+libtiff 4.3.0
+libtool 2.4.6_4
+libunistring 0.9.10
+libuv 1.42.0
+libvidstab 1.1.0
+libvmaf 2.3.0_1
+libvorbis 1.3.7
+libvpx 1.11.0
+libx11 1.7.2 1.7.3.1
+libxau 1.0.9
+libxcb 1.14_1
+libxdmcp 1.1.3
+libxext 1.3.4
+libxrender 0.9.10
+libyaml 0.2.5
+little-cms2 2.12
+luajit-openresty 2.1-20211210 2.1-20210510
+luv 1.42.0-1
+lz4 1.9.3
+lzo 2.10
+m4 1.4.19
+mbedtls 3.0.0
+md4c 0.4.8
+mpdecimal 2.5.1
+mpv 0.34.0_1
+msgpack 4.0.0
+mujs 1.1.3 1.2.0
+n 8.0.0
+ncurses 6.3
+neovim 0.6.0
+nettle 3.7.3
+nspr 4.32
+nss 3.73
+oniguruma 6.9.7.1
+opencore-amr 0.1.5
+openexr 3.1.3
+openjpeg 2.4.0
+openssl@1.1 1.1.1l_1 1.1.1m
+opus 1.3.1
+p11-kit 0.24.0_1
+pandoc 2.16.2
+pcre 8.45
+pcre2 10.39
+perl 5.34.0
+pixman 0.40.0
+pkg-config 0.29.2_3
+poppler 21.12.0
+pyenv 2.2.0
+pyenv-virtualenv 1.1.5
+python@3.10 3.10.1
+python@3.9 3.9.7_1 3.9.8 3.9.9
+qt 6.2.2
+rav1e 0.5.0
+readline 8.1.1
+ripgrep 13.0.0
+ripgrep-all 0.9.6
+rubberband 2.0.0
+rust 1.56.1
+sdl2 2.0.18 2.0.16
+snappy 1.1.9
+speex 1.2.0
+sqlite 3.36.0 3.37.0
+srt 1.4.4
+stow 2.3.1
+tesseract 4.1.3
+the_silver_searcher 2.2.0
+theora 1.1.1
+tmux 3.2a
+trash 0.9.2
+tree 1.8.0
+tree-sitter 0.20.0 0.20.1
+uchardet 0.0.7
+unbound 1.13.2_1
+unibilium 2.1.1
+universal-ctags p5.9.20211024.0
+utf8proc 2.6.1
+vapoursynth 57
+vcsh 2.0.4
+webp 1.2.1_1
+wget 1.21.2
+x264 r3060
+x265 3.5
+xorgproto 2021.5
+xvid 1.3.7
+xz 5.2.5
+youtube-dl 2021.6.6
+yt-dlp 2021.12.1
+zeromq 4.3.4
+zimg 3.0.3
+zlib 1.2.11
+zstd 1.5.0
+
+alacritty 0.9.0
+kitty 0.23.1
+visual-studio-code 1.62.2
+vlc 3.0.16
+
