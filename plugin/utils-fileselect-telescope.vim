@@ -47,6 +47,9 @@ require('telescope').setup{
 }
 EOF
 
+" lua require('telescope').setup{ defaults = { layout_strategy = 'vertical', layout_config = { prompt_position = 'top', mirror = true, width = 0.95, height = 0.95 }, }, }
+" Telescope find_files hidden=true layout_config={"prompt_position":"top"}
+" Telescope grep_string search="gsr"
 
 
 " These don't work.

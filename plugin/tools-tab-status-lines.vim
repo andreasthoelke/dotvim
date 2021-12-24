@@ -1,4 +1,19 @@
 
+
+" NVIM-scrollview config:
+
+let g:scrollview_current_only = 1
+let g:scrollview_column = 1
+" Transparency only works when scrollview_character is ''/empty
+" let g:scrollview_winblend = 90
+let g:scrollview_character = '▐'
+" let g:scrollview_character = '▌'
+" let g:scrollview_character = ''
+
+" hi ScrollView guibg=none guifg=#121416
+" ~/.vim/colors/munsell-blue-molokai.vim#/hi%20ScrollView%20guibg=none
+
+
 " To review any config data changes (e.g. styling) source the following 3 lines
 " To reload config data, then change tab to refresh
 " call lightline#init()
@@ -44,8 +59,10 @@ let g:lightline.inactive.left   = [ ['projectRootFolderName'], ['relativepath'] 
 "                              \ , ['fpathBNum', 'percent']
 "                              \ , ['filename', 'fpathBNum'] ]
 
-let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
-let g:lightline.inactive.right = [ ['scrollbar'] ]
+" let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
+" let g:lightline.inactive.right = [ ['scrollbar'] ]
+let g:lightline.active.right = [ ['line'] ]
+let g:lightline.inactive.right = [ ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
 " let g:lightline.inactive.right = [ ['scrollbar'] ]
@@ -93,8 +110,11 @@ func! Testthere()
 endfunc
 
 func! LightlineScrollbar()
-  return noscrollbar#statusline(20,' ','■')
+  " return noscrollbar#statusline(20,' ','■')
+  return noscrollbar#statusline(20,' ','▬')
+  " return noscrollbar#statusline(20,' ','█',['▐'],['▌'])
 endfunc
+" %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
 
 func! LightlineTagbar()
   return tagbar#currenttag('%s', '')

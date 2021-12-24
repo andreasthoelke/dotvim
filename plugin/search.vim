@@ -274,15 +274,19 @@ fun! GrepSearch(selType, mode)
   else
     " exec 'Frepo "' . keyw . '"'
     exec 'FzfRg ' . keyw
+    " exec 'CocCommand fzf-preview.ProjectFiles ' . keyw
   endif
 endfun
 
-nnoremap gsR :call GrepSearch( GetInputStr('Search in repo: ') )<cr>
-xnoremap gsR :<c-u>call GrepSearch( GetInputStr('Search in repo: ') )<cr>
+nnoremap gsR :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+xnoremap gsR :<c-u>call SearchRepo( GetInputStr('Search in repo: ') )<cr>
 
 fun! SearchRepo( keyw )
   " exec 'Frepo "' . a:keyw . '"'
-  exec 'FzfRg ' . a:keyw
+  if a:keyw != ''
+    exec 'FzfRg ' . a:keyw
+    " exec 'FzfAg ' . a:keyw
+  endif
 endfunc
 
 " Vim Grepper: ------------------------------

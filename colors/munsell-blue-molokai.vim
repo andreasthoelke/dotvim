@@ -66,6 +66,16 @@ hi PmenuSel        guifg=#54868E guibg=#1C2020
 " hi Pmenu           guifg=none guibg=none
 " hi PmenuSel        guifg=none guibg=none
 
+" help scrollview-color-customization
+" hi ScrollView guibg=none guifg=#121416
+" hi ScrollView guibg=none guifg=#08090A
+" hi ScrollView guibg=none guifg=#050608
+" hi ScrollView guibg=none guifg=#090C0D
+" hi ScrollView guibg=none guifg=#050809
+hi ScrollView guibg=none guifg=#020304
+" hi ScrollView guibg=none guifg=black
+" hi ScrollView guibg=none guifg=LightCyan
+
 hi PreCondit       guifg=#A6E22E               gui=bold
 hi PreProc         guifg=#A6E22E
 hi Question        guifg=#66D9EF

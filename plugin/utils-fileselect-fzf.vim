@@ -149,7 +149,9 @@ command! -bang -nargs=? -complete=dir FzfOpenHistory
 let g:fzf_command_prefix = 'Fzf'
 
 " Preview window on the upper side of the window with 40% height, hidden by default, ctrl-/ to toggle
-let g:fzf_preview_window = ['down:60%:hidden', 'ctrl-/']
+" TODO: somehow this setting prevents that the preview is show when vim is in Alacritty terminal
+" let g:fzf_preview_window = ['down:60%:hidden', 'ctrl-/']
+let g:fzf_preview_window = ['down:66%']
 
 let g:vista_fzf_preview = ['down:50%']
 

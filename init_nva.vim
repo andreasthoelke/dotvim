@@ -114,6 +114,7 @@ Plug 'itchyny/lightline.vim'
 
 Plug 'gcavallanti/vim-noscrollbar'
 " Plug 'drzel/vim-line-no-indicator'
+Plug 'dstein64/nvim-scrollview', { 'branch': 'main' }
 
 " Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"
@@ -181,7 +182,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 
 
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 " LSP Language server / client:
 Plug 'neovim/nvim-lspconfig'
@@ -533,8 +534,8 @@ nnoremap <leader>SS :SessionSave
 nnoremap <leader>Ss :SessionSave<cr>
 nnoremap <leader>Sn :SessionShowName<cr>
 
-" ?
-nnoremap <leader>SC :bufdo bwipeout<cr>
+" nnoremap <leader>SC :bufdo bwipeout<cr>
+nnoremap <leader>SC :BufferDeleteInactive<cr>
 
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!

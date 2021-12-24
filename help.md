@@ -69,11 +69,9 @@ lst --level=4 /Users/at/.config_git/
 # do-next
 notes/do-next
 
-fzf preview area in kitty not in alacritty!! how is bat working?
-gsr does not work in vis-sel mode?!
-FzfPreviewGitFiles map space-of
+fzf preview area in kitty not in alacritty!!
+ -> move to Telescope
 
-statusbar scroll character bigger/bold?
 
 ## the current cursor in alacritty
 * the current cursor has these shifting colors depending on the foreground color the cursor is on.
@@ -163,7 +161,7 @@ CocCommand fzf-preview.GitActions
   CocCommand fzf-preview.CocReferences
 CocCommand fzf-preview.Marks
 
-
+GREP??
 
 ## telescope.nvim
 Telescope <c-i>
@@ -288,7 +286,8 @@ get         - get types of in scope/context bindings at cursor position
 geT         - get type of identifier under cursor in do-bind. also gst, gsT
 ~/.vim/plugin/tools-langClientHIE-completion.vim#/Get%20types%20and
 
-### Coc completion
+## Completion
+### Coc.nvim
 CocConfig   - opens ~/.vim/coc-settings.json, defined by let g:coc_config_home = '~/.vim'
 CocList symbols  - allows to fuzzy-search and jump to all loaded symbols!
 CocList commands
@@ -305,7 +304,8 @@ all extensions: https://www.npmjs.com/search?q=keywords%3Acoc.nvim
 
 Config: ~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
 
-
+### Fzf
+~/.vim/plugin/utils-fileselect-fzf.vim#/inoremap%20<expr>%20<c-x><c-k>
 
 ## Fonts
 Custom fonts
@@ -939,6 +939,8 @@ Examples with generic operator functions
 * template for opfunc mappings (+vis-sel +command range) is here: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
 * Gen_opfunc2: applying a function via an operator map, visual selection and command  ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
+## Syntax color, highlights
+Telescope highlights
 
 # Notes
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
