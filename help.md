@@ -69,10 +69,6 @@ lst --level=4 /Users/at/.config_git/
 # do-next
 notes/do-next
 
-a tabnew map
-rather a tab save, open process
-and tab save
-
 HsMotions should be reworked using treesitter.  ~/.vim/plugin/HsMotions.vim#/TODO%20make%20a
 
 ## the current cursor in alacritty
@@ -865,7 +861,13 @@ nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 eins old
 old zwei
 drei old
+
+Comment out all highlight command lines:
+%s/^hi/" hi/g
+
 More tricks: ~/.vim/plugin/notes-workflow.vim#/Substitute%20Replace%20Text.
+Turn abs system path into home-dir path: <!-- '<,'>s/\/Users\/at/\~/ -->
+
 
 ### Commandline-ranges
 help cmdline-ranges
@@ -1059,6 +1061,8 @@ i.e. load an additional tab layout into a new tab
 
 leader Sd   - load default session
 leader Ss   - save to default session
+
+Settings: ~/.vim/init_nva.vim#/Session%20settings
 
 ## Infos
 leader2 lc[iB/ip] - count lines of code

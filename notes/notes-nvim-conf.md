@@ -1,6 +1,14 @@
 
 # NVIM config
 
+
+
+
+
+
+
+## Chris at machine config
+
 git clone https://github.com/LunarVim/Neovim-from-scratch.git ~/.config/nvim
 
 ~/.config/nvim
@@ -89,7 +97,21 @@ http://vimdoc.sourceforge.net/htmldoc/options.html
 :set runtimepath=~/vimruntime,/mygroup/vim,$VIMRUNTIME
 
 echo $VIMRUNTIME
-vim.fn.stdpath
+put =$VIMRUNTIME
+  /opt/homebrew/Cellar/neovim/0.6.0/share/nvim/runtime
+
+put =v:lua.vim.fn.stdpath('data')
+  ~/.local/share/nvim
+put =v:lua.vim.fn.stdpath('cache')
+  ~/.cache/nvim
+put =v:lua.vim.fn.stdpath('config')
+  ~/.config/nvim
+put =v:lua.vim.fn.stdpath('config_dirs')
+  /etc/xdg/nvim
+put =v:lua.vim.fn.stdpath('data_dirs')
+  /usr/local/share/nvim
+  /usr/share/nvim
+
 
 some test text
 let @* = getline(line('.')-1)
