@@ -69,9 +69,7 @@ lst --level=4 /Users/at/.config_git/
 # do-next
 notes/do-next
 
-fzf preview area in kitty not in alacritty!!
- -> move to Telescope
-
+poetry
 
 ## the current cursor in alacritty
 * the current cursor has these shifting colors depending on the foreground color the cursor is on.
@@ -224,22 +222,14 @@ https://github.com/williamboman/nvim-lsp-installer
 
 Do i need null-ls.nvim? https://github.com/jose-elias-alvarez/null-ls.nvim
 
-
-## Python lsp
-
-activating and using python virtual envs for nvim lsp
-https://www.reddit.com/r/neovim/comments/n5gcsx/pyright_luaconfig_not_getting_my_pyenv_environment/
-https://www.xvideos.com/video52220285/step_sister_wants_to_runaway_part_1_
-https://www.reddit.com/r/neovim/comments/ca91hq/pipenv_for_neovim_pythondependencies_what_is_the/
-https://github.com/LunarVim/LunarVim/issues/1357
-
-https://develop.spacemacs.org/layers/+lang/python/README.html#backends
-
 ## Treesitter
 TSInstallInfo
 TSInstall <language>
 help nvim-treesitter-commands
 TSModuleInfo
+
+
+# Python
 
 ### other python tools
 Black
@@ -248,7 +238,16 @@ isort manages/sorts import lines
 flake8 style enforcement
 mypy static typing
 
-### pyenv virtualenv pip & conda
+## pyenv virtualenv pip, conda and poetry
+
+### Poetry
+Now using poetry from local installs and auto virturl envs:
+~/.vim/notes/notes-python.md#/##%20Basic%20usage
+
+### Conda
+alternative to poetry.
+~/.vim/notes/notes-python.md#/###%20conda
+
 before running `pip install` <app>:
 check what environment you are in: `pyenv virtualenvs`
 (note the activated virtual env might autochange in a dir than contains a `.python-version` file)
@@ -257,8 +256,18 @@ you can also `pyenv deactivate` any env - so it's not globally active.
 then pip install should install in the currently active environment. (also notes `which pip` is now managed as a
 pyenv shim
 
-
 General maintainance notes: ~/.vim/notes/notes-python.md#/###%20pyenv%20virtualenv
+
+### python links
+activating and using python virtual envs for nvim lsp
+https://www.reddit.com/r/neovim/comments/n5gcsx/pyright_luaconfig_not_getting_my_pyenv_environment/
+https://www.xvideos.com/video52220285/step_sister_wants_to_runaway_part_1_
+https://www.reddit.com/r/neovim/comments/ca91hq/pipenv_for_neovim_pythondependencies_what_is_the/
+https://github.com/LunarVim/LunarVim/issues/1357
+
+https://develop.spacemacs.org/layers/+lang/python/README.html#backends
+
+
 
 ## Language client (old)
 [g / ]g     - prev/next error/warning

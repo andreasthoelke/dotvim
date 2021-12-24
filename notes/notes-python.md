@@ -140,6 +140,7 @@ conda activate numtest1
 conda deactivate
 conda create --name numtest1 numpy
 
+
 ## Virtual envs
 ### Paths
 pyenv virtualenv: ~/.pyenv/versions
