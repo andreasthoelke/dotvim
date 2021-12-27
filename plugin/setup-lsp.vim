@@ -1,9 +1,9 @@
 
-lua << EOF
+" lua << EOF
 
-require'lspconfig'.pyright.setup{}
+" require'lspconfig'.pyright.setup{}
 
-EOF
+" EOF
 
 
 

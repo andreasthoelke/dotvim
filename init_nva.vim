@@ -387,37 +387,15 @@ call plug#end()
 " ----------------------------------------------------------------------------------
 
 " This deletes all autocmds that have the 'ag' tag/group so they aren't registered again when the vimrc is re-sourced
+" NOTE: Currently several .vim scripts are referring to the "ag" autogroup
 augroup ag
   au!
 augroup end
-
-" 
 
 
 " This needs to be set early in the vimrc, as the mappings below will refer to it!
 let mapleader="\<Space>"
 let maplocalleader="\\"
-
-" Enables 'setlocal' for filestypes
-filetype plugin on
-
-
-" Increase this for debugging
-" set verbose=0
-" Will write a log file with debug level 9
-" vim -V9myVim.log
-
-" let g:python_host_prog = '/usr/bin/python2'
-" let g:python3_host_prog = '/opt/homebrew/bin/python3'
-let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
-let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
-
-
-" Perl provider: current error from checkhealth - Command error (job=108, exit code 2): `/opt/homebrew/bin/perl -W '-MApp::cpanminus' -e ` (in '/Users/at/Documents')
-"  Does't seem to have an effect:-
-" let g:perl_host_prog = '/opt/homebrew/bin/perl'
-" let g:perl_host_prog = 'perl'
-
 
 if !exists('g:colors_name')
   " && g:colors_name != 'munsell-blue-molokai'

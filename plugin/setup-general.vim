@@ -1,5 +1,19 @@
 
 
+" Enables 'setlocal' for filestypes
+filetype plugin on
+
+
+" Increase this for debugging
+" set verbose=0
+" Will write a log file with debug level 9
+" vim -V9myVim.log
+
+" let g:python_host_prog = '/usr/bin/python2'
+" let g:python3_host_prog = '/opt/homebrew/bin/python3'
+let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
+let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
+
 
 " avoid |hit enter| prompts
 " set shortmess+="mW"
@@ -77,11 +91,11 @@ endfunc
 " endfun
 
 
-au ag VimEnter * cd ~/Documents
+" au ag VimEnter * cd ~/Documents
 
 " Cleanup: ----------------------------------------------------------------------------
 " NOTE This might slow down exiting vim
-au ag VimLeavePre * call VimLeaveCleanup()
+" au ag VimLeavePre * call VimLeaveCleanup()
 func! VimLeaveCleanup()
   " TODO close all Markbar wins, other tool windows?
   " tabdo windo if &buftype == 'nofile' | close | endif
@@ -184,18 +198,6 @@ set shada=!,'200,<50,s10,h
 " Shada: ---------
 
 " Color:  ------------------------------------------------------------------------
-
-if !exists('g:colors_name')
-  " && g:colors_name != 'munsell-blue-molokai'
-  set background=dark
-  colorscheme munsell-blue-molokai
-endif
-
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
 
 " highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
@@ -335,7 +337,14 @@ set autoread
 
 " This seems needed to reload files that have changed outside of vim (https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044)
 " autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+" au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+
+augroup vim_focus_update
+  autocmd!
+  autocmd FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+augroup END
+" au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+
 " Issue: CursorHold would auto-reload the buffer in a split-window - but causes an error in search-window
 " au ag CursorHold,FocusGained,BufEnter * if mode() != 'c' | checktime | endif
 " autocmd FileChangedShellPost *
@@ -731,7 +740,7 @@ let g:ale_fixers = {
 " highlight clear ALEWarningSign
 
 " otherwise the bg-color looks off
-hi AleErrorSign   ctermfg=white
+"= hi AleErrorSign   ctermfg=white
 
 " let g:airline#extensions#ale#enabled = 1
 " needed?
@@ -780,8 +789,8 @@ let g:syntastic_check_on_wq = 0
 
 " let g:psc_ide_syntastic_mode = 1
 
-hi SyntasticErrorSign   ctermfg=white
-hi SpellBad term=reverse ctermbg=darkgreen
+"= hi SyntasticErrorSign   ctermfg=white
+"= hi SpellBad term=reverse ctermbg=darkgreen
 
 let g:syntastic_error_symbol = "•"
 let g:syntastic_style_error_symbol = "⚠"
@@ -801,24 +810,24 @@ let g:syntastic_style_warning_symbol = "⚠"
 " Neomake does the same as Ale
 " While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn,
 " Intero uses Neomake to show error and ghc warnings
-hi NeomakeErrorSign   ctermfg=white
-hi NeomakeWarningSign ctermfg=white
-hi NeomakeInfoSign    ctermfg=white
-hi NeomakeMessageSign ctermfg=white
-hi link NeomakeWarning Comment
-hi link NeomakeError Comment
-hi link NeomakeInfo Comment
-hi link NeomakeMessage Comment
-hi link NeomakeVirtualtextError Comment
-hi link NeomakeVirtualtextWarning Comment
-hi link NeomakeVirtualtextInfo Comment
-hi link NeomakeVirtualtextMessage Comment
+"= hi NeomakeErrorSign   ctermfg=white
+"= hi NeomakeWarningSign ctermfg=white
+"= hi NeomakeInfoSign    ctermfg=white
+"= hi NeomakeMessageSign ctermfg=white
+"= hi link NeomakeWarning Comment
+"= hi link NeomakeError Comment
+"= hi link NeomakeInfo Comment
+"= hi link NeomakeMessage Comment
+"= hi link NeomakeVirtualtextError Comment
+"= hi link NeomakeVirtualtextWarning Comment
+"= hi link NeomakeVirtualtextInfo Comment
+"= hi link NeomakeVirtualtextMessage Comment
 let g:neomake_virtualtext_prefix = ''
 
-hi ErrorSign   ctermfg=white
-hi WarningSign ctermfg=white
-hi IntoSign    ctermfg=white
-hi MessageSign ctermfg=white
+"= hi ErrorSign   ctermfg=white
+"= hi WarningSign ctermfg=white
+"= hi IntoSign    ctermfg=white
+"= hi MessageSign ctermfg=white
 
 
 " Autoexpand quickfix list not always wanted? controlling this elsewhere
@@ -949,23 +958,6 @@ let g:tcomment_textobject_inlinecomment = ''
 " Comments: --------------------------
 
 
-" CamelCaseMotion: ------------------------------------------------------
-call camelcasemotion#CreateMotionMappings(',')
-" map <silent> w <Plug>CamelCaseMotion_w
-" map <silent> b <Plug>CamelCaseMotion_b
-" map <silent> e <Plug>CamelCaseMotion_e
-" sunmap w
-" sunmap b
-" sunmap e
-" omap <silent> iw <Plug>CamelCaseMotion_iw
-" xmap <silent> iw <Plug>CamelCaseMotion_iw
-" omap <silent> ib <Plug>CamelCaseMotion_ib
-" xmap <silent> ib <Plug>CamelCaseMotion_ib
-" omap <silent> ie <Plug>CamelCaseMotion_ie
-" xmap <silent> ie <Plug>CamelCaseMotion_ie
-" imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
-" imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
-" CamelCaseMotion: ------------------------------------------------------
 
 " ─   " Vim Place (insterting without moving the cursor)──
 nmap gi <Plug>(place-insert)
@@ -994,7 +986,7 @@ map H <Plug>Sneak_,
 " let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
 let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
 " let g:sneak#target_labels = "funqt/FGHLTUNRMQZ?0"
-hi! link Sneak Cursor
+"= hi! link Sneak Cursor
 augroup colsneak
   autocmd!
   autocmd ColorScheme * hi! link SneakScope Normal
@@ -1035,10 +1027,10 @@ let g:EasyMotion_disable_two_key_combo = 0
 let g:EasyMotion_verbose = 0
 let g:EasyMotion_enter_jump_first = 1
 let g:EasyMotion_space_jump_first = 1
-hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
-hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
-hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
-hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
+"= hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
+"= hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
+"= hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
+"= hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 " let g:EasyMotion_re_anywhere = '\v' .
 "   \ '(<.|^$)' . '|' .
 "   \ '(.>|^$)' . '|' .
@@ -1090,7 +1082,7 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 " TODO Test Bufenter - TabNewEntered is only for nvim
 " Whenever a new tab is created, set the tab-working dir accordingly
 " autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
-autocmd! ag BufWinEnter * call OnTabEnter(expand("<amatch>"))
+" autocmd! ag BufWinEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
@@ -1140,7 +1132,7 @@ endfunction
 " autocmd! QuickFixCmdPost * botright copen 8
 " autocmd! QuickFixCmdPost * echom "hii"
 " TODO test this. This is what Intero uses?
-au ag User NeomakeJobFinished call QuickfixRefeshStyle()
+" au ag User NeomakeJobFinished call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
   if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
@@ -1348,7 +1340,7 @@ nmap ,P <plug>EasyClipPasteUnformattedBefore
 " Vim Highlighedhank:
 let g:highlightedyank_highlight_duration = 700
 " hi! HighlightedyankRegion guibg=#585858
-hi! link HighlightedyankRegion Search
+"= hi! link HighlightedyankRegion Search
 
 
 " Marks: ----------------------------------------------------------------
@@ -1443,7 +1435,12 @@ nmap gk <Plug>(Rel)
 
 " Quickfix loclist ----
 " Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
-au ag BufWinEnter quickfix call QuickfixMaps()
+" au ag BufWinEnter quickfix call QuickfixMaps()
+augroup quickfix_maps
+  autocmd!
+  autocmd BufWinEnter quickfix call QuickfixMaps()
+augroup END
+
 func! QuickfixMaps()
   nnoremap <buffer> go :.cc<cr>:wincmd p<cr>
   nnoremap <buffer> Go :.ll<cr>:wincmd p<cr>
@@ -1494,7 +1491,7 @@ function! Location_toggle()
 endfunction
 
 
-hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
+"= hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
 
 
 let g:easy_align_delimiters = {

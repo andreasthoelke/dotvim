@@ -150,9 +150,9 @@ let g:gitgutter_map_keys = 0
 nnoremap <leader>gg :GitGutterToggle<cr>
 " Note: Gutter updates on save!
 
-nnoremap ]c <Plug>GitGutterNextHunk
-nnoremap [c <Plug>GitGutterPrevHunk
-" Issue Note: does not work after buffer change? temp-fix: make a change and safe!
+nnoremap ]c <Plug>(GitGutterNextHunk)
+nnoremap [c <Plug>(GitGutterPrevHunk)
+" Issue Note: does not work after buffer change? temp-fix: make a change and save!
 " alt: disable gutter, close file, open file, enable gutter → ]c should work again
 
 " TIP: use: GitGutterUndoHunk, ..PreviewHunk
@@ -170,8 +170,8 @@ let g:gitgutter_eager = 0
 let g:gitgutter_enabled = 0
 let g:gitgutter_diff_base = 'HEAD'
 
-nmap <silent> ]c :GitGutterNextHunk<CR>
-nmap <silent> [c :GitGutterPrevHunk<CR>
+nmap ]c :GitGutterNextHunk<CR>
+nmap [c :GitGutterPrevHunk<CR>
 " nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 " nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 " nnoremap <expr> ]c &diff ? ']c' : ':call NextHunkAllBuffers()<CR>'
