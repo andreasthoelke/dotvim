@@ -126,6 +126,8 @@ nnoremap <leader><leader>ga :CocCommand fzf-preview.GitActions<cr>
 " nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
 nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
 
+nnoremap <leader><leader>gq :GitGutterQuickFix<cr>:copen<cr>
+
 let g:Gitv_CustomMappings = {
       \'update': 'r',
       \}
@@ -145,8 +147,11 @@ let g:fugitive_force_bang_command = 1
 let g:gitgutter_map_keys = 0
 " let g:gitgutter_git_args = '--git-dir-""'
 
-nnoremap <leader><leader>gg :GitGutterToggle<cr>
-nnoremap <leader>gg :GitGutterToggle<cr>
+" nnoremap <leader><leader>gg :GitGutterToggle<cr>
+" nnoremap <leader>gg :GitGutterToggle<cr>
+nnoremap <leader><leader>gg :GitGutterSignsToggle<cr>
+nnoremap <leader>gg :GitGutterSignsToggle<cr>
+
 " Note: Gutter updates on save!
 
 " nnoremap ]c <Plug>(GitGutterNextHunk)
@@ -164,11 +169,13 @@ nnoremap <leader><leader>gu <Plug>GitGutterUndoHunk
 " Todo: not sure how staging a hunk works..
 " nnoremap <Leader>ha <Plug>GitGutterStageHunk
 
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
-let g:gitgutter_enabled = 0
-let g:gitgutter_diff_base = 'HEAD'
+let g:gitgutter_signs = 0
+" let g:gitgutter_realtime = 0
+" let g:gitgutter_eager = 0
+" let g:gitgutter_enabled = 0
 
+" TODO test. This may be useful as a diff?
+" let g:gitgutter_diff_base = '<some commit SHA>'
 
 nnoremap ]c :GitGutterNextHunk<cr>
 nnoremap [c :GitGutterPrevHunk<cr>

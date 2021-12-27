@@ -25,6 +25,8 @@ set shortmess+=c
 " let g:symlink_loaded = 1
 " let g:symlink_redraw = 0
 
+let g:vim_markdown_no_default_key_mappings = 1
+
 " Persistence Saving: -----------------------------------------------------------------
 
 " Undo: -----------------------

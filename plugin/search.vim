@@ -81,7 +81,7 @@ endfunc
 " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 " TODO deprecate these maps
 nnoremap <silent> gsg :call GoogleSearch("word")<cr>
-vmap <silent> gsg :call GoogleSearch("visSel")<cr>
+vmap <silent> gsg :<c-u>call GoogleSearch("visSel")<cr>
 
 nnoremap <silent> gsh :call DocsForCursorWord()<cr>
 vmap <silent> gsh :call DocsForVisSel()<cr>
@@ -320,15 +320,16 @@ fun! GoogleSearch(selType)
     let keyw = Get_visual_selection()
   endif
   let enckw = UrlEncode(keyw)
-  let extension = GetExtension()
-  if extension == "purs"
-    let lang = 'PureScript'
-  elseif extension == "hs"
-    let lang = 'Haskell'
-  else
-    let lang = ''
-  endif
-  let url = 'http://www.google.de\#q\=' . lang . '+' . enckw
+  " let extension = GetExtension()
+  " if extension == "purs"
+  "   let lang = 'PureScript'
+  " elseif extension == "hs"
+  "   let lang = 'Haskell'
+  " else
+  "   let lang = ''
+  " endif
+  " let url = 'http://www.google.de\#q\=' . lang . '+' . enckw
+  let url = 'http://www.google.com\#q\=' . enckw
   let comm = 'silent !open ' . url
   exec comm
 endfun

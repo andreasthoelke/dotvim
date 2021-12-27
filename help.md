@@ -184,6 +184,7 @@ Note you can scroll and search like in vim.
 
 
 ## Markdown
+help vim-markdown
 help vim-markdown-folding
 plugin config: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
 
@@ -452,6 +453,8 @@ go    - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 
 :BufferDeleteInactive or :Bdi   - to wipe out all buffers not open in a window!
 
+Bdelete / Bwipeout   - will delete buffers but not close related windows! https://github.com/moll/vim-bbye
+
 ## Files open
 \v \T       - browse-open file in new split/tab from the same project
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
@@ -572,8 +575,11 @@ help argument-list
 
 Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 
-### Quickfixlist
+### quickfixlist
 copen  / cw[indow] / cclose   - to open/close the quickfix list
+p/P   - previews item in split / closes the preview split
+Maps:  ~/.vim/plugin/setup-general.vim#/func.%20QuickfixMaps..
+Note the 'go' command and the distinction with the location list maps
 
 ### Change Working Directory CWD Project Root
 leader dpr ":lcd " . projectroot#guess() . "\n"
@@ -662,7 +668,11 @@ leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-exte
 ## Gutter
 leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
+2leader gq  - push changes/hunks to quickfix list (note that project root needs to be set to git repo e.g. via leader-dpr
 GitGutterUndoHunk, ..PreviewHunk
+
+Note/issue: The ]c/[c navigation seems to happen based on that is in the *gutter* .. not in the repo! so the gutter
+            needs to be visible and even when the hanks have been commited I need to reload the file so the hunks disappear in the gutter
 
 ## Diffs
 windo diffoff  - to exit vimdiff mode
@@ -671,6 +681,8 @@ git-delta viewer config: ~/.gitconfig#/path%20=%20~/.config/git-delta/themes.git
 
 You can nicely diff two files like this:
 git diff --no-index filepath1 filepath2
+
+This may be useful as a diff? ~/.vim/plugin/git-integration.vim#/let%20g.gitgutter_diff_base%20=
 
 ## Branches and merge
 leader2 gb    - FzfPreviewGitBranches

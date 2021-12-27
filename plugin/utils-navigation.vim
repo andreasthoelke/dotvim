@@ -196,9 +196,12 @@ au ag TabLeave * let g:lasttab = tabpagenr()
 " nnoremap \X :bp<bar>sp<bar>bn<bar>bd!<CR>
 " some as: ?
 " nnoremap \X :bp | :sp | :bn | :bd!<CR>
-nnoremap <leader>bd :bd<cr>
+" nnoremap <leader>bd :bd<cr>
+" nnoremap <leader>bD :bd!<cr>
+" nnoremap ,x :bd<cr>
+nnoremap <leader>bd :Bwipeout<cr>
 nnoremap <leader>bD :bd!<cr>
-nnoremap ,x :bd<cr>
+nnoremap ,x :Bwipeout<cr>
 
 " Buffers: -----------------------------------------
 
