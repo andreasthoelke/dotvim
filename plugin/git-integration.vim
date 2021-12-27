@@ -9,8 +9,6 @@ let g:accountsGithub = readfile( expand( '~/.accounts/github' ) )[0:0][0]
 " git push -u origin master" `-u` add upstream tracking(!?)
 " git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 " 
-" 
-
 
 
 " ─   Git                                                ■
@@ -147,11 +145,12 @@ let g:fugitive_force_bang_command = 1
 let g:gitgutter_map_keys = 0
 " let g:gitgutter_git_args = '--git-dir-""'
 
+nnoremap <leader><leader>gg :GitGutterToggle<cr>
 nnoremap <leader>gg :GitGutterToggle<cr>
 " Note: Gutter updates on save!
 
-nnoremap ]c <Plug>(GitGutterNextHunk)
-nnoremap [c <Plug>(GitGutterPrevHunk)
+" nnoremap ]c <Plug>(GitGutterNextHunk)
+" nnoremap [c <Plug>(GitGutterPrevHunk)
 " Issue Note: does not work after buffer change? temp-fix: make a change and save!
 " alt: disable gutter, close file, open file, enable gutter → ]c should work again
 
@@ -170,16 +169,16 @@ let g:gitgutter_eager = 0
 let g:gitgutter_enabled = 0
 let g:gitgutter_diff_base = 'HEAD'
 
-nmap ]c :GitGutterNextHunk<CR>
-nmap [c :GitGutterPrevHunk<CR>
+
+nnoremap ]c :GitGutterNextHunk<cr>
+nnoremap [c :GitGutterPrevHunk<cr>
+
 " nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 " nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 " nnoremap <expr> ]c &diff ? ']c' : ':call NextHunkAllBuffers()<CR>'
 " nnoremap <expr> [c &diff ? '[c' : ':call PrevHunkAllBuffers()<CR>'
 
 " nnoremap <expr> <C-J> &diff ? ']c' : '<C-W>j'
-
-
 
 function! NextHunkAllBuffers()
   let line = line('.')

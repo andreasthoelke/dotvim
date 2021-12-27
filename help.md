@@ -507,7 +507,7 @@ c-w v c-w = - make 3 columns
 c-w |       - go to the next 'last window', then c-w h/l, then 'p' to fill the previous win with the content of the node
 TODO some simple maps/commands for 'p' could achieve a basic ranger functionality!?
 
-## Using file-paths
+# Using file-paths
 c-i      - autocompeting filepaths only works at the beginning of the line. c-i is prefered as it allows fuzzy-filtering the suggested filenames. BTW the autocomplete menu shows the [F] at the end of the item.
 c-x c-f  - works only on paths without space. but now testing :set isfname+=32 .
 c-w c-f  - to open this path in dirvish. note this does not work with the "% 20" formatting of the whitespace in the second line
@@ -520,6 +520,10 @@ gk       - (rel-link) to open the second path in vertical divish. Note this *onl
 
   TODO test this option: :set isfname+=32 ~/.vim/vimrc#/Makes%20whitespace%20be
 this lets me use spaces in paths! and complete with c-x c-f. but now paths have to start at the beginning of the line.
+
+## Symlinks
+Now using vim-symlink https://github.com/aymericbeaumet/vim-symlink to load the *target path* of a file that is a symlink.
+Note 'symlink' setting ~/.vim/plugin/setup-general.vim#/let%20g.symlink_loaded%20=
 
 ### Network volumes / Google Drive
 :sp /Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt   - load a Google Drive file with quoted spaces
@@ -642,6 +646,12 @@ leader2 gl  - FzfCommits
 leader2 gL  - now uses FzfPreviewGitLogs. Enter shows a diff.
 :Flog (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
 
+### Checkout and test a previous commit
+Commit all current changes
+Use FzfCommits / 2l gl to copy a commit hash with c-y
+run git checkout <commit-hash>
+test things then get back using "git checkout main"
+
 ### Quick save shortcuts
 lead lead gS - git status in float win
 lead lead gC - git commit -a (all changes! - not just staged)
@@ -653,7 +663,6 @@ leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-exte
 leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
 GitGutterUndoHunk, ..PreviewHunk
-
 
 ## Diffs
 windo diffoff  - to exit vimdiff mode

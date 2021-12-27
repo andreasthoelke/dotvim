@@ -6,6 +6,9 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug'
 " This is probl. just to have the help/docs available
 
+Plug 'moll/vim-bbye' " optional dependency to better wipe out buffers(?)
+Plug 'aymericbeaumet/vim-symlink'
+
 " File Selectors Browsers: ------------------------------------------
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'

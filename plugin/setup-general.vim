@@ -21,6 +21,10 @@ set shortmess=aoOtT
 " Cut completion messages?
 set shortmess+=c
 
+
+" let g:symlink_loaded = 1
+" let g:symlink_redraw = 0
+
 " Persistence Saving: -----------------------------------------------------------------
 
 " Undo: -----------------------
