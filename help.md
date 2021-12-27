@@ -635,66 +635,7 @@ ls -l | fzf | pbcopy
             mkCounter = component "Counter " \props -> Hooks.do
 
 # Git
-
-## Status & author commit
-leader og   - FzfPreviewGitStatus allows quick staging per file
-leader oG   - FzfGFiles? Now shows gread diffs. For review before commit: use tab to add. then c-q will show only the files in quickfix list. 
-              but can use ]c [c to navigate hunks. also use leader gg / gutter.
-,og         - Git magit can nicely stage Hunks. Also :GitcommitAuthor
-            - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file (of F to stage file), then `CC` to write a
-:G          - fugitive git status/autor. s to stage. cc to create commit.
-
-leader2 ga  - git actions
-leader2 gb  - git branches
-
-## Git commit log
-leader2 gl  - FzfCommits
-leader2 gL  - now uses FzfPreviewGitLogs. Enter shows a diff.
-:Flog (return on commit to view div, 'q' to close), <c-n/p> to see diffs. help Flog
-
-### Checkout and test a previous commit
-Commit all current changes
-Use FzfCommits / 2l gl to copy a commit hash with c-y
-run git checkout <commit-hash>
-test things then get back using "git checkout main"
-
-### Quick save shortcuts
-lead lead gS - git status in float win
-lead lead gC - git commit -a (all changes! - not just staged)
-lead lead gP - git push
-leader leader gc - Quick git commit (opt with vis-sel text)
-leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-external.vim#/Git
-
-## Gutter
-leader gg   - GitGutterToggle
-]c [c       - GitGutter Next/Prev Hunk
-2leader gq  - push changes/hunks to quickfix list (note that project root needs to be set to git repo e.g. via leader-dpr
-GitGutterUndoHunk, ..PreviewHunk
-
-Note/issue: The ]c/[c navigation seems to happen based on that is in the *gutter* .. not in the repo! so the gutter
-            needs to be visible and even when the hanks have been commited I need to reload the file so the hunks disappear in the gutter
-
-## Diffs
-windo diffoff  - to exit vimdiff mode
-git-delta viewer config: ~/.gitconfig#/path%20=%20~/.config/git-delta/themes.gitconfig
-                         https://github.com/dandavison/delta#choosing-colors-styles
-
-You can nicely diff two files like this:
-git diff --no-index filepath1 filepath2
-
-This may be useful as a diff? ~/.vim/plugin/git-integration.vim#/let%20g.gitgutter_diff_base%20=
-
-## Branches and merge
-leader2 gb    - FzfPreviewGitBranches
-how can i see a diff between branches or specific commits?
-To merge a branch: First commit everything on both branches. Then `git checkout main`, `git merger <featurebranch>`
-
-### Useful git commands
-git ls-remote  - to show the URL of the github repo
-
-### Github integration
-     search:  https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax
-     track local history: https://docs.github.com/en/desktop
+notes/notes-git.md
 
 ## Intero Errors or Warnings
 leader qq   - open QFL

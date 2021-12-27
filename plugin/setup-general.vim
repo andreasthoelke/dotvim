@@ -992,7 +992,7 @@ map H <Plug>Sneak_,
 " let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
 let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
 " let g:sneak#target_labels = "funqt/FGHLTUNRMQZ?0"
-"= hi! link Sneak Cursor
+hi! link Sneak Cursor
 augroup colsneak
   autocmd!
   autocmd ColorScheme * hi! link SneakScope Normal
@@ -1033,10 +1033,10 @@ let g:EasyMotion_disable_two_key_combo = 0
 let g:EasyMotion_verbose = 0
 let g:EasyMotion_enter_jump_first = 1
 let g:EasyMotion_space_jump_first = 1
-"= hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
-"= hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
-"= hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
-"= hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 " let g:EasyMotion_re_anywhere = '\v' .
 "   \ '(<.|^$)' . '|' .
 "   \ '(.>|^$)' . '|' .
@@ -1346,7 +1346,7 @@ nmap ,P <plug>EasyClipPasteUnformattedBefore
 " Vim Highlighedhank:
 let g:highlightedyank_highlight_duration = 700
 " hi! HighlightedyankRegion guibg=#585858
-"= hi! link HighlightedyankRegion Search
+hi! link HighlightedyankRegion Search
 
 
 " Marks: ----------------------------------------------------------------
@@ -1495,9 +1495,6 @@ function! Location_toggle()
     lopen
   endif
 endfunction
-
-
-"= hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
 
 
 let g:easy_align_delimiters = {

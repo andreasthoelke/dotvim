@@ -7,7 +7,7 @@ and: alias python=/opt/homebrew/bin/python3 to use the most current homebrew ins
 You can install Python packages with pip3 install <package> They will install into the site-package directory /opt/homebrew/lib/python3.9/site-packages
 
 Todo: there is still a note about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
-## Pyenv
+## pyenv
 https://github.com/pyenv/pyenv-virtualenv/blob/master/README.md
 pyenv versions      - show what environment is currently active
 pyenv global        - only shows the current system version | set the global system version pyenv global && pyenv global 3.10.0
