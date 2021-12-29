@@ -61,7 +61,6 @@ using `grt` on the following line will *only* show e.g.
 changing/setting the venv in a terminal-win will not change it inside of vim!
   echo $VIRTUAL_ENV
   ls
-  echo hi
 
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 
@@ -111,7 +110,7 @@ end,
 addresses python venv problems with:
 { prefer_local = ".venv/bin" }
 
-### examining ~/.pyen/
+### examining ~/.pyenv/
 The created virtual env is represented by a folder here:
 /Users/at/.pyenv/versions/
 

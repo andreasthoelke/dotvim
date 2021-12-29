@@ -1,13 +1,15 @@
 
 # NVIM config
 
-
+https://neovim.io/doc/user/lsp.html
 
 
 
 
 
 ## Chris at machine config
+
+/Users/at/.config/nvim.cam/lua/user/lsp/
 
 git clone https://github.com/LunarVim/Neovim-from-scratch.git ~/.config/nvim
 

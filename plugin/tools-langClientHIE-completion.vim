@@ -8,16 +8,6 @@ set hidden
 set nobackup
 set nowritebackup
 
-" Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|
-set shortmess+=c
-
 " ─   Completion                                        ──
 
 let g:coc_config_home = '~/.vim'
@@ -25,11 +15,13 @@ let g:coc_config_home = '~/.vim'
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<C-i>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" Temp deactivated:
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<C-i>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -37,11 +29,9 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
+
+" Temp deactivated:
+" inoremap <silent><expr> <c-space> coc#refresh()
 
 nnoremap <silent> gsi :call CocActionAsync('diagnosticInfo')<cr>
 
@@ -124,17 +114,16 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " let g:psc_ide_server_port = 12441
 " let g:psc_ide_server_port = 38218
 
-let g:vimmerps_disable_mappings = v:true
-
-let g:vimmerps_config =
-    \ { 'autoStartPscIde': v:true
-    \ , 'pscIdePort': v:null
-    \ , 'autocompleteAddImport': v:true
-    \ , 'pursExe': 'purs'
-    \ , 'addSpagoSources': v:true
-    \ , 'censorWarnings': ["ShadowedName", "UnusedImport", "MissingTypeDeclaration"]
-    \ , 'addNpmPath': v:true
-    \ }
+" let g:vimmerps_disable_mappings = v:true
+" let g:vimmerps_config =
+"     \ { 'autoStartPscIde': v:true
+"     \ , 'pscIdePort': v:null
+"     \ , 'autocompleteAddImport': v:true
+"     \ , 'pursExe': 'purs'
+"     \ , 'addSpagoSources': v:true
+"     \ , 'censorWarnings': ["ShadowedName", "UnusedImport", "MissingTypeDeclaration"]
+"     \ , 'addNpmPath': v:true
+"     \ }
 
 " Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
@@ -145,22 +134,22 @@ let g:vimmerps_config =
 " ghc-options: -fdefer-typed-holes -fwarn-incomplete-patterns -frefinement-level-hole-fits=1 -XPartialTypeSignatures
 " Also note ~/Documents/Haskell/6/HsTrainingTypeClasses1/.hlint.yaml#/#%20Ignore%20some
 
-autocmd BufReadPost *.kt setlocal filetype=kotlin
+" autocmd BufReadPost *.kt setlocal filetype=kotlin
 
 " ─   Language Client HIE                                ■
 
 " let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
 " let g:LanguageClient_serverCommands = { 'purescript': ['purescript-language-server', '--stdio', '--config', '{}'] }
-let g:LanguageClient_serverCommands = { 'kotlin': ["kotlin-language-server"] }
+" let g:LanguageClient_serverCommands = { 'kotlin': ["kotlin-language-server"] }
 
 " let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml', 'spago.dhall']
 
-let g:LanguageClient_autoStart = 1
+" let g:LanguageClient_autoStart = 1
 " let g:lsp_async_completion = 1
 " delay updates? not sure if this works
 " let g:LanguageClient_changeThrottle = 0.5
 
-let g:LanguageClient_diagnosticsEnable = 1
+" let g:LanguageClient_diagnosticsEnable = 1
 " let g:LanguageClient_diagnosticsList = 'Location'
 " default is Quickfix - but Intero uses quickfix (nicely formatted) via neomake
 
@@ -395,7 +384,7 @@ endfunc
 
 
 " set completeopt=menuone,preview
-set completeopt=noinsert,menuone,noselect
+" set completeopt=noinsert,menuone,noselect
 " set completeopt+=noselect
 " set completeopt+=noinsert
 

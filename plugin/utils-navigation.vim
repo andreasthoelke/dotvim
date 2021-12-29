@@ -199,9 +199,9 @@ au ag TabLeave * let g:lasttab = tabpagenr()
 " nnoremap <leader>bd :bd<cr>
 " nnoremap <leader>bD :bd!<cr>
 " nnoremap ,x :bd<cr>
-nnoremap <leader>bd :Bwipeout<cr>
+nnoremap <leader>bd :bd<cr>
 nnoremap <leader>bD :bd!<cr>
-nnoremap ,x :Bwipeout<cr>
+nnoremap ,x :bd<cr>
 
 " Buffers: -----------------------------------------
 

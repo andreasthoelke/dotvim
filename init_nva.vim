@@ -6,7 +6,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug'
 " This is probl. just to have the help/docs available
 
-Plug 'moll/vim-bbye' " optional dependency
+" Keeps window layout when closing buffer.
+" Plug 'moll/vim-bbye' " optional dependency
 Plug 'aymericbeaumet/vim-symlink'
 
 " File Selectors Browsers: ------------------------------------------
@@ -47,7 +48,7 @@ Plug 'kristijanhusak/vim-dirvish-git'
 " Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
 Plug 'majutsushi/tagbar'
 " this showed channel errors after quitting nvim
-" Plug 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags'
 " Make the preview window more convienient to use. use in quickfix via 'p'
 
 " Also for Tags, but from language server
@@ -86,6 +87,10 @@ Plug 'radenling/vim-dispatch-neovim'
 Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
+
+" Lua version of gitgutter?
+Plug 'lewis6991/gitsigns.nvim'
+
 " No longer supported
 " Plug 'gregsexton/gitv', {'on': ['Gitv']}
 Plug 'rbong/vim-flog'
@@ -178,7 +183,8 @@ Plug '907th/vim-auto-save'
 " This fork allows to define letter shorcuts per menu-item
 Plug 'skywind3000/vim-quickui'
 Plug 'CharlesGueunet/quickmenu.vim'
-Plug 'andreasthoelke/quickmenu_ix'
+" a functional duplicate that required a lot of renaming
+" Plug 'andreasthoelke/quickmenu_ix'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
@@ -186,22 +192,38 @@ Plug 'tpope/vim-repeat'
 
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'nvim-treesitter/playground'
 
 " LSP Language server / client:
 Plug 'neovim/nvim-lspconfig'
+Plug 'jose-elias-alvarez/null-ls.nvim'
 
+" Completion engine
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+
+" For luasnip users.
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 
 " Language Support: -----------------------------------------------------
-Plug 'jelera/vim-javascript-syntax'
-Plug 'elzr/vim-json'
-Plug 'kevinoid/vim-jsonc'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-Plug 'mityu/vim-applescript'
-Plug 'vmchale/dhall-vim'
-Plug 'jparise/vim-graphql'
-Plug 'udalov/kotlin-vim'
-Plug 'pantharshit00/vim-prisma'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+Plug 'b0o/SchemaStore.nvim'
+
+" Plug 'jelera/vim-javascript-syntax'
+" Plug 'elzr/vim-json'
+" Plug 'kevinoid/vim-jsonc'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'peitalin/vim-jsx-typescript'
+" Plug 'mityu/vim-applescript'
+" Plug 'vmchale/dhall-vim'
+" Plug 'jparise/vim-graphql'
+" Plug 'udalov/kotlin-vim'
+" Plug 'pantharshit00/vim-prisma'
 
 " Flutter/Dart
 " Plug 'dart-lang/dart-vim-plugin'
@@ -264,7 +286,7 @@ Plug 'navicore/vissort.vim'
 " Markdown: -------------
 " Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
-Plug 'plasticboy/vim-markdown'
+" Plug 'plasticboy/vim-markdown'
 
 Plug 'jszakmeister/markdown2ctags'
 Plug 'aklt/rel.vim'
@@ -400,16 +422,15 @@ augroup end
 let mapleader="\<Space>"
 let maplocalleader="\\"
 
+" What is this?
+" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+
 if !exists('g:colors_name')
   " && g:colors_name != 'munsell-blue-molokai'
   set background=dark
   colorscheme munsell-blue-molokai
-endif
-
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
 endif
 
 
