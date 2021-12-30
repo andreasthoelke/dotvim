@@ -236,14 +236,16 @@ Path to Android Studio config files:
 
 LspInfo
 help lspconfig-server-configurations
-plugin/setup-lsp.vim
+plugin/setup-lsp.lua
 
+https://neovim.io/doc/user/lsp.html
+some language servers are installed here: (?)
+echo v:lua.vim.fn.stdpath("data")
+/Users/at/.local/share/nvim/lsp_servers/
 Install location for language servers: ~/.local/share/nvim/lsp_servers/
 Other local app settings: ~/.local/share/
 installer used on lunarvim:
 https://github.com/williamboman/nvim-lsp-installer
-
-Do i need null-ls.nvim? https://github.com/jose-elias-alvarez/null-ls.nvim
 
 ## treesitter
 
@@ -935,6 +937,24 @@ leader vh - FzfHelptags only allow a simple <enter>. no preview. it's still good
 leader Sm - :MessagesShow - show past vim echoed text (show messages) in preview window - output of any single command: RedirMessagesWin verb set comments?
 put =g:maplocalleader - put the content of a variable into the buffer!
 nvim -V10vimlog - debug vim startup and sourcing process
+
+### Debug with test.vim
+Have a file name test.vim and put this in your file (this file use vim-plug as an example, you should use your own plugin manager), remember to change your language server.
+
+call plug#begin('~/.vim/plugged') 
+    Plug 'neovim/nvim-lsp'
+    Plug 'nvim-lua/completion-nvim'
+call plug#end()
+lua require'nvim_lsp'.sumneko_lua.setup{on_attach=require'completion'.on_attach}
+au Filetype lua setl omnifunc=v:lua.vim.lsp.omnifunc
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+Use nvim -u test.vim {your_file} to open your file.
+
 
 ## List of commands, maps and vim-sets (settings)
 

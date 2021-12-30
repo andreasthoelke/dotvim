@@ -1,3 +1,6 @@
+augroup ag
+  au!
+augroup end
 
 " ─   Filetype Specific Maps Tools Syntax               ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
@@ -11,6 +14,8 @@ au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 " this is now moved to ftdetect folder - not sure if this is needed
 " ~/.vim/ftdetect/purescript.vim#/au%20BufNewFile,BufRead%20*.purs
 au ag BufNewFile,BufRead        *.purs call HaskellMaps()
+
+au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.md          call VimScriptSyntaxAdditions()
@@ -133,6 +138,35 @@ func! HaskellSyntaxAdditions()
 endfunc
 
 " Syntax Color Haskell: --------------------
+
+
+func! LuaSyntaxAdditions() " ■
+  call CodeMarkupSyntaxHighlights()
+  " Hide comment character at beginning of line
+  call matchadd('Conceal', '\v^\s*\zs--\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  call matchadd('Conceal', '\s\zs\--\ze\s', 12, -1, {'conceal': ''})
+  " Conceal "%20" which is used for "h rel.txt" with space
+  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+
+  call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
+  set commentstring=\ \--%s
+  " Original vim foldmarker string
+  " set foldmarker={{{,}}}
+  " set foldmarker=■■,▲▲
+  " set foldmarker=\ ■,\ ▲
+endfunc " ▲
+
 
 func! VimScriptSyntaxAdditions() " ■
   call CodeMarkupSyntaxHighlights()

@@ -83,8 +83,30 @@ let g:floatWin_docked = 0
 " only used for g:floatWin_docked == 0
 let g:floatWin_max_width = 120
 
+
+func! FloatWin_ShowLines ( lines )
+  call v:lua.vim.lsp.util.open_floating_preview( a:lines )
+endfunc
+" call FloatWin_ShowLines( ['eins', 'zwei'] )
+
+func! FloatWin_close ()
+  call v:lua.FloatWin_close()
+endfunc
+
+lua << EOF
+function FloatWin_close ()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= "" then
+      vim.api.nvim_win_close(win, false)
+      -- print('Closing window', win)
+    end
+  end
+end
+EOF
+
 " Show lines in float-win at cursor loc by default. Or pass column, row for win relative position.
-func! FloatWin_ShowLines( linesToShow, ... )
+func! FloatWin_ShowLines_old( linesToShow, ... )
   if !len( a:linesToShow )
     return
   endif
@@ -167,6 +189,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
   return g:floatWin_win
 endfunc
 " call FloatWin_ShowLines( ['eins', 'zwei'] )
+" lua FloatWin_ShowLines( {'eins', 'zwei'} )
 " call FloatWin_ShowLines( testText1 )
 " call FloatWin_ShowLines( testText1, col('.') -10, BufferLineToWinLine( line('.') +3) )
 
@@ -234,7 +257,7 @@ func! FloatWin_reopen()
   call FloatWin_start_check()
 endfunc
 
-func! FloatWin_close()
+func! FloatWin_close_old()
   if g:floatWin_win
     let id = win_id2win(g:floatWin_win)
     if id > 0

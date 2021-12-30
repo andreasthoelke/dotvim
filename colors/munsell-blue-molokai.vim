@@ -539,6 +539,21 @@ hi link yamlPlainScalar purescriptIdentifier
 hi link dhallLabel Define
 
 
+hi link DiagnosticSignError purescriptIdentifier
+hi link DiagnosticSignWarn purescriptIdentifier
+hi link DiagnosticSignInfo PurescriptIdentifier
+hi link DiagnosticSignHint purescriptIdentifier
+
+hi link DiagnosticVirtualTextError purescriptIdentifier
+hi link DiagnosticVirtualTextWarn purescriptIdentifier
+hi link DiagnosticVirtualTextInfo purescriptIdentifier
+hi link DiagnosticVirtualTextHint purescriptIdentifier
+
+hi link DiagnosticFloatingError purescriptIdentifier
+hi link DiagnosticFloatingWarn purescriptIdentifier
+hi link DiagnosticFloatingInfo purescriptIdentifier
+hi link DiagnosticFloatingHint purescriptIdentifier
+
 hi link CocErrorHighlight NONE
 hi link CocWarningHighlight NONE
 " underline seems not visible?
@@ -551,6 +566,11 @@ hi link CocInfoSign purescriptIdentifier
 
 " BG color of floating win?
 hi Quote ctermbg=109 guifg=#83a598
+
+" -- highlight NormalFloat guibg=#1f2335
+" -- highlight FloatBorder guifg=white guibg=#1f2335
+" hi! NormalFloat guibg=NONE
+hi! link FloatBorder Comment
 
 
 " ─   Typescript / React                                ──

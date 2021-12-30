@@ -19,7 +19,8 @@ nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
-command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+command! Alacritty exec "silent !open -n '/Applications/Alacritty.app'"
 " Issue / Todo: this does not show the statusline scrollbar smoothly. Version 0.5.0
 " command! Alacritty5 exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/Alacritty.app/'"
 " Todo: start Alacritty with options

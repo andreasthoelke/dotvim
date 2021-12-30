@@ -2,10 +2,10 @@
 local lspconfig = require 'lspconfig'
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
-    vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
-        noremap = true,
-        silent = true,
-    })
+  vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
+    noremap = true,
+    silent = true,
+  })
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -13,7 +13,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 local flags = {
-    debounce_text_changes = 150,
+  debounce_text_changes = 150,
 }
 
 -- Use an on_attach function to only map the following keys
@@ -28,7 +28,7 @@ local on_attach = function(client, bnr)
   buf_map(bnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
   buf_map(bnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
   buf_map(bnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
-  buf_map(bnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+  buf_map(bnr, 'n', '<space><space>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
   buf_map(bnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
   buf_map(bnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
   buf_map(bnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
@@ -73,6 +73,81 @@ local on_attach = function(client, bnr)
 
 end
 
+-- vim.cmd [[autocmd ColorScheme * highlight NormalFloat guibg=#1f2335]]
+-- vim.cmd [[autocmd ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
+
+-- highlight NormalFloat guibg=#1f2335
+-- highlight FloatBorder guifg=white guibg=#1f2335
+
+-- Float menu color
+-- vim.cmd([[
+--             highlight NormalFloat guibg=#151515
+--             highlight FloatBorder guifg=#80A0C2 guibg=NONE
+--         ]])
+
+local border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
+
+-- LSP settings (for overriding per client)
+local handlers =  {
+  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
+  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+}
+
+local handlers2 = {
+    ["textDocument/publishDiagnostics"] = function(_, result, ...)
+        local min = vim.diagnostic.severity.INFO
+        result.diagnostics = vim.tbl_filter(function(t)
+            return t.severity <= min
+        end, result.diagnostics)
+        return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end,
+}
+
+-- To instead override globally
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or border
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
+
+-- function FloatWin_ShowLines ( lines )
+--   vim.lsp.util.open_floating_preview( lines )
+-- end
+--
+-- function FloatWin_close ()
+--   for _, win in ipairs(vim.api.nvim_list_wins()) do
+--     local config = vim.api.nvim_win_get_config(win)
+--     if config.relative ~= "" then
+--       vim.api.nvim_win_close(win, false)
+--       print('Closing window', win)
+--     end
+--   end
+-- end
+
+-- help vim.diagnostic.config()
+vim.diagnostic.config({
+  virtual_text = {
+    source = "if_many",
+    -- prefix = '■',
+    prefix = "|",
+  },
+  float = {
+    source = "if_many",
+  },
+  signs = false,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+})
+
+local signs = { Error = "•", Warn = "⚠", Hint = "➤", Info = "ℹ" }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 
 -- ─   Individual server configs                        ──
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
@@ -80,105 +155,105 @@ end
 
 -- https://github.com/microsoft/pyright
 lspconfig.pyright.setup({
-    capabilities = capabilities,
-    on_attach = function(client)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
-        on_attach(client)
-    end,
-    flags = flags,
-    settings = {
-        disableOrganizeImports = true,
-    },
+  capabilities = capabilities,
+  on_attach = function(client)
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
+    on_attach(client)
+  end,
+  flags = flags,
+  settings = {
+    disableOrganizeImports = true,
+  },
 })
 
 
 lspconfig.tsserver.setup({
-    on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
-        local ts_utils = require("nvim-lsp-ts-utils")
-        ts_utils.setup({})
-        ts_utils.setup_client(client)
-        buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
-        buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
-        buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
-        on_attach(client, bufnr)
-    end,
-    capabilities = capabilities,
-    flags = flags,
+  on_attach = function(client, bufnr)
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
+    local ts_utils = require("nvim-lsp-ts-utils")
+    ts_utils.setup({})
+    ts_utils.setup_client(client)
+    buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
+    buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
+    buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
+    on_attach(client, bufnr)
+  end,
+  capabilities = capabilities,
+  flags = flags,
 })
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls
 -- https://github.com/iamcco/vim-language-server
 lspconfig.vimls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
 lspconfig.graphql.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.eslint.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.cssls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.html.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/bash-lsp/bash-language-server
 lspconfig.bashls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
 })
 
 -- https://github.com/redhat-developer/yaml-language-server
 lspconfig.yamlls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
-    settings = {
-        yaml = {
-            format = {
-                printWidth = 100,
-            },
-        },
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+  settings = {
+    yaml = {
+      format = {
+        printWidth = 100,
+      },
     },
+  },
 })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.jsonls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = flags,
-    init_options = {
-        provideFormatter = false,
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+  init_options = {
+    provideFormatter = false,
+  },
+  settings = {
+    json = {
+      schemas = require("schemastore").json.schemas(),
     },
-    settings = {
-        json = {
-            schemas = require("schemastore").json.schemas(),
-        },
-    },
+  },
 })
 
 
@@ -208,19 +283,98 @@ lspconfig.sumneko_lua.setup {
 }
 
 
+-- ─   null-ls                                          ──
 
+-- vim.g.null_ls_disable = true
 local null_ls = require("null-ls")
 
+-- https://github.com/jose-elias-alvarez/null-ls.nvim
+local diagnostics_format = "[#{c}] #{m} (#{s})"
+local f = null_ls.builtins.formatting
+local d = null_ls.builtins.diagnostics
 null_ls.setup({
-    sources = {
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.code_actions.eslint_d,
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.completion.spell,
-        null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
-    },
-    on_attach = on_attach
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+  sources = {
+    -- codepell
+    d.codespell.with({
+      handlers = handlers,
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+    }),
+    -- python
+    d.flake8.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+    }),
+    f.isort.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+      extra_args = { "--profile", "black" },
+    }),
+    f.black.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+      extra_args = { "--fast" },
+    }),
+    -- javascript/typescript
+    d.eslint_d.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    f.prettier.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = "node_modules/.bin",
+    }),
+    -- sh/bash
+    d.shellcheck.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    f.shfmt.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "-i", "2" },
+    }),
+    -- lua
+    f.stylua.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "--indent-type", "Spaces" },
+    }),
+    -- json
+    f.fixjson.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- yaml
+    d.yamllint.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
+    }),
+    -- sql
+    f.sqlformat.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- toml
+    f.taplo.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- css/scss/sass/less
+    f.stylelint.with({
+      diagnostics_format = diagnostics_format,
+    }),
+  },
 })
+
+
+
+-- null_ls.setup({
+--   sources = {
+--     null_ls.builtins.diagnostics.eslint_d,
+--     null_ls.builtins.code_actions.eslint_d,
+--     null_ls.builtins.formatting.prettier,
+--     null_ls.builtins.completion.spell,
+--     null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+--   },
+--   on_attach = on_attach
+-- })
 
 
 -- ─   nvim-cmp setup                                    ■
@@ -235,6 +389,9 @@ local luasnip = require 'luasnip'
 
 local cmp = require 'cmp'
 cmp.setup {
+  completion = {
+    autocomplete = false, -- disable auto-completion.
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -251,7 +408,7 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = function(fallback)
+    ['<c-m>'] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
@@ -270,12 +427,61 @@ cmp.setup {
       end
     end,
   },
-  sources = {
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
+    { name = 'luasnip' }, -- For luasnip users.
+  }, {
+      { name = 'buffer' },
+    })
+  -- sources = {
+  --   { name = 'nvim_lsp' },
+  --   { name = 'luasnip' },
+  -- },
 }
 
+-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline('/', {
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+      { name = 'cmdline' }
+    })
+})
+
+_G.vimrc = _G.vimrc or {}
+_G.vimrc.cmp = _G.vimrc.cmp or {}
+_G.vimrc.cmp.lsp = function()
+  cmp.complete({
+    config = {
+      sources = {
+        { name = 'nvim_lsp' }
+      }
+    }
+  })
+end
+_G.vimrc.cmp.snippet = function()
+  cmp.complete({
+    config = {
+      sources = {
+        { name = 'vsnip' }
+      }
+    }
+  })
+end
+
+vim.cmd([[
+inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
+inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
+]])
+
+-- Other setup example: ~/.config/nvim.cam/lua/user/cmp.lua#/cmp.setup%20{
 
 -- ─^  nvim-cmp setup                                    ▲
 

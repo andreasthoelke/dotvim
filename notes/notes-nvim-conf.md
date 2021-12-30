@@ -1,10 +1,6 @@
 
 # NVIM config
 
-https://neovim.io/doc/user/lsp.html
-
-
-
 
 
 ## Chris at machine config
