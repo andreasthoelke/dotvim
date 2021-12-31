@@ -66,9 +66,20 @@ nnoremap <silent> <c-w>[ :call FloatWin_close()<cr>
 " Initialize this - else the map below causes an error
 let g:coc_last_float_win = 1
 
-nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>
-" nnoremap <silent> <c-w>i :call nvim_set_current_win( g:floatWin_win )<cr>gg
+
+nnoremap <silent> <c-w>i :call FloatWin_SelectFirst()<cr>
+" nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>
 " nnoremap <c-w>i <Plug>(coc-float-jump)
+
+func! FloatWin_SelectFirst()
+  for winnr in range(1, winnr('$'))
+    let win_conf = nvim_win_get_config(win_getid( winnr ))
+    if win_conf.focusable && !empty(win_conf.relative)
+      exec winnr . 'wincmd w'
+    endif
+  endfor
+endfunc
+
 
 nnoremap <silent> <c-w>I :call FloatWin_FitWidthHeight()<cr>
 
@@ -85,7 +96,7 @@ let g:floatWin_max_width = 120
 
 
 func! FloatWin_ShowLines ( lines )
-  call v:lua.vim.lsp.util.open_floating_preview( a:lines )
+  let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( a:lines )
 endfunc
 " call FloatWin_ShowLines( ['eins', 'zwei'] )
 
@@ -99,7 +110,7 @@ function FloatWin_close ()
     local config = vim.api.nvim_win_get_config(win)
     if config.relative ~= "" then
       vim.api.nvim_win_close(win, false)
-      -- print('Closing window', win)
+      " print('Closing window', win)
     end
   end
 end

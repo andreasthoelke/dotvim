@@ -163,7 +163,7 @@ Plug 'junegunn/goyo.vim'
 
 Plug 'AndrewRadev/linediff.vim'
 
-" Session: --------------------------------------------------------------
+" Session:
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 " Restore folding
@@ -220,7 +220,7 @@ Plug 'b0o/SchemaStore.nvim'
 " Plug 'leafgarland/typescript-vim'
 " Plug 'peitalin/vim-jsx-typescript'
 " Plug 'mityu/vim-applescript'
-" Plug 'vmchale/dhall-vim'
+Plug 'vmchale/dhall-vim'
 " Plug 'jparise/vim-graphql'
 " Plug 'udalov/kotlin-vim'
 " Plug 'pantharshit00/vim-prisma'

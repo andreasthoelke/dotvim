@@ -69,6 +69,9 @@ lst --level=4 /Users/at/.config_git/
 
 # do-next
 
+sessions are broken
+get the window id of the new float-win .. so i con jump into it.
+
 notes/do-next
 
 --Remap for dealing with word wrap
@@ -406,7 +409,7 @@ leader Hii/I - (in HsAPI) import identifier
 leader lHi - import identifier via LClient
 leader hfi - format imports
 
-### Purescript
+### purescript
 
 leader hii/I - (in HsAPI) import identifier
 leader lhi - import identifier via LClient
@@ -1139,7 +1142,7 @@ i.e. load an additional tab layout into a new tab
 leader Sd - load default session
 leader Ss - save to default session
 
-Settings: ~/.vim/init_nva.vim#/Session%20settings
+Settings: ~/.config/nvim/plugin/setup-general.vim#/Vim%20Sessions.
 
 ## Infos
 

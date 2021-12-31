@@ -539,20 +539,20 @@ hi link yamlPlainScalar purescriptIdentifier
 hi link dhallLabel Define
 
 
-hi link DiagnosticSignError purescriptIdentifier
-hi link DiagnosticSignWarn purescriptIdentifier
-hi link DiagnosticSignInfo PurescriptIdentifier
-hi link DiagnosticSignHint purescriptIdentifier
+hi link DiagnosticSignError Comment
+hi link DiagnosticSignWarn Comment
+hi link DiagnosticSignInfo Comment
+hi link DiagnosticSignHint Comment
 
-hi link DiagnosticVirtualTextError purescriptIdentifier
-hi link DiagnosticVirtualTextWarn purescriptIdentifier
-hi link DiagnosticVirtualTextInfo purescriptIdentifier
-hi link DiagnosticVirtualTextHint purescriptIdentifier
+hi link DiagnosticVirtualTextError Comment
+hi link DiagnosticVirtualTextWarn Comment
+hi link DiagnosticVirtualTextInfo Comment
+hi link DiagnosticVirtualTextHint Comment
 
-hi link DiagnosticFloatingError purescriptIdentifier
-hi link DiagnosticFloatingWarn purescriptIdentifier
-hi link DiagnosticFloatingInfo purescriptIdentifier
-hi link DiagnosticFloatingHint purescriptIdentifier
+hi link DiagnosticFloatingError Comment
+hi link DiagnosticFloatingWarn Comment
+hi link DiagnosticFloatingInfo Comment
+hi link DiagnosticFloatingHint Comment
 
 hi link CocErrorHighlight NONE
 hi link CocWarningHighlight NONE

@@ -108,7 +108,7 @@ func! VimLeaveCleanup()
   Tabdofast Windofast if &buftype == 'nofile' | close | endif
 endfunc
 
-" Vim Sessions: -----------------------------------------------------------------------
+" Vim Sessions:
 
 " new maps!
 nnoremap <leader>Sd :SessionOpen! default<cr>

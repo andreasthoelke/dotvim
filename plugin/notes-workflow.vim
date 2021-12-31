@@ -606,6 +606,7 @@ nnoremap <localleader>sh :set syntax=html<cr>
 nnoremap <localleader>sj :set syntax=javascript<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
+nnoremap <localleader>sl :set syntax=lua<cr>
 nnoremap <localleader>sp :set syntax=purescript<cr>
 nnoremap <localleader>sP :set syntax=purescript1<cr>
 nnoremap <localleader>SP :set syntax=python<cr>

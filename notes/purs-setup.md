@@ -9,23 +9,6 @@ Concur.Core
 Concur.Core.DOM
 Concur.Core.DevTools
 Concur.Core.Discharge
-Concur.Core.ElementBuilder
-Concur.Core.FRP
-Concur.Core.Gen
-Concur.Core.IsWidget
-Concur.Core.LiftWidget
-Concur.Core.Patterns
-Concur.Core.Props
-Concur.Core.Types
-Concur.React
-Concur.React.DOM
-Concur.React.Props
-Concur.React.Run
-Concur.React.SVG
-Concur.React.Widgets
-Control.Alt
-Control.Alternative
-
 
 # Node install
 Version manager 'n' in /user/local

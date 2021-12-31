@@ -184,6 +184,18 @@ lspconfig.tsserver.setup({
   flags = flags,
 })
 
+
+lspconfig.purescriptls.setup ({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {
+    purescript = {
+      addSpagoSources = true -- e.g. any purescript language-server config here
+    }
+  },
+  flags = flags,
+})
+
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls
 -- https://github.com/iamcco/vim-language-server
 lspconfig.vimls.setup({
@@ -299,7 +311,7 @@ null_ls.setup({
   sources = {
     -- codepell
     d.codespell.with({
-      handlers = handlers,
+      -- handlers = handlers,
       diagnostics_format = diagnostics_format,
       prefer_local = ".venv/bin",
     }),
