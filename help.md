@@ -272,6 +272,7 @@ flake8 style enforcement
 mypy static typing
 
 ## pyenv virtualenv pip, conda and poetry
+/Users/at/.config/nvim/notes/notes-python.md
 
 ### Poetry
 
@@ -598,6 +599,17 @@ leader of - open filepath under cursor in float win
 glc - open Url in line in Chromium
 leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@% and let @\*=@% )
 
+### Path expand and modify
+echo expand('%:t')
+echo expand('%:h')
+echo expand('%:p')
+echo fnamemodify('.gitignore', ':p')
+
+help filename-modifiers
+https://learnvimscriptthehardway.stevelosh.com/chapters/40.html
+
+
+
 ## Links / code links / vim rel-link
 
 glc - open Url in line in Chromium
@@ -641,10 +653,13 @@ Note the 'go' command and the distinction with the location list maps
 
 ### Change Working Directory CWD Project Root
 
+nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
+nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
+
 leader dpr ":lcd " . projectroot#guess() . "\n"
 leader dpR ":cd " . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
-~/.vim/vimrc#/Change%20Working%20Directory.
+~/.config/nvim/plugin/setup-general.vim#/Change%20Working%20Directory.
 
 ### Move / Copy files
 
@@ -1123,26 +1138,30 @@ leader wp af/ip ..
 
 ## Sessions
 
-leader So <c-i> - open a named session
-leader Sn - show name of the current session
-leader Ss - save/update the currently active session
-Rather do this: Save useful tab layout with a descriptive name:
-SessionTabSave nvim-lua-config
-SessionTabSave gatsby-tut1
-SessionTabSave nextjs-tut1
-You can open them as a session
-SessionOpen gatsby-tut1
-But this would switch out the current session:
-SessionOpen nextjs-tut1
-You could rather do this:
-tabn
-SessionTabOpen gatsby-tut1
-i.e. load an additional tab layout into a new tab
+Now using: ~/.config/nvim/plugin/setup-general.vim#/Neovim%20session%20manager
+Maps: ~/.config/nvim/plugin/setup-general.vim#/Vim%20Sessions.
+Commands: https://github.com/Shatur/neovim-session-manager#commands
 
-leader Sd - load default session
-leader Ss - save to default session
+outdated:
+  leader So <c-i> - open a named session
+  leader Sn - show name of the current session
+  leader Ss - save/update the currently active session
+  Rather do this: Save useful tab layout with a descriptive name:
+  SessionTabSave nvim-lua-config
+  SessionTabSave gatsby-tut1
+  SessionTabSave nextjs-tut1
+  You can open them as a session
+  SessionOpen gatsby-tut1
+  But this would switch out the current session:
+  SessionOpen nextjs-tut1
+  You could rather do this:
+  tabn
+  SessionTabOpen gatsby-tut1
+  i.e. load an additional tab layout into a new tab
 
-Settings: ~/.config/nvim/plugin/setup-general.vim#/Vim%20Sessions.
+  leader Sd - load default session
+  leader Ss - save to default session
+
 
 ## Infos
 

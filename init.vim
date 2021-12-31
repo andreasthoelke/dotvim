@@ -165,7 +165,8 @@ Plug 'AndrewRadev/linediff.vim'
 
 " Session:
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
+" Plug 'xolox/vim-session'
+Plug 'Shatur/neovim-session-manager'
 " Restore folding
 " Plug 'vim-scripts/restore_view.vim'
 " TODO test this

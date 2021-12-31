@@ -111,11 +111,15 @@ endfunc
 " Vim Sessions:
 
 " new maps!
-nnoremap <leader>Sd :SessionOpen! default<cr>
-nnoremap <leader>So :SessionOpen 
-nnoremap <leader>SS :SessionSave 
-nnoremap <leader>Ss :SessionSave<cr>
-nnoremap <leader>Sn :SessionShowName<cr>
+" nnoremap <leader>Sd :SessionOpen! default<cr>
+nnoremap <leader>Sd :LoadCurrentDirSession<cr>
+" nnoremap <leader>So :SessionOpen 
+nnoremap <leader>So :Telescope sessions<cr>
+nnoremap <leader>Sl :LoadLastSession<cr>
+" nnoremap <leader>SS :SessionSave 
+" nnoremap <leader>Ss :SessionSave<cr>
+nnoremap <leader>Ss :SaveSession<cr>
+" nnoremap <leader>Sn :SessionShowName<cr>
 
 " nnoremap <leader>SC :bufdo bwipeout<cr>
 nnoremap <leader>SC :BufferDeleteInactive<cr>
@@ -146,6 +150,23 @@ set sessionoptions-=buffers
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
 let g:session_autosave_periodic = 0
+
+" ─   Neovim session manager                            ──
+"  ~/.config/nvim/init.vim#/Plug%20'Shatur/neovim-session-manager'
+lua << EOF
+local Path = require('plenary.path')
+require('session_manager').setup({
+  sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions'), -- The directory where the session files will be saved.
+  path_replacer = '__', -- The character to which the path separator will be replaced for session files.
+  colon_replacer = '++', -- The character to which the colon symbol will be replaced for session files.
+  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+  autosave_last_session = true, -- Automatically save last session on exit.
+  autosave_ignore_not_normal = true, -- Plugin will not save a session when no writable and listed buffers are opened.
+  autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
+})
+require('telescope').load_extension('sessions')
+EOF
+
 
 " Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
@@ -1109,15 +1130,17 @@ func! SetWorkingDirectory(path)
 endfunc
 
 " Change Working Directory: ---------------
-nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
-nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "\n"
+" nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
+" nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
 nnoremap <leader>Sp :echo getcwd()<cr>
 nnoremap <leader>sp :echo getcwd()<cr>
 
 " set to current file path
-nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
-nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
+" nnoremap <leader>dcF :cd %:p:h<cr>:pwd<cr>
+" nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
+nnoremap <leader>dpR :cd %:p:h<cr>:pwd<cr>
+nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
 function! <SID>AutoProjectRootCD()
   try
