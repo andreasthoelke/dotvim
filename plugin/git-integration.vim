@@ -24,7 +24,7 @@ nnoremap <leader>oG         :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
-" git commit:            needs shell return
+" git commit:
 nnoremap <leader><leader>gC :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 vnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommit( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 nnoremap <leader><leader>gc :call ShellReturn( 'git commit -m "' . input('Commit message') '"' )<cr>
