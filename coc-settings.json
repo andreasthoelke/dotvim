@@ -1,5 +1,5 @@
 {
-  "jedi.enable": true,
+  "jedi.enable": false,
   "jedi.startupMessage": true,
   "git.enableGutters": false,
   "explorer.previewAction.onHover": false,

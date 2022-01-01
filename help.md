@@ -653,8 +653,9 @@ Note the 'go' command and the distinction with the location list maps
 
 ### Change Working Directory CWD Project Root
 
-nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
-nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
 leader dpr ":lcd " . projectroot#guess() . "\n"
 leader dpR ":cd " . projectroot#guess() . "\n"
@@ -865,6 +866,9 @@ leader ot/T - open Vista / Tagbar
 c-w \ - jump to it from leftmost win (c-w p to jump back to prev win)
 ? in win - show help
 p in win - to jump to tag but cursor stays in tagbar
+
+this actually works:
+call TagInStatusline()
 
 ### Vista usage
 
@@ -1140,7 +1144,7 @@ leader wp af/ip ..
 
 Now using: ~/.config/nvim/plugin/setup-general.vim#/Neovim%20session%20manager
 Maps: ~/.config/nvim/plugin/setup-general.vim#/Vim%20Sessions.
-Commands: https://github.com/Shatur/neovim-session-manager#commands
+Commands: https://github.com/Shatur/neovim-session-manager\#commands
 
 outdated:
   leader So <c-i> - open a named session

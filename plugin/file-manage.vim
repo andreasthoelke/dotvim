@@ -508,6 +508,10 @@ func! ProjectRootFolderName ()
   return GetLastComponentFromPath( getcwd() )
 endfunc
 
+func! ProjectRootFolderNameOfWin (winnr)
+  return GetLastComponentFromPath( getcwd(a:winnr) )
+endfunc
+
 " When opening a file with Dirvish the filepath is not relative. This makes sure it is.
 func! CurrentRelativeFilePath ()
   let path = expand('%:p')
@@ -516,6 +520,13 @@ func! CurrentRelativeFilePath ()
   return relPath
 endfunc
 " echo CurrentRelativeFilePath()
+
+func! CurrentRelativeFilePathOfWin ()
+  let path = expand('%:p')
+  let cwd = getcwd( winnr() )
+  let relPath = substitute( path, cwd, '', '' )
+  return relPath
+endfunc
 
 " A dirvish buffer will be the 'next folder path'
 func! CurrentNextFolderPath ()

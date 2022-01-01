@@ -42,18 +42,27 @@ func! TagInStatusline()
   call lightline#update()
 endfunc
 
-source ~/.vim/colors/wombat_2.vim
+" source ~/.vim/colors/wombat_2.vim
 
 let g:lightline = {}
 let g:lightline.colorscheme = 'wombat_2'
 " let g:lightline.colorscheme = 'default'
+
+func! TestSL()
+  " let g:lightline.active.right = [ ['scrollbar'], ['column', 'line'] ]
+  " let g:lightline.inactive.right = [ ['winnr', 'line'] ]
+  " let g:lightline.inactive.right = [ ['projectRootFolderNameOfWin', 'line'] ]
+  " let g:lightline.active.right = [ ['winnr', 'line'] ]
+  call lightline#init()
+  call lightline#update()
+endfunc
 
 let g:lightline.active = {}
 let g:lightline.inactive = {}
 " let g:lightline.active.left   = [ ['projectRootFolderName', 'relativepath'] ]
 " let g:lightline.inactive.left = [ ['projectRootFolderName', 'relativepath'] ]
 let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
-let g:lightline.inactive.left   = [ ['projectRootFolderName'], ['relativepath'] ]
+let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepathOfWin'] ]
 
 " let g:lightline.active.right = [ ['lineinfo', 'percent']
 "                              \ , ['fpathBNum', 'percent']
@@ -97,6 +106,8 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
+let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
+let g:lightline.component_function.relativepathOfWin = 'CurrentRelativeFilePathOfWin'
 let g:lightline.component_function.hithere = 'Testthere'
 let g:lightline.component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
 let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
@@ -104,6 +115,10 @@ let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
 let g:lightline.tab_component_function = {}
 let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
 
+
+func! LightlineLocalRootFolder()
+  return ProjectRootFolderNameOfWin( winnr() )
+endfunc
 
 func! Testthere()
   return col('.')

@@ -1142,6 +1142,10 @@ nnoremap <leader>sp :echo getcwd()<cr>
 nnoremap <leader>dpR :cd %:p:h<cr>:pwd<cr>
 nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
+nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
+
 function! <SID>AutoProjectRootCD()
   try
     if &ft != 'help'

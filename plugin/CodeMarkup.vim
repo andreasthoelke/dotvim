@@ -15,7 +15,7 @@ func! CodeMarkupSyntaxHighlights()
   " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
 
   " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
-  call matchadd('CommentSection', '\v("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+  call matchadd('CommentSection', '\v("|--|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
 
   " And even: more
   " Comment sections can be terminated using the ^ char
