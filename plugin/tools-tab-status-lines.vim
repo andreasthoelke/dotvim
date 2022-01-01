@@ -116,7 +116,6 @@ let g:lightline.tab_component_function = {}
 let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
 
 
-" Test
 func! LightlineLocalRootFolder()
   return ProjectRootFolderNameOfWin( winnr() )
 endfunc
