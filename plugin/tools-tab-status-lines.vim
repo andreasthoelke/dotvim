@@ -42,7 +42,8 @@ func! TagInStatusline()
   call lightline#update()
 endfunc
 
-" source ~/.vim/colors/wombat_2.vim
+" This only sources colors relevant to the statusline:
+source ~/.vim/colors/wombat_2.vim
 
 let g:lightline = {}
 let g:lightline.colorscheme = 'wombat_2'
@@ -70,7 +71,7 @@ let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepa
 
 " let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
 " let g:lightline.inactive.right = [ ['scrollbar'] ]
-let g:lightline.active.right = [ ['line'] ]
+let g:lightline.active.right = [ ['line'], ['pyVirtEnvStr'] ]
 let g:lightline.inactive.right = [ ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
@@ -106,6 +107,7 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
+let g:lightline.component_function.pyVirtEnvStr = 'PyVirtEnvStr'
 let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
 let g:lightline.component_function.relativepathOfWin = 'CurrentRelativeFilePathOfWin'
 let g:lightline.component_function.hithere = 'Testthere'
@@ -122,6 +124,22 @@ endfunc
 
 func! Testthere()
   return col('.')
+endfunc
+
+func! PyVirtEnvStr ()
+  return join( split( PyVimVirtualEnv(), '/' )[-2:], '/' )
+  " return split( PyVimVirtualEnv(), '/' )[-2]
+endfunc
+
+" This is the py-virtual-env that was active in the shell *when vim started!*
+func! PyVimVirtualEnv ()
+  return execute( "echo $VIRTUAL_ENV" )
+endfunc
+
+" This might read the env variable from the shell https://vim.fandom.com/wiki/Environment_variables
+func! PyVimVirtualEnvExt ()
+  " return expand( "$VIRTUAL_ENV" )
+  return expand( "$VIRTUAL_ENV_PROMPT" )
 endfunc
 
 func! LightlineScrollbar()

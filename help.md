@@ -1058,6 +1058,8 @@ Telescope highlights
 
 # Shell / ZSH
 
+read shell variables: ~/.config/nvim/plugin/tools-tab-status-lines.vim#/func.%20PyVimVirtualEnvExt%20..
+
 ## Command line $PATH
 
 (note that I'm now using ~/.zprofile like this to add to my $PATH)

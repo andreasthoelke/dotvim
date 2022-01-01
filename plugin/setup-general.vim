@@ -1130,8 +1130,8 @@ func! SetWorkingDirectory(path)
 endfunc
 
 " Change Working Directory: ---------------
-" nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
-" nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "\n"
+nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "<cr>"
+nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "<cr>"
 " Also consider using ":ProjectRootCD"
 nnoremap <leader>Sp :echo getcwd()<cr>
 nnoremap <leader>sp :echo getcwd()<cr>
@@ -1139,8 +1139,8 @@ nnoremap <leader>sp :echo getcwd()<cr>
 " set to current file path
 " nnoremap <leader>dcF :cd %:p:h<cr>:pwd<cr>
 " nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
-nnoremap <leader>dpR :cd %:p:h<cr>:pwd<cr>
-nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
+" nnoremap <leader>dpR :cd %:p:h<cr>:pwd<cr>
+" nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
 nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
