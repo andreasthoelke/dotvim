@@ -41,6 +41,7 @@ endfunc
 " call ShellReturn( 'ls' )
 " echo systemlist( 'ls' )
 
+
 " TODO testing this as off!
 " Keep term buffers running/open when closing the window
 " might want to consider 'winfixheight'
