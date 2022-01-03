@@ -27,7 +27,6 @@ nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
 nnoremap <leader><leader>gC :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 vnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
-nnoremap <leader><leader>gc :call ShellReturn( 'git commit -m "' . input('Commit message') '"' )<cr>
 " git push:
 nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 " View in Github desktop:
