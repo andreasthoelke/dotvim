@@ -105,7 +105,7 @@ Plug 'rking/ag.vim'
 " Tabline Statusline: -----------------------------------------------------------
 " Faster than airline and cleaner config?
 Plug 'itchyny/lightline.vim'
-" Lightline complient buffer/tabline
+" Lightline compliant buffer/tabline
 " Plug 'mengelbrecht/lightline-bufferline'
 
 " May activate this at times to create styled promptline
@@ -147,7 +147,7 @@ Plug 'plexigras/promptline.vim'
 " Plug 'cormacrelf/vim-colors-github'
 
 Plug 'chrisbra/Colorizer'
-" https://github.com/norcalli/nvim-colorizer.lua#commands
+" https://github.com/norcalli/nvim-colorizer.lua\#commands
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'KabbAmine/vCoolor.vim'
 

@@ -228,6 +228,17 @@ set shada=!,'200,<50,s10,h
 
 " highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
+lua << EOF
+require 'colorizer'.setup {
+  'vim';
+  'css';
+  'javascript';
+  html = {
+    mode = 'foreground';
+  }
+}
+EOF
+
 
 " Style Colors: ----------------------------{{{
 " Change colors in the colorscheme: Open vimfiles/colors/molokai

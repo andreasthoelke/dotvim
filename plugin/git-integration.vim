@@ -26,6 +26,7 @@ nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
 nnoremap <leader><leader>gC :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+" Issue: this does not show the confirmation message in the float window:
 xnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 " git push:
 nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>

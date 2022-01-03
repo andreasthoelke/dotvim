@@ -1142,6 +1142,13 @@ Examples with generic operator functions
 ## Syntax color, highlights
 
 Telescope highlights
+we now have a fast Colorizer
+Filter ansi color escape codes: ~/.config/nvim/plugin/search-replace.vim#/func.%20RemoveTermCodes%20.lines.
+  and potentially convert them to html/vim highlighting using ansifilter
+
+## Colorizer.nvim
+to highligh colors in code (CSS, JS, HTML, VIM)
+~/.config/nvim/plugin/setup-general.vim#/require%20'colorizer'.setup%20{
 
 # Notes
 
