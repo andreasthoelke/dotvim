@@ -1,6 +1,6 @@
 {
   "jedi.enable": false,
-  "jedi.startupMessage": true,
+  "jedi.startupMessage": false,
   "git.enableGutters": false,
   "explorer.previewAction.onHover": false,
   "explorer.previewAction.strategy": "labeling",

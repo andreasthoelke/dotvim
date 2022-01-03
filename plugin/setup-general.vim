@@ -156,10 +156,10 @@ let g:session_autosave_periodic = 0
 lua << EOF
 local Path = require('plenary.path')
 require('session_manager').setup({
-  sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions'), -- The directory where the session files will be saved.
+  sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions1'), -- The directory where the session files will be saved.
   path_replacer = '__', -- The character to which the path separator will be replaced for session files.
   colon_replacer = '++', -- The character to which the colon symbol will be replaced for session files.
-  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+  autoload_mode = require('session_manager.config').AutoloadMode.LastSession, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
   autosave_last_session = true, -- Automatically save last session on exit.
   autosave_ignore_not_normal = true, -- Plugin will not save a session when no writable and listed buffers are opened.
   autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
@@ -1130,8 +1130,6 @@ func! SetWorkingDirectory(path)
 endfunc
 
 " Change Working Directory: ---------------
-nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "<cr>"
-nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "<cr>"
 " Also consider using ":ProjectRootCD"
 nnoremap <leader>Sp :echo getcwd()<cr>
 nnoremap <leader>sp :echo getcwd()<cr>
@@ -1142,9 +1140,16 @@ nnoremap <leader>sp :echo getcwd()<cr>
 " nnoremap <leader>dpR :cd %:p:h<cr>:pwd<cr>
 " nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
+" Set the root to a specific folder - not necessarily a git root folder.
 nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
+
+" Hmm, i still want to set the project root from any file in the
+" project.
+nnoremap <expr><leader>cdsl ":lcd " . projectroot#guess() . "<cr>"
+nnoremap <expr><leader>cdsg ":cd "  . projectroot#guess() . "<cr>"
+nnoremap <expr><leader>cdst ":tcd "  . projectroot#guess() . "<cr>"
 
 function! <SID>AutoProjectRootCD()
   try

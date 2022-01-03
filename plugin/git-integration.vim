@@ -33,6 +33,7 @@ nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 " View in Github desktop:
 nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 
+nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
 
 func! GetGitRoot()
   return systemlist('git root')[0]

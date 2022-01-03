@@ -13,6 +13,25 @@ fun! SubstituteInLines ( lines, origDelim, newDelim )
   return a:lines
 endfun
 
+func! RemoveTermCodes (lines)
+  " return systemlist( 'sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"', join( a:lines, "\n" ) )
+  " return systemlist( 'strip-ansi', join( a:lines, "\n" ) )
+  return systemlist( 'ansifilter', join( a:lines, "\n" ) )
+endfunc
+
+fun! RemoveTermCodes( lines )
+  let l:idx = 0
+  while l:idx < len(a:lines)
+    let l:line = a:lines[l:idx]
+    " let a:lines[l:idx] = nvim_replace_termcodes(l:line, v:true, v:false, v:true)
+    let a:lines[l:idx] = substitute(l:line, '\e\[[0-9;]\+[mK]', '', 'g')
+
+    let l:idx = l:idx + 1
+  endwhile
+  return a:lines
+endfun
+
+
 func! ReplaceInRange( startLine, endLine, replacementMaps )
   let rangeStr = a:startLine . ',' . a:endLine
   for [target, replacement] in a:replacementMaps

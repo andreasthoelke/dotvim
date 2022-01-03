@@ -1,6 +1,6 @@
 
 
-" ─   Operater Map Example                              ──
+" ─   Operator Map Example                              ──
 " A very typical use case in a text editor is to run an action on a selection of text. In Vim a selection
 " of text can be a visual selection or a motion or text object. The following is an example of how to
 " set up the related maps in a reusable way.
@@ -37,11 +37,11 @@ endfunc
 " Clear the "CmdArg"
 nnoremap <leader><leader>R :unlet g:commendArgument1<cr>
 
-" ─^  Operater Map Example                              ▲
+" ─^  Operator Map Example                              ▲
 
 
-nnoremap <leader>r    m':let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
-vnoremap <leader>r :<c-u>let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
+nnoremap <leader><leader>r    m':let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
+vnoremap <leader><leader>r :<c-u>let g:opContFn='SaveToCmdArgVar'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
 
 
 

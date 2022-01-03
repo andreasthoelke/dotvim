@@ -147,6 +147,8 @@ Plug 'plexigras/promptline.vim'
 " Plug 'cormacrelf/vim-colors-github'
 
 Plug 'chrisbra/Colorizer'
+" https://github.com/norcalli/nvim-colorizer.lua#commands
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'KabbAmine/vCoolor.vim'
 
 
@@ -299,7 +301,13 @@ Plug 'aklt/rel.vim'
 " Plug 'andreasthoelke/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
 
-" ─   Haskell IDE features                               ■
+" ─   Repl IDE features                               ■
+
+Plug 'sillybun/vim-repl'
+Plug 'is0n/jaq-nvim'
+" Plug 'jbyuki/dash.nvim'
+" Plug 'metakirby5/codi.vim'
+" Plug 'michaelb/sniprun', {'do': 'bash install.sh'}
 
 " Plug 'parsonsmatt/intero-neovim'
 " Plug 'andreasthoelke/intero-neovim'

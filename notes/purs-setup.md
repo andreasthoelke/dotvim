@@ -158,7 +158,7 @@ nnoremap <leader>hrb :call BindingRename()<cr>
 CocList services
 try out? -> https://github.com/microsoft/language-server-protocol-inspector
 
-### just some command i tried
+### just some commands i tried
 CocList --normal location
 CocNext
 CocList files

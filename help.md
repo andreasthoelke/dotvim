@@ -1,7 +1,12 @@
 # help
 
-More help/comments: ~/.vim/notes/notes-navigation.md#/#%20Navigate%20Containers
+More help/comments:
+~/.vim/notes/notes-navigation.md#/#%20Navigate%20Containers
 ~/.vim/notes/releases.md#/##%20Release%20notes
+
+## Links
+notes/links
+
 
 # Homebrew
 
@@ -68,9 +73,18 @@ lst --level=4 /Users/at/.config_git/
 /Users/at/.vim/notes/notes-stow-config_git.md
 
 # do-next
+filter Ms, all with sed,
+just python with 'command' will be synchronous
+but i could just open a temp terminal! in a float
 
-sessions are broken
-get the window id of the new float-win .. so i con jump into it.
+
+note: search these notes:
+notes/notes-todos.md
+
+
+colors, maps etc for codi https://github.com/metakirby5/codi.vim/blob/master/doc/codi.txt
+the old spell should still work
+!python <filename> with shellreturn
 
 notes/do-next
 
@@ -259,6 +273,10 @@ TSModuleInfo
 
 https://www.youtube.com/watch?v=dPQfsASHNkg
 
+# Purescript
+notes/notes-purescript.md
+notes/purs-setup.md
+
 # Python
 
 " Example of how to run a Python function: ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
@@ -359,6 +377,76 @@ Config: ~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
 
 Custom fonts
 https://www.nerdfonts.com/font-downloads
+
+
+# Live code integration / repl
+
+## Purs repl
+
+~/.config/nvim/plugin/utils-repl.vim#/New%20Purescript%20REPL
+
+ReplStart
+ReplEval
+ReplSimpleResponseHandler
+
+e.g. this may become a subject again:
+~/.config/nvim/notes/notes-todos.md#/##%20Pretty%20printing
+
+
+## research links
+https://www.reddit.com/r/neovim/comments/qag4ib/python_devs_out_there_what_are_you_using_to_get_a/
+
+.. hmm https://github.com/michaelb/sniprun/blob/master/README.md
+
+Use print statements:
+https://github.com/meain/vim-printer
+
+### Jaq
+plugin/setup-jaq.lua
+https://github.com/is0n/jaq-nvim
+:Jaq   works, also on markdown
+
+### abstract code runners
+https://github.com/jbyuki/dash.nvim
+https://github.com/thinca/vim-quickrun
+https://github.com/formulahendry/vscode-code-runner
+
+### literate programming
+https://github.com/jbyuki/ntangle.nvim/blob/master/doc/ntangle.txt
+
+### Codi
+https://github.com/metakirby5/codi.vim
+https://github.com/metakirby5/codi.vim/blob/master/doc/codi.txt
+
+Jupyter notebook
+https://alpha2phi.medium.com/jupyter-notebook-vim-neovim-c2d67d56d563
+
+Terminal helpers
+https://github.com/kassio/neoterm
+
+### basically a notebook in vim
+https://github.com/sillybun/vim-repl
+
+### via SSH
+https://github.com/abhishekkrthakur/colabcode
+uses ngrok
+
+### ngrok
+https://bruhtus.github.io/posts/ssh-google-colab/
+
+### Use Jupytext
+https://jupytext.readthedocs.io/en/latest/
+vim plugin: https://github.com/goerz/jupytext.vim
+
+### magma nvim
+https://github.com/dccsillag/magma-nvim
+might get image preview support on mac: https://github.com/dccsillag/magma-nvim/issues/15
+
+similar for just vim https://github.com/jupyter-vim/jupyter-vim
+
+## Image preview
+https://github.com/edluffy/hologram.nvim
+
 
 ## Purs repl / Ghci/ Intero
 
@@ -653,9 +741,12 @@ Note the 'go' command and the distinction with the location list maps
 
 ### Change Working Directory CWD Project Root
 
+" Set the root to a specific folder - not necessarily a git root folder.
 nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
+
+There is also 'cds[earch]l/t/g'
 
 leader dpr ":lcd " . projectroot#guess() . "\n"
 leader dpR ":cd " . projectroot#guess() . "\n"
@@ -1002,7 +1093,7 @@ put =split(getline(line('.')-1), ',')
 ### vimdump files updating
 
 :RedirMessagesWin verb map - put any vim command echo text into a new buffer
-Substitude vim echoed locations with rel-lins: %s/ line /#:/ e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
+Substitute vim echoed locations with rel-lins: %s/ line /#:/ e.g. ~/.vim/plugin/HsAPI-haddock.vim line 37 => ~/.vim/plugin/HsAPI-haddock.vim#:37
 Collapse two lines into one: %s/\n.\*Last set from/ | /
 
 toggle vim settings: ~/.vim/vimrc#/function.%20ToggleOption.option_name,%20....
@@ -1132,6 +1223,8 @@ Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
 " Navigate errors: "]s" - "[s", show suggestions: "z=", rather: "ea" to go to insert mode at the end of the word, then
 " "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
 " add to dictionary: "zg" undo "zug"
+
+currently only z= works for suggestions?
 
 # Scratch window, temp notes file
 

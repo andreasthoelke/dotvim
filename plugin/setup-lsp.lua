@@ -313,7 +313,6 @@ null_ls.setup({
     d.codespell.with({
       -- handlers = handlers,
       diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
     }),
     -- python
     d.flake8.with({
@@ -336,7 +335,7 @@ null_ls.setup({
     }),
     f.prettier.with({
       diagnostics_format = diagnostics_format,
-      prefer_local = "node_modules/.bin",
+      filetypes = { "html", "json", "yaml", "markdown" },
     }),
     -- sh/bash
     d.shellcheck.with({

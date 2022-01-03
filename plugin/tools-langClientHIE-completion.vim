@@ -511,7 +511,7 @@ endfunc
 " ─^  Get types and Type holes                           ▲
 
 
-" ─   Repl Relead Tracking                               ■
+" ─   Repl Reload Tracking                               ■
 " augroup LS_StatusChange
 "   autocmd!
 "   autocmd FileWritePost *.purs echo 'hi'
