@@ -141,6 +141,12 @@ endfunc
 " Syntax Color Haskell: --------------------
 
 func! PythonSyntaxAdditions() " ■
+  call clearmatches()
+
+  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+  syntax match ConcealQuotes "'" conceal
+  syntax match ConcealQuotes '"' conceal
+
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
@@ -151,18 +157,16 @@ func! PythonSyntaxAdditions() " ■
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
   " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
 
-  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
 
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
   set commentstring=\ \#%s
-  " Original vim foldmarker string
-  " set foldmarker={{{,}}}
-  " set foldmarker=■■,▲▲
-  " set foldmarker=\ ■,\ ▲
+
+
 endfunc " ▲
 
 func! LuaSyntaxAdditions() " ■
