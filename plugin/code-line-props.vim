@@ -64,7 +64,7 @@ func! VisualCol()
   return VisualColLine( line('.'), col('.'), virtcol('.') )
 endfunc
 
-" The visible column index of a charater column index (recognising conceals/replacements)
+" The visible column index of a character column index (recognising conceals/replacements)
 func! VisualColLine( lineNum, sourceCharIdx, sourceVirtualCharIdx )
   if a:sourceVirtualCharIdx > a:sourceCharIdx
     " Once the cursor is the virtual (beyond the real chars) area of the line, virtcol() *does* return the visualColumn index!
@@ -74,7 +74,7 @@ func! VisualColLine( lineNum, sourceCharIdx, sourceVirtualCharIdx )
   endif
 endfunc
 
-func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
+func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx ) " ■
   let concealedCharCount = 0
   let concealInstanceIds = []
   let lineStr = getline(a:lineNum)
@@ -95,7 +95,7 @@ func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
   let replacementInstances = len( uniq( concealInstanceIds ) )
   let reducedColumnCount = concealedCharCount - replacementInstances
   return reducedColumnCount
-endfunc
+endfunc " ▲
 
 " Set the cursor to a visual-colomn index
 func! SetCursorVisualCol( lineNum, visualCol )
@@ -103,7 +103,7 @@ func! SetCursorVisualCol( lineNum, visualCol )
 endfunc
 
 " Find the first char(idx) that displays at a visualColumn index
-func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
+func! CharIdxOfVisualCol( lineNum, searchVisualColIdx ) " ■
   let lineStr = getline(a:lineNum)
   let currVisualIdx = 0
   let currConcealInstance = 0
@@ -158,7 +158,7 @@ func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
   " Previous solution: does not work, because setting in the vitual column area does reflect the visual column/compensate conceals!
     " To match this visual column via source-chars (extending into the virtual range), we have to add the columnsCount that the chars in this line hides/reduced
     " return a:searchVisualColIdx + reducedColumnCount
-endfunc
+endfunc " ▲
 " Tests:
 " call setpos('.', [0, line('.'), CharIdxOfVisualCol(line('.'), 20), 0] )
 
@@ -346,7 +346,7 @@ func! CursorIsAtStartOfWord()
 endfunc
 " echo  CursorIsAtStartOfWord()
 
-" Returns Ascii code of multi-byte charaters like '→'
+" Returns Ascii code of multi-byte characters like '→'
 func! GetCharAtCursorAscii()
   return strgetchar( getline('.'), virtcol('.')-1 )
 endfunc

@@ -88,6 +88,13 @@ func! PyReplStart ()
   let g:PursPyReplID = termopen("ipython", g:PyReplCallbacks)
 endfunc
 
+func! TestTer()
+  " call FloatWin_ShowLines( ['eins', 'zwei'] )
+  " call FloatWin_FocusFirst()
+  exec "new"
+  let g:PursPyReplID = termopen(g:cm, g:PyReplCallbacks)
+endfunc
+
 func! PyReplStop ()
   if !exists('g:PursPyReplID')
     echo 'PyRepl is not running'
@@ -150,10 +157,6 @@ func! PyReplSimpleResponseHandler( lines )
   "   return
   " endif
   let l:lines = RemoveTermCodes( l:lines )
-  " let l:lines = nvim_replace_termcodes( a:lines, v:true, v:true, v:true )
-  " let l:lines = ReplaceStringsInLines( l:lines, g:ReplaceBashEscapeStrings )
-  " echoe l:lines
-  " let l:lines = functional#filter( {x->x == ''}, l:lines )
 
   if len( l:lines ) == 3
     " PyRepl returned the typlical one value

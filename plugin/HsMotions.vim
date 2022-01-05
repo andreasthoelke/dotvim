@@ -154,7 +154,7 @@ endfunc
 func! PrevBlockLastLine()
   " Go one up to (presumably) the type-sig line
   normal! k
-  " Seach back to a line that does not start with a comment
+  " Search back to a line that does not start with a comment
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc
 
@@ -358,7 +358,7 @@ endfunc
 
 " ─^  Line (compensating conceal)                        ▲
 
-" ─   Indention                                          ■
+" ─   Indentation                                          ■
 
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 
@@ -515,10 +515,10 @@ endfunc
 " nnoremap ,K ^:call IndentBlockStart()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
 " TODO where is this useful in typical hasekell layout?
 
-" ─^  Indention                                          ▲
+" ─^  Indentation                                          ▲
 
 
-" NOTE: is this redundent with 't/T'?
+" NOTE: is this redundant with 't/T'?
 " TODO this only works in comma based args? (JS, vim, ..?). It doesn't work with the last arg?! how about spaces?
 " Argument Movement: Note the is Vim-targets related
 " Move to current-next argument - the B before the next ','

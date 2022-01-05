@@ -11,13 +11,34 @@
 " e1_cbwl0 = runReader cbwl0 (i:: Int)
 " "2. new feature: (x -> Bool) should be 'xp'
 
-nnoremap <leader>et :call CreateInlineTestDec()<cr>
+
+nnoremap <leader>et :call CreateInlineTestDec_py()<cr>
+func! CreateInlineTestDec_py()
+  let func_ln = searchpos( '^def\s', 'cnb' )[0]
+  " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
+  let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
+  let strInParan = matchstr( getline(func_ln), '\v\(\zs.*\ze\)' )
+  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  " echo "['first', 'sec', 'third']"[1:-2]
+  let lineText = funcName . '(' . paramNames[1:-2] . ')'
+  let nextIndex = GetNextTestDeclIndex(func_ln)
+  let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
+  call append( '.', lineText )
+  call search('(')
+  normal l
+endfunc
+" Tests:
+" def mult(aa, bb):
+"   return aa * bb
+" e1_mult = mult('aa', 'bb')
+
+
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec()
   let typeSigLineNum = TopLevTypeSigBackwLineNum()
   let funcName       = GetTopLevSymbolName( typeSigLineNum )
   let argumentTypesList = HsExtractArgTypesFromTypeSigStr( getline( typeSigLineNum ) )
-  let nextIndex = GetNextTestDeclIndex()
+  let nextIndex = GetNextTestDeclIndex(typeSigLineNum)
   let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . funcName . ' ' . ArgsPlacehoderStr( argumentTypesList )
   call append( line('.') -1, lineText )
   normal k^ww
@@ -28,9 +49,9 @@ endfunc
 " Will produce
 " e1_intStr = intStr (i:: Int)
 
-func! GetNextTestDeclIndex()
+func! GetNextTestDeclIndex( fn_linenum )
   let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()
-  let thereIsAPrevTestDecl = lineNumPrevInlineTestDec > TopLevBackwLine()
+  let thereIsAPrevTestDecl = lineNumPrevInlineTestDec > a:fn_linenum
   if thereIsAPrevTestDecl
     return 1 + eval( GetTestDeclIndex( lineNumPrevInlineTestDec ) )
   else
@@ -38,7 +59,7 @@ func! GetNextTestDeclIndex()
   endif
 endfunc
 " database2 ∷ String → [(String, String, Int)]
-" e1_database4 = database4 (Just "eins") 123
+" e3_database4 = database4 (Just "eins") 123
 " echo GetNextTestDeclIndex()
 
 

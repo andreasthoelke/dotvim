@@ -1,8 +1,8 @@
 
 " note you can just use :.,$s/old/new/g  to replace to the end of the file
 
-" This uses a list of lines, not a range in the code like below
-" Note: this returns lines list and needs to replace in the buffer
+" This uses a list of lines, not a range like in the code below
+" Note: this returns a list of lines and needs to be replaced in the buffer
 fun! SubstituteInLines ( lines, origDelim, newDelim )
   let l:idx = 0
   while l:idx < len(a:lines)

@@ -67,11 +67,11 @@ nnoremap <silent> <c-w>[ :call FloatWin_close()<cr>
 let g:coc_last_float_win = 1
 
 
-nnoremap <silent> <c-w>i :call FloatWin_SelectFirst()<cr>
+nnoremap <silent> <c-w>i :call FloatWin_FocusFirst()<cr>
 " nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>
 " nnoremap <c-w>i <Plug>(coc-float-jump)
 
-func! FloatWin_SelectFirst()
+func! FloatWin_FocusFirst()
   for winnr in range(1, winnr('$'))
     let win_conf = nvim_win_get_config(win_getid( winnr ))
     if win_conf.focusable && !empty(win_conf.relative)
@@ -115,6 +115,8 @@ function FloatWin_close ()
   end
 end
 EOF
+
+" func! 
 
 " Show lines in float-win at cursor loc by default. Or pass column, row for win relative position.
 func! FloatWin_ShowLines_old( linesToShow, ... )
@@ -343,6 +345,21 @@ function! CreateCenteredFloatingWindow() abort
     au BufWipeout <buffer> exe 'bw '.s:buf
     return l:textbuf
 endfunction
+
+
+func! FloatingTerm ()
+  let opts = {}
+  let opts.focusable = v:true
+  let opts.width     = 50
+  let opts.height    = 18
+  let opts.anchor    = 'NW'
+  let opts.relative  = 'cursor'
+  let opts.col       = 0
+  let opts.row       = 1
+
+  let l:textbuf = nvim_create_buf(v:false, v:true)
+  return nvim_open_win( l:textbuf, v:true, opts)
+endfunc
 
 func! FloatingBuffer( filePath )
   let opts = { 'focusable': v:true,

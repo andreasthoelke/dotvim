@@ -105,7 +105,7 @@ HsMotions should be reworked using treesitter. ~/.vim/plugin/HsMotions.vim#/TODO
 ## the current cursor in alacritty
 
 - the current cursor has these shifting colors depending on the foreground color the cursor is on.
-- and when I leave instert mode and jump somewhere it blinks once!!
+- and when I leave insert mode and jump somewhere it blinks once!!
 - and it becomes hollow when the window is not active.
 
 * still, a slightly thicker insert mode cursor
@@ -618,7 +618,7 @@ x - add some files to the arglist that you want to work with. then open the firs
 . - on a file, then 'rm' or 'mv %..' to delete, more file.
 
 t - open in new tab
-leader of - open file under cursor in float-win. curson is in float win so you can scroll right away.
+.. leader of - open file under cursor in float-win. cursor is in float win so you can scroll right away.
 P - preview in float-win
 p - preview in (currently open?) split. only good if there is no other open split?
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
