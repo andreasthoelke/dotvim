@@ -19,7 +19,7 @@ au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.md          call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──
@@ -196,8 +196,14 @@ func! LuaSyntaxAdditions() " ■
   " set foldmarker=\ ■,\ ▲
 endfunc " ▲
 
+func! MarkdownSyntaxAdditions()
+  call clearmatches()
+  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+endfunc
 
 func! VimScriptSyntaxAdditions() " ■
+  call clearmatches()
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})

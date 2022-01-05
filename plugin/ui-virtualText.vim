@@ -10,18 +10,49 @@
 if has('nvim-0.3.2')
   let g:nsid_def = nvim_create_namespace('default')
 endif
+
 function! VirtualtextClear()
   let l:buffer = bufnr('')
   call nvim_buf_clear_highlight(l:buffer, g:nsid_def, 0, -1)
+  call v:lua.vim.api.nvim_buf_del_extmark( l:buffer, g:nsid_def, 1)
 endfunction
-function! VirtualtextShowMessage(message, hlgroup)
+
+
+lua << EOF
+
+local bnr = vim.fn.bufnr('%')
+-- local ns_id = vim.api.nvim_create_namespace('demo')
+
+local line_num = 6
+local col_num = 15
+
+local opts = {
+  end_line = 10,
+  id = 1,
+  virt_text = {{"demo", "IncSearch"}},
+  -- virt_text_pos = 'overlay',
+  -- virt_text_pos = 'right_align',
+  virt_text_pos = 'eol',
+  -- virt_text_win_col = 20,
+}
+
+-- local mark_id = vim.api.nvim_buf_set_extmark(bnr, vim.g.nsid_def, line_num, col_num, opts)
+
+EOF
+
+
+func! VirtualtextShowMessage(message, hlgroup) " ■
   let l:cursor_position = getcurpos()
   let l:line = line('.')
   let l:buffer = bufnr('')
-  call nvim_buf_set_virtual_text(l:buffer, g:nsid_def, l:line-1, [[a:message, a:hlgroup]], {})
-endfunction
+  " let opts = {'end_line':
+  call nvim_buf_set_virtual_text(l:buffer, g:nsid_def, l:line-1, 4, {})
+  " call nvim_buf_set_extmark(l:buffer, g:nsid_def, l:line-1, [[a:message, a:hlgroup]], {})
+endfunc " ▲
 
+" call VirtualtextShowMessage( 'hi there', 'Comment' )
 " call VirtualtextClear()
+
 " call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'SpecialKey')
 " call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'Folded')
 " call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'WildMenu')
@@ -35,6 +66,7 @@ nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMe
 " vnoremap <leader>mv :call HighlightVisualSelection(0)<cr>
 " Clear nvim virtual highlights and text
 nnoremap <leader>cv :call VirtualtextClear()<cr>
+nnoremap ,cc :lua VirtualTxClear()<cr>
 
 function! HighlightVisualSelection( idx )
   let l:highlights = [ 'Normal', 'BlackBG', 'Visual', 'WildMenu' ]

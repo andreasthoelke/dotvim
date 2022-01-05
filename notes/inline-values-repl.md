@@ -82,7 +82,7 @@ it will be concealed like this
 ‥ add10(‥1, ‥2)  | 300
 
 ~/.config/nvim/syntax/purescript.vim#/Inline%20Tests%20conceals
-## Test binings and helper vals
+## Test bindings and helper vals
 the test binding can be used/referred to.
   if the var-name shows up not at the beginning of the line it will be concealed with an index
 you can create helper values by editing the main fn name (here: add10 -> range)

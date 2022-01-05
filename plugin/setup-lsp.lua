@@ -42,7 +42,7 @@ local on_attach = function(client, bnr)
   buf_map(bnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>')
   buf_map(bnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
 
-  buf_map(bnr, 'n', '<space>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
+  buf_map(bnr, 'n', '<space>?', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
   vim.cmd [[ command! LspFormat execute 'lua vim.lsp.buf.formatting()' ]]
 

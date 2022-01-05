@@ -1,7 +1,32 @@
 
+" ─   Sync IVR                                          ──
+" ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
+
+nnoremap <silent> gee :call repl_py#eval_line( line('.') )<cr>
+
+
+func! repl_py#eval_line( ln )
+  let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+  let printStatement = 'print(' . expression . ')'
+  let completeSource = repl_py#getStrOfBufAndCmd( printStatement )
+  let resLines = systemlist( 'python -c ' . '"' . completeSource . '"' )
+  let returnValue = resLines[-1]
+  call VirtualtextShowMessage( returnValue, "CommentSection" )
+  " echo resLines
+endfunc
+
+func! repl_py#getStrOfBufAndCmd ( cmd_str )
+  let lines = add( getline(1, "$"), a:cmd_str )
+  return join( lines, "\n" )
+endfunc
+
+
+
+" ─   Async REPL                                        ──
+
 " Repl multiple lines:
-nnoremap gel      :let g:opContFn='PyReplEvalLines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap gel :<c-u>let g:opContFn='PyReplEvalLines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+" nnoremap gel      :let g:opContFn='PyReplEvalLines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+" vnoremap gel :<c-u>let g:opContFn='PyReplEvalLines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! PyReplEvalLines( ... )
   let startLine = a:0 ? a:1 : 1
@@ -52,7 +77,6 @@ func! GetPyReplExprLN( lineNum )
   endif
 endfunc
 
-" ─   New Purescript REPL                                ■
 
 nnoremap <silent> <leader>ro :call PyReplStart()<cr>
 nnoremap <silent> <leader>rq :call PyReplStop()<cr>
