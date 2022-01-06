@@ -3,21 +3,45 @@
 " ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
 
 nnoremap <silent> gee :call repl_py#eval_line( line('.') )<cr>
+nnoremap <silent> gei :call repl_py#eval_line( line('.') )<cr>
 
+func! repl_py#create_source_file( source_lines )
+  let filename = expand('%:p:h') . '/replSrc_' . expand('%:t')
+  call writefile( a:source_lines, filename )
+  return filename
+endfun
 
 func! repl_py#eval_line( ln )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
   let printStatement = 'print(' . expression . ')'
-  let completeSource = repl_py#getStrOfBufAndCmd( printStatement )
-  let resLines = systemlist( 'python -c ' . '"' . completeSource . '"' )
-  let returnValue = resLines[-1]
-  call VirtualtextShowMessage( returnValue, "CommentSection" )
-  " echo resLines
+  let compl_sourceLines = repl_py#getStrOfBufAndCmd( printStatement )
+  let stdInStr = join( compl_sourceLines, "\n" )
+  " echo completeSource
+  let sourceFileName = repl_py#create_source_file( compl_sourceLines )
+  " echo sourceFileName
+  " return
+  " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
+  let resLines = systemlist( 'python ' . sourceFileName )
+  let expResult = resLines[-1]
+
+  if len( expResult ) > 8
+    let res_lineWise = substitute( expResult, '\v[\[|\]]', '', 'g' )
+    let res_lineWise = substitute( res_lineWise, '\v,\zs\s', '', 'g' )
+    let res_lineWise = split( res_lineWise, ',' )
+    " let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( [expResult] )
+    let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( res_lineWise )
+
+    call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
+  else
+    call v:lua.VirtualTxShow( expResult )
+  endif
+
+  " call VirtualtextShowMessage( expResult , "CommentSection" )
+
 endfunc
 
 func! repl_py#getStrOfBufAndCmd ( cmd_str )
-  let lines = add( getline(1, "$"), a:cmd_str )
-  return join( lines, "\n" )
+  return add( getline(1, "$"), a:cmd_str )
 endfunc
 
 

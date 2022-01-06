@@ -40,6 +40,10 @@ hi Directory       guifg=#11C8D7
 hi Error           guifg=#960050 guibg=#1E0010
 " hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
 hi ErrorMsg        guifg=#960050 guibg=#151719
+
+hi! def link Error purescriptIdentifier
+hi! def link ErrorMsg purescriptIdentifier
+
 hi Exception       guifg=#A6E22E               gui=bold
 hi Float           guifg=#AE81FF
 

@@ -99,6 +99,9 @@ vim.cmd [[augroup YankHighlight
   augroup end]]
 
 Debugger: https://github.com/mfussenegger/nvim-dap
+https://github.com/Pocco81/TrueZen.nvim
+Search and replace: https://github.com/nvim-pack/nvim-spectre
+Watch file changes: https://github.com/rktjmp/fwatch.nvim
 
 HsMotions should be reworked using treesitter. ~/.vim/plugin/HsMotions.vim#/TODO%20make%20a
 
@@ -213,6 +216,9 @@ https://teukka.tech/luanvim.html
 https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 https://neovim.io/doc/user/lua.html
 https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
+
+## Async vim.loop
+~/.config/nvim/notes/notes-lua-asyc-loop.md
 
 ### Preview a file in terminal/shell with cat -> bat
 
@@ -679,6 +685,9 @@ Note 'symlink' setting ~/.vim/plugin/setup-general.vim#/let%20g.symlink_loaded%2
 The next line/path only works with <c-w>f !
 /Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt
 
+## Watching folders and filepaths
+https://github.com/rktjmp/fwatch.nvim
+
 ### Filepaths & Urls
 
 c-w f - (on path or vis-sel) preview file content in horz-split
@@ -690,6 +699,7 @@ leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@% and let @\*=@% )
 ### Path expand and modify
 echo expand('%:t')
 echo expand('%:h')
+echo expand('%:p:h')
 echo expand('%:p')
 echo fnamemodify('.gitignore', ':p')
 
@@ -1020,6 +1030,7 @@ Comment out all highlight command lines:
 
 More tricks: ~/.vim/plugin/notes-workflow.vim#/Substitute%20Replace%20Text.
 Turn abs system path into home-dir path: <!-- '<,'>s/\/Users\/at/\~/ -->
+or use plugin? https://github.com/nvim-pack/nvim-spectre
 
 ### Commandline-ranges
 

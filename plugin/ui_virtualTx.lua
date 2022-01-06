@@ -8,7 +8,7 @@ _G.VirtualTxShow = function( dispTxt, hlgroup )
 
   local padding1 = { ' ', 'Comment' }
   local icon = { '|', 'BlackBG' }
-  local padding2 = { '  ', 'Comment' }
+  local padding2 = { ' ', 'Comment' }
   local message = { dispTxt, hlgroup or 'Comment' }
 
   local opts = {

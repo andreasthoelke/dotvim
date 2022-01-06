@@ -119,7 +119,8 @@ call termopen( g:cm )
 ~/.config/nvim/plugin/utils-repl-py.vim#/func.%20PyReplStart%20..
 
 
-
+I can use Typeinfo from lsp
+lua vim.lsp.buf.hover()
 
 
 
