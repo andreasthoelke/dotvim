@@ -5,11 +5,11 @@
 command! Browser :call OpenVisSel()
 vmap glb :call OpenVisSel()<cr>
 nnoremap glb :call HandleURL()<cr>
+nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
-nnoremap glc :call LaunchChromium2( GetUrlFromLine(line('.')) )<cr>
-
-command! ITerm :call OpenITerm()
-nnoremap gli :call OpenITerm()<cr>
+nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
+nnoremap glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>
+nnoremap glC :call StopChromium()<cr>
 
 command! Finder :call OpenFinder()
 nnoremap glf :call OpenFinder()<cr>
@@ -232,6 +232,12 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 " command! -nargs=1 Chromium :let  = jobstart("pulp repl", Cbs1)
 " TODO try chromium-browser --force-device-scale-factor=0.79 - but can also set this globally in Chromium app settings
 
+" alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
+
+func! ShowLocalWebFile( path )
+  call LaunchChromium( 'file:///private' . a:path )
+endfunc
+
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium"
 
@@ -242,7 +248,8 @@ func! LaunchChromium( url ) abort
   endif
   let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunc
-" call LaunchChromium2( 'http://purescript.org' )
+" call LaunchChromium( 'http://purescript.org' )
+" call LaunchChromium( 'file:///private/tmp/giphy2.gif' )
 " call LaunchChromium( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
 " call LaunchChromium( 'http://localhost:8080' )
 " call LaunchChromium2( 'https://milesfrain.github.io/purescript-halogen/guide/03-Performing-Effects.html' )
@@ -361,7 +368,5 @@ nmap <space>oEl :CocList explPresets
 
 
 
-" set filetypes as typescript.tsx
-autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
 
 

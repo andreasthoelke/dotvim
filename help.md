@@ -1158,6 +1158,10 @@ we now have a fast Colorizer
 Filter ansi color escape codes: ~/.config/nvim/plugin/search-replace.vim#/func.%20RemoveTermCodes%20.lines.
   and potentially convert them to html/vim highlighting using ansifilter
 
+i used this before:
+" set filetypes as typescript.tsx
+" autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
+
 ## Colorizer.nvim
 to highligh colors in code (CSS, JS, HTML, VIM)
 ~/.config/nvim/plugin/setup-general.vim#/require%20'colorizer'.setup%20{

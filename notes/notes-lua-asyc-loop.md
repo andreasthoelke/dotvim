@@ -44,7 +44,7 @@ true)
 print(result) -- 'hello world'
 
 https://neovim.io/doc/user/usr_41.html\#function-list
-
+h function-list
 
 lua require'convert_markdown'.convertFile()
 
@@ -60,6 +60,7 @@ lua require'tools_external'
 
 luafile ~/.config/nvim/lua/utils_general.lua
 
+### Plenary reload
 lua require'plenary.reload'.reload_module('tools_external')
 lua require'plenary.reload'.reload_module('utils_general')
 
@@ -114,6 +115,77 @@ vim.api.nvim_set_keymap(
   {noremap = true}
 )
 
+## Running / Sourcing lua testlines
+" I can run the following lines with vip<space>ss
+lua << EOF
+local abb = 'zwei'
+print('hi')
+print(abb)
+EOF
+
+
+# Plenary features
+
+## Read file
+
+lua << EOF
+local a = require 'plenary.async'
+local te = require 'tools_external'
+local path = '/Users/at/.config/nvim/notes/do-next'
+a.run(function() put( te.read_file(path) ) end)
+EOF
+
+## Curl
+
+lua << EOF
+local query = { name = "Jane Doe", key = "123456" }
+local te = require 'tools_external'
+put( te.curlTest(query).args.name )
+EOF
+
+lua require'tools_external'.curlTestFile()
+
+
+/tmp
+
+## Timer
+https://neovim.io/doc/user/lua.html\#lua-loop
+
+Create a timer handle (implementation detail uv_timer_t).
+
+local timer = vim.loop.new_timer()
+local i = 0
+-- Waits 1000ms, then repeats every 750ms until timer:close().
+timer:start(1000, 750, function()
+  print('timer invoked! i='..tostring(i))
+  if i > 4 then
+    timer:close()  -- Always close handles to avoid leaks.
+  end
+  i = i + 1
+end)
+print('sleeping');
+
+
+## Popup
+
+lua << EOF
+local col = vim.fn.col(".")
+local line = vim.fn.line(".")
+local te = require 'tools_external'
+te.popup( "Some test message [2, a, b, C]", line, col )
+EOF
+
+lua require'tools_external'.popup('test this')
+lua require'tools_external'.popup1()
+lua require'tools_external'.popup2()
+lua put( require'tools_external'.curlTest() )
+
+lua print( vim.fn.line('.') )
+lua print( vim.fn.col('.') )
+
+lua vim.fn.browse()
+
+help function-list
 
 
 

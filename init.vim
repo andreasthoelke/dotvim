@@ -26,6 +26,7 @@ Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRe
 
 " Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
@@ -216,7 +217,6 @@ Plug 'saadparwaiz1/cmp_luasnip'
 " Language Support: -----------------------------------------------------
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
-Plug 'leafo/moonscript-vim'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'
@@ -447,6 +447,5 @@ endif
 luafile ~/.config/nvim/lua/utils_general.lua
 " runtime utils_general.lua
 
-let g:vimsyn_embed = 'l'
 
 

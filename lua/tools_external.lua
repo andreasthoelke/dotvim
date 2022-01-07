@@ -3,6 +3,7 @@ local M = {}
 local loop = vim.loop
 local api = vim.api
 
+-- ─   Pandoc                                           ──
 -- from https://teukka.tech/posts/2020-01-07-vimloop/
 
 -- lua require'tools_external'.pandocMarkdownToHtml()
@@ -27,7 +28,7 @@ function M.pandocMarkdownToHtml()
   )
 end
 
-
+-- ─   Grep                                             ──
 local results = {}
 
 local function onread(err, data)
@@ -71,6 +72,8 @@ function M.asyncGrep(term)
 end
 
 
+-- ─   Read file                                        ──
+
 local a = require "plenary.async"
 
 function M.read_file(path)
@@ -89,9 +92,9 @@ function M.read_file(path)
   return( data )
 end
 
-print('hi from ext')
+-- print('hi from ext')
 
-local mypath = '/Users/at/.config/nvim/rg-fzf-vim.sh'
+-- local mypath = '/Users/at/.config/nvim/rg-fzf-vim.sh'
 -- a.run(function() put( M.read_file(mypath) ) end)
 
 -- `read` is an async function
@@ -100,7 +103,89 @@ M.readFile = function(path)
   assert(not err, err)
 end
 
-a.run(function() M.readFile("mypath") end)
+-- ─   Curl                                             ──
+local curl = require "plenary.curl"
+-- local eq = assert.are.same
+
+M.curlTest = function(query)
+  -- local query = { name = "john Doe", key = "123456" }
+  local response = curl.get("https://postman-echo.com/get", {
+    query = query,
+  })
+  -- eq(200, response.status)
+  -- eq(query, vim.fn.json_decode(response.body).args)
+  -- print('done')
+  return( vim.fn.json_decode(response.body) )
+end
+
+M.curlTestFile = function()
+  local file = "https://media2.giphy.com/media/bEMcuOG3hXVnihvB7x/giphy.gif"
+  local loc = "/tmp/giphy2.gif"
+  local res = curl.get(file, { output = loc })
+
+  -- eq(1, vim.fn.filereadable(loc), "should exists")
+  -- eq(200, res.status, "should return 200")
+  -- eq(0, res.exit, "should have exit code of 0")
+  -- vim.fn.delete(loc)
+end
+
+
+-- ─   Popup                                            ──
+-- vim.cmd [[highlight PopupColor1 ctermbg=lightblue guibg=lightblue]]
+-- vim.cmd [[highlight PopupColor2 ctermbg=lightcyan guibg=lightcyan]]
+
+local popup = require "popup"
+
+M.popup = function( message )
+  popup.create(message, {
+    line = "cursor+2",
+    col = "cursor+2",
+    -- border = {},
+    padding = { 0, 3, 0, 3 },
+    border = { 0, 1, 0, 1 },
+    -- borderchars = {'-'},
+    pos = "botleft",
+    time = 2000,
+    -- padding = {},
+    -- minwidth = 20,
+    -- highlight = 'PopupColor1'
+  })
+end
+
+M.popup2 = function()
+  local bufnr = vim.api.nvim_create_buf(false, false)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {'pass bufnr 1', 'pass bufnr 2'})
+  popup.create(bufnr, {
+    line = "cursor+2",
+    col = "cursor+2",
+    minwidth = 20,
+  })
+end
+
+
+M.popup1 = function()
+  popup.create({ "option 3", "option 1", "option 2" }, {
+    line = "cursor+1",
+    col = "cursor+1",
+    border = {},
+    -- border = { 1, 1, 1, 1},
+    enter = true,
+    cursorline = true,
+    callback = function(win_id, sel) vim.fn.confirm(sel) end,
+  })
+end
+
+
+
+
+
+
+
+
+
+
+
+
 
 return M
 

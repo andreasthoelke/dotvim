@@ -24,8 +24,8 @@ nnoremap <leader>s} "ty}:@t<cr>
 nnoremap <leader>sip m'"tyip:@t<cr>``
 " Uses "h textobj-function"
 " nmap     <leader>saf m'"tyaf:@t<cr>``
-nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
-nnoremap <leader>se :exec getline('.')<cr>
+nnoremap <silent> <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
+nnoremap <silent> <leader>se :exec getline('.')<cr>
 " same as above, but clutters the register
 " nnoremap <leader>si "tyy:@t<cr>
 
@@ -33,8 +33,9 @@ nnoremap <leader>se :exec getline('.')<cr>
 " nnoremap <leader>sr :exec @"<cr>
 
 " Reload a lua module:
-nnoremap <leader>sR :lua put( package.loaded[vim.fn.expand('%:t:r')] )<cr>
-nnoremap <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>
+nnoremap <silent> <leader>sR :lua put( package.loaded[vim.fn.expand('%:t:r')] )<cr>
+nnoremap <silent> <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>
+nnoremap <silent> ,sr :lua require( vim.fn.expand('%:t:r') )<cr>
 
 command! -nargs=+ Rld lua require'plenary'.reload.reload_module(<q-args>)
 " Rld utils_general
