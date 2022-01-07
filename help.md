@@ -698,6 +698,7 @@ leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath (put =@% and let @\*=@% )
 
 ### Path expand and modify
 echo expand('%:t')
+echo expand('%:t:r')
 echo expand('%:h')
 echo expand('%:p:h')
 echo expand('%:p')
@@ -705,7 +706,7 @@ echo fnamemodify('.gitignore', ':p')
 
 help filename-modifiers
 https://learnvimscriptthehardway.stevelosh.com/chapters/40.html
-
+h expand()
 
 
 ## Links / code links / vim rel-link

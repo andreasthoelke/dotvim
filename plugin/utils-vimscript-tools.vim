@@ -29,7 +29,17 @@ nnoremap <leader>se :exec getline('.')<cr>
 " same as above, but clutters the register
 " nnoremap <leader>si "tyy:@t<cr>
 
-nnoremap <leader>sr :exec @"<cr>
+" Source the string in the register?
+" nnoremap <leader>sr :exec @"<cr>
+
+" Reload a lua module:
+nnoremap <leader>sR :lua put( package.loaded[vim.fn.expand('%:t:r')] )<cr>
+nnoremap <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>
+
+command! -nargs=+ Rld lua require'plenary'.reload.reload_module(<q-args>)
+" Rld utils_general
+" Rld tools_external
+" exec 'Rld' expand('%:t:r')
 
 " free mappings? <leader>s..
 " TODO these map don't seem ideal. mnemonic not destinct enough?

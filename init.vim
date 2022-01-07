@@ -216,6 +216,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 " Language Support: -----------------------------------------------------
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
+Plug 'leafo/moonscript-vim'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'
@@ -443,5 +444,9 @@ if !exists('g:colors_name')
 endif
 
 
+luafile ~/.config/nvim/lua/utils_general.lua
+" runtime utils_general.lua
+
+let g:vimsyn_embed = 'l'
 
 

@@ -1073,7 +1073,8 @@ endfunc " ▲
 nnoremap <silent> t :call CommaItemStartForw()<cr>
 onoremap <silent> T :call CommaItemStartForw()<cr>
 " Note/Test: The "T" is meant to avoid the "t"/till here - test this
-vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
+" This collides with the 'vt'[ill map
+" vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
 nnoremap <silent> T :call CommaItemStartBackw()<cr>
 vnoremap <silent> T <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
 " Can't remap omap t, as this is the 't'ill map
