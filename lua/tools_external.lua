@@ -104,8 +104,8 @@ M.readFile = function(path)
 end
 
 -- ─   Curl                                             ──
+-- https://github.com/nvim-lua/plenary.nvim/blob/master/tests/plenary/curl_spec.lua
 local curl = require "plenary.curl"
--- local eq = assert.are.same
 
 M.curlTest = function(query)
   -- local query = { name = "john Doe", key = "123456" }
@@ -122,7 +122,6 @@ M.curlTestFile = function()
   local file = "https://media2.giphy.com/media/bEMcuOG3hXVnihvB7x/giphy.gif"
   local loc = "/tmp/giphy2.gif"
   local res = curl.get(file, { output = loc })
-
   -- eq(1, vim.fn.filereadable(loc), "should exists")
   -- eq(200, res.status, "should return 200")
   -- eq(0, res.exit, "should have exit code of 0")

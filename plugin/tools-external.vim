@@ -235,8 +235,15 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 " alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
 
 func! ShowLocalWebFile( path )
-  call LaunchChromium( 'file:///private' . a:path )
+  " call LaunchChromium( 'file:///private' . a:path )
+  call LaunchChromium( 'file:///' . a:path )
 endfunc
+" call ShowLocalWebFile( '/tmp/giphy2.gif' )
+" call ShowLocalWebFile( '/Users/at/Documents/Temp/test6.png' )
+" call ShowLocalWebFile( '/Users/at/Documents/Temp/test7.png' )
+" file:///Users/at/Documents/Temp/test6.png
+" /tmp
+" /tmp/giphy2.gif
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium"

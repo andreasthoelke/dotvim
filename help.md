@@ -640,7 +640,7 @@ I - edit divish buffer to execute shell commands with path
 y$ - copy file name - note the cursor is at a specific pos in the _concealed_ file path!
 0y$ - yank abs file path! - note the cursor is now at the start of the (concealed) line
 
-### Tricks
+## Tips
 
 :cd % - set working dir to the current dirvish folder
 :%!ls - to replace the text is the current buffer with
@@ -649,6 +649,11 @@ y$ - copy file name - note the cursor is at a specific pos in the _concealed_ fi
 Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvish_config
 
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
+
+## Finder MacOS
+Open a folder in Finder:
+- open the folder in Dirvish, <leader>cdl or :lcd %<cr>, then glf. ~/.config/nvim/plugin/tools-external.vim#/command.%20Finder%20.call
+
 
 ### Ranger-like setup
 
