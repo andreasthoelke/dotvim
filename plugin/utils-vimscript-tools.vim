@@ -16,7 +16,21 @@ endfunc
 
 " Sourcing Parts Of Vimscript:
 " the current file
-nnoremap <silent><leader>so :w<cr>:so %<cr>
+" nnoremap <silent><leader>so :w<cr>:so %<cr>
+nnoremap <silent> <leader>so :call SourceFile()<cr>
+
+func! SourceFile ()
+  if &filetype == 'lua'
+    exec 'luafile %'
+  else
+    exec 'source %'
+  endif
+endfunc
+
+
+inoremap <expr> jk pumvisible() ? "<C-e>" : "<Esc>"
+
+
 " the vimrc
 nnoremap <silent><leader><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
@@ -24,8 +38,12 @@ nnoremap <leader>s} "ty}:@t<cr>
 nnoremap <leader>sip m'"tyip:@t<cr>``
 " Uses "h textobj-function"
 " nmap     <leader>saf m'"tyaf:@t<cr>``
-nnoremap <silent> <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
-nnoremap <silent> <leader>se :exec getline('.')<cr>
+" nnoremap <silent> <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
+" nnoremap <silent> <leader>se :exec getline('.')<cr>
+
+nnoremap <silent> <leader>ss :call SourceRange()<cr>
+nnoremap <silent> <leader>se :call SourceRange()<cr>
+
 " same as above, but clutters the register
 " nnoremap <leader>si "tyy:@t<cr>
 
@@ -56,7 +74,11 @@ nnoremap <leader>cf (Wyw:call <c-r>"()<cr>^
 func! SourceRange() range
   let tmpsofile = tempname()
   call writefile(getline(a:firstline, a:lastline), l:tmpsofile)
-  execute "source " . l:tmpsofile
+  if &filetype == 'lua'
+    exec "luafile " . l:tmpsofile
+  else
+    exec "source " . l:tmpsofile
+  endif
   call delete(l:tmpsofile)
 endfunc
 " TIP: Range example function
@@ -64,7 +86,12 @@ endfunc
 func! SourceLines( lines )
   let tmpsofile = tempname()
   call writefile( a:lines, l:tmpsofile)
-  execute "source " . l:tmpsofile
+  " execute "source " . l:tmpsofile
+  if &filetype == 'lua'
+    exec "luafile " . l:tmpsofile
+  else
+    exec "source " . l:tmpsofile
+  endif
   call delete(l:tmpsofile)
 endfunc
 
@@ -85,7 +112,10 @@ func! OpSourceVimL( motionType, ...)
   let [startColumn, endColumn] = (a:motionType == 'line') ? [1, 200] : [startColumn, endColumn]
   let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
-  call SourceLines( l:selectedVimCode )
+
+  " call SourceLines( l:selectedVimCode )
+  exec startLine . ',' . endLine 'call SourceRange()'
+
   " Flash the sourced text for 500ms
   call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
 endfunc

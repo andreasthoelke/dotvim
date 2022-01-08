@@ -37,20 +37,28 @@ local function onread(err, data)
     -- TODO handle err
   end
   if data then
+    -- 3. The handler appends each item it receives (from the ripgrep process) to a list (a shared global var)
     table.insert(results, data)
   end
 end
 
 -- command! -nargs=+ -complete=dir -bar Grep lua require'tools'.asyncGrep(<q-args>)
 
+-- Summary:
+-- - i spawn a cmd-line process and pass file-out handles
+-- - i read line-wise into a shared variable using 'read_start on the file-handle (using a read handler/callback)
+-- - the cmd-process has an end-handler. it triggers a helper that uses the returned data in the shared-variable.
 function M.asyncGrep(term)
   print('hi there')
   local stdout = vim.loop.new_pipe(false)
   local stderr = vim.loop.new_pipe(false)
   local function setQF()
+    -- 5. This helper has access to the 'results' shared var.
+--     6. Items are just lines.
     vim.fn.setqflist({}, 'r', {title = 'Search Results', lines = results})
     api.nvim_command('cwindow')
     local count = #results
+    -- 7. Also, for the next search the *results* list/table needs to be cleared.
     for i=0, count do results[i]=nil end -- clear the table for the next search
   end
   handle = vim.loop.spawn('rg', {
@@ -63,10 +71,13 @@ function M.asyncGrep(term)
     stdout:close()
     stderr:close()
     handle:close()
+    -- 4. After the process is done and everything is closed another helper function is called.
     setQF()
   end
   )
   )
+  -- 1. Ripgrep is writing into the stdout file descriptor
+  -- 2. We attach a handler to the same stdout file descriptor
   vim.loop.read_start(stdout, onread)
   vim.loop.read_start(stderr, onread)
 end

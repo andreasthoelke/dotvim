@@ -16,6 +16,10 @@ echo v:lua.string.rep('A', 10)
 
 set statusline=%!v:lua.stline()
 
+### Vim options
+lua print( vim.o.ft )
+not working?
+lua print( vim.api.nvim_buf_get_option('ft') )
 
 let g:vimsyn_embed = 'l'
 
@@ -187,11 +191,13 @@ lua vim.fn.browse()
 
 help function-list
 
+## Coroutines
 
+A very simple example: /Users/at/Documents/Temp/plenary.nvim/scratch/coroutine_examples.lua
 
+https://www.lua.org/pil/9.1.html
 
-
-
+This shows communicating sequential processes: /Users/at/Documents/Temp/plenary.nvim/scratch/filter-pipe.lua
 
 
 

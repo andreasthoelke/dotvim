@@ -180,8 +180,8 @@ func! LuaSyntaxAdditions() " ■
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
   " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
 
-  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
 
   call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
 
@@ -208,7 +208,8 @@ func! VimScriptSyntaxAdditions() " ■
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
   " Hilde \" before comment after code
-  call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
+  " Issue: this hides the second \" of a string
+  " call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
   " Conceal "%20" which is used for "h rel.txt" with space
   call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
