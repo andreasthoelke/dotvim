@@ -86,6 +86,7 @@ func! repl_py#eval_line( ln )
   if len( expResult ) > 8
     call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
     call FloatWin_ShowLines_old ( repl_py#splitToLines( expResult ) )
+    " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
     call FloatWin_FocusFirst()
     " setlocal modifiable
     call easy_align#easyAlign( 1, line('$'), ',')
@@ -94,8 +95,6 @@ func! repl_py#eval_line( ln )
   else
     call v:lua.VirtualTxShow( expResult )
   endif
-
-  " call VirtualtextShowMessage( expResult , "CommentSection" )
 
 endfunc
 
