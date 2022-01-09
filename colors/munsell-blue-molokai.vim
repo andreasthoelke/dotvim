@@ -335,7 +335,8 @@ hi! def link gitHunk Comment
 hi! def link diffSubname Comment
 
 " VimScript colors
-hi! Todo guibg=bg guifg=#F92672
+hi! Todo guifg=#969696 guibg=#000000
+" hi! def link Todo Error
 hi! def link vimCommentTitle Type
 hi! def link vimString String
 hi! def link vimCommand purescriptStructure

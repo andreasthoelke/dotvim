@@ -10,14 +10,14 @@ set nowritebackup
 
 " ─   Completion                                        ──
 
-let g:coc_config_home = '~/.vim'
+let g:coc_config_home = '~/.config/nvim'
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 
 " Temp deactivated:
-inoremap <silent><expr> <c-y>
+inoremap <silent><expr> <c-i>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<C-i>" :
       \ coc#refresh()

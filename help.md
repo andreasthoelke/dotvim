@@ -1060,6 +1060,9 @@ leader rb - to rename a binding and its occurences
 
 help pattern.txt
 Extract string from a line example: ~/.vim/plugin/CodeMarkup.vim#/Extract%20headline%20text
+useful examples:
+  ~/.config/nvim/plugin/search-replace.vim#/func.%20PatternToMatchOutsideOfParentheses.%20searchStr,
+  ~/.config/nvim/notes/notes-navigation.md#/*%20Lookarounds
 
 # Vim
 

@@ -4,8 +4,8 @@
 
 
 
-" ─   Sync IVR                                          ──
-" ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
+"        ─   Sync IVR                                          ──
+"        ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
 
 nnoremap <silent> gee :call repl_py#eval_line( line('.') )<cr>
 nnoremap <silent> gei :call repl_py#eval_line( line('.') )<cr>
@@ -15,6 +15,60 @@ func! repl_py#create_source_file( source_lines )
   call writefile( a:source_lines, filename )
   return filename
 endfun
+
+func! repl_py#firstPairChar( str )
+  let testChar1 = "("
+  let testIdx1  = matchstrpos( a:str, testChar1 )[1]
+  let testIdx1  = testIdx1 == -1 ? 100 : testIdx1
+  let testChar2 = "\["
+  let testIdx2  = matchstrpos( a:str, testChar2 )[1]
+  let testIdx2  = testIdx2 == -1 ? 100 : testIdx2
+  let testChar3 = "\{"
+  let testIdx3  = matchstrpos( a:str, testChar3 )[1]
+  let testIdx3  = testIdx3 == -1 ? 100 : testIdx3
+  let testFirstChar = testChar1
+  let testFirstIdx  = testIdx1
+  let testFirstChar = testIdx2 < testFirstIdx ? testChar2 : testFirstChar
+  let testFirstChar = testIdx3 < testFirstIdx ? testChar3 : testFirstChar
+  return testFirstIdx == 100 ? v:false : testFirstChar
+endfunc
+" TODO do this using sort table
+" echo repl_py#firstPairChar( "some, } thing (, [ ")
+" echo repl_py#firstPairChar( "some, }[ thing (, [ ")
+" echo repl_py#firstPairChar( "test empty")
+
+func! repl_py#splitOutsideOfFirstPair( splitBy, lineToSplit )
+  let firstPairChar = repl_py#firstPairChar( a:lineToSplit )
+  if firstPairChar == "("
+    let splitPattern = PatternToMatchOutsideOfParentheses( a:splitBy, '(', ')' )
+  elseif firstPairChar == "["
+    let splitPattern = PatternToMatchOutsideOfParentheses( a:splitBy, '[', ']' )
+  elseif firstPairChar == "{"
+    let splitPattern = PatternToMatchOutsideOfParentheses( a:splitBy, '{', '}' )
+  else
+    let splitPattern = a:splitBy
+  endif
+  return split( a:lineToSplit, splitPattern )
+endfunc
+" call FloatWin_ShowLines ( repl_py#splitOutsideOfFirstPair( ",", "Output: ('Apple', 'PROPN', 'nsubj'), ('is', 'AUX', 'aux'), ('looking', 'VERB', 'ROOT'), ('at', 'ADP', 'prep'), ('buying', 'VERB', 'pcomp'), ('U.K.', 'PROPN', 'dobj'), ('startup', 'VERB', 'dep'), ('for', 'ADP', 'prep'), ('$', 'SYM', 'quantmod'), ('1', 'NUM', 'compound'), ('billion', 'NUM', 'pobj')]" ) )
+" call FloatWin_ShowLines_old ( repl_py#splitOutsideOfFirstPair( ",", "Output: ('Apple', 'PROPN', 'nsubj'), ('is', 'AUX', 'aux'), ('looking', 'VERB', 'ROOT'), ('at', 'ADP', 'prep'), ('buying', 'VERB', 'pcomp'), ('U.K.', 'PROPN', 'dobj'), ('startup', 'VERB', 'dep'), ('for', 'ADP', 'prep'), ('$', 'SYM', 'quantmod'), ('1', 'NUM', 'compound'), ('billion', 'NUM', 'pobj')]" ) )
+
+func! repl_py#splitToLines( lineToSplit )
+  if a:lineToSplit =~ "[\[|\{|\(]"
+    let lineToSplit = a:lineToSplit[1:-2]
+  else
+    let lineToSplit = a:lineToSplit
+  endif
+  let lines = repl_py#splitOutsideOfFirstPair( ",", lineToSplit )
+  return StripLeadingSpaces( lines )
+endfunc
+" echo "(" =~ "[\[|\{|\(]" ? "A" : "B"
+" echo "[" =~ "[\[|\{|\(]" ? "A" : "B"
+" echo "{" =~ "[\[|\{|\(]" ? "A" : "B"
+" echo "d" =~ "[\[|\{|\(]" ? "A" : "B"
+" echo "eins"[1:-2]
+" echo StripLeadingSpaces( ['eins', ' zw ei', '  drei'] )
+
 
 func! repl_py#eval_line( ln )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
@@ -30,14 +84,13 @@ func! repl_py#eval_line( ln )
   let expResult = resLines[-1]
 
   if len( expResult ) > 8
-    let res_lineWise = [expResult]
-    " let res_lineWise = substitute( expResult, '\v[\[|\]]', '', 'g' )
-    " let res_lineWise = substitute( res_lineWise, '\v,\zs\s', '', 'g' )
-    " let res_lineWise = split( res_lineWise, ',' )
-    " let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( [expResult] )
-    let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( res_lineWise )
-
     call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
+    call FloatWin_ShowLines_old ( repl_py#splitToLines( expResult ) )
+    call FloatWin_FocusFirst()
+    " setlocal modifiable
+    call easy_align#easyAlign( 1, line('$'), ',')
+    call FloatWin_FitWidthHeight()
+    wincmd p
   else
     call v:lua.VirtualTxShow( expResult )
   endif

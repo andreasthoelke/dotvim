@@ -13,6 +13,18 @@ fun! SubstituteInLines ( lines, origDelim, newDelim )
   return a:lines
 endfun
 
+fun! StripLeadingSpaces ( lines )
+  let l:idx = 0
+  while l:idx < len(a:lines)
+    let l:line = a:lines[l:idx]
+    let a:lines[l:idx] = substitute(l:line, '\v\s+\ze\S', '', '')
+    let l:idx = l:idx + 1
+  endwhile
+  return a:lines
+endfun
+" echo substitute( '  eins zwei', '\v\s+\ze\S', '', '' )
+" echo StripLeadingSpaces( ['  eins zwei', 'drei', ' vier'] )
+
 func! RemoveTermCodes (lines)
   " return systemlist( 'sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"', join( a:lines, "\n" ) )
   " return systemlist( 'strip-ansi', join( a:lines, "\n" ) )
@@ -176,11 +188,12 @@ func! PatternToMatchOutsideOfParentheses( searchStr, openStr, closeStr )
   return '\(([^' . a:closeStr . ']*' . a:openStr . '\)\@<!' . a:searchStr . '\([^' . a:openStr . ']*' . a:closeStr . '\)\@!'
 endfunc
 " prevent matches (in brackets) - but not outsider (other) -- [this e actually works!!] (elems)
-" call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '(', ')' ), -1, -1 )
-" call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '\[', '\]' ), -1, -1 )
+" call matchadd('Error', PatternToMatchOutsideOfParentheses( 'e', '(', ')' ), -1, -1 )
+" call matchadd('Error', PatternToMatchOutsideOfParentheses( 'e', '\[', '\]' ), -1, -1 )
+" call matchadd('Error', PatternToMatchOutsideOfParentheses( 'e', '[\[(]', '[\])]' ), -1, -1 )
 
 " Note: Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks
 " Search within bracket - (works with (limitations)) ...
-" call matchadd('MatchParen', '([^)]*', -1, -1 )
+" call matchadd('Error', '([^)]*', -1, -1 )
 
 
