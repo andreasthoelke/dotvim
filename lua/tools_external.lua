@@ -186,9 +186,29 @@ M.popup1 = function()
 end
 
 
+-- local a = require "plenary.async.control"
+-- local bb = a.channel.counter
 
+-- ─   Jobs                                             ──
 
+M.job1 = function()
+  local results = {}
+  local job = Job:new {
+    command = "cat",
 
+    on_stdout = function(_, data)
+      table.insert(results, data)
+    end,
+  }
+
+  job:start()
+  job:send "hello\n"
+  job:send "world\n"
+  job:shutdown()
+
+  assert.are.same(job:result(), { "hello", "world" })
+  assert.are.same(job:result(), results)
+end
 
 
 

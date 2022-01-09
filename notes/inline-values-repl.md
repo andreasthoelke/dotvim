@@ -122,6 +122,11 @@ call termopen( g:cm )
 I can use Typeinfo from lsp
 lua vim.lsp.buf.hover()
 
+plenary.lsp.override
+
+lua print(vim.inspect(vim.tbl_keys(vim.lsp.handlers)))
+
+
 
 
 

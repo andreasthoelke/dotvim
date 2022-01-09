@@ -1,4 +1,9 @@
 
+
+
+
+
+
 " ─   Sync IVR                                          ──
 " ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
 
@@ -25,9 +30,10 @@ func! repl_py#eval_line( ln )
   let expResult = resLines[-1]
 
   if len( expResult ) > 8
-    let res_lineWise = substitute( expResult, '\v[\[|\]]', '', 'g' )
-    let res_lineWise = substitute( res_lineWise, '\v,\zs\s', '', 'g' )
-    let res_lineWise = split( res_lineWise, ',' )
+    let res_lineWise = [expResult]
+    " let res_lineWise = substitute( expResult, '\v[\[|\]]', '', 'g' )
+    " let res_lineWise = substitute( res_lineWise, '\v,\zs\s', '', 'g' )
+    " let res_lineWise = split( res_lineWise, ',' )
     " let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( [expResult] )
     let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( res_lineWise )
 
@@ -113,13 +119,13 @@ nnoremap <silent> dr         :call PyReplReload()<cr>
 " nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
 " vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
-nnoremap <silent> gei      :silent call PyReplEval( GetPyReplExprLN( line('.') ) )<cr>
-nnoremap <silent> gei      :silent call PyReplEval( GetLineFromCursor() )<cr>
-vnoremap <silent> gei :<c-u>call PyReplEval( Get_visual_selection() )<cr>
+" nnoremap <silent> gei      :silent call PyReplEval( GetPyReplExprLN( line('.') ) )<cr>
+" nnoremap <silent> gei      :silent call PyReplEval( GetLineFromCursor() )<cr>
+" vnoremap <silent> gei :<c-u>call PyReplEval( Get_visual_selection() )<cr>
 
 " now moved to ~/.vim/plugin/HsAPI.vim#/Get%20.type%20from
-nnoremap get      :call PyReplEval( '?' . expand('<cword>') )<cr>
-vnoremap get :<c-u>call PyReplEval( '?' . GetVisSel() )<cr>
+" nnoremap get      :call PyReplEval( '?' . expand('<cword>') )<cr>
+" vnoremap get :<c-u>call PyReplEval( '?' . GetVisSel() )<cr>
 
 
 

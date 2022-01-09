@@ -81,6 +81,13 @@ but i could just open a temp terminal! in a float
 note: search these notes:
 notes/notes-todos.md
 
+# Jobs
+are now easy to set up:
+notes/notes-lua-asyc-loop.md
+/Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua
+
+Rework bookmarks: ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
+also see notes/links
 
 colors, maps etc for codi https://github.com/metakirby5/codi.vim/blob/master/doc/codi.txt
 the old spell should still work
@@ -94,9 +101,9 @@ vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true,
 
 -- Highlight on yank
 vim.cmd [[augroup YankHighlight
-    autocmd!
-    autocmd TextYankPost * silent! lua vim.highlight.on_yank()
-  augroup end]]
+  autocmd!
+  autocmd TextYankPost * silent! lua vim.highlight.on_yank()
+augroup end]]
 
 Debugger: https://github.com/mfussenegger/nvim-dap
 https://github.com/Pocco81/TrueZen.nvim

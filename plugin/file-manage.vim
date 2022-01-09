@@ -6,13 +6,13 @@ nnoremap ,ts :SessionTabSave tab-
 nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
 
 " Shortcuts to popular folders:
-nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
-nnoremap <leader>or :vnew ~/.vim/plugin/<cr>
-nnoremap <leader>oR :tabe ~/.vim/plugin/<cr>
-nnoremap <leader>on :vnew ~/.vim/notes/<cr>
-nnoremap <leader>oN :tabe ~/.vim/notes/<cr>
-nnoremap <leader>ov :vnew ~/.vim/<cr>
-nnoremap <leader>oV :tabe ~/.vim/<cr>
+nnoremap <leader>ou :tabe ~/.config/nvim/utils/<cr>
+nnoremap <leader>or :vnew ~/.config/nvim/plugin/<cr>
+nnoremap <leader>oR :tabe ~/.config/nvim/plugin/<cr>
+nnoremap <leader>on :vnew ~/.config/nvim/notes/<cr>
+nnoremap <leader>oN :tabe ~/.config/nvim/notes/<cr>
+nnoremap <leader>ov :vnew ~/.config/nvim/<cr>
+nnoremap <leader>oV :tabe ~/.config/nvim/<cr>
 nnoremap <leader>od :vnew ~/Documents/<cr>
 nnoremap <leader>oD :tabe ~/Documents/<cr>
 nnoremap <leader>oh :vnew ~/Documents/Haskell/6/<cr>
@@ -25,7 +25,7 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
-nnoremap ,v :exec "vnew " . expand('%:p:h')<cr>
+nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>

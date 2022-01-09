@@ -20,6 +20,7 @@ endfunc
 nnoremap <silent> <leader>so :call SourceFile()<cr>
 
 func! SourceFile ()
+  silent exec "w"
   if &filetype == 'lua'
     exec 'luafile %'
   else
@@ -72,6 +73,7 @@ nnoremap <leader>cf (Wyw:call <c-r>"()<cr>^
 " nnoremap <leader>caf (Wyw:call <c-r>"(<c-r>[other reg])<cr>^
 
 func! SourceRange() range
+  silent exec "w"
   let tmpsofile = tempname()
   call writefile(getline(a:firstline, a:lastline), l:tmpsofile)
   if &filetype == 'lua'

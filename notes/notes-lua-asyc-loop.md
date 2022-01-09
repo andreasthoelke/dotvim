@@ -200,5 +200,44 @@ https://www.lua.org/pil/9.1.html
 This shows communicating sequential processes: /Users/at/Documents/Temp/plenary.nvim/scratch/filter-pipe.lua
 
 
+# Penary utility lib
+/Users/at/Documents/Temp/plenary.nvim/lua/plenary/
+
+## Lists
+/Users/at/Documents/Temp/plenary.nvim/tests/plenary/py_list_spec.lua
+
+# Lsp completions
+local a = require "plenary.async.control"
+local bb = a.channel.counter
+
+local util = require 'vim.lsp.util'
+local params = util.make_position_params()
+params.context = { includeDeclaration = true }
+local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/references", params, 10000)
+
+
+vim.lsp.buf_request_sync()
+
+### These work!
+lua put( require'utils_lsp'.hover() )
+gets simple types like function, class, parameter, etc
+
+lua put( require'utils_lsp'.references() )
+lua put( require'utils_lsp'.diagnostic_buffer() )
+
+? lua put( require'utils_lsp'.document_symbol() )
+
+# Jobs
+are now easy to set up: /Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua
+~/.config/nvim/lua/jobtest.lua
+
+## Coroutines
+~/.config/nvim/lua/filter-pipe.lua
+
+
+
+
+
+
 
 

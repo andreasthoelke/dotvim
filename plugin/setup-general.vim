@@ -1040,19 +1040,30 @@ nmap <Plug>(go_away_sneak) <Plug>Sneak_s
 " Endhanced word and line motions
 map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
-map <localleader>j <Plug>(easymotion-j)
-map <localleader>k <Plug>(easymotion-k)
+" map <localleader>j <Plug>(easymotion-j)
+" map <localleader>k <Plug>(easymotion-k)
+map ,j <Plug>(easymotion-j)
+map ,k <Plug>(easymotion-k)
+
 " Jump to paragraphs
 map <localleader><c-l> :call EasyMotion#Paragraph(0, 0)<cr>
 map <localleader><c-h> :call EasyMotion#Paragraph(0, 1)<cr>
 " Jump to typical spots
-map <localleader>l <Plug>(easymotion-lineforward)
-map <localleader>h <Plug>(easymotion-linebackward)
+" map <localleader>l <Plug>(easymotion-lineforward)
+" map <localleader>h <Plug>(easymotion-linebackward)
+map ,l <Plug>(easymotion-lineforward)
+map ,h <Plug>(easymotion-linebackward)
+
 " Jump to specific char within a word
 " nmap <localleader>f <Plug>(easymotion-overwin-f)
-nmap <localleader>f <Plug>(easymotion-bd-f)
-xmap <localleader>f <Plug>(easymotion-bd-f)
-omap <localleader>f <Plug>(easymotion-bd-f)
+" nmap <localleader>f <Plug>(easymotion-bd-f)
+" xmap <localleader>f <Plug>(easymotion-bd-f)
+" omap <localleader>f <Plug>(easymotion-bd-f)
+
+nmap ,f <Plug>(easymotion-bd-f)
+xmap ,f <Plug>(easymotion-bd-f)
+omap ,f <Plug>(easymotion-bd-f)
+
 " map t <Plug>(easymotion-tl)
 " Search replacement
 " nmap / <Plug>(easymotion-sn)
@@ -1329,7 +1340,9 @@ let g:tagbar_map_showproto = ''
 " Delay to display the peedaboo window"
 " let g:peekaboo_delay = 1000
 " let g:peekaboo_delay = 0
-let g:peekaboo_prefix = '<leader>'
+let g:peekaboo_prefix = ','
+
+nnoremap <leader>" :Telescope registers<cr>
 
 " A yank in vim writes to the system clipboard, and a system copy is available to paste in vim. but gets overwritten at the first yank.
 set clipboard=unnamed

@@ -36,6 +36,8 @@ Plug 'nvim-telescope/telescope-github.nvim'
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
 
+
+
 Plug 'justinmk/vim-dirvish'
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 Plug 'kristijanhusak/vim-dirvish-git'
@@ -57,7 +59,7 @@ Plug 'liuchengxu/vista.vim'
 
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
-Plug 'junegunn/vim-peekaboo'
+" Plug 'junegunn/vim-peekaboo'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
 " " Changes: Add every yank position to the jumplist, comment out 'repeat#invalidate()' as it seems to cause jump to the top of the file
@@ -217,6 +219,9 @@ Plug 'saadparwaiz1/cmp_luasnip'
 " Language Support: -----------------------------------------------------
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
+
+Plug 'pigpigyyy/Yuescript-vim'
+Plug 'leafo/moonscript-vim'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'
@@ -445,7 +450,7 @@ endif
 
 
 luafile ~/.config/nvim/lua/utils_general.lua
-" runtime utils_general.lua
+luafile ~/.config/nvim/plugin/ui_virtualTx.lua
 
 
 
