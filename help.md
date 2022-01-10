@@ -73,6 +73,10 @@ lst --level=4 /Users/at/.config_git/
 /Users/at/.vim/notes/notes-stow-config_git.md
 
 # do-next
+
+### Caching asyc repl
+~/.config/nvim/notes/inline-values-repl.md#/#%20Caching%20asyc
+
 filter Ms, all with sed,
 just python with 'command' will be synchronous
 but i could just open a temp terminal! in a float
@@ -570,6 +574,11 @@ Go to search root folder in Dirvish then
 vim dirvish \*\* -- seach for 'dirvish' in all files. then use :cw/copen and ]q[q
 collect the files and folder in the arglist ~/.vim/help.md#/###%20Arglist
 
+vim[grep] writes to the quickfix / location list. example:
+exec "1lvimgrepa /" . expand('<cword>') . "/ %"
+lopen
+https://gist.github.com/seanh/a866462a27cb3ad7b084c8e6000a06b9
+
 ## Karabiner Key maps
 
 c-' - Next Mac app. See definition here: ~/.config/karabiner/karabiner.json#/"description".%20"Left%20Control
@@ -762,6 +771,9 @@ p/P - previews item in split / closes the preview split
 Maps: ~/.vim/plugin/setup-general.vim#/func.%20QuickfixMaps..
 Note the 'go' command and the distinction with the location list maps
 
+note the lua code here: ~/.config/nvim/lua/tools_external.lua#/local%20function%20setQF..
+
+comprehensive article: https://vimways.org/2018/colder-quickfix-lists/
 ### Change Working Directory CWD Project Root
 
 " Set the root to a specific folder - not necessarily a git root folder.

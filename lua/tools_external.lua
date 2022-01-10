@@ -49,7 +49,7 @@ end
 -- - i read line-wise into a shared variable using 'read_start on the file-handle (using a read handler/callback)
 -- - the cmd-process has an end-handler. it triggers a helper that uses the returned data in the shared-variable.
 function M.asyncGrep(term)
-  print('hi there')
+  -- print('hi there')
   local stdout = vim.loop.new_pipe(false)
   local stderr = vim.loop.new_pipe(false)
   local function setQF()

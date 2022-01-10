@@ -81,6 +81,10 @@ func! repl_py#alignInFloatWin()
 endfunc
 
 func! repl_py#eval_line( ln )
+  if !(&filetype == 'python')
+    echo "This is not a Python file!"
+    return
+  endif
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
   let printStatement = 'print(' . expression . ')'
   let compl_sourceLines = repl_py#getStrOfBufAndCmd( printStatement )

@@ -1,4 +1,17 @@
 
+# Caching asyc repl
+Will need this for performance reasons
+- the temp file I create e.g. /Users/at/Documents/ML/spacy1/replSrc_t1.py
+  - should not contain the e1_ .. test lines
+  - should not contain the print eval at the end
+- this allows to dr / reload the file in ipython
+  but not run the (costly) test evals
+- these will be run as interactive repl evals
+  these lines still remain / are maintained in the source file
+  so they get lsp.
+  but these vars can get overwritten in the repl session.
+
+
 # Inline Values Repl (IVR)
 - evaluate code in source file context
   - using the main compiler and inject a print(ed) expression

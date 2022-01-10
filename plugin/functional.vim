@@ -39,7 +39,7 @@ func! functional#map(fn, list)
 endfunc
 " echo functional#map( 'toupper', ['eins', 'zwei'] )
 " echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
-" echo Mapped( {a -> a . 'aa'}, ['bb', 'aa', 'cc'])
+" echo functional#map( {a -> a . 'aa'}, ['bb', 'aa', 'cc'])
 " Could also use a separate function reference ■
 " let Fn2 = {_, x -> a:fn( x ) }
 " call map(new_list, Fn2) ▲

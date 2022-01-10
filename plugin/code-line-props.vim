@@ -169,6 +169,7 @@ func! VisualBlockMode()
 endfunc
 
 
+
 " Vim Pattern: For applying a function via an operator map, visual selection and command
 nnoremap <leader><leader>lc      :let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:set opfunc=Gen_opfunc2<cr>g@
 vnoremap <leader><leader>lc :<c-u>let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:call Gen_opfunc2(0,1)<cr>g@
