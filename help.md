@@ -772,12 +772,17 @@ Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 leader qq   - to open/close
 copen / cw[indow] / cclose - to open/close the quickfix list
 p/P - previews item in split / closes the preview split
+]q [q   - next / prev item
+[Q ]Q   - cfirst clast
+leader qa   - to add cursor pos to qf list
+leader M    - to add cursor pos to qf list
+
 Maps: ~/.config/nvim/plugin/utils-quickfix-list.vim#/func.%20QuickfixMaps..
 Note the 'go' command and the distinction with the location list maps
 
 note the lua code here: ~/.config/nvim/lua/tools_external.lua#/local%20function%20setQF..
-
 comprehensive article: https://vimways.org/2018/colder-quickfix-lists/
+
 ### Change Working Directory CWD Project Root
 
 " Set the root to a specific folder - not necessarily a git root folder.
