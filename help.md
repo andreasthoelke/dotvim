@@ -764,11 +764,15 @@ help argument-list
 
 Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 
+### autosave
+~/.config/nvim/plugin/setup-general.vim#/Autosave
+
 ### quickfixlist
 
+leader qq   - to open/close
 copen / cw[indow] / cclose - to open/close the quickfix list
 p/P - previews item in split / closes the preview split
-Maps: ~/.vim/plugin/setup-general.vim#/func.%20QuickfixMaps..
+Maps: ~/.config/nvim/plugin/utils-quickfix-list.vim#/func.%20QuickfixMaps..
 Note the 'go' command and the distinction with the location list maps
 
 note the lua code here: ~/.config/nvim/lua/tools_external.lua#/local%20function%20setQF..

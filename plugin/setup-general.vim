@@ -65,19 +65,21 @@ nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
 " Mundo: ----------------------
 
 
-" Autosave: -------------------
+" ─   Autosave                                          ──
 " Use "AutoSaveToggle" enable/disable
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
-let g:auto_save_events = ["CursorHold", "WinLeave", "VimLeavePre"]
+" let g:auto_save_events = ["CursorHold", "WinLeave", "VimLeavePre"]
+let g:auto_save_events = ["WinLeave", "VimLeavePre", "InsertLeave", "TextChanged"]
+" help auto-save-events
 " VimLeavePre does not save before Vim displays it's alerts
 " Maybe need this?
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " this doesn't work. how to add more project root markers?
 " let g:gutentags_add_default_project_roots = ['.gitignore', 'README.md']
 
-" Note: Plugin will "set updatetime=200"
+" Note: Only used by Magit? ? Plugin will "set updatetime=200"
 func! AttachAutosaveStopEvents()
   autocmd! BufEnter,WinEnter <buffer> let g:auto_save = 0 | echo "Autsave off"
   autocmd! BufHidden,WinLeave <buffer> let g:auto_save = 1 | echo "Autsave on"
@@ -1494,63 +1496,6 @@ nmap gk <Plug>(Rel)
 " example: ~/.vimrc#/set
 " Rel Links: -------------
 
-
-" Quickfix loclist ----
-" Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
-" au ag BufWinEnter quickfix call QuickfixMaps()
-augroup quickfix_maps
-  autocmd!
-  autocmd BufWinEnter quickfix call QuickfixMaps()
-augroup END
-
-func! QuickfixMaps()
-  nnoremap <buffer> go :.cc<cr>:wincmd p<cr>
-  nnoremap <buffer> Go :.ll<cr>:wincmd p<cr>
-  nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr>
-  nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr>
-  nnoremap <buffer> <c-m> :lnext<cr>:wincmd p<cr>
-  nnoremap <buffer> <c-i> :lprev<cr>:wincmd p<cr>
-  nnoremap <silent><buffer> p :PreviewQuickfix<cr>
-  nnoremap <silent><buffer> P :PreviewClose<cr>
-  " autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
-  " autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
-endfunc
-
-" nmap <leader>ll :lopen<cr>:Wrap<cr>
-nnoremap <leader>ll :call Location_toggle()<cr>
-" nmap <leader>qq :copen<cr>
-" Todo: this get's overwrittern on quickfix refesh:
-" nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
-nnoremap <leader>qq :call QuickFix_toggle()<cr>
-
-" Toggle quickfix window
-function! QuickFix_toggle()
-  for i in range(1, winnr('$'))
-    let bnum = winbufnr(i)
-    if getbufvar(bnum, '&buftype') == 'quickfix'
-      cclose
-      return
-    endif
-  endfor
-  copen
-endfunction
-
-function! s:BufferCount() abort
-  return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
-endfunction
-
-" Toggle Location List window
-function! Location_toggle()
-  " https://github.com/Valloric/ListToggle/blob/master/plugin/listtoggle.vim
-  let buffer_count_before = s:BufferCount()
-  " Location list can't be closed if there's cursor in it, so we need
-  " to call lclose twice to move cursor to the main pane
-  silent! lclose
-  silent! lclose
-  if s:BufferCount() == buffer_count_before
-    lopen
-  endif
-endfunction
 
 
 let g:easy_align_delimiters = {

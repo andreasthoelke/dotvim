@@ -180,64 +180,6 @@ let g:ctrlp_max_depth = 10
 let g:ctrlp_clear_cache_on_exit = 0
 " --- quickfix & loclist ----
 
-" When using `dd` in the quickfix list, remove the item from the quickfix list.
-function! RemoveQFItem()
-  let curqfidx = line('.') - 1
-  let qfall = getqflist()
-  call remove(qfall, curqfidx)
-  call setqflist(qfall, 'r')
-  execute curqfidx + 1 . "cfirst"
-  copen
-endfunction
-command! RemoveQFItem :call RemoveQFItem()
-" Use map <buffer> to only map dd in the quickfix window. Requires +localmap
-autocmd FileType qf map <buffer> dd :RemoveQFItem<cr>
-
-" Todo: Add a new QF entry after the current position. I might want to do this by creating the dictionary line from a
-" template. Currently using the vimgrep approach to add to the QF list: see func! AddCWordToQFList
-function! AddQFItem()
-  " let qfall = getqflist()
-  " call add(qfall, getline('.'))
-  " call setqflist(qfall, 'r')
-  " execute curqfidx + 1 . "cfirst"
-  " copen
-  " cfdo :call append( line('.'), getline('.'))
-endfunction
-" call append( line('.'), functional#map( {a -> string(a)}, getqflist() ) )
-" {'lnum': 18, 'bufnr': 17, 'end_lnum': 0, 'valid': 1, 'vcol': 0, 'nr': 0, 'module': '', 'type': '', 'col': 12, 'end_col': 0, 'pattern': '', 'text': '- vs code, mpv'}
-" {'lnum': 58, 'bufnr': 18, 'end_lnum': 0, 'valid': 1, 'vcol': 0, 'nr': 0, 'module': '', 'type': '', 'col': 14, 'end_col': 0, 'pattern': '', 'text': '" - vs code, mpv'}
-" {'lnum': 40, 'bufnr': 19, 'end_lnum': 0, 'valid': 1, 'vcol': 0, 'nr': 0, 'module': '', 'type': '', 'col': 1, 'end_col': 0, 'pattern': '', 'text': 'mpv World\''s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4'}
-
-
-func! SetVisSelToLineRange( l1, l2 )
-  let linelength = len( getline( a:l2 ) )
-  call setpos( "'<", [0, a:l1, 0, 0] )
-  call setpos( "'>", [0, a:l2, linelength, 0] )
-  " normal! gv
-endfunc
-" call SetVisSelToCurrentLine( line('.'), line('.')+2 )
-" Also note: ~/.config/nvim/plugin/HsMotions.vim#/func.%20SetVisSel.%20l1,
-
-func! AddCWordToQFList()
-  call SetVisSelToLineRange( line('.'), line('.') )
-  " exec "1lvimgrepa /" . expand('<cword>') . "/ %"
-  " let cmd = ":vimgrep/\%(\%'<\|\%>'<\%<'>\|\%'>\)" . expand('<cword>') . "/ %"
-  let cmd = "vimgrepa/\\%(\\%'<\\|\\%>'<\\%<'>\\|\\%'>\\)" . expand('<cword>') . "/j %"
-  exec cmd
-  " let cmd = escape(cmd, '\')
-  " let cmd = ":vimgrepa/\\%(\\%'<\\|\\%>'<\\%<'>\\|\\%'>\\)" . expand('<cword>') . "/j %\n"
-  " call feedkeys( cmd, 'n' )
-  " copen
-endfunc
-" call SetVisSelToLineRange( line('.')-5, line('.') )
-" vimgrep/\%(\%'<\|\%>'<\%<'>\|\%'>\)expand/ %
-" call feedkeys( ":echo 'hi'\n", "n" )
-" From https://stackoverflow.com/questions/21483847/is-it-possible-to-use-vimgrep-for-a-visual-selection-of-the-current-file
-" Using :vimgrep to "easily" add to the qf-list
-" So the approach it to search for the curent word under the cursor. But vimgrep starts to search from the beginning of
-" the file. This is why the focus on the current selection is needed. The "j" flag prevent a jump.
-" I had to double-escape the \ !!
-" The feedkeys version also works but also needs the double quoted slashes
 
 " Demo function:
 " Set up a "Delete Buffer" map:

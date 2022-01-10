@@ -84,6 +84,7 @@ func! GitMagitAuthor( win )
   let g:auto_save = 0
 endfunc
 
+let g:magit_show_magit_mapping=''
 let g:magit_default_show_all_files = 1
 let g:magit_default_fold_level = 1
 " let g:magit_default_sections = ['info', 'global_help', 'commit', 'staged', 'unstaged']
