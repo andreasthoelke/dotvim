@@ -116,7 +116,8 @@ function FloatWin_close ()
 end
 EOF
 
-" func! 
+" let g:floatWin_scratchBuf_Id = nvim_create_buf( v:false, v:true )
+" call nvim_buf_set_lines( g:floatWin_scratchBuf_Id, 0, -1, 0, ['eins'] )
 
 " Show lines in float-win at cursor loc by default. Or pass column, row for win relative position.
 func! FloatWin_ShowLines_old( linesToShow, ... )
@@ -124,9 +125,9 @@ func! FloatWin_ShowLines_old( linesToShow, ... )
     return
   endif
   " TODO move this to intero
-  if join( a:linesToShow ) =~ 'CInterrupted'
-    return
-  endif
+  " if join( a:linesToShow ) =~ 'CInterrupted'
+  "   return
+  " endif
   let opt = { 'focusable': v:true,
         \ 'width': 50,
         \ 'height': 10,
@@ -346,7 +347,7 @@ function! CreateCenteredFloatingWindow() abort
     return l:textbuf
 endfunction
 
-
+" echo FloatingTerm()
 func! FloatingTerm ()
   let opts = {}
   let opts.focusable = v:true
@@ -360,6 +361,23 @@ func! FloatingTerm ()
   let l:textbuf = nvim_create_buf(v:false, v:true)
   return nvim_open_win( l:textbuf, v:true, opts)
 endfunc
+
+" call FloatingSmallNew(['eins'])
+func! FloatingSmallNew(linesToShow)
+  let opts = {}
+  let opts.focusable = v:true
+  let opts.width     = 35
+  let opts.height    = 18
+  let opts.anchor    = 'NW'
+  let opts.relative  = 'cursor'
+  let opts.col       = 0
+  let opts.row       = 1
+
+  let textbuf = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_lines( textbuf, 0, -1, 0, a:linesToShow )
+  return nvim_open_win( l:textbuf, v:true, opts)
+endfunc
+
 
 func! FloatingBuffer( filePath )
   let opts = { 'focusable': v:true,

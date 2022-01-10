@@ -82,8 +82,21 @@ func! SourceRange() range
     exec "source " . l:tmpsofile
   endif
   call delete(l:tmpsofile)
+
+  " Note: I can't access the range vars like this
+  " echo ("Sourced " . a:lastline - a:firstline . " lines!")
+  return RangeAux(a:firstline, a:lastline)
 endfunc
 " TIP: Range example function
+
+
+function! RangeAux(lnum1, lnum2) abort
+  " echo a:lnum1 . ' - ' . a:lnum2
+  " echo a:lnum2
+  let pos1 = [0, a:lnum1, 1, 0]
+  let pos2 = [0, a:lnum2, 1, 0]
+  call highlightedyank#highlight#add( 'HighlightedyankRegion', pos1, pos2, 'line', 500)
+endfunction
 
 func! SourceLines( lines )
   let tmpsofile = tempname()
@@ -117,9 +130,12 @@ func! OpSourceVimL( motionType, ...)
 
   " call SourceLines( l:selectedVimCode )
   exec startLine . ',' . endLine 'call SourceRange()'
+  " echoe startLine
+  " echoe endLine
 
   " Flash the sourced text for 500ms
-  call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
+  " call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
+  " call highlightedyank#highlight#add( 'HighlightedyankRegion', startLine, endLine, 'line', 500)
 endfunc
 " Tests: `leader s$` on [e]cho and visual-sel echo ..{{{
 " Some text echo 'hi 2'

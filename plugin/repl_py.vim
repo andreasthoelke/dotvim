@@ -4,8 +4,8 @@
 
 
 
-"        ─   Sync IVR                                          ──
-"        ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
+" ─   Sync IVR                                          ──
+" ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
 
 nnoremap <silent> gee :call repl_py#eval_line( line('.') )<cr>
 nnoremap <silent> gei :call repl_py#eval_line( line('.') )<cr>
@@ -52,6 +52,9 @@ func! repl_py#splitOutsideOfFirstPair( splitBy, lineToSplit )
 endfunc
 " call FloatWin_ShowLines ( repl_py#splitOutsideOfFirstPair( ",", "Output: ('Apple', 'PROPN', 'nsubj'), ('is', 'AUX', 'aux'), ('looking', 'VERB', 'ROOT'), ('at', 'ADP', 'prep'), ('buying', 'VERB', 'pcomp'), ('U.K.', 'PROPN', 'dobj'), ('startup', 'VERB', 'dep'), ('for', 'ADP', 'prep'), ('$', 'SYM', 'quantmod'), ('1', 'NUM', 'compound'), ('billion', 'NUM', 'pobj')]" ) )
 " call FloatWin_ShowLines_old ( repl_py#splitOutsideOfFirstPair( ",", "Output: ('Apple', 'PROPN', 'nsubj'), ('is', 'AUX', 'aux'), ('looking', 'VERB', 'ROOT'), ('at', 'ADP', 'prep'), ('buying', 'VERB', 'pcomp'), ('U.K.', 'PROPN', 'dobj'), ('startup', 'VERB', 'dep'), ('for', 'ADP', 'prep'), ('$', 'SYM', 'quantmod'), ('1', 'NUM', 'compound'), ('billion', 'NUM', 'pobj')]" ) )
+" call FloatWin_ShowLines_old ( repl_py#splitOutsideOfFirstPair( ",", "eins zwei drei" ) )
+" echo split ( "eins zwei drei", "," )
+" call FloatWin_ShowLines_old (['eins'])
 
 func! repl_py#splitToLines( lineToSplit )
   if a:lineToSplit =~ "[\[|\{|\(]"
@@ -69,6 +72,13 @@ endfunc
 " echo "eins"[1:-2]
 " echo StripLeadingSpaces( ['eins', ' zw ei', '  drei'] )
 
+func! repl_py#alignInFloatWin()
+  call FloatWin_FocusFirst()
+  " setlocal modifiable
+  call easy_align#easyAlign( 1, line('$'), ',')
+  call FloatWin_FitWidthHeight()
+  wincmd p
+endfunc
 
 func! repl_py#eval_line( ln )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
@@ -85,13 +95,14 @@ func! repl_py#eval_line( ln )
 
   if len( expResult ) > 8
     call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
-    call FloatWin_ShowLines_old ( repl_py#splitToLines( expResult ) )
+    let linesResult = repl_py#splitToLines( expResult )
+    " echoe linesResult
+    " call FloatWin_ShowLines_old ( linesResult )
+    let g:floatWin_win = FloatingSmallNew ( linesResult )
     " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
-    call FloatWin_FocusFirst()
-    " setlocal modifiable
-    call easy_align#easyAlign( 1, line('$'), ',')
-    call FloatWin_FitWidthHeight()
-    wincmd p
+    if len(linesResult) > 2
+      call repl_py#alignInFloatWin()
+    endif
   else
     call v:lua.VirtualTxShow( expResult )
   endif
