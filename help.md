@@ -806,6 +806,10 @@ leader dpR ":cd " . projectroot#guess() . "\n"
 
 ## Move / Copy files
 
+in dirvish, "." on the file, then mv/cp, then <c-f>A to go to the end of the line to specify the
+target path: - use %.. to move/copy to the parent folder.
+             - use %subfoder/ to *keep* the filename and move/copy to the subfolder. (note the "/" at the end!)
+
 manual/low level:
 yy in Dirvish - copy the full file path
 navigate to the destination path in Dirvish then `glT` to open a terminal at that location

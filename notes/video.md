@@ -1,12 +1,18 @@
 
 # MPV / VLC Media player
 
-~/.config/mpv/m
-
 
 mpv --help
 vlc --help
 mpv myvideo.mp4
+
+## Scripts
+~/.config/mpv/
+~/.config/mpv/mpv.conf
+
+git clone https://github.com/zxhzxhz/mpv-chapters  ~/.config/mpv/mpv-chapters
+
+
 
 # ytdl
 
@@ -53,10 +59,7 @@ youtube-dl W86cTIoMv2U --get-format
 youtube-dl W86cTIoMv2U -j
 youtube-dl W86cTIoMv2U -j > W86cTIoMv2U_infos.json
 
-## Scripts
-git clone https://github.com/zxhzxhz/mpv-chapters
 
-pwd
 
 
 
