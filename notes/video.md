@@ -1,11 +1,14 @@
 
-## MPV / VLC Media player
-mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
+# MPV / VLC Media player
+
+~/.config/mpv/m
+
+
 mpv --help
 vlc --help
+mpv myvideo.mp4
 
-
-## ytdl
+# ytdl
 
 next:
 - edit divish buffer to execute shell commands with path
@@ -18,7 +21,6 @@ Test paths: /Users/at/Documents/tests/YT-dls/myvideo.mp4
 
 ls
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" | mpv -
-ytdl "W86cTIoMv2U" | mpv -
 ytdl W86cTIoMv2U | mpv -
 ytdl W86cTIoMv2U | vlc -
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" | vlc -
@@ -36,9 +38,10 @@ vlc myvideo.mp4
 youtube-dl W86cTIoMv2U --skip-download --write-sub
 youtube-dl W86cTIoMv2U -s --write-sub
 
+mpv W86cTIoMv2U.mp4
 mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
-mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
-mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
+
+mpv mpv-shot0001.jpg
 
 youtube-dl W86cTIoMv2U -e --get-title
 youtube-dl W86cTIoMv2U -e --get-title --get-description
@@ -48,6 +51,26 @@ youtube-dl W86cTIoMv2U --get-format
 -j --dump-json
 -j
 youtube-dl W86cTIoMv2U -j
-youtube-dl W86cTIoMv2U -j > test.json
+youtube-dl W86cTIoMv2U -j > W86cTIoMv2U_infos.json
+
+## Scripts
+git clone https://github.com/zxhzxhz/mpv-chapters
+
+pwd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

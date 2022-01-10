@@ -23,9 +23,9 @@ endfunc
 nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
 
-nnoremap grt :call ShellReturn( GetLineFromCursor() )<cr>
-vnoremap grt :<c-u>call ShellReturn( GetVisSel() )<cr>
-nnoremap grT :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
+nnoremap gwt :call ShellReturn( GetLineFromCursor() )<cr>
+vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
+nnoremap gwT :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 
 " Else the cursor in the termanal is red when not in insert mode .. which is informative - but how to adjust the color/look?
 hi! TermCursorNC guibg=grey guifg=white

@@ -448,6 +448,7 @@ if !exists('g:colors_name')
   colorscheme munsell-blue-molokai
 endif
 
+nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
 luafile ~/.config/nvim/lua/utils_general.lua
 luafile ~/.config/nvim/plugin/ui_virtualTx.lua

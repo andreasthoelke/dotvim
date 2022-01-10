@@ -604,6 +604,7 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 " Set Syntax:
 nnoremap <localleader>sh :set syntax=html<cr>
 nnoremap <localleader>sj :set syntax=javascript<cr>
+nnoremap <localleader>sJ :set syntax=json<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
 nnoremap <localleader>sl :set syntax=lua<cr>

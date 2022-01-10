@@ -97,8 +97,8 @@ command! GithubSearch call GithubSearch("word")
 nnoremap <silent> gsI :call GithubSearch("word")<cr>
 xnoremap <silent> gsI :<c-u>call GithubSearch("visSel")<cr>
 
-nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
-xnoremap <silent> gsr :<c-u>call GrepSearch("visSel", "repo")<cr>
+nnoremap <silent> gsR :call GrepSearch("word", "repo")<cr>
+xnoremap <silent> gsR :<c-u>call GrepSearch("visSel", "repo")<cr>
 " gsb now used to browse namespace
 " nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 " vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
@@ -278,8 +278,8 @@ fun! GrepSearch(selType, mode)
   endif
 endfun
 
-nnoremap gsR :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
-xnoremap gsR :<c-u>call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+nnoremap gsr :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+xnoremap gsr :<c-u>call SearchRepo( GetInputStr('Search in repo: ') )<cr>
 
 fun! SearchRepo( keyw )
   " exec 'Frepo "' . a:keyw . '"'

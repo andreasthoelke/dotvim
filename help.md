@@ -633,6 +633,7 @@ leader gp - ctrlP. use <c-o>v - browse-open recent file in a split e.g. from a d
 
 ## Dirvish
 
+:vs ./   - open the cwd in a split! you can use <c-i> in command line to drill into sub-folders
 a - open file in right split, then use ]f [f to go back forth the files in the dir!
 x - add some files to the arglist that you want to work with. then open the first file (with a or i), then use
 ]a [a [A ]A - to go through the marked files (instead of opening tabs for all files)
@@ -764,10 +765,10 @@ help argument-list
 
 Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 
-### autosave
+## autosave
 ~/.config/nvim/plugin/setup-general.vim#/Autosave
 
-### quickfixlist
+## quickfixlist
 
 leader qq   - to open/close
 copen / cw[indow] / cclose - to open/close the quickfix list
@@ -783,7 +784,7 @@ Note the 'go' command and the distinction with the location list maps
 note the lua code here: ~/.config/nvim/lua/tools_external.lua#/local%20function%20setQF..
 comprehensive article: https://vimways.org/2018/colder-quickfix-lists/
 
-### Change Working Directory CWD Project Root
+## Change Working Directory CWD Project Root
 
 " Set the root to a specific folder - not necessarily a git root folder.
 nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
@@ -797,7 +798,13 @@ leader dpR ":cd " . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
 ~/.config/nvim/plugin/setup-general.vim#/Change%20Working%20Directory.
 
-### Move / Copy files
+### Use the CWD
+- for search
+- for terminal commands (gwt). Example: run gwt on the next two chars: lsl
+
+:vs ./   - open the cwd in a split! you can use <c-i> in command line to drill into sub-folders
+
+## Move / Copy files
 
 manual/low level:
 yy in Dirvish - copy the full file path
@@ -1197,6 +1204,8 @@ Filter ansi color escape codes: ~/.config/nvim/plugin/search-replace.vim#/func.%
 i used this before:
 " set filetypes as typescript.tsx
 " autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
+
+  colorscheme munsell-blue-molokai
 
 ## Colorizer.nvim
 to highligh colors in code (CSS, JS, HTML, VIM)

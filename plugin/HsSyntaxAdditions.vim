@@ -7,7 +7,7 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx call JsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx,*json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript

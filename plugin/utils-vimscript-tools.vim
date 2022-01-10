@@ -17,7 +17,7 @@ endfunc
 " Sourcing Parts Of Vimscript:
 " the current file
 " nnoremap <silent><leader>so :w<cr>:so %<cr>
-nnoremap <silent> <leader>so :call SourceFile()<cr>
+nnoremap <silent> <leader>so :call SourceFile()<cr>:echo 'Sourced ' . expand('%:t') . "!"<cr>
 
 func! SourceFile ()
   silent exec "w"
