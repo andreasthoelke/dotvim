@@ -1,5 +1,54 @@
 
 
+# Database integration
+https://alpha2phi.medium.com/neovim-database-completion-d1f590634338
+
+
+https://github.com/kristijanhusak/vim-dadbod-ui/blob/master/README.md
+https://github.com/lighttiger2505/sqls
+
+
+# jupyter notebooks
+https://alpha2phi.medium.com/publishing-jupyter-notebook-167ec3b653a2
+
+
+# Jobs
+note the job sequence summary here:
+https://alpha2phi.medium.com/faster-neovim-plugin-development-with-plenary-nvim-e5ba8dcd12a3
+
+are now easy to set up:
+notes/notes-lua-asyc-loop.md
+/Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua
+
+Rework bookmarks: ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
+also see notes/links
+
+colors, maps etc for codi https://github.com/metakirby5/codi.vim/blob/master/doc/codi.txt
+the old spell should still work
+!python <filename> with shellreturn
+
+## open new vim tab from terminal (using deno)
+ https://github.com/lambdalisue/guise.vim
+https://alpha2phi.medium.com/a-vim-neovim-plugin-ecosystem-to-try-9221c642cbf9
+
+# Deno
+/opt/homebrew/Cellar/deno/1.17.3: 10 files, 66.6MB
+
+zsh completions have been installed to:
+  /opt/homebrew/share/zsh/site-functions
+
+gwt ->
+deno run https://deno.land/std/examples/welcome.ts
+
+echo exepath('deno')
+
+brew tap wez/wezterm
+brew install --cask wez/wezterm/wezterm
+
+
+
+# Older notes / todos:
+
 search and sel a git working dir (open divish folder and set lcd)
 there is a projects plugin in lvim
 note that ctrlp has a directory selector using c-f in the window.

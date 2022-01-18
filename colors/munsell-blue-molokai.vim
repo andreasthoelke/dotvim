@@ -217,7 +217,8 @@ let g:materialmonokai_termcolors = 256 " does not support 16 color term right no
 
 " purescriptFunction > Function
 " hi! Function guifg=#0087AF "munsell blue"
-hi! Function guifg=#008EB8 "munsell blue"
+" hi! Function guifg=#008EB8 "munsell blue"
+hi! Function guifg=#1692CE "munsell blue"
 
 hi! purescriptFunction guifg=#008EB8 guibg=#000000
 
@@ -235,7 +236,8 @@ hi! purescriptOperator guifg=#3A666E
 hi! purescriptColon guifg=#2D4E54
 hi! Operator guifg=#335A60
 
-
+hi! def link TSFunction purescriptFunction
+hi! def link pythonAttribute purescriptRecordKeys
 
 " purescriptType > Type
 " hi! Type guifg=#76E0D9 "middle blue"

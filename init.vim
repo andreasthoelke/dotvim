@@ -36,7 +36,9 @@ Plug 'nvim-telescope/telescope-github.nvim'
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
 
+Plug 'vim-denops/denops.vim'
 
+Plug 'lambdalisue/guise.vim'
 
 Plug 'justinmk/vim-dirvish'
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'

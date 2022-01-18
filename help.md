@@ -74,7 +74,15 @@ lst --level=4 /Users/at/.config_git/
 
 # do-next
 
-### Caching asyc repl
+# notes/do-next
+
+note the job sequence summary here:
+https://alpha2phi.medium.com/faster-neovim-plugin-development-with-plenary-nvim-e5ba8dcd12a3
+
+note Code Runner approach
+https://alpha2phi.medium.com/neovim-code-runner-cd9dcf871f20
+
+## Caching asyc repl
 ~/.config/nvim/notes/inline-values-repl.md#/#%20Caching%20asyc
 
 filter Ms, all with sed,
@@ -85,23 +93,13 @@ but i could just open a temp terminal! in a float
 note: search these notes:
 notes/notes-todos.md
 
-# Jobs
-are now easy to set up:
-notes/notes-lua-asyc-loop.md
-/Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua
 
-Rework bookmarks: ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
-also see notes/links
 
-colors, maps etc for codi https://github.com/metakirby5/codi.vim/blob/master/doc/codi.txt
-the old spell should still work
-!python <filename> with shellreturn
 
-notes/do-next
 
 --Remap for dealing with word wrap
-vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
+lua vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
+lua vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
 
 -- Highlight on yank
 vim.cmd [[augroup YankHighlight
@@ -288,6 +286,7 @@ TSInstall <language>
 help nvim-treesitter-commands
 TSModuleInfo
 
+TSHighlightCapturesUnderCursor   - show the highlight groups under the cursor
 https://www.youtube.com/watch?v=dPQfsASHNkg
 
 # Purescript
@@ -461,8 +460,10 @@ might get image preview support on mac: https://github.com/dccsillag/magma-nvim/
 
 similar for just vim https://github.com/jupyter-vim/jupyter-vim
 
-## Image preview
+## Image Media preview
 https://github.com/edluffy/hologram.nvim
+in Chrome:
+nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 
 ## Purs repl / Ghci/ Intero
@@ -676,6 +677,7 @@ Open a folder in Finder:
 
 "Win navigate right to left and use 'p'"
 \T - new tab, go to a 'root' folder
+,tn - new empty tab
 c-w v c-w = - make 3 columns
 c-w | - go to the next 'last window', then c-w h/l, then 'p' to fill the previous win with the content of the node
 TODO some simple maps/commands for 'p' could achieve a basic ranger functionality!?
@@ -803,6 +805,10 @@ leader dpR ":cd " . projectroot#guess() . "\n"
 - for terminal commands (gwt). Example: run gwt on the next two chars: lsl
 
 :vs ./   - open the cwd in a split! you can use <c-i> in command line to drill into sub-folders
+
+### Copy the CWD
+in dirvish folder: leader Fpc, then in target window: :lcd <c-r>"<cr>
+
 
 ## Move / Copy files
 
@@ -1209,7 +1215,10 @@ i used this before:
 " set filetypes as typescript.tsx
 " autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
 
-  colorscheme munsell-blue-molokai
+colorscheme munsell-blue-molokai
+
+## Configure a color
+~/.config/nvim/plugin/syntax-color.vim#/STEP1.%20FIND%20THE
 
 ## Colorizer.nvim
 to highligh colors in code (CSS, JS, HTML, VIM)

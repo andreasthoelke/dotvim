@@ -5,6 +5,13 @@
 require('nvim-treesitter.configs').setup {
   highlight = {
     enable = true, -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of languages that will be disabled
+    -- additional_vim_regex_highlighting = true,
+
+    custom_captures = {
+        -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+        ["foo.bar"] = "Identifier",
+      },
   },
   playground = {
     enable = true,

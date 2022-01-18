@@ -1,4 +1,10 @@
 
+note Code Runner approach
+https://alpha2phi.medium.com/neovim-code-runner-cd9dcf871f20
+
+note the job sequence summary here:
+https://alpha2phi.medium.com/faster-neovim-plugin-development-with-plenary-nvim-e5ba8dcd12a3
+
 # Caching asyc repl
 Will need this for performance reasons
 - the temp file I create e.g. /Users/at/Documents/ML/spacy1/replSrc_t1.py

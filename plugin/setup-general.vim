@@ -582,6 +582,11 @@ noremap ,H H
 vnoremap ,L L
 vnoremap ,H H
 
+" Remap for dealing with word wrap
+lua vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
+lua vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
+
+
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
 " au! ag InsertLeave * call InsertLeave()
