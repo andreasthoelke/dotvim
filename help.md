@@ -209,6 +209,8 @@ GREP??
 
 ## telescope.nvim
 
+leader te    - to see options. but not all (e.g. session is missing)
+
 Telescope <c-i>
 Telescope gh gist
 ~/.vim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
@@ -1050,6 +1052,10 @@ leader c-o - FzfPreviewJumps
 
 ## Bookmarks Shortcuts / Popular links
 
+also consider:
+<leader>ts <cmd>Telescope sessions<cr>
+<leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
+
 ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
 leader ou :tabe ~/.vim/utils
 leader or :vnew ~/.vim/plugin
@@ -1328,6 +1334,9 @@ SLoad <c-i>    - load sessions
 ## Sessions
 
 Now using: ~/.config/nvim/plugin/setup-general.vim#/Neovim%20session%20manager
+but not autoloading
+
+
 Maps: ~/.config/nvim/plugin/setup-general.vim#/Vim%20Sessions.
 Commands: https://github.com/Shatur/neovim-session-manager\#commands
 

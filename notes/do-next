@@ -49,6 +49,7 @@ brew install --cask wez/wezterm/wezterm
 
 # Older notes / todos:
 
+Can now do this with telescope repo list
 search and sel a git working dir (open divish folder and set lcd)
 there is a projects plugin in lvim
 note that ctrlp has a directory selector using c-f in the window.

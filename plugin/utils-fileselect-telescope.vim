@@ -1,8 +1,13 @@
 
+" nnoremap <leader>te <cmd>Telescope<cr>
+nnoremap <leader>te :Telescope 
 
+nnoremap <leader>ts <cmd>Telescope sessions<cr>
+nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fo <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>

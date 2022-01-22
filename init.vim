@@ -32,6 +32,8 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 
 Plug 'nvim-telescope/telescope-github.nvim'
+Plug 'cljoly/telescope-repo.nvim'
+
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
