@@ -1,4 +1,7 @@
 
+-- local Path = require('plenary.path')
+-- print( Path:new(vim.fn.stdpath('data'), 'sessions1') )
+
 local M = {}
 local api = vim.api
 

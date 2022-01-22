@@ -804,6 +804,7 @@ leader dpR ":cd " . projectroot#guess() . "\n"
 - for search
 - for terminal commands (gwt). Example: run gwt on the next two chars: lsl
 
+:e .     - to just go back to the cwd in dirvish
 :vs ./   - open the cwd in a split! you can use <c-i> in command line to drill into sub-folders
 
 ### Copy the CWD
@@ -1069,6 +1070,8 @@ nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 ## Rename, replace, substitute
 
+https://vim.fandom.com/wiki/Power_of_g
+
 <!-- '<,'>s/old/new/g -->
 
 .+1,.+2s/old/new/g
@@ -1315,6 +1318,12 @@ leader bd/D - delete the buffer. bD for :bd! is not needed
 leader oS af/ip/\j or visSel - put lines into a scratch window
 note this alternative:
 leader wp af/ip ..
+
+## Startup screen
+https://github.com/mhinz/vim-startify/wiki/Plugin-features-in-detail
+
+SLoad <c-i>    - load sessions
+
 
 ## Sessions
 

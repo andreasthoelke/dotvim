@@ -125,6 +125,8 @@ mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
 mpv mpv-shot0001.jpg
 
 youtube-dl W86cTIoMv2U -e --get-title
+youtube-dl W86cTIoMv2U -e --write-sub
+youtube-dl W86cTIoMv2U --list-subs
 youtube-dl W86cTIoMv2U -e --get-title --get-description
 youtube-dl W86cTIoMv2U -e --get-description --get-thumbnail
 youtube-dl W86cTIoMv2U -e --get-thumbnail
@@ -137,12 +139,17 @@ youtube-dl W86cTIoMv2U -j > W86cTIoMv2U_infos.json
 ## Thumbnails
 https://i.ytimg.com/sb/mb59CQQvxd4/storyboard3_L0/default.jpg?sqp=-oaymwENSDfyq4qpAwVwAcABBqLzl_8DBgiZ9duOBg%3D%3D&sigh=rs%24AOn4CLCpl6q6hCwUJ1i-otAjGXJ3P8VY6A
 
+## Subtitle
+--convert-subs FORMAT
+Convert the subtitles to other format (currently supported: srt|ass|vtt|lrc)
 
+youtube-dl W86cTIoMv2U --skip-download --write-sub --sub-lang en-GB
 
-
-
-
-
+youtube-dl y3mazk5j8Sg --skip-download --write-sub
+youtube-dl 6OMzvvJHYxU --skip-download --write-sub
+youtube-dl wkPR4Rcf4ww --skip-download --write-sub
+youtube-dl z-IR48Mb3W0 --skip-download --write-sub
+youtube-dl GU87SH5e0eI --skip-download --write-sub
 
 
 

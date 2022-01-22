@@ -57,10 +57,11 @@ endfunc
 " call FloatWin_ShowLines_old (['eins'])
 
 func! repl_py#splitToLines( lineToSplit )
-  if a:lineToSplit =~ "[\[|\{|\(]"
+  if a:lineToSplit[0] =~ "[\[|\{|\(]"
     let lineToSplit = a:lineToSplit[1:-2]
   else
-    let lineToSplit = a:lineToSplit
+    return [ a:lineToSplit ]
+    " let lineToSplit = a:lineToSplit
   endif
   let lines = repl_py#splitOutsideOfFirstPair( ",", lineToSplit )
   return StripLeadingSpaces( lines )

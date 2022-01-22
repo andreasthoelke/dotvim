@@ -170,6 +170,8 @@ Plug 'junegunn/goyo.vim'
 
 Plug 'AndrewRadev/linediff.vim'
 
+Plug 'mhinz/vim-startify'
+
 " Session:
 Plug 'xolox/vim-misc'
 " Plug 'xolox/vim-session'
@@ -295,7 +297,7 @@ Plug 'godlygeek/tabular'
 Plug 'navicore/vissort.vim'
 
 " Markdown: -------------
-" Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
 " Plug 'plasticboy/vim-markdown'
 
