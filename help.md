@@ -590,7 +590,7 @@ Older config (with tab remap?) /Users/at/.config/karabiner/karabiner.json.bak
 
 ## Window, Buffer Navigation
 
-c-w n/N - SymbolNext SplitTop
+c-w n/N - SymbolNext SplitTop (??)
 c-w i - jump into float-win
 leader wp[ap/af] - pin a function/paragraph (or imports) to the top
 c-w dk - close the window above
