@@ -71,7 +71,7 @@ let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepa
 
 " let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
 " let g:lightline.inactive.right = [ ['scrollbar'] ]
-let g:lightline.active.right = [ ['line'], ['pyVirtEnvStr'] ]
+let g:lightline.active.right = [ ['line'], ['db', 'pyVirtEnvStr'] ]
 let g:lightline.inactive.right = [ ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
@@ -106,6 +106,7 @@ let g:lightline.component.relativepath_fresh = '%{CurrentRelativeFilePath()}'
 let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
+let g:lightline.component_function.db = "DBUIInfos"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
 let g:lightline.component_function.pyVirtEnvStr = 'PyVirtEnvStr'
 let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
@@ -117,6 +118,14 @@ let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
 let g:lightline.tab_component_function = {}
 let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
 
+
+func! DBUIInfos ()
+  return db_ui#statusline({
+        \ 'show': ['db_name', 'schema', 'table'],
+        \ 'separator' : ' - ',
+        \ 'prefix': ''
+        \ })
+endfunc
 
 func! LightlineLocalRootFolder()
   return ProjectRootFolderNameOfWin( winnr() )

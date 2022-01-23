@@ -32,6 +32,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 
 Plug 'nvim-telescope/telescope-github.nvim'
+Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'cljoly/telescope-repo.nvim'
 
 
@@ -89,6 +90,11 @@ Plug 'andreasthoelke/vim-EnhancedJumps'
 " Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
+
+" DBs:
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
+Plug 'kristijanhusak/vim-dadbod-completion'
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'

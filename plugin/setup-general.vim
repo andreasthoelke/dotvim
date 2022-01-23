@@ -174,6 +174,14 @@ EOF
 
 nnoremap <leader>st :Startify<cr>
 
+let g:startify_lists = [
+      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'files',     'header': ['   MRU']            },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
 let g:startify_custom_header = []
 
 " let g:startify_session_dir = '~/.local/share/nvim/sessions1'
@@ -1131,7 +1139,7 @@ let g:rootmarkers = ['package.json', '.git', 'spago.dhall', '.gitignore', 'stack
 " well, not really needed?!
 
 " remove/delete a file relative to project-root
-nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
+" nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
 
 command! DelFile :call delete(expand('%')) | bdelete!
 
@@ -1282,8 +1290,8 @@ function! DiffToggle()
     endif
 endfunction
 
-vnoremap <leader>di :Linediff<cr>
-nnoremap <leader>dr :LinediffReset<cr>
+" vnoremap <leader>di :Linediff<cr>
+" nnoremap <leader>dr :LinediffReset<cr>
 
 set diffopt+=vertical
 

@@ -1325,10 +1325,32 @@ leader oS af/ip/\j or visSel - put lines into a scratch window
 note this alternative:
 leader wp af/ip ..
 
+## DB / Databases
+
+notes/notes-db-sql.md
+plugin/tools-db.vim
+help dadbod-ui
+
+
 ## Startup screen
+leader st
 https://github.com/mhinz/vim-startify/wiki/Plugin-features-in-detail
 
 SLoad <c-i>    - load sessions
+
+## Repos & Projects
+leader tp   - to manage projects https://github.com/nvim-telescope/telescope-project.nvim
+  d	delete currently selected project
+  r	rename currently selected project
+  c	create a project*
+  s	search inside files within your project
+  b	browse inside files within your project
+  w	change to the selected project's directory without opening it
+  R	find a recently opened file within your project
+  f	find a file within your project (same as <CR>)
+
+leader tr   - select a repo
+
 
 
 ## Sessions

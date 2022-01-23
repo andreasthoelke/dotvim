@@ -4,6 +4,7 @@ nnoremap <leader>te :Telescope
 
 nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
+nnoremap <leader>tp <cmd>Telescope project<cr>
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -29,7 +30,7 @@ require('telescope').setup{
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-        ["<C-h>"] = "which_key"
+        -- ["<C-h>"] = "which_key"
       }
     }
   },
@@ -50,6 +51,7 @@ require('telescope').setup{
     -- please take a look at the readme of the extension you want to configure
   }
 }
+require'telescope'.load_extension('project')
 EOF
 
 " lua require('telescope').setup{ defaults = { layout_strategy = 'vertical', layout_config = { prompt_position = 'top', mirror = true, width = 0.95, height = 0.95 }, }, }
