@@ -214,14 +214,15 @@ endfunc
 " * `<leader>rb` to rename a binding and its occurences
 
 " Next/Prev Binding:
-nnoremap <silent> ]b :call BindingForw()<cr>:call ScrollOff(16)<cr>
+" " Todo: ]b collides with unimpaired bnext.
+" nnoremap <silent> ]b :call BindingForw()<cr>:call ScrollOff(16)<cr>
 func! BindingForw()
   normal! W
   call search( g:typeSigBind, 'W' )
   normal! B
 endfunc
 
-nnoremap <silent> [b :call BindingBackw()<cr>:call ScrollOff(10)<cr>
+" nnoremap <silent> [b :call BindingBackw()<cr>:call ScrollOff(10)<cr>
 func! BindingBackw()
   call search( g:typeSigBind, 'bW' )
   normal! B

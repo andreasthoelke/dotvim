@@ -228,7 +228,9 @@ endfunc
 
 func! FloatWin_FitWidth()
   " get the current buffer lines
-  let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  " let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  let lines = getline( 0, line('$') )
+  " echoe lines
   let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
   if newWidth > 5
     call FloatWin_SetProp( 'width', newWidth )
@@ -241,8 +243,10 @@ endfunc
 " call FloatWin_SetProp( 'height', 10 )
 
 func! FloatWin_FitWidthHeight()
-  let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  " let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
   " let lines = nvim_buf_get_lines( g:floatWin_win, 0, line('$'), 0 )
+  let lines = getline( 0, line('$') )
+  " echoe lines
   let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
   if newWidth > 0
     call nvim_win_set_config( g:floatWin_win, { 'width' : newWidth, 'height': len( lines ) } )

@@ -376,8 +376,9 @@ hi! def link TagbarKind Type
 hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! Highlight1 guifg=#F6DC69
 
-hi! def link mkdHeading Operator
-hi! def link mkdNonListItemBlock purescriptIdentifier
+hi! def link mkdHeading SpGreen52
+" hi! def link mkdNonListItemBlock FloatBorder
+hi! def link mkdNonListItemBlock CommentPlus
 hi! def link mkdListItemLine purescriptIdentifier
 hi! def link mkdListItemLine mkdListItemLine
 hi! def link mkdCode Statement
@@ -389,6 +390,29 @@ hi! def link mkdInlineURL Underlined2
 hi! def link mkdLink Underlined2
 " hi! def link htmlBold htmlBold
 " hi! def link htmlItalic htmlItalic
+
+" hi! def link htmlH1 Typedef
+" hi! def link htmlH2 Typedef
+" hi! def link htmlH3 Typedef
+
+hi! def link htmlH1 SpGreen51
+hi! def link htmlH2 SpGreen51
+hi! def link htmlH3 SpGreen51
+
+hi! SpGreen1 guifg=#1BB994
+hi! SpGreen2 guifg=#B4FFF4
+hi! SpGreen3 guifg=#20FFD0
+hi! SpGreen4 guifg=#16A29C
+hi! SpGreen5 guifg=#A8FFFE
+" hi! SpGreen51 guifg=#88DEDD
+" hi! SpGreen51 guifg=#77DEDD
+hi! SpGreen51 guifg=#6FD0CF
+hi! SpGreen52 guifg=#52A1A0
+hi! SpGreen6 guifg=#18CEC7
+hi! SpGreen7 guifg=#0C7EC8
+hi! SpGreen8 guifg=#13A3FF
+hi! SpGreen9 guifg=#0D77BD
+
 
 " Dirvish{{{
 hi! def link DirvishPathTail Function
@@ -451,6 +475,7 @@ hi Normal          guifg=#3F5C66 guibg=#121416
 
 " hi Comment         guifg=#3D5862
 hi Comment         guifg=#344B53
+hi CommentPlus     guifg=#38595E
 
 " Conceal: Leaving the default link to Operator currently
 " hi conceal         guifg=#BCBCBC guibg=none

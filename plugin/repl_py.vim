@@ -1,6 +1,6 @@
 
 
-
+" Notes: ~/.config/nvim/notes/inline-values-repl.md#/#%20Caching%20asyc
 
 
 
@@ -26,6 +26,7 @@ func! repl_py#firstPairChar( str )
   let testChar3 = "\{"
   let testIdx3  = matchstrpos( a:str, testChar3 )[1]
   let testIdx3  = testIdx3 == -1 ? 100 : testIdx3
+  " echo testIdx3
   let testFirstChar = testChar1
   let testFirstIdx  = testIdx1
   let testFirstChar = testIdx2 < testFirstIdx ? testChar2 : testFirstChar
@@ -33,12 +34,18 @@ func! repl_py#firstPairChar( str )
   return testFirstIdx == 100 ? v:false : testFirstChar
 endfunc
 " TODO do this using sort table
+" echo matchstrpos( "a b({}", "[\[|\{|\(]")[1]
 " echo repl_py#firstPairChar( "some, } thing (, [ ")
+" echo repl_py#firstPairChar( "aa(aa]" )
+" echo repl_py#firstPairChar( "{'attacker': 'Jaime Lannister', 'battle': 'Battle of the Golden Tooth', 'defender': 'Vance'}, {'attacker': ")
 " echo repl_py#firstPairChar( "some, }[ thing (, [ ")
 " echo repl_py#firstPairChar( "test empty")
 
 func! repl_py#splitOutsideOfFirstPair( splitBy, lineToSplit )
-  let firstPairChar = repl_py#firstPairChar( a:lineToSplit )
+  " let firstPairChar = repl_py#firstPairChar( a:lineToSplit )
+  let pos = matchstrpos( a:lineToSplit, "[\[|\{|\(]")[1]
+  let firstPairChar = a:lineToSplit[pos]
+  " echoe firstPairChar
   if firstPairChar == "("
     let splitPattern = PatternToMatchOutsideOfParentheses( a:splitBy, '(', ')' )
   elseif firstPairChar == "["
@@ -55,6 +62,7 @@ endfunc
 " call FloatWin_ShowLines_old ( repl_py#splitOutsideOfFirstPair( ",", "eins zwei drei" ) )
 " echo split ( "eins zwei drei", "," )
 " call FloatWin_ShowLines_old (['eins'])
+
 
 func! repl_py#splitToLines( lineToSplit )
   if a:lineToSplit[0] =~ "[\[|\{|\(]"
@@ -77,6 +85,7 @@ func! repl_py#alignInFloatWin()
   call FloatWin_FocusFirst()
   " setlocal modifiable
   call easy_align#easyAlign( 1, line('$'), ',')
+  exec "%s/\r//ge"
   call FloatWin_FitWidthHeight()
   wincmd p
 endfunc
@@ -96,29 +105,61 @@ func! repl_py#eval_line( ln )
   " return
   " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
   let resLines = systemlist( 'python ' . sourceFileName )
-  let expResult = resLines[-1]
 
-  if len( expResult ) > 8
-    call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
-    let linesResult = repl_py#splitToLines( expResult )
-    " echoe linesResult
-    " call FloatWin_ShowLines_old ( linesResult )
-    let g:floatWin_win = FloatingSmallNew ( linesResult )
-    " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
-    if len(linesResult) > 2
+  " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
+  if resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
+  " if 0
+    " echo "ndarray"
+    let g:floatWin_win = FloatingSmallNew ( resLines )
+
+    call FloatWin_FocusFirst()
+    exec "%s/\\[//ge"
+    exec "%s/]//ge"
+    " exec "%s/'//ge"
+    call easy_align#easyAlign( 1, line('$'), ',')
+    call FloatWin_FitWidthHeight()
+    wincmd p
+
+    " Collection returned:
+  elseif resLines[-1] =~ "[\[|\{|\(]"
+  " elseif 0
+    let expResult = resLines[-1]
+    " echoe expResult
+
+    if len( expResult ) > 3
+      call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
+      let linesResult = repl_py#splitToLines( expResult )
+      " echoe linesResult
+      " call FloatWin_ShowLines_old ( linesResult )
+      let g:floatWin_win = FloatingSmallNew ( linesResult )
+      " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
+      if len(linesResult) > 2
+        call repl_py#alignInFloatWin()
+      endif
+    else
+      call v:lua.VirtualTxShow( expResult )
+    endif
+
+  else
+    " Printed object:
+    let g:floatWin_win = FloatingSmallNew ( resLines )
+    if len(resLines) > 2
       call repl_py#alignInFloatWin()
     endif
-  else
-    call v:lua.VirtualTxShow( expResult )
   endif
 
 endfunc
 
+" Approach: The inline values are bound to variables named "e<int>_<funcname> = expression"
+" These variables are commented out in the repl-execution file. Only the expression of the executed line will be appended in a print statement.
 func! repl_py#getStrOfBufAndCmd ( cmd_str )
-  return add( getline(1, "$"), a:cmd_str )
+  let bufferLines = getline( 0, "$" )
+  let replLines = functional#map( {lineStr -> substitute( lineStr, "\\zee\\d_", "# ", "g" )}, bufferLines )
+  return add( replLines, a:cmd_str )
 endfunc
 
-
+" %s/\zee\d_/# /ge
+" echo functional#map( {lineStr -> substitute( lineStr, "\\zee\\d_", "# ", "g" )}, ["e6_aa = res1", "e1_bb = 11", "cc"])
 
 " ─   Async REPL                                        ──
 

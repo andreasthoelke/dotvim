@@ -164,7 +164,8 @@ Plug 'chrisbra/Colorizer'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'KabbAmine/vCoolor.vim'
 
-
+Plug 'chrisbra/unicode.vim'
+Plug 'nvim-telescope/telescope-symbols.nvim'
 
 " Highlight
 " Plug 't9md/vim-quickhl'

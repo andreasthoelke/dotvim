@@ -64,6 +64,61 @@ use air_routes
 where name='Cookie'
 select name, owner from cats;
 
+# mycli
+mycli mysql://root:PW@127.0.0.1:3306/pets
+mycli mysql://root:PW@127.0.0.1:3306/air_routes
+
+https://www.mycli.net/commands
+/Users/at/.myclirc
+
+\dt    - list tables
+\dt airports - list columns in a table
++----------------------+
+| Tables_in_air_routes |
++----------------------+
+| airports             |
+| continents           |
+| countries            |
+| iroutes              |
+| routes               |
++----------------------+
+
+## air_ports
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| ID        | int         | NO   | PRI | <null>  |       |
+| IATA      | char(3)     | NO   |     | <null>  |       |
+| ICAO      | char(4)     | NO   |     | <null>  |       |
+| CITY      | varchar(50) | YES  |     | <null>  |       |
+| DESCR     | varchar(80) | YES  |     | <null>  |       |
+| REGION    | varchar(6)  | YES  |     | <null>  |       |
+| COUNTRY   | char(2)     | NO   | MUL | <null>  |       |
+| RUNWAYS   | int         | NO   |     | <null>  |       |
+| LONGEST   | int         | NO   |     | <null>  |       |
+| ALTITUDE  | int         | NO   |     | <null>  |       |
+| CONTINENT | char(2)     | NO   | MUL | <null>  |       |
+| LAT       | double      | NO   |     | <null>  |       |
+| LON       | double      | NO   |     | <null>  |       |
++-----------+-------------+------+-----+---------+-------+
+
+## iroutes
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| SRC   | char(3) | NO   | PRI | <null>  |       |
+| DEST  | char(3) | NO   | PRI | <null>  |       |
+| DIST  | int     | NO   |     | <null>  |       |
++-------+---------+------+-----+---------+-------+
+
+
+mysql_config_editor set --login-path=local --host=localhost --user=username --password
+https://dev.mysql.com/doc/refman/5.6/en/mysql-config-editor.html
+
+
+
+
+
 
 
 

@@ -590,6 +590,7 @@ Older config (with tab remap?) /Users/at/.config/karabiner/karabiner.json.bak
 
 ## Window, Buffer Navigation
 
+
 c-w n/N - SymbolNext SplitTop (??)
 c-w i - jump into float-win
 leader wp[ap/af] - pin a function/paragraph (or imports) to the top
@@ -602,12 +603,25 @@ c-w I - resize/fit floatwin height width
 c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
 1<c-w>x - swap window with the one above/at top of screen (2 is below)
 
+Move a Buffer to a different window (potentially in a different tab)
+leader cp     - copy file path of the source buffer
+in the target window:
+leader sp     - to set the buffer of this window to the filepath in the register
+leader sP     - same as above, but copies the buffer filename
+                that got replaced. So you can 'leader sp' that buffer into a different window.
+
+
+
 ### Window scrolling
 
 c-e/y - up/down
 zt/b - bottom/top
 
 ### Buffers
+
+]f [f   - next/prev file in folder
+]b [b   - next/prev buffer in buffer list
+help unimpaired
 
 go - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
@@ -670,9 +684,14 @@ Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvi
 
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 
-## Finder MacOS
+# MacOS
+## Finder
 Open a folder in Finder:
 - open the folder in Dirvish, <leader>cdl or :lcd %<cr>, then glf. ~/.config/nvim/plugin/tools-external.vim#/command.%20Finder%20.call
+
+## Preview
+c-s j/k   - to scroll a pdf page in preview app.
+(Control + right Shift key) .. note the karabiner config.
 
 
 ### Ranger-like setup
@@ -918,7 +937,7 @@ Align templates using UserChoiceAction/ quickmenu: ~/.vim/plugin/utils-align.vim
 
 ## Purs Browse Module
 
-## Format
+# Format
 
 leader leader sm 'SplitModulesInLines'<cr>
 leader leader jm 'JoinModulesFromLines'<cr>
@@ -928,11 +947,18 @@ leader leader sa 'StripAligningSpaces'<cr>
 leader leader hu 'HsUnicode'<cr>
 leader leader hU 'HsUnUnicode'<cr>
 
-### JSON format
+## JSON format
 
 %!jq
 or
 %!python -m json.tool
+
+
+# Unicode
+Telescope symbols
+UnicodeTable
+help unicode-pugin
+
 
 # Motions
 
@@ -1091,6 +1117,7 @@ Comment out all highlight command lines:
 More tricks: ~/.vim/plugin/notes-workflow.vim#/Substitute%20Replace%20Text.
 Turn abs system path into home-dir path: <!-- '<,'>s/\/Users\/at/\~/ -->
 or use plugin? https://github.com/nvim-pack/nvim-spectre
+To remove ^M characters (windows line breaks?) use exec "%s/\r//g"
 
 ### Commandline-ranges
 
@@ -1225,6 +1252,7 @@ i used this before:
 " autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
 
 colorscheme munsell-blue-molokai
+
 
 ## Configure a color
 ~/.config/nvim/plugin/syntax-color.vim#/STEP1.%20FIND%20THE

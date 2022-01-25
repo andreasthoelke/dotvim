@@ -247,6 +247,10 @@ nnoremap <leader>aab :ls<cr>:b<space>
 " Normal mode: "%p
 " Insert mode: i<c-r>%
 
+nnoremap <leader>cp :let @* = @%<cr>:let @" = @%<cr>
+nnoremap <leader>sp :e <c-r>"<cr>
+nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
+
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
 nnoremap <leader>Fpc :let @* = @%<cr>:let @" = @%<cr>
 nnoremap <leader>FpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>

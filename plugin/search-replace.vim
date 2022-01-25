@@ -25,6 +25,8 @@ endfun
 " echo substitute( '  eins zwei', '\v\s+\ze\S', '', '' )
 " echo StripLeadingSpaces( ['  eins zwei', 'drei', ' vier'] )
 
+" To remove ^M characters (windows line breaks?) use exec "%s/\r//g"
+
 func! RemoveTermCodes (lines)
   " return systemlist( 'sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"', join( a:lines, "\n" ) )
   " return systemlist( 'strip-ansi', join( a:lines, "\n" ) )

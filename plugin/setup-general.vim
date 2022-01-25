@@ -119,8 +119,8 @@ nnoremap <leader>Sd :LoadCurrentDirSession<cr>
 nnoremap <leader>So :Telescope sessions<cr>
 nnoremap <leader>Sl :LoadLastSession<cr>
 " nnoremap <leader>SS :SessionSave 
-" nnoremap <leader>Ss :SessionSave<cr>
-nnoremap <leader>Ss :SaveSession<cr>
+" nnoremap <leader>Ss :SaveSession<cr>
+nnoremap <leader>Ss :SSave<cr>
 " nnoremap <leader>Sn :SessionShowName<cr>
 
 " nnoremap <leader>SC :bufdo bwipeout<cr>
@@ -163,7 +163,7 @@ require('session_manager').setup({
   colon_replacer = '++', -- The character to which the colon symbol will be replaced for session files.
   autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
   autosave_last_session = true, -- Automatically save last session on exit.
-  autosave_ignore_not_normal = true, -- Plugin will not save a session when no writable and listed buffers are opened.
+  autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
   autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
 })
 require('telescope').load_extension('sessions')
@@ -833,7 +833,9 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 " "]a" is used for mark navigation
 
 " Disable certain unimpaired maps!:
-let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
+" let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
+let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': ''}
+
 
 
 " UNIMPAIRED: -------------------------------------------------
@@ -1179,8 +1181,9 @@ endfunc
 
 " Change Working Directory: ---------------
 " Also consider using ":ProjectRootCD"
-nnoremap <leader>Sp :echo getcwd()<cr>
-nnoremap <leader>sp :echo getcwd()<cr>
+nnoremap <leader>ecd :echo getcwd()<cr>
+nnoremap <leader>ewd :echo getcwd()<cr>
+" nnoremap <leader>sp :echo getcwd()<cr>
 
 " set to current file path
 " nnoremap <leader>dcF :cd %:p:h<cr>:pwd<cr>
