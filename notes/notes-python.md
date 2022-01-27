@@ -8,11 +8,58 @@ You can install Python packages with pip3 install <package> They will install in
 
 Todo: there is still a note about the virtual env set in :checkhealth. see https://vi.stackexchange.com/questions/7644/use-vim-with-virtualenv/7654#7654
 
+### python -m venv
+
+python -m venv .env
+source .env/bin/activate
+
+make two virtual environments:
+  python3 -m venv $HOME/.virtualenvs/test1
+  python3 -m venv $HOME/.virtualenvs/test2
+  source $HOME/.virtualenvs/test1/bin/activate
+  pip install pillow
+  source $HOME/.virtualenvs/test2/bin/activate
+  pip install requests
+
+These are the default packages installed in an environment:
+     /Users/at/.virtualenvs/test2/lib/python3.10
+    └──  site-packages
+       ├──  distutils_hack
+       ├──  distutils-precedence.pth
+       ├──  pip
+       ├──  pip-21.2.3.dist-info
+       ├──  pkg_resources
+       ├──  setuptools
+       └──  setuptools-57.4.0.dist-info
+
+This now shows the pillow packages installed:
+/Users/at/.virtualenvs/test1/lib/python3.10/
+
+And here are the requests packages:
+/Users/at/.virtualenvs/test2/lib/python3.10/
+
+Make a test.sh file:
+VIRTUAL_ENV=$HOME/.virtualenvs/test1 $HOME/.virtualenvs/test1/bin/pyls
+
+https://github.com/HallerPatrick/py_lsp.nvim
+https://github.com/neovim/nvim-lspconfig/issues/500\#issuecomment-965824580
+before_init = function(_, config)
+    local p
+    if vim.env.VIRTUAL_ENV then
+        p = lsp_util.path.join(vim.env.VIRTUAL_ENV, "bin", "python3")
+    else
+        p = utils.find_cmd("python3", ".venv/bin", config.root_dir)
+    end
+    config.settings.python.pythonPath = p
+end,
+
 
 ## pip
 pip list
 pip show <package>
 pip install pypisearch
+pip install -r requirements.txt
+
 
 
 ## pyenv
@@ -73,46 +120,6 @@ changing/setting the venv in a terminal-win will not change it inside of vim!
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 
 
-### python -m venv
-make two virtual environments:
-  python3 -m venv $HOME/.virtualenvs/test1
-  python3 -m venv $HOME/.virtualenvs/test2
-  source $HOME/.virtualenvs/test1/bin/activate
-  pip install pillow
-  source $HOME/.virtualenvs/test2/bin/activate
-  pip install requests
-
-These are the default packages installed in an environment:
-     /Users/at/.virtualenvs/test2/lib/python3.10
-    └──  site-packages
-       ├──  distutils_hack
-       ├──  distutils-precedence.pth
-       ├──  pip
-       ├──  pip-21.2.3.dist-info
-       ├──  pkg_resources
-       ├──  setuptools
-       └──  setuptools-57.4.0.dist-info
-
-This now shows the pillow packages installed:
-/Users/at/.virtualenvs/test1/lib/python3.10/
-
-And here are the requests packages:
-/Users/at/.virtualenvs/test2/lib/python3.10/
-
-Make a test.sh file:
-VIRTUAL_ENV=$HOME/.virtualenvs/test1 $HOME/.virtualenvs/test1/bin/pyls
-
-https://github.com/HallerPatrick/py_lsp.nvim
-https://github.com/neovim/nvim-lspconfig/issues/500\#issuecomment-965824580
-before_init = function(_, config)
-    local p
-    if vim.env.VIRTUAL_ENV then
-        p = lsp_util.path.join(vim.env.VIRTUAL_ENV, "bin", "python3")
-    else
-        p = utils.find_cmd("python3", ".venv/bin", config.root_dir)
-    end
-    config.settings.python.pythonPath = p
-end,
 
 ### null-ls
 addresses python venv problems with:

@@ -280,7 +280,8 @@ func! LaunchChromium2( url ) abort
   "   call jobstop( g:launchChromium_job_id2 )
   "   unlet g:launchChromium_job_id2
   " endif
-  let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath2 . ' --app=' . shellescape( a:url ))
+  " let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+  let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' ' . shellescape( a:url ))
 endfunc
 
 

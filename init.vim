@@ -96,6 +96,9 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 
+Plug 'memgraph/cypher.vim'
+Plug 'neo4j-contrib/cypher-vim-syntax'
+
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'

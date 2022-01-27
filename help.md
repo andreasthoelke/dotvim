@@ -396,8 +396,10 @@ Config: ~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
 Custom fonts
 https://www.nerdfonts.com/font-downloads
 
-
 # Live code integration / repl
+
+## Local webserver
+python -m http.server   - to serve a folder of files
 
 ## Purs repl
 
@@ -733,6 +735,10 @@ The next line/path only works with <c-w>f !
 ## Watching folders and filepaths
 https://github.com/rktjmp/fwatch.nvim
 
+## Control Chrome
+### trigger function calls on page
+notes/chrome-cli
+
 ### Filepaths & Urls
 
 c-w f - (on path or vis-sel) preview file content in horz-split
@@ -955,6 +961,7 @@ or
 
 
 # Unicode
+c-x g    - after key-characters in insert mode. e.g. type "->" and then <c-g>g to select the symbol
 Telescope symbols
 UnicodeTable
 help unicode-pugin
