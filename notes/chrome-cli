@@ -1,0 +1,28 @@
+
+python -m http.server
+/Users/at/.config/nvim/notes/testpage1.html
+Documents/Temp/test.html
+
+chrome-cli execute 'document.getElementById("demo").innerHTML = "Hello JavaScript!";'
+
+
+chrome-cli execute 'console.log("hi")'
+chrome-cli execute 'console.log( document.getElementById("demo").innerHTML )'
+chrome-cli execute 'console.log( document.getElementById("demo").getAttribute("txx") )'
+chrome-cli execute 'console.log( document.getElementById("demo").append("11") )'
+
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( \"89\" )"'
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( 89.1 )"'
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( [3,4,5] )"'
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( {aa: 33} )"'
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( Date )"'
+chrome-cli execute 'document.getElementById("demo").innerHTML = "test11( test12 )"'
+chrome-cli execute 'document.getElementById("demo").setAttribute("txx", "New 2 Text")'
+chrome-cli execute 'document.getElementById("but").dispatchEvent(1)'
+
+chrome-cli execute 'document.getElementById("demo").innerHTML = "Hello JavaScript!";'
+
+
+
+
+
