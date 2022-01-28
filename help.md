@@ -76,6 +76,13 @@ lst --level=4 /Users/at/.config_git/
 
 # notes/do-next
 
+notes/chrome-cli
+- run js file. see this approach: ~/.config/nvim/notes/chrome-cli#/##%20TODO%20Run
+- package:
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+    and callback info an include/require file, so I can quickly integrate this in a React page.
+
 note the job sequence summary here:
 https://alpha2phi.medium.com/faster-neovim-plugin-development-with-plenary-nvim-e5ba8dcd12a3
 
@@ -738,6 +745,7 @@ https://github.com/rktjmp/fwatch.nvim
 ## Control Chrome
 ### trigger function calls on page
 notes/chrome-cli
+~/.config/nvim/notes/chrome-cli#/##%20TODO%20Run
 
 ### Filepaths & Urls
 
@@ -861,6 +869,8 @@ assisted:
 
 ### Move / copy text (vim registers)
 
+leader "   - to show registers in telescope
+
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer.
 vim-easyclip plugin: ~/.vim/vimrc#/Vim%20clipboard%20features. https://github.com/svermeulen/vim-easyclip
 help easyclip
@@ -879,6 +889,16 @@ let @_ = getline(line('.')-1)
 let @_ = 'just a test'
 put =@"\*
 put =@"
+
+put =@1
+call setreg('1', 'hi')
+call setreg('1', [])
+
+#### clear all registers
+let regs=split('12345678', '\zs')
+call functional#map( {r -> setreg(r,[])}, regs )
+
+
 
 ### Shell system clipbord
 

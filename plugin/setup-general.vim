@@ -166,7 +166,7 @@ require('session_manager').setup({
   autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
   autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
 })
-require('telescope').load_extension('sessions')
+-- require('telescope').load_extension('sessions')
 EOF
 
 " Sessions are saved here:

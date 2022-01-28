@@ -22,7 +22,21 @@ chrome-cli execute 'document.getElementById("but").dispatchEvent(1)'
 
 chrome-cli execute 'document.getElementById("demo").innerHTML = "Hello JavaScript!";'
 
+## TODO Run a file
+myscript.js:
 
+(async () => {
+    // load jQuery
+    const jReq = await fetch('https://code.jquery.com/jquery-3.5.0.slim.min.js')
+    jText = await jReq.text()
+    eval(jText)
 
+    // now ready for use:
+    console.log(jQuery().jquery)
+})()
+... then in terminal:
+
+JS=$(cat myscript.js)
+chrome-cli execute "$JS" -t "1234"
 
 

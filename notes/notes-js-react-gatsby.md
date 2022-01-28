@@ -16,4 +16,13 @@ http://localhost:3000/posts/first-post
 stopped here:
 https://nextjs.org/learn/basics/navigate-between-pages/client-side
 
+# Create React App
+
+
+
+
+
+
+
+
 
