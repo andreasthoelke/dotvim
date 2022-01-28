@@ -1029,6 +1029,15 @@ f/F - f<char> to jump to next char. L/H to next
 help text-objects
 iB - inside entire buffer ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
 
+### Html tags
+vit/vat  - work nicely for html tags. these maps are *native*
+
+### Comma
+vIt      - comma separated item (experimental see: ~/.config/nvim/plugin/HsMotions.vim#/Comma%20textobjects
+
+
+
+
 ### Command Insert Mode Movement
 
 c-f - into command edit mode!! test with <leader>s$: call append('.', input('--: ', 'eins zwei'))

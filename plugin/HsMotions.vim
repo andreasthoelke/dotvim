@@ -1134,22 +1134,25 @@ endfunc
 
 
 " ─   Comma textobjects                                  ■
-onoremap <silent> at :<c-u>call CommaItem_VisSel_Around()<cr>
-vnoremap <silent> at :<c-u>call CommaItem_VisSel_Around()<cr>o
-onoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>
-vnoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>o
+onoremap <silent> It :<c-u>call CommaItem_VisSel_Around()<cr>
+vnoremap <silent> It :<c-u>call CommaItem_VisSel_Around()<cr>o
+" onoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>
+" vnoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>o
 " Test: cat, yat, vat, vit, vit<o>
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
+" TODO: with the cursor on "abc" and then yat it will copy "Idris"/the next item
 
 func! CommaItem_VisSel_Around()
   normal! m'
   " Move to the start of the item
-  call CommaItemStart()
+  call CommaItemStartBackw()
+  call CommaItemStartForw()
   " and save that position
   let [sLine, sCol] = getpos('.')[1:2]
   " now move to the end of the item, then to the start of the next and back one step
-  call CommaItemEnd()
-  normal! Wh
+  call CommaItemStartForw()
+  call search(',', 'b')
+  normal! h
   let [eLine, eCol] = getpos('.')[1:2]
   call setpos( "'<", [0, sLine, sCol, 0] )
   call setpos( "'>", [0, eLine, eCol, 0] )
@@ -1157,16 +1160,16 @@ func! CommaItem_VisSel_Around()
   normal! gv
 endfunc
 
-func! CommaItem_VisSel_Inside()
-  normal! m'
-  call CommaItemStart()
-  let [sLine, sCol] = getpos('.')[1:2]
-  call CommaItemEnd()
-  let [eLine, eCol] = getpos('.')[1:2]
-  call setpos( "'<", [0, sLine, sCol, 0] )
-  call setpos( "'>", [0, eLine, eCol, 0] )
-  normal! gv
-endfunc
+" func! CommaItem_VisSel_Inside()
+"   normal! m'
+"   call CommaItemStartBackw()
+"   let [sLine, sCol] = getpos('.')[1:2]
+"   call CommaItemEnd()
+"   let [eLine, eCol] = getpos('.')[1:2]
+"   call setpos( "'<", [0, sLine, sCol, 0] )
+"   call setpos( "'>", [0, eLine, eCol, 0] )
+"   normal! gv
+" endfunc
 " ─^  Comma textobjects                                  ▲
 
 
