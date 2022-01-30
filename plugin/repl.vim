@@ -56,8 +56,6 @@ endfunc
 " au! ag TextChanged *.purs call NodeJSRunBinding()
 
 
-
-
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
 
 " call jobsend(g:intero_job_id, "\<C-u>")

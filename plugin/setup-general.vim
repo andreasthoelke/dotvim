@@ -64,6 +64,10 @@ nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
 
 " Mundo: ----------------------
 
+" nvim-scrollview (the visible scrollbar) settings:
+let g:scrollview_auto_workarounds = 0
+" Note: this was overwriting the 'zf' maps
+
 
 " ─   Autosave                                          ──
 " Use "AutoSaveToggle" enable/disable

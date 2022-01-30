@@ -12,7 +12,17 @@
 " "2. new feature: (x -> Bool) should be 'xp'
 
 
-nnoremap <leader>et :call CreateInlineTestDec_py()<cr>
+nnoremap <leader>et :call CreateInlineTestDec()<cr>
+
+func! CreateInlineTestDec()
+  if &filetype == 'python'
+    call CreateInlineTestDec_py()
+  else
+    call CreateInlineTestDec_js()
+  endif
+endfun
+
+
 func! CreateInlineTestDec_py()
   let func_ln = searchpos( '^def\s', 'cnb' )[0]
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
@@ -33,8 +43,29 @@ endfunc
 " e1_mult = mult('aa', 'bb')
 
 
+func! CreateInlineTestDec_js()
+  let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
+  let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  call append( '.', lineText )
+  call search('(')
+  normal l
+endfunc
+" Tests:
+" def mult(aa, bb):
+"   return aa * bb
+" e1_mult = mult('aa', 'bb')
+
+
+
+
+
 " e1_database4 = database4 (Just "eins") 123
-func! CreateInlineTestDec()
+func! CreateInlineTestDec_hs()
   let typeSigLineNum = TopLevTypeSigBackwLineNum()
   let funcName       = GetTopLevSymbolName( typeSigLineNum )
   let argumentTypesList = HsExtractArgTypesFromTypeSigStr( getline( typeSigLineNum ) )
@@ -109,7 +140,8 @@ endfunc
 
 
 func! InlineTestDeclBackwLine()
-  return searchpos( '\v^e\d_', 'cnbW')[0]
+  " return searchpos( '\v^e\d_', 'cnbW')[0]
+  return searchpos( '\v^(const\s)=e\d_', 'cnbW')[0]
 endfunc
 " echo InlineTestDeclBackwLine()
 

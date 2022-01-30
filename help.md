@@ -1169,6 +1169,7 @@ leader rb - to rename a binding and its occurences
 ## Patterns & regex
 
 help pattern.txt
+help pattern-overview
 Extract string from a line example: ~/.vim/plugin/CodeMarkup.vim#/Extract%20headline%20text
 useful examples:
   ~/.config/nvim/plugin/search-replace.vim#/func.%20PatternToMatchOutsideOfParentheses.%20searchStr,
@@ -1392,7 +1393,7 @@ leader wp af/ip ..
 ## DB / Databases
 
 notes/notes-db-sql.md
-plugin/tools-db.vim
+plugin/tools_db.vim
 help dadbod-ui
 
 

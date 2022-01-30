@@ -1187,7 +1187,7 @@ func! BracketStartForw()
     normal! h
   endif
   let [oLine, oCol] = getpos('.')[1:2]
-  let [sLine, sCol] = searchpos( '{\|\[\|(', 'nW' )
+  let [sLine, sCol] = searchpos( '{\|\[\|(\|<\i', 'nW' )
   if sLine && sLine < (oLine + 15)
     call setpos('.', [0, sLine, sCol, 0] )
     if CursorIsOnEmptyList()
@@ -1201,15 +1201,15 @@ endfunc
 
 func! BracketStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
-  let [sLine, sCol] = searchpos( '{\|\[\|(', 'bnW' )
+  let [sLine, sCol] = searchpos( '{\|\[\|(\|<\i', 'bnW' )
   if sLine && sLine > (oLine - 15)
     call setpos('.', [0, sLine, sCol, 0] )
-    normal! w
+    " normal! w
   endif
   " If the cursor has not moved we are already at the start of a list → go back to the outer or previous lists start
   let [nLine, nCol] = getpos('.')[1:2]
   if oLine==nLine && oCol==nCol
-    call searchpos( '{\|\[\|(', 'bW' )
+    call searchpos( '{\|\[\|(\|<\i', 'bW' )
     call BracketStartBackw()
   endif
 endfunc
@@ -1225,10 +1225,10 @@ func! BracketEndForw()
   " Don't be stuck at previous location
   normal! l
   let [oLine, oCol] = getpos('.')[1:2]
-  let [sLine, sCol] = searchpos( '}\|\]\|)', 'nW' )
+  let [sLine, sCol] = searchpos( '}\|\]\|)\|<\/', 'nW' )
   if sLine && sLine < (oLine + 15)
     call setpos('.', [0, sLine, sCol, 0] )
-    normal! BE
+    " normal! BE
   endif
 endfunc
 
