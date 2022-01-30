@@ -1,0 +1,125 @@
+
+func! RunJSCode ( code )
+  let nodeCmd = 'console.log( ' . a:code . ' )'
+  let l:cmd = 'node -e ' . shellescape( nodeCmd )
+  let resLines = systemlist( l:cmd )
+  return resLines
+endfunc
+
+func! RunJSLines ()
+  let code = GetVisSel()
+  echo RunJSCode( code )
+endfunc
+
+
+command! -range=% JSRun call JSRun( <line1>, <line2> )
+" Note: this applies to the whole buffer when no visual-sel
+
+" nnoremap <leader>dl :call DBRun( line('.'), line('.') )<cr>
+" nnoremap <leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+" vnoremap <leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+nnoremap <silent> gei :call tools_js#eval_line( line('.') )<cr>
+
+func! JSRun( ... )
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+  " let rangeStr = startLine . ',' . endLine
+  let lines = getline(startLine, endLine)
+  let sqlStr = join(lines, "\n")
+
+  let rows = db_ui#query( sqlStr )
+  if len( rows ) == 0
+    echo "query completed!"
+    return
+  endif
+
+  let g:query_res = rows
+
+  let str_rows = functional#map( 'string', rows )
+
+  " let linesResult = repl_py#splitToLines( string( rows ) )
+
+  let g:floatWin_win = FloatingSmallNew ( str_rows )
+
+  call tools_db#alignInFloatWin()
+
+endfunc
+
+func! tools_js#eval_line( ln )
+  " if !(&filetype == 'python')
+  "   echo "This is not a Python file!"
+  "   return
+  " endif
+  let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+  let printStatement = 'console.log(' . expression . ')'
+  let compl_sourceLines = tools_js#getStrOfBufAndCmd( printStatement )
+  let stdInStr = join( compl_sourceLines, "\n" )
+  " echo completeSource
+  let sourceFileName = repl_py#create_source_file( compl_sourceLines )
+  " echo sourceFileName
+  " return
+  " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
+  let resLines = systemlist( 'node ' . sourceFileName )
+
+  " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
+  if resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
+  " if 0
+    " echo "ndarray"
+    let g:floatWin_win = FloatingSmallNew ( resLines )
+
+    call FloatWin_FocusFirst()
+    exec "%s/\\[//ge"
+    exec "%s/]//ge"
+    " exec "%s/'//ge"
+    call easy_align#easyAlign( 1, line('$'), ',')
+    call FloatWin_FitWidthHeight()
+    wincmd p
+
+    " Collection returned:
+  elseif resLines[-1] =~ "[\[|\{|\(]"
+  " elseif 0
+    let expResult = resLines[-1]
+    " echoe expResult
+
+    if len( expResult ) > 3
+      call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
+      let linesResult = repl_py#splitToLines( expResult )
+      " echoe linesResult
+      " call FloatWin_ShowLines_old ( linesResult )
+      let g:floatWin_win = FloatingSmallNew ( linesResult )
+      " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
+      if len(linesResult) > 2
+        call repl_py#alignInFloatWin()
+      endif
+    else
+      call v:lua.VirtualTxShow( expResult )
+    endif
+
+  else
+    " Printed object:
+    let g:floatWin_win = FloatingSmallNew ( resLines )
+    if len(resLines) > 2
+      call repl_py#alignInFloatWin()
+    endif
+  endif
+
+endfunc
+
+" Approach: The inline values are bound to variables named "e<int>_<funcname> = expression"
+" These variables are commented out in the repl-execution file. Only the expression of the executed line will be appended in a print statement.
+func! tools_js#getStrOfBufAndCmd ( cmd_str )
+  let bufferLines = getline( 0, "$" )
+  let replLines = functional#map( {lineStr -> substitute( lineStr, "\\zeconst\se\\d_", "# ", "g" )}, bufferLines )
+  return add( replLines, a:cmd_str )
+endfunc
+
+
+
+
+
+
+
+
+
+
