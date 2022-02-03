@@ -91,6 +91,8 @@ lua put( vim.g.sometestvar )
 lua print( vim.g.sometestvar )
 lua print( vim.g['sometestvar'] )
 
+
+
 ### Set shell environment vars
 lua print( vim.env.FZF_DEFAULT_OPTS )
 lua vim.env.FZF_DEFAULT_OPTS = '--layout=reverse'

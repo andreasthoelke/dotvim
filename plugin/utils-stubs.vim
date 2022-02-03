@@ -151,11 +151,13 @@ endfunc
 " echo TopLevBackwLine()
 
 func! GetTestDeclIndex( lineNum )
-  return matchstr( getline(a:lineNum), '^e\zs\d\ze_')
+  " return matchstr( getline(a:lineNum), '^e\zs\d\ze_')
+  return matchstr( getline(a:lineNum), '\v^(const\s)=e\zs\d\ze_')
 endfunc
-" echo GetTestDeclIndex( 6 )
+
 " echo GetTestDeclIndex( line('.') +1 )
-" e2_database4 = database4 Nothing 99
+" e3_database4 = database4 Nothing 99
+" const e2_database4 = database4 Nothing 99
 
 func! GetAssertionIndex( lineNum )
   return matchstr( getline(a:lineNum), '^a\zs\d\d\ze_')

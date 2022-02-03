@@ -11,6 +11,26 @@ func! RunJSLines ()
   echo RunJSCode( code )
 endfunc
 
+" Executes the code in an isolated process (no access to app variables, only the DOM)
+" Returns the return value of (synchronous) expression.
+func! RunJSFileInBrowser ( fileName )
+  let cmd = 'JS=$(cat ' . a:fileName . ') && chrome-cli execute "$JS"'
+  return system( cmd )
+endfunc
+
+" Evaluates the code in the app process by injecting it into a MutationObserver element.
+func! EvalInBrowserApp ( fileName )
+  let lines = readfile( a:fileName, "\n" )
+  let jsCode = shellescape( join( lines, '\n' ) )
+  let compl_sourceLines = 'document.getElementById("evalCode").innerHTML = ' . jsCode
+
+  let sourceFileName = repl_py#create_source_file( [compl_sourceLines] )
+  echo sourceFileName
+  return
+  call EvalJSFileInBrowser( sourceFileName )
+endfunc
+call EvalInBrowserApp( "/Users/at/Documents/UI-Dev/React1/graphin1/scratch/rep_test2.js" )
+
 
 command! -range=% JSRun call JSRun( <line1>, <line2> )
 " Note: this applies to the whole buffer when no visual-sel
@@ -19,7 +39,7 @@ command! -range=% JSRun call JSRun( <line1>, <line2> )
 " nnoremap <leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
 " vnoremap <leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
-nnoremap <silent> gei :call tools_js#eval_line( line('.') )<cr>
+nnoremap <silent> gej :call tools_js#eval_line( line('.') )<cr>
 
 func! JSRun( ... )
   let startLine = a:0 ? a:1 : 1
@@ -45,6 +65,22 @@ func! JSRun( ... )
   call tools_db#alignInFloatWin()
 
 endfunc
+
+func! tools_js#json_stringify( expressionCodeStr )
+  return tools_js#eval_expression( 'JSON.stringify(' . a:expressionCodeStr . ')' )
+endfunc
+
+
+func! tools_js#eval_expression( expressionCodeStr )
+  let tmpFileName = tempname() . '.js'
+  let printStatement = 'console.log(' . a:expressionCodeStr . ')'
+  call writefile( [printStatement], tmpFileName )
+
+  let res = system( 'node ' . tmpFileName )
+  call delete( tmpFileName )
+  return res
+endfunc
+" echo tools_js#eval_expression( '{aa: 44, bb: "eins"}.aa' )
 
 func! tools_js#eval_line( ln )
   " if !(&filetype == 'python')
@@ -110,13 +146,12 @@ endfunc
 " These variables are commented out in the repl-execution file. Only the expression of the executed line will be appended in a print statement.
 func! tools_js#getStrOfBufAndCmd ( cmd_str )
   let bufferLines = getline( 0, "$" )
-  let replLines = functional#map( {lineStr -> substitute( lineStr, "\\zeconst\se\\d_", "# ", "g" )}, bufferLines )
+  let replLines = functional#map( {lineStr -> substitute( lineStr, '\zeconst\se\d_', '// ', 'g' )}, bufferLines )
   return add( replLines, a:cmd_str )
 endfunc
 
-
-
-
+" echo substitute( 'const e3_eins = 33', '\zeconst\se\d_', '// ', 'g' )
+" echo functional#map( {lineStr -> substitute( lineStr, '\zeconst\se\d_', '// ', 'g' )}, ['const e3_eins = 33', 'const zwei = 33'] )
 
 
 

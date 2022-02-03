@@ -135,18 +135,43 @@ end
 
 -- put( vim.fn.systemlist "fd job" )
 
-for _, e in ipairs( job1() ) do
-  print( 'hey 11 ' .. e )
-end
+-- uncomment the following lines and run: lua require('jobtest')
+-- for _, e in ipairs( job1() ) do
+--   print( 'hey 11 ' .. e )
+-- end
 
-for _, e in ipairs( job6() ) do
-  print( e )
-end
+-- for _, e in ipairs( job6() ) do
+--   print( e )
+-- end
 
+-- https://github.com/nvim-lua/plenary.nvim/blob/master/tests/plenary/job_spec.lua
+-- when is vim.loop.new_pipe useful?
+-- local input_pipe = vim.loop.new_pipe(false)
+-- local stdout_results = {}
+-- local fzf = Job:new {
+--   writer = input_pipe,
+--
+--   command = "fzf",
+--   args = { "--filter", "job.lua" },
+--
+--   on_stdout = function(_, line)
+--     table.insert(stdout_results, line)
+--   end,
+-- }
+--
+-- fzf:start()
+--
+-- input_pipe:write "hello\n"
+-- input_pipe:write "world\n"
+-- input_pipe:write "job.lua\n"
+-- input_pipe:close()
+--
+-- fzf:shutdown()
+--
+-- local results = fzf:result()
+-- assert.are.same("job.lua", results[1])
 
-
-
-
+-- simple example: https://alpha2phi.medium.com/faster-neovim-plugin-development-with-plenary-nvim-e5ba8dcd12a3
 
 
 

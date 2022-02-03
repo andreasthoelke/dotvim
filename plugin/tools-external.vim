@@ -246,7 +246,7 @@ endfunc
 " /tmp/giphy2.gif
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
-let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium"
+let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 
 func! LaunchChromium( url ) abort
   if exists('g:launchChromium_job_id')

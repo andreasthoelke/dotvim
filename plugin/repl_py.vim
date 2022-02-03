@@ -217,11 +217,11 @@ func! GetPyReplExprLN( lineNum )
 endfunc
 
 
-nnoremap <silent> <leader>ro :call PyReplStart()<cr>
-nnoremap <silent> <leader>rq :call PyReplStop()<cr>
+" nnoremap <silent> <leader>ro :call PyReplStart()<cr>
+" nnoremap <silent> <leader>rq :call PyReplStop()<cr>
 " nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
 " nnoremap <silent> dr         :call ReplEval(':reload')<cr>:call ReplReload_Refreshed( expand('%') )<cr>
-nnoremap <silent> dr         :call PyReplReload()<cr>
+" nnoremap <silent> dr         :call PyReplReload()<cr>
 " nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
 " Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses

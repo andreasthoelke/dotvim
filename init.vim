@@ -51,6 +51,7 @@ Plug 'kristijanhusak/vim-dirvish-git'
 
 " Browser Integration: ---------
 " Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'npm install && npm run build' }
+Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'bash install.sh' }
 
 " Tools: ------------------------------------------
 " Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
@@ -90,6 +91,10 @@ Plug 'andreasthoelke/vim-EnhancedJumps'
 " Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
+
+" Websockets:
+" " This is not neovim jobcontrol compliant
+" Plug 'dhleong/vim-wildwildws', {'do': 'npm i -g wildwildws-d'}
 
 " DBs:
 Plug 'tpope/vim-dadbod'
