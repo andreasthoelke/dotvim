@@ -12,6 +12,7 @@ Todo: there is still a note about the virtual env set in :checkhealth. see https
 
 python -m venv .env
 source .env/bin/activate
+deactivate   (note that this command is now available)
 
 make two virtual environments:
   python3 -m venv $HOME/.virtualenvs/test1
@@ -198,6 +199,7 @@ poetry add pendulum
 poetry install
 poetry update
 
+poetry add $(cat requirements.txt)
 
 ### poetry run
 Runs shell command or script with the projects virtual env!

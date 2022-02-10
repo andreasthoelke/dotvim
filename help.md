@@ -986,6 +986,9 @@ Telescope symbols
 UnicodeTable
 help unicode-pugin
 
+Nice symbols in use with conceal in purescript and typescript syntax files:
+~/.config/nvim/syntax/purescript.vim#/https.//unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
+~/.config/nvim/syntax/typescript.vim#/let%20g.TsCharsToUnicode%20=
 
 # Motions
 

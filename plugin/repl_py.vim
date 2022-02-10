@@ -7,8 +7,9 @@
 " ─   Sync IVR                                          ──
 " ~/.config/nvim/notes/inline-values-repl.md#/#%20Inline%20Values
 
-nnoremap <silent> gee :call repl_py#eval_line( line('.') )<cr>
-nnoremap <silent> gei :call repl_py#eval_line( line('.') )<cr>
+" nnoremap <silent> gei :call repl_py#eval_line( line('.') )<cr>
+" these are now buffer maps:
+" ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/nnoremap%20<silent><buffer>%20gei
 
 func! repl_py#create_source_file( source_lines )
   let filename = expand('%:p:h') . '/replSrc_' . expand('%:t')

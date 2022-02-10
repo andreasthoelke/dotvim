@@ -1,4 +1,11 @@
 
+# Next
+https://github.com/jdepoix/youtube-transcript-api
+should be able to get word level timings! via undocumented json3 url extension
+
+we'll then not need vtt-to-json lib
+
+
 
 The html interface:
 https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
@@ -95,6 +102,7 @@ Test paths: /Users/at/Documents/tests/YT-dls/myvideo.mp4
 
 ls
 ytdl "http://www.youtube.com/watch?v=_HSylqgVYQI" | mpv -
+ytdl "http://www.youtube.com/watch?v=qK4G2KpmqFU" | mpv -
 ytdl W86cTIoMv2U | mpv -
 
 ytdl mb59CQQvxd4 | mpv -
@@ -125,8 +133,11 @@ mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
 mpv mpv-shot0001.jpg
 
 youtube-dl W86cTIoMv2U -e --get-title
+youtube-dl qK4G2KpmqFU -e --get-title
+youtube-dl qK4G2KpmqFU -e --write-sub
 youtube-dl W86cTIoMv2U -e --write-sub
 youtube-dl W86cTIoMv2U --list-subs
+youtube-dl qK4G2KpmqFU --list-subs
 youtube-dl W86cTIoMv2U -e --get-title --get-description
 youtube-dl W86cTIoMv2U -e --get-description --get-thumbnail
 youtube-dl W86cTIoMv2U -e --get-thumbnail
@@ -144,12 +155,14 @@ https://i.ytimg.com/sb/mb59CQQvxd4/storyboard3_L0/default.jpg?sqp=-oaymwENSDfyq4
 Convert the subtitles to other format (currently supported: srt|ass|vtt|lrc)
 
 youtube-dl W86cTIoMv2U --skip-download --write-sub --sub-lang en-GB
+youtube-dl qK4G2KpmqFU --skip-download --write-sub --sub-lang en
 
 youtube-dl y3mazk5j8Sg --skip-download --write-sub
 youtube-dl 6OMzvvJHYxU --skip-download --write-sub
 youtube-dl wkPR4Rcf4ww --skip-download --write-sub
 youtube-dl z-IR48Mb3W0 --skip-download --write-sub
 youtube-dl GU87SH5e0eI --skip-download --write-sub
+youtube-dl qK4G2KpmqFU --skip-download --write-sub
 
 
 

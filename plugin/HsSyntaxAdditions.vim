@@ -44,7 +44,12 @@ endfunc
 nnoremap <leader>cm :call clearmatches()<cr>
 
 func! JsSyntaxAdditions() " ■
+  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.') )<cr>
+
   call clearmatches()
+
+  " set syntax=typescript
+  call TsConcealWithUnicode()
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
   syntax match ConcealQuotes "'" conceal
@@ -66,10 +71,39 @@ func! JsSyntaxAdditions() " ■
   set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
-  set commentstring=\ \/\/%s
+  " set commentstring=\ \/\/%s
 
 
 endfunc " ▲
+
+
+func! TsConcealWithUnicode ()
+
+  let g:TsCharsToUnicode = [
+        \  ['->',           '→', 'hsArrow']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['===',            '≡', 'Normal']
+        \, ['\s\zsstring',            'S', 'Normal']
+        \, ['\s\zsnumber',            'N', 'Normal']
+        \, ['\s\zsFunction',            'F', 'Normal']
+        \, ['\s\zsReact.Node',            '◻', 'Normal']
+        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
+        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+        \]
+
+  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
+    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  endfor
+
+  syntax match Normal ":\ze\s" conceal
+  syntax match Normal "const\s" conceal
+
+  " JSDoc comments
+  syntax match Normal "\/\*\*" conceal
+  syntax match Normal "\s\*\s" conceal
+  syntax match Normal "\s\*\/" conceal
+
+endfunc
 
 
 " func! JsSyntaxAdditions()
@@ -170,6 +204,8 @@ endfunc
 " Syntax Color Haskell: --------------------
 
 func! PythonSyntaxAdditions() " ■
+  nnoremap <silent><buffer> gei :call repl_py#eval_line( line('.') )<cr>
+
   call clearmatches()
 
   syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥

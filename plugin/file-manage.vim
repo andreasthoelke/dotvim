@@ -57,7 +57,8 @@ func! PreviewPathInFloatWin( filePath )
   " if IsFolderPath( fp )
   if isdirectory( fp )
     " let lines = systemlist( 'ls ' . fp )
-    let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
+    " let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
+    let lines = systemlist( 'exa -T --icons --level=2 --ignore-glob=".git|node_modules" ' . fp )
   else
     let lines = readfile( fp, "\n" )
   endif

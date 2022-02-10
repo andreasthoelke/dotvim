@@ -35,6 +35,9 @@ Plug 'nvim-telescope/telescope-github.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'cljoly/telescope-repo.nvim'
 
+Plug 'tpope/vim-commentary'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+" Plug 'suy/vim-context-commentstring'
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
@@ -241,14 +244,19 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
 
-Plug 'pigpigyyy/Yuescript-vim'
-Plug 'leafo/moonscript-vim'
+" Plug 'pigpigyyy/Yuescript-vim'
+" Plug 'leafo/moonscript-vim'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'
 " Plug 'kevinoid/vim-jsonc'
 " Plug 'leafgarland/typescript-vim'
 " Plug 'peitalin/vim-jsx-typescript'
+
+" seemed to have no effect. not needed with treesitter?
+" Plug 'yuezk/vim-js'
+" Plug 'maxmellon/vim-jsx-pretty'
+
 " Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
 " Plug 'jparise/vim-graphql'

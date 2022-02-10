@@ -218,7 +218,8 @@ let g:materialmonokai_termcolors = 256 " does not support 16 color term right no
 " purescriptFunction > Function
 " hi! Function guifg=#0087AF "munsell blue"
 " hi! Function guifg=#008EB8 "munsell blue"
-hi! Function guifg=#1692CE "munsell blue"
+" hi! Function guifg=#1692CE "munsell blue"
+hi! Function guifg=#008EB8 "munsell blue"
 
 hi! purescriptFunction guifg=#008EB8 guibg=#000000
 
@@ -236,7 +237,24 @@ hi! purescriptOperator guifg=#3A666E
 hi! purescriptColon guifg=#2D4E54
 hi! Operator guifg=#335A60
 
-hi! def link TSFunction purescriptFunction
+hi! def link TSFunction Function
+" hi! def link TSFunction SpGreen52
+" hi! def link TSFunction fnWireframe
+" hi! def link TSFunction hsTopLevelBind
+hi! def link TSConstant CommentMinus
+hi! def link TSMethod purescriptRecordKeys
+hi! def link TSProperty purescriptConstructor
+hi! def link TSParameter purescriptIdentifier
+hi! def link TSTagAttribute purescriptClasses
+hi! def link TSVariable purescriptFunctionDeclStart
+
+hi! def link TSKeyword CommentMinus
+hi! def link TSTagDelimiter CommentMinus
+hi! def link TSPunctBracket CommentMinus
+hi! def link TSPunctDelimiter CommentMinus
+" hi! def link TSVariable purescriptRecordKeys
+" hi! def link TSConstructor purescriptFunction
+" hi! def link TSTag purescriptIdentifier
 hi! def link pythonAttribute purescriptRecordKeys
 
 " purescriptType > Type
@@ -284,7 +302,7 @@ hi! Boolean guifg=#66A279
 hi! String guifg=#66A279
 
 hi! hsTopLevelBind guifg=#459AB3 guibg=#0C0C0C
-hi! tsBind guifg=#459AB3
+" hi! tsBind guifg=#459AB3
 
 hi! purescriptState guibg=#141414 guifg=#3A3935
 hi! purescriptStateKey guibg=none guifg=#807A6F
@@ -475,6 +493,7 @@ hi Normal          guifg=#3F5C66 guibg=#121416
 
 " hi Comment         guifg=#3D5862
 hi Comment         guifg=#344B53
+hi CommentMinus    guifg=#273A40
 hi CommentPlus     guifg=#38595E
 
 " Conceal: Leaving the default link to Operator currently

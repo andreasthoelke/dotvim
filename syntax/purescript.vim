@@ -347,6 +347,7 @@ func! HsConcealWithUnicode ()
 " ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⨞ ⭘ ⌸ ◫ ∧ ⋁ ⟑ ⨆
 " s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
 " TextEdit and paste these symbols there
+"    ■
 
   for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
     exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym

@@ -601,24 +601,9 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 " go to just before the first non-blank text of the line
 " inoremap II <Esc>I
 
-" Set Syntax:
-nnoremap <localleader>sh :set syntax=html<cr>
-nnoremap <localleader>sj :set syntax=javascript<cr>
-nnoremap <localleader>sJ :set syntax=json<cr>
-nnoremap <localleader>sv :set syntax=vim<cr>
-nnoremap <localleader>sm :set syntax=markdown<cr>
-nnoremap <localleader>sl :set syntax=lua<cr>
-nnoremap <localleader>sp :set syntax=purescript<cr>
-nnoremap <localleader>sP :set syntax=purescript1<cr>
-nnoremap <localleader>SP :set syntax=python<cr>
-nnoremap <localleader>sd :set syntax=dirvish<cr>
-" TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
-
-" nnoremap <leader>sp :set syntax=purescript<cr>:call HaskellSyntaxAdditions()<cr>
-" nnoremap <leader>sP :set syntax=purescript1<cr>:call HaskellSyntaxAdditions()<cr>
 
 " demos:
-abbrev mul Multiple<CR>lines
+" abbrev mul Multiple<CR>lines
 
 
 

@@ -9,6 +9,7 @@ nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>
+nnoremap <leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>
 nnoremap glC :call StopChromium()<cr>
 
 command! Finder :call OpenFinder()

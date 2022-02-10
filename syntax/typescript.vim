@@ -220,25 +220,13 @@ syn match typescriptLogicSymbols "\(&&\)\|\(||\)\|\(!\)"
 syn match typescriptOpSymbols "=\{1,3}\|!==\|!=\|<\|>\|>=\|<=\|++\|+=\|--\|-="
 
 
+" syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
+
 " ─   Conceal with unicode                               ■
 
-func! TsConcealWithUnicode ()
 
-  let g:TsCharsToUnicode = [
-        \  ['->',           '→', 'hsArrow']
-        \, ['\s\zs<-',           '←', 'hsArrowBackw']
-        \, ['===',            '≡', 'Normal']
-        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
-        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
-        \]
+" call TsConcealWithUnicode()
 
-  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
-    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
-  endfor
-
-endfunc
-
-call TsConcealWithUnicode()
 
 " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
 

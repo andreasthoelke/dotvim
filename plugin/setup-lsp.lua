@@ -134,7 +134,8 @@ vim.diagnostic.config({
     prefix = "|",
   },
   float = {
-    source = "if_many",
+    -- source = "if_many",
+    source = "always",
   },
   signs = false,
   underline = true,
@@ -182,6 +183,8 @@ lspconfig.tsserver.setup({
   end,
   capabilities = capabilities,
   flags = flags,
+  -- filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
 })
 
 
@@ -210,6 +213,14 @@ lspconfig.graphql.setup({
   on_attach = on_attach,
   flags = flags,
 })
+
+-- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
+lspconfig.flow.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
+
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.eslint.setup({

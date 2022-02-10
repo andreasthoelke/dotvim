@@ -29,7 +29,7 @@ func! EvalInBrowserApp ( fileName )
   return
   call EvalJSFileInBrowser( sourceFileName )
 endfunc
-call EvalInBrowserApp( "/Users/at/Documents/UI-Dev/React1/graphin1/scratch/rep_test2.js" )
+" call EvalInBrowserApp( "/Users/at/Documents/UI-Dev/React1/graphin1/scratch/rep_test2.js" )
 
 
 command! -range=% JSRun call JSRun( <line1>, <line2> )
@@ -39,7 +39,7 @@ command! -range=% JSRun call JSRun( <line1>, <line2> )
 " nnoremap <leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
 " vnoremap <leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
-nnoremap <silent> gej :call tools_js#eval_line( line('.') )<cr>
+" nnoremap <silent> gej :call tools_js#eval_line( line('.') )<cr>
 
 func! JSRun( ... )
   let startLine = a:0 ? a:1 : 1
@@ -82,6 +82,10 @@ func! tools_js#eval_expression( expressionCodeStr )
 endfunc
 " echo tools_js#eval_expression( '{aa: 44, bb: "eins"}.aa' )
 
+
+" Note: Buffer maps!
+" ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
+
 func! tools_js#eval_line( ln )
   " if !(&filetype == 'python')
   "   echo "This is not a Python file!"
@@ -90,13 +94,17 @@ func! tools_js#eval_line( ln )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
   let printStatement = 'console.log(' . expression . ')'
   let compl_sourceLines = tools_js#getStrOfBufAndCmd( printStatement )
-  let stdInStr = join( compl_sourceLines, "\n" )
-  " echo completeSource
-  let sourceFileName = repl_py#create_source_file( compl_sourceLines )
-  " echo sourceFileName
-  " return
+
+  " let stdInStr = join( compl_sourceLines, "\n" ) ■
   " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
-  let resLines = systemlist( 'node ' . sourceFileName )
+  " let sourceFileName = repl_py#create_source_file( compl_sourceLines ) ▲
+
+  let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
+  let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
+  call writefile( compl_sourceLines, filenameSource )
+
+  call system( 'npx babel ' . filenameSource . ' --out-file ' . filenameBuild )
+  let resLines = systemlist( 'node ' . filenameBuild )
 
   " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
   if resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
