@@ -11,6 +11,23 @@
 " e1_cbwl0 = runReader cbwl0 (i:: Int)
 " "2. new feature: (x -> Bool) should be 'xp'
 
+nnoremap <leader>ejd :call CreateJSDocComment()<cr>
+
+
+func! CreateJSDocComment()
+  let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cn' )[0]
+  let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  " echo paramNames
+  " let fn_txt = len( [] ) == 0 ? hostDecName : hostDecName . ' ' . strInParan
+  let fn_txt = hostDecName . ' ' . strInParan
+  let lines = ['/**', ' * ' . fn_txt, ' */']
+  call append( '.', lines )
+  normal jjww
+endfunc
+
+
 
 nnoremap <leader>et :call CreateInlineTestDec()<cr>
 

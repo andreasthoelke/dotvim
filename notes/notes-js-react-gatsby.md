@@ -54,7 +54,7 @@ https://flow-typed.github.io/flow-typed/#/usage
 
 https://gist.github.com/nkbt/9efd4facb391edbf8048
 
-
+/* eslint no-unused-vars: 0 */
 
 create-react-app my-app && cd my-app
 yarn add --dev flow-bin
