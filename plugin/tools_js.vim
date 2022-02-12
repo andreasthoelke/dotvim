@@ -86,7 +86,7 @@ endfunc
 " Note: Buffer maps!
 " ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 
-func! tools_js#eval_line( ln )
+func! tools_js#eval_line( ln, plain )
   " if !(&filetype == 'python')
   "   echo "This is not a Python file!"
   "   return
@@ -100,15 +100,23 @@ func! tools_js#eval_line( ln )
   " let sourceFileName = repl_py#create_source_file( compl_sourceLines ) ▲
 
   let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
-  let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
+  " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
+  let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.js'
   call writefile( compl_sourceLines, filenameSource )
+  " echo expand('%:r')
 
-  call system( 'npx babel ' . filenameSource . ' --out-file ' . filenameBuild )
+  " call system( 'npx babel ' . filenameSource . ' --out-file ' . filenameBuild )
+  " call system( 'tsc ' . filenameSource . ' --outfile ' . filenameBuild )
+  call system( 'npx swc ' . filenameSource . ' -o ' . filenameBuild )
   let resLines = systemlist( 'node ' . filenameBuild )
+  " let resLines = systemlist( 'node ' . filenameSource )
 
-  " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
-  if resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
-  " if 0
+  if a:plain
+    let g:floatWin_win = FloatingSmallNew ( resLines )
+
+    " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
+  elseif resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
+    " if 0
     " echo "ndarray"
     let g:floatWin_win = FloatingSmallNew ( resLines )
 

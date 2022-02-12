@@ -422,7 +422,7 @@ command! -bang Args call fzf#run(fzf#wrap('args', {'source': argv()}, <bang>0))
   " - <c-c><cr> runs the Shdo! command to will show a buffer with the full command
   " - leader leader z will run the shell script in that buffer
   " - leader bd to delete that temp buffer
-  " - see the effect in the dirvish buffers. R? for leader X?
+  " - see the effect in the dirvish buffers. R? or leader X?
   " - <c-w>L/H to reverse the command?
 
 

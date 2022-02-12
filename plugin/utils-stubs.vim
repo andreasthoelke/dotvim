@@ -11,10 +11,11 @@
 " e1_cbwl0 = runReader cbwl0 (i:: Int)
 " "2. new feature: (x -> Bool) should be 'xp'
 
-nnoremap <leader>ejd :call CreateJSDocComment()<cr>
+nnoremap <leader>ejd :call CreateJSDocComment_short()<cr>
+nnoremap <leader>ejD :call CreateJSDocComment_long()<cr>
 
 
-func! CreateJSDocComment()
+func! CreateJSDocComment_long()
   let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cn' )[0]
   let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
@@ -27,9 +28,21 @@ func! CreateJSDocComment()
   normal jjww
 endfunc
 
-
+func! CreateJSDocComment_short()
+  let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cn' )[0]
+  let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  " echo paramNames
+  " let fn_txt = len( [] ) == 0 ? hostDecName : hostDecName . ' ' . strInParan
+  let fn_txt = hostDecName . ' ' . strInParan
+  let lines = ['/** ' . fn_txt . ' */']
+  call append( line('.')-1, lines )
+  normal kw
+endfunc
 
 nnoremap <leader>et :call CreateInlineTestDec()<cr>
+nnoremap <leader>eT :call CreateInlineTestDec_js_function()<cr>
 
 func! CreateInlineTestDec()
   if &filetype == 'python'
@@ -77,6 +90,19 @@ endfunc
 "   return aa * bb
 " e1_mult = mult('aa', 'bb')
 
+func! CreateInlineTestDec_js_function()
+  let hostLn = searchpos( '^function\s', 'cnb' )[0]
+  let hostDecName = matchstr( getline( hostLn ), 'function\s\zs\i*' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  call append( line('.') -1, lineText )
+  normal k0
+  call search('(')
+  normal l
+endfunc
 
 
 

@@ -18,6 +18,7 @@ https://nextjs.org/learn/basics/navigate-between-pages/client-side
 
 # Create React App
 npx create-react-app fn-comps1 && cd $_
+npx create-react-app tuts_2 && cd $_
 
 # Function components
 https://www.robinwieruch.de/react-function-component/
@@ -28,8 +29,10 @@ http://localhost:3000
 # Flow types
 use 'npm run flow'
 
-could try this setup:
-npx create-react-app flowchecker
+Make flow aware of "import { ReactComponent as MyIcon } from 'icon.svg';
+~/Documents/UI-Dev/React1/fn-comps1/.flowconfig#/module.name_mapper.extension='svg'%20->%20'<PROJECT_ROOT>/SVGModule.js.flow'
+
+just an old tutorial?
 https://pusher.com/tutorials/type-check-react-flow/
 
 auto-annotator?
@@ -46,9 +49,11 @@ const MyComponent = ({ id, name}: MyComponentProps): React.Node =>
   <div>{`My name is ${name} and ${id} is my ID.`}</div>
 
 ## flow-typed
-https://flow-typed.github.io/flow-typed/#/usage
 
+https://flow-typed.github.io/flow-typed/\#/usage
 
+Note: after installing a new lib I need to run this again:
+flow-typed install
 
 # Eslint
 
@@ -61,20 +66,27 @@ yarn add --dev flow-bin
 yarn run flow init
 
 
+# Babel
+
+caution: this ejects CRA
+https://github.com/timarney/react-app-rewired
+https://dev.to/ansonh/simplest-way-to-install-babel-plugins-in-create-react-app-7i5
 
 
+npm install --save-dev @babel/plugin-proposal-do-expressions
+npm install --save-dev @babel/plugin-transform-react-jsx
 
 
+# Nextjs
+
+npx create-next-app nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
 
 
+# Styled components
 
+# Typescript
 
-
-
-
-
-
-
+npx src <filename> -o <outfile>
 
 
 

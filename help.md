@@ -859,7 +859,7 @@ mv or cp ("cp -r" to copy a folder) then <c-[> to go to normal mode then `p` to 
 assisted:
 
 - put two dirvish folders side by side. use e.g. \T\v
-- the win/folderpath that has the cursor is the source (other on is the target of the move) (left/right does not matter)
+- the win/folderpath that has the cursor is the source (the other window/folder is the target of the file-move) (left/right does not matter)
 - add files to the arglist (highlighted in red). use ,x(l/}/vis-sel)
   - reset arglist with leader X
   - show arglist with leader oa (CtrlPArgs)

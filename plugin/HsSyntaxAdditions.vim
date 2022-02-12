@@ -44,7 +44,8 @@ endfunc
 nnoremap <leader>cm :call clearmatches()<cr>
 
 func! JsSyntaxAdditions() " ■
-  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.') )<cr>
+  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:false )<cr>
+  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true )<cr>
 
   call clearmatches()
 
@@ -95,13 +96,16 @@ func! TsConcealWithUnicode ()
     exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
   endfor
 
-  syntax match Normal ":\ze\s" conceal
+  syntax match Normal "\S\zs:\ze\s" conceal
   syntax match Normal "const\s" conceal
 
   " JSDoc comments
   syntax match Normal "\/\*\*" conceal
-  syntax match Normal "\s\*\s" conceal
-  syntax match Normal "\s\*\/" conceal
+  syntax match Normal "\/\*\*\s" conceal
+  syntax match Normal "^\s\*\s" conceal
+  syntax match Normal "^\*\s" conceal
+  syntax match Normal "^function" conceal cchar=→
+  syntax match Normal "\*\/" conceal
 
 endfunc
 
