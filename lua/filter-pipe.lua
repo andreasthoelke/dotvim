@@ -44,6 +44,6 @@ end
 
 local p = producer()
 local f = filter(p)
-consumer(f)
+-- consumer(f)
 
 

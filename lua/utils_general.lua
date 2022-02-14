@@ -15,7 +15,7 @@ end
 
 -- lua put( require'utils_general'.abc() )
 function M.abc()
-  return 'hi 4 there'
+  return 'hi 5 there'
 end
 
 -- print('hi from utils-general')
@@ -28,6 +28,28 @@ function _G.put(...)
   end
 
   print(table.concat(objects, '\n'))
+  return ...
+end
+
+function _G.floatWinShow(...)
+  local objects = {}
+  for i = 1, select('#', ...) do
+    local v = select(i, ...)
+    table.insert(objects, vim.inspect(v))
+  end
+
+  vim.lsp.util.open_floating_preview(table.concat(objects, '\n'))
+  return ...
+end
+
+function M.floatWinShow(...)
+  local objects = {}
+  for i = 1, select('#', ...) do
+    local v = select(i, ...)
+    table.insert(objects, vim.inspect(v))
+  end
+
+  vim.lsp.util.open_floating_preview(table.concat(objects, '\n'))
   return ...
 end
 

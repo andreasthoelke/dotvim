@@ -23,7 +23,7 @@ command! -range=% ShowInFloatWin :<line1>,<line2>call ShowInFloatWin()
 
 func! ShowInFloatWin() range
   let lines = getline( a:firstline, a:lastline )
-  call FloatWin_ShowLines( lines, line('.'), col('.'), 120, 1 )
+  call FloatWin_ShowLines_old( lines, line('.'), col('.'), 120, 1 )
 endfunc
 " 4,11ShowInFloatWin
 
@@ -103,6 +103,8 @@ func! FloatWin_ShowLines ( lines )
   let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( a:lines )
 endfunc
 " call FloatWin_ShowLines( ['eins', 'zwei'] )
+" call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
+
 
 func! FloatWin_close ()
   call v:lua.FloatWin_close()

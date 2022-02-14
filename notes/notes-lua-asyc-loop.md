@@ -1,11 +1,9 @@
 
 # Lua async and vim.loop
 
-call v:lua.print( vim.fn.expand('%:t:r') )
 
 lua put( vim.fn.expand('%:t:r') )
 
-lua = vim.log
 lua put( vim.log )
 
 runtime utils_general.lua
@@ -67,6 +65,7 @@ luafile ~/.config/nvim/lua/utils_general.lua
 ### Plenary reload
 lua require'plenary.reload'.reload_module('tools_external')
 lua require'plenary.reload'.reload_module('utils_general')
+lua require'plenary.reload'.reload_module('utils_lsp')
 
 command! -nargs=+ -complete=dir -bar Grep lua require'tools'.asyncGrep(<q-args>)
 command! -nargs=+ Rld lua require'plenary'.reload.reload_module(<q-args>)
@@ -220,6 +219,8 @@ local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/references", param
 
 vim.lsp.buf_request_sync()
 
+lua vim.lsp.util.open_floating_preview( {'eins'} )
+
 ### These work!
 lua put( require'utils_lsp'.hover() )
 gets simple types like function, class, parameter, etc
@@ -227,8 +228,20 @@ gets simple types like function, class, parameter, etc
 lua put( require'utils_lsp'.references() )
 lua put( require'utils_lsp'.diagnostic_buffer() )
 
+lua require'utils_lsp'.diagnosticsShow()
+
 ? lua put( require'utils_lsp'.document_symbol() )
 write somefunction
+
+lua put( require'utils_general'.abc() )
+lua require'utils_general'.floatWinShow( {{'eins'}} )
+
+echo v:lua.vim.lsp.diagnostic.get(0)
+
+## convert lines in table/list to string
+call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
+
+lua put( vim.diagnostic.severity.INFO )
 
 # Jobs
 are now easy to set up: /Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua

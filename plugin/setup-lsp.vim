@@ -3,7 +3,7 @@
 
 lua <<EOF
 require'toggle_lsp_diagnostics'.init()
-require'toggle_lsp_diagnostics'.init({ start_on = false, signs = false, underline = false, virtual_text = { prefix = "|" }})
+require'toggle_lsp_diagnostics'.init({ start_on = true, signs = false, underline = false, virtual_text = { prefix = "|" }})
 EOF
 
 
@@ -28,7 +28,11 @@ let g:coc_config_home = '~/.config/nvim'
 " Coc's completion menu can itegrate many sources (like webbrowser, buffer, lsp).
 inoremap <silent><expr> <c-i> coc#refresh()
 
+nnoremap <leader>lds :call DiagnosticsShow()<cr>
 
+func! DiagnosticsShow ()
+  call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
+endfunc
 
 
 

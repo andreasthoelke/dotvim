@@ -24,8 +24,6 @@ function M.hover()
   return results_lsp
 end
 
-
-
 function M.references()
   local params = util.make_position_params()
   params.context = { includeDeclaration = true }
@@ -74,6 +72,16 @@ function M.diagnostic_buffer()
   return res
 end
 
+function M.diagnosticsShow()
+  vim.lsp.util.open_floating_preview( {M.diagnostic_buffer()} )
+end
+-- put( require'utils_lsp'.diagnostic_buffer() )
+
+-- require'utils_lsp'.diagnosticsShow()
+
+-- vim.lsp.util.open_floating_preview( {"eins"} )
+
+
 function M.diagnostic_all()
   local raw_result = vim.lsp.diagnostic.get_all()
   if raw_result == nil then
@@ -106,6 +114,7 @@ function PrintDiagnostics(opts, bufnr, line_nr, client_id)
     end
   end
   vim.api.nvim_echo({{diagnostic_message, "Normal"}}, false, {})
+
 end
 
 return M

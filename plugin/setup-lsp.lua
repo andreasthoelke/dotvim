@@ -93,7 +93,7 @@ local handlers =  {
   ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
 }
 
-local handlers2 = {
+local handler_filterDiagnSeverity = {
     ["textDocument/publishDiagnostics"] = function(_, result, ...)
         local min = vim.diagnostic.severity.INFO
         result.diagnostics = vim.tbl_filter(function(t)
@@ -102,6 +102,20 @@ local handlers2 = {
         return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
     end,
 }
+
+-- code 2307
+local handler_filterDiagnCodes = {
+    ["textDocument/publishDiagnostics"] = function(_, result, ...)
+          result.diagnostics = vim.tbl_filter( function(t)
+              return
+                     t.code ~= 6133  -- defined but never used
+                 -- and t.code ~= 2307
+          end, result.diagnostics )
+        return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end,
+}
+
+
 
 -- handlers = {
 --        ["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -190,6 +204,8 @@ lspconfig.tsserver.setup({
     buf_map(bufnr, "n", "gto", ":TSLspImportAll<CR>")
     on_attach(client, bufnr)
   end,
+  -- handlers = handlers2,
+  handlers = handler_filterDiagnCodes,
   capabilities = capabilities,
   flags = flags,
   -- filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
