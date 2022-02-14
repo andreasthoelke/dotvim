@@ -867,6 +867,10 @@ assisted:
 - alternatively preview/edit the command with leader mV
   detailed description: ~/.vim/plugin/file-manage.vim#/Move%20Files
 
+### Rename files / buffers
+RenameBuffer .bak%   - to  disable  / backup a file. (could also more into .bak/ folder?
+!mv '.bak.eslintrc.js' .bak/
+
 ### Move / copy text (vim registers)
 
 leader "   - to show registers in telescope

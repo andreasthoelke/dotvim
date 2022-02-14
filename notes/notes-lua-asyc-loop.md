@@ -123,7 +123,7 @@ vim.api.nvim_set_keymap(
 
 ## Running / Sourcing lua testlines
 " I can run the following lines with vip<space>ss
-lua << EOF
+lua __ EOF
 local abb = 'zwei'
 print('hi')
 print(abb)
@@ -134,7 +134,7 @@ EOF
 
 ## Read file
 
-lua << EOF
+lua __ EOF
 local a = require 'plenary.async'
 local te = require 'tools_external'
 local path = '/Users/at/.config/nvim/notes/do-next'
@@ -143,7 +143,7 @@ EOF
 
 ## Curl
 
-lua << EOF
+lua __ EOF
 local query = { name = "Jane Doe", key = "123456" }
 local te = require 'tools_external'
 put( te.curlTest(query).args.name )
@@ -174,7 +174,7 @@ print('sleeping');
 
 ## Popup
 
-lua << EOF
+lua __ EOF
 local col = vim.fn.col(".")
 local line = vim.fn.line(".")
 local te = require 'tools_external'
@@ -228,6 +228,7 @@ lua put( require'utils_lsp'.references() )
 lua put( require'utils_lsp'.diagnostic_buffer() )
 
 ? lua put( require'utils_lsp'.document_symbol() )
+write somefunction
 
 # Jobs
 are now easy to set up: /Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lua

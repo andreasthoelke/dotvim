@@ -103,6 +103,15 @@ local handlers2 = {
     end,
 }
 
+-- handlers = {
+--        ["textDocument/publishDiagnostics"] = vim.lsp.with(
+--          vim.lsp.diagnostic.on_publish_diagnostics, {
+--            -- Disable virtual_text
+--            virtual_text = false
+--          }
+--        ),
+--      }
+
 -- To instead override globally
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -138,7 +147,7 @@ vim.diagnostic.config({
     source = "always",
   },
   signs = false,
-  underline = true,
+  underline = false,
   update_in_insert = false,
   severity_sort = false,
 })
@@ -215,19 +224,20 @@ lspconfig.graphql.setup({
 })
 
 -- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
-lspconfig.flow.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
+-- lspconfig.flow.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 
+-- Todo: this duplicates messages of eslint_d
 -- https://github.com/hrsh7th/vscode-langservers-extracted
-lspconfig.eslint.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
+-- lspconfig.eslint.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.cssls.setup({
@@ -266,6 +276,14 @@ lspconfig.yamlls.setup({
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.jsonls.setup({
+  handlers = {
+    ["textDocument/publishDiagnostics"] = vim.lsp.with(
+      vim.lsp.diagnostic.on_publish_diagnostics, {
+        -- Disable virtual_text
+      virtual_text = true
+      }
+      ),
+  },
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
@@ -341,9 +359,9 @@ null_ls.setup({
       extra_args = { "--fast" },
     }),
     -- javascript/typescript
-    d.eslint_d.with({
-      diagnostics_format = diagnostics_format,
-    }),
+    -- d.eslint_d.with({
+    --   diagnostics_format = diagnostics_format,
+    -- }),
     f.prettier.with({
       diagnostics_format = diagnostics_format,
       filetypes = { "html", "json", "yaml", "markdown" },
@@ -498,6 +516,8 @@ _G.vimrc.cmp.snippet = function()
   })
 end
 
+-- inoremap <C-i> <Cmd>lua vimrc.cmp.lsp()<CR>
+
 vim.cmd([[
 inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
 inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
@@ -506,8 +526,6 @@ inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
 -- Other setup example: ~/.config/nvim.cam/lua/user/cmp.lua#/cmp.setup%20{
 
 -- ─^  nvim-cmp setup                                    ▲
-
-
 
 
 

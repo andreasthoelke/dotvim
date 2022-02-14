@@ -88,6 +88,18 @@ npx create-next-app nextjs-blog --use-npm --example "https://github.com/vercel/n
 
 npx src <filename> -o <outfile>
 
+https://www.typescriptlang.org/docs/handbook/2/functions.html
+
+"strictFunctionTypes": false,
+
+# Json placeholder
+https://jsonplaceholder.typicode.com/guide/
+
+
+# Fetch clients
+axios only works with require(axios).default?
+
+
 
 
 

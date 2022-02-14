@@ -41,8 +41,8 @@ func! CreateJSDocComment_short()
   normal kw
 endfunc
 
-nnoremap <leader>et :call CreateInlineTestDec()<cr>
-nnoremap <leader>eT :call CreateInlineTestDec_js_function()<cr>
+nnoremap <silent> <leader>et :call CreateInlineTestDec()<cr>
+nnoremap <silent> <leader>eT :call CreateInlineTestDec_js_function()<cr>
 
 func! CreateInlineTestDec()
   if &filetype == 'python'

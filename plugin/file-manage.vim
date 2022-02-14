@@ -1,7 +1,6 @@
 
 
 
-nnoremap <silent> ,tn :tabnew<cr>
 nnoremap ,ts :SessionTabSave tab-
 nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
 
@@ -22,10 +21,13 @@ nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
 nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
+nnoremap <silent> ,tn :tabnew<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
+nnoremap \s :exec "new " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
+nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>

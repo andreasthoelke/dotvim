@@ -99,16 +99,19 @@ func! tools_js#eval_line( ln, plain )
   " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
   " let sourceFileName = repl_py#create_source_file( compl_sourceLines ) ▲
 
-  let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
+  " let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
+  let filenameSource = expand('%:p:h') . '/.replSrc_' . expand('%:t:r')
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
-  let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.js'
+  " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.mjs'
   call writefile( compl_sourceLines, filenameSource )
   " echo expand('%:r')
 
   " call system( 'npx babel ' . filenameSource . ' --out-file ' . filenameBuild )
   " call system( 'tsc ' . filenameSource . ' --outfile ' . filenameBuild )
-  call system( 'npx swc ' . filenameSource . ' -o ' . filenameBuild )
-  let resLines = systemlist( 'node ' . filenameBuild )
+  " call system( 'npx swc ' . filenameSource . ' -o ' . filenameBuild )
+  " let resLines = systemlist( 'node ' . filenameBuild )
+  " npx ts-node -T src/main.ts
+  let resLines = systemlist( 'npx ts-node -T ' . filenameSource )
   " let resLines = systemlist( 'node ' . filenameSource )
 
   if a:plain
