@@ -87,20 +87,22 @@ endfunc
 " ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 
 func! tools_js#eval_line( ln, plain )
-  " if !(&filetype == 'python')
-  "   echo "This is not a Python file!"
-  "   return
-  " endif
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
-  let printStatement = 'console.log(' . expression . ')'
-  let compl_sourceLines = tools_js#getStrOfBufAndCmd( printStatement )
+
+  " let printStatement = 'console.log(' . expression . ')'
+
+  " example: new Promise( (r) => r( runAsyc1() ) ).then( res => console.log( res ) )
+  let ps = 'new Promise( (r) => r( ' . expression . ' ) ).then( res => console.log( res ) )'
+  " Just in case the value of the expression is a promise we console.log in a callback
+
+  let compl_sourceLines = tools_js#getStrOfBufAndCmd( ps )
 
   " let stdInStr = join( compl_sourceLines, "\n" ) ■
   " let resLines = systemlist( 'python -c ' . '"' . stdInStr . '"' )
   " let sourceFileName = repl_py#create_source_file( compl_sourceLines ) ▲
 
   " let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
-  let filenameSource = expand('%:p:h') . '/.replSrc_' . expand('%:t:r')
+  let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.ts'
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.mjs'
   call writefile( compl_sourceLines, filenameSource )

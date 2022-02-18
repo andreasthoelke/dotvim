@@ -103,8 +103,9 @@ local handler_filterDiagnSeverity = {
     end,
 }
 
--- code 2307
-local handler_filterDiagnCodes = {
+-- ─   Diagnostics filter/disable rules /types of warnings──
+
+local handler_TS_filterDiagnCodes = {
     ["textDocument/publishDiagnostics"] = function(_, result, ...)
           result.diagnostics = vim.tbl_filter( function(t)
               return
@@ -114,6 +115,19 @@ local handler_filterDiagnCodes = {
         return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
     end,
 }
+
+local handler_JSON_filterDiagnCodes = {
+    ["textDocument/publishDiagnostics"] = function(_, result, ...)
+          result.diagnostics = vim.tbl_filter( function(t)
+              return
+                     t.code ~= 521  -- comments are not permitted in JSON
+                 -- and t.code ~= 2307
+          end, result.diagnostics )
+        return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end,
+}
+
+
 
 
 
@@ -205,11 +219,11 @@ lspconfig.tsserver.setup({
     on_attach(client, bufnr)
   end,
   -- handlers = handlers2,
-  handlers = handler_filterDiagnCodes,
+  handlers = handler_TS_filterDiagnCodes,
   capabilities = capabilities,
   flags = flags,
-  -- filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
-  filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  -- filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
 })
 
 
@@ -292,14 +306,15 @@ lspconfig.yamlls.setup({
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.jsonls.setup({
-  handlers = {
-    ["textDocument/publishDiagnostics"] = vim.lsp.with(
-      vim.lsp.diagnostic.on_publish_diagnostics, {
-        -- Disable virtual_text
-      virtual_text = true
-      }
-      ),
-  },
+  -- handlers = {
+  --   ["textDocument/publishDiagnostics"] = vim.lsp.with(
+  --     vim.lsp.diagnostic.on_publish_diagnostics, {
+  --       -- Disable virtual_text
+  --     virtual_text = true
+  --     }
+  --     ),
+  -- },
+  handlers = handler_JSON_filterDiagnCodes,
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,

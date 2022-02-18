@@ -1256,10 +1256,10 @@ endfunc
 "   * basically everything that is a one char delim is better addressed by 'h' and 'l' motions
 "   * back motion jumps to beginning of var, not adjasant opening bracket/pair
 " - skip empty lines
-nnoremap <silent> w :call ExprInnerStartForw()<cr>
+" nnoremap <silent> w :call ExprInnerStartForw()<cr>
 " onoremap <silent> w :call ExprInner_VisSel_Inside()<cr>
-nnoremap <silent> b :call ExprInnerStartBackw()<cr>
-vnoremap <silent> w <esc>:call ChangeVisSel(function('ExprInnerStartForw'))<cr>
+" nnoremap <silent> b :call ExprInnerStartBackw()<cr>
+" vnoremap <silent> w <esc>:call ChangeVisSel(function('ExprInnerStartForw'))<cr>
 vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
 " Test: vbbbowww      v        |                v     ← cursor on "|", result sel on "v"
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc

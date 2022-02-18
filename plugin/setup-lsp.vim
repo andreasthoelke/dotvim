@@ -2,8 +2,8 @@
 " https://github.com/WhoIsSethDaniel/toggle-lsp-diagnostics.nvim/blob/main/README.md
 
 lua <<EOF
-require'toggle_lsp_diagnostics'.init()
-require'toggle_lsp_diagnostics'.init({ start_on = true, signs = false, underline = false, virtual_text = { prefix = "|" }})
+-- require'toggle_lsp_diagnostics'.init()
+-- require'toggle_lsp_diagnostics'.init({ start_on = true, signs = false, underline = false, virtual_text = { prefix = "|" }})
 EOF
 
 

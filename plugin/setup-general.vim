@@ -291,9 +291,12 @@ exec "set fillchars+=vert:\\ "
 
 " Trailing Whitespace:
 " vim-better-whitespace plugin
-let g:better_whitespace_guicolor='#333333'
+let g:better_whitespace_guicolor='#202925'
 let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 " Notes: highlight TrailingWhitespace guibg=#333333 match TrailingWhitespace /\s\+$/ Remove trailing whitespace: ":%s/\s\+$//e" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1) autocmd BufEnter * call matchadd('Error', '\v\s+$', -1)
+
+let g:better_whitespace_enabled = 0
+autocmd BufWritePre * EnableWhitespace
 
 " use "StripWhitespace" and "ToggleWhitespace"  
 nnoremap <leader>sw :StripWhitespace<cr>

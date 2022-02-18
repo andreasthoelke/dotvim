@@ -230,6 +230,9 @@ notes/notes-lunarvim.md
 
 # Lua
 
+do i need to specifically source lua files?
+~/.config/nvim/init.vim#/luafile%20~/.config/nvim/lua/utils_general.lua
+
 https://teukka.tech/luanvim.html
 https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 https://neovim.io/doc/user/lua.html
@@ -274,6 +277,15 @@ Path to Android Studio config files:
 ~ Library / ApplicationSupport / Google / AndroidStudioPreview2020.3 git add colors/Munsell-blue\ Kotlin.icls -f
 
 # LSP Language server / client
+
+## Disable/enable diagnostic displays
+leader ltv/s/u   - lsp toggle virtual-text/signs/underline
+ToggleDiagOff    - turn off diagnostic messages
+config: ~/.config/nvim/plugin/setup-lsp.vim#/nmap%20<leader>ltu%20<Plug>.toggle-lsp-diag-underline.
+
+## Diagnostics filter/disable rules /types of warnings
+config: ~/.config/nvim/plugin/setup-lsp.lua#/local%20handler_JSON_filterDiagnCodes%20=
+
 
 LspInfo
 help lspconfig-server-configurations
@@ -922,6 +934,9 @@ ls -l | fzf | pbcopy
 
 notes/notes-git.md
 
+## clone a github subdirectory/ folder
+utils/git_clone_subfolder.sh
+
 ## Intero Errors or Warnings
 
 leader qq - open QFL
@@ -1199,7 +1214,7 @@ nvim -V10vimlog - debug vim startup and sourcing process
 ### Debug with test.vim
 Have a file name test.vim and put this in your file (this file use vim-plug as an example, you should use your own plugin manager), remember to change your language server.
 
-call plug#begin('~/.vim/plugged') 
+call plug#begin('~/.vim/plugged')
     Plug 'neovim/nvim-lsp'
     Plug 'nvim-lua/completion-nvim'
 call plug#end()
@@ -1217,6 +1232,8 @@ Use nvim -u test.vim {your_file} to open your file.
 ## List of commands, maps and vim-sets (settings)
 
 leader vm - FzfMaps
+leader vc :Telescope commands<cr>
+
 :filter function \*stat<c-i> - just text seach in function names
 Find where a vim-command, function or map is defined
 

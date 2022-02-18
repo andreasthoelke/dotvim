@@ -97,7 +97,20 @@ https://jsonplaceholder.typicode.com/guide/
 
 
 # Fetch clients
-axios only works with require(axios).default?
+
+
+
+# Redux
+// Actions Creators
+const addTodo1 = (text: string) => ({ type: 'todos/todoAdded', payload: text })
+
+## Reducers
+(state, action) => newState
+.. are like Event listeners. Actions = Events
+
+
+
+
 
 
 

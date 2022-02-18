@@ -483,6 +483,7 @@ nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
 luafile ~/.config/nvim/lua/utils_general.lua
 luafile ~/.config/nvim/plugin/ui_virtualTx.lua
+" luafile ~/.config/nvim/plugin/setup-lsp.lua
 
 
 

@@ -7,6 +7,7 @@
   "explorer.width": 20,
   "javascript.validate.enable": false,
   "coc.preferences.enableFloatHighlight": false,
+  "diagnostic.enable": false,
   "diagnostic.virtualText": false,
   "diagnostic.enableSign": false,
   "diagnostic.enableMessage": "jump",

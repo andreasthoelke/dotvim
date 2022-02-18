@@ -251,6 +251,9 @@ are now easy to set up: /Users/at/Documents/Temp/plenary.nvim/scratch/jobtest.lu
 ~/.config/nvim/lua/filter-pipe.lua
 
 
+do i need to specifically source lua files?
+~/.config/nvim/init.vim#/luafile%20~/.config/nvim/lua/utils_general.lua
+
 
 
 

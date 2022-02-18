@@ -53,8 +53,8 @@ func! JsSyntaxAdditions() " ■
   call TsConcealWithUnicode()
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
-  syntax match ConcealQuotes "'" conceal
-  syntax match ConcealQuotes '"' conceal
+  " syntax match ConcealQuotes "'" conceal
+  " syntax match ConcealQuotes '"' conceal
 
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
@@ -80,12 +80,16 @@ endfunc " ▲
 
 func! TsConcealWithUnicode ()
 
+  " call matchadd('Conceal', "'", 12, -1, {'conceal': ''})
+
   let g:TsCharsToUnicode = [
         \  ['->',           '→', 'hsArrow']
         \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['==',            '≡', 'Normal']
         \, ['===',            '≡', 'Normal']
         \, ['\s\zsstring',            'S', 'Normal']
         \, ['\s\zsnumber',            'N', 'Normal']
+        \, ['\s\zsboolean',            'B', 'Normal']
         \, ['\s\zsFunction',            'F', 'Normal']
         \, ['\s\zsReact.Node',            '◻', 'Normal']
         \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
@@ -98,6 +102,11 @@ func! TsConcealWithUnicode ()
 
   syntax match Normal "\S\zs:\ze\s" conceal
   syntax match Normal "const\s" conceal
+
+  syntax match Normal "'" conceal
+  syntax match Normal "''" conceal cchar=∅
+  syntax match Normal '"' conceal
+  syntax match Normal '""' conceal cchar=∅
 
   " JSDoc comments
   syntax match Normal "\/\*\*" conceal
