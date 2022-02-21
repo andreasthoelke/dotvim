@@ -9,6 +9,7 @@ au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx,*json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed
@@ -77,7 +78,6 @@ func! JsSyntaxAdditions() " ■
 
 endfunc " ▲
 
-
 func! TsConcealWithUnicode ()
 
   " call matchadd('Conceal', "'", 12, -1, {'conceal': ''})
@@ -114,6 +114,118 @@ func! TsConcealWithUnicode ()
   syntax match Normal "^\s\*\s" conceal
   syntax match Normal "^\*\s" conceal
   syntax match Normal "^function" conceal cchar=→
+  syntax match Normal "\*\/" conceal
+
+endfunc
+
+" Nice example unicode symbols
+" ~/.config/nvim/syntax/purescript.vim#/func.%20HsConcealWithUnicode%20..
+
+func! SvelteSyntaxAdditions() " ■
+  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:false )<cr>
+  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true )<cr>
+
+  call clearmatches()
+
+  " set syntax=typescript
+  call SvelteConcealWithUnicode()
+
+  " call matchadd('CommentLabel', '\vscript', -1, -1 )
+  " call matchadd('BlackBG', '\v\$\:\s\zs\i*\ze\I', 11, -1 )
+  " call matchadd('BlackBG', '\v\$\:\s\i*\I\ze', 11, -1 )
+  " Reactive value declaration:
+  call matchadd('BlackBG', '\v\$\:\s\i{-}\I\ze', 11, -1 )
+  " call matchadd('BlackBG', '\v\<.*\{\s\zs\i*\ze\s\}', 11, -1 )
+  " call matchadd('purescriptIdentifier', '\v\<.*\{\s\zs\S*\ze\s\}', 11, -1 )
+  " Live variables in markup:
+  call matchadd('purescriptIdentifierDot1', '\v\<.*\{\s\zs\S*\ze\s\}', 11, -1 )
+
+  syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
+  " syntax match ConcealQuotes "'" conceal
+  " syntax match ConcealQuotes '"' conceal
+
+  call CodeMarkupSyntaxHighlights()
+  " Hide comment character at beginning of line
+  " call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  " call matchadd('Conceal', '\s\zs\#\ze\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\s\zs\\/\/\ze\s', 12, -1, {'conceal': ''})
+  " Conceal "%20" which is used for "h rel.txt" with space
+  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
+  " set commentstring=\ \/\/%s
+
+
+endfunc
+
+func! SvelteConcealWithUnicode ()
+
+  " call matchadd('Conceal', "'", 12, -1, {'conceal': ''})
+
+  let g:TsCharsToUnicode = [
+        \  ['->',           '→', 'hsArrow']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['==',            '≡', 'Normal']
+        \, ['===',            '≡', 'Normal']
+        \, ['\s\zsstring',            'S', 'Normal']
+        \, ['\s\zsnumber\ze\s',            'N', 'Normal']
+        \, ['\s\zsboolean',            'B', 'Normal']
+        \, ['\s\zsFunction',            'F', 'Normal']
+        \, ['\s\zsReact.Node',            '◻', 'Normal']
+        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
+        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+        \]
+
+  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
+    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  endfor
+
+  syntax match Normal "\S\zs:\ze\s" conceal
+  syntax match Normal "const\s" conceal
+  " syntax match Normal "const" conceal cchar=⦙
+
+  syntax match Normal "<script>" conceal cchar=⌈
+  syntax match Normal "</script>" conceal cchar=⌋
+  syntax match Normal "<style>" conceal cchar=⌈
+  syntax match Normal "</style>" conceal cchar=⌋
+
+  syntax match Normal "<button" conceal cchar=B
+  syntax match Normal "\/button>" conceal cchar=B
+  syntax match Normal "<div" conceal cchar=D
+  syntax match Normal "\/div>" conceal cchar=D
+  syntax match Normal "<p" conceal cchar=P
+  syntax match Normal "\/p>" conceal cchar=P
+
+  syntax match Normal "let\s" conceal cchar=᛫
+  syntax match Normal "\.\.\." conceal cchar=‥
+  " syntax match Normal "\$:" conceal cchar=•
+  " syntax match Normal "\$:\s" conceal cchar=⫶
+  syntax match Normal "\$:\s" conceal
+
+  syntax match Normal "'" conceal
+  syntax match Normal "''" conceal cchar=∅
+  syntax match Normal '"' conceal
+  syntax match Normal '""' conceal cchar=∅
+
+  syntax match Normal '{' conceal cchar=⟨
+  syntax match Normal '}' conceal cchar=⟩
+
+  " syntax match Normal '</\i*>' conceal cchar=⌉
+
+  " JSDoc comments
+  syntax match Normal "\/\*\*" conceal
+  syntax match Normal "\/\*\*\s" conceal
+  syntax match Normal "^\s\*\s" conceal
+  syntax match Normal "^\*\s" conceal
+  syntax match Normal "function" conceal cchar=→
   syntax match Normal "\*\/" conceal
 
 endfunc

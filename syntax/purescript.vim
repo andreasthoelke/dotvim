@@ -342,8 +342,10 @@ func! HsConcealWithUnicode ()
 " https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
 
   " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
-" ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ⌋ ⦙ ⫶ | ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫ ■▪▮▯▰▱▴◗◿
-" ⍨ ⎨⎭⎵⏠‣ ‥ ⬜ ⬚ ⭕ ⎧⍿⥰ ⌄ ⅀ ≀ ⋆ ⍿ ⊺
+  " Telescope symbols                  ⟫
+" ⟨⟩ mathematical right/left                      ⌟  ⌋ ⌈
+" ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ⌋ ⦙ ⫶⌉ | ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫ ■▪▮▯▰▱▴◗◿
+" ⍨ ⎨⎛⎭⎵⏠‣ ‥ ⬜ ⬚ ⭕ ⎧⍿⥰ ⌄ ⅀ ≀ ⋆ ⍿ ⊺
 " ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⨞ ⭘ ⌸ ◫ ∧ ⋁ ⟑ ⨆
 " s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
 " TextEdit and paste these symbols there

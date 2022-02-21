@@ -226,6 +226,12 @@ lspconfig.tsserver.setup({
   -- filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
 })
 
+lspconfig.svelte.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
+
 
 lspconfig.purescriptls.setup ({
   capabilities = capabilities,
