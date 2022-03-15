@@ -235,7 +235,7 @@ endfunction
 " This was the default setting:
 " put =&shada
 " !,'100,<50,s10,h
-set shada=!,'200,<50,s10,h
+set shada=!,'1000,<50,s10,h
 
 " Example settings:
 " set shada=",'10,f1,<10,h

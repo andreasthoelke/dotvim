@@ -587,6 +587,11 @@ endfunc
 " call SetExecutableFlag('/Users/at/.vim/notes/my folder/ei.txt', v:false)
 " call SetExecutableFlag('/Users/at/.vim/notes/my folder/ei.txt', v:true)
 
+" call SetExecutableFlag('~/apps_bin/nvim07/bin/nvim', v:true)
+" call SetExecutableFlag('~/apps_bin/nvim061/bin/nvim', v:true)
+"
+" can also navigate to folder and then chmod +x nvim
+" but then I just right-clicked and >open< the file .. also the lib...8.. file
 
 
 

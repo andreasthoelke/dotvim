@@ -101,8 +101,11 @@ note: search these notes:
 notes/notes-todos.md
 
 
-
-
+## Snippets
+Todo:
+For console.log and JSON.stringify
+using luasnip?
+~/.config/nvim/plugin/setup-lsp.lua#/local%20luasnip%20=
 
 --Remap for dealing with word wrap
 lua vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
@@ -230,6 +233,9 @@ notes/notes-lunarvim.md
 
 # Lua
 
+## Basics
+~/.config/nvim/notes/notes-lua-asyc-loop.md#/##%20Global%20variables
+
 do i need to specifically source lua files?
 ~/.config/nvim/init.vim#/luafile%20~/.config/nvim/lua/utils_general.lua
 
@@ -309,6 +315,11 @@ TSModuleInfo
 
 TSHighlightCapturesUnderCursor   - show the highlight groups under the cursor
 https://www.youtube.com/watch?v=dPQfsASHNkg
+
+# Html / CSS
+
+~/Documents/UI-Dev/React1/css1/css1.md#/#%20CSS
+
 
 # Purescript
 notes/notes-purescript.md
@@ -706,6 +717,10 @@ Dirvish settings and custom maps: ~/.vim/plugin/file-manage.vim#/augroup%20dirvi
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 
 # MacOS
+
+## file rights executable chmod
+~/.config/nvim/plugin/file-manage.vim#/func.%20SetExecutableFlag%20.
+
 ## Finder
 Open a folder in Finder:
 - open the folder in Dirvish, <leader>cdl or :lcd %<cr>, then glf. ~/.config/nvim/plugin/tools-external.vim#/command.%20Finder%20.call
@@ -1048,11 +1063,21 @@ f/F - f<char> to jump to next char. L/H to next
 
 ## Text-objects
 
+Can look up the textobjects here:
+https://github.com/nvim-treesitter/nvim-treesitter-textobjects/blob/master/queries/javascript/textobjects.scm
+https://github.com/nvim-treesitter/nvim-treesitter-textobjects\#built-in-textobjects
+
+Then deine select, move (and shift) maps here:
+~/.config/nvim/plugin/setup-treesitter.lua#/textobjects%20=%20{
+
+
 help text-objects
 iB - inside entire buffer ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
 
 ### Html tags
 vit/vat  - work nicely for html tags. these maps are *native*
+
+
 
 ### Comma
 vIt      - comma separated item (experimental see: ~/.config/nvim/plugin/HsMotions.vim#/Comma%20textobjects
@@ -1113,7 +1138,7 @@ call TagInStatusline()
 
 use fold interaction: ~/.vim/help.md#/##%20Folds,%20Folding
 
-config: ~/.vim/init_nva.vim#/Vista.
+config: ~/.config/nvim/plugin/setup-general.vim#/Vista.
 
 ## Marks
 

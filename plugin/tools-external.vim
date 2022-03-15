@@ -10,6 +10,8 @@ nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>
 nnoremap <leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>
+nnoremap <leader>glC :call LaunchChromium( 'http://localhost:8000' )<cr>
+nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>
 nnoremap glC :call StopChromium()<cr>
 
 command! Finder :call OpenFinder()
@@ -247,6 +249,7 @@ endfunc
 " /tmp/giphy2.gif
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
+" let g:chromiumAppPath = "/Applications/Google\ Chrome.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 
 func! LaunchChromium( url ) abort

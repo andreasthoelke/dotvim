@@ -38,7 +38,7 @@ endfunc
 " set commentstring=\ --\ \%s
 " dynamically use GetLangCommentStr()
 
-let g:headingPttn = '\v^("|--)?\s─\s'
+let g:headingPttn = '\v^("|--|//)?\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
 " let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
 
@@ -185,6 +185,7 @@ endfunc
 
 " ─   Create, Update, Delete Headings and Sections    ──
 nnoremap <leader>ehs :call CreateHeading(0, '', 0)<cr>
+" nnoremap <leader>ehs :call CreateHeading(0, '', 1)<cr>
 " Create Section header start or end markers
 " Uses the current line text if headerText is empty string
 func! CreateHeading( isEnd, headerText, isSection )
@@ -270,11 +271,15 @@ endfunc
 
 " Extract headline text from section header line
 func! GetHeadingTextFromHeadingLine( lineNum )
-  return matchstr( getline(a:lineNum), '\v^("|--)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
+  return matchstr( getline(a:lineNum), '\v^("|--|\/\/)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
+  " return matchstr( getline(a:lineNum), '\v^("|--|\/\/)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(─)')
 endfunc
 " echo GetHeadingTextFromHeadingLine( line('.') +1 )
-" ─^  Some Hxadline Text                                ──
+" // ─    Set: seek pos when audio is playing              ──
 " ─   Some Headline Text                                 ■
+" // ─   Some Headline Text                                 ■
+" -- ─   Some Headline Text                                 ■
+" ─^  Some Hxadline Text                                ──
 
 
 

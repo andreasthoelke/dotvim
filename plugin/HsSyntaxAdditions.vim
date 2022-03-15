@@ -113,7 +113,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "\/\*\*\s" conceal
   syntax match Normal "^\s\*\s" conceal
   syntax match Normal "^\*\s" conceal
-  syntax match Normal "^function" conceal cchar=→
+  syntax match Normal "function" conceal cchar=→
   syntax match Normal "\*\/" conceal
 
 endfunc
@@ -133,12 +133,15 @@ func! SvelteSyntaxAdditions() " ■
   " call matchadd('CommentLabel', '\vscript', -1, -1 )
   " call matchadd('BlackBG', '\v\$\:\s\zs\i*\ze\I', 11, -1 )
   " call matchadd('BlackBG', '\v\$\:\s\i*\I\ze', 11, -1 )
+  call matchadd('BlackBG', '\v\$\:\s\zs\i*\I\ze', 11, -1 )
+  call matchadd('purescriptIdentifier', '\vlet\s\zs\i*\I\ze', 11, -1 )
   " Reactive value declaration:
-  call matchadd('BlackBG', '\v\$\:\s\i{-}\I\ze', 11, -1 )
+  " call matchadd('BlackBG', '\v\$\:\s\i{-}\I\ze', 11, -1 )
   " call matchadd('BlackBG', '\v\<.*\{\s\zs\i*\ze\s\}', 11, -1 )
   " call matchadd('purescriptIdentifier', '\v\<.*\{\s\zs\S*\ze\s\}', 11, -1 )
   " Live variables in markup:
-  call matchadd('purescriptIdentifierDot1', '\v\<.*\{\s\zs\S*\ze\s\}', 11, -1 )
+  " call matchadd('purescriptIdentifierDot1', '\v\<.{-}\{\s\zs\S*\ze\s\}', 11, -1 )
+  call matchadd('purescriptIdentifierDot1', '\v\=\{\s\zs\S*\ze\s\}', 11, -1 )
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
   " syntax match ConcealQuotes "'" conceal
@@ -176,7 +179,6 @@ func! SvelteConcealWithUnicode ()
         \, ['==',            '≡', 'Normal']
         \, ['===',            '≡', 'Normal']
         \, ['\s\zsstring',            'S', 'Normal']
-        \, ['\s\zsnumber\ze\s',            'N', 'Normal']
         \, ['\s\zsboolean',            'B', 'Normal']
         \, ['\s\zsFunction',            'F', 'Normal']
         \, ['\s\zsReact.Node',            '◻', 'Normal']
@@ -192,7 +194,9 @@ func! SvelteConcealWithUnicode ()
   syntax match Normal "const\s" conceal
   " syntax match Normal "const" conceal cchar=⦙
 
-  syntax match Normal "<script>" conceal cchar=⌈
+  syntax match Normal "\s\zsnumber" conceal cchar=N
+
+  syntax match Normal "<script.*>" conceal cchar=⌈
   syntax match Normal "</script>" conceal cchar=⌋
   syntax match Normal "<style>" conceal cchar=⌈
   syntax match Normal "</style>" conceal cchar=⌋
@@ -203,12 +207,28 @@ func! SvelteConcealWithUnicode ()
   syntax match Normal "\/div>" conceal cchar=D
   syntax match Normal "<p" conceal cchar=P
   syntax match Normal "\/p>" conceal cchar=P
+  syntax match Normal "<input" conceal cchar=I
+  syntax match Normal "\/input>" conceal cchar=I
+  syntax match Normal "<label" conceal cchar=L
+  syntax match Normal "\/label>" conceal cchar=L
+  syntax match Normal "<h\d" conceal cchar=H
+  syntax match Normal "\/h\d>" conceal cchar=H
+  syntax match Normal "<option" conceal cchar=O
+  syntax match Normal "\/option>" conceal cchar=O
+  syntax match Normal "<span" conceal cchar=S
+  syntax match Normal "\/span>" conceal cchar=S
 
-  syntax match Normal "let\s" conceal cchar=᛫
+  " syntax match Normal "let\s" conceal cchar=᛫
+  syntax match Normal "let\s" conceal
   syntax match Normal "\.\.\." conceal cchar=‥
   " syntax match Normal "\$:" conceal cchar=•
   " syntax match Normal "\$:\s" conceal cchar=⫶
-  syntax match Normal "\$:\s" conceal
+  syntax match Normal "\$:\ze\s" conceal cchar=⫶
+  " syntax match Normal "\$:\s" conceal
+
+  syntax match Normal "bind:value=" conceal cchar=⁎
+  syntax match Normal "bind:checked=" conceal cchar=⁎
+  syntax match Normal "bind:group=" conceal cchar=⁎
 
   syntax match Normal "'" conceal
   syntax match Normal "''" conceal cchar=∅

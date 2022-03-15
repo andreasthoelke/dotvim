@@ -7,6 +7,17 @@ lua <<EOF
 EOF
 
 
+" nmap <silent>            ,gd <Plug>(coc-definition)
+" nmap <silent> \gd :vsplit<CR><Plug>(coc-definition)
+" nmap <silent> gd :call FloatingBuffer(expand('%'))<CR><Plug>(coc-definition)
+" nmap <silent> gD :split<CR><Plug>(coc-definition)
+
+nnoremap <silent> gdd :LspDef<cr>
+nnoremap <silent> gdo :call FloatingBuffer(expand('%'))<CR>:LspDef<cr>
+nnoremap <silent> gdv :vsplit<CR>:LspDef<cr>
+nnoremap <silent> gds :split<CR>:LspDef<cr>
+
+
 nmap <leader>ltu <Plug>(toggle-lsp-diag-underline)
 nmap <leader>lts <Plug>(toggle-lsp-diag-signs)
 nmap <leader>ltv <Plug>(toggle-lsp-diag-vtext)
