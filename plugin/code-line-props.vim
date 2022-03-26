@@ -413,5 +413,10 @@ func! CursorIsInsideStringOrComment()
   return CursorIsInsideComment() || CursorIsInsideString()
 endfunc
 
-
+func! ParagraphStartEndLines()
+  let [lstart, cstart] = searchpos( '^$', 'nWb')
+  let [lend, cend] = searchpos( '^$', 'nW')
+  return [ lstart + 1, lend - 1 ]
+endfunc
+" echo ParagraphStartEndLines()
 

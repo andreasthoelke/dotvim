@@ -31,6 +31,10 @@ notes/brew-list-dump-2021-12-23.txt
 
 /Users/at/.vim/notes/notes-node-npm.md
 
+## Typescript repl
+~/Documents/Server-Dev/a_tssetup/notes-typescript-node.md#/##%20TS-Node
+
+
 # JS React Gatsby NextJS
 
 notes/notes-js-react-gatsby.md
@@ -682,6 +686,9 @@ leader gp - ctrlP. use <c-o>v - browse-open recent file in a split e.g. from a d
 
 ## Dirvish
 
+Dirvish conf: ~/.config/nvim/plugin/file-manage.vim#/Dirvish
+New file ops: ~/.config/nvim/ftplugin/dirvish.vim#/Maps
+
 :vs ./   - open the cwd in a split! you can use <c-i> in command line to drill into sub-folders
 a - open file in right split, then use ]f [f to go back forth the files in the dir!
 x - add some files to the arglist that you want to work with. then open the first file (with a or i), then use
@@ -1153,7 +1160,9 @@ c-x - delete mark
 DelLocalMarks, DelGlobalMarks
 gz'M - Open a mark position in a floating-win. Use empty floating win with marks jumps: e.g. gz'M
 
-Todo: checkout https://github.com/MattesGroeger/vim-bookmarks
+## Vim-Bookmarks
+https://github.com/MattesGroeger/vim-bookmarks
+
 
 ### Jumplist
 
@@ -1415,8 +1424,8 @@ c-w h - to delete the last word in insert mode. this is needed bc c-w jumps to b
 
 ### Vim -> terminal commands
 
-grt - run command in terminal (command is string in line from cursor or vis-sel)
-grT - with editable command string
+gwt - run command in terminal (command is string in line from cursor or vis-sel)
+gwT - with editable command string
 
 :%! - execute all lines if the current buffer as shell commands!
 :put =system('ls')<cr> - put the return value of 'ls' into the current buffer!

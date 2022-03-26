@@ -1440,6 +1440,23 @@ let g:highlightedyank_highlight_duration = 700
 " hi! HighlightedyankRegion guibg=#585858
 hi! link HighlightedyankRegion Search
 
+" Vim-Bookmarks
+let g:bookmark_no_default_key_mappings = 1
+
+let g:bookmark_sign = ''
+let g:bookmark_annotation_sign = ''
+
+nmap <Leader>bb <Plug>BookmarkToggle
+nmap <Leader>ba <Plug>BookmarkAnnotate
+nmap <Leader>bs <Plug>BookmarkShowAll
+nmap <Leader>bn <Plug>BookmarkNext
+nmap <Leader>bp <Plug>BookmarkPrev
+nmap <Leader>bc <Plug>BookmarkClear
+nmap <Leader><Leader>bd <Plug>BookmarkClear
+" nmap <Leader>x <Plug>BookmarkClearAll
+nmap <Leader>bk <Plug>BookmarkMoveUp
+nmap <Leader>bj <Plug>BookmarkMoveDown
+" nmap <Leader>g <Plug>BookmarkMoveToLine
 
 " Marks: ----------------------------------------------------------------
 

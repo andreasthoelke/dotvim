@@ -23,6 +23,8 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
 
+Plug 'MattesGroeger/vim-bookmarks'
+Plug 'tom-anders/telescope-vim-bookmarks.nvim'
 
 " Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
@@ -49,6 +51,9 @@ Plug 'lambdalisue/guise.vim'
 Plug 'justinmk/vim-dirvish'
 " TODO Currently trying out: set the a local current dir (lcd) for the Shdo buffer ~/.vim/plugged/vim-dirvish/autoload/dirvish.vim#/execute%20'silent%20split'
 Plug 'kristijanhusak/vim-dirvish-git'
+Plug 'roginfarrer/vim-dirvish-dovish'
+
+
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window
 " Plug 'andreasthoelke/vim-dirvish'
 
@@ -106,6 +111,7 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 
 Plug 'memgraph/cypher.vim'
 Plug 'neo4j-contrib/cypher-vim-syntax'
+Plug 'edgedb/edgedb-vim'
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'

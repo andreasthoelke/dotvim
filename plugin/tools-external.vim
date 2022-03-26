@@ -322,15 +322,6 @@ endfunc
 " ─^  Running AppleScript                                ▲
 
 
-" ─   Bookmarks                                          ■
-
-nnoremap <leader>bt :CocCommand bookmark.toggle<cr>
-" https://github.com/voldikss/coc-bookmark
-
-
-
-
-" ─^  Bookmarks                                          ▲
 
 command! Explorer CocCommand explorer
 " nnoremap <leader>oe :CocCommand explorer<cr>

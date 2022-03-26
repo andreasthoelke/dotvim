@@ -91,7 +91,7 @@ endfunc
 " e1_mult = mult('aa', 'bb')
 
 func! CreateInlineTestDec_js_function()
-  let hostLn = searchpos( '^function\s', 'cnb' )[0]
+  let hostLn = searchpos( 'function\s', 'cnb' )[0]
   let hostDecName = matchstr( getline( hostLn ), 'function\s\zs\i*' )
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )

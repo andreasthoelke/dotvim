@@ -250,6 +250,14 @@ augroup dirvish_config
 
 augroup END
 
+" https://github.com/roginfarrer/vim-dirvish-dovish
+" ~/.config/nvim/ftplugin/dirvish.vim#/Maps
+
+" Used for <Plug>(dovish_delete)
+function! g:DovishDelete(target) abort
+  return 'del ' . a:target
+endfunction
+
 
 
 " TODO: i tried to overwrite dirvishes custom search mapping here. Instead i've now just commented

@@ -1,11 +1,12 @@
 
 
-nnoremap <silent> <leader>ro :call WsReplStart()<cr>
-nnoremap <silent> <leader>rq :call WsReplStop()<cr>
+" deactivated these maps as currently not in use.
+" nnoremap <silent> <leader>ro :call WsReplStart()<cr>
+" nnoremap <silent> <leader>rq :call WsReplStop()<cr>
 " nnoremap <silent> dr         :call WsReplReload()<cr>
 
-nnoremap <silent> gei      :silent call WsReplPost( GetLineFromCursor() )<cr>
-vnoremap <silent> gei :<c-u>call WsReplPost( Get_visual_selection() )<cr>
+" nnoremap <silent> gei      :silent call WsReplPost( GetLineFromCursor() )<cr>
+" vnoremap <silent> gei :<c-u>call WsReplPost( Get_visual_selection() )<cr>
 
 
 func! WsReplStart ()

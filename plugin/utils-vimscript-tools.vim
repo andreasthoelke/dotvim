@@ -4,7 +4,7 @@
 " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
 "  see PasteListAsLines - not needed any more
-nnoremap <leader>bb :call HsStringListToLines()<cr>
+" nnoremap <leader>bb :call HsStringListToLines()<cr>
 func! HsStringListToLines()
   let a = eval( getline('.') )
   call append('.', a)

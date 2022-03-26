@@ -114,6 +114,7 @@ func! tools_js#eval_line( ln, plain )
   " let resLines = systemlist( 'node ' . filenameBuild )
   " npx ts-node -T src/main.ts
   let resLines = systemlist( 'npx ts-node -T ' . filenameSource )
+  " let resLines = systemlist( 'node --loader ts-node/esm -T ' . filenameSource )
   " let resLines = systemlist( 'node ' . filenameSource )
 
   if a:plain

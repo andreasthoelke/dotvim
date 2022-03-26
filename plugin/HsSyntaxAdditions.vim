@@ -7,7 +7,8 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx,*json call JsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
 
@@ -43,6 +44,21 @@ endfunc
 
 
 nnoremap <leader>cm :call clearmatches()<cr>
+
+
+func! EdgeQLSyntaxAdditions() " ■
+  call tools_edgedb#bufferMaps()
+
+  call clearmatches()
+  set conceallevel=2
+  set concealcursor=ni
+
+  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
+  syntax match Normal "->" conceal cchar=→
+  set commentstring=\#%s
+
+endfunc " ▲
+
 
 func! JsSyntaxAdditions() " ■
   nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:false )<cr>
