@@ -55,6 +55,8 @@ func! EdgeQLSyntaxAdditions() " ■
 
   call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
   syntax match Normal "->" conceal cchar=→
+  syntax match Normal "::" conceal cchar=|
+  syntax match Normal ":=" conceal cchar=⫶
   set commentstring=\#%s
 
 endfunc " ▲
