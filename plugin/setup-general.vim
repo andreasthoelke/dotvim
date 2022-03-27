@@ -1039,12 +1039,13 @@ let g:place_blink = 0
 
 " ─   Sneak Code Navigation                             ──
 " 1-character enhanced 'f'
-nmap ,f <Plug>Sneak_f
+nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
-xmap ,f <Plug>Sneak_f
+xmap f <Plug>Sneak_f
 xmap F <Plug>Sneak_F
-omap ,f <Plug>Sneak_f
+omap f <Plug>Sneak_f
 omap F <Plug>Sneak_F
+
 " 1-character enhanced 't'
 " nmap ,t <Plug>Sneak_t
 " nmap ,T <Plug>Sneak_T
@@ -1095,9 +1096,9 @@ map ,h <Plug>(easymotion-linebackward)
 " xmap <localleader>f <Plug>(easymotion-bd-f)
 " omap <localleader>f <Plug>(easymotion-bd-f)
 
-nmap f <Plug>(easymotion-bd-f)
-xmap f <Plug>(easymotion-bd-f)
-omap f <Plug>(easymotion-bd-f)
+nmap ,f <Plug>(easymotion-bd-f)
+xmap ,f <Plug>(easymotion-bd-f)
+omap ,f <Plug>(easymotion-bd-f)
 
 " map t <Plug>(easymotion-tl)
 " Search replacement
