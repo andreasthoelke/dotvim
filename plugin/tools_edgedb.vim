@@ -6,8 +6,11 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> gei :call tools_edgedb#eval_parag( v:true )<cr>
   nnoremap <silent><buffer> geI :call tools_edgedb#eval_parag( v:false )<cr>
 
-  nnoremap <silent><buffer> <leader>ge :let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-  vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
+  nnoremap gq    m':let g:opContFn='tools_edgedb#query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
+  vnoremap gq :<c-u>let g:opContFn='tools_edgedb#query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
+
+  " nnoremap <silent><buffer> <leader>ge :let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+  " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
   nnoremap <silent><buffer> <leader>geo :call tools_edgedb#eval_buffer( v:true )<cr>
 
   nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cword>'), v:false )<cr>
@@ -27,11 +30,19 @@ func! tools_edgedb#bufferMaps()
 
 endfunc
 
+func! tools_edgedb#query_textObj( sel_str )
+  " echoe a:sel_str
+  " return
+  call tools_edgedb#runQueryShow( v:true, a:sel_str )
+endfunc
+
+
 func! tools_edgedb#queryAllObjectFields( obj_name )
   let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
   let fieldsStr = join( fieldNames, ', ' )
   let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
-  let resLines = tools_edgedb#runQuery( query )
+  " let resLines = tools_edgedb#runQuery( query )
+  call tools_edgedb#runQueryShow( v:true, [query] )
 endfunc
 
 func! tools_edgedb#showObjectFields( obj_name )
@@ -47,7 +58,7 @@ func! tools_edgedb#getObjectFields( obj_name )
   let q2 = "'), links_cl := (select infos.links filter .name != '__type__'), properties_cl := (select infos.properties filter .name != 'id'), select (properties_cl union links_cl).name"
 
   let query = q1 . a:obj_name . q2
-  let resLines = tools_edgedb#runQuery( query )
+  let resLines = tools_edgedb#runQuery( [query] )
 
   let cleanedLines = SubstituteInLines( resLines, '"', '' )
   return cleanedLines
@@ -65,7 +76,7 @@ func! tools_edgedb#query_withProp( text, details )
   " echoe objectProp
   " return
   let query = 'select ' . objectProp . ';'
-  call tools_edgedb#eval( v:true, [query] )
+  call tools_edgedb#runQueryShow( v:true, [query] )
 endfunc
 " echo substitute( 'aber]', ']', '', '')
 " echo substitute( 'aber]', ']\|)', '', '')
@@ -78,8 +89,9 @@ func! tools_edgedb#query_inParans( details )
   let sCol += 1
   let eCol -= 1
   let lines = GetTextWithinLineColumns_asLines( sLine, sCol, eLine, eCol )
-  " echoe lines
-  call tools_edgedb#eval( v:true, lines )
+  echoe lines
+  return
+  call tools_edgedb#runQueryShow( v:true, lines )
 endfunc
 " call tools_edgedb#query_inParans( 'ein' )
 " see search flags like bnWn /opt/homebrew/Cellar/neovim/0.6.0/share/nvim/runtime/doc/eval.txt#/search.{pattern}%20[,%20{flags}
@@ -91,7 +103,7 @@ func! tools_edgedb#query_objCount( word, details)
     let line = 'select count( ' . a:word . ' );'
   endif
 
-  call tools_edgedb#eval( v:true, [line] )
+  call tools_edgedb#runQueryShow( v:true, [line] )
 endfunc
 
 func! tools_edgedb#eval_parag( format )
@@ -111,12 +123,12 @@ func! tools_edgedb#describe_object( word, verbose )
     let line = ['describe object ' . a:word . ' as sdl;']
   endif
 
-  call tools_edgedb#eval( v:true, line )
+  call tools_edgedb#runQueryShow( v:true, line )
 endfunc
 
 func! tools_edgedb#describe_schema()
   let line = ['describe schema as sdl;']
-  call tools_edgedb#eval( v:true, line )
+  call tools_edgedb#runQueryShow( v:true, line )
 endfunc
 
 " command! -range=% EdgeDBEval call tools_edgedb#eval( <line1>, <line2> )
@@ -127,13 +139,13 @@ func! tools_edgedb#eval_range ( format, ... )
 
   let lines = getline(startLine, endLine)
 
-  call tools_edgedb#eval( a:format, lines )
+  call tools_edgedb#runQueryShow( a:format, lines )
 endfunc
 
 
-func! tools_edgedb#eval ( format, lines )
+func! tools_edgedb#runQueryShow ( format, query_lines )
 
-  let resLines = tools_edgedb#runQuery( a:lines )
+  let resLines = tools_edgedb#runQuery( a:query_lines )
 
   let resLines = RemoveTermCodes( resLines )
 
@@ -173,9 +185,9 @@ func! tools_edgedb#eval ( format, lines )
 endfunc
 
 
-func! tools_edgedb#runQuery( query )
+func! tools_edgedb#runQuery( query_lines )
   let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
-  call writefile( a:query, filenameSource )
+  call writefile( a:query_lines, filenameSource )
 
   let resLines = systemlist( 'cat ' . filenameSource . ' | edgedb -d ' . g:edgedb_db )
   return resLines
