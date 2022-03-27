@@ -2,25 +2,25 @@
 " ~/.vim/notes/notes-todos.md#/###%20HsAPI
 
 
-nnoremap ,gsd :call HsAPIQueryShowBuf( HsCursorKeyword_findModule(), 15, 0 )<cr>
-vnoremap ,gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
-nnoremap ,gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
-vnoremap ,gSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
+" nnoremap ,gsd :call HsAPIQueryShowBuf( HsCursorKeyword_findModule(), 15, 0 )<cr>
+" vnoremap ,gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
+" nnoremap ,gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
+" vnoremap ,gSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
 
-nnoremap gsd :call PsAPIQuery( HsCursorKeyword(), 15, 0 )<cr>
-vnoremap gsd :<c-u>call PsAPIQuery( GetVisSel(),       15, 0 )<cr>
-nnoremap gSd :call PsAPIQuery( HsCursorKeyword(), 60, 0 )<cr>
-vnoremap gSd :call PsAPIQuery( GetVisSel(),       60, 0 )<cr>
+" nnoremap gsd :call PsAPIQuery( HsCursorKeyword(), 15, 0 )<cr>
+" vnoremap gsd :<c-u>call PsAPIQuery( GetVisSel(),       15, 0 )<cr>
+" nnoremap gSd :call PsAPIQuery( HsCursorKeyword(), 60, 0 )<cr>
+" vnoremap gSd :call PsAPIQuery( GetVisSel(),       60, 0 )<cr>
 
-nnoremap ,gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
-vnoremap ,gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
-nnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
-vnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
+" nnoremap ,gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
+" vnoremap ,gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+" nnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+" vnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
-nnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
-vnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       15, 0 )<cr>
-nnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
-vnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       60, 0 )<cr>
+" nnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+" vnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       15, 0 )<cr>
+" nnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+" vnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
 
 " TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
@@ -29,22 +29,22 @@ vnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       60, 0
 
 
 " gsk to insert info into float win - using the module name
-nnoremap gsk :call HsAPIShowInfoContext( HsCursorKeyword_findModule() )<cr>
-vnoremap gsk :call HsAPIShowInfoContext( GetVisSel() )<cr>
-nnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', HsCursorKeyword_findModule()) )<cr>
-vnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', GetVisSel()) )<cr>
+" nnoremap gsk :call HsAPIShowInfoContext( HsCursorKeyword_findModule() )<cr>
+" vnoremap gsk :call HsAPIShowInfoContext( GetVisSel() )<cr>
+" nnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', HsCursorKeyword_findModule()) )<cr>
+" vnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', GetVisSel()) )<cr>
 
-" Browse modules uses Hoogle for Haskell
-nnoremap ,gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
-vnoremap ,gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
-nnoremap ,gsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
-vnoremap ,gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
+" " Browse modules uses Hoogle for Haskell
+" nnoremap ,gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
+" vnoremap ,gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
+" nnoremap ,gsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
+" vnoremap ,gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
 
-" Browse modules uses Psci for Purescript
-nnoremap gsb      :call ReplEval(':browse ' . expand('<cWORD>'))<cr>
-vnoremap gsb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
-nnoremap gsB      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
-vnoremap gsB :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
+" " Browse modules uses Psci for Purescript
+" nnoremap gsb      :call ReplEval(':browse ' . expand('<cWORD>'))<cr>
+" vnoremap gsb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
+" nnoremap gsB      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
+" vnoremap gsB :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
 
 

@@ -1,5 +1,6 @@
 .git
 plugged/
+autoload/
 spell/
 sessions/
 __Tagbar__*
