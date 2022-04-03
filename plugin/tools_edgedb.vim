@@ -1,6 +1,12 @@
 
 " let g:edgedb_db = 'edgedb'
-let g:edgedb_db = 'dracula'
+" let g:edgedb_db = 'dracula'
+" let g:edgedb_db = 'dracula1'
+let g:edgedb_db = 'dracula4'
+" let g:edgedb_db = 'ch20_1'
+
+let g:edgedb_instance = '_1playground_2'
+
 
 func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> gei :call tools_edgedb#eval_parag( v:true )<cr>
@@ -26,7 +32,10 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> ges :call tools_edgedb#query_inParans( v:false )<cr>
 
   nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFields( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFieldsWT( expand('<cword>') )<cr>
   nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFields( expand('<cword>') )<cr>
+
+  nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cword>') )<cr>
 
 endfunc
 
@@ -56,10 +65,8 @@ endfunc
 func! tools_edgedb#getObjectFields( obj_name )
   let q1 = "with infos := (select schema::ObjectType { links: { name }, properties: { name } } filter .name = 'default::"
   let q2 = "'), links_cl := (select infos.links filter .name != '__type__'), properties_cl := (select infos.properties filter .name != 'id'), select (properties_cl union links_cl).name"
-
   let query = q1 . a:obj_name . q2
   let resLines = tools_edgedb#runQuery( [query] )
-
   let cleanedLines = SubstituteInLines( resLines, '"', '' )
   return cleanedLines
 endfunc
@@ -69,6 +76,36 @@ endfunc
 "   links_cl := (select infos.links filter .name != '__type__'),
 "   properties_cl := (select infos.properties filter .name != 'id'),
 " select (properties_cl union links_cl).name
+
+
+func! tools_edgedb#showObjectFieldsWT( obj_name )
+  let fieldNames = tools_edgedb#getObjectFieldsWT( a:obj_name )
+  let g:floatWin_win = FloatingSmallNew ( fieldNames )
+  call tools_edgedb#bufferMaps()
+  " set syntax=edgeql
+  call easy_align#easyAlign( 1, line('$'), ',')
+  exec "%s/,//ge"
+  call FloatWin_FitWidthHeight()
+  wincmd p
+endfunc
+
+func! tools_edgedb#getObjectFieldsWT( obj_name )
+  let q1 = "with infos := (select schema::ObjectType { links: { name }, properties: { name } } filter .name = 'default::"
+  let q2 = "'), links_cl := (select infos.links filter .name != '__type__'), properties_cl := (select infos.properties filter .name != 'id'), fields := (properties_cl union links_cl), select fields.name ++ ',' ++ fields.target.name"
+  let query = q1 . a:obj_name . q2
+  let resLines = tools_edgedb#runQuery( [query] )
+  let cleanedLines = SubstituteInLines( resLines, '"', '' )
+  let cleanedLines = SubstituteInLines( cleanedLines, ',.*\:', ',' )
+  return cleanedLines
+endfunc
+
+" with
+"   infos := (select schema::ObjectType { links: { name }, properties: { name } } filter .name = 'default::Vampire'),
+"   links_cl := (select infos.links filter .name != '__type__'),
+"   properties_cl := (select infos.properties filter .name != 'id'),
+"   fields := (properties_cl union links_cl)
+" select fields.name ++ ',' ++ fields.target.name
+
 
 
 func! tools_edgedb#query_withProp( text, details )
@@ -89,8 +126,8 @@ func! tools_edgedb#query_inParans( details )
   let sCol += 1
   let eCol -= 1
   let lines = GetTextWithinLineColumns_asLines( sLine, sCol, eLine, eCol )
-  echoe lines
-  return
+  " echoe lines
+  " return
   call tools_edgedb#runQueryShow( v:true, lines )
 endfunc
 " call tools_edgedb#query_inParans( 'ein' )
@@ -126,18 +163,48 @@ func! tools_edgedb#describe_object( word, verbose )
   call tools_edgedb#runQueryShow( v:true, line )
 endfunc
 
+command! EdgeDBStartInstance call tools_edgedb#startInstance()
+
+func! tools_edgedb#startInstance ()
+  let cmd = 'edgedb instance start ' . g:edgedb_instance
+  let resLines = systemlist( cmd )
+  echo 'EdgeDB instance started: ' . g:edgedb_instance . ' DB: ' . g:edgedb_db
+endfunc
+
+
+command! EdgeDBShowTypes call tools_edgedb#showTypes()
+
+func! tools_edgedb#showTypes ()
+  let cmd = 'edgedb -d ' . g:edgedb_db . ' list types'
+  let resLines = systemlist( cmd )
+  let g:floatWin_win = FloatingSmallNew ( resLines )
+  " call FloatWin_FocusFirst()
+  call FloatWin_FitWidthHeight()
+endfunc
+
+command! EdgeDBShowSchema call tools_edgedb#describe_schema()
+
 func! tools_edgedb#describe_schema()
   let line = ['describe schema as sdl;']
   call tools_edgedb#runQueryShow( v:true, line )
 endfunc
 
-" command! -range=% EdgeDBEval call tools_edgedb#eval( <line1>, <line2> )
+command! EdgeDBShowAllObjects call tools_edgedb#showAllObjects()
+
+func! tools_edgedb#showAllObjects()
+  call tools_edgedb#runQueryShow( v:true, ['select count( Object ); select Object { __type__: {name} }'] )
+endfunc
+
+" 'select Object { __type__: {name} }'
+
+command! -range=% EdgeDBEval call tools_edgedb#eval_range( v:true, <line1>, <line2> )
 
 func! tools_edgedb#eval_range ( format, ... )
   let startLine = a:0 ? a:1 : 1
   let endLine = a:0 ? a:2 : line('$')
 
   let lines = getline(startLine, endLine)
+  " echoe lines
 
   call tools_edgedb#runQueryShow( a:format, lines )
 endfunc
@@ -146,6 +213,7 @@ endfunc
 func! tools_edgedb#runQueryShow ( format, query_lines )
 
   let resLines = tools_edgedb#runQuery( a:query_lines )
+  " echoe resLines
 
   let resLines = RemoveTermCodes( resLines )
 
@@ -186,6 +254,7 @@ endfunc
 
 
 func! tools_edgedb#runQuery( query_lines )
+  " echoe a:query_lines
   let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
   call writefile( a:query_lines, filenameSource )
 
