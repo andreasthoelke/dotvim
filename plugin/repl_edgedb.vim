@@ -37,7 +37,13 @@ endfunc
 " endfunc
 
 func! EdbReplMainCallback(job_id, data, event)
-  " echo a:data[0]
+  " Todo: returns are inconsistent
+  return
+  " echoe a:event
+  " let l:lines = RemoveTermCodes( a:data )
+  " echoe l:lines[-3:-2]
+  " echoe a:data[-1]
+  " echoe len( a:data )
   " call EdbReplSimpleResponseHandler (a:data)
 endfunc
 
@@ -47,6 +53,10 @@ endfunc
 
 func! EdbReplExitCallback(job_id, data, event)
   echom a:data
+endfunc
+
+func! EdbReplPlain( message )
+  call jobsend(g:EdbReplID, a:message . "\n" )
 endfunc
 
 

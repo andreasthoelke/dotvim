@@ -31,9 +31,10 @@ func! tools_edgedb#bufferMaps()
 
   nnoremap <silent><buffer> ges :call tools_edgedb#query_inParans( v:false )<cr>
 
-  nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFields( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFieldsWT( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFields( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFields( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFieldsWT( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTable( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gsF :call tools_edgedb#queryAllObjectFields( expand('<cword>') )<cr>
 
   nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cword>') )<cr>
 
@@ -45,6 +46,113 @@ func! tools_edgedb#query_textObj( sel_str )
   call tools_edgedb#runQueryShow( v:true, a:sel_str )
 endfunc
 
+func! tools_edgedb#queryAllObjectFieldsTable( select_clause )
+  let sc_words = split( a:select_clause )
+  let obj_name = sc_words[1]
+  let fieldNames = tools_edgedb#getObjectFields( obj_name )
+
+" with
+"   obj := (select Region filter .name = 'Prussia'),
+" select obj {name, cities, other_places, castles}
+
+endfunc
+
+func! tools_edgedb#queryAllObjectFieldsTablePermMulti( obj_name )
+  " This query uses a tuple of sub-queries(?) and therefore *permutes* all mutiple linked objects resulting in additional lines in the table. Which is ok, but see the other approach ..
+  " with
+  "   obj := (select Region filter .name = 'Prussia'),
+  "   fieldVals := (obj.name, obj.cities, obj.other_places, <json>obj.castles ?? <json>'-'),
+  " select fieldVals
+
+  let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
+  let q_preFName = '<json>obj.'
+  let q_postFName = ' ?? <json>"-"'
+  let q_start = '(' . q_preFName
+  let q_inBetween = q_postFName . ', ' . q_preFName
+  let q_end = ')'
+  let q_fieldValsExpr = q_start . join( fieldNames, q_inBetween ) . q_postFName . q_end
+  let queryL1 = 'with obj := (select ' . a:obj_name . '), '
+  let queryL2 = 'fieldVals := ' . q_fieldValsExpr . ', '
+  let queryL3 = 'select fieldVals;'
+  let query = queryL1 . queryL2 . queryL3
+  " call EdbReplPlain( query )
+  let resLines = tools_edgedb#runQuery( [query] )
+  " echo UnexpandLines( resLines )
+  let resLines = UnexpandLines( resLines )
+  " return
+  " Note: The EdgeQL returned tuples can be evaluated to vimscript lists! ->
+  let resLines = functional#map( {lineStr -> FilterLists( eval( lineStr ) )}, resLines )
+  " echoe resLines
+  " return
+  let resLines = functional#map( {line -> string( line )}, resLines )
+  let tableLines = [string( fieldNames )] + resLines
+  " echo tableLines
+  let tableLines = functional#map( {lineStr -> lineStr[1:-2] }, tableLines )
+  let g:floatWin_win = FloatingSmallNew ( tableLines )
+  call tools_edgedb#bufferMaps()
+  " call easy_align#easyAlign( 1, line('$'), ',')
+  silent exec "%s/\'//g"
+  silent exec "%s/\"//g"
+  silent exec "Tabularize /,"
+  silent exec "%s/,//g"
+  call append( 1, '' )
+  let infoLine = len( resLines ) . ' ' . a:obj_name . "'s"
+  call append( 0, infoLine )
+  call FloatWin_FitWidthHeight()
+  wincmd p
+  " call append( line('.'), fieldNames )
+  " call append( line('.'), query )
+endfunc
+  " list := (npc.name, <str>npc.age ?? '-', <json>npc.places_visited  ?? <json>'-')
+  " ~/Documents/Server-Dev/edgedb/1playground/src/drac/dpl2.edgeql#/list%20.=%20.npc.name,
+" call tools_edgedb#queryAllObjectFieldsTable( 'Vampire' )
+
+func! FilterLists ( line )
+  let res = []
+  for el in a:line
+    if type(el) == 3
+      " limit the size of the list and replace the commas with ;
+      let item = string( el[:2] )[1:-2]   . '‥'
+      let item = substitute( item, ',', ';', 'g')
+      call add( res, item )
+    elseif type(el) == 4
+      let item = '‥' . string( el )[-5:-2]
+      call add( res, item )
+    else
+      call add( res, el )
+    endif
+  endfor
+  return res
+endfunc
+" echo FilterLists( ['eins', [4,3], v:true] )
+
+func! UnexpandLines ( list )
+  let ret = []
+  let buf = ''
+  for e in a:list
+    if e == '['
+      " echo 'start'
+      " start: of collapse tracking. Start filling the buffer
+      let buf = '['
+    elseif e == ']'
+      " echo 'end'
+      " end: of collapse tracking. add the accumulated buffer as an unexpanded list item
+      let buf = buf . e
+      call add( ret, buf )
+      let buf = ''
+    elseif buf == ''
+      " echo 'normal'
+      " normal: no collapse tracking is active. add list items as normal
+      call add( ret, e )
+    else
+      " echo 'during'
+      " during: collapse tracking. append the list item to the buffer, not the list.
+      let buf = buf . e
+    endif
+  endfor
+  return ret
+endfunc
+" echo UnexpandLines( ['[','eins','zwei',']','[drei','vier'] )
 
 func! tools_edgedb#queryAllObjectFields( obj_name )
   let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
@@ -96,6 +204,7 @@ func! tools_edgedb#getObjectFieldsWT( obj_name )
   let resLines = tools_edgedb#runQuery( [query] )
   let cleanedLines = SubstituteInLines( resLines, '"', '' )
   let cleanedLines = SubstituteInLines( cleanedLines, ',.*\:', ',' )
+  let cleanedLines = SubstituteInLines( cleanedLines, '>', ',' )
   return cleanedLines
 endfunc
 
@@ -106,7 +215,18 @@ endfunc
 "   fields := (properties_cl union links_cl)
 " select fields.name ++ ',' ++ fields.target.name
 
-
+func! tools_edgedb#getObjectFieldsWTL( obj_name )
+  let list_names_types = tools_edgedb#getObjectFieldsWT( a:obj_name )
+  let list_names_types = functional#map( {l -> split( l, ',' ) }, list_names_types )
+  let res = []
+  for [name, type] in list_names_types
+    let isLinkType = type[0] =~ '\u'
+    " call add( res, [name, type, isLinkType] )
+    call add( res, {'name': name, 'type': type, 'isLinkType': isLinkType} )
+  endfor
+  return res
+endfunc
+" echo 'Ab'[0] =~ '\u'
 
 func! tools_edgedb#query_withProp( text, details )
   let objectProp = substitute( a:text, ')\|]', '', '')
