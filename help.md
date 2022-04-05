@@ -1161,6 +1161,8 @@ DelLocalMarks, DelGlobalMarks
 gz'M - Open a mark position in a floating-win. Use empty floating win with marks jumps: e.g. gz'M
 
 ## Vim-Bookmarks
+
+~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
 https://github.com/MattesGroeger/vim-bookmarks
 
 

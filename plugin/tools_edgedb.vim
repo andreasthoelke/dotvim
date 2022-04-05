@@ -33,8 +33,9 @@ func! tools_edgedb#bufferMaps()
 
   nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFields( expand('<cword>') )<cr>
   nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFieldsWT( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTable( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
   nnoremap <silent><buffer> gsF :call tools_edgedb#queryAllObjectFields( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> <leader>gsF :call tools_edgedb#queryAllObjectFields_InnerFields( expand('<cword>') )<cr>
 
   nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cword>') )<cr>
 
@@ -46,16 +47,58 @@ func! tools_edgedb#query_textObj( sel_str )
   call tools_edgedb#runQueryShow( v:true, a:sel_str )
 endfunc
 
-func! tools_edgedb#queryAllObjectFieldsTable( select_clause )
-  let sc_words = split( a:select_clause )
-  let obj_name = sc_words[1]
-  let fieldNames = tools_edgedb#getObjectFields( obj_name )
 
-" with
-"   obj := (select Region filter .name = 'Prussia'),
-" select obj {name, cities, other_places, castles}
+func! tools_edgedb#queryAllObjectFields_InnerFields( select_clause )
+  let sc_words = split( a:select_clause )
+  if len( sc_words ) > 1
+    let obj_name = sc_words[1]
+    let select_clause = a:select_clause
+  else
+    let obj_name = sc_words[0]
+    let select_clause = 'select ' . obj_name
+  endif
+  let objFields = tools_edgedb#getObjectFieldsWTL( obj_name )
+  let objFields = tools_edgedb#addStrFieldsToObjFields( objFields )
+  let linkFields = functional#filter( {f -> f.isLinkType }, objFields )
+  let propFields = functional#map({f->f.name}, functional#filter( {f -> !f.isLinkType }, objFields ))
+  let q_propFields = join( propFields, ', ' )
+
+  let q_linkFieldsList = []
+  for field in linkFields
+    let qstr = field.name . ': {'
+    let qstr = qstr . join( field.strFields, ', ' ) . '}'
+    call add( q_linkFieldsList, qstr )
+  endfor
+  let q_linkFields = join( q_linkFieldsList, ', ' )
+  let query = select_clause . ' {' . q_propFields . ', ' . q_linkFields . '}'
+  call tools_edgedb#runQueryShow( v:true, [query] )
+  " Can't parse/turn this string into a dictionary
+  " let resLines = tools_edgedb#runQuery( [query] )
+  " let resLines = join( resLines )
+  " let resLines = substitute( resLines, ' null,', ' "null",', 'g' )
+  " let resLines = eval( resLines )
+  " echo resLines
 
 endfunc
+" call tools_edgedb#queryAllObjectFieldsTable( 'select Region' )
+
+" find field names that contain name, title
+" only use 3 chars
+" use str fields that are mostly not nil
+" concat 3 chars of multifields, abbrev after 10 chars
+" can just use the js driver!
+"
+" call append(line('.'), string( linkFields ))
+" [{'name': 'other_places', 'isLinkType': 1, 'type': 'OtherPlace', 'isArray': 0}, {'name': 'castles', 'isLinkType': 1, 'type': 'Castle', 'isArray': 0}, {'name': 'cities', 'isLinkType': 1, 'type': 'City', 'isArray': 0}, {'name': 'important_places', 'isLinkType': 0, 'type': 'strA', 'isArray': 1}, {'name': 'name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'modern_name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'coffins', 'isLinkType': 0, 'type': 'int16', 'isArray': 0}]
+
+" all link fields
+" take the first str typed property of that object e.g. modern_name
+" put the name of the field in a second info column
+" combine it with id
+" the field val will then be a concat of modern_name + ..id
+" if modern_name is nil then only id excerpt will be shown
+" select Region {name, cities: {id, name, modern_name}}
+
 
 func! tools_edgedb#queryAllObjectFieldsTablePermMulti( obj_name )
   " This query uses a tuple of sub-queries(?) and therefore *permutes* all mutiple linked objects resulting in additional lines in the table. Which is ok, but see the other approach ..
@@ -204,8 +247,15 @@ func! tools_edgedb#getObjectFieldsWT( obj_name )
   let resLines = tools_edgedb#runQuery( [query] )
   let cleanedLines = SubstituteInLines( resLines, '"', '' )
   let cleanedLines = SubstituteInLines( cleanedLines, ',.*\:', ',' )
-  let cleanedLines = SubstituteInLines( cleanedLines, '>', ',' )
+  let cleanedLines = SubstituteInLines( cleanedLines, '>', 'A' )
   return cleanedLines
+endfunc
+
+func! tools_edgedb#getObjectFieldsWTP( obj_name )
+  let q1 = "with infos := (select schema::ObjectType { links: { name }, properties: { name } } filter .name = 'default::"
+  let q2 = "'), links_cl := (select infos.links filter .name != '__type__'), properties_cl := (select infos.properties filter .name != 'id'), fields := (properties_cl union links_cl), select fields.name ++ ',' ++ fields.target.name"
+  let query = q1 . a:obj_name . q2
+  return tools_edgedb#runQuery( [query] )
 endfunc
 
 " with
@@ -221,12 +271,36 @@ func! tools_edgedb#getObjectFieldsWTL( obj_name )
   let res = []
   for [name, type] in list_names_types
     let isLinkType = type[0] =~ '\u'
-    " call add( res, [name, type, isLinkType] )
-    call add( res, {'name': name, 'type': type, 'isLinkType': isLinkType} )
+    let isArray = type[-1:] == 'A'
+    call add( res, {'name': name, 'type': type, 'isArray': isArray, 'isLinkType': isLinkType} )
   endfor
   return res
 endfunc
-" echo 'Ab'[0] =~ '\u'
+" echoe tools_edgedb#getObjectFieldsWTL( 'Region' )
+" [{'name': 'other_places', 'isLinkType': 1, 'type': 'OtherPlace'},
+" {'name': 'castles', 'isLinkType': 1, 'type': 'Castle'},
+" {'name': 'cities', 'isLinkType': 1, 'type': 'City'},
+" {'name': 'important_places', 'isLinkType': 0, 'type': 'str'},
+" {'name': 'name', 'isLinkType': 0, 'type': 'str'},
+" {'name': 'modern_name', 'isLinkType': 0, 'type': 'str'},
+" {'name': 'coffins', 'isLinkType': 0, 'type': 'int16'}]
+
+" obj_fields: [{'name': 'other_places', 'isLinkType': 1, 'type': 'OtherPlace', 'isArray': 0}, {'name': 'castles', 'isLinkType': 1, 'type': 'Castle', 'isArray': 0}, {'name': 'cities', 'isLinkType': 1, 'type': 'City', 'isArray': 0}, {'name': 'important_places', 'isLinkType': 0, 'type': 'strA', 'isArray': 1}, {'name': 'name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'modern_name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'coffins', 'isLinkType': 0, 'type': 'int16', 'isArray': 0}]
+func! tools_edgedb#addStrFieldsToObjFields( obj_fields )
+  let res = []
+  for field in a:obj_fields
+    if field.isLinkType
+      let list_names_types = tools_edgedb#getObjectFieldsWTL( field.type )
+      let strFields = functional#filter( {f -> f.type == 'str'}, list_names_types )
+      let fieldNames = functional#map( {f -> f.name }, strFields )
+      let field.strFields = ['id'] + fieldNames
+    endif
+    call add( res, field )
+  endfor
+  return res
+endfunc
+" echo tools_edgedb#addStrFieldsToObjFields([{'name': 'other_places', 'isLinkType': 1, 'type': 'OtherPlace', 'isArray': 0}, {'name': 'castles', 'isLinkType': 1, 'type': 'Castle', 'isArray': 0}, {'name': 'cities', 'isLinkType': 1, 'type': 'City', 'isArray': 0}, {'name': 'important_places', 'isLinkType': 0, 'type': 'strA', 'isArray': 1}, {'name': 'name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'modern_name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'coffins', 'isLinkType': 0, 'type': 'int16', 'isArray': 0}])
+
 
 func! tools_edgedb#query_withProp( text, details )
   let objectProp = substitute( a:text, ')\|]', '', '')

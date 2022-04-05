@@ -23,7 +23,8 @@ func! CodeMarkupSyntaxHighlights()
   " Comment label: This is a simple label for some highlighted info to come
   " Note that:this does not match - the scoping of vim vars e.g. g:myvar would otherwise match
 
-  call matchadd('CommentLabel', g:labelPttn, -1, -1 )
+  " " temp disabled this because this shows up when code is pasted in comments
+  " call matchadd('CommentLabel', g:labelPttn, -1, -1 )
 
   " call matchadd('CommentLabel', '\v^\s*("|--)\s\zs\S[^.]{,18}:(\S)@!', -1, -1 )
   " Note: ":\ze(\s\S)=" allows "..: eins" and "..:", but not "..:eins"
