@@ -88,9 +88,24 @@ endfunc
 
 func! tools_js#eval_line( ln, plain )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
-  if expression =~ '^e\.' && expression !~ '\.run('
-    let expression = expression . '.run(db)'
-  endif
+
+  " Workaround: The type info is based in 'hover' of the cursor loc, so we need to move the cursor here
+  let l:maintainedCursorPos = getpos('.')
+  normal ^w
+  let lspTypeStr = v:lua.require('utils_lsp').type()
+  call setpos('.', l:maintainedCursorPos)
+  " echo lspTypeStr
+  " return
+  let typeStr = matchstr( lspTypeStr, '\v\:\s\zs.*' )
+  let isPromise = typeStr =~ 'Promise'
+  let isQuery = typeStr =~ 'expr_'
+
+  let expression = isQuery ? expression . '.run(db)' : expression
+
+  " Old
+  " if expression =~ '^e\.' && expression !~ '\.run('
+  "   let expression = expression . '.run(db)'
+  " endif
 
   " let printStatement = 'console.log(' . expression . ')'
 

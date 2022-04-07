@@ -65,6 +65,7 @@ endfunc " ▲
 func! JsSyntaxAdditions() " ■
   nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:false )<cr>
   nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true )<cr>
+  " nnoremap <silent><buffer> gej :call tools_js#eval_line( line('.'), v:true )<cr>
 
   call clearmatches()
 

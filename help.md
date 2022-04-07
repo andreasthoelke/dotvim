@@ -297,7 +297,9 @@ config: ~/.config/nvim/plugin/setup-lsp.vim#/nmap%20<leader>ltu%20<Plug>.toggle-
 config: ~/.config/nvim/plugin/setup-lsp.lua#/local%20handler_JSON_filterDiagnCodes%20=
 
 
-LspInfo
+## LspInfo
+very useful help functions: ~/.config/nvim/lua/utils_lsp.lua#/function%20M.type..
+
 help lspconfig-server-configurations
 plugin/setup-lsp.lua
 
@@ -309,6 +311,9 @@ Install location for language servers: ~/.local/share/nvim/lsp_servers/
 Other local app settings: ~/.local/share/
 installer used on lunarvim:
 https://github.com/williamboman/nvim-lsp-installer
+
+## Lua tricks
+~/.config/nvim/notes/notes-lua-asyc-loop.md#/###%20Plenary%20reload
 
 ## treesitter
 

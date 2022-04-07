@@ -18,10 +18,23 @@ end
 
 function M.hover()
   local params = util.make_position_params()
-
+  -- todo: set these params: see ~/.config/nvim/plugin/tools_js.vim#/Workaround.%20The%20type
+  -- return params
   local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/hover", params, 2000)
-
   return results_lsp
+end
+-- put( require'utils_lsp'.hover() )
+
+
+function M.type()
+  TypeStr = {}
+  local results_lsp = M.hover()
+  for _, server_results in pairs(results_lsp) do
+    if server_results.result then
+      TypeStr = server_results.result.contents[1].value
+    end
+  end
+  return TypeStr
 end
 
 function M.references()

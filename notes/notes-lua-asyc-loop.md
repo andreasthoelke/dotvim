@@ -238,6 +238,8 @@ lua require'utils_general'.floatWinShow( {{'eins'}} )
 
 echo v:lua.vim.lsp.diagnostic.get(0)
 
+echo v:lua.require'utils_lsp'.hover()
+
 ## convert lines in table/list to string
 call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
 
