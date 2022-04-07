@@ -1459,6 +1459,7 @@ nmap <Leader>bk <Plug>BookmarkMoveUp
 nmap <Leader>bj <Plug>BookmarkMoveDown
 " nmap <Leader>g <Plug>BookmarkMoveToLine
 
+
 " Marks: ----------------------------------------------------------------
 
 let g:markbar_marks_to_display = 'abcdefghijklnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'

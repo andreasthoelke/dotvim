@@ -34,7 +34,9 @@ nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
 
 nnoremap <leader>oF :FzfGFiles<cr>
 
-nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links" )<cr>
+nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links2022.md" )<cr>
+nnoremap <leader>os :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>
+nnoremap <leader>ob :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>:Telescope vim_bookmarks all<cr>
 
 nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor() )<cr>
 xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>

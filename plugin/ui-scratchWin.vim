@@ -94,8 +94,10 @@ endfunc
 
 nnoremap <leader>oS :call ScratchWinNext_Show([], 7)<cr>
 
-nnoremap <leader>os :let g:opContFn='Scratchlines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap <leader>os :<c-u>let g:opContFn='Scratchlines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+nnoremap <leader><leader>os :let g:opContFn='Scratchlines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader><leader>os :<c-u>let g:opContFn='Scratchlines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+
 
 func! Scratchlines( ... )
   let startLine = a:0 ? a:1 : 1

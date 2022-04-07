@@ -81,13 +81,16 @@ func! tools_js#eval_expression( expressionCodeStr )
   return res
 endfunc
 " echo tools_js#eval_expression( '{aa: 44, bb: "eins"}.aa' )
-
+" echo 'eiens' =~ '^e' && 'eins' !~ 'a'
 
 " Note: Buffer maps!
 " ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 
 func! tools_js#eval_line( ln, plain )
   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+  if expression =~ '^e\.' && expression !~ '\.run('
+    let expression = expression . '.run(db)'
+  endif
 
   " let printStatement = 'console.log(' . expression . ')'
 
@@ -141,25 +144,25 @@ func! tools_js#eval_line( ln, plain )
     " echoe expResult
 
     if len( expResult ) > 3
-      call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
+      " call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
       let linesResult = repl_py#splitToLines( expResult )
       " echoe linesResult
       " call FloatWin_ShowLines_old ( linesResult )
       let g:floatWin_win = FloatingSmallNew ( linesResult )
       " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
-      if len(linesResult) > 2
-        call repl_py#alignInFloatWin()
-      endif
+      " if len(linesResult) > 2
+      call repl_py#alignInFloatWin()
+      " endif
     else
-      call v:lua.VirtualTxShow( expResult )
+      " call v:lua.VirtualTxShow( expResult )
     endif
 
   else
     " Printed object:
     let g:floatWin_win = FloatingSmallNew ( resLines )
-    if len(resLines) > 2
+    " if len(resLines) > 2
       call repl_py#alignInFloatWin()
-    endif
+    " endif
   endif
 
 endfunc

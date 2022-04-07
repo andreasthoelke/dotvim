@@ -391,13 +391,14 @@ endfunc
 
 func! FloatingBuffer( filePath )
   let opts = { 'focusable': v:true,
-        \ 'width': 65,
-        \ 'height': 15,
+        \ 'width': 90,
+        \ 'height': 40,
         \ 'anchor': 'NW'
         \}
   let opts.relative = 'cursor'
   let opts.col = 0
   let opts.row = 1
+  let opts.zindex = 4
 
   " let l:textbuf = nvim_create_buf(v:false, v:true)
   let g:floatWin_win_Pers = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)

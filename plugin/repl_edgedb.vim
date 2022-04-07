@@ -3,7 +3,7 @@
 
 nnoremap <silent> <leader>ro :call EdbReplStart()<cr>
 nnoremap <silent> <leader>rq :call EdbReplStop()<cr>
-nnoremap <silent> dr         :call EdbReplReload()<cr>
+" nnoremap <silent> dr         :call EdbReplReload()<cr>
 
 nnoremap <silent> ,gei      :silent call EdbReplPost( GetLineFromCursor() )<cr>
 vnoremap <silent> ,gei :<c-u>call EdbReplPost( Get_visual_selection() )<cr>
