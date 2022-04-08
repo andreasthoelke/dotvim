@@ -41,9 +41,10 @@ func! CreateJSDocComment_short()
   normal kw
 endfunc
 
-nnoremap <silent> <leader>er :call CreateIndexedDec_js()<cr>
+nnoremap <silent> <leader>er :call CreateIndexedDec_js(v:false)<cr>
+nnoremap <silent> <leader>eR :call CreateIndexedDec_js(v:true)<cr>
 
-func! CreateIndexedDec_js()
+func! CreateIndexedDec_js( specialMaintainedVar )
   " const greeter = (person: Person) => {
   let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
   " function selRegion (subStr: string) {
@@ -56,7 +57,11 @@ func! CreateIndexedDec_js()
     let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
   endif
   let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . hostDecName
+  if a:specialMaintainedVar
+    let lineText = 'const a' . nextIndex . '_' . hostDecName . ' = ' . hostDecName
+  else
+    let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . hostDecName
+  endif
   call append( line('.') -1, lineText )
   normal kwww
 endfunc

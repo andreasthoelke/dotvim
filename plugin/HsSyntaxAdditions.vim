@@ -78,6 +78,7 @@ func! JsSyntaxAdditions() " ■
   call TsConcealWithUnicode()
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
+  syntax match InlineTestDeclaration '\v^const\sa\d_\i{-}\s\=' conceal cchar=…
   " syntax match ConcealQuotes "'" conceal
   " syntax match ConcealQuotes '"' conceal
 

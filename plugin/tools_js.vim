@@ -107,10 +107,12 @@ func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpressi
 
   if a:useTLBindNameAsExpression
     if tlBindName =~ 'e\d_'
-      echo "Can't eval a test-binding name. You can only eval the one-line expression of this binding!"
-      return
+      " echo "Can't eval a test-binding name. You can only eval the one-line expression of this binding!"
+      " return
+      let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+    else
+      let expression = tlBindName
     endif
-    let expression = tlBindName
   else
     let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
     " let [startLine, endLine] = ParagraphStartEndLines() ■
@@ -230,9 +232,4 @@ endfunc
 
 " echo substitute( 'const e3_eins = 33', '\zeconst\se\d_', '// ', 'g' )
 " echo functional#map( {lineStr -> substitute( lineStr, '\zeconst\se\d_', '// ', 'g' )}, ['const e3_eins = 33', 'const zwei = 33'] )
-
-
-
-
-
 
