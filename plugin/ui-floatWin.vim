@@ -386,6 +386,8 @@ func! FloatingSmallNew(linesToShow)
   let textbuf = nvim_create_buf(v:false, v:true)
   call nvim_buf_set_lines( textbuf, 0, -1, 0, a:linesToShow )
   return nvim_open_win( l:textbuf, v:true, opts)
+  " Todo: is there a way to prevent the file name being echoed?
+  " silent call nvim_open_win( nvim_create_buf(v:false, v:true), v:true, opts)
 endfunc
 
 

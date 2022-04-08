@@ -323,6 +323,8 @@ help nvim-treesitter-commands
 TSModuleInfo
 
 TSHighlightCapturesUnderCursor   - show the highlight groups under the cursor
+nvim-treesitter-playground.hl-info
+lua require('nvim-treesitter-playground.hl-info').show_hl_captures()
 https://www.youtube.com/watch?v=dPQfsASHNkg
 
 # Html / CSS

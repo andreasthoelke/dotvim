@@ -41,6 +41,26 @@ func! CreateJSDocComment_short()
   normal kw
 endfunc
 
+nnoremap <silent> <leader>er :call CreateIndexedDec_js()<cr>
+
+func! CreateIndexedDec_js()
+  " const greeter = (person: Person) => {
+  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
+  " function selRegion (subStr: string) {
+  let hostLn2 = searchpos( '^function', 'cnb' )[0]
+  if hostLn1 > hostLn2
+    let hostLn = hostLn1
+    let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  else
+    let hostLn = hostLn2
+    let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
+  endif
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . hostDecName
+  call append( line('.') -1, lineText )
+  normal kwww
+endfunc
+
 nnoremap <silent> <leader>et :call CreateInlineTestDec()<cr>
 nnoremap <silent> <leader>eT :call CreateInlineTestDec_js_function()<cr>
 
@@ -74,8 +94,17 @@ endfunc
 
 
 func! CreateInlineTestDec_js()
-  let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
-  let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  " const greeter = (person: Person) => {
+  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
+  " function selRegion (subStr: string) {
+  let hostLn2 = searchpos( '^function', 'cnb' )[0]
+  if hostLn1 > hostLn2
+    let hostLn = hostLn1
+    let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  else
+    let hostLn = hostLn2
+    let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
+  endif
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . paramNames[1:-2] . ')'

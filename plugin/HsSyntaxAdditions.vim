@@ -63,9 +63,14 @@ endfunc " ▲
 
 
 func! JsSyntaxAdditions() " ■
-  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:false )<cr>
-  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true )<cr>
-  " nnoremap <silent><buffer> gej :call tools_js#eval_line( line('.'), v:true )<cr>
+  nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
+  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
+  nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
+  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
+  nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
+  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
+  nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
+  nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
 
   call clearmatches()
 
@@ -136,6 +141,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "^\s\*\s" conceal
   syntax match Normal "^\*\s" conceal
   syntax match Normal "function" conceal cchar=→
+  syntax match Normal "e\." conceal cchar=᛫
   syntax match Normal "\*\/" conceal
 
 endfunc

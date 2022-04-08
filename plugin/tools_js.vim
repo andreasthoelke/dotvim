@@ -86,21 +86,52 @@ endfunc
 " Note: Buffer maps!
 " ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 
-func! tools_js#eval_line( ln, plain )
-  let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpression )
 
   " Workaround: The type info is based in 'hover' of the cursor loc, so we need to move the cursor here
   let l:maintainedCursorPos = getpos('.')
-  normal ^w
+  exec "silent keepjumps normal! {"
+  " moves cursor to the first code line (not a comment)
+  let [sLine, sCol] = searchpos( '^\i', 'W' )
+  exec "silent keepjumps normal! w"
+
   let lspTypeStr = v:lua.require('utils_lsp').type()
+  let tlBindName = expand('<cword>')
   call setpos('.', l:maintainedCursorPos)
-  " echo lspTypeStr
+  redraw " so the float win will use the original cursor pos
+  " echo tlBindName
   " return
   let typeStr = matchstr( lspTypeStr, '\v\:\s\zs.*' )
   let isPromise = typeStr =~ 'Promise'
   let isQuery = typeStr =~ 'expr_'
 
-  let expression = isQuery ? expression . '.run(db)' : expression
+  if a:useTLBindNameAsExpression
+    if tlBindName =~ 'e\d_'
+      echo "Can't eval a test-binding name. You can only eval the one-line expression of this binding!"
+      return
+    endif
+    let expression = tlBindName
+  else
+    let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+    " let [startLine, endLine] = ParagraphStartEndLines() ■
+    " if startLine - endLine != 0
+    "   " paragraph mode!
+    "   echo 'Paragraph mode is not supported yet. Eval the binding name instead (using gei)'
+    "   return
+    "   let firstLine = matchstr( getline(startLine), '\v\=\s\zs.*' )
+    "   let lines = getline(startLine + 1, endLine)
+    "   " let expression = join( [firstLine] + lines )
+    "   let expression = [firstLine] + lines
+    " else
+    "   let expression = matchstr( getline(a:ln), '\v\=\s\zs.*' )
+    " endif ▲
+  endif
+
+  if a:edgeql_preview
+    let expression = expression . '.toEdgeQL()'
+  elseif isQuery
+    let expression = expression . '.run(db)'
+  endif
 
   " Old
   " if expression =~ '^e\.' && expression !~ '\.run('
@@ -121,6 +152,7 @@ func! tools_js#eval_line( ln, plain )
 
   " let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
   let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.ts'
+  " let filenameSource = "/Users/at/Documents/Server-Dev/edgedb/1playground/src/server/.rs_3pl.ts"
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.mjs'
   call writefile( compl_sourceLines, filenameSource )
@@ -135,8 +167,14 @@ func! tools_js#eval_line( ln, plain )
   " let resLines = systemlist( 'node --loader ts-node/esm -T ' . filenameSource )
   " let resLines = systemlist( 'node ' . filenameSource )
 
-  if a:plain
-    let g:floatWin_win = FloatingSmallNew ( resLines )
+  if !a:formatted
+    " Todo: how to silence the float window? e.i. not echo the file name
+    silent let g:floatWin_win = FloatingSmallNew ( resLines )
+    " silent call FloatingSmallNew ( resLines )
+    " let g:floatWin_win = FloatWin_ShowLines ( resLines )
+    " let g:floatWin_win = FloatWin_ShowLines_old ( resLines )
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
 
     " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
   elseif resLines[0][0:1] == "[[" && !(resLines[0] =~ ",")
@@ -150,7 +188,7 @@ func! tools_js#eval_line( ln, plain )
     " exec "%s/'//ge"
     call easy_align#easyAlign( 1, line('$'), ',')
     call FloatWin_FitWidthHeight()
-    wincmd p
+    silent wincmd p
 
     " Collection returned:
   elseif resLines[-1] =~ "[\[|\{|\(]"
