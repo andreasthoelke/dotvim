@@ -46,9 +46,9 @@ nnoremap <silent> <leader>eR :call CreateIndexedDec_js(v:true)<cr>
 
 func! CreateIndexedDec_js( specialMaintainedVar )
   " const greeter = (person: Person) => {
-  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
+  let hostLn1 = searchpos( '^const\s\([e|a]\d_\)\@!', 'cnb' )[0]
   " function selRegion (subStr: string) {
-  let hostLn2 = searchpos( '^function', 'cnb' )[0]
+  let hostLn2 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
   if hostLn1 > hostLn2
     let hostLn = hostLn1
     let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
@@ -102,7 +102,7 @@ func! CreateInlineTestDec_js()
   " const greeter = (person: Person) => {
   let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
   " function selRegion (subStr: string) {
-  let hostLn2 = searchpos( '^function', 'cnb' )[0]
+  let hostLn2 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
   if hostLn1 > hostLn2
     let hostLn = hostLn1
     let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
@@ -218,7 +218,7 @@ endfunc
 
 func! InlineTestDeclBackwLine()
   " return searchpos( '\v^e\d_', 'cnbW')[0]
-  return searchpos( '\v^(const\s)=e\d_', 'cnbW')[0]
+  return searchpos( '\v^(const\s)=[e|a]\d_', 'cnbW')[0]
 endfunc
 " echo InlineTestDeclBackwLine()
 
@@ -229,7 +229,7 @@ endfunc
 
 func! GetTestDeclIndex( lineNum )
   " return matchstr( getline(a:lineNum), '^e\zs\d\ze_')
-  return matchstr( getline(a:lineNum), '\v^(const\s)=e\zs\d\ze_')
+  return matchstr( getline(a:lineNum), '\v^(const\s)=[e|a]\zs\d\ze_')
 endfunc
 
 " echo GetTestDeclIndex( line('.') +1 )

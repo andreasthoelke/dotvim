@@ -345,7 +345,7 @@ func! HsConcealWithUnicode ()
   " Telescope symbols                  ⟫
 " ⟨⟩ mathematical right/left                      ⌟  ⌋ ⌈
 " ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ⌋ ⦙ ⫶⌉ | ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫ ■▪▮▯▰▱▴◗◿
-" ⍨ ⎨⎛⎭⎵⏠‣ ‥ ⬜ ⬚ ⭕ ⎧⍿⥰ ⌄ ⅀ ≀ ⋆ ⍿ ⊺
+" ⍨ ⎨⎛⎭⎵⏠‣ ‥ ⬜ ⬚ ⭕ ⎧⍿⥰ ⌄ ⅀ ≀ ⋆ ⍿ ⊺      ∼
 " ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⨞ ⭘ ⌸ ◫ ∧ ⋁ ⟑ ⨆      ≔
 " s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
 " TextEdit and paste these symbols there

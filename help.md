@@ -426,7 +426,9 @@ CocInstall coc-jedi - install an extension
 all extensions: https://www.npmjs.com/search?q=keywords%3Acoc.nvim
 https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
-Config: ~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
+Config: ~/.config/nvim/plugin/setup-lsp.vim#/coc-nvim
+old:
+~/.vim/plugin/tools-langClientHIE-completion.vim#/Completion
 
 ### Fzf
 
@@ -1239,6 +1241,11 @@ Extract string from a line example: ~/.vim/plugin/CodeMarkup.vim#/Extract%20head
 useful examples:
   ~/.config/nvim/plugin/search-replace.vim#/func.%20PatternToMatchOutsideOfParentheses.%20searchStr,
   ~/.config/nvim/notes/notes-navigation.md#/*%20Lookarounds
+
+optional atoms:
+/\v^(async\s)?function
+async function ()
+
 
 # Vim
 

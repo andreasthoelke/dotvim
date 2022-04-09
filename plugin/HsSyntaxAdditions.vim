@@ -72,6 +72,8 @@ func! JsSyntaxAdditions() " ■
   nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
   nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
 
+  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
+
   call clearmatches()
 
   " set syntax=typescript
@@ -141,8 +143,16 @@ func! TsConcealWithUnicode ()
   syntax match Normal "\/\*\*\s" conceal
   syntax match Normal "^\s\*\s" conceal
   syntax match Normal "^\*\s" conceal
+
+  " Other TS clean-up conceals
   syntax match Normal "function" conceal cchar=→
-  syntax match Normal "e\." conceal cchar=᛫
+  syntax match Normal "\s\zse\." conceal cchar=᛫
+  syntax match Normal "\s\zstrue" conceal cchar=᛫
+  syntax match Normal "ilike" conceal cchar=∼
+  syntax match Normal "like" conceal cchar=∼
+  syntax match Normal "order_by\:" conceal cchar=ꜛ
+  syntax match Normal "filter\:" conceal cchar=≚
+  syntax match Normal "\.\.\." conceal cchar=…
   syntax match Normal "\*\/" conceal
 
 endfunc

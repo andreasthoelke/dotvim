@@ -45,7 +45,9 @@ func! DiagnosticsShow ()
   call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
 endfunc
 
+" autocmd User CocOpenFloat call nvim_win_set_config(g:coc_last_float_win, {'relative': 'editor', 'row': 0, 'col': 0})
+" autocmd User CocOpenFloat call nvim_win_set_width(g:coc_last_float_win, 9999)
 
-
+" inoremap <expr> <c-i> pumvisible() ? "\<C-o>coc#_hide()" : "<c-i>"
 
 
