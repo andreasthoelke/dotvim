@@ -1246,6 +1246,9 @@ optional atoms:
 /\v^(async\s)?function
 async function ()
 
+note the single quotes!
+elseif resLines[0] =~ '\v(with)|(select)'
+
 
 # Vim
 

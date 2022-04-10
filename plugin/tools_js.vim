@@ -169,12 +169,20 @@ func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpressi
   " let resLines = systemlist( 'node --loader ts-node/esm -T ' . filenameSource )
   " let resLines = systemlist( 'node ' . filenameSource )
 
+  " echoe resLines[0]
+
   if !a:formatted
     " Todo: how to silence the float window? e.i. not echo the file name
     silent let g:floatWin_win = FloatingSmallNew ( resLines )
     " silent call FloatingSmallNew ( resLines )
     " let g:floatWin_win = FloatWin_ShowLines ( resLines )
     " let g:floatWin_win = FloatWin_ShowLines_old ( resLines )
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
+
+  " elseif resLines[0] =~ '\v(with)|(select)'
+  elseif a:edgeql_preview
+    silent let g:floatWin_win = FloatingSmallNew ( resLines )
     silent call FloatWin_FitWidthHeight()
     silent wincmd p
 
