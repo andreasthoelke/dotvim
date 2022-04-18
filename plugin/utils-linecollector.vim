@@ -23,3 +23,11 @@ func! CollectLine() range
   checktime
 endfunc
 " LINE COLLECTOR: ---------------
+
+
+
+
+
+
+
+

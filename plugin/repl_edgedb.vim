@@ -15,7 +15,7 @@ func! EdbReplStart ()
     return
   endif
 
-  call tools_edgedb#startInstance ()
+  " call tools_edgedb#startInstance ()
 
   exec "new"
   let g:EdbRepl_bufnr = bufnr()

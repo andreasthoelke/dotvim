@@ -118,9 +118,10 @@ end
 -- https://github.com/nvim-lua/plenary.nvim/blob/master/tests/plenary/curl_spec.lua
 local curl = require "plenary.curl"
 
-M.curlTest = function(query)
+M.curl = function(url, query)
   -- local query = { name = "john Doe", key = "123456" }
-  local response = curl.get("https://postman-echo.com/get", {
+  -- local response = curl.get("https://postman-echo.com/get", {
+  local response = curl.get( url, {
     query = query,
   })
   -- eq(200, response.status)

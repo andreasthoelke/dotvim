@@ -232,10 +232,14 @@ https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 https://github.com/nvim-telescope/telescope.nvim/blob/master/README.md\#default-mappings
 
 # Lunavim
-
 notes/notes-lunarvim.md
 
 # Lua
+
+reload a lua file with <leader>sr
+
+## Lua tricks
+~/.config/nvim/notes/notes-lua-asyc-loop.md#/###%20Plenary%20reload
 
 ## Basics
 ~/.config/nvim/notes/notes-lua-asyc-loop.md#/##%20Global%20variables
@@ -311,9 +315,6 @@ Install location for language servers: ~/.local/share/nvim/lsp_servers/
 Other local app settings: ~/.local/share/
 installer used on lunarvim:
 https://github.com/williamboman/nvim-lsp-installer
-
-## Lua tricks
-~/.config/nvim/notes/notes-lua-asyc-loop.md#/###%20Plenary%20reload
 
 ## treesitter
 
@@ -1029,6 +1030,18 @@ leader leader hU 'HsUnUnicode'<cr>
 or
 %!python -m json.tool
 
+## JSON encode / decode
+
+func! tools_js#json_stringify( expressionCodeStr )
+
+vimscript: json_decode()
+lua: vim.fn.json_decode(response.body)
+
+# Curl / http requests
+~/.config/nvim/notes/notes-lua-asyc-loop.md#/##%20Curl
+but rather use ->
+## Node axios
+~/Documents/Server-Dev/b_tssetup/src/httptests.ts#/import%20http%20from
 
 # Unicode
 c-x g    - after key-characters in insert mode. e.g. type "->" and then <c-g>g to select the symbol

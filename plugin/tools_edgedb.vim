@@ -1,11 +1,12 @@
 
-" let g:edgedb_db = 'edgedb'
+let g:edgedb_db = 'edgedb'
 " let g:edgedb_db = 'dracula'
 " let g:edgedb_db = 'dracula1'
-let g:edgedb_db = 'dracula4'
+" let g:edgedb_db = 'dracula4'
 " let g:edgedb_db = 'ch20_1'
 
 let g:edgedb_instance = '_1playground_2'
+" let g:edgedb_instance = '_1playground_2'
 
 
 func! tools_edgedb#bufferMaps()
@@ -151,8 +152,14 @@ endfunc
 " call tools_edgedb#queryAllObjectFieldsTable( 'Vampire' )
 
 func! FilterLists ( line )
+  if type(a:line) == 3
+    let line = a:line
+  else
+    let line = [a:line]
+  endif
+
   let res = []
-  for el in a:line
+  for el in line
     if type(el) == 3
       " limit the size of the list and replace the commas with ;
       let item = string( el[:2] )[1:-2]   . '‥'

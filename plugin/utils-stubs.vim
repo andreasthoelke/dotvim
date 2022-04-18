@@ -51,10 +51,10 @@ func! CreateIndexedDec_js( specialMaintainedVar )
   let hostLn2 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
   if hostLn1 > hostLn2
     let hostLn = hostLn1
-    let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+    let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*' )
   else
     let hostLn = hostLn2
-    let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
+    let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*' )
   endif
   let nextIndex = GetNextTestDeclIndex( hostLn )
   if a:specialMaintainedVar

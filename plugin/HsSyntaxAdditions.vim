@@ -7,7 +7,7 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
@@ -122,7 +122,6 @@ func! TsConcealWithUnicode ()
         \, ['\<\zsboolean',            'B', 'Normal']
         \, ['\s\zsFunction',            'F', 'Normal']
         \, ['\s\zsReact.Node',            '◻', 'Normal']
-        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
         \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
         \]
 
@@ -144,8 +143,17 @@ func! TsConcealWithUnicode ()
   syntax match Normal "^\s\*\s" conceal
   syntax match Normal "^\*\s" conceal
 
-  " Other TS clean-up conceals
+  " TS conceals
   syntax match Normal "function" conceal cchar=→
+  syntax match Normal "return\ze\s" conceal cchar=←
+  syntax match Normal "async\ze\s" conceal cchar=•
+  syntax match Normal "await\ze\s" conceal cchar=≀
+  syntax match Normal "Promise" conceal cchar=~
+  syntax match Normal "export\ze\s" conceal cchar=∷
+  syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
+  syntax match Normal "\v\=\>" conceal cchar=⇒
+
+  " EdgeDB query builder object: e.select()
   syntax match Normal "\s\zse\." conceal cchar=᛫
   syntax match Normal "\s\zstrue" conceal cchar=᛫
   syntax match Normal "ilike" conceal cchar=∼

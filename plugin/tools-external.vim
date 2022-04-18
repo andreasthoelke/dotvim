@@ -82,6 +82,22 @@ func! AlacrittyResetToNormalConfigFile ()
   endif
 endfunc
 
+
+func! AddLinesToFile ( filePath, newLines, delLineNum )
+  let oldLines = readfile( a:filePath)
+  let newLines = oldLines[0 : a:delLineNum] + a:newLines
+  call writefile( newLines, a:filePath)
+endfunc
+
+command! TypescriptReplsetCommonJS call TypescriptRepl_TSNode_setCommonJS()
+
+func! TypescriptRepl_TSNode_setCommonJS()
+  let newConfigLine1 = ' , "ts-node": { "compilerOptions": { "module": "CommonJS" } }'
+  let newConfigLine2 = '}'
+  let fileName = 'tsconfig.json'
+  call AddLinesToFile( fileName, [newConfigLine1, newConfigLine2], -2 )
+endfunc
+
 fun! OpenITerm()
   let path = projectroot#guess()
   exec 'silent !open -a iTerm ' . path

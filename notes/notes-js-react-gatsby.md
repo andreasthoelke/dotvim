@@ -81,8 +81,11 @@ npm install --save-dev @babel/plugin-transform-react-jsx
 
 npx create-next-app nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
 
+# new React vite typescript project
+yarn create vite .. then follow propts!
 
 # Styled components
+
 
 # Typescript
 

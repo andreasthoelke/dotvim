@@ -154,6 +154,8 @@ func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpressi
 
   " let filenameSource = expand('%:p:h') . '/replSrc_' . expand('%:t')
   let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.ts'
+  " The `.mjs` extension seems needed to avoid `export` and `module` errors
+  " let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.mjs'
   " let filenameSource = "/Users/at/Documents/Server-Dev/edgedb/1playground/src/server/.rs_3pl.ts"
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t')
   " let filenameBuild  = expand('%:p:h') . '/replBuild_' . expand('%:t:r') . '.mjs'

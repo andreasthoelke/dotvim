@@ -142,11 +142,23 @@ EOF
 
 ## Curl
 
-lua __ EOF
+leader s}  - to run
+leader sr  - to reload lua/tools_external.lua
+
+lua << EOF
+local url = "https://postman-echo.com/get"
 local query = { name = "Jane Doe", key = "123456" }
 local te = require 'tools_external'
-put( te.curlTest(query).args.name )
+put( te.curl(url, query).args.name )
 EOF
+
+lua << EOF
+local query = {}
+local url = "https://jsonplaceholder.typicode.com/posts/1"
+local te = require 'tools_external'
+put( te.curl(url, query) )
+EOF
+
 
 lua require'tools_external'.curlTestFile()
 
