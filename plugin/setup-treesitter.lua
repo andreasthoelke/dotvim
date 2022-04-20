@@ -54,8 +54,9 @@ require('nvim-treesitter.configs').setup {
         -- You can use the capture groups defined in textobjects.scm
         ['af'] = '@function.outer',
         ['if'] = '@function.inner',
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
+        -- Temp: disabled this in favour of vim-targets (which works for function args)
+        -- ['aa'] = '@parameter.outer',
+        -- ['ia'] = '@parameter.inner',
       },
     },
     move = {

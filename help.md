@@ -1099,9 +1099,11 @@ https://github.com/nvim-treesitter/nvim-treesitter-textobjects\#built-in-textobj
 Then deine select, move (and shift) maps here:
 ~/.config/nvim/plugin/setup-treesitter.lua#/textobjects%20=%20{
 
-
 help text-objects
 iB - inside entire buffer ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
+
+### vim (welle-) targets
+~/.config/nvim/notes/notes-navigation.md#/###%20Targets
 
 ### Html tags
 vit/vat  - work nicely for html tags. these maps are *native*
