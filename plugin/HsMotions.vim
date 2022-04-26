@@ -1103,11 +1103,17 @@ func! CommaItemStartForw() " ■
   endif
 endfunc " ▲
 
+" Testing this with ~/Documents/Architecture/examples/gql1/server/po2.ts#/builder.queryType.{
 func! CommaItemStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
   " Find delimiter on the same bracket level, skip matches in Strings
   let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  call setpos('.', [0, sLine, sCol, 0] )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  call setpos('.', [0, sLine, sCol, 0] )
+  normal! w
+  return
   if sLine && sLine > (oLine - 5)
     call setpos('.', [0, sLine, sCol, 0] )
     normal! w

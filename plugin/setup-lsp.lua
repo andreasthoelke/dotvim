@@ -215,7 +215,8 @@ lspconfig.tsserver.setup({
     ts_utils.setup({})
     ts_utils.setup_client(client)
     buf_map(bufnr, "n", "gts", ":TSLspOrganize<CR>")
-    buf_map(bufnr, "n", "gti", ":TSLspRenameFile<CR>")
+    buf_map(bufnr, "n", "gtf", ":TSLspRenameFile<CR>")
+    buf_map(bufnr, "n", "gti", ":TSLspImportCurrent<CR>")
     buf_map(bufnr, "n", "gto", ":TSLspImportAll<CR>")
     on_attach(client, bufnr)
   end,
@@ -443,16 +444,16 @@ null_ls.setup({
 
 
 
--- null_ls.setup({
---   sources = {
---     null_ls.builtins.diagnostics.eslint_d,
---     null_ls.builtins.code_actions.eslint_d,
---     null_ls.builtins.formatting.prettier,
---     null_ls.builtins.completion.spell,
---     null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
---   },
---   on_attach = on_attach
--- })
+null_ls.setup({
+  sources = {
+    null_ls.builtins.diagnostics.eslint_d,
+    null_ls.builtins.code_actions.eslint_d,
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.completion.spell,
+    null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+  },
+  on_attach = on_attach
+})
 
 
 -- ─   nvim-cmp setup                                    ■

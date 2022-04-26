@@ -365,8 +365,8 @@ Plug 'andreasthoelke/vim-hoogle'
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " Plug 'goolord/vim2hs'
-Plug 'andreasthoelke/vim2hs'
-Plug 'andreasthoelke/haskell-env'
+" Plug 'andreasthoelke/vim2hs'
+" Plug 'andreasthoelke/haskell-env'
 " Interact with Hoogle Haskell API
 " now in vim folder
 " Plug 'andreasthoelke/HsAPIExplore'

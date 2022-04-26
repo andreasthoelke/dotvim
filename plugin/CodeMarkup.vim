@@ -39,7 +39,7 @@ endfunc
 " set commentstring=\ --\ \%s
 " dynamically use GetLangCommentStr()
 
-let g:headingPttn = '\v^("|--|//)?\s─\s'
+let g:headingPttn = '\v^("|--|#|//)?\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
 " let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
 

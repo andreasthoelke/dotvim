@@ -12,6 +12,10 @@
 ~/Documents/Server-Dev/a_tssetup/notes-typescript-node.md#/#%20Typescript
 ~/.config/nvim/notes/notes-js-react-gatsby.md#/#%20Redux
 
+# GraphQL
+https://github.com/graphql/swapi-graphql
+https://apis.guru/graphql-apis/
+https://studio.apollographql.com/public/star-wars-swapi/schema/reference?variant=current
 
 # XState
 

@@ -53,8 +53,8 @@ let g:ag_highlight=1
 " nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
-" nnoremap <silent> <c-[> m':set nohlsearch<cr>
-nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
+" nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
+nnoremap <silent> <Esc> m':set nohlsearch<cr>:call FloatWin_close()<cr>
 " Don't add seach next/prev to the jumplist
 nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
