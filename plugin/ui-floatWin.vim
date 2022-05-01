@@ -385,6 +385,10 @@ func! FloatingSmallNew(linesToShow)
 
   let textbuf = nvim_create_buf(v:false, v:true)
   call nvim_buf_set_lines( textbuf, 0, -1, 0, a:linesToShow )
+  " call nvim_buf_set_option( textbuf, 'filetype', 'graphql' )
+  let filetype = GetFileTypeFromBufText( a:linesToShow )
+  call setbufvar( textbuf, "&filetype", filetype )
+
   return nvim_open_win( l:textbuf, v:true, opts)
   " Todo: is there a way to prevent the file name being echoed?
   " silent call nvim_open_win( nvim_create_buf(v:false, v:true), v:true, opts)
@@ -434,6 +438,16 @@ command! -complete=help -nargs=? Help call FloatingWindowHelp(<q-args>)
 
 
 
+func! GetFileTypeFromBufText ( lines )
+  let text = join( a:lines )
+  if     text =~ 'Query' && text =~ 'type'
+    return 'graphql'
+  elseif text =~ 'select'
+    return 'edgeql'
+  else
+    return ''
+  endif
+endfunc
 
 
 

@@ -969,6 +969,12 @@ notes/notes-git.md
 ## clone a github subdirectory/ folder
 utils/git_clone_subfolder.sh
 
+hmm, this doesn't seem to work:
+sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh examples https://github.com/hayes/pothos
+sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh tree/master/examples https://github.com/hayes/pothos
+
+
+
 ## Intero Errors or Warnings
 
 leader qq - open QFL

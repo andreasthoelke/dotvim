@@ -63,8 +63,17 @@ require('nvim-treesitter.configs').setup {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
-        ['<c-m>'] = '@function.outer',
-        [']p'] = '@parameter.outer',
+        -- Todo:
+        -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects 
+        -- ['<c-m>'] = '@function.outer',
+        -- [']a'] = '@block.inner',
+        -- [']b'] = '@block.outer',
+        -- [']c'] = '@call.inner',
+        -- [']d'] = '@call.outer',
+        -- [']e'] = '@scopename.inner',
+        -- [']f'] = '@statement.outer',
+        -- [']g'] = '@frame.inner',
+        -- [']h'] = '@frame.outer',
         -- [',w'] = '@parameter.inner',
       },
       goto_next_end = {
@@ -73,7 +82,8 @@ require('nvim-treesitter.configs').setup {
         -- [',e'] = '@parameter.inner',
       },
       goto_previous_start = {
-        ['<c-i>'] = '@function.outer',
+        -- ['<c-i>'] = '@function.outer',
+        ['<space>b'] = '@frame.outer',
         ['[p'] = '@parameter.outer',
         -- [',b'] = '@parameter.inner',
       },

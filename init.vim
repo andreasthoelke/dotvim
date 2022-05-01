@@ -71,6 +71,8 @@ Plug 'majutsushi/tagbar'
 " Also for Tags, but from language server
 Plug 'liuchengxu/vista.vim'
 
+Plug 'simrat39/symbols-outline.nvim'
+
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
 " Plug 'junegunn/vim-peekaboo'
@@ -494,6 +496,7 @@ nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
 luafile ~/.config/nvim/lua/utils_general.lua
 luafile ~/.config/nvim/plugin/ui_virtualTx.lua
+luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
 " luafile ~/.config/nvim/plugin/setup-lsp.lua
 
 

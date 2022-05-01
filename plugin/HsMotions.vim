@@ -1091,6 +1091,9 @@ func! CommaItemStartForw() " ■
   " Test this: I may want to use this in comments and strings?!
   let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW' )
   " echo sLine . '-' . sCol
+  call setpos('.', [0, sLine, sCol, 0] )
+  normal! w
+  return
   if sLine && sLine < (oLine + 5)
     call setpos('.', [0, sLine, sCol, 0] )
     if CursorIsOnClosingBracket()
