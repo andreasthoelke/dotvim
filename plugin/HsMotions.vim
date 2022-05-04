@@ -1503,9 +1503,9 @@ func! SkipSyntaxIDs()
   return CursorIsInsideString() || GetSyntaxIDAtCursor() =~ 'where'
 endfunc
 
-
+" now using ~/.config/nvim/init.vim#/Plug%20'chaoren/vim-wordmotion'
 " CamelCaseMotion: ------------------------------------------------------
-call camelcasemotion#CreateMotionMappings(',')
+" call camelcasemotion#CreateMotionMappings(',')
 " map <silent> w <Plug>CamelCaseMotion_w
 " map <silent> b <Plug>CamelCaseMotion_b
 " map <silent> e <Plug>CamelCaseMotion_e

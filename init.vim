@@ -311,9 +311,11 @@ Plug 'andreasthoelke/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
-Plug 'bkad/camelcasemotion'
 Plug 'tomtom/tcomment_vim'
 Plug 'joereynolds/place.vim'
+
+" Plug 'bkad/camelcasemotion'
+Plug 'chaoren/vim-wordmotion'
 
 Plug 'kana/vim-textobj-user'
 " This does fail many function types - search alternative - new using HaskellMaps() in HsMotion!

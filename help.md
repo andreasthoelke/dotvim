@@ -1088,6 +1088,8 @@ g]/g[ - first/last char of prev yanked text
 q/Q - Label/ Heading motion
 ihc - 'inside heading content' text object
 
+
+
 ## Sneak & easymotion
 
 f/F - f<char> to jump to next char. L/H to next

@@ -581,6 +581,11 @@ endfunc
 
 " ─   Movement                                          ──
 
+" ~/.config/nvim/init.vim#/Plug%20'chaoren/vim-wordmotion'
+let g:wordmotion_prefix = ","
+
+
+
 " also note  ~/.vim/plugin/utils-align-old.vim#/Join%20line%20below
 
 " ─   General                                           ──

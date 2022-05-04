@@ -1,6 +1,13 @@
 
 # Links 2022
 
+# Relay architecture
+
+example projects with different DBs and GQL coding approaches:
+koa-todo with mongo db backend. separate frontend repo
+pothos prisma example projects
+replay team in-code DBs using the graphql-relay lib
+
 # Current projects
 ~/Documents/Server-Dev/
 

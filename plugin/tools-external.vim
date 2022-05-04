@@ -339,9 +339,10 @@ endfunc
 
 
 
-command! Explorer CocCommand explorer
+" Not in use:
+" command! Explorer CocCommand explorer
 " nnoremap <leader>oe :CocCommand explorer<cr>
-nnoremap <leader>oe :CocCommand explorer --preset simplify<cr>
+" nnoremap <leader>oe :CocCommand explorer --preset simplify<cr>
 
 let g:coc_explorer_global_presets = {
   \   '.vim': {
@@ -378,11 +379,11 @@ let g:coc_explorer_global_presets = {
   \ }
 
 " Use preset argument to open it
-nmap <space>oEd :CocCommand explorer --preset .vim<CR>
-nmap <space>oEf :CocCommand explorer --preset floating<CR>
+" nmap <space>oEd :CocCommand explorer --preset .vim<CR>
+" nmap <space>oEf :CocCommand explorer --preset floating<CR>
 
 " List all presets
-nmap <space>oEl :CocList explPresets
+" nmap <space>oEl :CocList explPresets
 
 
 

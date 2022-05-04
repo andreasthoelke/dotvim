@@ -17,6 +17,8 @@ let g:db_ui_use_nerd_fonts = 1
 let g:dbs = {
   \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',
   \ 'pets': 'mysql://root:PW@127.0.0.1:3306/pets',
+  \ 'todos_koa': 'mongodb://localhost:27017/todos_koa',
+  \ 'pothos_prisma': 'sqlite:/Users/at/Documents/Architecture/examples/pothos/examples/prisma/prisma/dev.db',
   \ }
 " mysql://root:PW@127.0.0.1:3306/pets
 " mysql://root:PW@127.0.0.1:3306/air_routes
