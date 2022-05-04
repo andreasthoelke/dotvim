@@ -1061,6 +1061,9 @@ Nice symbols in use with conceal in purescript and typescript syntax files:
 
 # Motions
 
+now using https://github.com/chaoren/vim-wordmotion
+with "," prefix g:wordmotion_prefix ~/.config/nvim/plugin/setup-general.vim#/let%20g.wordmotion_prefix%20=
+
 g; - to revert the InsertLeave jump
 gI^- <cr> - to prefix the current line with a '- ' without moving the cursor
 leader j - break line (with indention)
