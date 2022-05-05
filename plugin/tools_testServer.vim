@@ -1,16 +1,20 @@
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
+nnoremap <silent> gsi :call T_DoSetImport()<cr>
+
+nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_ClientRefetch()<cr>
+nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
+
+nnoremap <silent> ger :call T_ClientRefetch()<cr>
+nnoremap <silent> gwr :call T_PrinterRerun()<cr>
+nnoremap <silent> dr :call T_PrinterRerun()<cr>
 
 nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
 nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
-nnoremap <silent> gsi :call T_DoSetImport()<cr>
-nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'hi'<cr>
-nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
 
-
-" ─   Set server import variables                        ■
-" Set the typeDef and resolver imports of scratch/.testServer.ts
+" ─   Set import variables                               ■
+" Set the imports of scratch/.testServer.ts, testClient.ts and testPrinter.ts
 
 " Set an exported identifier as a specific import variable in the testServer.ts file
 func! T_DoSetImport()
@@ -22,61 +26,95 @@ func! T_DoSetImport()
 
   " 3. Which type of import var do we want to set?
   if     identif =~ 'tydef'
-    call T_SetTypeDef( identif, modulePath )
+    call T_SetServerTypeDef( identif, modulePath )
   elseif identif =~ 'resol'
-    call T_SetResolver( identif, modulePath )
+    call T_SetServerResolver( identif, modulePath )
   elseif identif =~ 'query'
+    call T_SetClientQuery( identif, modulePath )
   elseif identif =~ 'varia'
+    call T_SetClientVariables( identif, modulePath )
   else
+    call T_SetPrinterIdentif( identif, modulePath )
   endif
   echo 'Set: ' . identif
 endfunc
 
-func! T_SetTypeDef( identifier, module )
+" Server:
+func! T_SetServerTypeDef( identifier, module )
   let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
-  let serverLines = T_ReadServerFileLines()
-  " Overwrite/set the imported typeDef in line 0
-  let serverLines[0] = importStm
-  call T_WriteServerFile( serverLines )
+  let TesterLines = T_ReadTesterFileLines('Server')
+  " Overwrite/set the imported var
+  let TesterLines[0] = importStm
+  call T_WriteTesterFile( TesterLines, 'Server' )
 endfunc
 
-func! T_SetResolver( identifier, module )
+func! T_SetServerResolver( identifier, module )
   let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
-  let serverLines = T_ReadServerFileLines()
-  " Overwrite/set the imported typeDef in line 0
-  let serverLines[1] = importStm
-  call T_WriteServerFile( serverLines )
+  let TesterLines = T_ReadTesterFileLines('Server')
+  " Overwrite/set the imported var
+  let TesterLines[1] = importStm
+  call T_WriteTesterFile( TesterLines, 'Server')
 endfunc
 
-" ─^  Set server import variables                        ▲
+" Client:
+func! T_SetClientQuery( identifier, module )
+  let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('Client')
+  " Overwrite/set the imported var
+  let TesterLines[0] = importStm
+  call T_WriteTesterFile( TesterLines, 'Client' )
+endfunc
+
+func! T_SetClientVariables( identifier, module )
+  let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('Client')
+  " Overwrite/set the imported var
+  let TesterLines[1] = importStm
+  call T_WriteTesterFile( TesterLines, 'Client' )
+endfunc
+
+" Printer:
+func! T_SetPrinterIdentif( identifier, module )
+  let importStm = "import { " . a:identifier . " as testIdentif } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('Printer')
+  " Overwrite/set the imported var
+  let TesterLines[0] = importStm
+  call T_WriteTesterFile( TesterLines, 'Printer' )
+  call T_PrinterRerun()
+endfunc
+
+
+" ─^  Set import variables                               ▲
+
+
 
 
 
 " ─   File operations                                    ■
 
-func! T_WriteServerFile( lines )
-  let serverPath = T_ServerFilePath()
-  call writefile(a:lines, serverPath)
+func! T_WriteTesterFile( lines, testerName )
+  let TesterPath = T_TesterFilePath( a:testerName )
+  call writefile(a:lines, TesterPath)
 endfunc
 
-func! T_ReadServerFileLines()
-  let serverPath = T_ServerFilePath()
-  if !filereadable( serverPath )
+func! T_ReadTesterFileLines( testerName )
+  let TesterPath = T_TesterFilePath( a:testerName )
+  if !filereadable( TesterPath )
     " There's no testServer.ts file yet in this project - copy a template
-    let templateFile = '~/.config/nvim/notes/templates/.testServer.ts'
+    let templateFile = '~/.config/nvim/notes/templates/.test' . a:testerName . '.ts'
     let templateFile = fnamemodify( templateFile, ':p')
     let lines = readfile( templateFile, '\n' )
-    call writefile(lines, serverPath)
+    call writefile(lines, TesterPath)
   endif
-  return readfile( serverPath, '\n' )
+  return readfile( TesterPath, '\n' )
 endfunc
 
-func! T_ServerFilePath()
-  return getcwd() . '/scratch/.testServer.ts'
+func! T_TesterFilePath( testerName )
+  return getcwd() . '/scratch/.test' . a:testerName . '.ts'
 endfunc
 
-func! T_ServerStartTerminalCommand()
-  return 'npx ts-node -T ' . T_ServerFilePath()
+func! T_TesterTerminalCommand( testerName )
+  return 'npx ts-node -T ' . T_TesterFilePath( a:testerName )
 endfunc
 
 " The current files' module path
@@ -115,8 +153,8 @@ endfunc
 func! T_ServerStart ()
   if exists('g:T_ServerID') | echo 'T_Server is already running' | return | endif
   " exec "10new"
-  " let g:T_ServerID = termopen( T_ServerStartTerminalCommand(), g:T_ServerCallbacks )
-  let g:T_ServerID = jobstart( T_ServerStartTerminalCommand(), g:T_ServerCallbacks )
+  " let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
+  let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
 
 func! T_ServerStop ()
@@ -143,6 +181,37 @@ let g:T_ServerCallbacks = {
 
 
 " ─^  Manage long running server process                 ▲
+
+
+
+func! T_ClientRefetch()
+  let resLines = systemlist( T_TesterTerminalCommand('Client') )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+func! T_PrinterRerun()
+  let resLines = systemlist( T_TesterTerminalCommand('Printer') )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

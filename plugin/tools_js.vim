@@ -94,6 +94,10 @@ func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpressi
   " moves cursor to the first code line (not a comment)
   let [sLine, sCol] = searchpos( '^\i', 'W' )
   exec "silent keepjumps normal! w"
+  if expand('<cword>') == 'const'
+    " this might be an export statement
+    exec "silent keepjumps normal! w"
+  endif
 
   let lspTypeStr = v:lua.require('utils_lsp').type()
   let tlBindName = expand('<cword>')
@@ -146,6 +150,7 @@ func! tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpressi
   let ps = 'new Promise( (r) => r( ' . expression . ' ) ).then( res => console.log( res ) )'
   " Just in case the value of the expression is a promise we console.log in a callback
 
+  " Todo: use a separate printer file: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20TODO.%20Normal 
   let compl_sourceLines = tools_js#getStrOfBufAndCmd( ps )
 
   " let stdInStr = join( compl_sourceLines, "\n" ) ■
