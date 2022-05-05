@@ -2,6 +2,7 @@
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
 nnoremap <silent> gsi :call T_DoSetImport()<cr>
+nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
 
 nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_ClientRefetch()<cr>
 nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
@@ -18,11 +19,7 @@ nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
 
 " Set an exported identifier as a specific import variable in the testServer.ts file
 func! T_DoSetImport()
-  " 1. Get the exported identifier
-  let [export, _, identif; _] = split( getline('.') )
-  if export != 'export' | echo 'identifier needs to be exported' | return | endif
-  " 2. Get the module path
-  let modulePath = T_AbsModulePath()
+  let [identif, modulePath] = T_ImportInfo()
 
   " 3. Which type of import var do we want to set?
   if     identif =~ 'tydef'
@@ -37,6 +34,15 @@ func! T_DoSetImport()
     call T_SetPrinterIdentif( identif, modulePath )
   endif
   echo 'Set: ' . identif
+endfunc
+
+func! T_ImportInfo()
+  " 1. Get the exported identifier
+  let [export, _, identif; _] = split( getline('.') )
+  if export != 'export' | echo 'identifier needs to be exported' | return | endif
+  " 2. Get the module path
+  let modulePath = T_AbsModulePath()
+  return [identif, modulePath]
 endfunc
 
 " Server:
@@ -56,9 +62,10 @@ func! T_SetServerResolver( identifier, module )
   call T_WriteTesterFile( TesterLines, 'Server')
 endfunc
 
+
 " Client:
 func! T_SetClientQuery( identifier, module )
-  let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
+  let importStm = "import { " . a:identifier . " as query } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Client')
   " Overwrite/set the imported var
   let TesterLines[0] = importStm
@@ -66,7 +73,7 @@ func! T_SetClientQuery( identifier, module )
 endfunc
 
 func! T_SetClientVariables( identifier, module )
-  let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
+  let importStm = "import { " . a:identifier . " as variables } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Client')
   " Overwrite/set the imported var
   let TesterLines[1] = importStm
@@ -83,6 +90,10 @@ func! T_SetPrinterIdentif( identifier, module )
   call T_PrinterRerun()
 endfunc
 
+func! T_DoSetPrinterIdentif()
+  let [identif, modulePath] = T_ImportInfo()
+  call T_SetPrinterIdentif( identif, modulePath )
+endfunc
 
 " ─^  Set import variables                               ▲
 
@@ -170,7 +181,7 @@ func! T_ServerMainCallback (job_id, data, event)
 endfunc
 
 func! T_ServerErrorCallback (job_id, data, event)
-  " echo a:data
+  echo a:data
 endfunc
 
 let g:T_ServerCallbacks = {

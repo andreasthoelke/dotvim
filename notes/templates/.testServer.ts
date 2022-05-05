@@ -12,7 +12,7 @@ const execSchema = makeExecutableSchema({
 })
 
 createServer({ schema: execSchema, port: 4040 }).start()
-
+// http://
 
 
 

@@ -445,7 +445,7 @@ func! GetFileTypeFromBufText ( lines )
   elseif text =~ 'select'
     return 'edgeql'
   else
-    return ''
+    return 'typescript'
   endif
 endfunc
 
