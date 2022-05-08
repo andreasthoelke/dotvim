@@ -96,7 +96,6 @@ fun! SymbolNext_SplitTop()
   keepjumps normal! ggn
 endfunc
 
-
 " Vim Rel Links:
 " ":h rel-links" - "gk" split right. though "c-w f" splits below - TODO
 let g:rel_open = 'vsplit'

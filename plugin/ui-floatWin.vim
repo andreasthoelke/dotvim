@@ -388,6 +388,7 @@ func! FloatingSmallNew(linesToShow)
   " call nvim_buf_set_option( textbuf, 'filetype', 'graphql' )
   let filetype = GetFileTypeFromBufText( a:linesToShow )
   call setbufvar( textbuf, "&filetype", filetype )
+  " call setbufvar( textbuf, "&syntax", filetype )
 
   return nvim_open_win( l:textbuf, v:true, opts)
   " Todo: is there a way to prevent the file name being echoed?

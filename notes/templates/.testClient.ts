@@ -1,25 +1,26 @@
-import { myquery1 as typeDefs } from '../scratch/gql1'
-import { myvaria1 as variables } from '../scratch/gql1'
+import { tydefConstr1 as typeDefs } from '../scratch/gql4'
+import { resolCons1 as resolvers } from '../scratch/gql4'
+import { queryCons1 as query } from '../scratch/gql4'
+import { variaCons1 as variables } from '../scratch/gql4'
 
-import { request } from "graphql-request";
-
-
-const fetch = async () => {
-  const res = await request({
-    url: 'http://localhost:4040/graphql',
-    document: query,
-    variables: JSON.stringify( variables ),
-    // requestHeaders: { Authorization: `bearer ${GH_TOKEN}` },
-  })
-  return res
-}
-
-fetch().then( res => console.log( res ) )
-  // do one simple retry
-  .catch(err => fetch().then( res => console.log( res ) ))
+import { buildSchema, graphql, GraphQLSchema } from 'graphql'
 
 
+const process = graphql({
+  // schema: buildSchema( typeDefs ), // An SDL (fixed) schema(-first)
+  // rootValue: resolvers, // needs a separate resolvers object
+  schema: new GraphQLSchema({ query: typeDefs }), // Code-first query-root object includes resolvers
+  source: query,
+  // contextValue?: ?any,
+  variableValues: variables,
+  // operationName?: ?string
+})
 
+// process.then( res => console.log( res ) )
+
+process.then( res => console.log( JSON.parse(JSON.stringify( res.data )) ) )
+
+// https://graphql.org/graphql-js/graphql/
 
 
 

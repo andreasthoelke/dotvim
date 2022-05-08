@@ -117,7 +117,7 @@ Plug 'edgedb/edgedb-vim'
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
-Plug 'jreybert/vimagit'
+" Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 
 " Lua version of gitgutter?

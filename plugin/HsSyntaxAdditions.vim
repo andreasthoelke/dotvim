@@ -114,11 +114,11 @@ func! TsConcealWithUnicode ()
         \, ['\s\zs<-',           '←', 'hsArrowBackw']
         \, ['==',            '≡', 'Normal']
         \, ['===',            '≡', 'Normal']
-        \, ['\s\zsstring\ze[\s|)|,|;]',    'S', 'Normal']
-        \, ['\s\zsnumber\ze[\s|)|,|;]',    'N', 'Normal']
+        \, ['\s\zsstring\ze[\s|)|,|;|[|\n]',    'S', 'Normal']
+        \, ['\s\zsnumber\ze[\s|)|,|;|[|\n]',    'N', 'Normal']
+        \, ['\s\zsboolean\ze[\s|)|,|;|[|\n]',   'B', 'Normal']
         \, ['\<\zsstring\ze\s',            'S', 'Normal']
         \, ['\<\zsstring\ze)',            'S', 'Normal']
-        \, ['\s\zsboolean',            'B', 'Normal']
         \, ['\<\zsnumber\ze\s',            'N', 'Normal']
         \, ['\<\zsboolean',            'B', 'Normal']
         \, ['\s\zsFunction',            'F', 'Normal']
@@ -146,6 +146,7 @@ func! TsConcealWithUnicode ()
 
   " TS conceals
   syntax match Normal "function" conceal cchar=→
+  syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "return\ze\s" conceal cchar=←
   syntax match Normal "async\ze\s" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀

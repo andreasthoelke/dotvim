@@ -1366,11 +1366,35 @@ leader saf/p - source function or paragraph
 
 ~/.vim/plugin/ui-userChoiceAction.vim#/User%20Choice%20Menu
 
-### Maps, Mappings, Expression maps
+# Maps, Mappings, Expression maps
 
 ~/.vim/plugin/notes-workflow.vim#/Mappings.
 
-#### Defining operator maps
+
+
+## Mapping Control ctrl keys to Option alt key
+The problem: vim can only receive/map some <c-..> keys.
+some control keys can be nicely mapped. e.g.:
+nnoremap <c-n> :echo 123<cr>
+other are not possible to map. e.g.:
+nnoremap <c-.> :echo 123<cr>
+even other where possible to map before, they have now stopped working. e.g.:
+nnoremap <c-m> :echo 123<cr>
+The workaround: You can remap these impossible control-.. key in karabiner to an option / alt key!
+See how control-m is remapped to option-m here: ~/.config/karabiner/karabiner.json#/"description".%20"Control%20m
+Related to this there is another challenge: ->
+### Mapping Alt / Option keys
+This does not (seem to) work:
+nnoremap <A-m> :echo 123<cr>
+Vim can only receive special character corresponding to these Alt-key. These character can be found like this:
+In insert mode press control-k .. the a ? will show up. Then the Option-key combination (twice?!) to get the special char.
+nnoremap µ :echo 124<cr>
+Now this map works with option-m AND with control-m (because control-m is mapped to option-m in karabiner setting)
+
+See also: ~/.config/nvim/plugin/utils-navigation.vim#/nnoremap%20≥%20.vertical
+~/.config/nvim/plugin/HsMotions.vim#/nnoremap%20<silent>%20µ
+
+### Defining operator maps
 
 help map-operator
 

@@ -4,12 +4,14 @@
 nnoremap <silent> gsi :call T_DoSetImport()<cr>
 nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
 
-nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_ClientRefetch()<cr>
+nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
 nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
 
-nnoremap <silent> ger :call T_ClientRefetch()<cr>
-nnoremap <silent> gwr :call T_PrinterRerun()<cr>
-nnoremap <silent> dr :call T_PrinterRerun()<cr>
+nnoremap <silent> ger :call T_Refetch('Client')<cr>
+nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
+nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
+" nnoremap <silent> ger :call T_ClientRefetch()<cr>
+" nnoremap <silent> gwr :call T_PrinterRerun()<cr>
 
 nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
 nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
@@ -24,12 +26,20 @@ func! T_DoSetImport()
   " 3. Which type of import var do we want to set?
   if     identif =~ 'tydef'
     call T_SetServerTypeDef( identif, modulePath )
+    call T_SetGqlExecTypeDef( identif, modulePath )
+    call VirtualRadioLabel('▵t')
   elseif identif =~ 'resol'
     call T_SetServerResolver( identif, modulePath )
+    call T_SetGqlExecResolver( identif, modulePath )
+    call VirtualRadioLabel('▵r')
   elseif identif =~ 'query'
     call T_SetClientQuery( identif, modulePath )
+    call T_SetGqlExecQuery( identif, modulePath )
+    call VirtualRadioLabel('▵q')
   elseif identif =~ 'varia'
     call T_SetClientVariables( identif, modulePath )
+    call T_SetGqlExecVariables( identif, modulePath )
+    call VirtualRadioLabel('▵v')
   else
     call T_SetPrinterIdentif( identif, modulePath )
   endif
@@ -49,42 +59,64 @@ endfunc
 func! T_SetServerTypeDef( identifier, module )
   let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Server')
-  " Overwrite/set the imported var
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Server' )
+endfunc
+
+func! T_SetGqlExecTypeDef( identifier, module )
+  let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('GqlExec')
+  let TesterLines[0] = importStm
+  call T_WriteTesterFile( TesterLines, 'GqlExec' )
 endfunc
 
 func! T_SetServerResolver( identifier, module )
   let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Server')
-  " Overwrite/set the imported var
   let TesterLines[1] = importStm
   call T_WriteTesterFile( TesterLines, 'Server')
 endfunc
 
+func! T_SetGqlExecResolver( identifier, module )
+  let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('GqlExec')
+  let TesterLines[1] = importStm
+  call T_WriteTesterFile( TesterLines, 'GqlExec')
+endfunc
 
 " Client:
 func! T_SetClientQuery( identifier, module )
   let importStm = "import { " . a:identifier . " as query } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Client')
-  " Overwrite/set the imported var
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Client' )
+endfunc
+
+func! T_SetGqlExecQuery( identifier, module )
+  let importStm = "import { " . a:identifier . " as query } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('GqlExec')
+  let TesterLines[2] = importStm " Note that the Client imports start at the 3rd line!
+  call T_WriteTesterFile( TesterLines, 'GqlExec' )
 endfunc
 
 func! T_SetClientVariables( identifier, module )
   let importStm = "import { " . a:identifier . " as variables } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Client')
-  " Overwrite/set the imported var
   let TesterLines[1] = importStm
   call T_WriteTesterFile( TesterLines, 'Client' )
+endfunc
+
+func! T_SetGqlExecVariables( identifier, module )
+  let importStm = "import { " . a:identifier . " as variables } from '" . a:module . "'"
+  let TesterLines = T_ReadTesterFileLines('GqlExec')
+  let TesterLines[3] = importStm
+  call T_WriteTesterFile( TesterLines, 'GqlExec' )
 endfunc
 
 " Printer:
 func! T_SetPrinterIdentif( identifier, module )
   let importStm = "import { " . a:identifier . " as testIdentif } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Printer')
-  " Overwrite/set the imported var
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Printer' )
   call T_PrinterRerun()
@@ -177,11 +209,11 @@ endfunc
 
 
 func! T_ServerMainCallback (job_id, data, event)
-  " echo a:data
+  echom a:data
 endfunc
 
 func! T_ServerErrorCallback (job_id, data, event)
-  echo a:data
+  echom a:data
 endfunc
 
 let g:T_ServerCallbacks = {
@@ -194,21 +226,15 @@ let g:T_ServerCallbacks = {
 " ─^  Manage long running server process                 ▲
 
 
-
-func! T_ClientRefetch()
-  let resLines = systemlist( T_TesterTerminalCommand('Client') )
+func! T_Refetch( testerName )
+  let resLines = systemlist( T_TesterTerminalCommand( a:testerName ) )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc
 
 
-func! T_PrinterRerun()
-  let resLines = systemlist( T_TesterTerminalCommand('Printer') )
-  silent let g:floatWin_win = FloatingSmallNew ( resLines )
-  silent call FloatWin_FitWidthHeight()
-  silent wincmd p
-endfunc
+
 
 
 

@@ -92,13 +92,17 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<<<', '<$>', '<\*>', '<\#>','\*>', '=<<', '>>', '>>=', '++', '<>', '<|>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→', '\.', '\~>']
-let g:columnSeps = ['::', '=', '->', '<-', '>', '$', '#', '\<then', '\<else', 'deriving']
+" let g:columnSeps = ['::', '=', '->', '<-', '>', '$', '#', '\<then', '\<else', 'deriving']
+let g:columnSeps = ['=', ':', '=>']
 let g:syntaxSym = ['<-', '=', '\$', '\#', '`\w*`', '->', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )
 let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'let', 'deriving'] )) )
-let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
+" let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
+" Typescript:
+let g:lineHotspotsPttn = MakeOrPttn( ['=', '=\>'] )
+let g:colonPttn = MakeOrPttn( ['\:\s'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
@@ -577,15 +581,31 @@ vmap iv ,Ho,L
 
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 
-" This is the 'ballpark' motion - it gets you into constituting areas in a function
+" Note: <c-m> and <c-i> is now unmappable
 " nnoremap <silent> <c-m> :call FnAreaForw()<cr>
 " nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
-nnoremap <silent> <c-m> j^
-nnoremap <silent> <c-i> k^
+" Instead use option-key / alt-key maps that are sent by karabiner. see ~/.config/nvim/help.md#/###%20Mapping%20Alt
+nnoremap <silent> µ :call HotspotForw()<cr>
+nnoremap <silent> <tab> :call HotspotBackw()<cr>
 
+func! HotspotForw()
+  call SearchSkipSC( g:lineHotspotsPttn, 'W' )
+  normal w
+endfunc
+
+func! HotspotBackw()
+  normal bh
+  call SearchSkipSC( g:lineHotspotsPttn, 'bW' )
+  normal w
+endfunc
+
+
+" Go to the start of the next/prev line may also be useful when lines become longer.
+" nnoremap <silent> <c-m> j^
+" nnoremap <silent> <c-i> k^
+
+" This is the 'ballpark' motion - it gets you into constituting areas in a function
 func! FnAreaForw()
-  " Step back is needed to find keywords that are being skipped to from a prev keyword, e.g. a 'do' after '='
-  normal! h
   let [oLine, oCol] = getpos('.')[1:2]
   " Find the next hotspot keyword
   call SearchSkipSC( g:fnWirePttn, 'W' )
@@ -658,8 +678,20 @@ nnoremap <silent> ,j :call FnAreaForw()<cr>
 nnoremap <silent> ,k :call FnAreaBackw()<cr>
 
 " Column movement:
-nnoremap <silent> I :call ColumnMotionForw()<cr>
-nnoremap <silent> Y :call ColumnMotionBackw()<cr>
+nnoremap <silent> I :call ColonForw()<cr>
+nnoremap <silent> Y :call ColonBackw()<cr>
+
+func! ColonForw()
+  call SearchSkipSC( g:colonPttn, 'W' )
+  normal w
+endfunc
+
+func! ColonBackw()
+  normal bh
+  call SearchSkipSC( g:colonPttn, 'bW' )
+  normal w
+endfunc
+
 func! ColumnMotionForw() " ■
   if !search('\S', 'nW') " cancel recursive call at end of file
     return
