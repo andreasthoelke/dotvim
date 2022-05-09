@@ -1,15 +1,15 @@
 -- init.lua
 vim.g.symbols_outline = {
     highlight_hovered_item = true,
-    show_guides = true,
+    show_guides = false,
     auto_preview = false,
     position = 'right',
     relative_width = true,
-    width = 20,
+    width = 10,
     auto_close = false,
     show_numbers = false,
     show_relative_numbers = false,
-    show_symbol_details = true,
+    show_symbol_details = false,
     preview_bg_highlight = 'Pmenu',
     keymaps = { -- These keymaps can be a string or a table for multiple keys
         close = {"<Esc>", "q"},

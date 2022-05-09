@@ -1466,7 +1466,7 @@ nmap <Leader>bj <Plug>BookmarkMoveDown
 " nmap <Leader>g <Plug>BookmarkMoveToLine
 
 
-" Marks: ----------------------------------------------------------------
+" ─   Marks                                          ──
 
 let g:markbar_marks_to_display = 'abcdefghijklnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -1506,8 +1506,24 @@ function! ForceGlobalRemovalMarks()
 endfunction
 
 " Markbar: --------------------------------------------------------------------------"
-nmap <leader>om <Plug>ToggleMarkbar
-" nmap mo <Plug>OpenMarkbar | wincmd p
+nnoremap <leader>om :call MarkbarOpen()<cr>
+
+let g:markbar_isopen = v:false
+
+func! MarkbarOpen()
+  if !g:markbar_isopen
+    call g:standard_controller.openMarkbar()
+    set syntax=typescript
+    let g:markbar_isopen = v:true
+    wincmd p
+  else
+    call g:standard_controller.closeMarkbar()
+    let g:markbar_isopen = v:false
+  endif
+endfunc
+
+" nmap <leader>om <Plug>ToggleMarkbar
+" nmap <leader><leader>om <Plug>OpenMarkbar | echo "hi"
 " nmap mo :call g:standard_controller.toggleMarkbar()<cr>:wincmd p<cr>
 " nmap mm :call markbar#ui#RefreshMarkbar(g:__active_controller)<cr>
 let g:markbar_enable_peekaboo = v:false

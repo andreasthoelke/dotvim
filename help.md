@@ -1162,7 +1162,7 @@ leader om - Markbar
 leader oU - Undo tree (Mundo)
 :StripWhitespace - removes whitespace
 
-## Tags, Vista, Tagbar
+## Tags, Vista, Tagbar, Symbols Outline
 
 leader / - Search for tags
 leader ? - FzfPreviewBufferTags
@@ -1175,6 +1175,10 @@ p in win - to jump to tag but cursor stays in tagbar
 
 this actually works:
 call TagInStatusline()
+
+now using SymbolsOutline:
+~/.config/nvim/plugin/setup-symbols-outline.lua#/vim.g.symbols_outline%20=%20{
+~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<leader>ot%20.SymbolsOutline<cr>
 
 ### Vista usage
 
@@ -1194,6 +1198,8 @@ o - open mark at cursor
 c-x - delete mark
 DelLocalMarks, DelGlobalMarks
 gz'M - Open a mark position in a floating-win. Use empty floating win with marks jumps: e.g. gz'M
+
+Markbar config: ~/.config/nvim/plugin/setup-general.vim#/Marks.
 
 ## Vim-Bookmarks
 

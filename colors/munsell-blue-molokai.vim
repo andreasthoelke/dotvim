@@ -390,6 +390,12 @@ hi! def link TagbarScope Function
 hi! def link TagbarType Keyword
 hi! def link TagbarKind Type
 
+" Symbol Outline
+" hi! def link FocusedSymbol PmenuSel
+" hi! def link FocusedSymbol purescriptIdentifierDot1
+" hi! def link FocusedSymbol purescriptIdentifer
+hi! FocusedSymbol guifg=#A2AEB0
+
 " Markdown colors
 hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! Highlight1 guifg=#F6DC69

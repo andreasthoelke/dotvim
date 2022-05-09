@@ -95,6 +95,7 @@ endfunc
 
 
 " https://stackoverflow.com/questions/1534835/how-do-i-close-all-buffers-that-arent-shown-in-a-window-in-vim
+
 function! DeleteInactiveBufs()
     "From tabpagebuflist() help, get a list of all buffers in all tabs
     let tablist = []
@@ -107,7 +108,8 @@ function! DeleteInactiveBufs()
     for i in range(1, bufnr('$'))
         if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
         "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
-            silent exec 'bwipeout!' i
+            " silent exec 'bwipeout!' i
+            silent exec 'bdelete!' i
             let nWipeouts = nWipeouts + 1
         endif
     endfor

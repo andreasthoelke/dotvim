@@ -24,10 +24,10 @@ func! T_DoSetImport()
   let [identif, modulePath] = T_ImportInfo()
 
   " 3. Which type of import var do we want to set?
-  if     identif =~ 'tydef'
+  if     identif =~ 'schco'
     call T_SetServerTypeDef( identif, modulePath )
     call T_SetGqlExecTypeDef( identif, modulePath )
-    call VirtualRadioLabel('▵t')
+    call VirtualRadioLabel('▵sc')
   elseif identif =~ 'resol'
     call T_SetServerResolver( identif, modulePath )
     call T_SetGqlExecResolver( identif, modulePath )
@@ -57,14 +57,14 @@ endfunc
 
 " Server:
 func! T_SetServerTypeDef( identifier, module )
-  let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
+  let importStm = "import { " . a:identifier . " as schemaConfig } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Server')
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Server' )
 endfunc
 
 func! T_SetGqlExecTypeDef( identifier, module )
-  let importStm = "import { " . a:identifier . " as typeDefs } from '" . a:module . "'"
+  let importStm = "import { " . a:identifier . " as schemaConfig } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('GqlExec')
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'GqlExec' )
