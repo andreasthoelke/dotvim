@@ -1,4 +1,10 @@
 
+
+## Yarn upgrade packages
+yarn outdated - to see a list of new/wanted version numbers
+yarn upgrade-interactive --latest - select which packages to upgrade
+yarn list --pattern @pothos
+
 # Node, npm
 
 npm list -g

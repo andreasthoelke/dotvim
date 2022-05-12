@@ -69,6 +69,7 @@ nnoremap <c-w>H :call WinMove('h')<cr>
 nnoremap <c-w>L :call WinMove('l')<cr>
 
 func! WinMove (dir)
+  let [oLine, oCol] = getpos('.')[1:2]
   let filename = expand('%:p')
   wincmd q
   if     a:dir == 'j'
@@ -80,6 +81,7 @@ func! WinMove (dir)
   elseif a:dir == 'l'
     exec 'botright' '37vsplit' filename
   endif
+  call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
 " Split: current buffer left

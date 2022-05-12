@@ -8,12 +8,14 @@ nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
 nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
 
 nnoremap <silent> ger :call T_Refetch('Client')<cr>
+" nnoremap <silent> ,ger :call T_DoSetImport()<cr>:T_Refetch('Client')<cr>
 nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
+nnoremap <silent> ,gdr :call T_Refetch('GqlExecWithError')<cr>
 nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
-" nnoremap <silent> ger :call T_ClientRefetch()<cr>
-" nnoremap <silent> gwr :call T_PrinterRerun()<cr>
+nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
 
 nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
+nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
 nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
 
 " ─   Set import variables                               ■
@@ -24,12 +26,12 @@ func! T_DoSetImport()
   let [identif, modulePath] = T_ImportInfo()
 
   " 3. Which type of import var do we want to set?
-  if     identif =~ 'schco'
-    call T_SetServerTypeDef( identif, modulePath )
+  if     identif =~ 'sch' || identif =~ 'builder'
+    " call T_SetServerTypeDef( identif, modulePath )
     call T_SetGqlExecTypeDef( identif, modulePath )
-    call VirtualRadioLabel('▵sc')
+    call VirtualRadioLabel('▵s')
   elseif identif =~ 'resol'
-    call T_SetServerResolver( identif, modulePath )
+    " call T_SetServerResolver( identif, modulePath )
     call T_SetGqlExecResolver( identif, modulePath )
     call VirtualRadioLabel('▵r')
   elseif identif =~ 'query'
@@ -47,13 +49,26 @@ func! T_DoSetImport()
 endfunc
 
 func! T_ImportInfo()
-  " 1. Get the exported identifier
-  let [export, _, identif; _] = split( getline('.') )
-  if export != 'export' | echo 'identifier needs to be exported' | return | endif
-  " 2. Get the module path
+  " 1. Get the module path
   let modulePath = T_AbsModulePath()
-  return [identif, modulePath]
+  " 2. Get the exported identifier
+  let [export, altIdentif, identif; _] = split( getline('.') )
+  if export != 'export'
+    " echo 'identifier needs to be exported'
+    call T_ExportLine()
+    return [altIdentif, modulePath]
+  else
+    return [identif, modulePath]
+  endif
 endfunc
+
+func! T_ExportLine()
+  let lineText = getline('.')
+  let lineText = 'export ' . lineText
+  call append( '.', lineText )
+  normal dd
+endfunc
+" call T_ExportLine()
 
 " Server:
 func! T_SetServerTypeDef( identifier, module )
@@ -64,7 +79,7 @@ func! T_SetServerTypeDef( identifier, module )
 endfunc
 
 func! T_SetGqlExecTypeDef( identifier, module )
-  let importStm = "import { " . a:identifier . " as schemaConfig } from '" . a:module . "'"
+  let importStm = "import { " . a:identifier . " as schemaSource } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('GqlExec')
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'GqlExec' )
@@ -90,6 +105,7 @@ func! T_SetClientQuery( identifier, module )
   let TesterLines = T_ReadTesterFileLines('Client')
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Client' )
+  " call T_Refetch( 'Client' )
 endfunc
 
 func! T_SetGqlExecQuery( identifier, module )
@@ -97,6 +113,7 @@ func! T_SetGqlExecQuery( identifier, module )
   let TesterLines = T_ReadTesterFileLines('GqlExec')
   let TesterLines[2] = importStm " Note that the Client imports start at the 3rd line!
   call T_WriteTesterFile( TesterLines, 'GqlExec' )
+  call T_Refetch( 'GqlExec' )
 endfunc
 
 func! T_SetClientVariables( identifier, module )
@@ -119,7 +136,7 @@ func! T_SetPrinterIdentif( identifier, module )
   let TesterLines = T_ReadTesterFileLines('Printer')
   let TesterLines[0] = importStm
   call T_WriteTesterFile( TesterLines, 'Printer' )
-  call T_PrinterRerun()
+  call T_Refetch( 'Printer' )
 endfunc
 
 func! T_DoSetPrinterIdentif()
@@ -156,9 +173,43 @@ func! T_TesterFilePath( testerName )
   return getcwd() . '/scratch/.test' . a:testerName . '.ts'
 endfunc
 
-func! T_TesterTerminalCommand( testerName )
-  return 'npx ts-node -T ' . T_TesterFilePath( a:testerName )
+func! T_TesterTerminalCommand( testCmd )
+
+  if a:testCmd     == 'ShowSchema'
+    let filePath = T_TesterFilePath( 'GqlExec' )
+    let functionName = 'ShowSchema'
+
+  elseif a:testCmd == 'GqlExec'
+    let filePath = T_TesterFilePath( 'GqlExec' )
+    let functionName = 'ExecSchema'
+
+  elseif a:testCmd == 'GqlExecWithError'
+    let filePath = T_TesterFilePath( 'GqlExec' )
+    let functionName = 'ExecSchemaWithError'
+
+  elseif a:testCmd == 'Server'
+    let filePath = T_TesterFilePath( 'Server' )
+    let functionName = 'StartServer'
+
+  elseif a:testCmd == 'Client'
+    let filePath = T_TesterFilePath( 'Client' )
+    let functionName = 'RunQuery'
+
+  elseif a:testCmd == 'Printer'
+    let filePath = T_TesterFilePath( 'Printer' )
+    let functionName = 'RunPrint'
+
+  else
+    echoe a:testCmd . ' not supported!'
+    return
+  endif
+
+  return T_NodeFunctionCall_TermCmd( filePath, functionName )
 endfunc
+" echo systemlist( T_TesterTerminalCommand( 'Printer' ) )
+" echo T_TesterTerminalCommand( 'Printer' )
+" echo systemlist( T_TesterTerminalCommand( 'Client' ) )
+
 
 " The current files' module path
 func! T_AbsModulePath()
@@ -166,13 +217,6 @@ func! T_AbsModulePath()
   return '..' . CurrentRelativeModulePath()
 endfunc
 
-func! CurrentRelativeModulePath()
-  let path = expand('%:p:r')
-  let cwd = getcwd()
-  let relPath = substitute( path, cwd, '', '' )
-  return relPath
-endfunc
-" echo CurrentRelativeModulePath()
 
 
 " ─^  File operations                                    ▲
@@ -195,9 +239,13 @@ endfunc
 
 func! T_ServerStart ()
   if exists('g:T_ServerID') | echo 'T_Server is already running' | return | endif
-  " exec "10new"
-  " let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
   let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
+endfunc
+
+func! T_ServerStartT ()
+  if exists('g:T_ServerID') | echo 'T_Server is already running' | return | endif
+  exec "10new"
+  let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
 
 func! T_ServerStop ()

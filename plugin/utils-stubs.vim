@@ -380,6 +380,7 @@ endfunc
 " ─^  ArgTypesToSuggestedArgNames                        ▲
 
 
+
 func! ExpandSignature()
   let identif = GetTopLevSymbolName()
   let fillChars = repeat( ' ', col('.'))

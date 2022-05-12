@@ -5,10 +5,10 @@
 
 
 
-nnoremap ger :call WebserverRequestResponse( '' )<cr>
-nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
-nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
-nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
+" nnoremap ger :call WebserverRequestResponse( '' )<cr>
+" nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
+" nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
+" nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
 func! WebserverRequestResponse( flags )
   let urlExtension = GetStringInQuotesFromLine( line('.') )
   let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension

@@ -308,8 +308,13 @@ endfunc
 " endfunc
 
 func! GraphQLSyntaxAdditions()
+  " Note: this sequence of clearmatches, CodeMarkup, matchadd conceal and conceallevel seems to be important
+  call clearmatches()
+  call CodeMarkupSyntaxHighlights()
   call matchadd('Conceal', '"""', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
   set conceallevel=2
+  set concealcursor=ni
 endfunc
 
 

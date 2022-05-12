@@ -10,7 +10,7 @@ nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>
 nnoremap <leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>
-nnoremap <leader>glC :call LaunchChromium( 'http://localhost:8000' )<cr>
+nnoremap <leader>glC :call LaunchChromium( 'http://localhost:4040/graphql' )<cr>
 nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>
 nnoremap glC :call StopChromium()<cr>
 
@@ -89,6 +89,8 @@ func! AddLinesToFile ( filePath, newLines, delLineNum )
   call writefile( newLines, a:filePath)
 endfunc
 
+" ─   Javascript Nodejs helper                           ■
+
 command! TypescriptReplsetCommonJS call TypescriptRepl_TSNode_setCommonJS()
 
 func! TypescriptRepl_TSNode_setCommonJS()
@@ -97,6 +99,28 @@ func! TypescriptRepl_TSNode_setCommonJS()
   let fileName = 'tsconfig.json'
   call AddLinesToFile( fileName, [newConfigLine1, newConfigLine2], -2 )
 endfunc
+
+" Execute a function in a typescript file. This function should typically console.log() it's result. Example:
+  " let resLines = systemlist( T_TesterTerminalCommand( a:testerName ) )
+  " silent let g:floatWin_win = FloatingSmallNew ( resLines )
+func! T_NodeFunctionCall_TermCmd( filePath, fnName )
+  let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
+  return "npx ts-node -T -e '" . js_code_statement . "'"
+  " node -e 'require("./db").init()'
+  " npx ts-node -T -e 'require("/Users/at/Documents/Architecture/examples/gql1/scratch/.testGqlExec.ts").ShowSchema()'
+endfunc
+
+func! CurrentRelativeModulePath()
+  let path = expand('%:p:r')
+  let cwd = getcwd()
+  let relPath = substitute( path, cwd, '', '' )
+  return relPath
+endfunc
+" echo CurrentRelativeModulePath()
+
+
+" ─^  Javascript Nodejs helper                           ▲
+
 
 fun! OpenITerm()
   let path = projectroot#guess()

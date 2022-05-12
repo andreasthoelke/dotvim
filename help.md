@@ -1094,11 +1094,15 @@ ihc - 'inside heading content' text object
 
 
 ## Sneak & easymotion
-
-f/F - f<char> to jump to next char. L/H to next
 ~/.config/nvim/plugin/setup-general.vim#/Sneak%20Code%20Navigation
-\j/k - line motion
-\f - then type first char, then the label keys that show up. Use then when you have already found/read a particular word.
+
+Sneak - forward OR Backward motion
+f/F - f<char> to jump to next char. L/H to next
+
+Easymotion - forward AND backward (!) motion:
+,f - then type first char, then the label keys that show up. Use this when you have already spotted/focused/read a particular char/word.
+
+,j/k - line motion
 
 
 ## Text-objects
