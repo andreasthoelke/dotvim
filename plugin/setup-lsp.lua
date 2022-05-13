@@ -271,11 +271,11 @@ lspconfig.graphql.setup({
 
 -- Todo: this duplicates messages of eslint_d
 -- https://github.com/hrsh7th/vscode-langservers-extracted
--- lspconfig.eslint.setup({
---   capabilities = capabilities,
---   on_attach = on_attach,
---   flags = flags,
--- })
+lspconfig.eslint.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.cssls.setup({

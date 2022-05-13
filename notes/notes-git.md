@@ -1,4 +1,18 @@
 
+## Clone a single branch
+git clone -b patch-2 --single-branch https://github.com/andreasthoelke/pothos
+
+## Make a pull request to a github repo
+clone the repo
+create a new branch with a meaningful name
+commit changes to this branch.
+you can later git push to this branch to update your pending pull request.
+
+## Update local clone from remote repo
+git pull --rebase
+then there will be conflic code markers (like >>>>> ..) you will have to clean up!
+then you can git add . and git commit -m '..'.
+then git rebase --continue
 
 ## Status & author commit
 leader og   - FzfPreviewGitStatus allows quick staging per file
