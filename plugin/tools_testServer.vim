@@ -1,11 +1,24 @@
 
+" Todo:
+" 0. copy all files at once from the template. including .env to the project root. and a *default test*. this will
+" include empty/undefined schema, resolvers, query and variab. these are imported as a default to the Tester files.
+" 1. This depands on the following installs:
+" pnpm add -D -w lodash @types/lodash graphql-request apollo-server express express-graphql @types/express @graphql-yoga/node @pothos/core dotenv
+" npm i -D lodash @types/lodash graphql-request apollo-server express express-graphql @types/express @graphql-yoga/node @pothos/core dotenv
+" 2. client and server are reading from TESTSERVERNAME and TESTPORT from .env. This script could copy these lines
+" into the .env file
+" 
+let g:T_ServerName = ''
+" let g:T_ServerName = 'Yoga'
+" let g:T_ServerName = 'Express'
+
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
 nnoremap <silent> gsi :call T_DoSetImport()<cr>
 nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
 
-nnoremap <silent> gsr :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
-nnoremap <silent> gsR :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
+nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
+nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
 
 nnoremap <silent> ger :call T_Refetch('Client')<cr>
 " nnoremap <silent> ,ger :call T_DoSetImport()<cr>:T_Refetch('Client')<cr>
@@ -42,6 +55,10 @@ func! T_DoSetImport()
     call T_SetClientVariables( identif, modulePath )
     call T_SetGqlExecVariables( identif, modulePath )
     call VirtualRadioLabel('▵v')
+  elseif identif =~ 'contex'
+    " Server context factory function
+    call T_SetServerContext( identif, modulePath )
+    call VirtualRadioLabel('▵c')
   else
     call T_SetPrinterIdentif( identif, modulePath )
   endif
@@ -56,11 +73,17 @@ func! T_ImportInfo()
   if export != 'export'
     " echo 'identifier needs to be exported'
     call T_ExportLine()
-    return [altIdentif, modulePath]
+    let ident = T_RemoveTypeColon( altIdentif )
   else
-    return [identif, modulePath]
+    let ident = T_RemoveTypeColon( identif )
   endif
+  return [ident, modulePath]
 endfunc
+
+func! T_RemoveTypeColon( str )
+  return substitute( a:str, ':', '', '' )
+endfunc
+" echo T_RemoveTypeColon( 'myVar:' )
 
 func! T_ExportLine()
   let lineText = getline('.')
@@ -71,12 +94,22 @@ endfunc
 " call T_ExportLine()
 
 " Server:
-func! T_SetServerTypeDef( identifier, module )
-  let importStm = "import { " . a:identifier . " as schemaConfig } from '" . a:module . "'"
+" func! T_SetServerTypeDef( identifier, module )
+"   let importStm = "import { " . a:identifier . " as schemaConfig } from '" . a:module . "'"
+"   let TesterLines = T_ReadTesterFileLines('Server')
+"   let TesterLines[0] = importStm
+"   call T_WriteTesterFile( TesterLines, 'Server' )
+" endfunc
+
+" The context value setup depends a bit on which server is used. So currently only this contextFactory function is
+" imported directly into the testServer.ts and used by currently only some servers (e.g. Express).
+func! T_SetServerContext( identifier, module )
+  let importStm = "import { " . a:identifier . " as context } from '" . a:module . "'"
   let TesterLines = T_ReadTesterFileLines('Server')
   let TesterLines[0] = importStm
-  call T_WriteTesterFile( TesterLines, 'Server' )
+  call T_WriteTesterFile( TesterLines, 'Server')
 endfunc
+
 
 func! T_SetGqlExecTypeDef( identifier, module )
   let importStm = "import { " . a:identifier . " as schemaSource } from '" . a:module . "'"
@@ -85,12 +118,12 @@ func! T_SetGqlExecTypeDef( identifier, module )
   call T_WriteTesterFile( TesterLines, 'GqlExec' )
 endfunc
 
-func! T_SetServerResolver( identifier, module )
-  let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
-  let TesterLines = T_ReadTesterFileLines('Server')
-  let TesterLines[1] = importStm
-  call T_WriteTesterFile( TesterLines, 'Server')
-endfunc
+" func! T_SetServerResolver( identifier, module )
+"   let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
+"   let TesterLines = T_ReadTesterFileLines('Server')
+"   let TesterLines[1] = importStm
+"   call T_WriteTesterFile( TesterLines, 'Server')
+" endfunc
 
 func! T_SetGqlExecResolver( identifier, module )
   let importStm = "import { " . a:identifier . " as resolvers } from '" . a:module . "'"
@@ -113,7 +146,7 @@ func! T_SetGqlExecQuery( identifier, module )
   let TesterLines = T_ReadTesterFileLines('GqlExec')
   let TesterLines[2] = importStm " Note that the Client imports start at the 3rd line!
   call T_WriteTesterFile( TesterLines, 'GqlExec' )
-  call T_Refetch( 'GqlExec' )
+  " call T_Refetch( 'GqlExec' )
 endfunc
 
 func! T_SetClientVariables( identifier, module )
@@ -159,18 +192,13 @@ endfunc
 
 func! T_ReadTesterFileLines( testerName )
   let TesterPath = T_TesterFilePath( a:testerName )
-  if !filereadable( TesterPath )
-    " There's no testServer.ts file yet in this project - copy a template
-    let templateFile = '~/.config/nvim/notes/templates/.test' . a:testerName . '.ts'
-    let templateFile = fnamemodify( templateFile, ':p')
-    let lines = readfile( templateFile, '\n' )
-    call writefile(lines, TesterPath)
-  endif
   return readfile( TesterPath, '\n' )
 endfunc
 
 func! T_TesterFilePath( testerName )
-  return getcwd() . '/scratch/.test' . a:testerName . '.ts'
+  let TesterPath = getcwd() . '/scratch/.test' . a:testerName . '.ts'
+  call T_EnsureTesterModuleFile( TesterPath, a:testerName )
+  return TesterPath
 endfunc
 
 func! T_TesterTerminalCommand( testCmd )
@@ -189,7 +217,7 @@ func! T_TesterTerminalCommand( testCmd )
 
   elseif a:testCmd == 'Server'
     let filePath = T_TesterFilePath( 'Server' )
-    let functionName = 'StartServer'
+    let functionName = 'StartServer' . g:T_ServerName
 
   elseif a:testCmd == 'Client'
     let filePath = T_TesterFilePath( 'Client' )
@@ -282,6 +310,19 @@ func! T_Refetch( testerName )
 endfunc
 
 
+func! T_EnsureTesterModuleFile( TesterPath, testerName )
+  if !filereadable( a:TesterPath )
+    " There's no testServer.ts file yet in this project - copy a template
+    let dirpath = fnamemodify( a:TesterPath, ':p:h')
+    if !isdirectory( dirpath )
+      call mkdir( dirpath, 'p' )
+    endif
+    let templateFile = '~/.config/nvim/notes/templates/.test' . a:testerName . '.ts'
+    let templateFile = fnamemodify( templateFile, ':p')
+    let lines = readfile( templateFile, '\n' )
+    call writefile(lines, a:TesterPath)
+  endif
+endfunc
 
 
 

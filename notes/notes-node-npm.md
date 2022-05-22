@@ -1,4 +1,17 @@
 
+## Changing node versions
+using n i get:
+   installed : v16.15.0 to /usr/local/bin/node
+      active : v18.0.0 at /opt/homebrew/bin/node
+
+Todo: how to keep using n?
+
+But i can change the node version with brew:
+brew link --overwrite node@16
+brew info node@16
+brew install node@16
+
+
 
 ## Yarn upgrade packages
 yarn outdated - to see a list of new/wanted version numbers

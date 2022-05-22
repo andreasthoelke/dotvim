@@ -73,7 +73,7 @@ endfunc
 
 func! GetNextScratchFilePath()
   " project root
-  " mkdir if not exsists
+  " mkdir if not exists
   " count files in dir
 endfunc
 

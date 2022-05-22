@@ -1,10 +1,9 @@
-import { justatestvar1 as testIdentif } from '../scratch/gql3'
+import { Posts as testIdentif } from '../scratch/gqlBasicTests'
 
+export function RunPrint() {
+  new Promise( (r) => r( testIdentif ) ).then( res => console.log( res ) )
+}
 
-
-// new Promise( (r) => r( testIdentif ) ).then( res => console.log( res ) )
-
-console.log( testIdentif )
 
 
 

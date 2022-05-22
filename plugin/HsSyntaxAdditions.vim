@@ -151,6 +151,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "async\ze\s" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
+  syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v\=\>" conceal cchar=⇒

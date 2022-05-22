@@ -1042,6 +1042,15 @@ nmap gi <Plug>(place-insert)
 nmap gI <Plug>(place-insert-multiple)
 let g:place_blink = 0
 
+" ─   Vim targets                                       ──
+
+" autocmd User targets#mappings#user call targets#mappings#extend({
+"     \ 'i': {'separator': [{'d': ','}]}
+"     \ })
+
+let g:targets_argOpening = '[({[]'
+let g:targets_argClosing = '[]})]'
+
 " ─   Sneak Code Navigation                             ──
 " 1-character enhanced 'f'
 nmap f <Plug>Sneak_f
@@ -1054,9 +1063,9 @@ omap F <Plug>Sneak_F
 " 1-character enhanced 't'
 " nmap ,t <Plug>Sneak_t
 " nmap ,T <Plug>Sneak_T
-" xmap ,t <Plug>Sneak_t
+" xmap t <Plug>Sneak_t
 " xmap ,T <Plug>Sneak_T
-" omap ,t <Plug>Sneak_t
+omap t <Plug>Sneak_t
 " omap ,T <Plug>Sneak_T
 " Use L/H for next so ";" and "," can be used elsewhere
 map L <Plug>Sneak_;

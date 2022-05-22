@@ -269,6 +269,7 @@ lspconfig.graphql.setup({
 -- })
 
 
+-- Todo: This works fine but i'd need to configure prettier e.g. to optionally let me use or not use semicolons/;
 -- Todo: this duplicates messages of eslint_d
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.eslint.setup({

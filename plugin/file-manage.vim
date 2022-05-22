@@ -350,11 +350,13 @@ endfunction
 
 " CtrlP support: Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
 command! CtrlPArgs call ctrlp#init( ctrlpArgs#id() )
-nnoremap <leader>oa :CtrlPArgs<cr>
-nnoremap <leader>gi :CtrlPArgs<cr>
+nnoremap <leader>sA :CtrlPArgs<cr>
+nnoremap <leader>dA :call ArglistDelFiles()<cr>
+nnoremap <leader>cA :call ArglistClear()<cr>
 
-" Reset the global arg list:
-nnoremap <leader>X :%argdelete<cr>:call ReloadKeepView()<cr>
+nnoremap <leader>oa :echo 'use sA (show Arglist)'<cr>
+nnoremap <leader>X :echo 'use dA (delete Arglist)'<cr>
+
 " Use "argg and argl" to switch to global and local arg list. Generally prefer the global arg list.
 
 func! ReloadKeepView()
@@ -370,6 +372,23 @@ vnoremap <leader>x :<c-u>call Arglist_toggleItems( getline("'<", "'>") )<cr>
 nnoremap <leader>x :set opfunc=ArglistToggle_op<cr>g@
 " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
 " Issue: Dotfolders e.g. ".git" can not be toggled in dirvish, only with CtrlP-s
+
+" leader xiB  - toggle all dirvish files to the arglist
+
+func! ArglistDelFiles()
+  call input( 'deleting these files: ' . string( argv() ) )
+  call map ( argv(), {_, str -> delete( str, 'rf' )} )
+  for fname in argv()
+    exec 'bdelete' fname
+  endfor
+  exec '%argdelete'
+  normal R
+endfunc
+
+func! ArglistClear()
+  exec '%argdelete'
+  normal R
+endfunc
 
 func! ArglistToggle_op( _ )
   call Arglist_toggleItems( getline( "'[", "']" ) )

@@ -31,7 +31,7 @@ notes/brew-list-dump-2021-12-23.txt
 
 /Users/at/.vim/notes/notes-node-npm.md
 
-## Typescript repl
+## Typescript project setup, lsp, tslint, prettier
 ~/Documents/Server-Dev/a_tssetup/notes-typescript-node.md#/##%20TS-Node
 
 
@@ -663,6 +663,17 @@ leader sP     - same as above, but copies the buffer filename
 c-e/y - up/down
 zt/b - bottom/top
 
+### Chromium tool windows
+are launched via <space>glC
+~/.config/nvim/plugin/tools-external.vim#/func.%20LaunchChromium.%20url
+
+they may overlap with :MarkdownPreview window. There's also:
+~/.config/nvim/plugin/tools-external.vim#/func.%20LaunchChromium2.%20url
+
+To go to the next (overlapping) window:
+  Cmd + *`*
+
+
 ### Buffers
 
 ]f [f   - next/prev file in folder
@@ -746,6 +757,8 @@ Open a folder in Finder:
 c-s j/k   - to scroll a pdf page in preview app.
 (Control + right Shift key) .. note the karabiner config.
 
+## Ranger
+:set show_hidden!      - to enter command mode and show hidden files
 
 ### Ranger-like setup
 
@@ -838,11 +851,15 @@ leader oa - show arglist in CtrlP. v/t to open. <c-s> to delete
 
 :arg \*.html or :argadd \**/*md
 
+leader xiB  - toggle all dirvish files to the arglist
+
 help argument-list
 [a :previous
 ]a :next
 [A :first
 ]A :last
+
+maps and helpers: ~/.config/nvim/plugin/file-manage.vim#/Arglist
 
 Populate Arglist: ~/.vim/plugin/notes-workflow.vim#/Populate%20Arglist.%20-
 
@@ -1111,7 +1128,7 @@ Can look up the textobjects here:
 https://github.com/nvim-treesitter/nvim-treesitter-textobjects/blob/master/queries/javascript/textobjects.scm
 https://github.com/nvim-treesitter/nvim-treesitter-textobjects\#built-in-textobjects
 
-Then deine select, move (and shift) maps here:
+Then define select, move (and shift) maps here:
 ~/.config/nvim/plugin/setup-treesitter.lua#/textobjects%20=%20{
 
 help text-objects
@@ -1119,6 +1136,7 @@ iB - inside entire buffer ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
 
 ### vim (welle-) targets
 ~/.config/nvim/notes/notes-navigation.md#/###%20Targets
+~/.config/nvim/plugin/setup-general.vim#/Vim%20targets
 
 ### Html tags
 vit/vat  - work nicely for html tags. these maps are *native*
@@ -1612,5 +1630,6 @@ read the documentation here!: ~/.vim/plugin/syntax-color.vim#/STEP2A.%20If%20you
 function argument highlighing ~/.vim/syntax/purescript.vim#/TODO%20rather%20highlight
 https://github.com/pboettch/vim-highlight-cursor-words/blob/master/plugin/hicursorwords.vim
 https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-vim-like-in-netbeans
+
 
 Show purescript syntax in Coc completion menu
