@@ -376,14 +376,25 @@ nnoremap <leader>x :set opfunc=ArglistToggle_op<cr>g@
 " leader xiB  - toggle all dirvish files to the arglist
 
 func! ArglistDelFiles()
-  call input( 'deleting these files: ' . string( argv() ) )
-  call map ( argv(), {_, str -> delete( str, 'rf' )} )
-  for fname in argv()
-    exec 'bdelete' fname
-  endfor
-  exec '%argdelete'
-  normal R
+  let msg = 'Deleting these files: ' . string( argv() ) . ' ?'
+  let dres = confirm( msg, "&Yes\n&Cancel", 2 )
+  if dres == 1
+    for fname in argv()
+      call system( 'del ' . fname )
+      exec 'bdelete' fname
+    endfor
+    exec '%argdelete'
+    normal R
+  else
+    redraw
+    echo 'canceled'
+  endif
+  " clear the message area
+  call feedkeys(':','nx')
 endfunc
+
+" Note: vim delete(<fname>) doesn't move to trash!
+" call map ( argv(), {_, str -> delete( str, 'rf' )} )
 
 func! ArglistClear()
   exec '%argdelete'
