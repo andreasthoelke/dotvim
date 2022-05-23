@@ -180,7 +180,11 @@ endfunc
 " ─^  Set import variables                               ▲
 
 
-
+func! T_InsertLineAt( path, lineTxt, idx )
+  let lines = readfile( a:path, '\n' )
+  call insert( lines, a:lineTxt, a:idx )
+  call writefile( lines, a:path )
+endfunc
 
 
 " ─   File operations                                    ■

@@ -255,12 +255,12 @@ inoremap \fp <C-R>=getcwd()<CR>
 " TIP: To insert the RETURN VAL OF ANY VIM FUNCTION into insert position:
 " - hit: 'i', then '<strg>r', then '=', then 'SomeTest1("Hi!")'<cr>
 " TIP: can also do i<strg>r=system('ls')<cr>  try this:
-nmap     <leader>dcg i<c-r>=system('ls')<cr><esc>
-nnoremap <leader>ls  i<c-r>=system('ls -a')<cr><esc>
-nnoremap <leader>ds  i<c-r>=system('
-nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
-" Example: a minimal 'choose buffer' prompt:
-nnoremap <leader>aab :ls<cr>:b<space>
+" nmap     <leader>dcg i<c-r>=system('ls')<cr><esc>
+" nnoremap <leader>ls  i<c-r>=system('ls -a')<cr><esc>
+" nnoremap <leader>ds  i<c-r>=system('
+" nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
+" " Example: a minimal 'choose buffer' prompt:
+" nnoremap <leader>aab :ls<cr>:b<space>
 
 " TIP: Refer to the current file: "%" or alternate/previous file "#"
 " Normal mode: "%p

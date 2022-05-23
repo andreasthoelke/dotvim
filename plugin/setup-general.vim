@@ -162,7 +162,7 @@ let g:session_autosave_periodic = 0
 lua << EOF
 local Path = require('plenary.path')
 require('session_manager').setup({
-  sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions1'), -- The directory where the session files will be saved.
+  sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions'), -- The directory where the session files will be saved.
   path_replacer = '__', -- The character to which the path separator will be replaced for session files.
   colon_replacer = '++', -- The character to which the colon symbol will be replaced for session files.
   autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
@@ -177,6 +177,7 @@ EOF
 " /Users/at/.local/share/nvim/sessions1/
 
 nnoremap <leader>st :Startify<cr>
+nnoremap <leader>ls :call SessionLoadForCWDStartify()<cr>
 
 let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
@@ -189,9 +190,26 @@ let g:startify_lists = [
 let g:startify_custom_header = []
 
 " let g:startify_session_dir = '~/.local/share/nvim/sessions1'
-let g:startify_session_dir = stdpath('data') . '/sessions1'
+" Startify is listing the sessions safed by 'session_manager' (see above)
+let g:startify_session_dir = stdpath('data') . '/sessions'
 " echo $XDG_DATA_HOME
 " echo stdpath('data')
+
+" /Users/at/.local/share/nvim/sessions/
+" /Users/at/.local/share/nvim/sessions1/
+" __Users__at__Documents__Architecture__examples__graphql-relay-js
+
+func! SessionLoadForCWDStartify()
+  let sessionFile = substitute( getcwd(), '/', '__', 'g' )
+  " let sessionPath = g:startify_session_dir . '/' . sessionFile
+  exec 'SLoad ' . sessionFile
+
+  " For some reason the cmdheight is set to 1 after loading a session. Setting it back to 3:
+  let currTab=tabpagenr()
+  tabdo set cmdheight=3
+  execute 'tabn ' . currTab
+endfunc
+
 
 " Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.

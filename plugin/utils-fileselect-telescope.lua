@@ -33,6 +33,7 @@ require('telescope').setup{
 
 require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
+-- require('telescope').load_extension('session-lens')
 
 local bookmark_actions = require('telescope').extensions.vim_bookmarks.actions
 

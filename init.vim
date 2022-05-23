@@ -35,6 +35,10 @@ Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 
 Plug 'nvim-telescope/telescope-github.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
+
+" Plug 'rmagatti/auto-session'
+" Plug 'rmagatti/session-lens'
+
 Plug 'cljoly/telescope-repo.nvim'
 
 Plug 'tpope/vim-commentary'
