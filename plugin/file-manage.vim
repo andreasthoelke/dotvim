@@ -125,6 +125,9 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
 " This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
 nnoremap <silent> gp :<C-u>FzfHistory<CR>
+nnoremap <silent> ,gp :<C-u>FzfPreviewOldFiles<CR>
+" nnoremap <silent> ,gp :<C-u>FZFMru<CR>
+nnoremap <silent> <leader>gp :topleft MRU<CR>
 nnoremap <silent> go :<C-u>FzfBuffer<cr>
 
 
@@ -137,7 +140,7 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 " let g:ctrlp_cmd = 'CtrlPMRU'
 " let g:ctrlp_map = '<localleader>a'
 let g:ctrlp_map = 'gO'
-nnoremap <leader>gp :CtrlPMRU<cr>
+nnoremap <leader><leader>gp :CtrlPMRU<cr>
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {

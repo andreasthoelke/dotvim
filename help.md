@@ -696,6 +696,13 @@ deactivated: Bdelete / Bwipeout - will delete buffers but not close related wind
 leader of - FzfPreviewGitFiles
 leader oF - FzfGFiles
 
+## MRU files, history
+yegappan/mru
+
+is usually based on the shada setting
+#~/.config/nvim/plugin/setup-general.vim#/set%20shada=.,'1000,<50,s10,h
+
+
 ### Files fuzzy open
 
 op - FzfPreviewFromResources project_mru. has nice color syntax

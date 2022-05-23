@@ -236,6 +236,19 @@ set viewdir=~/vimtmp/view//
 
 " ─^  Session settings                                   ▲
 
+" ─   MRU files history                                 ──
+" using: yegappan/mru
+" https://github.com/yegappan/mru/wiki/User-Manual
+
+" file list is here:
+let MRU_File = '/Users/at/.config/nvim/.vim_mru_files'
+
+let MRU_Max_Entries = 3000
+
+" ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20gp
+
+" ─   Shada                                             ──
+
 " Shada: (Shared Persistence) ---------
 command! ShadaClear :call ClearShada()
 " abbrev sc ShadaClear
@@ -540,7 +553,7 @@ noremap <leader>: q:i!
 " call histdel('cmd')
 
 " Default command history is 20
-set history =200
+set history =400
 
 " Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
 " workaround may be to double/ "qq" or to "q<space" instead.

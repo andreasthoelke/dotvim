@@ -21,6 +21,12 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 nnoremap <leader>bs <cmd>lua require('telescope').extensions.vim_bookmarks.all({ width_line=0, width_text=40, shorten_path=true })<cr>
 
+nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
+
+" nnoremap <leader>bk <cmd>lua require('utils_general').fileViewB()<cr>
+
+" interesting but not really my thing
+" Telescope file_browser
 
 " lua require('telescope').setup{ defaults = { layout_strategy = 'vertical', layout_config = { prompt_position = 'top', mirror = true, width = 0.95, height = 0.95 }, }, }
 " Telescope find_files hidden=true layout_config={"prompt_position":"top"}

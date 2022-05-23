@@ -21,6 +21,10 @@ require('telescope').setup{
     -- }
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
+    -- find_files = {
+    -- }
+
+
   },
   extensions = {
     -- Your extension configuration goes here:
@@ -28,12 +32,13 @@ require('telescope').setup{
     --   extension_config_key = value,
     -- }
     -- please take a look at the readme of the extension you want to configure
+
   }
 }
 
 require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
--- require('telescope').load_extension('session-lens')
+require("telescope").load_extension( "file_browser" )
 
 local bookmark_actions = require('telescope').extensions.vim_bookmarks.actions
 
@@ -42,10 +47,16 @@ function _G.TelBookmarks()
     attach_mappings = function(_, map)
       map('i', '<C-x>', bookmark_actions.delete_selected_or_at_cursor)
       map('n', 'dd', bookmark_actions.delete_selected_or_at_cursor)
-    return true
+      return true
     end
   }
 end
+
+
+
+
+-- lua put( require'utils_general'.abc() )
+
 
 return M
 

@@ -36,6 +36,8 @@ Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-github.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
 
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+
 " Plug 'rmagatti/auto-session'
 " Plug 'rmagatti/session-lens'
 
@@ -160,6 +162,8 @@ Plug 'gcavallanti/vim-noscrollbar'
 " Plug 'drzel/vim-line-no-indicator'
 Plug 'dstein64/nvim-scrollview', { 'branch': 'main' }
 
+Plug 'kyazdani42/nvim-web-devicons'
+
 " Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"
 " Plug 'edkolev/tmuxline.vim'
@@ -201,6 +205,8 @@ Plug 'junegunn/goyo.vim'
 " Plug 'kshenoy/vim-signature'
 
 Plug 'AndrewRadev/linediff.vim'
+
+Plug 'yegappan/mru'
 
 Plug 'mhinz/vim-startify'
 
