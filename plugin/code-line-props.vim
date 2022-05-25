@@ -169,11 +169,33 @@ func! VisualBlockMode()
 endfunc
 
 
+" ─   Run list of commands                            ──
+" The 1st item of the list is the function name that will be called with startLine, endLine. The return value of this
+" function call will be passed to the function name in the 3rd list item.
+nnoremap <leader>gwt :let g:opProcessAction=['ListOfLines',[],'RunListOfCommands',[]]<cr>:set opfunc=Gen_opfunc2<cr>g@
+vnoremap <leader>gwt :<c-u>let g:opProcessAction=['ListOfLines',[],'RunListOfCommands',[]]<cr>:call Gen_opfunc2(0,1)<cr>
+" Note this example is not including a related vis-sel command
+
+" " Test lines paragraph (leader gwtip)
+
+" touch temp
+" echo "8drei" >> temp
+" echo "9drei" >> temp
+" echo "vier" >> temp
+
+" cat temp
+
+
+
+func! ListOfLines( startLine, endLine )
+  return getline( a:startLine, a:endLine )
+endfunc
 
 " Vim Pattern: For applying a function via an operator map, visual selection and command
 nnoremap <leader><leader>lc      :let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:set opfunc=Gen_opfunc2<cr>g@
 vnoremap <leader><leader>lc :<c-u>let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:call Gen_opfunc2(0,1)<cr>g@
 command! -range=% LinesOfCodeCount echo LinesOfCodeCount( <line1>, <line2> )
+
 
 " An opFunction (operation on lines of code (very common in vim!)) has to be an action/side-effect.
 " This allows to write processing code into a pure/resusabel function and then run an action just on the result.

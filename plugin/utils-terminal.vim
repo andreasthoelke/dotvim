@@ -41,6 +41,15 @@ endfunc
 " call ShellReturn( 'ls' )
 " echo systemlist( 'ls' )
 
+func! RunListOfCommands( list )
+  for cmd in a:list
+    call system( cmd )
+  endfor
+  echo 'Ran ' . len( a:list ) . ' commands'
+endfunc
+" call RunListOfCommands( ['touch temp', 'echo "drei" >> temp', 'echo "vier" >> temp'] )
+" cat temp
+
 " TODO testing this as off!
 " Keep term buffers running/open when closing the window
 " might want to consider 'winfixheight'

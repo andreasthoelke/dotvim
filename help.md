@@ -1436,6 +1436,9 @@ See also: ~/.config/nvim/plugin/utils-navigation.vim#/nnoremap%20≥%20.vertical
 
 ### Defining operator maps
 
+This is a current example with some documentation:
+~/.config/nvim/plugin/code-line-props.vim#/Run%20list%20of
+
 help map-operator
 
 Basic example: ~/.vim/plugin/utils-vimscript-tools.vim#/func.%20OpSourceVimL.%20motionType, ~/.vim/plugin/search-replace.vim#/Operator%20Map.%20The
