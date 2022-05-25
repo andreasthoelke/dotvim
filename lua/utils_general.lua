@@ -120,11 +120,14 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
     local changed = entry.info.changed == 1 and "+" or " "
     local indicator = entry.flag .. hidden .. readonly .. changed
 
-    local dir_name = vim.fn.fnamemodify(bufname, ":p:h")
+    -- local dir_name = vim.fn.fnamemodify(bufname, ":p:h")
+    -- TODO: how to show a relative path?
+    local dir_name = vim.fn.fnamemodify(bufname, ":h")
     local file_name = vim.fn.fnamemodify(bufname, ":p:t")
 
     local icons, highlight = devicons.get_icon(bufname, string.match(bufname, "%a+$"), { default = true })
 
+    -- TODO this has a specific return shape for builtin.buffers field. find which shape 'oldfiles' expects.
     return {
       valid = true,
 

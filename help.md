@@ -139,18 +139,6 @@ HsMotions should be reworked using treesitter. ~/.vim/plugin/HsMotions.vim#/TODO
 vs code command line options - jump to cursor lock in vscode and back to nvim
 manage /Library/Application Support/ in source control?
 
-# Fuzzy file selection
-
-vim \*\*<TAB> - Files under the current directory - You can select multiple items with TAB key
-vim ../fzf\*\*<TAB> - Files under parent directory that match `fzf`
-cd \*\*<TAB> - Directories under current directory (single-selection)
-
-' - exact matches
-.sh$ - match at the end of the string
-!vim - negate matching
-
-Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
-More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
 
 ### Unix pipe examples
 
@@ -703,7 +691,7 @@ is usually based on the shada setting
 #~/.config/nvim/plugin/setup-general.vim#/set%20shada=.,'1000,<50,s10,h
 
 
-### Files fuzzy open
+# Files fuzzy open
 
 op - FzfPreviewFromResources project_mru. has nice color syntax
 oP - FzfHistory
@@ -711,6 +699,23 @@ can tab multi sel. can use c-t or cv to open multiple wins/tabs. or! .. us <c-q>
 quickfix list open and ]q ready to go through the selected files.
 ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 leader gp - ctrlP. use <c-o>v - browse-open recent file in a split e.g. from a different project
+
+## Fzf how to custom setup
+~/.config/nvim/plugin/utils-fileselect-fzf.vim#/Fzf%20config%20summary
+
+### Fuzzy file selection
+
+vim \*\*<TAB> - Files under the current directory - You can select multiple items with TAB key
+vim ../fzf\*\*<TAB> - Files under parent directory that match `fzf`
+cd \*\*<TAB> - Directories under current directory (single-selection)
+
+' - exact matches
+.sh$ - match at the end of the string
+!vim - negate matching
+
+Examples integrating with e.g. Chrome, NPM, etc https://github.com/junegunn/fzf/wiki/examples
+More technical usecases https://github.com/junegunn/fzf/blob/master/README.md#advanced-topics
+
 
 ## Dirvish
 

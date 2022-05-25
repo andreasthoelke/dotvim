@@ -34,7 +34,7 @@ func! ShowList (list)
   echo fzf#run( {'source': a:list, 'sink': function('TestEcho')} )
 endfunc
 
-let g:testCollection = []
+let g:testCollection = ['eins', 'zwei', '/Users/at/Documents/Server-Dev/pothos/pothos/scratch/testSchema.graphql']
 func! TestCollect (newItems)
   let g:testCollection += a:newItems
   call ShowList( g:testCollection )
@@ -53,6 +53,36 @@ command! -bang -complete=dir -nargs=? TestLS
       \ call fzf#run(fzf#wrap({'sinklist': function('TestCollect'), 'source': 'ls', 'dir': <q-args>}, <bang>0))
 
 " TestLS /tmp
+
+func! F_ReadOldFiles()
+   return F_ReadLines( '~/.config/nvim/.vim_mru_files' )
+endfunc
+
+func! F_ReadLines( file )
+  return readfile( a:file, '\n' )
+endfunc
+
+command! -bang -complete=dir -nargs=? FzfOldFilesCust1
+      \ call fzf#run(fzf#wrap({'source': 'cat ~/.config/nvim/.vim_mru_files', 'dir': <q-args>}, <bang>0))
+
+command! -bang -complete=dir -nargs=? FzfOldFilesCust2
+      \ call fzf#run(fzf#wrap({'source': 'cat ~/.config/nvim/.vim_mru_files', 'dir': <q-args>, 'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0))
+
+" {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}
+
+command! -bang -complete=file -nargs=? FzfPathsFromFile
+      \ call fzf#run(fzf#wrap({'source': 'cat '.shellescape(<q-args>), 'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0))
+
+" This totally works:
+" FzfPathsFromFile ~/.config/nvim/.vim_mru_files
+
+" ─   Fzf config summary                                ──
+
+" The command above shows how to read from a file (using the 'source' key) with a shell command. but I can also use a vim function call.
+" Because 'sink' or 'sinklist' is not set, fzf uses the default file open features. like t to open in a tab.
+" But you can use sinklist to call a function with a (tab selected) list of values!
+" 'sinklist': function('TestCollect')
+
 
 
 " Path completion with custom source command
@@ -82,7 +112,7 @@ inoremap <expr> <c-x><c-l> fzf#vim#complete(fzf#wrap({
 " imap <c-x><c-l> <plug>(fzf-complete-line)
 
 
-command! -bang -nargs=? -complete=dir Test1Files
+command! -bang -nargs=? -complete=dir FzfFilesCustom1
     \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
 
 

@@ -21,6 +21,12 @@ nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
 nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
+nnoremap <leader>ovp :FzfFilesCustom1 ~/.config/nvim/plugin<cr>
+nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
+
+nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
+
+
 nnoremap <silent> ,tn :tabnew<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \s :exec "new " . expand('%:p:h')<cr>
@@ -125,10 +131,13 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
 " This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
 nnoremap <silent> gp :<C-u>FzfHistory<CR>
-nnoremap <silent> ,gp :<C-u>FzfPreviewOldFiles<CR>
+" This command uses a separate history file which should accumulate 2000 entries over time:
+nnoremap <silent> ,gp :<C-u>FzfPathsFromFile ~/.config/nvim/.vim_mru_files<CR>
+nnoremap <silent> ,,gp :<C-u>FzfPreviewOldFiles<CR>
 " nnoremap <silent> ,gp :<C-u>FZFMru<CR>
 nnoremap <silent> <leader>gp :topleft MRU<CR>
 nnoremap <silent> go :<C-u>FzfBuffer<cr>
+nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
 
 
 " ─   CtrlP                                              ■
