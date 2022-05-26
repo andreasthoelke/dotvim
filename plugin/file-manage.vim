@@ -367,7 +367,7 @@ nnoremap <leader>dA :call ArglistDelFiles()<cr>
 nnoremap <leader>cA :call ArglistClear()<cr>
 
 nnoremap <leader>oa :echo 'use sA (show Arglist)'<cr>
-nnoremap <leader>X :echo 'use dA (delete Arglist)'<cr>
+nnoremap <leader>X :echo 'use cA (clear Arglist)'<cr>
 
 " Use "argg and argl" to switch to global and local arg list. Generally prefer the global arg list.
 

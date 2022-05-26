@@ -194,15 +194,10 @@ func! T_TesterFilePath( testerName )
   return TesterPath
 endfunc
 
-func! T_TesterFilePath_ProjectRel( testerName )
-  return '/scratch/.test' . a:testerName . '.ts'
-endfunc
 
-let TesterNamesAll = ['Client' , 'GqlExec' , 'Printer' , 'Server' , 'sDefault']
+let g:TesterFileNamesAll = ['.testClient.ts' , '.testGqlExec.ts' , '.testPrinter.ts' , '.testServer.ts' , '.testsDefault.ts']
+let g:TesterNamesAll =          ['Client' , 'GqlExec' , 'Printer' , 'Server' , 'sDefault']
 
-func! T_TesterFilePathsAll_ProjectRel()
-  return functional#map( { testerName -> T_TesterFilePath_ProjectRel( testerName ) }, TesterNamesAll )
-endfunc
 
 " This should generally be empty so just StartServer() is called. Then .testServer.ts uses process.env.SERVERNAME to e.g. call StartServerYoga()
 let g:T_ServerName = ''
@@ -337,22 +332,33 @@ func! T_InitTesterFiles()
 endfunc
 
 
-
-" Copy commands will silently fail
-func! T_CopyFilesNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
-  let testFilePath = a:targetFolderPath . a:listOfFileNames[0]
+" Notes: Might stop at or destroy existing files! Copy might fail silently.
+func! T_CopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
+  let testFilePath = a:targetFolderPath . '/' . a:listOfFileNames[0]
   if filereadable( testFilePath )
     echoe 'File ' . testFilePath . ' already exists!'
     return
   endif
   if !isdirectory( a:targetFolderPath ) | call mkdir( a:targetFolderPath, 'p' ) | endif
-  let commands = functional#map( { fname -> 'cp ' . a:sourceFolderPath . fname . ' ' . a:targetFolderPath . fname }, a:listOfFileNames )
+  let commands = functional#map( { fname -> 'cp ' . a:sourceFolderPath . '/' . fname . ' ' . a:targetFolderPath . '/' . fname }, a:listOfFileNames )
+  " echo commands
   call RunListOfCommands( commands )
 endfunc
 
-func! T_SnapshotTesterFiles()
-  let sourceFolder = getcwd()
-  let snapshotFolderBasePath = sourceFolder . '/snap'
+func! T_ForceCopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
+  let testFilePath = a:targetFolderPath . '/' . a:listOfFileNames[0]
+  if !isdirectory( a:targetFolderPath ) | call mkdir( a:targetFolderPath, 'p' ) | endif
+  let commands = functional#map( { fname -> 'cp ' . a:sourceFolderPath . '/' . fname . ' ' . a:targetFolderPath . '/' . fname }, a:listOfFileNames )
+  call RunListOfCommands( commands )
+endfunc
+
+nnoremap 
+command! -nargs=? TestServerSnapshotTesterFiles call T_SnapshotTesterFiles( <q-args> )
+
+func! T_SnapshotTesterFiles( snapshotName )
+  let sourceFolder = getcwd() . '/scratch'
+  let snapshotFolder = T_NextSnapshotDirPath( sourceFolder . '/snapshot_' . a:snapshotName )
+  call T_CopyFileNamesToFolder( g:TesterFileNamesAll, sourceFolder, snapshotFolder )
 endfunc
 
 func! T_NextSnapshotDirPath( basePath )
@@ -366,7 +372,15 @@ endfunc
 " mkdir 'temp1' 'temp2'
 " del 'temp1' 'temp2'
 
+command! TestServerReactivateSnapshot call T_ReactivateSnapshot( getline('.') )
 
+func! T_ReactivateSnapshot( snapshotFolder )
+  " auto backup the current files
+  call T_SnapshotTesterFiles( 'backup' )
+  let targetFolder = getcwd() . '/scratch'
+  " Overwrite the current tester files!
+  call T_ForceCopyFileNamesToFolder( g:TesterFileNamesAll, a:snapshotFolder, targetFolder )
+endfunc
 
 
 
