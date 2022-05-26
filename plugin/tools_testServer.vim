@@ -1,16 +1,5 @@
 
-" Todo:
-" 0. copy all files at once from the template. including .env to the project root. and a *default test*. this will
-" include empty/undefined schema, resolvers, query and variab. these are imported as a default to the Tester files.
-" 1. This depands on the following installs:
-" pnpm add -D -w lodash @types/lodash graphql-request apollo-server express express-graphql @types/express @graphql-yoga/node @pothos/core dotenv
-" npm i -D lodash @types/lodash graphql-request apollo-server express express-graphql @types/express @graphql-yoga/node @pothos/core dotenv
-" 2. client and server are reading from TESTSERVERNAME and TESTPORT from .env. This script could copy these lines
-" into the .env file
 " 
-let g:T_ServerName = ''
-" let g:T_ServerName = 'Yoga'
-" let g:T_ServerName = 'Express'
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
@@ -201,9 +190,23 @@ endfunc
 
 func! T_TesterFilePath( testerName )
   let TesterPath = getcwd() . '/scratch/.test' . a:testerName . '.ts'
-  call T_EnsureTesterModuleFile( TesterPath, a:testerName )
+  " call T_EnsureTesterModuleFile( TesterPath, a:testerName )
   return TesterPath
 endfunc
+
+func! T_TesterFilePath_ProjectRel( testerName )
+  return '/scratch/.test' . a:testerName . '.ts'
+endfunc
+
+let TesterNamesAll = ['Client' , 'GqlExec' , 'Printer' , 'Server' , 'sDefault']
+
+func! T_TesterFilePathsAll_ProjectRel()
+  return functional#map( { testerName -> T_TesterFilePath_ProjectRel( testerName ) }, TesterNamesAll )
+endfunc
+
+" This should generally be empty so just StartServer() is called. Then .testServer.ts uses process.env.SERVERNAME to e.g. call StartServerYoga()
+let g:T_ServerName = ''
+" let g:T_ServerName = 'Express'
 
 func! T_TesterTerminalCommand( testCmd )
 
@@ -329,13 +332,39 @@ func! T_EnsureTesterModuleFile( TesterPath, testerName )
 endfunc
 
 
+func! T_InitTesterFiles()
+
+endfunc
 
 
 
+" Copy commands will silently fail
+func! T_CopyFilesNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
+  let testFilePath = a:targetFolderPath . a:listOfFileNames[0]
+  if filereadable( testFilePath )
+    echoe 'File ' . testFilePath . ' already exists!'
+    return
+  endif
+  if !isdirectory( a:targetFolderPath ) | call mkdir( a:targetFolderPath, 'p' ) | endif
+  let commands = functional#map( { fname -> 'cp ' . a:sourceFolderPath . fname . ' ' . a:targetFolderPath . fname }, a:listOfFileNames )
+  call RunListOfCommands( commands )
+endfunc
 
+func! T_SnapshotTesterFiles()
+  let sourceFolder = getcwd()
+  let snapshotFolderBasePath = sourceFolder . '/snap'
+endfunc
 
-
-
+func! T_NextSnapshotDirPath( basePath )
+  let idx = 1
+  while isdirectory( a:basePath . idx )
+    let idx += 1
+  endwhile
+  return a:basePath . idx
+endfunc
+" echo T_NextSnapDirPath( getcwd() . '/temp' )
+" mkdir 'temp1' 'temp2'
+" del 'temp1' 'temp2'
 
 
 

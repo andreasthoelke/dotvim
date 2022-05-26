@@ -184,6 +184,7 @@ vnoremap <leader>gwt :<c-u>let g:opProcessAction=['ListOfLines',[],'RunListOfCom
 " echo "vier" >> temp
 
 " cat temp
+" del temp
 
 
 

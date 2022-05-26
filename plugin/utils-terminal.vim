@@ -49,15 +49,16 @@ func! RunListOfCommands( list )
 endfunc
 " call RunListOfCommands( ['touch temp', 'echo "drei" >> temp', 'echo "vier" >> temp'] )
 " cat temp
+" Example usage: ~/.config/nvim/plugin/code-line-props.vim#/Run%20list%20of
 
-" TODO testing this as off!
-" Keep term buffers running/open when closing the window
-" might want to consider 'winfixheight'
+
+
+
+" TODO testing this as off! Keep term buffers running/open when closing the window might want to consider 'winfixheight'
 " augroup custom_term
 "   autocmd!
 "   autocmd TermOpen * setlocal bufhidden=hide
 " augroup END
-
 
 " Tested Terminal Examples:
 " ":sp term://zsh"
