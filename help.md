@@ -831,6 +831,7 @@ echo expand('%:h')
 echo expand('%:p:h')
 echo expand('%:p')
 echo fnamemodify('.gitignore', ':p')
+echo fnamemodify('../scratch/.testsDefault', ':t:r')
 
 help filename-modifiers
 https://learnvimscriptthehardway.stevelosh.com/chapters/40.html

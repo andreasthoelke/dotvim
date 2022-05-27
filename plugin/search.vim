@@ -80,13 +80,13 @@ endfunc
 
 " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 " TODO deprecate these maps
-nnoremap <silent> gsg :call GoogleSearch("word")<cr>
-vmap <silent> gsg :<c-u>call GoogleSearch("visSel")<cr>
+" nnoremap <silent> gsg :call GoogleSearch("word")<cr>
+" vmap <silent> gsg :<c-u>call GoogleSearch("visSel")<cr>
 
-nnoremap <silent> gsh :call DocsForCursorWord()<cr>
-vmap <silent> gsh :call DocsForVisSel()<cr>
+" nnoremap <silent> gsh :call DocsForCursorWord()<cr>
+" vmap <silent> gsh :call DocsForVisSel()<cr>
 
-nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
+" nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
 
 " Now in HsAPIExplore:
 " nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
@@ -94,11 +94,11 @@ nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
 
 command! GithubSearch call GithubSearch("word")
 
-nnoremap <silent> gsI :call GithubSearch("word")<cr>
-xnoremap <silent> gsI :<c-u>call GithubSearch("visSel")<cr>
+" nnoremap <silent> gsI :call GithubSearch("word")<cr>
+" xnoremap <silent> gsI :<c-u>call GithubSearch("visSel")<cr>
 
-nnoremap <silent> <leader>gsR :call GrepSearch("word", "repo")<cr>
-xnoremap <silent> <leader>gsR :<c-u>call GrepSearch("visSel", "repo")<cr>
+" nnoremap <silent> <leader>gsR :call GrepSearch("word", "repo")<cr>
+" xnoremap <silent> <leader>gsR :<c-u>call GrepSearch("visSel", "repo")<cr>
 " gsb now used to browse namespace
 " nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 " vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>

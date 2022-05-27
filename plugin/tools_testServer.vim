@@ -3,22 +3,73 @@
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
-nnoremap <silent> gsi :call T_DoSetImport()<cr>
-nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
+func! T_MenuCommands()
+  let testServerCmds =  [ {'section': 'Set import identifier'} ]
+  " nnoremap <silent> gsi :call T_DoSetImport()<cr>
+  let testServerCmds += [ {'label': '_I set import',   'cmd': 'call T_DoSetImport()' } ]
+  " nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
+  let testServerCmds += [ {'label': '_W set printer identifier',   'cmd':'call T_DoSetPrinterIdentif()' } ]
 
-nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
-nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
+  let testServerCmds +=  [ {'section':'Server refresh'} ]
+  " nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
+  let testServerCmds += [ {'label': '_R Server refetch + client refetch',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'call T_Refetch("Client")' } ]
+  " nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
+  let testServerCmds += [ {'label': '_T Server refresh',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'echo "Refreshed server"' } ]
 
-nnoremap <silent> ger :call T_Refetch('Client')<cr>
-" nnoremap <silent> ,ger :call T_DoSetImport()<cr>:T_Refetch('Client')<cr>
-nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
-nnoremap <silent> ,gdr :call T_Refetch('GqlExecWithError')<cr>
-nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
-nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
+  let testServerCmds +=  [ {'section': 'Refetching'} ]
+  " nnoremap <silent> ger :call T_Refetch('Client')<cr>
+  let testServerCmds += [ {'label': '_E Client',   'cmd': 'call T_Refetch("Client")' } ]
+  " nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
+  let testServerCmds += [ {'label': '_D GQL Exec',   'cmd': 'call T_Refetch("GqlExec")' } ]
+  " nnoremap <silent> ,gdr :call T_Refetch('GqlExecWithError')<cr>
+  let testServerCmds += [ {'label': 'GQL Exec with error',   'cmd': 'call T_Refetch("GqlExecWithError")' } ]
+  " nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
+  let testServerCmds += [ {'label': '_Printer',   'cmd': 'call T_Refetch("Printer")' } ]
+  " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
+  let testServerCmds += [ {'label': '_Show schema',   'cmd': 'call T_Refetch("ShowSchema")' } ]
 
-nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
-nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
-nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
+  let testServerCmds +=  [ {'section': 'Server start/stop'} ]
+  " nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
+  let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echo "Server started"' } ]
+  " nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
+  let testServerCmds += [ {'label': '_G Server start in terminal',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
+  " nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
+  let testServerCmds += [ {'label': '_Q Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echo "Server stopped"' } ]
+
+  let testServerCmds = T_CurrentIdentif_report( testServerCmds )
+  return testServerCmds
+endfunc
+
+
+nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+
+
+func! TestServerCmd ( chosenObj )
+  exec a:chosenObj.cmd
+  if has_key( a:chosenObj, 'cmd2' )
+    exec a:chosenObj.cmd2
+  endif
+endfunc
+
+
+  " exec "call TestUserChoice1( {'otherData':123} )" ■
+  " exec "call TestUserChoice1(" . string( {'otherData':123} ) . ")"
+  " call call( actionFn, actionArgs + [processResult] )
+  " 
+  " if a:shouldEcho
+  "   echo 'Searching ' . a:choosenObjCmd.label
+  " endif
+  " if has_key( a:choosenObjCmd, 'url' )
+  "   exec '!open ' . shellescape( a:choosenObjCmd.url . a:searchTerm.term )
+  " elseif has_key( a:choosenObjCmd, 'comm' )
+  "   exec a:choosenObjCmd.comm . ' ' . a:searchTerm.term
+  " endif
+
+" let g:testServerCmds += [ {'label':'_Stackage',   'cmd':'call T_DoSetImport()'
+"       \, 'cmd2':''
+"       \}] ▲
+
+
 
 " ─   Set import variables                               ■
 " Set the imports of scratch/.testServer.ts, testClient.ts and testPrinter.ts
@@ -29,30 +80,52 @@ func! T_DoSetImport()
 
   " 3. Which type of import var do we want to set?
   if     identif =~ 'sch' || identif =~ 'builder'
+    let persistKey = 'schema'
     " call T_SetServerTypeDef( identif, modulePath )
     call T_SetGqlExecTypeDef( identif, modulePath )
     call VirtualRadioLabel('▵s')
   elseif identif =~ 'resol'
+    let persistKey = 'resolver'
     " call T_SetServerResolver( identif, modulePath )
     call T_SetGqlExecResolver( identif, modulePath )
     call VirtualRadioLabel('▵r')
   elseif identif =~ 'query'
+    let persistKey = 'query'
     call T_SetClientQuery( identif, modulePath )
     call T_SetGqlExecQuery( identif, modulePath )
     call VirtualRadioLabel('▵q')
   elseif identif =~ 'varia'
+    let persistKey = 'variables'
     call T_SetClientVariables( identif, modulePath )
     call T_SetGqlExecVariables( identif, modulePath )
     call VirtualRadioLabel('▵v')
   elseif identif =~ 'contex'
+    let persistKey = 'context'
     " Server context factory function
     call T_SetServerContext( identif, modulePath )
     call VirtualRadioLabel('▵c')
   else
+    let persistKey = 'printer'
     call T_SetPrinterIdentif( identif, modulePath )
   endif
   echo 'Set: ' . identif
+
+  call T_CurrentIdentif_update( persistKey, identif, modulePath )
 endfunc
+
+" let g:testServerCurrentIdentif = {'schemaI': '', 'schemaM': '', 
+
+func! T_CurrentIdentif_default()
+  let def = {}
+  let def.schema_identif = ''
+  let def.schema_module = ''
+  let def.query_identif = ''
+  let def.query_module = ''
+  return def
+endfunc
+
+
+
 
 func! T_ImportInfo()
   " 1. Get the module path
@@ -326,6 +399,42 @@ func! T_EnsureTesterModuleFile( TesterPath, testerName )
   endif
 endfunc
 
+" echo eval("[4, 5][0]")
+" echo eval("{'aa': 11, 'bb': 22}").bb
+
+func! T_CurrentIdentif()
+  let persistPath = getcwd() . '/scratch/.testServer_currentIdentif'
+  if filereadable( persistPath )
+    let confObj = eval( readfile( persistPath, '\n' )[0] )
+  else
+    let confObj = T_CurrentIdentif_default()
+    call writefile( [string( confObj )], persistPath )
+  endif
+  return confObj
+endfunc
+
+func! T_CurrentIdentif_update( key, identif, module )
+  let confObj = T_CurrentIdentif()
+  let confObj[ a:key . '_identif' ] = a:identif
+  let confObj[ a:key . '_module' ] = a:module
+  let persistPath = getcwd() . '/scratch/.testServer_currentIdentif'
+  call writefile( [string( confObj )], persistPath )
+endfunc
+
+func! T_CurrentIdentif_report( list_menuConf )
+  let resConf = a:list_menuConf
+  let confObj = T_CurrentIdentif()
+  for key in ['schema', 'resolver', 'query', 'variables', 'context']
+    if has_key( confObj, key . '_identif' )
+      let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
+      let resConf +=  [ {'section': infoStr} ]
+    endif
+  endfor
+  return resConf
+endfunc
+
+" fnamemodify('../scratch/.testsDefault', ':t:r')
+
 
 func! T_InitTesterFiles()
 
@@ -352,7 +461,6 @@ func! T_ForceCopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFol
   call RunListOfCommands( commands )
 endfunc
 
-nnoremap 
 command! -nargs=? TestServerSnapshotTesterFiles call T_SnapshotTesterFiles( <q-args> )
 
 func! T_SnapshotTesterFiles( snapshotName )

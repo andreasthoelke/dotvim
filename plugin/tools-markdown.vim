@@ -4,7 +4,7 @@
 " ─   Markdown-Preview                                   ■
 
 nnoremap glm :call StopChromium()<cr>:MarkdownPreview<cr>
-nnoremap gsm :call StopChromium()<cr>
+" nnoremap gsm :call StopChromium()<cr>
 
 
 let g:mkdp_auto_start = 0

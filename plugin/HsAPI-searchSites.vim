@@ -139,21 +139,21 @@ nnoremap <leader><leader>cb :echo GetSearchParams('n')<cr>
 let g:choicesTest2 = [{'label':'_Google', 'url':'http://www.google.de/search?q='}, {'section':'Local search:'}, {'label':'_In Hask dir', 'comm':'Fhask'}]
 
               "                      ( userPromptText,      optUserPromtValue_andFirstArg,    choices,       continuationFn,          contOtherArgs,          [winPos] ... )
-nnoremap gso :call UserChoiceAction( 'Run query on site', GetSearchParams('n'),                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap <leader>gso :call UserChoiceAction( 'Run query on site', GetSearchParams('n'),                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap <leader>gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
-vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+" vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+" vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
 nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
 
 
 " TODO temp purescript version
-nnoremap gso :call UserChoiceAction( 'Run query on site', {'identifier': HsCursorKeyword()},       g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-nnoremap gsO :call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')}, g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetVisSel()},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-" vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap <leader>gso :call UserChoiceAction( 'Run query on site', {'identifier': HsCursorKeyword()},       g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap <leader>gsO :call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')}, g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+vnoremap <leader>gso :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetVisSel()},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 
 
