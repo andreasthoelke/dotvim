@@ -8,13 +8,13 @@ func! T_MenuCommands()
   " nnoremap <silent> gsi :call T_DoSetImport()<cr>
   let testServerCmds += [ {'label': '_I set import',   'cmd': 'call T_DoSetImport()' } ]
   " nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
-  let testServerCmds += [ {'label': '_W set printer identifier',   'cmd':'call T_DoSetPrinterIdentif()' } ]
+  let testServerCmds += [ {'label': '_W set printer identif',   'cmd':'call T_DoSetPrinterIdentif()' } ]
 
   let testServerCmds +=  [ {'section':'Server refresh'} ]
   " nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
-  let testServerCmds += [ {'label': '_R Server refetch + client refetch',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'call T_Refetch("Client")' } ]
+  let testServerCmds += [ {'label': '_Refresh + client refetch',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'call T_Refetch("Client")' } ]
   " nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
-  let testServerCmds += [ {'label': '_T Server refresh',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'echo "Refreshed server"' } ]
+  let testServerCmds += [ {'label': '_T Just server refresh',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'echo "Refreshed server"' } ]
 
   let testServerCmds +=  [ {'section': 'Refetching'} ]
   " nnoremap <silent> ger :call T_Refetch('Client')<cr>
@@ -32,17 +32,40 @@ func! T_MenuCommands()
   " nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
   let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echo "Server started"' } ]
   " nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
-  let testServerCmds += [ {'label': '_G Server start in terminal',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
+  let testServerCmds += [ {'label': '_G Server start in term',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
   " nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
   let testServerCmds += [ {'label': '_Q Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echo "Server stopped"' } ]
+
+  let testServerCmds +=  [ {'section': 'Snapshots'} ]
+  let testServerCmds += [ {'label': '_Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
+  let snapshotName = T_GetSnapshotNameFromDirvishFolder()
+  if len( snapshotName )
+    let testServerCmds += [ {'label': '_Y Reactivate '. snapshotName ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
+  endif
+
+  let testServerCmds +=  [ {'section': 'Project [' . (T_IsInitialized() ? 'ready]' : 'not yet initialized]')} ]
+  if !T_IsInitialized()
+    let snapshotName = T_GetSnapshotNameFromFolderPath( g:testServerDefaultFiles )
+    let testServerCmds += [ {'label': '_M Initialize from '. snapshotName ,   'cmd': 'call T_InitTesterFiles()' } ]
+  endif
 
   let testServerCmds = T_CurrentIdentif_report( testServerCmds )
   return testServerCmds
 endfunc
 
 
-nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+func! T_GetSnapshotNameFromDirvishFolder()
+  if &ft != 'dirvish' | return '' | endif
+  return T_GetSnapshotNameFromFolderPath( getline('.')[:-2] )
+endfunc
 
+func! T_GetSnapshotNameFromFolderPath( path )
+  let lastPathComponent = fnamemodify( a:path, ':t' )
+  return matchstr( lastPathComponent, 'snapshot_\zs.*' )
+endfunc
+
+
+nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
 func! TestServerCmd ( chosenObj )
   exec a:chosenObj.cmd
@@ -421,6 +444,7 @@ func! T_CurrentIdentif_update( key, identif, module )
   call writefile( [string( confObj )], persistPath )
 endfunc
 
+" Extends the UserChoiceAction menu config with (dummy) sections that show the currently active identifier and module 
 func! T_CurrentIdentif_report( list_menuConf )
   let resConf = a:list_menuConf
   let confObj = T_CurrentIdentif()
@@ -433,13 +457,31 @@ func! T_CurrentIdentif_report( list_menuConf )
   return resConf
 endfunc
 
-" fnamemodify('../scratch/.testsDefault', ':t:r')
 
-
-func! T_InitTesterFiles()
-
+func! T_IsInitialized()
+  return filereadable( T_TesterFilePath( 'GqlExec' ) )
 endfunc
 
+let g:testServerDefaultFiles = '/Users/at/Documents/Server-Dev/pothos/pothos/scratch/snapshot_sdl1'
+
+func! T_InitTesterFiles()
+  let targetFolder = getcwd() . '/scratch'
+  if !isdirectory( targetFolder ) | call mkdir( targetFolder, 'p' ) | endif
+  call T_CopyFileNamesToFolder( g:TesterFileNamesAll, g:testServerDefaultFiles, targetFolder )
+
+  call T_InitEnvFile()
+endfunc
+
+func! T_InitEnvFile()
+  let path = getcwd() . '/.env'
+  call T_AppendEchoLineToFile( 'TESTPORT=4040', path )
+  call T_AppendEchoLineToFile( 'TESTSERVERNAME="Apollo"', path )
+endfunc
+
+func! T_AppendEchoLineToFile( line, path )
+  let cmd = 'echo ' . shellescape( a:line ) . ' >> ' . a:path
+  echom system( cmd )
+endfunc
 
 " Notes: Might stop at or destroy existing files! Copy might fail silently.
 func! T_CopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
@@ -484,7 +526,7 @@ command! TestServerReactivateSnapshot call T_ReactivateSnapshot( getline('.') )
 
 func! T_ReactivateSnapshot( snapshotFolder )
   " auto backup the current files
-  call T_SnapshotTesterFiles( 'backup' )
+  " call T_SnapshotTesterFiles( 'backup' )
   let targetFolder = getcwd() . '/scratch'
   " Overwrite the current tester files!
   call T_ForceCopyFileNamesToFolder( g:TesterFileNamesAll, a:snapshotFolder, targetFolder )
