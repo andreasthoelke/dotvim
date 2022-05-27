@@ -288,6 +288,12 @@ config: ~/.config/nvim/plugin/setup-lsp.vim#/nmap%20<leader>ltu%20<Plug>.toggle-
 ## Diagnostics filter/disable rules /types of warnings
 config: ~/.config/nvim/plugin/setup-lsp.lua#/local%20handler_JSON_filterDiagnCodes%20=
 
+## Workspace diagnostics with telescope and trouble
+Trouble document_diagnostics
+Trouble lsp_definitions
+Trouble workspace_diagnostics
+Telescope lsp_workspace_symbols query=port
+Telescope buffers (then <c-t> to open results in trouble
 
 ## LspInfo
 very useful help functions: ~/.config/nvim/lua/utils_lsp.lua#/function%20M.type..

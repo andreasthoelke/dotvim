@@ -1,5 +1,5 @@
 
-" 
+
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
 
@@ -48,6 +48,7 @@ func! T_MenuCommands()
     let snapshotName = T_GetSnapshotNameFromFolderPath( g:testServerDefaultFiles )
     let testServerCmds += [ {'label': '_M Initialize from '. snapshotName ,   'cmd': 'call T_InitTesterFiles()' } ]
   endif
+  let testServerCmds += [ {'label': '_N Install packages',   'cmd': 'call T_InitInstallPackages()' } ]
 
   let testServerCmds = T_CurrentIdentif_report( testServerCmds )
   return testServerCmds
@@ -291,7 +292,7 @@ func! T_TesterFilePath( testerName )
 endfunc
 
 
-let g:TesterFileNamesAll = ['.testClient.ts' , '.testGqlExec.ts' , '.testPrinter.ts' , '.testServer.ts' , '.testsDefault.ts']
+let g:TesterFileNamesAll = ['.testClient.ts' , '.testGqlExec.ts' , '.testPrinter.ts' , '.testServer.ts' , '.testsDefault.ts', '.testServer_currentIdentif', '.testServer_packages']
 let g:TesterNamesAll =          ['Client' , 'GqlExec' , 'Printer' , 'Server' , 'sDefault']
 
 
@@ -373,6 +374,16 @@ func! T_ServerStartT ()
   exec "10new"
   let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
+
+func! T_RunJob( cmd, mode )
+  if a:mode == 'background'
+    let g:T_JobID = jobstart( a:cmd, g:T_ServerCallbacks )
+  elseif a:mode == 'visible'
+    exec "10new"
+    let g:T_JobID = termopen( a:cmd, g:T_ServerCallbacks )
+  endif
+endfunc
+" call T_RunJob( 'ls', 'visible' )
 
 func! T_ServerStop ()
   if !exists('g:T_ServerID') | echo 'T_Server is not running' | return | endif
@@ -481,6 +492,27 @@ endfunc
 func! T_AppendEchoLineToFile( line, path )
   let cmd = 'echo ' . shellescape( a:line ) . ' >> ' . a:path
   echom system( cmd )
+endfunc
+
+func! T_InitInstallPackages()
+  let path = getcwd() . '/scratch/.testServer_packages'
+  if !filereadable( path ) | echoe 'Missing: ' . path | return | endif
+  let packages = readfile( path, '\n' )
+  let cmd = T_GetPackageInstallCmdOfCurrentProject() . ' ' . join( packages )
+  call T_RunJob( cmd, 'visible' )
+endfunc
+
+func! T_GetPackageInstallCmdOfCurrentProject()
+  let path = getcwd() . '/pnpm-workspace.yaml'
+  let ws = filereadable( path ) ? ' -w' : ''
+
+  let path = getcwd() . '/pnpm-lock.yaml'
+  if filereadable( path ) | return 'pnpm add -D' . ws | endif
+  let path = getcwd() . '/yarn.lock'
+  if filereadable( path ) | return 'yarn add -D' . ws | endif
+  let path = getcwd() . '/package.json'
+  if !filereadable( path ) | echoe 'Not an npm project!' | return | endif
+  return 'npm install --dev'
 endfunc
 
 " Notes: Might stop at or destroy existing files! Copy might fail silently.

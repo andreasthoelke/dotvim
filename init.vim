@@ -228,7 +228,7 @@ Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in 
 " Autosaves buffers on specific events
 Plug '907th/vim-auto-save'
 " Plug 'skywind3000/quickmenu.vim'
-" This fork allows to define letter shorcuts per menu-item
+" This fork allows to define letter shortcuts per menu-item
 Plug 'skywind3000/vim-quickui'
 Plug 'CharlesGueunet/quickmenu.vim'
 " a functional duplicate that required a lot of renaming
@@ -249,6 +249,8 @@ Plug 'jose-elias-alvarez/null-ls.nvim'
 
 Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 Plug 'ray-x/navigator.lua'
+
+Plug 'folke/trouble.nvim'
 
 " Completion engine
 Plug 'hrsh7th/nvim-cmp'
