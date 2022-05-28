@@ -30,11 +30,11 @@ func! T_MenuCommands()
 
   let testServerCmds +=  [ {'section': 'Server start/stop'} ]
   " nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
-  let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echo "Server started"' } ]
+  let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echom "Server started"' } ]
   " nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
   let testServerCmds += [ {'label': '_G Server start in term',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
   " nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
-  let testServerCmds += [ {'label': '_Q Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echo "Server stopped"' } ]
+  let testServerCmds += [ {'label': '_H Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echom "Server stopped"' } ]
 
   let testServerCmds +=  [ {'section': 'Snapshots'} ]
   let testServerCmds += [ {'label': '_Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
@@ -71,10 +71,20 @@ nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCom
 func! TestServerCmd ( chosenObj )
   exec a:chosenObj.cmd
   if has_key( a:chosenObj, 'cmd2' )
-    exec a:chosenObj.cmd2
+    call timer_start(200, { tid -> execute( a:chosenObj.cmd2, "" )})
+    " exec a:chosenObj.cmd2
   endif
 endfunc
 
+func! T_DelayedCmd( cmd, time )
+   call timer_start( a:time, { tid -> execute( a:cmd, "" )})
+endfunc
+" call T_DelayedCmd( "echo 'hi there'", 1000 )
+
+func! T_echo( str )
+  call T_DelayedCmd( 'echom "' . a:str . '"', 500 )
+endfunc
+" call T_echo( 'hi 2 there')
 
   " exec "call TestUserChoice1( {'otherData':123} )" ■
   " exec "call TestUserChoice1(" . string( {'otherData':123} ) . ")"
@@ -365,12 +375,12 @@ endfunc
 
 
 func! T_ServerStart ()
-  if exists('g:T_ServerID') | echo 'T_Server is already running' | return | endif
+  if exists('g:T_ServerID') | call T_echo( 'T_Server is already running' ) | return | endif
   let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
 
 func! T_ServerStartT ()
-  if exists('g:T_ServerID') | echo 'T_Server is already running' | return | endif
+  if exists('g:T_ServerID') | call T_echo( 'T_Server is already running' ) | return | endif
   exec "10new"
   let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
@@ -386,7 +396,7 @@ endfunc
 " call T_RunJob( 'ls', 'visible' )
 
 func! T_ServerStop ()
-  if !exists('g:T_ServerID') | echo 'T_Server is not running' | return | endif
+  if !exists('g:T_ServerID') | call T_echo( 'T_Server is not running' ) | return | endif
   call jobstop( g:T_ServerID )
   unlet g:T_ServerID
   " echo 'T_Server stopped'
