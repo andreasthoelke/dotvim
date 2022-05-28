@@ -807,6 +807,10 @@ this lets me use spaces in paths! and complete with c-x c-f. but now paths have 
 Now using vim-symlink https://github.com/aymericbeaumet/vim-symlink to load the _target path_ of a file that is a symlink.
 Note 'symlink' setting ~/.vim/plugin/setup-general.vim#/let%20g.symlink_loaded%20=
 
+### symlink a file to a git repo for backup
+
+
+
 ### Network volumes / Google Drive
 
 :sp /Volumes/GoogleDrive/My\ Drive/Sample\ upload.txt - load a Google Drive file with quoted spaces
