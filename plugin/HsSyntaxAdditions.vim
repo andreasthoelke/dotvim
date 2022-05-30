@@ -81,6 +81,9 @@ func! JsSyntaxAdditions() " ■
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥
   syntax match InlineTestDeclaration '\v^const\sa\d_\i{-}\s\=' conceal cchar=…
+  syntax match InlineTestDeclaration '\v^export\sconst\se\d_\i{-}\s\=' conceal cchar=‥
+  syntax match InlineTestDeclaration '\v^export\sconst\sa\d_\i{-}\s\=' conceal cchar=…
+  syntax match InlineTestDeclaration '\v^export\sconst\se\d_\i{-}\:' conceal cchar=‥
   " syntax match ConcealQuotes "'" conceal
   " syntax match ConcealQuotes '"' conceal
 
@@ -151,6 +154,8 @@ func! TsConcealWithUnicode ()
   syntax match Normal "async\ze\s" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
+  syntax match Normal "undefined" conceal cchar=∪
+  syntax match Normal "null\ze\s" conceal cchar=⨆
   syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ

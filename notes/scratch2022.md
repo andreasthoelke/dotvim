@@ -1,8 +1,14 @@
 
-syntaxIdAtCursor with treesitter
-import RelayPlugin from '@pothos/plugin-relay';
 
 # Scratch
+
+type Tags
+are just arrays on Posts .. not connections
+
+use the Comment implement (not the node) version
+the add a custom Node type to the interface [Node]
+
+i might make manually unique string ids in data.ts.
 
 
 
@@ -18,7 +24,7 @@ https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils
 
 ### Quick floats
 sp os - scratch
-sp os - links
+sp ol - links
 sp ob - vim bookmarks
 
 gdo - go to definition in float

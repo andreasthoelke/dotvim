@@ -25,7 +25,45 @@ nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wi
 
 nnoremap gwt :call ShellReturn( GetLineFromCursor() )<cr>
 vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
-nnoremap gwT :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
+nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
+
+
+" ─   One shot async Terminal                            ■
+
+nnoremap gwT :call TermOneShot( GetLineFromCursor() )<cr>
+nnoremap ,gwt :call TermOneShot_FloatBuffer( GetLineFromCursor() )<cr>
+
+func! TermOneShot( cmd )
+  exec "15new"
+  let g:TermID = termopen( a:cmd )
+endfunc
+" The following line works (only) without shellescape()
+" echo 'hi'
+
+func! TermOneShotCB (job_id, data, event)
+  call append('.', a:data )
+  silent call FloatWin_FitWidthHeight()
+endfunc
+
+
+let g:TermOneShotCBs = {
+      \ 'on_stdout': function('TermOneShotCB'),
+      \ 'on_stderr': function('TermOneShotCB'),
+      \ 'on_exit': function('TermOneShotCB')
+      \ }
+
+func! TermOneShot_FloatBuffer( cmd )
+  silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
+  silent call FloatWin_FitWidthHeight()
+  let g:TermID = jobstart( a:cmd, g:TermOneShotCBs )
+endfunc
+
+
+
+
+
+" ─^  One shot async Terminal                            ▲
+
 
 " Else the cursor in the termanal is red when not in insert mode .. which is informative - but how to adjust the color/look?
 hi! TermCursorNC guibg=grey guifg=white

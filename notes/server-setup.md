@@ -1,7 +1,7 @@
 
-
 a simple reproduceable setup
 
+some stuff
 # typescript
 # graphql
 # edgedb
@@ -36,6 +36,9 @@ wget https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/t
 # eslintrc # https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/
 wget https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/.eslintrc.js
 
+collecting custom settings here: ~/Documents/Server-Dev/c_gql_edb/.eslintrc.js#/rules.%20{
+TODO: make this file (in a repo?) the template for new projects.
+
 # git
 git init
 git add .
@@ -53,6 +56,7 @@ npx ts-node -T -e 'require("./src/main.ts").delayed()'
 
 # test a rambda list call with arg
 pnpm add -D rambda
+pnpm add -D lodash @types/lodash
 use leader s} to run these lines to insert the test lines into main.ts
 call T_InsertLineAt( './src/main.ts', '', 0 )
 call T_InsertLineAt( './src/main.ts', 'export const list = (n: number) => console.log( range(1, n + 1) )', 1 )
@@ -95,7 +99,26 @@ use leader glC to explore in GraphiQl
 ## change the server and port
 in ./.env
 
+# Copy a sub-folder from another project
+cp -r /Users/at/Documents/Server-Dev/pothos/pothos/examples/relay-windowed-pagination/src/ ./src/pagination-data-example
+note that adding a "/" to the source folder copies only the contents (not the folder itself) so you can create a new (renamed) folder at the target
 
-ln /Users/at/Documents/Server-Dev/server-setup.md /Users/at/.config/nvim/notes/server-setup.md
+## Install missing package
+pnpm add -D @pothos/plugin-relay
+This seems needed for type errors to update:
+LspRestart
+
+# fp-ts
+pnpm add fp-ts
+src/fp-ts-examples/
+
+
+
+
+
+
+
+
+
 
 

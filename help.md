@@ -808,8 +808,12 @@ Now using vim-symlink https://github.com/aymericbeaumet/vim-symlink to load the 
 Note 'symlink' setting ~/.vim/plugin/setup-general.vim#/let%20g.symlink_loaded%20=
 
 ### hard link a file to a git repo for backup
+I can just hard link any (notes) file into nvim/notes and it will be packed up
+ln /Users/at/Documents/Server-Dev/server-setup.md /Users/at/.config/nvim/notes/server-setup.md
+TODO: write a vim helper to back up a notes file.
 
-
+limitation: pulling the file back from the remote repo (note I have never done this) would bread the link to the original file
+therefore it would be better to have the original file in the repo and a related symlink somewhere in the documents folder.
 
 ### Network volumes / Google Drive
 
@@ -1527,6 +1531,10 @@ c-z - to suspend vim and go to the terminal - then if done in the terminal do fg
 c-s-t - new tab in kitty! use ctrl+shift + arrows l/r to navigate tabs. see: https://sw.kovidgoyal.net/kitty/overview/
 
 # Terminal buffer
+
+gwt - run command from cursor pos via shellreturn()
+,gwt - make the command editable
+gwT - run in asym terminal buffer
 
 glt/T - open a new terminal buffer in project root (also works in dirvish)
 gLt/T - to prefill and edit line command string to running it in a hidden/visible term-buffer
