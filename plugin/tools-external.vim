@@ -110,6 +110,10 @@ func! T_NodeFunctionCall_TermCmd( filePath, fnName )
   " npx ts-node -T -e 'require("/Users/at/Documents/Architecture/examples/gql1/scratch/.testGqlExec.ts").ShowSchema()'
 endfunc
 
+
+" node -e "import('<path>').then(m => console.log(m.abc1))"
+
+
 func! CurrentRelativeModulePath()
   let path = expand('%:p:r')
   let cwd = getcwd()
