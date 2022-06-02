@@ -1,7 +1,6 @@
 
 a simple reproduceable setup
 
-some stuff
 # typescript
 # graphql
 # edgedb

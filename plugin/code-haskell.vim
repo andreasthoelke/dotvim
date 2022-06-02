@@ -192,7 +192,18 @@ endfunc
 " echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → (a → b) → m a → m [a]
 " echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
+" snoc :: forall a. List a -> a -> List a
+echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 
+" echo matchstr( 'forall a b. List a', '.*\ze\.' )
+
+func! HsAddTypeVarsToAllArgTypes ( argTypes )
+  let typeVarDecl = matchstr( a:argTypes[0], '.*\ze\.' )
+  let typeVarsToExtend = a:argTypes[1:]
+  let extendedTypeVars = functional#map( { item -> typeVarDecl . '. ' . item }, typeVarsToExtend )
+  return insert( extendedTypeVars, a:argTypes[ 0 ] )
+endfunc
+" echo HsAddTypeVarsToAllArgTypes( ['forall a b. List a', 'List b', 'a'] )
 
 func! HsGetTypeFromSignatureStr( signStr )
   return matchstr( a:signStr, '\v(∷|::)\s\zs.*')
@@ -201,7 +212,7 @@ endfunc
 " echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
 
 func! UndefinedVarName ()
-  return &filetype=="purescript" ? "u" : "i"
+  return &filetype=="purescript" ? "i" : "u"
 endfunc
 
 

@@ -72,6 +72,8 @@ nnoremap <silent> <leader>eT :call CreateInlineTestDec_js_function()<cr>
 func! CreateInlineTestDec()
   if &filetype == 'python'
     call CreateInlineTestDec_py()
+  elseif &filetype == 'purescript'
+    call CreateInlineTestDec_hs()
   else
     call CreateInlineTestDec_js()
   endif
@@ -146,6 +148,7 @@ func! CreateInlineTestDec_hs()
   let typeSigLineNum = TopLevTypeSigBackwLineNum()
   let funcName       = GetTopLevSymbolName( typeSigLineNum )
   let argumentTypesList = HsExtractArgTypesFromTypeSigStr( getline( typeSigLineNum ) )
+  let argumentTypesList = HsAddTypeVarsToAllArgTypes( argumentTypesList )
   let nextIndex = GetNextTestDeclIndex(typeSigLineNum)
   let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . funcName . ' ' . ArgsPlacehoderStr( argumentTypesList )
   call append( line('.') -1, lineText )
@@ -259,7 +262,7 @@ nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= 
 " nnoremap <localleader>ht ^yiwko<esc>PA :: a<esc>w
 
 " TODO adapt other stub maps to not use yank register
-nnoremap <leader>es :call Stubs_ExpandATypeSign()<cr>
+" nnoremap <leader>es :call Stubs_ExpandATypeSign()<cr>
 func! Stubs_ExpandATypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
   let indentChars = repeat( ' ', col('.')-1)
@@ -272,7 +275,7 @@ endfunc
 " cbom0 = compare
 
 " "expand signature" expand a signature to a function stub
-nnoremap <leader>eb :call Stubs_ExpandTermLevelFromTypeSign()<cr>
+" nnoremap <leader>eb :call Stubs_ExpandTermLevelFromTypeSign()<cr>
 " Issue: this produces doublicate var names. use  ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Exercises.hs#/indexDoublicateNames%20..%20[String]
 
 func! Stubs_ExpandTermLevelFromTypeSign()
@@ -280,7 +283,7 @@ func! Stubs_ExpandTermLevelFromTypeSign()
   let argTypes = HsExtractArgTypesFromTypeSigStr( getline( line('.') ) )
   let argTypesStr = join( ArgTypesToSuggestedArgNames( argTypes ), ' ' )
   let indentChars = repeat( ' ', col('.')-1)
-  let lineText = indentChars . symbName . ' ' . argTypesStr . ' = u'
+  let lineText = indentChars . symbName . ' ' . argTypesStr . ' = i'
   call append( line('.'), lineText )
   normal! j$b
 endfunc

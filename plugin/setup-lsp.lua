@@ -240,11 +240,15 @@ lspconfig.purescriptls.setup ({
   on_attach = on_attach,
   settings = {
     purescript = {
-      addSpagoSources = true -- e.g. any purescript language-server config here
+      addSpagoSources = true, -- e.g. any purescript language-server config here
+      censorWarnings = {"ShadowedName", "UnusedName", "UnusedDeclaration", "UnusedImport", "MissingTypeDeclaration"},
     }
   },
   flags = flags,
 })
+-- Options: https://github.com/nwolverson/vscode-ide-purescript/blob/master/package.json
+-- https://github.com/purescript/purescript/blob/9534e24d3fb87d6c6b222c8b31d13b57cc5c3e04/src/Language/PureScript/Errors.hs
+
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls
 -- https://github.com/iamcco/vim-language-server

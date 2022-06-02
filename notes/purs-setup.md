@@ -132,7 +132,7 @@ alternatively:
 :CocDiagnostics will show a quickfix list
 leader qq, then ]q[q ]Q[Q p to preview
 only 'p' to preview seems to work - <cr> to jump seems to work resort/invalidate items?
-UX isn't great of this
+UX isn't of this isn't great
 
 useful workflow to overview errors and workings:
  leader qq, then set syntax=purescript
@@ -292,7 +292,7 @@ map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
 
 
     ### Deoplete
-    does not seem to pick up language-server input - neighter from vimmer nor from psc-ide
+    does not seem to pick up language-server input - neither from vimmer nor from psc-ide
     ~/.vim/plugin/tools-langClientHIE-completion.vim#/Backup%20old.%20using
     this mapping conflicts with
     ~/.vim/plugin/tools-langClientHIE-completion.vim#/inoremap%20<silent><expr>%20<TAB>
@@ -304,8 +304,6 @@ map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
 - when is call PscAutostart needed? (it seems i just have to live with an intitial error on the first call after a vim restart)
 
 - function stub mappings - currently not leader ht
-
-
 
 
 this looks useful:

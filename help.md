@@ -328,8 +328,11 @@ https://www.youtube.com/watch?v=dPQfsASHNkg
 
 
 # Purescript
+~/Documents/PS/setup-tests/a_pss/purescript-setup-2022.md#/##%20Lsp%20errors
+
 notes/notes-purescript.md
 notes/purs-setup.md
+
 
 # Python
 
@@ -415,6 +418,9 @@ CocList <c-i> - to see all useful! options
 CocList extensions
 extensions are installed here: ~/.config/coc/extensions/node_modules/
 note ~/.config/coc/
+call CocAction('toggleExtension', 'browser')
+CocList extensions
+and then <tab> on browser, then 'd' for disable
 
 CocList marketplace - search and install extensions. or use:
 CocInstall coc-jedi - install an extension

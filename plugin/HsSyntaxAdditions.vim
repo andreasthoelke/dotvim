@@ -201,33 +201,19 @@ func! HaskellSyntaxAdditions()
   call tools_purescript#bufferMaps()
   call CodeMarkupSyntaxHighlights()
   " call HsConcealWithUnicode()
-  " Conceal comment marker string
-  " call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '-- ', 12, -1, {'conceal': ''})
-  " Note: Priority is set to "12" to be > the CodeMarkup matchadd priority (11)
-  " TODO reactivate" call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
-  " TODO" call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
 
-" ─   Conceal with unicode                               ■
-  " This replaces the following insert maps
-  " inoremap :: <c-k>::
-  " inoremap -> <c-k>->
-  " inoremap <- <c-k><-
-  " inoremap => <c-k>=>
-  " inoremap <= <c-k><=
-  " inoremap forall <c-k>FA
+  " syntax match Normal "String\ze\s" conceal cchar=S
+  " syntax match Normal "Number\ze\s" conceal cchar=N
+  " syntax match Normal "Int\ze\s" conceal cchar=I
+  " syntax match Normal "Boolean\ze\s" conceal cchar=B
 
-  " syntax match Normal ' \zs<\$>' conceal cchar=⫩
-  " call matchadd('Conceal', '::', 12, -1, {'conceal': '∷'})
-  " call matchadd('Conceal', ' \zs->', 12, -1, {'conceal': '→'})
-  " call matchadd('Conceal', ' \zs<-', 12, -1, {'conceal': '←'})
-  " call matchadd('Conceal', ' \zs=\ze>', 12, -1, {'conceal': '⇒'})
-  " call matchadd('Conceal', ' \zs<=', 12, -1, {'conceal': '⇐'})
-  " call matchadd('Conceal', ' \zsforall', 12, -1, {'conceal': '∀'})
+  call matchadd('Conceal', 'String', -1, -1, {'conceal': 'S'})
+  call matchadd('Conceal', 'Number', -1, -1, {'conceal': 'N'})
+  call matchadd('Conceal', 'Int', -1, -1, {'conceal': 'I'})
+  call matchadd('Conceal', 'Boolean', -1, -1, {'conceal': 'B'})
+
 
   " Other Haskell unicode conceals: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Conceal%20with%20unicode
-" ─^  Conceal with unicode                               ▲
 
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding

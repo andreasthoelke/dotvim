@@ -430,37 +430,28 @@ call matchadd('purescriptClassesBG', '\vcss\ze\s\"', -1, -1 )
 " Example data declaration 1-9: hides the first identifier (the function to be tested)
 " e1_database4 = database4 (Just "eins") 123
 " -- ①  (Just eins) 123
-syntax match InlineTestNum   'e1' conceal cchar=①
-syntax match InlineTestNum   'e2' conceal cchar=②
-syntax match InlineTestNum   'e3' conceal cchar=③
-syntax match InlineTestNum   'e4' conceal cchar=④
-syntax match InlineTestNum   'e5' conceal cchar=⑤
-syntax match InlineTestNum   'e6' conceal cchar=⑥
-syntax match InlineTestNum   'e7' conceal cchar=⑦
-syntax match InlineTestNum   'e8' conceal cchar=⑧
-syntax match InlineTestNum   'e9' conceal cchar=⑨
-syntax match InlineTestNum   'e10' conceal cchar=⑩
-syntax match InlineTestNum   'e11' conceal cchar=⑪
-syntax match InlineTestNum   'e12' conceal cchar=⑫
+syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+
+" syntax match InlineTestNum   'e1' conceal cchar=①
 " syntax match InlineTestIdeSpace '\v_\i+\ze[\)\ ]' contained conceal cchar= 
-syntax match InlineTestIdeSpace '\v_\f{-}\ze\)?\_s' contained conceal cchar= 
+" syntax match InlineTestIdeSpace '\v_\f{-}\ze\)?\_s' contained conceal cchar= 
 " Notes: The '+' is needed to prevent concealing standalone '_'s
 " syntax match InlineTestDecSpace '\v_\i{-}\s\=\ze\s' conceal cchar= 
 " syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
-syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
+" syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
 
 " syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\)| ]' contains=InlineTestNum,InlineTestIdeSpace
-syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\_s|\)]' contains=InlineTestNum,InlineTestIdeSpace
+" syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\_s|\)]' contains=InlineTestNum,InlineTestIdeSpace
 " syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s\i{-}\s' contains=InlineTestNum,InlineTestDecSpace
-syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,InlineTestDecSpace
+" syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,InlineTestDecSpace
 
 " added \_s and ')' as end of the test-identifier. now this works without space at the end of the line:
 " e2_e1_consos12 = (replicateM 100 e1_consos12)
 " e3_e1_consos12 = replicateM 100 e1_consos12
 
 " syntax match InlineTestTypeSig '\v^e\d_.*\s::.*' conceal
-syntax match InlineTestDecT    '\v^e\d_\i{-}\ze\s\::' conceal cchar= 
-syntax match InlineTestDecTC   '\v^e\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestDecT
+" syntax match InlineTestDecT    '\v^e\d_\i{-}\ze\s\::' conceal cchar= 
+" syntax match InlineTestDecTC   '\v^e\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestDecT
 
 
 " TODO this is sort of benefitial (but coincidential and i could not set up a separate HL-group for this when tried in
@@ -472,11 +463,11 @@ syntax match InlineTestDecTC   '\v^e\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclC
 " Assertions:
 " a15__database3 = (snd <$> e1_database4) `flipElem` 123
 " └ (snd <$> ① ) ∋ 123
-syntax match InlineTestAssertDec     '\v^a\d\d_\i{-}\s\=\ze\s' conceal cchar=├
-syntax match InlineTestAssertDecT    '\v^a\d\d_\i{-}\ze\s\::' conceal cchar=├
-syntax match InlineTestAssertDecTC   '\v^a\d\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestAssertDecT
-syntax match InlineTestAssertLastDec '\v^a\d\d__\i{-}\s\=\ze\s' conceal cchar=└
-syntax match InlineTestAssertDecAndTestIdentif  '\v^a\d\d_\i{-}\s\=\se\d\i{-}\ze\s' conceal cchar=├
+" syntax match InlineTestAssertDec     '\v^a\d\d_\i{-}\s\=\ze\s' conceal cchar=├
+" syntax match InlineTestAssertDecT    '\v^a\d\d_\i{-}\ze\s\::' conceal cchar=├
+" syntax match InlineTestAssertDecTC   '\v^a\d\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestAssertDecT
+" syntax match InlineTestAssertLastDec '\v^a\d\d__\i{-}\s\=\ze\s' conceal cchar=└
+" syntax match InlineTestAssertDecAndTestIdentif  '\v^a\d\d_\i{-}\s\=\se\d\i{-}\ze\s' conceal cchar=├
 
 syntax match concealedSourceLink '\v\/Users\S{-}\ze\_s' conceal cchar=˙
 

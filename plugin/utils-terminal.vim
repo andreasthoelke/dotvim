@@ -45,15 +45,21 @@ func! TermOneShotCB (job_id, data, event)
   silent call FloatWin_FitWidthHeight()
 endfunc
 
+func! TermOneShotCB_exit (job_id, data, event)
+  call append('.', 'done' )
+  silent wincmd p
+  " silent call FloatWin_FitWidthHeight()
+endfunc
 
 let g:TermOneShotCBs = {
       \ 'on_stdout': function('TermOneShotCB'),
       \ 'on_stderr': function('TermOneShotCB'),
-      \ 'on_exit': function('TermOneShotCB')
+      \ 'on_exit': function('TermOneShotCB_exit')
       \ }
 
 func! TermOneShot_FloatBuffer( cmd )
-  silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
+  " silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
+  silent let g:floatWin_win = FloatingSmallNew ( [] )
   silent call FloatWin_FitWidthHeight()
   let g:TermID = jobstart( a:cmd, g:TermOneShotCBs )
 endfunc
@@ -70,6 +76,12 @@ hi! TermCursorNC guibg=grey guifg=white
 
 " Terminal: ------------------------------------------------------------------------
 
+func! System_Float( cmd )
+  let resLines = systemlist( a:cmd )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
 
 func! ShellReturn( cmd )
   " let resultLines = split( system( a:cmd ), '\n' )

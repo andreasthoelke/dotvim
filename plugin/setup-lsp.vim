@@ -52,4 +52,17 @@ endfunc
 
 " inoremap <expr> <c-i> pumvisible() ? "\<C-o>coc#_hide()" : "<c-i>"
 
+" doesn't work
+" call CocAction('runCommand', 'editor.action.organizeImport')
+
+
+
+
+
+
+
+
+
+
+
 
