@@ -193,7 +193,7 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → (a → b) → m a → m [a]
 " echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 " snoc :: forall a. List a -> a -> List a
-echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
+" echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 
 " echo matchstr( 'forall a b. List a', '.*\ze\.' )
 

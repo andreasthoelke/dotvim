@@ -19,6 +19,7 @@ local flags = {
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bnr)
+  -- put( client )
 
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -228,12 +229,6 @@ lspconfig.tsserver.setup({
   -- filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
 })
 
-lspconfig.svelte.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
-
 
 lspconfig.purescriptls.setup ({
   capabilities = capabilities,
@@ -248,6 +243,14 @@ lspconfig.purescriptls.setup ({
 })
 -- Options: https://github.com/nwolverson/vscode-ide-purescript/blob/master/package.json
 -- https://github.com/purescript/purescript/blob/9534e24d3fb87d6c6b222c8b31d13b57cc5c3e04/src/Language/PureScript/Errors.hs
+
+
+-- lspconfig.rescriptls.setup ({
+--   cmd = {'node', '~/.config/nvim/plugged/vim-rescript/server/out/server.js', '--stdio'},
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls

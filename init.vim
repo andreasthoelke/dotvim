@@ -269,7 +269,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
 
-Plug 'leafOfTree/vim-svelte-plugin'
+" Plug 'leafOfTree/vim-svelte-plugin'
 
 " Plug 'pigpigyyy/Yuescript-vim'
 " Plug 'leafo/moonscript-vim'
@@ -364,6 +364,9 @@ Plug 'purescript-contrib/purescript-vim'
 " it't not clear why I would need the plugin - it's also unmaintained
 " Plug 'andreasthoelke/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
+
+Plug 'rescript-lang/vim-rescript'
+Plug 'nkrkv/nvim-treesitter-rescript'
 
 " ─   Repl IDE features                               ■
 

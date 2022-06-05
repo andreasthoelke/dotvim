@@ -7,10 +7,11 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed
@@ -61,6 +62,36 @@ func! EdgeQLSyntaxAdditions() " ■
 
 endfunc " ▲
 
+func! RescriptSyntaxAdditions()
+  " setlocal omnifunc=rescript#Complete
+
+  call JsSyntaxAdditions()
+  " Todo: replace with -> ..
+  " call TsConcealWithUnicode()
+
+  " nnoremap <silent><buffer>            K   :RescriptTypeHint<cr>
+  " nnoremap <silent><buffer> <leader>K :call FloatingBuffer(expand('%'))<CR>:call RescriptTypeHint()<cr>
+  nnoremap <silent><buffer> <leader>K :call RescriptTypeHint()<cr>
+  nnoremap <silent><buffer> <leader>k :call RescriptTypeHint()<cr>
+  nnoremap <silent><buffer>       get :call RescriptTypeHint()<cr>
+
+  nnoremap <silent><buffer>            gdd :RescriptJumpToDefinition<cr>
+  nnoremap <silent><buffer> gdv :vsplit<CR>:RescriptJumpToDefinition<cr>
+  nnoremap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR>:RescriptJumpToDefinition<cr>
+  nnoremap <silent><buffer> gds :split<CR>:RescriptJumpToDefinition<cr>
+
+  " nmap <silent><buffer>            gdd <Plug>(coc-definition)
+  " nmap <silent><buffer> gdv :vsplit<CR><Plug>(coc-definition)
+  " nmap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR><Plug>(coc-definition)
+  " nmap <silent><buffer> gds :split<CR><Plug>(coc-definition)
+
+  " nnoremap <silent> gdd :LspDef<cr>
+  " nnoremap <silent> gdo :call FloatingBuffer(expand('%'))<CR>:LspDef<cr>
+  " nnoremap <silent> gdv :vsplit<CR>:LspDef<cr>
+  " nnoremap <silent> gds :split<CR>:LspDef<cr>
+
+
+endfunc
 
 func! JsSyntaxAdditions() " ■
   nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>

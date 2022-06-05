@@ -56,6 +56,68 @@ endfunc
 " call CocAction('runCommand', 'editor.action.organizeImport')
 
 
+" ─   ReScript Vim                                      ──
+
+" autocmd FileType rescript setlocal omnifunc=rescript#Complete
+
+function! RescriptTypeHint()
+
+  let c_line = line(".")
+  let c_col = col(".")
+
+  let l:command = g:rescript_analysis_exe . " hover " . @% . " " . (c_line - 1) . " " . (c_col - 1)
+
+  let out = system(l:command)
+
+  if v:shell_error != 0
+    echohl Error | echomsg "Type Info failed with exit code '" . v:shell_error . "'" | echohl None
+    return
+  endif
+
+  let l:json = []
+  try
+    let l:json = json_decode(out)
+  catch /.*/
+    echo "No type info (couldn't decode analysis result)"
+    return
+  endtry
+
+  let l:match = l:json
+
+  if get(l:match, "contents", "") != ""
+    let md_content = l:match.contents
+
+    let lines = split(md_content, "\n")
+    " let lines = extend(["Pos (l:c): " . c_line . ":" . c_col], text)
+
+    " call s:ShowInPreview("type-preview", "markdown", lines)
+
+    let lines = functional#filter( {line -> !(line =~ '```')}, lines )
+
+
+    call writefile( lines, '/Users/at/.vim/scratch/typeinfo.res' )
+
+    silent let g:floatWin_win = FloatingSmallNew ( [] )
+
+    exec 'edit' '/Users/at/.vim/scratch/typeinfo.res'
+
+    " set filetype=rescript
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
+
+    return
+  endif
+  echo "No type info"
+endfunction
+
+
+" echo !( '```res' =~ '```' )
+
+
+
+
+
+
 
 
 
