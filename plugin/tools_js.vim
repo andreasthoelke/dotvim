@@ -1,3 +1,19 @@
+" Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
+func! tools_js#bufferMaps()
+
+  nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
+  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
+  nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
+  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
+  nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
+  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
+  nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
+  nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
+
+  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
+
+endfunc
+
 
 func! RunJSCode ( code )
   let nodeCmd = 'console.log( ' . a:code . ' )'

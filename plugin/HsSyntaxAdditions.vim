@@ -7,7 +7,8 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
+" au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
@@ -21,7 +22,7 @@ au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
-au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
@@ -63,48 +64,77 @@ func! EdgeQLSyntaxAdditions() " ■
 endfunc " ▲
 
 func! RescriptSyntaxAdditions()
-  " setlocal omnifunc=rescript#Complete
+  call tools_rescript#bufferMaps()
 
-  call JsSyntaxAdditions()
-  " Todo: replace with -> ..
+  " call clearmatches()
+
   " call TsConcealWithUnicode()
 
-  " nnoremap <silent><buffer>            K   :RescriptTypeHint<cr>
-  " nnoremap <silent><buffer> <leader>K :call FloatingBuffer(expand('%'))<CR>:call RescriptTypeHint()<cr>
-  nnoremap <silent><buffer> <leader>K :call RescriptTypeHint()<cr>
-  nnoremap <silent><buffer> <leader>k :call RescriptTypeHint()<cr>
-  nnoremap <silent><buffer>       get :call RescriptTypeHint()<cr>
+  let g:TsCharsToUnicode = [
+        \  ['->',           '→', 'hsArrow']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['==',            '≡', 'Normal']
+        \, ['===',            '≡', 'Normal']
+        \, ['\s\zsstring\ze[\s|)|,|;|[|\n]',    'S', 'Normal']
+        \, ['\s\zsnumber\ze[\s|)|,|;|[|\n]',    'N', 'Normal']
+        \, ['\s\zsboolean\ze[\s|)|,|;|[|\n]',   'B', 'Normal']
+        \, ['\<\zsstring\ze\s',            'S', 'Normal']
+        \, ['\<\zsstring\ze)',            'S', 'Normal']
+        \, ['\<\zsnumber\ze\s',            'N', 'Normal']
+        \, ['\<\zsboolean',            'B', 'Normal']
+        \, ['\s\zsFunction',            'F', 'Normal']
+        \, ['\s\zsReact.Node',            '◻', 'Normal']
+        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+        \]
 
-  nnoremap <silent><buffer>            gdd :RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gdv :vsplit<CR>:RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR>:RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gds :split<CR>:RescriptJumpToDefinition<cr>
+  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
+    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  endfor
 
-  " nmap <silent><buffer>            gdd <Plug>(coc-definition)
-  " nmap <silent><buffer> gdv :vsplit<CR><Plug>(coc-definition)
-  " nmap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR><Plug>(coc-definition)
-  " nmap <silent><buffer> gds :split<CR><Plug>(coc-definition)
+  " JSDoc comments
+  syntax match Normal "\/\*\s" conceal
+  syntax match Normal "\/\*\*\s" conceal
+  syntax match Normal "^\s\*\s" conceal
+  syntax match Normal "^\*\s" conceal
+  syntax match Normal "\*\/" conceal
 
-  " nnoremap <silent> gdd :LspDef<cr>
-  " nnoremap <silent> gdo :call FloatingBuffer(expand('%'))<CR>:LspDef<cr>
-  " nnoremap <silent> gdv :vsplit<CR>:LspDef<cr>
-  " nnoremap <silent> gds :split<CR>:LspDef<cr>
 
+  syntax match Normal "\S\zs:\ze\s" conceal
+  syntax match Normal "^let\s" conceal
+  syntax match Normal "^\s\s\zslet\s" conceal
+
+  syntax match Normal '"' conceal
+  syntax match Normal '""' conceal cchar=∅
+
+
+  " TS conceals
+  syntax match Normal "relay`" conceal cchar=▵
+  syntax match Normal "return\ze\s" conceal cchar=←
+  syntax match Normal "\v\=\>" conceal cchar=⇒
+
+
+  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+
+  call CodeMarkupSyntaxHighlights()
+  " Hide comment character at beginning of line
+  call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  " call matchadd('Conceal', '\s\zs\#\ze\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\s\zs\\/\/\ze\s', 12, -1, {'conceal': ''})
+  " Conceal "%20" which is used for "h rel.txt" with space
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
+  " set commentstring=\ \/\/%s
+  " set commentstring=\ \/\/%s
 
 endfunc
 
+
 func! JsSyntaxAdditions() " ■
-  nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
-  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
-  nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
-  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
-  nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
-  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
-  nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
-  nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
-
-  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
-
+  call tools_js#bufferMaps()
   call clearmatches()
 
   " set syntax=typescript
@@ -363,6 +393,7 @@ func! MarkdownSyntaxAdditions()
 endfunc
 
 func! VimScriptSyntaxAdditions() " ■
+  " echoe "why is this called?"
   call clearmatches()
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
