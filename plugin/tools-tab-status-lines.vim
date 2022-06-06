@@ -71,7 +71,10 @@ let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepa
 
 " let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
 " let g:lightline.inactive.right = [ ['scrollbar'] ]
-let g:lightline.active.right = [ ['line'], ['db', 'pyVirtEnvStr'] ]
+" let g:lightline.active.right = [ ['line'], ['db', 'pyVirtEnvStr'] ]
+"
+" 2022-06 update: use the vertical small scrollbar again
+let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr'] ]
 let g:lightline.inactive.right = [ ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]

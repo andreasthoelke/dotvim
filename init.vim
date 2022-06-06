@@ -158,9 +158,12 @@ Plug 'itchyny/lightline.vim'
 " Plug 'pacha/vem-tabline'
 " Plug 'pacha/vem-statusline'
 
+" A vertical scrollbar!
+" Plug 'dstein64/nvim-scrollview', { 'branch': 'main' }
+" Plug 'dstein64/nvim-scrollview'
+" A small horizontal scrollbar
 Plug 'gcavallanti/vim-noscrollbar'
 " Plug 'drzel/vim-line-no-indicator'
-Plug 'dstein64/nvim-scrollview', { 'branch': 'main' }
 
 Plug 'kyazdani42/nvim-web-devicons'
 
