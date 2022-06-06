@@ -70,26 +70,20 @@ func! RescriptSyntaxAdditions()
 
   " call TsConcealWithUnicode()
 
-  let g:TsCharsToUnicode = [
-        \  ['->',           '→', 'hsArrow']
-        \, ['\s\zs<-',           '←', 'hsArrowBackw']
-        \, ['==',            '≡', 'Normal']
-        \, ['===',            '≡', 'Normal']
-        \, ['\s\zsstring\ze[\s|)|,|;|[|\n]',    'S', 'Normal']
-        \, ['\s\zsnumber\ze[\s|)|,|;|[|\n]',    'N', 'Normal']
-        \, ['\s\zsboolean\ze[\s|)|,|;|[|\n]',   'B', 'Normal']
-        \, ['\<\zsstring\ze\s',            'S', 'Normal']
-        \, ['\<\zsstring\ze)',            'S', 'Normal']
-        \, ['\<\zsnumber\ze\s',            'N', 'Normal']
-        \, ['\<\zsboolean',            'B', 'Normal']
-        \, ['\s\zsFunction',            'F', 'Normal']
-        \, ['\s\zsReact.Node',            '◻', 'Normal']
-        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
-        \]
 
-  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
-    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
-  endfor
+
+  syntax match Normal "\v\=\>" conceal cchar=⇒
+  syntax match Normal "\v\-\>" conceal cchar=→
+  syntax match Normal "\v\=\=" conceal cchar=≡
+  syntax match Normal "\v\+\+\>" conceal cchar=⧺
+  syntax match Normal "\v\|\|\>" conceal cchar=‖
+
+  syntax match Normal '\W\zsint\ze\W' conceal cchar=I
+
+  syntax match Normal '\W\zsint\ze\W' conceal cchar=I
+  syntax match Normal '\W\zsstring\ze\W' conceal cchar=S
+  syntax match Normal '\W\zsfloat\ze\W' conceal cchar=F
+  syntax match Normal '\W\zsbool\ze\W' conceal cchar=B
 
   " JSDoc comments
   syntax match Normal "\/\*\s" conceal
@@ -110,10 +104,9 @@ func! RescriptSyntaxAdditions()
   " TS conceals
   syntax match Normal "relay`" conceal cchar=▵
   syntax match Normal "return\ze\s" conceal cchar=←
-  syntax match Normal "\v\=\>" conceal cchar=⇒
 
 
-  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+  syntax match InlineTestDeclaration '\v^let\se\d_\i{-}\s\=' conceal cchar=‥
 
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
@@ -128,8 +121,9 @@ func! RescriptSyntaxAdditions()
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
   " set commentstring=\ \/\/%s
-  " set commentstring=\ \/\/%s
 
+" new unicode symbols
+" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎⟦╌ ∥,a͡,b, e ͢ e  װ ∗⇣⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
 endfunc
 
 

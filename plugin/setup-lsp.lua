@@ -245,12 +245,12 @@ lspconfig.purescriptls.setup ({
 -- https://github.com/purescript/purescript/blob/9534e24d3fb87d6c6b222c8b31d13b57cc5c3e04/src/Language/PureScript/Errors.hs
 
 
--- lspconfig.rescriptls.setup ({
---   cmd = {'node', '~/.config/nvim/plugged/vim-rescript/server/out/server.js', '--stdio'},
---   capabilities = capabilities,
---   on_attach = on_attach,
---   flags = flags,
--- })
+lspconfig.rescriptls.setup ({
+  cmd = {"node", "/Users/at/.config/nvim/plugged/vim-rescript/server/out/server.js", "--stdio"},
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
 
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls

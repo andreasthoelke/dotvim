@@ -1,5 +1,10 @@
 
 func! GetLangCommentStr()
+
+  if &filetype == 'rescript'
+    return '//'
+  endif
+
   let cstr = &commentstring
   if empty( cstr )
     return ""
@@ -11,7 +16,6 @@ endfunc
 " put =GetLangCommentStr()
 
 
-" Todo: this does not seem to work with treesitter
 command! SyntaxIDShow echo GetSyntaxIDAtCursor()
 func! GetSyntaxIDAtCursor()
   return synIDattr( synID( line('.'), col('.'), 0), 'name' )

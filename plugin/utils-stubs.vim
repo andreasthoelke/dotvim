@@ -105,15 +105,26 @@ func! CreateInlineTestDec_rescript()
   let hostLn = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
   let hostDecName = matchstr( getline(hostLn ), '\vlet\s\zs\i*\ze\s' )
 
+  " let add = (a, b) => a + b
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  if strInParan == ''
+    " let greetMore = name => {
+    let strInParan = matchstr( getline(hostLn ), '\v\=\zs.*\ze\=' )
+  endif
+
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let paramNames = substitute( paramNames, "'", '"', 'g')
-  let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  if len( paramNames ) > 2
+    let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  else
+    let lineText = hostDecName
+  endif
   let nextIndex = GetNextTestDeclIndex( hostLn )
   let lineText = 'let e' . nextIndex . '_' . hostDecName . ' = ' . lineText
   call append( '.', lineText )
-  call search('(')
-  normal l
+  " call search('(')
+  normal dd
+  normal www
 endfunc
 
 

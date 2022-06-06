@@ -35,7 +35,7 @@
   "signature.floatConfig": { "maxHeight": 20 },
   "coc.preferences.enableFloatHighlight": false,
   "diagnostic.enable": false,
-  "diagnostic.virtualText": false,
+  "diagnostic.virtualText": true,
   "diagnostic.enableSign": false,
   "diagnostic.enableMessage": "jump",
   "diagnostic.errorSign": "•",

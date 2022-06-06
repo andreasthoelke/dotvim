@@ -1336,6 +1336,9 @@ async function ()
 note the single quotes!
 elseif resLines[0] =~ '\v(with)|(select)'
 
+character-classes:
+h character-classes
+\W is a non-word character
 
 # Vim
 
