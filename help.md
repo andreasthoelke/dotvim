@@ -1297,6 +1297,7 @@ https://vim.fandom.com/wiki/Power_of_g
 <!-- '<,'>s/old/new/g -->
 
 .+1,.+2s/old/new/g
+exec( '.+1,.+2s/old/new/g' )
 eins old
 old zwei
 drei old
@@ -1308,6 +1309,24 @@ More tricks: ~/.vim/plugin/notes-workflow.vim#/Substitute%20Replace%20Text.
 Turn abs system path into home-dir path: <!-- '<,'>s/\/Users\/at/\~/ -->
 or use plugin? https://github.com/nvim-pack/nvim-spectre
 To remove ^M characters (windows line breaks?) use exec "%s/\r//g"
+
+### Substitute in buffer example
+help substitute
+cautious with the following commands!
+they comment and uncommend lines (insert "// ") when a pattern matches
+exec '%substitute/^\zelet\se\d_/\/\/ /ge'
+
+exec '.+1substitute/\/\/\s\zelet\se\d_//ge'
+let e1_greetMore = greetMore("abcc")
+
+eins test
+
+// let e1_someLet2 = someLet2()
+
+ranges
+exec '.+1,.+8s/\zelet\se\d_/\/\/ /ge'
+
+
 
 ### Commandline-ranges
 

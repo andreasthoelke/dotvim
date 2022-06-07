@@ -75,8 +75,10 @@ func! RescriptSyntaxAdditions()
   syntax match Normal "\v\=\>" conceal cchar=⇒
   syntax match Normal "\v\-\>" conceal cchar=→
   syntax match Normal "\v\=\=" conceal cchar=≡
-  syntax match Normal "\v\+\+\>" conceal cchar=⧺
-  syntax match Normal "\v\|\|\>" conceal cchar=‖
+  syntax match Normal "\v\=\=\=" conceal cchar=≣
+  syntax match Normal "\v\+\+" conceal cchar=⧺
+  syntax match Normal "\v\|\|" conceal cchar=‖
+  syntax match Normal "\v\&\&" conceal cchar=﹠
 
   syntax match Normal '\W\zsint\ze\W' conceal cchar=I
 
@@ -84,6 +86,15 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\W\zsstring\ze\W' conceal cchar=S
   syntax match Normal '\W\zsfloat\ze\W' conceal cchar=F
   syntax match Normal '\W\zsbool\ze\W' conceal cchar=B
+
+  syntax match Normal '\'a\ze\W' conceal cchar=𝑎
+  syntax match Normal '\W\zs\'b\ze\W' conceal cchar=𝑏
+  syntax match Normal '\W\zs\'c\ze\W' conceal cchar=𝑐
+
+  syntax match Normal '\i\zs<' conceal cchar=﹝
+  syntax match Normal '>' conceal cchar=﹞
+  " syntax match Normal '\i\zs<' conceal cchar=⟨
+  " syntax match Normal '>' conceal cchar=⟩
 
   " JSDoc comments
   syntax match Normal "\/\*\s" conceal
@@ -123,7 +134,7 @@ func! RescriptSyntaxAdditions()
   " set commentstring=\ \/\/%s
 
 " new unicode symbols
-" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎⟦╌ ∥,a͡,b, e ͢ e  װ ∗⇣⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
+" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗⇣⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
 endfunc
 
 

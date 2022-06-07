@@ -100,31 +100,36 @@ endfunc
 " e1_mult = mult('aa', 'bb')
 
 
-func! CreateInlineTestDec_rescript()
+func! CreateInlineTestDec_rescript ()
   " const greeter = (person: Person) => {
-  let hostLn = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
-  let hostDecName = matchstr( getline(hostLn ), '\vlet\s\zs\i*\ze\s' )
+    let hostLn = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    let hostDecName = matchstr( getline(hostLn ), '\vlet\s\zs\i*\ze\W' )
 
-  " let add = (a, b) => a + b
-  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
-  if strInParan == ''
-    " let greetMore = name => {
-    let strInParan = matchstr( getline(hostLn ), '\v\=\zs.*\ze\=' )
-  endif
+    " if getline(hostLn) =~ '\:.*='
+    if getline(hostLn) =~ '\:'
+      let lineText = hostDecName
+    else
+      " let add = (a, b) => a + b
+      let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+      if strInParan == ''
+        " let greetMore = name => {
+          let strInParan = matchstr( getline(hostLn ), '\v\=\zs.*\ze\=>' )
+        endif
 
-  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
-  let paramNames = substitute( paramNames, "'", '"', 'g')
-  if len( paramNames ) > 2
-    let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
-  else
-    let lineText = hostDecName
-  endif
-  let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'let e' . nextIndex . '_' . hostDecName . ' = ' . lineText
-  call append( '.', lineText )
-  " call search('(')
-  normal dd
-  normal www
+        let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+        let paramNames = substitute( paramNames, "'", '"', 'g')
+        if len( paramNames ) > 2
+          let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+        else
+          let lineText = hostDecName
+        endif
+      endif
+        let nextIndex = GetNextTestDeclIndex( hostLn )
+        let lineText = 'let e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+      call append( '.', lineText )
+      " call search('(')
+      normal dd
+      normal www
 endfunc
 
 
