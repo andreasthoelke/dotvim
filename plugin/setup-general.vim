@@ -628,7 +628,8 @@ let g:wordmotion_prefix = ","
 nnoremap v m'v
 
 " i usually to the inner word, and keep the space after it.
-nnoremap cw ciw
+" nnoremap cw ciw
+nnoremap cw ce
 
 " Want to go to last visible char most of the times and g_ is tricky to type
 nnoremap $ m'g_

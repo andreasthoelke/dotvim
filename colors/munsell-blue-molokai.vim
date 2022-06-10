@@ -507,6 +507,7 @@ hi CommentMinus    guifg=#273A40
 hi CommentMinusMinus guifg=#1D2B2F
 hi CommentPlus     guifg=#38595E
 " hi! ConcealOne  guifg=#2D505E
+" This is now used for all concealed cchars
 hi! ConcealOne  guifg=#2A4651
 
 " Conceal: Leaving the default link to Operator currently
@@ -550,9 +551,11 @@ hi! EndOfBuffer guifg=bg
 
 " Comment syntax additions
 hi BlackBG guibg=#000000
+hi BlackBGsoft guibg=#101010
 hi GreyBG guibg=#262626
 hi CommentSection guifg=#42606B guibg=#0E0E0E
 hi CommentLabel   guifg=#42606B guibg=#030303
+hi CommentMarkup   guifg=#26383D guibg=#0D0F10
 
 hi htmlLink guifg=#42606B guibg=#030303
 

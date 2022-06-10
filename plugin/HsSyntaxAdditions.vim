@@ -174,7 +174,7 @@ func! RescriptSyntaxAdditions()
   " call matchadd('Conceal', '\v\s\zs\:\>', -1, -1, {'conceal': '▷'})
 
 
-  call matchadd('BlackBG', '\v("|--|//|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+  call matchadd('CommentMarkup', '\v("|--|//|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
 
   " call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
