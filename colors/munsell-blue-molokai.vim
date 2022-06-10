@@ -235,7 +235,7 @@ hi! purescriptDelimiter guifg=#2D4F54
 " hi! purescriptOperator guifg=#32575E
 hi! purescriptOperator guifg=#3A666E
 hi! purescriptColon guifg=#2D4E54
-hi! Operator guifg=#335A60
+" hi! Operator guifg=#335A60
 
 hi! def link TSFunction Function
 " hi! def link TSFunction SpGreen52
@@ -332,8 +332,12 @@ exec 'hi! Keyword guifg=' . g:color_ming_green
 " purescriptOperator > Operator
 " exec 'hi! Operator guifg=' . g:color_ming_green
 " Note: Operator is (automatically?!) linked to all concealed symbols!
-exec 'hi! Operator guifg=' . g:color_ming_green_dark
+" exec 'hi! Operator guifg=' . g:color_ming_green_dark
 " exec 'hi! Operator guifg=' . g:color_ming_green_dark2
+" This one makes the equal sign barker - which looks nice
+hi! Operator         guifg=#2D505E
+" hi! Operator         guifg=#355E6E
+" hi! Operator         guifg=#3C6B7C
 
 " purescriptDelimiter > Delimiter
 exec 'hi! Delimiter guifg=' . g:color_ming_green
@@ -502,11 +506,15 @@ hi Comment         guifg=#344B53
 hi CommentMinus    guifg=#273A40
 hi CommentMinusMinus guifg=#1D2B2F
 hi CommentPlus     guifg=#38595E
+" hi! ConcealOne  guifg=#2D505E
+hi! ConcealOne  guifg=#2A4651
 
 " Conceal: Leaving the default link to Operator currently
 " hi conceal         guifg=#BCBCBC guibg=none
 " exec 'hi conceal guifg=' . g:color_ming_green
-hi! link conceal CommentMinus
+" hi! link conceal CommentMinus
+hi! link conceal ConcealOne
+" hi! link conceal Comment
 
 " Note: Cursor is show with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings

@@ -111,7 +111,7 @@ endfunc
 
 " Push shift text to the right:
 " nnoremap <localleader>> i <esc>
-nnoremap ,> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
+nnoremap <silent> ,> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
 " nnoremap <localleader>> i <Esc>
 " Make it repeatable so the cursor follows the text to the right
 " Followup: it just does this. not sure what the problem was before

@@ -1,4 +1,4 @@
-" syntax highlighting for purescript
+" uyntax highlighting for purescript
 "
 " Heavily modified version of the purescript syntax
 " highlighter to support purescript.

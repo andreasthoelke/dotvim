@@ -435,7 +435,7 @@ func! ColumnBlockEndPosCol1( searchStartLine, dir )
     if IndentLevel( currTestLine ) != 1
       " the test line is indented -> the previous line is the last line in the block
       return currTestLine - a:dir
-    elseif abs(currTestLine - a:searchStartLine) > 30
+    elseif abs(currTestLine - a:searchStartLine) > 90
       return currTestLine
     else
       let currTestLine += a:dir
@@ -452,7 +452,7 @@ func! ColumnBlockEndPos( searchStartLine, searchForIndentLevel, dir )
     let matchingColumns = functional#filter( {x->x==a:searchForIndentLevel}, WordStartVisualColumns( currTestLine ) )
     if !len( matchingColumns )
       return currTestLine - a:dir
-    elseif abs(currTestLine - a:searchStartLine) > 30
+    elseif abs(currTestLine - a:searchStartLine) > 90
       return currTestLine
     else
       let currTestLine += a:dir
@@ -471,7 +471,7 @@ func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForInde
     elseif IndentLevel1stColumn( currTestLine ) ==   a:searchForIndentLevel
       " Found a line where the first column fits the search indent level
       let searching = 0
-    elseif abs(currTestLine - a:searchStartLine) > 30
+    elseif abs(currTestLine - a:searchStartLine) > 90
       " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
       let currTestLine = a:searchStartLine
       let searching = 0
@@ -493,7 +493,7 @@ func! FindLineWithWordStartAtColumn( searchStartLine, searchForIndentLevel, dir 
       " echo matchingColumns
       " Found a line where some word starts at this column
       return currTestLine
-    elseif abs(currTestLine - a:searchStartLine) > 30
+    elseif abs(currTestLine - a:searchStartLine) > 90
       " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
       return a:searchStartLine
     else

@@ -66,35 +66,51 @@ endfunc " ▲
 func! RescriptSyntaxAdditions()
   call tools_rescript#bufferMaps()
 
-  " call clearmatches()
+  call clearmatches()
 
   " call TsConcealWithUnicode()
 
 
-
   syntax match Normal "\v\=\>" conceal cchar=⇒
   syntax match Normal "\v\-\>" conceal cchar=→
+  syntax match Normal "\v\~" conceal cchar=˙
+  syntax match Normal "()" conceal cchar=‧
+
+
   syntax match Normal "\v\=\=" conceal cchar=≡
   syntax match Normal "\v\=\=\=" conceal cchar=≣
   syntax match Normal "\v\+\+" conceal cchar=⧺
   syntax match Normal "\v\|\|" conceal cchar=‖
   syntax match Normal "\v\&\&" conceal cchar=﹠
 
-  syntax match Normal '\W\zsint\ze\W' conceal cchar=I
 
-  syntax match Normal '\W\zsint\ze\W' conceal cchar=I
-  syntax match Normal '\W\zsstring\ze\W' conceal cchar=S
-  syntax match Normal '\W\zsfloat\ze\W' conceal cchar=F
-  syntax match Normal '\W\zsbool\ze\W' conceal cchar=B
+  " syntax match Normal '\'a\ze\W' conceal cchar=𝑎
+  " syntax match Normal '\W\zs\'b\ze\W' conceal cchar=𝑏
+  " syntax match Normal '\W\zs\'c\ze\W' conceal cchar=𝑐
 
-  syntax match Normal '\'a\ze\W' conceal cchar=𝑎
-  syntax match Normal '\W\zs\'b\ze\W' conceal cchar=𝑏
-  syntax match Normal '\W\zs\'c\ze\W' conceal cchar=𝑐
+  syntax match Normal '\'a' conceal cchar=𝑎
+  syntax match Normal '\'b' conceal cchar=𝑏
+  syntax match Normal '\'c' conceal cchar=𝑐
 
-  syntax match Normal '\i\zs<' conceal cchar=﹝
-  syntax match Normal '>' conceal cchar=﹞
+  " syntax match Normal '\W\zsint\ze\W' conceal cchar=I
+  " syntax match Normal '\W\zsstring\ze\W' conceal cchar=S
+  " syntax match Normal '\W\zsfloat\ze\W' conceal cchar=F
+  " syntax match Normal '\W\zsbool\ze\W' conceal cchar=B
+
+  " Note: The following int type match works quite will in this file (seach for int) ~/Documents/UI-Dev/rescript/setup-tests/a_rs/src/b_types.res#/let%20myInt%20=
+  syntax match Normal '\<\zsint\ze\W' conceal cchar=I
+  syntax match Normal 'string\ze\W' conceal cchar=S
+  syntax match Normal 'float\ze\W' conceal cchar=F
+  syntax match Normal 'bool\ze\W' conceal cchar=B
+
+  " syntax match Normal '\w\zs<' conceal cchar=﹝
+  " syntax match Normal '<' conceal cchar=﹝
+  " syntax match Normal '>' conceal cchar=﹞
+  " syntax match Normal '[^:]>' conceal cchar=﹞
   " syntax match Normal '\i\zs<' conceal cchar=⟨
   " syntax match Normal '>' conceal cchar=⟩
+
+  syntax match Normal "\.\.\." conceal cchar=…
 
   " JSDoc comments
   syntax match Normal "\/\*\s" conceal
@@ -111,20 +127,61 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '"' conceal
   syntax match Normal '""' conceal cchar=∅
 
+  " Comment conceal
+  syntax match Normal '\v\s*\zs\/\/\s' conceal
 
-  " TS conceals
+
+  " Keywords
   syntax match Normal "relay`" conceal cchar=▵
-  syntax match Normal "return\ze\s" conceal cchar=←
+  syntax match Normal 'mutable' conceal cchar=⁎
+  syntax match Normal 'rec\ze\s' conceal cchar=∩
+  syntax match Normal '^and\ze\s' conceal cchar=∝
+  syntax match Normal 'switch\ze\s' conceal cchar=⌋
+  syntax match Normal 'true' conceal cchar=𝗍
+  syntax match Normal 'false' conceal cchar=𝖿
+
+  syntax match Normal '@react.component' conceal cchar=_
+  syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
+  syntax match Normal 'ReactEvent\.' conceal cchar=⁝
+  syntax match Normal 'React\.' conceal cchar=⁝
+  syntax match Normal '\s\zsHook\.' conceal cchar=⁝
+  syntax match Normal 'Option\.' conceal cchar=⁝
+  syntax match Normal 'AsyncResult\.' conceal cchar=≀
+  syntax match Normal '^module\ze\s' conceal cchar=
+  syntax match Normal '^type\ze\s' conceal cchar=┆
+
+  syntax match Normal '<' conceal cchar=⁽
+  syntax match Normal '>' conceal cchar=⁾
+
+  syntax match Normal '<div' conceal cchar=⋮
+  syntax match Normal '<div>' conceal cchar=⋮
+  syntax match Normal '</div>' conceal cchar=⋮
+  syntax match Normal '/>' conceal cchar=˗
+  syntax match Normal '|>' conceal cchar=⇾
+
+
+
+"  ↻  ↶ ↷ ⇵ ⇠ ⇽ ⇾ ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
+"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘
+"  籠  |  ⋮  ┆       ‾        ˋ ·   ˗  ˯ˍ ˓  ˜˙ ⁚
+
+
 
 
   syntax match InlineTestDeclaration '\v^let\se\d_\i{-}\s\=' conceal cchar=‥
 
-  call CodeMarkupSyntaxHighlights()
+  " syntax match Normal '\:\>' conceal cchar=▷
+  " call matchadd('Conceal', '\v\s\zs\:\>', -1, -1, {'conceal': '▷'})
+
+
+  call matchadd('BlackBG', '\v("|--|//|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+
+  " call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
-  call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
+  " call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
   " Hilde \" before comment after code
   " call matchadd('Conceal', '\s\zs\#\ze\s', 12, -1, {'conceal': ''})
-  call matchadd('Conceal', '\s\zs\\/\/\ze\s', 12, -1, {'conceal': ''})
+  " call matchadd('Conceal', '\s\zs\\/\/\ze\s', 12, -1, {'conceal': ''})
   " Conceal "%20" which is used for "h rel.txt" with space
 
   set conceallevel=2 " ■
@@ -134,7 +191,12 @@ func! RescriptSyntaxAdditions()
   " set commentstring=\ \/\/%s
 
 " new unicode symbols
-" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗⇣⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
+" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
+"  ↻  ↶ ↷ ⇵ ⇠ ⇽ ⇾ ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
+"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘
+"  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙    ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
+"  ⟛    ⟫  ⟯  ⟶    ⠃ ⠈ ⠁ ⠌     ﹚ ﹜            ᐨ
+
 endfunc
 
 

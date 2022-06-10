@@ -129,7 +129,7 @@ func! CreateInlineTestDec_rescript ()
       call append( '.', lineText )
       " call search('(')
       normal dd
-      normal www
+      normal ^www
 endfunc
 
 
@@ -254,7 +254,7 @@ endfunc
 
 func! InlineTestDeclBackwLine()
   " return searchpos( '\v^e\d_', 'cnbW')[0]
-  return searchpos( '\v^(const\s)=[e|a]\d_', 'cnbW')[0]
+  return searchpos( '\v^(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
 endfunc
 " echo InlineTestDeclBackwLine()
 
@@ -265,12 +265,12 @@ endfunc
 
 func! GetTestDeclIndex( lineNum )
   " return matchstr( getline(a:lineNum), '^e\zs\d\ze_')
-  return matchstr( getline(a:lineNum), '\v^(const\s)=[e|a]\zs\d\ze_')
+  return matchstr( getline(a:lineNum), '\v^(const\s|let\s)=[e|a]\zs\d\ze_')
 endfunc
 
 " echo GetTestDeclIndex( line('.') +1 )
+" let e2_database4 = database4 Nothing 99
 " e3_database4 = database4 Nothing 99
-" const e2_database4 = database4 Nothing 99
 
 func! GetAssertionIndex( lineNum )
   return matchstr( getline(a:lineNum), '^a\zs\d\d\ze_')

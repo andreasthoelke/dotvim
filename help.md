@@ -1359,6 +1359,25 @@ character-classes:
 h character-classes
 \W is a non-word character
 
+source the following line to match "ein" when it is NOT followed by "s" or "e"!
+/ein[se]\@!
+eins
+einer
+einr
+
+/if \(\(then\)\@!.\)*$
+/\(\(then\)\@!\)other
+
+if this something
+if ab then more
+and other
+if ab cd
+
+type validRed<'a> = [< #Fire | #Crimson | #Ash] as 'a
+type myReds = validRed<[#Ash]>
+let message = "Hello " ++ (theCompany :> string)
+
+
 # Vim
 
 ### vim help
@@ -1692,6 +1711,7 @@ read the documentation here!: ~/.vim/plugin/syntax-color.vim#/STEP2A.%20If%20you
 function argument highlighing ~/.vim/syntax/purescript.vim#/TODO%20rather%20highlight
 https://github.com/pboettch/vim-highlight-cursor-words/blob/master/plugin/hicursorwords.vim
 https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-vim-like-in-netbeans
+
 
 
 Show purescript syntax in Coc completion menu

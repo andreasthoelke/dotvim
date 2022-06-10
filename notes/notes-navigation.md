@@ -527,7 +527,7 @@ location could be a
 /co\|fi
 
 * Lookarounds
-  are just asserting the presense of groups, they dont consume/return the characters
+  are just asserting the presence of groups, they dont consume/return the characters
 This will match 'e's when followed by a space, but dont match the space
 /\ve(\s)@=
 /\ve(\s)@!
@@ -553,6 +553,17 @@ PINEAPPLE
 APPLE
 KIWI)
 (ORANGE APPLE) APPLE
+
+
+if \(\(then\)\@!.\)*$
+/\vva@=
+
+type validRed<'a> = [< #Fire | #Crimson | #Ash] as 'a
+type myReds = validRed<[#Ash]>
+let message = "Hello " ++ (theCompany :> string)
+
+ab:xs
+ab:bs
 
 /\v'([^']*)'
 call matchadd('MatchParen', "\v'([^']*)'", -1, -1 )
