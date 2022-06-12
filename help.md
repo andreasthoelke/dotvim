@@ -1358,6 +1358,7 @@ elseif resLines[0] =~ '\v(with)|(select)'
 character-classes:
 h character-classes
 \W is a non-word character
+\S is a non-whitespace character!
 
 source the following line to match "ein" when it is NOT followed by "s" or "e"!
 /ein[se]\@!

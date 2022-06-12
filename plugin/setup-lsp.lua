@@ -246,7 +246,8 @@ lspconfig.purescriptls.setup ({
 
 
 lspconfig.rescriptls.setup ({
-  cmd = {"node", "/Users/at/.config/nvim/plugged/vim-rescript/server/out/server.js", "--stdio"},
+  -- cmd = {"node", "/Users/at/.config/nvim/plugged/vim-rescript/server/out/server.js", "--stdio"},
+  cmd = {"node", "/Users/at/.config/nvim/utils/rescript_vscode/server/out/server.js", "--stdio"},
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,

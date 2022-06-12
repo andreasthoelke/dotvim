@@ -1,5 +1,17 @@
 
 
+let e1_dummyName = Belt.Array.range( 1, 4 )
+  -> Js.Array2.map( i => i
+    -> i => {i + 1}
+    -> show
+    -> Js.String2.concat( "name", _ )
+    -> i => {i ++ "x"}
+    -> React.string
+  )
+  -> React.array
+
+
+
 # Scratch
 
 type Tags

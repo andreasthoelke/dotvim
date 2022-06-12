@@ -6,6 +6,7 @@ sessions/
 __Tagbar__*
 notes/vimdump-*
 scratch/
+utils/rescript_vscode/
 notes/*-bk
 notes/test*
 tags

@@ -254,6 +254,8 @@ Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 Plug 'ray-x/navigator.lua'
 
 Plug 'folke/trouble.nvim'
+" https://github.com/folke/lsp-colors.nvim
+Plug 'folke/lsp-colors.nvim'
 
 " Completion engine
 Plug 'hrsh7th/nvim-cmp'
@@ -517,7 +519,7 @@ nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 luafile ~/.config/nvim/lua/utils_general.lua
 luafile ~/.config/nvim/plugin/ui_virtualTx.lua
 luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
-" luafile ~/.config/nvim/plugin/setup-lsp.lua
+luafile ~/.config/nvim/plugin/setup-lsp.lua
 
 
 
