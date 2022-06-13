@@ -159,6 +159,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal 'Belt\.' conceal " cchar=⁝
   syntax match Normal 'Array\.' conceal cchar=⟦
   syntax match Normal 'List\.' conceal cchar=⟬
+  syntax match Normal 'Int\.' conceal
   syntax match Normal 'list{' conceal cchar=⟬
   " syntax match Normal 'Belt.Array\.' conceal cchar=⁝
   " syntax match Normal 'Belt.List\.' conceal cchar=⁝
@@ -188,7 +189,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '|>' conceal cchar=⇾
 
   syntax match Normal 'map(' conceal cchar=➚
-  syntax match Normal 'map\zs( i => i' conceal cchar=»
+  syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat(' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_

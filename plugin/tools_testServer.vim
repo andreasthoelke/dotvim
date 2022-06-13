@@ -76,6 +76,7 @@ func! TestServerCmd ( chosenObj )
   endif
 endfunc
 
+" A general sleep, pause, delay, timeout function!
 func! T_DelayedCmd( cmd, time )
    call timer_start( a:time, { tid -> execute( a:cmd, "" )})
 endfunc

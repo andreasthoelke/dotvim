@@ -9,11 +9,12 @@ func! tools_rescript#bufferMaps()
   nnoremap <silent><buffer>         geo :call system( 'npx rescript' )<cr>
   nnoremap <silent><buffer>         geO :call System_Float( 'npx rescript' )<cr>
 
-  nnoremap <silent><buffer>         ged <cmd>TroubleToggle<cr>
-  " nnoremap <silent><buffer>         ged :Trouble<cr>
-  " nnoremap <silent><buffer>         ged :Trouble<cr>
-  " nnoremap <silent><buffer>         ger :Trouble lsp_references<cr><c-w>p
-  " nnoremap <silent><buffer>         geD :TroubleClose<cr>
+  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+
+  " Todo: make these maps general per languge and put them here or
+  " ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_rescript()<cr>
@@ -120,7 +121,8 @@ func! RS_NodeCall( identif )
   " Note: expand('%:r') is returning the absolute path initially when opened from dirvish!
   " let filePath_compiledJS = getcwd() . '/' . expand('%:r') . '.bs.js'
   let projRelativeFilenameRoot = fnamemodify( CurrentRelativeFilePath(), ':r' )
-  let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . '.bs.js'
+  " let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . '.bs.js'
+  let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . '.mjs'
 
   let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
 
@@ -131,6 +133,7 @@ func! RS_NodeCall( identif )
   let js_code_importCall = 'import("' . filePath_compiledJS . '").then(m => execIdentif(m.' . a:identif . '))'
 
   return "node -e '" . js_code_helperFn . js_code_importCall . "'"
+  " return "npx ts-node -T  -e '" . js_code_helperFn . js_code_importCall . "'"
 endfunc
 " let @" = RS_NodeCall( expand('<cword>') )
 

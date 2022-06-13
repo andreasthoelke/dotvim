@@ -27,6 +27,9 @@ i might make manually unique string ids in data.ts.
 
 ## Vim to learn
 
+sp qa - add cursor pos to quickfix list
+leader qq - toggle quickfix list
+
 ### Lsp
 sp ca - code action
 gti   - import identifier under cursor

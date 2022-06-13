@@ -240,6 +240,10 @@ https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 https://neovim.io/doc/user/lua.html
 https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 
+## A general sleep, pause, delay, timeout function
+func! T_DelayedCmd( cmd, time )
+call T_DelayedCmd( "echo 'hi there'", 1000 )
+
 ## Async vim.loop
 ~/.config/nvim/notes/notes-lua-asyc-loop.md
 
