@@ -50,9 +50,12 @@ func! RS_EvalParagIdentif_simple()
   if IndentLevel( line('.') ) == 1
     let identLineNum = line('.')
   else
-    let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    " let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    let identLineNum = searchpos( '^let\s', 'cnb' )[0]
   endif
   let identif = matchstr( getline( identLineNum ), '\vlet\s\zs\i*\ze\W' )
+  " echo identLineNum identif
+  " return
   let filePath = expand('%:p:h')
 
   let _compl_ = system( 'npm run build' )
@@ -64,7 +67,8 @@ func! RS_EvalParagIdentif()"  ■
   if IndentLevel( line('.') ) == 1
     let identLineNum = line('.')
   else
-    let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    " let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    let identLineNum = searchpos( '^let\s', 'cnb' )[0]
   endif
   " let identif = split( getline( identLineNum) )[1]
   let identif = matchstr( getline( identLineNum ), '\vlet\s\zs\i*\ze\W' )

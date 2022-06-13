@@ -8,7 +8,7 @@ au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.res,*.mli call RescriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
@@ -66,6 +66,8 @@ endfunc " ▲
 func! RescriptSyntaxAdditions()
   call tools_rescript#bufferMaps()
 
+  set textwidth=0
+
   call clearmatches()
 
   " call TsConcealWithUnicode()
@@ -73,10 +75,10 @@ func! RescriptSyntaxAdditions()
 
   syntax match Normal "\v\=\>" conceal cchar=⇒
   " syntax match Normal "\v\-\>" conceal cchar=→
-  syntax match Normal "\v\-\>" conceal cchar=⇾
+  syntax match Normal "\v\-\>" conceal cchar=➔
   syntax match Normal "\v\~" conceal cchar=˙
   syntax match Normal "()" conceal cchar=‧
-
+  syntax match Normal "_e" conceal cchar=‧
 
   syntax match Normal "\v\=\=" conceal cchar=≡
   syntax match Normal "\v\=\=\=" conceal cchar=≣
@@ -108,6 +110,8 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\vbool\ze(\W|\_$)' conceal cchar=B
   " syntax match Normal 'bool\ze\_$' conceal cchar=B
   " syntax match Normal 'array\ze\W' conceal cchar=A
+  syntax match Normal 'array\ze\W' conceal cchar=⟦
+  syntax match Normal 'list\ze\W' conceal cchar=⟬
 
   " syntax match Normal '\w\zs<' conceal cchar=﹝
   " syntax match Normal '<' conceal cchar=﹝
@@ -149,8 +153,15 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '@react.component' conceal cchar=_
   syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
   syntax match Normal 'ReactEvent\.' conceal cchar=⁝
-  syntax match Normal 'React\.' conceal cchar=⁝
-  syntax match Normal 'Belt.Array\.' conceal cchar=⁝
+  syntax match Normal 'React.' conceal cchar=𝑟
+  " syntax match Normal 'element' conceal cchar=⊃
+  syntax match Normal 'React.element' conceal cchar=⊃
+  syntax match Normal 'Belt\.' conceal " cchar=⁝
+  syntax match Normal 'Array\.' conceal cchar=⟦
+  syntax match Normal 'List\.' conceal cchar=⟬
+  syntax match Normal 'list{' conceal cchar=⟬
+  " syntax match Normal 'Belt.Array\.' conceal cchar=⁝
+  " syntax match Normal 'Belt.List\.' conceal cchar=⁝
   syntax match Normal 'Belt.Int\.' conceal cchar=⁝
   syntax match Normal 'Belt.Result\.' conceal cchar=⁝
   syntax match Normal 'Belt.Option\.' conceal cchar=⁝
@@ -163,6 +174,10 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '^module\ze\s' conceal cchar=
   syntax match Normal '^type\ze\s' conceal cchar=┆
 
+  syntax match Normal 'toString' conceal cchar=≺
+
+
+
   syntax match Normal '<' conceal cchar=⁽
   syntax match Normal '>' conceal cchar=⁾
 
@@ -172,14 +187,15 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '/>' conceal cchar=˗
   syntax match Normal '|>' conceal cchar=⇾
 
-  syntax match Normal 'element\ze\W' conceal cchar=⊃
-  syntax match Normal 'className=' conceal cchar=◇
-
+  syntax match Normal 'map(' conceal cchar=➚
   syntax match Normal 'map\zs( i => i' conceal cchar=»
   syntax match Normal 'concat(' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_
+  syntax match Normal 'x => x' conceal cchar=_
 
+  " syntax match Normal ')\ze\s-' conceal
+  " syntax match Normal ')\_$' conceal
 
 
 " ─     Inline Tests                                    ──
@@ -226,10 +242,10 @@ func! RescriptSyntaxAdditions()
 
 " new unicode symbols
 " « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
-"  ↻  ↶ ↷ ⇵ ⇠ ⇽ ⇾ ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
-"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘                  ∩
-"  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙    ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
-"  ⟛    ⟫  ⟯  ⟶    ⠃ ⠈ ⠁ ⠌     ﹚ ﹜            ᐨ
+"  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɍ r⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
+"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘                  ∩        𝑟S  ʀS
+"  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
+"  ⟛    ⟫  ⟯  ⟶    ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ
 "  ⊝   ⊙  ⊖  ⊘    ⊟  ⊡ | ⊖  ⊙
 "   ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  • ▪
 "   ◆  ◇  ◈  ◻  ◽  ☀
