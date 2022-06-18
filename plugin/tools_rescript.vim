@@ -6,15 +6,16 @@ func! tools_rescript#bufferMaps()
   nnoremap <silent><buffer>        ,gei :call TermOneShot_FloatBuffer( RS_EvalParagIdentif() )<cr>
   nnoremap <silent><buffer> <leader>gei :call TermOneShot( RS_EvalParagIdentif() )<cr>
 
-  nnoremap <silent><buffer>         geo :call system( 'npx rescript' )<cr>
+  nnoremap <silent><buffer>         gel :call RS_ComponentShow()<cr>
+
   nnoremap <silent><buffer>         geO :call System_Float( 'npx rescript' )<cr>
+  nnoremap <silent><buffer>         geo :call RS_RelayCompile()<cr>
 
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
-  " Todo: make these maps general per languge and put them here or
-  " ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
-  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_rescript()<cr>
@@ -32,6 +33,43 @@ func! tools_rescript#bufferMaps()
   nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
 
 
+endfunc
+
+
+func! RS_RelayCompile()
+  let lines = systemlist( 'npx rescript-relay-compiler' )
+  let lines = RemoveTermCodes( lines )
+  silent let g:floatWin_win = FloatingSmallNew ( lines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+func! RS_ComponentShow()
+  if IndentLevel( line('.') ) == 1
+    let identLineNum = line('.')
+  else
+    let identLineNum = searchpos( '^let\s', 'cnb' )[0]
+  endif
+  let identif = matchstr( getline( identLineNum ), '\vlet\s\zs\i*\ze\W' )
+  if getline( identLineNum ) =~ '() =>'
+    " This is (likely) a component with no args. it needs to be called to return an element to be rendered
+    let identif = identif . '()'
+  endif
+  let moduleName = expand('%:t:r')
+  call RS_ComponentShow_UpdateFile( identif, moduleName )
+endfunc
+
+" File ./src/Show.res is set to have the following two e.g. have the following loc:
+" @react.component
+" let make = () => ArraysKeys.items2
+func! RS_ComponentShow_UpdateFile( identifier, module )
+  let makeBinding = "let make = () => " . a:module . "\." . a:identifier
+  let lines = ["@react.component", makeBinding]
+  let folderPath = expand('%:p:h')
+  let filePath = folderPath . '/Show.res'
+  " Overwrite the Show.res file
+  call writefile( lines, filePath)
 endfunc
 
 

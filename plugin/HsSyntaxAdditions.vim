@@ -78,7 +78,8 @@ func! RescriptSyntaxAdditions()
   syntax match Normal "\v\-\>" conceal cchar=➔
   syntax match Normal "\v\~" conceal cchar=˙
   syntax match Normal "()" conceal cchar=‧
-  syntax match Normal "_e" conceal cchar=‧
+  " this hides/collapses all vars/args that start with an underscore, e.g. here (_abe) => setCount(x => x + 1)
+  syntax match Normal "\v\W\zs_\i{-}\ze\W" conceal cchar=ˍ
 
   syntax match Normal "\v\=\=" conceal cchar=≡
   syntax match Normal "\v\=\=\=" conceal cchar=≣
@@ -100,7 +101,7 @@ func! RescriptSyntaxAdditions()
   " syntax match Normal '\W\zsfloat\ze\W' conceal cchar=F
   " syntax match Normal '\W\zsbool\ze\W' conceal cchar=B
 
-  " Note: The following int type match works quite will in this file (seach for int) ~/Documents/UI-Dev/rescript/setup-tests/a_rs/src/b_types.res#/let%20myInt%20=
+  " Note: The following int type match works quite will in this file (search for int) ~/Documents/UI-Dev/rescript/setup-tests/a_rs/src/b_types.res#/let%20myInt%20=
   " syntax match Normal '\<\zsint\ze\W' conceal cchar=I
   " syntax match Normal 'string\ze\W' conceal cchar=S
   " syntax match Normal 'float\ze\W' conceal cchar=F
@@ -153,10 +154,11 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '@react.component' conceal cchar=_
   syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
   syntax match Normal 'ReactEvent\.' conceal cchar=⁝
-  syntax match Normal 'React.' conceal cchar=𝑟
+  syntax match Normal 'React\.' conceal cchar=𝑟
   " syntax match Normal 'element' conceal cchar=⊃
   syntax match Normal 'React.element' conceal cchar=⊃
-  syntax match Normal 'Belt\.' conceal " cchar=⁝
+  syntax match Normal 'className=' conceal cchar=◇
+  " syntax match Normal 'Belt\.' conceal " cchar=⁝
   syntax match Normal 'Array\.' conceal cchar=⟦
   syntax match Normal 'List\.' conceal cchar=⟬
   syntax match Normal 'Int\.' conceal
@@ -188,6 +190,8 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '/>' conceal cchar=˗
   syntax match Normal '|>' conceal cchar=⇾
 
+  syntax match Normal '\s\zstype_=' conceal
+
   syntax match Normal 'map(' conceal cchar=➚
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat(' conceal cchar=◇
@@ -211,6 +215,8 @@ func! RescriptSyntaxAdditions()
   " syntax match InlineTestDeclaration '\v^let\:\se\d_\i{-}' conceal cchar=‥
 
 
+" syntax region graphqlExtensionPoint start=+%\(graphql\|relay\)(+ end=+)+ contains=graphqlExtensionPointS
+" syntax region graphqlExtensionPointS matchgroup=String start=+`+ end=+`+ contains=@GraphQLSyntax contained
 
 " ─     Code Headings                                   ──
 

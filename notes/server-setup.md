@@ -84,6 +84,9 @@ gsa - server start
 gse - client fetch
 gsd - gql-exec
 
+## Summarize multiple commands in an .sh script
+/Users/at/Documents/UI-Dev/rescript/setup-tests/relay/graphql-client-example-server/prepareForPublish.sh
+
 # Lsp diagnostics
 This should show no error, just some type warnings
 Trouble workspace_diagnostics

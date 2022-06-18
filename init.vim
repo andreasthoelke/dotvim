@@ -291,6 +291,7 @@ Plug 'b0o/SchemaStore.nvim'
 
 " Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
+" I think tree-sitter is now handling this?
 " Plug 'jparise/vim-graphql'
 " Plug 'udalov/kotlin-vim'
 " Plug 'pantharshit00/vim-prisma'

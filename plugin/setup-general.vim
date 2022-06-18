@@ -1187,10 +1187,15 @@ let g:vcoolor_disable_mappings = v:true
 
 
 "  --- Project Root --------------------------------------------
-
+" echo projectroot#guess()
+" echo projectroot#guess( expand( "%:p" ) )
+" echo expand( "%:p" )
+" NEW: only this command works! ->
+" echo finddir('.git/..', expand('%:p:h').';')
 " let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
 " Prioritise looking for git repo roots
-let g:rootmarkers = ['package.json', '.git', 'spago.dhall', '.gitignore', 'stack.yaml', '*.cabal', 'README.md']
+" let g:rootmarkers = ['package.json', '.git', 'spago.dhall', '.gitignore', 'stack.yaml', '*.cabal', 'README.md']
+let g:rootmarkers = ['package.json', '.gitignore']
 
 "
 " open file relative to project-root
@@ -1253,21 +1258,25 @@ nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
-" Hmm, i still want to set the project root from any file in the
-" project.
-nnoremap <expr><leader>cdsl ":lcd " . projectroot#guess() . "<cr>"
-nnoremap <expr><leader>cdsg ":cd "  . projectroot#guess() . "<cr>"
-nnoremap <expr><leader>cdst ":tcd "  . projectroot#guess() . "<cr>"
+" set the project root from any file in the project.
+nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 
-function! <SID>AutoProjectRootCD()
-  try
-    if &ft != 'help'
-      ProjectRootCD
-    endif
-  catch
-    " Silently ignore invalid buffers
-  endtry
-endfunction
+func! FindGitRootFolderOfCurrentFile()
+  return finddir('.git/..', expand('%:p:h').';')
+endfunc
+
+" not currently using this
+" function! <SID>AutoProjectRootCD()
+"   try
+"     if &ft != 'help'
+"       ProjectRootCD
+"     endif
+"   catch
+"     " Silently ignore invalid buffers
+"   endtry
+" endfunction
 
 
 

@@ -303,7 +303,7 @@ func! PyReplEval( expr )
   call jobsend(g:PursPyReplID, a:expr . "\n")
 endfunc
 
-" ANSI colors are incoded into the error messages and need to be removed (TODO there is also a setting for psci). e.g.  [32m'Done!'[39m
+" ANSI colors are encoded into the error messages and need to be removed (TODO there is also a setting for psci). e.g.  [32m'Done!'[39m
 let g:PyReplaceBashEscapeStrings = [['[33m',''], ['[32m',''], ['[39m',''], ['[0m','']]
 
 " Separates 3 output types:

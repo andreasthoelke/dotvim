@@ -105,6 +105,10 @@ note: search these notes:
 notes/notes-todos.md
 
 
+## Encode special chars & terminal escape colors
+ ~/.config/nvim/plugin/search.vim#/func.%20EscapeSpecialChars.%20str
+func! RemoveTermCodes (lines)
+
 ## Snippets
 Todo:
 For console.log and JSON.stringify
@@ -314,7 +318,7 @@ Other local app settings: ~/.local/share/
 installer used on lunarvim:
 https://github.com/williamboman/nvim-lsp-installer
 
-## treesitter
+# treesitter
 
 TSInstallInfo
 TSInstall <language>
@@ -325,6 +329,24 @@ TSHighlightCapturesUnderCursor   - show the highlight groups under the cursor
 nvim-treesitter-playground.hl-info
 lua require('nvim-treesitter-playground.hl-info').show_hl_captures()
 https://www.youtube.com/watch?v=dPQfsASHNkg
+
+
+### TODO: nvim-treesitter-rescript plugin update or pull request
+currently I can not update this plugin from the github repo bc i made local changes (see next paragraph)
+~/.config/nvim/plugged/nvim-treesitter-rescript
+I should fork the repo, do the changes below (optionally create a PR), ..
+then I can pull/merge from original repo!
+
+### How to extend a treesitter grammar
+https://tree-sitter.github.io/tree-sitter/creating-parsers
+0. Setup: In the tree-sitter-rescript folder set up the following tools:
+npm init
+npm install --save nan
+npm install --save-dev tree-sitter-cli
+1. Edit the grammar.js file: ~/.config/nvim/plugged/nvim-treesitter-rescript/tree-sitter-rescript/grammar.js#/_raw_relay_extension.%20$%20=>
+2. Run tree-sitter generate
+TSInstall rescript
+
 
 # Html / CSS
 
@@ -933,6 +955,10 @@ leader dpR ":cd " . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
 ~/.config/nvim/plugin/setup-general.vim#/Change%20Working%20Directory.
 
+git rev-parse —show-toplevel "/Users/at/.config/nvim/plugin/setup-general.vim"
+git root
+git root "/Users/at/.config/nvim/plugin/setup-general.vim"
+
 ### Use the CWD
 - for search
 - for terminal commands (gwt). Example: run gwt on the next two chars: lsl
@@ -1359,6 +1385,12 @@ async function ()
 note the single quotes!
 elseif resLines[0] =~ '\v(with)|(select)'
 
+/\(graphql\|relay\)
+
+module Fragment = %relay(`
+module Fragment = %graphql(`
+
+
 character-classes:
 h character-classes
 \W is a non-word character
@@ -1612,6 +1644,9 @@ gwT - with editable command string
 
 :%! - execute all lines if the current buffer as shell commands!
 :put =system('ls')<cr> - put the return value of 'ls' into the current buffer!
+
+## Summarize multiple commands in an .sh script
+/Users/at/Documents/UI-Dev/rescript/setup-tests/relay/graphql-client-example-server/prepareForPublish.sh
 
 ## Spell Checking
 
