@@ -950,6 +950,10 @@ nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
 There is also 'cds[earch]l/t/g'
 
+" projectroot#guess is no longer working for .vim files. the 'cdsl maps are now using ->
+func! FindGitRootFolderOfCurrentFile()
+  return finddir('.git/..', expand('%:p:h').';')
+
 leader dpr ":lcd " . projectroot#guess() . "\n"
 leader dpR ":cd " . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
@@ -1122,6 +1126,10 @@ func! tools_js#json_stringify( expressionCodeStr )
 
 vimscript: json_decode()
 lua: vim.fn.json_decode(response.body)
+
+## Read from a .json config file
+echo json_decode( join( readfile("./package.json") ) ).scripts
+func! JsonConfKey( confFile, key )
 
 # Curl / http requests
 ~/.config/nvim/notes/notes-lua-asyc-loop.md#/##%20Curl

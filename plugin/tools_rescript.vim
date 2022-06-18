@@ -8,8 +8,8 @@ func! tools_rescript#bufferMaps()
 
   nnoremap <silent><buffer>         gel :call RS_ComponentShow()<cr>
 
-  nnoremap <silent><buffer>         geO :call System_Float( 'npx rescript' )<cr>
-  nnoremap <silent><buffer>         geo :call RS_RelayCompile()<cr>
+  nnoremap <silent><buffer>         geo :call RS_RescriptCompile()<cr>
+  nnoremap <silent><buffer>         geO :call RS_RelayCompile()<cr>
 
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
@@ -32,7 +32,17 @@ func! tools_rescript#bufferMaps()
   nnoremap <silent><buffer> <c-n> :call RS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
 
+endfunc
 
+
+func! RS_RescriptCompile()
+  let lines = systemlist( 'npx rescript' )
+  let lines = RemoveTermCodes( lines )
+  " Rescript uses "We've found a bug", but the "'" breaks syntax highlight
+  let lines = SubstituteInLines( lines, "'", " " )
+  silent let g:floatWin_win = FloatingSmallNew ( lines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
 endfunc
 
 
@@ -160,7 +170,8 @@ func! RS_NodeCall( identif )
   " let filePath_compiledJS = getcwd() . '/' . expand('%:r') . '.bs.js'
   let projRelativeFilenameRoot = fnamemodify( CurrentRelativeFilePath(), ':r' )
   " let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . '.bs.js'
-  let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . '.mjs'
+  let rescriptCompileToFileExtension = JsonConfKey( 'bsconfig.json', 'suffix' )
+  let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . rescriptCompileToFileExtension
 
   let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
 
@@ -174,6 +185,11 @@ func! RS_NodeCall( identif )
   " return "npx ts-node -T  -e '" . js_code_helperFn . js_code_importCall . "'"
 endfunc
 " let @" = RS_NodeCall( expand('<cword>') )
+
+
+func! RS_ModJsonFile()
+
+endfunc
 
 
 " Unused functions ■
