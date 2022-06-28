@@ -471,6 +471,24 @@ https://www.nerdfonts.com/font-downloads
 ## Local webserver
 python -m http.server   - to serve a folder of files
 
+### Webpack bundle + index.html local webserver Live reload example
+This is an old fashioned example (no vite/webpack auto refresh):
+/Users/at/Documents/UI-Dev/rescript/examples/genType/examples/untyped-react-example/index.html
+1. the rescript (in this case bucklescript) compiler runs in watch mode: "start": "bsb -make-world -w",
+2. webpack also runs in watch mode: "npm run webpack -w", it bundles into ./bundledOutputs/main.js
+3. python -m http.server in the project root with the index.html:
+  <!DOCTYPE html>
+  <html lang="en">
+  <body>
+    <div id="index"></div>
+    <script src="../bundledOutputs/main.js"></script>
+  </body>
+  </html>
+4. open localhost:8000 in Chrome
+5. Activate the live reload extension http://localhost:8000/bundledOutputs/main.js
+6. Edit the "localhost" rule to make sure this file is monitored: http://localhost:8000/bundledOutputs/main.js
+     (the python webserver will start showing the requests (pulling once per second)
+
 ## Purs repl
 
 ~/.config/nvim/plugin/utils-repl.vim#/New%20Purescript%20REPL

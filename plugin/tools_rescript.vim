@@ -8,8 +8,10 @@ func! tools_rescript#bufferMaps()
 
   nnoremap <silent><buffer>         gel :call RS_ComponentShow()<cr>
 
+  " Todo: Vite Rescript plugin shows these errors in the browser
   nnoremap <silent><buffer>         geo :call RS_RescriptCompile()<cr>
   nnoremap <silent><buffer>         geO :call RS_RelayCompile()<cr>
+  nnoremap <silent><buffer>         gef :RescriptFormat<cr>
 
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
@@ -64,18 +66,19 @@ func! RS_ComponentShow()
   let identif = matchstr( getline( identLineNum ), '\vlet\s\zs\i*\ze\W' )
   if getline( identLineNum ) =~ '() =>'
     " This is (likely) a component with no args. it needs to be called to return an element to be rendered
-    let identif = identif . '()'
+    " let identif = identif . '()'
   endif
   let moduleName = expand('%:t:r')
   call RS_ComponentShow_UpdateFile( identif, moduleName )
 endfunc
 
-" File ./src/Show.res is set to have the following two e.g. have the following loc:
-" @react.component
-" let make = () => ArraysKeys.items2
+" File ./src/Show.res is set to have the following lines:
+" @genType @react.component
+" let make = () => A_markupRS.make
+" @genType let default = make
 func! RS_ComponentShow_UpdateFile( identifier, module )
   let makeBinding = "let make = () => " . a:module . "\." . a:identifier
-  let lines = ["@react.component", makeBinding]
+  let lines = ["@genType @react.component", makeBinding, "@genType let default = make"]
   let folderPath = expand('%:p:h')
   let filePath = folderPath . '/Show.res'
   " Overwrite the Show.res file

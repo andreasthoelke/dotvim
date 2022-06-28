@@ -6,8 +6,8 @@
 " Demo Expression Map:
 " In dirvish buffers use the filename % to cd terminal to this folder
 " nnoremap <expr> glT (&ft=='dirvish') ? ':below 20Term! cd %<CR>' : ':below 20Term!<CR>'
-nnoremap <expr> glT (&ft=='dirvish') ? ':call TermInNextFolder(20)<cr>' : ':below 20Term!<cr>'
-nnoremap <expr> glt (&ft=='dirvish') ? ':call TermInNextFolder(v:false)<cr>' : ':below Term!<cr>'
+nnoremap <silent><expr> glT (&ft=='dirvish') ? ':silent call TermInNextFolder(20)<cr>' : ':below 20Term!<cr>'
+nnoremap <silent><expr> glt (&ft=='dirvish') ? ':silent call TermInNextFolder(v:false)<cr>' : ':below Term!<cr>'
 
 func! TermInNextFolder (winsize)
   let folderpath = shellescape( CurrentNextFolderPath() )

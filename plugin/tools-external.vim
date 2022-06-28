@@ -8,7 +8,7 @@ nnoremap glb :call HandleURL()<cr>
 nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
-nnoremap glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>
+nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 nnoremap <leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>
 nnoremap <leader>glC :call LaunchChromium( 'http://localhost:4040/graphql' )<cr>
 nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>

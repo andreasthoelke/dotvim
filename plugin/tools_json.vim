@@ -36,6 +36,8 @@ command! -nargs=* ConfAdd call JsonAppendToKey(<f-args>)
 " call JsonAppendToKey( "Test4.json", "bs-dependencies", "hi there" )
 " ~/Documents/UI-Dev/rescript/setup-tests/b_vite_react/bsconfig.json#/"@rescriptbr/ancestor",
 
+" TODO: A better approach would be to read a list value, add to it and then
+" deduplicate the list items.
 func! JsonAppendToKey( filePath, key, value )
   let ls = []
   let ls = add(ls, 'const editJsonFile = require("edit-json-file");')

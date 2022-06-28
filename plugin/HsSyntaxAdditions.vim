@@ -152,6 +152,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal 'false' conceal cchar=𝖿
 
   syntax match Normal '@react.component' conceal cchar=_
+  syntax match Normal '@genType' conceal cchar=∷
   syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
   syntax match Normal 'ReactEvent\.' conceal cchar=⁝
   syntax match Normal 'React\.' conceal cchar=𝑟
@@ -249,7 +250,7 @@ func! RescriptSyntaxAdditions()
 
 " new unicode symbols
 " « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
-"  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɍ r⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
+"  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ r⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
 "  ⋋  ⋐  ⋘  ⋯  ⌘ ∘                  ∩        𝑟S  ʀS
 "  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
 "  ⟛    ⟫  ⟯  ⟶    ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ

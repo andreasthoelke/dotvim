@@ -1,18 +1,54 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 func! tools_js#bufferMaps()
 
-  nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
-  nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
-  nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
-  nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
-  nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
-  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
-  nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
-  nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
+  " tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpression )
+  " nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
+  " nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
+  " nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
+  " nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
+  " nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
+  " nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
+  " nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
+  " nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
+
+  nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
+  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
+
+  nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
+
+func! JS_ComponentShow()
+  if IndentLevel( line('.') ) == 1
+    let identLineNum = line('.')
+  else
+    let identLineNum = searchpos( '^export\s', 'cnb' )[0]
+  endif
+  if getline( identLineNum ) =~ 'default'
+    let binding = 'ShowComp'
+  else
+    let identif = matchstr( getline( identLineNum ), '\vfunction\s\zs\i*\ze\W' )
+    let binding = "{ " . identif . " as ShowComp }"
+  endif
+  let moduleName = expand('%:t:r')
+  call JS_ComponentShow_UpdateFile( binding, moduleName )
+endfunc
+
+" File ./src/ShowJS.res is set to have the following lines:
+" import ShowComp from "./A_markup"
+" import { Identif as ShowComp } from "./A_markup"
+" export default ShowComp
+func! JS_ComponentShow_UpdateFile( binding, module )
+  let makeBinding = "import " . a:binding . " from './" . a:module . "'"
+  let lines = [makeBinding, "export default ShowComp"]
+  let folderPath = expand('%:p:h')
+  let filePath = folderPath . '/ShowJS.jsx'
+  " Overwrite the Show.res file
+  call writefile( lines, filePath)
+endfunc
+
 
 
 func! RunJSCode ( code )
