@@ -11,14 +11,71 @@ func! tools_js#bufferMaps()
   " nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
   " nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
 
-  nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
+
+  nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
+
+  " nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
   nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
 
   nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
 
+  nnoremap <silent><buffer> <c-n> :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-p> :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+
+  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+
+  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+
+  " Stubs and inline tests
+  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js()<cr>
+  nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js_function()<cr>
+
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
+
+
+func! JS_EvalParagIdentif_simple()
+  if IndentLevel( line('.') ) == 1
+    let identLineNum = line('.')
+  else
+    " let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
+    let identLineNum = searchpos( '^const\s', 'cnb' )[0]
+  endif
+  let identif = matchstr( getline( identLineNum ), '\vconst\s\zs\i*\ze\W' )
+  " echo identLineNum identif
+  " return
+
+  " TODO: remove the types, change the file extension so I can use node not ts-node
+  " let filePath = expand('%:p:h')
+  " let _compl_ = system( 'tsc ' . filePath )
+
+  return JS_NodeCall( identif )
+endfunc
+
+func! JS_NodeCall( identif )
+  let filePath = getcwd() . CurrentRelativeFilePath()
+
+  let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
+
+  " node -e "import('<path>').then(m => console.log(m.abc1))"
+  " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '))'
+  " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '()' . '))'
+
+  " let js_code_importCall = 'import("' . filePath . '").then(m => execIdentif(m.' . a:identif . '))'
+
+  " let js_code_importCall = 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')'
+  let js_code_importCall = 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')'
+
+  " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
+  return "npx ts-node -T  -e '" . js_code_helperFn . js_code_importCall . "'"
+  " NOTE: .mjs files do not work with ts-node
+endfunc
+" let @" = RS_NodeCall( expand('<cword>') )
+
+
 
 func! JS_ComponentShow()
   if IndentLevel( line('.') ) == 1
@@ -29,7 +86,7 @@ func! JS_ComponentShow()
   if getline( identLineNum ) =~ 'default'
     let binding = 'ShowComp'
   else
-    let identif = matchstr( getline( identLineNum ), '\vfunction\s\zs\i*\ze\W' )
+    let identif = matchstr( getline( identLineNum ), '\v(function|const)\s\zs\i*\ze\W' )
     let binding = "{ " . identif . " as ShowComp }"
   endif
   let moduleName = expand('%:t:r')
@@ -299,4 +356,20 @@ endfunc
 
 " echo substitute( 'const e3_eins = 33', '\zeconst\se\d_', '// ', 'g' )
 " echo functional#map( {lineStr -> substitute( lineStr, '\zeconst\se\d_', '// ', 'g' )}, ['const e3_eins = 33', 'const zwei = 33'] )
+
+func! JS_TopLevBindingForw()
+  " normal! j
+  call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+func! JS_TopLevBindingBackw()
+  call search( '\v^(export|function|const|let)\s', 'bW' )
+  " normal! {
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+
+
+
+
 

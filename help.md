@@ -293,6 +293,11 @@ leader ltv/s/u   - lsp toggle virtual-text/signs/underline
 ToggleDiagOff    - turn off diagnostic messages
 config: ~/.config/nvim/plugin/setup-lsp.vim#/nmap%20<leader>ltu%20<Plug>.toggle-lsp-diag-underline.
 
+## How to filter typescript lsp diagnostic warnings/errors
+For some reason this doesn't have an effect: ~/Documents/UI-Dev/rescript/setup-tests/c_vite_ts_react/tsconfig.json#/"noImplicitAny".%20false,
+Instead i use :call DiagnosticsShow() to find the *code* of an error/warning
+and then list this code here: ~/.config/nvim/plugin/setup-lsp.lua#/and%20t.code%20~=
+
 ## Diagnostics filter/disable rules /types of warnings
 config: ~/.config/nvim/plugin/setup-lsp.lua#/local%20handler_JSON_filterDiagnCodes%20=
 
@@ -302,6 +307,16 @@ Trouble lsp_definitions
 Trouble workspace_diagnostics
 Telescope lsp_workspace_symbols query=port
 Telescope buffers (then <c-t> to open results in trouble
+
+### Trouble config
+~/.config/nvim/plugin/setup-general.lua#/local%20trouble%20=
+open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+open_tab = { "<c-t>" }, -- open buffer in new tab
+preview = "p", -- preview the diagnostic location
+close_folds = {"zM", "zm"}, -- close all folds
+open_folds = {"zR", "zr"}, -- open all folds
+toggle_fold = {"zA", "za"}, -- toggle fold of current file
+
 
 ## LspInfo
 very useful help functions: ~/.config/nvim/lua/utils_lsp.lua#/function%20M.type..

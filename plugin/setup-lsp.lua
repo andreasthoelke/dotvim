@@ -108,12 +108,16 @@ local handler_filterDiagnSeverity = {
 }
 
 -- ─   Diagnostics filter/disable rules /types of warnings──
+-- ~/.config/nvim/help.md#/##%20How%20to
 
 local handler_TS_filterDiagnCodes = {
     ["textDocument/publishDiagnostics"] = function(_, result, ...)
           result.diagnostics = vim.tbl_filter( function(t)
               return
                      t.code ~= 6133  -- defined but never used
+                 and t.code ~= 7044  -- noImplicitAny
+                 and t.code ~= 6196  -- declared but never used
+                 and t.code ~= 6198  -- destructured elements unused
                  -- and t.code ~= 2307
           end, result.diagnostics )
         return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)

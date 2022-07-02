@@ -66,8 +66,8 @@ func! CreateIndexedDec_js( specialMaintainedVar )
   normal kwww
 endfunc
 
-nnoremap <silent> <leader>et :call CreateInlineTestDec()<cr>
-nnoremap <silent> <leader>eT :call CreateInlineTestDec_js_function()<cr>
+" nnoremap <silent> <leader>et :call CreateInlineTestDec()<cr>
+" nnoremap <silent> <leader>eT :call CreateInlineTestDec_js_function()<cr>
 
 func! CreateInlineTestDec()
   if &filetype == 'python'
@@ -149,10 +149,10 @@ func! CreateInlineTestDec_js()
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
   let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
   call append( '.', lineText )
-  call search('(')
-  normal l
+  normal dd
+  normal ^wwww
 endfunc
 " Tests:
 " def mult(aa, bb):

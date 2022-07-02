@@ -1,5 +1,6 @@
 
-
+npx vite
+http://localhost:3000
 
 Todos:
 ~/.config/nvim/help.md#/###%20TODO.%20nvim-treesitter-rescript

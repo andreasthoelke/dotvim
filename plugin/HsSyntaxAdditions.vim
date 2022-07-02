@@ -9,7 +9,7 @@ au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli call RescriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*.json call JsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
@@ -154,6 +154,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '@react.component' conceal cchar=_
   syntax match Normal '@genType' conceal cchar=∷
   syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
+  syntax match Normal 'ReactDOM\.' conceal cchar=⁝
   syntax match Normal 'ReactEvent\.' conceal cchar=⁝
   syntax match Normal 'React\.' conceal cchar=𝑟
   " syntax match Normal 'element' conceal cchar=⊃
@@ -301,26 +302,31 @@ func! TsConcealWithUnicode ()
 
   " call matchadd('Conceal', "'", 12, -1, {'conceal': ''})
 
-  let g:TsCharsToUnicode = [
-        \  ['->',           '→', 'hsArrow']
-        \, ['\s\zs<-',           '←', 'hsArrowBackw']
-        \, ['==',            '≡', 'Normal']
-        \, ['===',            '≡', 'Normal']
-        \, ['\s\zsstring\ze[\s|)|,|;|[|\n]',    'S', 'Normal']
-        \, ['\s\zsnumber\ze[\s|)|,|;|[|\n]',    'N', 'Normal']
-        \, ['\s\zsboolean\ze[\s|)|,|;|[|\n]',   'B', 'Normal']
-        \, ['\<\zsstring\ze\s',            'S', 'Normal']
-        \, ['\<\zsstring\ze)',            'S', 'Normal']
-        \, ['\<\zsnumber\ze\s',            'N', 'Normal']
-        \, ['\<\zsboolean',            'B', 'Normal']
-        \, ['\s\zsFunction',            'F', 'Normal']
-        \, ['\s\zsReact.Node',            '◻', 'Normal']
-        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
-        \]
+  " let g:TsCharsToUnicode = [
+  "       \  ['->',           '→', 'hsArrow']
+  "       \, ['\s\zs<-',           '←', 'hsArrowBackw']
+  "       \, ['==',            '≡', 'Normal']
+  "       \, ['===',            '≡', 'Normal']
+  "       \, ['\s\zsstring\ze[\s|)|,|;|[|\n]',    'S', 'Normal']
+  "       \, ['\s\zsnumber\ze[\s|)|,|;|[|\n]',    'N', 'Normal']
+  "       \, ['\s\zsboolean\ze[\s|)|,|;|[|\n]',   'B', 'Normal']
+  "       \, ['\<\zsstring\ze\s',            'S', 'Normal']
+  "       \, ['\<\zsstring\ze)',            'S', 'Normal']
+  "       \, ['\<\zsnumber\ze\s',            'N', 'Normal']
+  "       \, ['\<\zsboolean',            'B', 'Normal']
+  "       \, ['\s\zsFunction',            'F', 'Normal']
+  "       \, ['\s\zsReact.Node',            '◻', 'Normal']
+  "       \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+  "       \]
+  " for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
+  "   exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  " endfor
 
-  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
-    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
-  endfor
+
+  syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=F
+  syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
+  syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
+  syntax match Normal 'array\ze\W' conceal cchar=⟦
 
   syntax match Normal "\S\zs:\ze\s" conceal
   syntax match Normal "const\s" conceal

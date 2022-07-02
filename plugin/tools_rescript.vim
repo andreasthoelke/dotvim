@@ -72,7 +72,7 @@ func! RS_ComponentShow()
   call RS_ComponentShow_UpdateFile( identif, moduleName )
 endfunc
 
-" File ./src/Show.res is set to have the following lines:
+" File ./src/ShowRS.res is set to have the following lines:
 " @genType @react.component
 " let make = () => A_markupRS.make
 " @genType let default = make
@@ -80,7 +80,7 @@ func! RS_ComponentShow_UpdateFile( identifier, module )
   let makeBinding = "let make = () => " . a:module . "\." . a:identifier
   let lines = ["@genType @react.component", makeBinding, "@genType let default = make"]
   let folderPath = expand('%:p:h')
-  let filePath = folderPath . '/Show.res'
+  let filePath = folderPath . '/ShowRS.res'
   " Overwrite the Show.res file
   call writefile( lines, filePath)
 endfunc
