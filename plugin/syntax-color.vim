@@ -24,6 +24,7 @@ nnoremap <leader><leader>bn :echo GetSyntaxIDAtCursor()<cr>
 
 
 " STEP1: FIND THE SYNATX GROUP YOU WANT TO CHANGE:
+" TSHighlightCapturesUnderCursor   - show the highlight groups under the cursor
 " Show the syntax group(s) of the word under the cursor
 " The first pasted line is the outermost syntax group eg. vimLineComment, the last line is actual syntax group/id for the work
 " under the cursor, e.g. vimCommentTitle

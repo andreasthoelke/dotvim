@@ -345,6 +345,12 @@ nvim-treesitter-playground.hl-info
 lua require('nvim-treesitter-playground.hl-info').show_hl_captures()
 https://www.youtube.com/watch?v=dPQfsASHNkg
 
+* **@namespace** -> **rescriptTSNamespace** -> **TSNamespace**
+
+* **@variable** -> **tsxTSVariable** -> **TSVariable**
+* **@constructor** -> **tsxTSConstructor** -> **TSConstructor**
+* **@function** -> **tsxTSFunction** -> **TSFunction**
+
 
 ### TODO: nvim-treesitter-rescript plugin update or pull request
 currently I can not update this plugin from the github repo bc i made local changes (see next paragraph)
@@ -1083,9 +1089,13 @@ ls -l | fzf | pbcopy
 
 notes/notes-git.md
 
+# degit
 ## clone a github subdirectory/ folder
-utils/git_clone_subfolder.sh
+this clones a subfolder from a github repo:
+npx degit gothinkster/realworld/api realworld_api
+not sure how to clone a single file. wget should do this?
 
+utils/git_clone_subfolder.sh
 hmm, this doesn't seem to work:
 sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh examples https://github.com/hayes/pothos
 sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh tree/master/examples https://github.com/hayes/pothos
@@ -1302,6 +1312,8 @@ p in win - to jump to tag but cursor stays in tagbar
 this actually works:
 call TagInStatusline()
 
+## Lsp symbols outline
+
 now using SymbolsOutline:
 ~/.config/nvim/plugin/setup-symbols-outline.lua#/vim.g.symbols_outline%20=%20{
 ~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<leader>ot%20.SymbolsOutline<cr>
@@ -1362,6 +1374,9 @@ noremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 ## Rename, replace, substitute
+
+delete lines with .bs.js extension
+g!/\.bs\.js/d
 
 https://vim.fandom.com/wiki/Power_of_g
 

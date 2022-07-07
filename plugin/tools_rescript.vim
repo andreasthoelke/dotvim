@@ -25,15 +25,26 @@ func! tools_rescript#bufferMaps()
   nnoremap <silent><buffer>       geh :silent call RescriptTypeHint()<cr>
   " vnoremap <silent><buffer>       geh :<c-u>silent call RescriptTypeHint()<cr>
 
-  nnoremap <silent><buffer>            gdd :RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gdv :vsplit<CR>:RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR>:RescriptJumpToDefinition<cr>
-  nnoremap <silent><buffer> gds :split<CR>:RescriptJumpToDefinition<cr>
-
+  nnoremap <silent><buffer>            gdd :call RS_OpenDefinition(':e')<cr>
+  nnoremap <silent><buffer> gdv :call RS_OpenDefinition(':vsplit')<cr>
+  " nnoremap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR>:RescriptJumpToDefinition<cr>
+  nnoremap <silent><buffer> gdo :call FloatingBuffer(expand('%'))<CR>:call RS_OpenDefinition(':e')<cr>
+  nnoremap <silent><buffer> gds :call RS_OpenDefinition(':split')<cr>
+  nnoremap <silent><buffer> gdt :call RS_OpenDefinition(':tabnew')<cr>
 
   nnoremap <silent><buffer> <c-n> :call RS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
 
+endfunc
+
+func! RS_OpenDefinition( cmd )
+  let [file, start_line, start_col] = rescript#GetDefinitionLocation()
+  " echo [file, start_line, start_col]
+  " return
+  if len( file )
+    exec a:cmd file
+  endif
+  call cursor(start_line, start_col)
 endfunc
 
 
@@ -79,8 +90,8 @@ endfunc
 func! RS_ComponentShow_UpdateFile( identifier, module )
   let makeBinding = "let make = () => " . a:module . "\." . a:identifier
   let lines = ["@genType @react.component", makeBinding, "@genType let default = make"]
-  let folderPath = expand('%:p:h')
-  let filePath = folderPath . '/ShowRS.res'
+  " let folderPath = expand('%:p:h')
+  let filePath = getcwd() . '/src/ShowRS.res'
   " Overwrite the Show.res file
   call writefile( lines, filePath)
 endfunc

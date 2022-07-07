@@ -153,6 +153,8 @@ func! RescriptSyntaxAdditions()
 
   syntax match Normal '@react.component' conceal cchar=_
   syntax match Normal '@genType' conceal cchar=∷
+  syntax match Normal '= { @genType @react.component let make = ' conceal
+  syntax match Normal 'make\s=\s' conceal
   syntax match Normal 'ReactDOM.Style\.' conceal cchar=⁝
   syntax match Normal 'ReactDOM\.' conceal cchar=⁝
   syntax match Normal 'ReactEvent\.' conceal cchar=⁝
@@ -176,7 +178,8 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\s\zsHook\.' conceal cchar=⁝
   syntax match Normal 'Option\.' conceal cchar=⁝
   syntax match Normal 'AsyncResult\.' conceal cchar=≀
-  syntax match Normal '^module\ze\s' conceal cchar=
+  " syntax match Normal '^module\ze\s' conceal cchar=
+  syntax match Normal '^module\s' conceal
   syntax match Normal '^type\ze\s' conceal cchar=┆
 
   syntax match Normal 'toString' conceal cchar=≺
@@ -323,6 +326,12 @@ func! TsConcealWithUnicode ()
   " endfor
 
 
+  syntax match Normal "\v\=\=" conceal cchar=≡
+  syntax match Normal "\v\=\=\=" conceal cchar=≣
+  syntax match Normal "\v\+\+" conceal cchar=⧺
+  syntax match Normal "\v\|\|" conceal cchar=‖
+  syntax match Normal "\v\&\&" conceal cchar=﹠
+
   syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=F
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
@@ -356,6 +365,32 @@ func! TsConcealWithUnicode ()
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v\=\>" conceal cchar=⇒
 
+
+  syntax match Normal '<' conceal cchar=⁽
+  syntax match Normal '>' conceal cchar=⁾
+
+  syntax match Normal '<div' conceal cchar=⋮
+  syntax match Normal '<div>' conceal cchar=⋮
+  syntax match Normal '</div>' conceal cchar=⋮
+  syntax match Normal '/>' conceal cchar=˗
+  syntax match Normal '|>' conceal cchar=⇾
+
+  syntax match Normal '\s\zstype_=' conceal
+
+  syntax match Normal 'map' conceal cchar=➚
+  syntax match Normal 'pipe' conceal cchar=⇾
+  syntax match Normal 'i => i' conceal cchar=»
+  syntax match Normal 'concat' conceal cchar=◇
+
+  syntax match Normal 'i => {i' conceal cchar=_
+  syntax match Normal 'x => x' conceal cchar=_
+
+
+  syntax match Normal 'JSX.Element' conceal cchar=⊃
+  syntax match Normal 'className=' conceal cchar=◇
+
+
+
   " EdgeDB query builder object: e.select()
   syntax match Normal "\s\zse\." conceal cchar=᛫
   syntax match Normal "\s\zstrue" conceal cchar=᛫
@@ -365,6 +400,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "filter\:" conceal cchar=≚
   syntax match Normal "\.\.\." conceal cchar=…
   syntax match Normal "\*\/" conceal
+
 
 endfunc
 

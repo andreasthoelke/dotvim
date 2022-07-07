@@ -715,7 +715,8 @@ hi! def link tsxCloseTag Comment
 
 hi! def link foldBraces purescriptIdentifier
 
+" ─   Rescript                                          ──
 
-
+hi! def link rescriptTSNamespace Function
 
 

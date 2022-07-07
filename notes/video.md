@@ -164,10 +164,10 @@ youtube-dl z-IR48Mb3W0 --skip-download --write-sub
 youtube-dl GU87SH5e0eI --skip-download --write-sub
 youtube-dl qK4G2KpmqFU --skip-download --write-sub
 
+# pytube
+https://twitter.com/clcoding/status/1543973091935940609
 
-
-
-
+ln /Users/at/.config/nvim/notes/video.md /Users/at/Documents/Product/videoLN.md
 
 
 

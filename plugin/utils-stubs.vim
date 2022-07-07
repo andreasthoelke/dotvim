@@ -135,19 +135,30 @@ endfunc
 
 func! CreateInlineTestDec_js()
   " const greeter = (person: Person) => {
+
   let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
-  " function selRegion (subStr: string) {
-  let hostLn2 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
-  if hostLn1 > hostLn2
-    let hostLn = hostLn1
-    let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
-  else
-    let hostLn = hostLn2
-    let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
-  endif
+  let hostLn2 = searchpos( '^export\sconst\s\(e\d_\)\@!', 'cnb' )[0]
+  let hostLn3 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
+
+  let hostLn = max( [hostLn1, hostLn2, hostLn3] )
+  let hostDecName = matchstr( getline(hostLn ), '\v(const|function)\s\zs\i*\ze\W' )
+
+  " echo hostDecName
+  " return
+
+  " if hostLn1 > hostLn2
+  "   let hostLn = hostLn1
+  "   " let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
+  "   let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\W' )
+  " else
+  "   let hostLn = hostLn2
+  "   let hostDecName = matchstr( getline(hostLn ), '\vfunction\s\zs\i*\ze\s' )
+  " endif
+
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  " TODO: this doesn't work
   let nextIndex = GetNextTestDeclIndex( hostLn )
   let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
   call append( '.', lineText )
