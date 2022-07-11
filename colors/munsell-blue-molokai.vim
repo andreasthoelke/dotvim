@@ -718,5 +718,6 @@ hi! def link foldBraces purescriptIdentifier
 " ─   Rescript                                          ──
 
 hi! def link rescriptTSNamespace Function
+hi! def link rescriptTSRepeat Comment
 
 

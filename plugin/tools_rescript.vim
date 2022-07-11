@@ -39,6 +39,11 @@ endfunc
 
 func! RS_OpenDefinition( cmd )
   let [file, start_line, start_col] = rescript#GetDefinitionLocation()
+  " if !(type(file) == v:t_string)
+  if type(file) != v:t_string
+    echo "no result"
+    return
+  endif
   " echo [file, start_line, start_col]
   " return
   if len( file )

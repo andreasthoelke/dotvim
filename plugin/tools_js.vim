@@ -44,7 +44,7 @@ func! JS_EvalParagIdentif_simple()
     " let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
     let identLineNum = searchpos( '^const\s', 'cnb' )[0]
   endif
-  let identif = matchstr( getline( identLineNum ), '\vconst\s\zs\i*\ze\W' )
+  let identif = matchstr( getline( identLineNum ), '\v(const|var)\s\zs\i*\ze\W' )
   " echo identLineNum identif
   " return
 
@@ -57,6 +57,17 @@ endfunc
 
 func! JS_NodeCall( identif )
   let filePath = getcwd() . CurrentRelativeFilePath()
+
+  " Note: This is only needed in .mjs files. it basically only changes the file extension for ts-node to work
+  let fileExtension = fnamemodify( filePath, ':e' )
+  if fileExtension == 'mjs'
+    let lines = readfile( filePath, '\n' )
+    let filePath = filePath . '.ts'
+    call writefile(lines, filePath)
+
+    " Optional: Delete this temp file
+    call JS_DeleteFileDelayed( filePath )
+  endif
 
   let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
 
@@ -75,7 +86,13 @@ func! JS_NodeCall( identif )
 endfunc
 " let @" = RS_NodeCall( expand('<cword>') )
 
-
+func! JS_DeleteFileDelayed( filePath )
+  let delFileCmd = "call system( 'del " . a:filePath . "' )"
+  " echo delFileCmd
+  call T_DelayedCmd( delFileCmd, 400 )
+  " call T_DelayedCmd( "echo 'hi there'", 1000 )
+  "  "call system( 'del ' . fname )"
+endfunc
 
 func! JS_ComponentShow()
   if IndentLevel( line('.') ) == 1
@@ -359,11 +376,11 @@ endfunc
 
 func! JS_TopLevBindingForw()
   " normal! j
-  call search( '\v^(export|function|const|let)\s', 'W' )
+  call search( '\v^(export|function|var|const|let)\s', 'W' )
 endfunc
 
 func! JS_TopLevBindingBackw()
-  call search( '\v^(export|function|const|let)\s', 'bW' )
+  call search( '\v^(export|function|var|const|let)\s', 'bW' )
   " normal! {
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc

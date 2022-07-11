@@ -248,6 +248,7 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 func! T_DelayedCmd( cmd, time )
 call T_DelayedCmd( "echo 'hi there'", 1000 )
 
+
 ## Async vim.loop
 ~/.config/nvim/notes/notes-lua-asyc-loop.md
 
@@ -915,6 +916,7 @@ echo expand('%:t:r')
 echo expand('%:h')
 echo expand('%:p:h')
 echo expand('%:p')
+echo expand('%:e')
 echo fnamemodify('.gitignore', ':p')
 echo fnamemodify('../scratch/.testsDefault', ':t:r')
 

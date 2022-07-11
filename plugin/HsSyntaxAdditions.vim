@@ -177,6 +177,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal 'Js.String2\.' conceal cchar=⁝
   syntax match Normal '\s\zsHook\.' conceal cchar=⁝
   syntax match Normal 'Option\.' conceal cchar=⁝
+  syntax match Normal 'Promise' conceal cchar=~
   syntax match Normal 'AsyncResult\.' conceal cchar=≀
   " syntax match Normal '^module\ze\s' conceal cchar=
   syntax match Normal '^module\s' conceal
