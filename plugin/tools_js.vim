@@ -82,7 +82,11 @@ func! JS_NodeCall( identif )
 
   " TODO: move this into a JS file. try to integrate console.table( [obj1, obj2], ["columnName1", "colName2"] )
 
+  let filePathPrinter = getcwd() . "/scratch/.testPrinter.ts"
+
   let lines = []
+  call add( lines, 'const printer = require("' . filePathPrinter . '");' )
+
   call add( lines, "require(\"util\").inspect.defaultOptions.depth = 4;" )
   " call add( lines, "const util = require(\"node:util\");" )
   call add( lines, "function isPromise(p) { if (typeof p === \"object\" && typeof p.then === \"function\") { return true; } return false; }; " )
@@ -95,7 +99,10 @@ func! JS_NodeCall( identif )
   call add( lines,    "} else                                  { console.log( symb ) }; " )
   call add( lines, "}; " )
 
-  call add( lines, 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')' )
+  " call add( lines, 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')' )
+  call add( lines, 'const modu = require("' . filePath . '");' )
+
+  call add( lines, 'printer.execIdentif(modu.' . a:identif . ')' )
 
   " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
   return "npx ts-node --transpile-only -T  -e '" . join( lines ) . "'"
