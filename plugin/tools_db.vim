@@ -1,4 +1,29 @@
 
+
+
+func! tools_db#bufferMaps()
+  nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
+  nnoremap <silent><buffer> ,ge <Plug>(sqls-execute-query)
+
+
+  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+
+  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+
+  " Stubs and inline tests
+  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_rescript()<cr>
+
+  nnoremap <silent><buffer>       geh :silent call RescriptTypeHint()<cr>
+  nnoremap <silent><buffer>            gdd :call RS_OpenDefinition(':e')<cr>
+
+  nnoremap <silent><buffer> <c-n> :call RS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+
+endfunc
+
+
 nnoremap <silent> <leader>du :DBUIToggle<CR>
 nnoremap <silent> <leader>df :DBUIFindBuffer<CR>
 nnoremap <silent> <leader>dr :DBUIRenameBuffer<CR>
@@ -17,6 +42,7 @@ let g:db_ui_use_nerd_fonts = 1
 let g:dbs = {
   \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',
   \ 'pets': 'mysql://root:PW@127.0.0.1:3306/pets',
+  \ 'learn_dev': 'postgres:///learn_dev',
   \ 'todos_koa': 'mongodb://localhost:27017/todos_koa',
   \ 'pothos_prisma': 'sqlite:/Users/at/Documents/Architecture/examples/pothos/examples/prisma/prisma/dev.db',
   \ }
@@ -48,6 +74,13 @@ nnoremap <silent> <leader>Dip :call DB_putInsertQuery()<cr>
 " autocmd FileType sql nnoremap <buffer><leader>i :call <sid>populate_query()
 
 
+func! DB_eval_parag()
+  let [startLine, endLine] = ParagraphStartEndLines()
+  call DBRun( startLine, endLine )
+endfunc
+
+
+
 command! -range=% DBRun call DBRun( <line1>, <line2> )
 " Note: this applies to the whole buffer when no visual-sel
 
@@ -62,23 +95,27 @@ func! DBRun( ... )
   let lines = getline(startLine, endLine)
   let sqlStr = join(lines, "\n")
 
-  let rows = db_ui#query( sqlStr )
-  if len( rows ) == 0
+  let resLines = db_ui#query( sqlStr )
+  if len( resLines ) == 0
     echo "query completed!"
     return
   endif
 
-  let g:query_res = rows
+  let resLines = RemoveTermCodes( resLines )
 
-  let str_rows = functional#map( 'string', rows )
 
-  " let linesResult = repl_py#splitToLines( string( rows ) )
+  let g:query_res = resLines
 
-  let g:floatWin_win = FloatingSmallNew ( str_rows )
+  let str_resLines = functional#map( 'string', resLines )
+
+  " let linesResult = repl_py#splitToLines( string( resLines ) )
+
+  let g:floatWin_win = FloatingSmallNew ( str_resLines )
 
   call tools_db#alignInFloatWin()
 
 endfunc
+" Check: ~/.config/nvim/plugin/tools_edgedb.vim#/func.%20tools_edgedb#runQueryShow%20.
 
 func! tools_db#alignInFloatWin()
   call FloatWin_FocusFirst()
@@ -101,6 +138,7 @@ endfunc
 
 " For built in omnifunc
 autocmd FileType sql setlocal omnifunc=vim_dadbod_completion#omni
+" Now (also?) using lsp
 
 " hrsh7th/nvim-compe
 " let g:compe.source.vim_dadbod_completion = v:true

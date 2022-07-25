@@ -129,6 +129,8 @@ func! T_DoSetImport()
     call T_SetClientQuery( identif, modulePath )
     call T_SetGqlExecQuery( identif, modulePath )
     call VirtualRadioLabel('▵q')
+    " call T_Refetch("Client")
+    " TODO: set and refetch might be a separate command?
   elseif identif =~ 'varia'
     let persistKey = 'variables'
     call T_SetClientVariables( identif, modulePath )

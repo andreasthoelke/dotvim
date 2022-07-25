@@ -23,7 +23,7 @@ endfunc
 nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
 
-nnoremap gwt :call ShellReturn( GetLineFromCursor() )<cr>
+nnoremap <silent> gwt :echo "Running terminal command .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>:call ShellReturn( GetLineFromCursor() )<cr>
 vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
 nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 

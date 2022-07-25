@@ -65,6 +65,10 @@ call T_InsertLineAt( './src/main.ts', "import { range } from 'rambda'", 1 )
 Run the test (should show 1..12)
 npx ts-node -T -e 'require("./src/main.ts").list(12)'
 
+pnpm --help
+pnpm remove rambda
+pnpm add ramda @types/ramda
+
 # Initialize the testServer files
 vim: gs .. then initialize and install packages
 
@@ -77,6 +81,7 @@ echo g:TesterFileNamesAll
 
 also .env is initialized: ~/.config/nvim/plugin/tools_testServer.vim#/func.%20T_InitEnvFile..
 Installing packages: ~/.config/nvim/plugin/tools_testServer.vim#/func.%20T_InitInstallPackages..
+cat .env # you may want to change server and port!
 
 ## Tests
 gss - show shema
@@ -85,6 +90,8 @@ gse - client fetch
 gsd - gql-exec
 
 ## Summarize multiple commands in an .sh script
+example config shell script: ~/Documents/Server-Dev/pg/a_pg_learn/server-setup.md#/##%20Config%20shell
+read shell variables: ~/.config/nvim/plugin/tools-tab-status-lines.vim#/func.%20PyVimVirtualEnvExt%20..
 /Users/at/Documents/UI-Dev/rescript/setup-tests/relay/graphql-client-example-server/prepareForPublish.sh
 
 # Lsp diagnostics
@@ -104,6 +111,7 @@ in ./.env
 # Copy a sub-folder from another project
 cp -r /Users/at/Documents/Server-Dev/pothos/pothos/examples/relay-windowed-pagination/src/ ./src/pagination-data-example
 note that adding a "/" to the source folder copies only the contents (not the folder itself) so you can create a new (renamed) folder at the target
+also use leader yy, leader pp in dirvish to copy folders
 
 ## Install missing package
 pnpm add -D @pothos/plugin-relay
@@ -114,8 +122,152 @@ LspRestart
 pnpm add fp-ts
 src/fp-ts-examples/
 
+# PostgreSQL
+/Users/at/Documents/Server-Dev/pg/a_pg_learn/
+
+yarn add db-migrate db-migrate-pg
+you can use psql to connect to the db!
 
 
+# PostgreSQL installation
+now using Postgres.app. not using homebrew.
+  psql --help
+  brew uninstall libpq
+  brew services restart postgresql
+  sudo mkdir -p /etc/paths.d &&
+  echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
+
+## PostgreSQL settings
+/Users/at/Library/Application Support/Postgres
+postgresql.conf
+
+/Users/at/Library/Application%20Support/Postgres/var-14/
+~/Library/Application%20Support/Postgres/var-14/postgresql.conf#/#port%20=%205432
+
+# Migration files
+npx db-migrate create create-schema --sql-file
+./migrations/20220718102738-create-schema.js
+
+### up sql file at
+./migrations/sqls/20220718102738-create-schema-up.sql
+
+### down sql file at
+./migrations/sqls/20220718102738-create-schema-down.sql
+npx db-migrate up
+npx db-migrate down
+touch .db-migraterc
+npx db-migrate create create-table-person
+
+### card, response tables
+npx db-migrate create create-table-card
+npx db-migrate create create-table-response
+npx db-migrate create create-function-score-response
+npx db-migrate create create-function-handle-score
+
+npx db-migrate up
+npx db-migrate down
+
+# SQLS lsp for sql
+go install github.com/lighttiger2505/sqls@latest
+
+vim plugin: https://github.com/nanotee/sqls.nvim
+
+help sqls-nvim
+
+coc-nvim config
+~/.config/nvim/coc-settings.json#/"sql".%20{
+
+/Users/at/.config/sqls/config.yml
+
+
+# Postgraphile
+Beginner course: https://www.youtube.com/watch?v=eDZO8z1qw3k&t=980s
+
+yarn add postgraphile
+
+## Config shell script
+touch server.sh
+chmod +x server.sh
+
+npx postgraphile \
+  -c postgres:///learn_dev \
+  --schema learn
+
+npx postgraphile -c postgres:///learn_dev --schema learn
+
+./server.sh
+
+
+## Plugins
+yarn add @graphile-contrib/pg-simplify-inflector
+
+# GraphQL queries
+scratch/learn_dev.ts
+
+http://localhost:4040/graphql
+
+# Prisma example
+
+/Users/at/Documents/Server-Dev/pothos/pothos-repo2/examples/prisma/
+
+pnpm add @prisma/client prisma @pothos/plugin-prisma
+yarn add @pothos/plugin-prisma
+
+pnpm add node-fetch
+
+## Commands
+            init   Set up Prisma for your app
+        generate   Generate artifacts (e.g. Prisma Client)
+              db   Manage your database schema and lifecycle
+         migrate   Migrate your database
+          studio   Browse your data with Prisma Studio
+          format   Format your schema
+## Examples
+  Set up a new Prisma project
+  $ prisma init
+  Generate artifacts (e.g. Prisma Client)
+  $ prisma generate
+  Browse your data
+  $ prisma studio
+  Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Cl ient)
+  $ prisma migrate dev
+  Pull the schema from an existing database, updating the Prisma schema
+  $ prisma db pull
+  Push the Prisma schema state to the database
+  $ prisma db push
+
+
+npx prisma init
+npx prisma studio
+npx prisma generate
+npx prisma migrate reset -f
+ts-node ./prisma/seed.ts
+
+
+https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-postgres
+
+postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
+
+## Prisma migrate
+npx prisma migrate dev --name init
+
+npx prisma migrate dev --name pothos_example
+
+npx prisma db push
+
+## Prisma client
+npx ts-node src/a_prisma.ts
+
+https://github.com/prisma/prisma-examples/tree/latest/typescript/graphql-nextjs
+https://github.com/prisma/prisma-examples/tree/latest/typescript/grpc
+
+npx prisma generate
+
+
+# Edgedb
+
+query builder, composability
+https://www.edgedb.com/blog/designing-the-ultimate-typescript-query-builder
 
 
 

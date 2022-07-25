@@ -40,6 +40,16 @@ endfunc
 func! JS_EvalParagIdentif_simple()
   if IndentLevel( line('.') ) == 1
     let identLineNum = line('.')
+    let firstWord = split( getline('.') )[0]
+    if firstWord != 'export'
+      if !(expand('%:e') == 'mjs') " rescript files already export all identifiers.
+        let lineText = getline( line('.') )
+        " normal dd
+        call append( '.', 'export ' . lineText )
+        normal dd
+        return "echo 'line exported!'"
+      endif
+    endif
   else
     " let identLineNum = searchpos( '^let\s\(e\d_\)\@!', 'cnb' )[0]
     let identLineNum = searchpos( '^const\s', 'cnb' )[0]
@@ -67,24 +77,39 @@ func! JS_NodeCall( identif )
 
     " Optional: Delete this temp file
     call JS_DeleteFileDelayed( filePath )
+    " Also: could add more conditions here like: if !(getline('.') =~ 'export')
   endif
 
-  let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
+  " TODO: move this into a JS file. try to integrate console.table( [obj1, obj2], ["columnName1", "colName2"] )
 
+  let lines = []
+  call add( lines, "require(\"util\").inspect.defaultOptions.depth = 4;" )
+  " call add( lines, "const util = require(\"node:util\");" )
+  call add( lines, "function isPromise(p) { if (typeof p === \"object\" && typeof p.then === \"function\") { return true; } return false; }; " )
+  " call add( lines, "function ensureArray(v) { if (typeof v === \"object\" && typeof v.then === \"function\") { return v; } return [v]; }; " )
+
+  call add( lines, "function execIdentif (symb) { " )
+  call add( lines,    "if     (typeof symb == \"function\" ) { console.log( symb() ) " )
+  call add( lines,    "} else if (isPromise(symb))              { symb.then( v => console.log( v ) ) " )
+  " call add( lines,    "} else if (isPromise(symb))              { symb.then( v => Promise.all( ensureArray( v ) ).then( w => console.log( w ) ) ) " )
+  call add( lines,    "} else                                  { console.log( symb ) }; " )
+  call add( lines, "}; " )
+
+  call add( lines, 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')' )
+
+  " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
+  return "npx ts-node --transpile-only -T  -e '" . join( lines ) . "'"
+  " NOTE: .mjs files do not work with ts-node
+endfunc
+" let @" = JS_NodeCall( expand('<cword>') ) ■
+  " example: new Promise( (r) => r( runAsyc1() ) ).then( res => console.log( res ) )
+  " let ps = 'new Promise( (r) => r( ' . expression . ' ) ).then( res => console.log( res ) )'
+  " Just in case the value of the expression is a promise we console.log in a callback
   " node -e "import('<path>').then(m => console.log(m.abc1))"
   " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '))'
   " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '()' . '))'
-
   " let js_code_importCall = 'import("' . filePath . '").then(m => execIdentif(m.' . a:identif . '))'
-
-  " let js_code_importCall = 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')'
-  let js_code_importCall = 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')'
-
-  " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
-  return "npx ts-node -T  -e '" . js_code_helperFn . js_code_importCall . "'"
-  " NOTE: .mjs files do not work with ts-node
-endfunc
-" let @" = RS_NodeCall( expand('<cword>') )
+  " let js_code_importCall = 'const modu = require("' . filePath . '"); execIdentif(modu.' . a:identif . ')' ▲
 
 func! JS_DeleteFileDelayed( filePath )
   let delFileCmd = "call system( 'del " . a:filePath . "' )"

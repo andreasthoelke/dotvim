@@ -8,11 +8,12 @@ au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli call RescriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call JsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
-" au ag BufNewFile,BufRead,WinNew *.svelte call SvelteSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
+
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed
@@ -46,6 +47,25 @@ endfunc
 
 
 nnoremap <leader>cm :call clearmatches()<cr>
+
+
+func! SQLSyntaxAdditions()
+  call tools_db#bufferMaps()
+  call clearmatches()
+
+  set conceallevel=2
+  set concealcursor=ni
+  set commentstring=\#%s
+
+  syntax match Normal "->" conceal cchar=→
+  syntax match Normal "::" conceal cchar=|
+  syntax match Normal ":=" conceal cchar=⫶
+
+  call matchadd('BlackBG', '\v("|--|//|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+  call matchadd('Conceal', '"""', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
+endfunc
+
 
 
 func! EdgeQLSyntaxAdditions() " ■
@@ -95,6 +115,10 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\'a' conceal cchar=𝑎
   syntax match Normal '\'b' conceal cchar=𝑏
   syntax match Normal '\'c' conceal cchar=𝑐
+  syntax match Normal '\'d' conceal cchar=𝑑
+  syntax match Normal '\'e' conceal cchar=𝑒
+  syntax match Normal '\'f' conceal cchar=𝑓
+  syntax match Normal '\'g' conceal cchar=𝑔
 
   " syntax match Normal '\W\zsint\ze\W' conceal cchar=I
   " syntax match Normal '\W\zsstring\ze\W' conceal cchar=S
@@ -109,6 +133,10 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\vfloat\ze(\W|\_$)' conceal cchar=F
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
   syntax match Normal '\vbool\ze(\W|\_$)' conceal cchar=B
+
+  " The convention for a main type in a module is MonduleName.t
+  syntax match Normal '\v\.t\ze(\W|\_$)' conceal cchar=ᵀ
+
   " syntax match Normal 'bool\ze\_$' conceal cchar=B
   " syntax match Normal 'array\ze\W' conceal cchar=A
   syntax match Normal 'array\ze\W' conceal cchar=⟦
@@ -178,7 +206,15 @@ func! RescriptSyntaxAdditions()
   syntax match Normal '\s\zsHook\.' conceal cchar=⁝
   syntax match Normal 'Option\.' conceal cchar=⁝
   syntax match Normal 'Promise' conceal cchar=~
-  syntax match Normal 'AsyncResult\.' conceal cchar=≀
+  syntax match Normal 'Async' conceal cchar=≀
+  " syntax match Normal 'option' conceal cchar=◘
+  syntax match Normal 'option' conceal cchar=∦
+  syntax match Normal 'result' conceal cchar=∥
+  " syntax match Normal 'unit' conceal cchar=◘
+  syntax match Normal 'unit' conceal cchar=✴
+
+"  ⋋  ꜝ︕ ⋐  ⋘  ⋯  ⌘ ∘  ⋊ ☾  ♽ ♺  ⫐ ◘ ☳  ⌀ ⋄ ∝  ⊺ ⊱ ⚐ ⚀ ⊔ ∥  ∦ ∟ ∨ ∪ ∩  ◘      𝑟S  ʀS
+
   " syntax match Normal '^module\ze\s' conceal cchar=
   syntax match Normal '^module\s' conceal
   syntax match Normal '^type\ze\s' conceal cchar=┆
@@ -256,12 +292,12 @@ func! RescriptSyntaxAdditions()
 " new unicode symbols
 " « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
 "  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ r⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
-"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘                  ∩        𝑟S  ʀS
+"  ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
 "  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
-"  ⟛    ⟫  ⟯  ⟶    ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ
-"  ⊝   ⊙  ⊖  ⊘    ⊟  ⊡ | ⊖  ⊙
+"  ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ
+"  ⊝   ⊙  ⊖  ⊘ ⫞   ⊟  ⊡ | ⊖  ⊙
 "   ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  • ▪
-"   ◆  ◇  ◈  ◻  ◽  ☀
+"   ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ✱ ❂ ❈
 
 endfunc
 
@@ -333,7 +369,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "\v\|\|" conceal cchar=‖
   syntax match Normal "\v\&\&" conceal cchar=﹠
 
-  syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=F
+  syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=N
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
   syntax match Normal 'array\ze\W' conceal cchar=⟦
@@ -357,6 +393,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "return\ze\s" conceal cchar=←
   syntax match Normal "async\ze\s" conceal cchar=•
+  syntax match Normal "Async\ze\W" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
   syntax match Normal "undefined" conceal cchar=∪
@@ -364,6 +401,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
+  syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v\=\>" conceal cchar=⇒
 
 
@@ -378,7 +416,11 @@ func! TsConcealWithUnicode ()
 
   syntax match Normal '\s\zstype_=' conceal
 
+" ➹  ⤤  ⬀  ⬈  ⧼  ⪦ ⇡ ⇞  ⇾  ~➚
+
   syntax match Normal 'map' conceal cchar=➚
+  syntax match Normal 'and\zeThen' conceal cchar=~
+  syntax match Normal 'Then\ze\W' conceal cchar=➚
   syntax match Normal 'pipe' conceal cchar=⇾
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
@@ -395,8 +437,8 @@ func! TsConcealWithUnicode ()
   " EdgeDB query builder object: e.select()
   syntax match Normal "\s\zse\." conceal cchar=᛫
   syntax match Normal "\s\zstrue" conceal cchar=᛫
-  syntax match Normal "ilike" conceal cchar=∼
-  syntax match Normal "like" conceal cchar=∼
+  " syntax match Normal "ilike" conceal cchar=∼
+  " syntax match Normal "like" conceal cchar=∼
   syntax match Normal "order_by\:" conceal cchar=ꜛ
   syntax match Normal "filter\:" conceal cchar=≚
   syntax match Normal "\.\.\." conceal cchar=…
@@ -416,6 +458,8 @@ endfunc
 "   call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
 "   set conceallevel=2
 " endfunc
+
+
 
 func! GraphQLSyntaxAdditions()
   " Note: this sequence of clearmatches, CodeMarkup, matchadd conceal and conceallevel seems to be important

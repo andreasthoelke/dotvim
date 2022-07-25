@@ -117,6 +117,8 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 
+Plug 'nanotee/sqls.nvim'
+
 Plug 'memgraph/cypher.vim'
 Plug 'neo4j-contrib/cypher-vim-syntax'
 Plug 'edgedb/edgedb-vim'

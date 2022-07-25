@@ -20,6 +20,12 @@
       "args": ["--node-ipc"],
       "filetypes": ["rescript"],
       "rootPatterns": ["bsconfig.json"]
+    },
+    "sql": {
+      "command": "sqls",
+      "args": ["-config", "$HOME/.config/sqls/config.yml"],
+      "filetypes": ["sql"],
+      "shell": true
     }
   },
   "jedi.enable": false,

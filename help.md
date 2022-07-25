@@ -248,6 +248,7 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 func! T_DelayedCmd( cmd, time )
 call T_DelayedCmd( "echo 'hi there'", 1000 )
 
+Example: ~/.config/nvim/plugin/tools_js.vim#/func.%20JS_DeleteFileDelayed.%20filePath
 
 ## Async vim.loop
 ~/.config/nvim/notes/notes-lua-asyc-loop.md
@@ -255,6 +256,11 @@ call T_DelayedCmd( "echo 'hi there'", 1000 )
 ### Preview a file in terminal/shell with cat -> bat
 
 Note you can scroll and search like in vim.
+
+### Update bat with new syntax
+https://github.com/sharkdp/bat
+https://github.com/sharkdp/bat\#adding-new-syntaxes--language-definitions
+
 
 ## Markdown
 
@@ -1630,8 +1636,9 @@ to highligh colors in code (CSS, JS, HTML, VIM)
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
 # Shell / ZSH
-
+example config shell script: ~/Documents/Server-Dev/pg/a_pg_learn/server-setup.md#/##%20Config%20shell
 read shell variables: ~/.config/nvim/plugin/tools-tab-status-lines.vim#/func.%20PyVimVirtualEnvExt%20..
+/Users/at/Documents/UI-Dev/rescript/setup-tests/relay/graphql-client-example-server/prepareForPublish.sh
 
 ## Command line $PATH
 

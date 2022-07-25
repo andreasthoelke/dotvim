@@ -104,13 +104,13 @@ endfunc
 
 func! RS_TopLevBindingForw()
   normal! }
-  call search( '^let\s', 'W' )
+  call search( '\v^(module|let)\s', 'W' )
 endfunc
 
 func! RS_TopLevBindingBackw()
-  call search( '^let\s', 'bW' )
+  call search( '\v^(module|let)\s', 'bW' )
   normal! {
-  call search( '^let\s', 'W' )
+  call search( '\v^(module|let)\s', 'W' )
 endfunc
 
 
@@ -192,15 +192,30 @@ func! RS_NodeCall( identif )
   let rescriptCompileToFileExtension = JsonConfKey( 'bsconfig.json', 'suffix' )
   let filePath_compiledJS = getcwd() . projRelativeFilenameRoot . rescriptCompileToFileExtension
 
-  let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
+
+  let lines = []
+  call add( lines, "function isPromise(p) { if (typeof p === \"object\" && typeof p.then === \"function\") { return true; } return false; }; " )
+
+  call add( lines, "function execIdentif (symb) { " )
+  call add( lines,    "if     (typeof symb == \"function\" ) { console.log( symb() ) " )
+  call add( lines,    "} else if (isPromise(symb))              { symb.then( v => console.log( v ) ) " )
+  call add( lines,    "} else                                  { console.log( symb ) }; " )
+  call add( lines, "}; " )
+
+  " call add( lines, 'const modu = require("' . filePath_compiledJS . '"); execIdentif(modu.' . a:identif . ')' )
+  call add( lines, 'import("' . filePath_compiledJS . '").then(m => execIdentif(m.' . a:identif . '))' )
+
+  return "node -e '" . join( lines ) . "'"
+
+  " let js_code_helperFn = "function execIdentif (symb) { if (typeof symb == \"function\" ) { console.log( symb() ) } else { console.log( symb ) } }; "
 
   " node -e "import('<path>').then(m => console.log(m.abc1))"
   " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '))'
   " let js_code_statement = 'import("' . filePath . '").then(m => console.log(m.' . a:identif . '()' . '))'
 
-  let js_code_importCall = 'import("' . filePath_compiledJS . '").then(m => execIdentif(m.' . a:identif . '))'
+  " let js_code_importCall = 'import("' . filePath_compiledJS . '").then(m => execIdentif(m.' . a:identif . '))'
 
-  return "node -e '" . js_code_helperFn . js_code_importCall . "'"
+  " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
   " return "npx ts-node -T  -e '" . js_code_helperFn . js_code_importCall . "'"
 endfunc
 " let @" = RS_NodeCall( expand('<cword>') )

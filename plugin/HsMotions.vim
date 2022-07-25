@@ -120,6 +120,8 @@ endfunc
 " ─   TopLevel                                           ■
 
 " TODO make a local map for vim? -> this should probl use treesitter
+" NOW HERE: ~/.config/nvim/plugin/tools_rescript.vim#/nnoremap%20<silent><buffer>%20<c-n>
+
 nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
 " nnoremap <silent> <c-n> :call vista#jump#NextTopLevel()<cr>
 func! TopLevBindingForw()
@@ -367,12 +369,13 @@ endfunc
 
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 
-nnoremap J  :call ColumnLevelForwBackw(1)<cr>
-onoremap J V:call IndentBlockEnd()<cr>
-nnoremap K  :call ColumnLevelForwBackw(-1)<cr>
-onoremap K V:call IndentBlockStart()<cr>
-vnoremap <silent> J <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
-vnoremap <silent> K <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
+noremap J  :call ColumnLevelForwBackw(1)<cr>
+noremap K  :call ColumnLevelForwBackw(-1)<cr>
+
+" onoremap J V:call IndentBlockEnd()<cr>
+" onoremap K V:call IndentBlockStart()<cr>
+" vnoremap <silent> J <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
+" vnoremap <silent> K <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
 
 func! IndentBlockEnd()
   normal! m'
@@ -673,11 +676,12 @@ let g:hlAreaID = 0
 " call matchdelete( abc )
 " call clearmatches()
 
-" LHS movement:
-" nnoremap ,j j^
-" nnoremap ,k k^
-nnoremap <silent> ,j :call FnAreaForw()<cr>
-nnoremap <silent> ,k :call FnAreaBackw()<cr>
+" Just a new convenience motion attempt
+nnoremap <silent> ) j^
+nnoremap <silent> ( ^
+
+" nnoremap <silent> ,j :call FnAreaForw()<cr>
+" nnoremap <silent> ,k :call FnAreaBackw()<cr>
 
 " Column movement:
 nnoremap <silent> I :call ColonForw()<cr>
@@ -1147,7 +1151,8 @@ func! CommaItemStartBackw()
   " Find delimiter on the same bracket level, skip matches in Strings
   let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   call setpos('.', [0, sLine, sCol, 0] )
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   call setpos('.', [0, sLine, sCol, 0] )
   normal! w
   return
@@ -1165,7 +1170,7 @@ func! CommaItemStartBackw()
     return
   endif
   " Second step
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   if sLine && sLine > (oLine - 5)
     call setpos('.', [0, sLine, sCol, 0] )
     call search('\S')

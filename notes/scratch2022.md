@@ -1,11 +1,15 @@
 
 npx vite
 http://localhost:3000
+http://localhost:4040/graphql
+npx rescript build -w
 
 Todos:
 ~/.config/nvim/help.md#/###%20TODO.%20nvim-treesitter-rescript
 
 # Scratch
+git add *
+degit https://github.com/hayes/pothos
 
 type Tags
 are just arrays on Posts .. not connections

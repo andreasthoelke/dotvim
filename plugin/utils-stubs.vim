@@ -136,9 +136,9 @@ endfunc
 func! CreateInlineTestDec_js()
   " const greeter = (person: Person) => {
 
-  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnb' )[0]
-  let hostLn2 = searchpos( '^export\sconst\s\(e\d_\)\@!', 'cnb' )[0]
-  let hostLn3 = searchpos( '\v^(async\s)?function', 'cnb' )[0]
+  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnbW' )[0]
+  let hostLn2 = searchpos( '^export\sconst\s\(e\d_\)\@!', 'cnbW' )[0]
+  let hostLn3 = searchpos( '\v^(async\s)?function', 'cnbW' )[0]
 
   let hostLn = max( [hostLn1, hostLn2, hostLn3] )
   let hostDecName = matchstr( getline(hostLn ), '\v(const|function)\s\zs\i*\ze\W' )
@@ -157,7 +157,8 @@ func! CreateInlineTestDec_js()
 
   let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
-  let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  " let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  let lineText = hostDecName
   " TODO: this doesn't work
   let nextIndex = GetNextTestDeclIndex( hostLn )
   let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
@@ -205,7 +206,8 @@ endfunc
 " e1_intStr = intStr (i:: Int)
 
 func! GetNextTestDeclIndex( fn_linenum )
-  let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()
+  " let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()
+  let lineNumPrevInlineTestDec = searchpos( '\v(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
   let thereIsAPrevTestDecl = lineNumPrevInlineTestDec > a:fn_linenum
   if thereIsAPrevTestDecl
     return 1 + eval( GetTestDeclIndex( lineNumPrevInlineTestDec ) )
@@ -265,7 +267,7 @@ endfunc
 
 func! InlineTestDeclBackwLine()
   " return searchpos( '\v^e\d_', 'cnbW')[0]
-  return searchpos( '\v^(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
+  return searchpos( '\v(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
 endfunc
 " echo InlineTestDeclBackwLine()
 
@@ -276,7 +278,7 @@ endfunc
 
 func! GetTestDeclIndex( lineNum )
   " return matchstr( getline(a:lineNum), '^e\zs\d\ze_')
-  return matchstr( getline(a:lineNum), '\v^(const\s|let\s)=[e|a]\zs\d\ze_')
+  return matchstr( getline(a:lineNum), '\v(const\s|let\s)=[e|a]\zs\d\ze_')
 endfunc
 
 " echo GetTestDeclIndex( line('.') +1 )

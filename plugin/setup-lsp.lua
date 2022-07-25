@@ -259,6 +259,13 @@ lspconfig.rescriptls.setup ({
   flags = flags,
 })
 
+-- https://github.com/ocaml/ocaml-lsp
+lspconfig.ocamllsp.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
+
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls
 -- https://github.com/iamcco/vim-language-server
@@ -274,6 +281,44 @@ lspconfig.graphql.setup({
   on_attach = on_attach,
   flags = flags,
 })
+
+-- https://github.com/lighttiger2505/sqls
+-- https://github.com/nanotee/sqls.nvim
+-- mysql://root:PW@127.0.0.1:3306/pets
+require('lspconfig').sqls.setup{
+  on_attach = function(client, bufnr)
+    require('sqls').on_attach(client, bufnr)
+  end,
+  settings = {
+    sqls = {
+      connections = {
+        {
+          alias = 'mysql_pets',
+          driver = 'mysql',
+          dataSourceName = 'root:PW@127.0.0.1:3306/pets',
+        },
+        {
+          alias = 'demo_world',
+          driver = 'mysql',
+          dataSourceName = 'root:root@tcp(127.0.0.1:13306)/world',
+        },
+
+        {
+          alias = 'pg_learn',
+          driver = 'postgresql',
+          dataSourceName = 'host=127.0.0.1 port=5432 user=postgres password=PW dbname=learn_dev',
+        },
+        {
+          alias = 'pg_demo',
+          driver = 'postgresql',
+          dataSourceName = 'host=127.0.0.1 port=15432 user=postgres password=mysecretpassword1234 dbname=dvdrental sslmode=disable',
+        },
+
+      },
+    },
+  },
+}
+
 
 -- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
 -- lspconfig.flow.setup({

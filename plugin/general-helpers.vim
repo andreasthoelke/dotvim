@@ -267,7 +267,8 @@ inoremap \fp <C-R>=getcwd()<CR>
 " Insert mode: i<c-r>%
 
 nnoremap <leader>cp :let @* = @%<cr>:let @" = @%<cr>
-nnoremap <leader>sp :e <c-r>"<cr>
+" nnoremap <leader>sp :e <c-r>"<cr>
+nnoremap <leader>sp :e <c-r>*<cr>
 nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
 
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
