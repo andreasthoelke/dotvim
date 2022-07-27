@@ -22,6 +22,10 @@ i might make manually unique string ids in data.ts.
 
 ## Vim to learn
 
+gsw - sets a test-printer expression in /scratch/.testPrinter.ts
+gsp - prints/call this (exported) identifier (cursor can be in a different place)
+
+
 sp qa - add cursor pos to quickfix list
 leader qq - toggle quickfix list
 

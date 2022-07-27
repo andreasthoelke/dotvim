@@ -161,10 +161,10 @@ func! CreateInlineTestDec_js()
   let lineText = hostDecName
   " TODO: this doesn't work
   let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = () => ' . lineText
   call append( '.', lineText )
   normal dd
-  normal ^wwww
+  normal ^wwwwww
 endfunc
 " Tests:
 " def mult(aa, bb):

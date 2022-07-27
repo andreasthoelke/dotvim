@@ -298,6 +298,7 @@ func! RescriptSyntaxAdditions()
 "  ⊝   ⊙  ⊖  ⊘ ⫞   ⊟  ⊡ | ⊖  ⊙
 "   ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  • ▪
 "   ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ✱ ❂ ❈
+" ➔  ⇾  →  ˃ ➟ ⇢  ↗ → →
 
 endfunc
 
@@ -364,7 +365,8 @@ func! TsConcealWithUnicode ()
 
 
   syntax match Normal "\v\=\=" conceal cchar=≡
-  syntax match Normal "\v\=\=\=" conceal cchar=≣
+  syntax match Normal "\v\=\=" conceal cchar=≡
+  " syntax match Normal "\s\zs\>\=\ze\s" conceal cchar=≥
   syntax match Normal "\v\+\+" conceal cchar=⧺
   syntax match Normal "\v\|\|" conceal cchar=‖
   syntax match Normal "\v\&\&" conceal cchar=﹠
@@ -373,8 +375,15 @@ func! TsConcealWithUnicode ()
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
   syntax match Normal 'array\ze\W' conceal cchar=⟦
+  " syntax match Normal 'Array\ze\W' conceal cchar=⟦
 
-  syntax match Normal "\S\zs:\ze\s" conceal
+  syntax match Normal "\v\=\>" conceal cchar=⇒
+
+  " The collon before a type or an object value
+  syntax match Normal "\w\zs:\ze\s" conceal
+  syntax match Normal ")\zs:\ze\s" conceal cchar=˃
+  syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
+
   syntax match Normal "const\s" conceal
 
   syntax match Normal "'" conceal
@@ -389,9 +398,13 @@ func! TsConcealWithUnicode ()
   syntax match Normal "^\*\s" conceal
 
   " TS conceals
-  syntax match Normal "function" conceal cchar=→
+  " TODO: can't match "export" twice? ~/Documents/Server-Dev/d_gql_edb/src/b_ramda_pipe_async_examples.ts#/export%20function%20ac
+  " syntax match Normal "export\s\zsfunction\ze\s" conceal cchar=→
+  syntax match Normal "^function\ze\s" conceal cchar=→
+  syntax match Normal "^export\ze\s" conceal cchar=∷
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "return\ze\s" conceal cchar=←
+  syntax match Normal "return\zeA" conceal cchar=←
   syntax match Normal "async\ze\s" conceal cchar=•
   syntax match Normal "Async\ze\W" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
@@ -399,11 +412,9 @@ func! TsConcealWithUnicode ()
   syntax match Normal "undefined" conceal cchar=∪
   syntax match Normal "null\ze\s" conceal cchar=⨆
   syntax match Normal "this\." conceal cchar=⫶
-  syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
-  syntax match Normal "\v\=\>" conceal cchar=⇒
-
+  syntax match Normal "void" conceal cchar=✴
 
   syntax match Normal '<' conceal cchar=⁽
   syntax match Normal '>' conceal cchar=⁾
