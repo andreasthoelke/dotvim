@@ -148,6 +148,20 @@ func! InsertStringAtLoc( str, line, col )
 endfunc
 " echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
+nnoremap <silent> <leader>]t :call BufferInnerBracket()<cr>
+
+func! BufferInnerBracket()
+  let [oLine, oCol] = getpos('.')[1:2]
+  call BracketStartForw()
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  normal! b
+  call FlipToPairChar('')
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  " normal! w%
+  call setpos('.', [0, oLine, oCol, 0] )
+endfunc
+
+
 
 nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
 " nnoremap <leader>sn :echo col([line('.'),'$'])<CR>

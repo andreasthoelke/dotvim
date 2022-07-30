@@ -1420,7 +1420,8 @@ eins test
 ranges
 exec '.+1,.+8s/\zelet\se\d_/\/\/ /ge'
 
-
+Example map with range/ textobjects support:
+~/.config/nvim/plugin/utils-align.vim#/func.%20StripSemicolon.%20...
 
 ### Commandline-ranges
 
