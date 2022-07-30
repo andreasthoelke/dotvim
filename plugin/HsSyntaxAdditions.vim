@@ -239,7 +239,7 @@ func! RescriptSyntaxAdditions()
   syntax match Normal 'concat(' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_
-  syntax match Normal 'x => x' conceal cchar=_
+  syntax match Normal 'x => x\ze\s' conceal cchar=_
 
   " syntax match Normal ')\ze\s-' conceal
   " syntax match Normal ')\_$' conceal
@@ -437,7 +437,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'concat' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_
-  syntax match Normal 'x => x' conceal cchar=_
+  syntax match Normal 'x => x\ze\s' conceal cchar=_
 
 
   syntax match Normal 'JSX.Element' conceal cchar=⊃

@@ -25,8 +25,6 @@ func! T_MenuCommands()
   let testServerCmds += [ {'label': 'GQL Exec with error',   'cmd': 'call T_Refetch("GqlExecWithError")' } ]
   " nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
   let testServerCmds += [ {'label': '_Printer',   'cmd': 'call T_Refetch("Printer")' } ]
-  " now including reporting for all promises
-  " let testServerCmds += [ {'label': '_V Printer (eval time)',   'cmd': 'call T_Refetch("Printer_withEvalTime")' } ]
   " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
   let testServerCmds += [ {'label': '_Show schema',   'cmd': 'call T_Refetch("ShowSchema")' } ]
 
@@ -340,10 +338,6 @@ func! T_TesterTerminalCommand( testCmd )
   elseif a:testCmd == 'Printer'
     let filePath = T_TesterFilePath( 'Printer' )
     let functionName = 'RunPrint'
-
-  elseif a:testCmd == 'Printer_withEvalTime'
-    let filePath = T_TesterFilePath( 'Printer' )
-    let functionName = 'RunPrint_showEvalTime'
 
   else
     echoe a:testCmd . ' not supported!'

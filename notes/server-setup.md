@@ -38,6 +38,8 @@ wget https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/.
 collecting custom settings here: ~/Documents/Server-Dev/c_gql_edb/.eslintrc.js#/rules.%20{
 TODO: make this file (in a repo?) the template for new projects.
 
+~/Documents/Server-Dev/d_gql_edb/.eslintrc.js#/rules.%20{
+
 # git
 git init
 git add .
@@ -270,8 +272,8 @@ query builder, composability
 https://www.edgedb.com/blog/designing-the-ultimate-typescript-query-builder
 
 
-
-
+# Rambdax
+pnpm add rambdax
 
 
 

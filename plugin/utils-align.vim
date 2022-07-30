@@ -109,6 +109,20 @@ endfunc
 " call StripAligningSpaces()
 
 
+command! -range=% StripSemicolon call StripSemicolon( <line1>, <line2> )
+
+nnoremap <leader>s;      :let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader>s; :<c-u>let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+func! StripSemicolon( ... )
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+  let rangeStr = startLine . ',' . endLine
+  exec rangeStr . 's/\;\ze$//g'
+endfunc
+" call StripSemicolon()
+
+
 " Push shift text to the right:
 " nnoremap <localleader>> i <esc>
 nnoremap <silent> ,> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
@@ -123,7 +137,7 @@ func! InsertStringAtLoc( str, line, col )
   let textBefore = lineText[:a:col]
   let textAfter = lineText[a:col+1:]
   if a:col == -1
-    " quick fix for cursor positon 1
+    " quick fix for cursor position 1
     let textBefore = ""
   endif
   " echo textBefore
