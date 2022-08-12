@@ -54,9 +54,19 @@ require('nvim-treesitter.configs').setup {
         -- You can use the capture groups defined in textobjects.scm
         ['af'] = '@function.outer',
         ['if'] = '@function.inner',
+        ['<leader>ab'] = '@block.outer',
+        ['av'] = '@frame.outer',
         -- Temp: disabled this in favour of vim-targets (which works for function args)
         -- ['aa'] = '@parameter.outer',
         -- ['ia'] = '@parameter.inner',
+      },
+    },
+    lsp_interop = {
+      enable = true,
+      border = 'none',
+      peek_definition_code = {
+        ["<leader>df"] = "@function.outer",
+        ["<leader>dF"] = "@class.outer",
       },
     },
     move = {

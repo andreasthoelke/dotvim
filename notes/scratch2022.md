@@ -22,6 +22,11 @@ i might make manually unique string ids in data.ts.
 
 ## Vim to learn
 
+new js/ts 'yank around {} block' map: y<leader>ab
+
+space s; - strip semicolon .. and the af/ap/,j
+space ]t - buffer inner bracket
+
 gsw - sets a test-printer expression in /scratch/.testPrinter.ts
 gsp - prints/call this (exported) identifier (cursor can be in a different place)
 

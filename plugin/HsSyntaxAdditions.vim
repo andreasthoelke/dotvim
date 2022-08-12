@@ -213,7 +213,9 @@ func! RescriptSyntaxAdditions()
   " syntax match Normal 'unit' conceal cchar=◘
   syntax match Normal 'unit' conceal cchar=✴
 
-"  ⋋  ꜝ︕ ⋐  ⋘  ⋯  ⌘ ∘  ⋊ ☾  ♽ ♺  ⫐ ◘ ☳  ⌀ ⋄ ∝  ⊺ ⊱ ⚐ ⚀ ⊔ ∥  ∦ ∟ ∨ ∪ ∩  ◘      𝑟S  ʀS
+"  ⋋  ⁎ꜝ︕ ⋐  ⋘  ⋯  ⌘ ∘  ⋊ ☾  ♽ ♺  ⫐ ◘ ☳  ⌀ ⋄ ∝ 
+"  ⊺ ⊱ ⚐ ⚀ ⊔ ∥  ∦ ∟ ∨ ∪ ∩  ◘      𝑟S  ʀS
+"  ⊃ ⊃ 𝑒 𝑓
 
   " syntax match Normal '^module\ze\s' conceal cchar=
   syntax match Normal '^module\s' conceal
@@ -375,13 +377,13 @@ func! TsConcealWithUnicode ()
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
   syntax match Normal 'array\ze\W' conceal cchar=⟦
-  " syntax match Normal 'Array\ze\W' conceal cchar=⟦
+  syntax match Normal 'Array\ze\W' conceal cchar=⟦
 
   syntax match Normal "\v\=\>" conceal cchar=⇒
 
   " The collon before a type or an object value
   syntax match Normal "\w\zs:\ze\s" conceal
-  syntax match Normal ")\zs:\ze\s" conceal cchar=˃
+  syntax match Normal ")\zs:" conceal cchar=˃
   syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
 
   syntax match Normal "const\s" conceal
@@ -410,6 +412,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
   syntax match Normal "undefined" conceal cchar=∪
+  syntax match Normal "unknown" conceal cchar=⪦
   syntax match Normal "null\ze\s" conceal cchar=⨆
   syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
@@ -432,18 +435,21 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'map' conceal cchar=➚
   syntax match Normal 'and\zeThen' conceal cchar=~
   syntax match Normal 'Then\ze\W' conceal cchar=➚
-  syntax match Normal 'pipe' conceal cchar=⇾
+  syntax match Normal 'pipe' conceal cchar=→
+  syntax match Normal 'flow' conceal cchar=⇾
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_
   syntax match Normal 'x => x\ze\s' conceal cchar=_
 
-
   syntax match Normal 'JSX.Element' conceal cchar=⊃
   syntax match Normal 'className=' conceal cchar=◇
 
-
+  " Effect TS Plus
+  syntax match Normal 'Effect' conceal cchar=⁝
+  syntax match Normal 'Effect\.' conceal cchar=⁝
+  syntax match Normal 'flatMap' conceal cchar=↣
 
   " EdgeDB query builder object: e.select()
   syntax match Normal "\s\zse\." conceal cchar=᛫

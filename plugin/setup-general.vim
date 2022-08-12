@@ -47,7 +47,7 @@ endfunction
 command! ClearUndo :call ClearUndo()<CR>
 " echom undofile('.')
 " /Users/at/vimtmp/undo/%Users%at
-" echo &undolevels 
+" echo &undolevels
 
 " Mundo: ----------------------
 let g:mundo_width = 50
@@ -119,10 +119,10 @@ endfunc
 " new maps!
 " nnoremap <leader>Sd :SessionOpen! default<cr>
 nnoremap <leader>Sd :LoadCurrentDirSession<cr>
-" nnoremap <leader>So :SessionOpen 
+" nnoremap <leader>So :SessionOpen
 nnoremap <leader>So :Telescope sessions<cr>
 nnoremap <leader>Sl :LoadLastSession<cr>
-" nnoremap <leader>SS :SessionSave 
+" nnoremap <leader>SS :SessionSave
 " nnoremap <leader>Ss :SaveSession<cr>
 nnoremap <leader>Ss :SSave<cr>
 " nnoremap <leader>Sn :SessionShowName<cr>
@@ -314,7 +314,7 @@ set numberwidth=2
 set nonumber
 
 " Don't show the Pipe "|" character vertical window split borders
-" set fillchars+=vert:\  
+" set fillchars+=vert:\
 " This is to allow a <Space> at the end of an expression
 " Note that the \ to escape the ' ' also needs to be escaped, hence the \\
 exec "set fillchars+=vert:\\ "
@@ -327,12 +327,14 @@ let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 " Notes: highlight TrailingWhitespace guibg=#333333 match TrailingWhitespace /\s\+$/ Remove trailing whitespace: ":%s/\s\+$//e" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1) autocmd BufEnter * call matchadd('Error', '\v\s+$', -1)
 
 let g:better_whitespace_enabled = 0
-autocmd BufWritePre * EnableWhitespace
+" NOTE: disabled this bc/ after using lsp.diagnostic.next() ']d' then an insert mode after the first space there was a highlighted whitespace.
+" autocmd BufWritePre * EnableWhitespace
 
-" use "StripWhitespace" and "ToggleWhitespace"  
+" use "StripWhitespace" and "ToggleWhitespace"
 nnoremap <leader>sw :StripWhitespace<cr>
 nnoremap <leader><leader>sw :StripWhitespace<cr>
 nnoremap yoW :ToggleWhitespace<cr>
+nnoremap <silent><leader>tw :ToggleWhitespace<cr>
 
 
 noremap <leader><leader>ytw :call ToggleOption('wrap')<cr>
@@ -344,6 +346,15 @@ function! ToggleOption(option_name, ...)
   exe 'set' . option_scope . ' ' . option_prefix . a:option_name
 endfunction
 
+
+" doesn't seem to work
+let g:neoformat_scala_scalafmt = {
+        \ 'exe': 'scalafmt-native',
+        \ 'args': ['--stdin'],
+        \ 'stdin': 1,
+        \ }
+
+" autocmd BufWritePre *.{scala,sbt} Neoformat
 
 
 " Tested: unprintable chars, tabs, show trailing whitespace chars
@@ -712,7 +723,7 @@ endfunc
 " call JumplistTimeout_WaitStart( 3 )
  " ▲
 
-" Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
+" Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist,
 " restoring the cursor pos. (Note: this fills in to what I think setpos("''", <loc>) is supposed to do)
 func! AddLocToJumplist ( loc )
   let l:maintainedCursorPos = getpos('.')
@@ -745,7 +756,7 @@ augroup END
 " Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
-" Skip cursor-rest jump if cursor hasn't moved (unfortunate fix) 
+" Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
 noremap <silent> <c-o> :call JumpBackSkipCurrentLoc()<cr>
 func! JumpBackSkipCurrentLoc ()
   let l:origCursorPos = getpos('.')

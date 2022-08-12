@@ -106,6 +106,10 @@ endfunc
 func! T_NodeFunctionCall_TermCmd( filePath, fnName )
   let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
   return "npx ts-node -T -e '" . js_code_statement . "'"
+
+  " return "node --loader ts-node/esm -e '" . js_code_statement . "'"
+
+  " return "node -O '{\"module\": \"commonjs\"}' --loader ts-node/esm -e '" . js_code_statement . "'"
   " node -e 'require("./db").init()'
   " npx ts-node -T -e 'require("/Users/at/Documents/Architecture/examples/gql1/scratch/.testGqlExec.ts").ShowSchema()'
 endfunc
@@ -121,6 +125,24 @@ func! CurrentRelativeModulePath()
   return relPath
 endfunc
 " echo CurrentRelativeModulePath()
+
+" CurrentRelativeModulePath() -> /packages/app/src/program
+" import { e1_processCommands as testIdentif } from "@org/app/program"
+
+" echo split( '/packages/app/src/program', '/' )
+" echo substitute( '/packages/app/src/program', '/packages', '@org', '' )
+
+func! ModulePath_MonoRepo()
+  let path = expand('%:p:r')
+  let cwd = getcwd()
+
+  let relPath    = substitute( path, cwd, '', '' )
+  let orgPath    = substitute( relPath, '/packages', '@org', '' )
+  let modulePath = substitute( orgPath, '/src', '', '' )
+
+  let packageName = split( relPath, '/' )[1]
+  return [packageName, modulePath]
+endfunc
 
 
 " ─^  Javascript Nodejs helper                           ▲

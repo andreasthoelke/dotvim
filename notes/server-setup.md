@@ -25,6 +25,10 @@ pnpm add -D typescript @types/node ts-node
 pnpm add -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
 pnpm add -D tslib@latest # just for import helpers?
 
+## change nodejs version on macos
+brew unlink node
+brew link --overwrite node@14
+
 # .gitignore
 wget https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/.gitignore
 
@@ -59,17 +63,47 @@ npx ts-node -T -e 'require("./src/main.ts").delayed()'
 pnpm add -D rambda
 pnpm add -D lodash @types/lodash
 use leader s} to run these lines to insert the test lines into main.ts
-call T_InsertLineAt( './src/main.ts', '', 0 )
-call T_InsertLineAt( './src/main.ts', 'export const list = (n: number) => console.log( range(1, n + 1) )', 1 )
-call T_InsertLineAt( './src/main.ts', '', 0 )
-call T_InsertLineAt( './src/main.ts', "import { range } from 'rambda'", 1 )
+call T_InsertLineAt( './scratch/test1.ts', '', 0 )
+call T_InsertLineAt( './scratch/test1.ts', 'export const list = (n: number) => console.log( range(1, n + 1) )', 1 )
+call T_InsertLineAt( './scratch/test1.ts', '', 0 )
+call T_InsertLineAt( './scratch/test1.ts', "import { range } from 'ramda'", 1 )
 
 Run the test (should show 1..12)
-npx ts-node -T -e 'require("./src/main.ts").list(12)'
+npx ts-node -T -e 'require("./scratch/test1.ts").list(12)'
+npx ts-node -O '{"module": "commonjs"}' -e 'require("./scratch/test1.ts").list(12)'
+
+npx ts-node -O '{"module": "commonjs"}' -e 'import("./scratch/test1").then(m => m.list(12))'
+
+npx ts-node -O '{"module": "nodenext"}' -e 'import("./scratch/test1").then(m => m.list(12))'
+
+node -e 'const test = require("./scratch/test1.ts"); test.list(12)'
+
+node --loader ts-node/esm -e 'const test = require("./src/test1.ts"); test.list(12)'
+
+npx ts-node -O '{"module": "commonjs"}' ./scratch/test1.ts
+
+npx ts-node ./scratch/test1.ts
+
+node --no-warnings --loader ts-node/esm ./scratch/test1.ts
+
+node --no-warnings --loader ts-node/esm ./scratch/test2.ts
+
+node --no-warnings --loader ts-node/esm ./scratch/.testPrinter.ts
+
+node --loader ts-node/esm ./src/test1.ts
+
+node --no-warnings --loader ts-node/esm ./scratch/.testPrinter2.ts
+
+npx ts-node ./scratch/.testPrinter.ts
+
+
+node --loader ts-node/esm ./scratch/.testPrinter.ts
 
 pnpm --help
 pnpm remove rambda
 pnpm add ramda @types/ramda
+
+yarn add ramda @types/ramda
 
 # Initialize the testServer files
 vim: gs .. then initialize and install packages
@@ -274,6 +308,22 @@ https://www.edgedb.com/blog/designing-the-ultimate-typescript-query-builder
 
 # Rambdax
 pnpm add rambdax
+
+# fp-ts
+pnpm add fp-ts
+
+pnpm add moment
+
+
+
+
+
+
+
+
+
+
+
 
 
 

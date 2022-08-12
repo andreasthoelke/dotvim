@@ -25,6 +25,11 @@ npm list -g --depth 0
 sudo npm uninstall -g moment
 n --help   .. let's install and select node versions
 
+## change nodejs version on macos
+brew unlink node
+brew link --overwrite node@14
+
+
 
 ## Changed global package install path
 https://github.com/sindresorhus/guides/blob/main/npm-global-without-sudo.md

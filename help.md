@@ -1256,6 +1256,10 @@ Then define select, move (and shift) maps here:
 help text-objects
 iB - inside entire buffer ~/.vim/plugin/HsMotions.vim#/Textobjects.%20
 
+
+### define simple custom textobjects in vimscript!
+~/.config/nvim/plugin/CodeMarkup.vim#/func.%20LabelAndHeading_VisSel_Content..
+
 ### vim (welle-) targets
 ~/.config/nvim/notes/notes-navigation.md#/###%20Targets
 ~/.config/nvim/plugin/setup-general.vim#/Vim%20targets
@@ -1646,6 +1650,11 @@ read shell variables: ~/.config/nvim/plugin/tools-tab-status-lines.vim#/func.%20
 (note that I'm now using ~/.zprofile like this to add to my $PATH)
 ~/.vim/notes/notes-node-npm.md#/.note%20that%20I
 
+## change nodejs version on macos
+brew unlink node
+brew link --overwrite node@14
+
+
 Previous approach:
 To set the system-wide $PATH, run "sudo nvim /etc/paths"
 ~/.zshrc#/#%20Previous%20$PATH.
@@ -1715,7 +1724,16 @@ gwT - with editable command string
 /Users/at/Documents/UI-Dev/rescript/setup-tests/relay/graphql-client-example-server/prepareForPublish.sh
 
 ## Spell Checking
+### pip spellcheck
 
+~/.config/nvim/spell/codespell-ignore.txt
+~/.config/nvim/plugin/setup-lsp.lua#/extra_args%20=%20{
+
+this doesn't seem to work? (set by null-lsp)
+.codespellignorewords
+
+
+### old vim based spell check
 Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
 " Navigate errors: "]s" - "[s", show suggestions: "z=", rather: "ea" to go to insert mode at the end of the word, then
 " "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.

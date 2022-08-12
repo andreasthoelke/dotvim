@@ -276,10 +276,11 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'b0o/SchemaStore.nvim'
 
-" Plug 'leafOfTree/vim-svelte-plugin'
+Plug 'scalameta/nvim-metals'
+" Plug 'derekwyatt/vim-scala'
 
-" Plug 'pigpigyyy/Yuescript-vim'
-" Plug 'leafo/moonscript-vim'
+
+Plug 'mfussenegger/nvim-dap'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'

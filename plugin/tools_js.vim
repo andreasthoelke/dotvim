@@ -14,6 +14,9 @@ func! tools_js#bufferMaps()
 
   nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
 
+  nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
+  nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
+
   " nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
   nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
 
@@ -34,6 +37,30 @@ func! tools_js#bufferMaps()
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
+endfunc
+
+
+func! JS_Identif_ParagExport()
+
+  let hostLn1 = searchpos( '^const\s', 'cnbW' )[0]
+  let hostLn2 = searchpos( '^export\sconst\s', 'cnbW' )[0]
+  let hostLn3 = searchpos( '\v^(async\s)?function', 'cnbW' )[0]
+
+  let hostLn = max( [hostLn1, hostLn2, hostLn3] )
+  let hostDecName = matchstr( getline(hostLn ), '\v(const|function)\s\zs\i*\ze\W' )
+
+  let firstWord = split( getline( hostLn ) )[0]
+  if firstWord != 'export'
+    let [oLine, oCol] = getpos('.')[1:2]
+    call setpos('.', [0, hostLn, 0, 0] )
+    let lineText = getline( hostLn )
+    call append( hostLn, 'export ' . lineText )
+    normal dd
+    call setpos('.', [0, oLine, oCol, 0] )
+  endif
+
+  call VirtualRadioLabel_lineNum( '«', hostLn )
+  return hostDecName
 endfunc
 
 
@@ -106,6 +133,10 @@ func! JS_NodeCall( identif )
 
   " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
   return "npx ts-node --transpile-only -T  -e '" . join( lines ) . "'"
+
+  " return "node --loader ts-node/esm -e '" . join( lines ) . "'" 
+
+
   " NOTE: .mjs files do not work with ts-node
 endfunc
 " let @" = JS_NodeCall( expand('<cword>') ) ■
@@ -155,7 +186,35 @@ func! JS_ComponentShow_UpdateFile( binding, module )
   call writefile( lines, filePath)
 endfunc
 
+" Process: import identif into runPrinter.ts, build --watch will update runPrinter.js
+" - source file:   packages/app/src/mySourceFile.ts
+" - printer:       packages/app/src/runPrinter.ts
+" - module:        @org/app/mySourceFile
+" - printer (run): packages/app/build/esm/runPrinter.js
 
+func! TsPlus_SetPrinterIdentif()
+  " Create the import statement of the test identif under the cursor
+  let [packageName, modulePath] = ModulePath_MonoRepo()
+  " let [identif, _] = T_ImportInfo()
+  let identif = JS_Identif_ParagExport()
+  let importStm = "import { " . identif . " as testIdentif } from '" . modulePath . "'"
+
+  let g:TsPlusPrinter_packageName = packageName
+
+  " Overwrite with first import line in the printer.ts (needs to be in the same folder as the source file for now)
+  let printerFilePath = expand('%:p:h') . '/runPrinter.ts'
+  let printerLines = readfile( printerFilePath, '\n' )
+  let printerLines[0] = importStm
+  call writefile( printerLines, printerFilePath )
+  " call VirtualRadioLabel('«')
+endfunc
+
+func! TsPlus_RunPrinter()
+  " node packages/app/build/esm/runPrinter.js
+  let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
+  " call System_Float( 'node ' . printerRunnablePath )
+  call System_Float( 'yarn build && node ' . printerRunnablePath )
+endfunc
 
 func! RunJSCode ( code )
   let nodeCmd = 'console.log( ' . a:code . ' )'
