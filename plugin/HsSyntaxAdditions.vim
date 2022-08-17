@@ -293,7 +293,7 @@ func! RescriptSyntaxAdditions()
 
 " new unicode symbols
 " « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
-"  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ r⊃  ⊆  ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
+"  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ r⊃ ᴅ 𝑑 ⊆  ⊇ ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
 "  ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
 "  ˃ ˲  ˿  ͐  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
 "  ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ
@@ -367,7 +367,7 @@ func! TsConcealWithUnicode ()
 
 
   syntax match Normal "\v\=\=" conceal cchar=≡
-  syntax match Normal "\v\=\=" conceal cchar=≡
+  syntax match Normal "===" conceal cchar=≣
   " syntax match Normal "\s\zs\>\=\ze\s" conceal cchar=≥
   syntax match Normal "\v\+\+" conceal cchar=⧺
   syntax match Normal "\v\|\|" conceal cchar=‖
@@ -387,6 +387,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
 
   syntax match Normal "const\s" conceal
+  syntax match Normal "readonly\s" conceal cchar=‧
 
   syntax match Normal "'" conceal
   syntax match Normal "''" conceal cchar=∅
@@ -402,7 +403,7 @@ func! TsConcealWithUnicode ()
   " TS conceals
   " TODO: can't match "export" twice? ~/Documents/Server-Dev/d_gql_edb/src/b_ramda_pipe_async_examples.ts#/export%20function%20ac
   " syntax match Normal "export\s\zsfunction\ze\s" conceal cchar=→
-  syntax match Normal "^function\ze\s" conceal cchar=→
+  syntax match Normal "function\ze\s" conceal cchar=→
   syntax match Normal "^export\ze\s" conceal cchar=∷
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "return\ze\s" conceal cchar=←
@@ -411,10 +412,11 @@ func! TsConcealWithUnicode ()
   syntax match Normal "Async\ze\W" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
+  syntax match Normal "Deferred" conceal cchar=~
   syntax match Normal "undefined" conceal cchar=∪
   syntax match Normal "unknown" conceal cchar=⪦
   syntax match Normal "null\ze\s" conceal cchar=⨆
-  syntax match Normal "this\." conceal cchar=⫶
+  " syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
   syntax match Normal "void" conceal cchar=✴
@@ -439,6 +441,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'flow' conceal cchar=⇾
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
+  syntax match Normal 'combine' conceal cchar=◇
 
   syntax match Normal 'i => {i' conceal cchar=_
   syntax match Normal 'x => x\ze\s' conceal cchar=_
@@ -447,9 +450,28 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'className=' conceal cchar=◇
 
   " Effect TS Plus
-  syntax match Normal 'Effect' conceal cchar=⁝
+  " syntax match Normal 'Effect' conceal cchar=⁝
   syntax match Normal 'Effect\.' conceal cchar=⁝
+  syntax match Normal 'AssociativeIdentity\.' conceal cchar=⁝
+  syntax match Normal 'Associative\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
+
+
+  " Match.tag( exp, {
+  syntax match Normal 'Match.tag(' conceal cchar=⊂
+
+
+
+  " const result = $(deferred.await)
+  syntax match Normal '=\s\$(' conceal cchar=⇠
+  " const v1 = Do(($) => {
+  syntax match Normal 'Do(($) => {' conceal cchar=⊇
+  syntax match Normal '$(' conceal cchar=ˍ
+
+  " syntax match Normal '\v\s\zs\)$' conceal cchar=᛫
+  syntax match Normal '\v\S\s\zs\)$' conceal
+  " TODO use a lookaround
+  " syntax match Normal '\v\$@!.*\zs\)$' conceal cchar=᛫
 
   " EdgeDB query builder object: e.select()
   syntax match Normal "\s\zse\." conceal cchar=᛫

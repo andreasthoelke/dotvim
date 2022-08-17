@@ -590,8 +590,11 @@ vmap iv ,Ho,L
 " nnoremap <silent> <c-m> :call FnAreaForw()<cr>
 " nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
 " Instead use option-key / alt-key maps that are sent by karabiner. see ~/.config/nvim/help.md#/###%20Mapping%20Alt
-nnoremap <silent> µ :call HotspotForw()<cr>
-nnoremap <silent> <tab> :call HotspotBackw()<cr>
+" nnoremap <silent> µ :call HotspotForw()<cr>
+" nnoremap <silent> <tab> :call HotspotBackw()<cr>
+
+nnoremap <silent> µ :call search('\.', 'W')<cr>w
+nnoremap <silent> <tab> h:call search('\.', 'bW')<cr>w
 
 func! HotspotForw()
   call SearchSkipSC( g:lineHotspotsPttn, 'W' )
@@ -1109,18 +1112,19 @@ endfunc " ▲
 
 
 " ─   Next/prev in comma separated lists                 ■
-nnoremap <silent> t :call CommaItemStartForw()<cr>
-onoremap <silent> T :call CommaItemStartForw()<cr>
+nnoremap <silent> ]t :call CommaItemStartForw()<cr>
+" onoremap <silent> T :call CommaItemStartForw()<cr>
 " Note/Test: The "T" is meant to avoid the "t"/till here - test this
 " This collides with the 'vt'[ill map
 " vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
-nnoremap <silent> T :call CommaItemStartBackw()<cr>
-vnoremap <silent> T <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
+nnoremap <silent> [t :call CommaItemStartBackw()<cr>
+vnoremap <silent> [t <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
 " Can't remap omap t, as this is the 't'ill map
 " onoremap <silent> t :call CommaItemStartBackw()<cr>
 " Test: tttlvTot          v           |     v
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! CommaItemStartForw() " ■
+  normal! l
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
@@ -1222,10 +1226,10 @@ endfunc
 
 
 " ─   Start of next/prev bracket                         ■
-nnoremap <silent> ]t :call BracketStartForw()<cr>
-vnoremap <silent> ]t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
-nnoremap <silent> [t :call BracketStartBackw()<cr>
-vnoremap <silent> [t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
+nnoremap <silent> t :call BracketStartForw()<cr>
+vnoremap <silent> t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
+nnoremap <silent> T b:call BracketStartBackw()<cr>w
+vnoremap <silent> T <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
 " See the 't' tests above. In tests file see BracketStartForw. Note the visual maps will hardly be needed
 " Issue: t/T and ]t/[t is not very intuitive
 " Tests: just some ]t]t]t and some [t[t[t - note this jumps to start of comment and other 'wrong' spots - but that's ok
@@ -1265,6 +1269,8 @@ endfunc
 
 " End of a list: 
 " Move to the end of a list, ready to insert the next item.
+
+nnoremap <silent> <leader>]t :call BracketEndForw()<cr>
 nnoremap <silent> ]T :call BracketEndForw()<cr>
 vnoremap <silent> ]T <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
 " Test: t]Ti,<space>JS<esc>

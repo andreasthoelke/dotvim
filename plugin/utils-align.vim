@@ -148,7 +148,7 @@ func! InsertStringAtLoc( str, line, col )
 endfunc
 " echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
-nnoremap <silent> <leader>]t :call BufferInnerBracket()<cr>
+nnoremap <silent> <leader><leader>]t :call BufferInnerBracket()<cr>
 
 func! BufferInnerBracket()
   let [oLine, oCol] = getpos('.')[1:2]

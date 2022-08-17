@@ -1270,13 +1270,26 @@ nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
 nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
 " set the project root from any file in the project.
-nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
+" nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <expr><leader>cdsl ":lcd " . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
 nnoremap <expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 nnoremap <expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 
 func! FindGitRootFolderOfCurrentFile()
   return finddir('.git/..', expand('%:p:h').';')
 endfunc
+
+func! FindYarnPackageRootFolderOfCurrentBuffer()
+  let relFilePath = findfile('package.json', expand('%:p:h').';')
+  let folderPathOfPackageJson = fnamemodify( relFilePath, ":p:h")
+  let gitRootFolder = FindGitRootFolderOfCurrentFile()
+  if len( gitRootFolder ) > len( folderPathOfPackageJson )
+    return gitRootFolder
+  else
+    return folderPathOfPackageJson
+  endif
+endfunc
+
 
 " not currently using this
 " function! <SID>AutoProjectRootCD()
