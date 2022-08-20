@@ -593,8 +593,29 @@ vmap iv ,Ho,L
 " nnoremap <silent> µ :call HotspotForw()<cr>
 " nnoremap <silent> <tab> :call HotspotBackw()<cr>
 
-nnoremap <silent> µ :call search('\.', 'W')<cr>w
-nnoremap <silent> <tab> h:call search('\.', 'bW')<cr>w
+nnoremap <silent> µ :call HotspotTSFw()<cr>
+nnoremap <silent> <tab> :call HotspotTSBw()<cr>
+
+func! HotspotTSFw()
+  call search('\.', 'W')
+  normal! w
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    normal! ll
+  endif
+endfunc
+
+func HotspotTSBw()
+  normal! h
+  call search('\.', 'bW')
+  normal! l
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    call HotspotTSBw()
+  endif
+endfunc
 
 func! HotspotForw()
   call SearchSkipSC( g:lineHotspotsPttn, 'W' )
@@ -680,8 +701,24 @@ let g:hlAreaID = 0
 " call clearmatches()
 
 " Just a new convenience motion attempt
-nnoremap <silent> ) j^
-nnoremap <silent> ( ^
+nnoremap <silent> ) :call MvLineStart()<cr>
+nnoremap <silent> ( :call MvNextLineStart()<cr>
+
+func! MvLineStart()
+  normal! j^
+  let cw = expand('<cword>')
+  if cw == 'const' || cw == 'let'
+    normal! w
+  endif
+endfunc
+
+func! MvNextLineStart()
+  normal! ^
+  let cw = expand('<cword>')
+  if cw == 'const' || cw == 'let'
+    normal! w
+  endif
+endfunc
 
 " nnoremap <silent> ,j :call FnAreaForw()<cr>
 " nnoremap <silent> ,k :call FnAreaBackw()<cr>
@@ -693,12 +730,20 @@ nnoremap <silent> Y :call ColonBackw()<cr>
 func! ColonForw()
   call SearchSkipSC( g:colonPttn, 'W' )
   normal w
+  let chrs = Get2CharsFromCursor()
+  if chrs == '$('
+    normal! ww
+  endif
 endfunc
 
 func! ColonBackw()
   normal bh
   call SearchSkipSC( g:colonPttn, 'bW' )
   normal w
+  let chrs = Get2CharsFromCursor()
+  if chrs == '$('
+    normal! ww
+  endif
 endfunc
 
 func! ColumnMotionForw() " ■

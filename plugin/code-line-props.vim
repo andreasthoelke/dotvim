@@ -303,6 +303,11 @@ func! GetCharAtCursor()
 endfunc
 " echo GetCharAtCursor()
 
+" echo getline('.')[col('.')-1:col('.')]
+func! Get2CharsFromCursor()
+  return getline('.')[col('.')-1:col('.')]
+endfunc
+
 func! GetCharAtColRelToCursor( offset )
   return getline('.')[ col('.') + a:offset -1 ]
 endfunc

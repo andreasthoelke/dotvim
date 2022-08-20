@@ -379,6 +379,11 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'array\ze\W' conceal cchar=⟦
   syntax match Normal 'Array\ze\W' conceal cchar=⟦
 
+  syntax match Normal 'List\ze\W' conceal cchar=⟬
+  syntax match Normal 'Tuple' conceal cchar=T
+  syntax match Normal 'tuple\:\s' conceal cchar=T
+  syntax match Normal 'tuple\:\[' conceal cchar=T
+
   syntax match Normal "\v\=\>" conceal cchar=⇒
 
   " The collon before a type or an object value
@@ -415,6 +420,7 @@ func! TsConcealWithUnicode ()
   syntax match Normal "Deferred" conceal cchar=~
   syntax match Normal "undefined" conceal cchar=∪
   syntax match Normal "unknown" conceal cchar=⪦
+  syntax match Normal "never" conceal cchar=ˍ
   syntax match Normal "null\ze\s" conceal cchar=⨆
   " syntax match Normal "this\." conceal cchar=⫶
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
@@ -449,9 +455,11 @@ func! TsConcealWithUnicode ()
   syntax match Normal 'JSX.Element' conceal cchar=⊃
   syntax match Normal 'className=' conceal cchar=◇
 
-  " Effect TS Plus
+  " Effect TS Plus ᴈ ᴇ ᴱ ᴲ ᵉ
   " syntax match Normal 'Effect' conceal cchar=⁝
+  syntax match Normal 'Effect\ze<' conceal cchar=ᴱ
   syntax match Normal 'Effect\.' conceal cchar=⁝
+  syntax match Normal 'Effect\.\$\.' conceal cchar=⁝
   syntax match Normal 'AssociativeIdentity\.' conceal cchar=⁝
   syntax match Normal 'Associative\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
@@ -462,10 +470,14 @@ func! TsConcealWithUnicode ()
 
 
 
-  " const result = $(deferred.await)
-  syntax match Normal '=\s\$(' conceal cchar=⇠
   " const v1 = Do(($) => {
   syntax match Normal 'Do(($) => {' conceal cchar=⊇
+  syntax match Normal '=\s\$(' conceal cchar=⇠
+  syntax match Normal '$(' conceal cchar=ˍ
+
+  " const v1 = Effect.Do()
+  syntax match Normal 'Effect.Do()' conceal cchar=⊇
+  syntax match Normal '\v.bind(Value)?\(' conceal
   syntax match Normal '$(' conceal cchar=ˍ
 
   " syntax match Normal '\v\s\zs\)$' conceal cchar=᛫

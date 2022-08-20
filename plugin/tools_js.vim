@@ -16,6 +16,7 @@ func! tools_js#bufferMaps()
 
   nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
   nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
+  nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
 
   " nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
   nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
@@ -24,6 +25,7 @@ func! tools_js#bufferMaps()
 
   nnoremap <silent><buffer> <c-n> :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-p> :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
@@ -212,8 +214,17 @@ endfunc
 func! TsPlus_RunPrinter()
   " node packages/app/build/esm/runPrinter.js
   let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
+  echom printerRunnablePath
   " call System_Float( 'node ' . printerRunnablePath )
   call System_Float( 'yarn build && node ' . printerRunnablePath )
+endfunc
+
+func! TsPlus_RunPrinter_InTerm()
+  " node packages/app/build/esm/runPrinter.js
+  let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
+  " echom printerRunnablePath
+  " call System_Float( 'node ' . printerRunnablePath )
+  call TermOneShot( 'yarn build && node ' . printerRunnablePath )
 endfunc
 
 func! RunJSCode ( code )
@@ -477,7 +488,17 @@ func! JS_TopLevBindingBackw()
 endfunc
 
 
+func! JS_YankCodeBlock()
+  let [oLine, oCol] = getpos('.')[1:2]
+  call JS_TopLevBindingBackw()
+  let [sLine, sCol] = getpos('.')[1:2]
+  call search( '\v^\S', 'W' )
+  let [eLine, eCol] = getpos('.')[1:2]
 
-
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal gvy
+  call setpos('.', [0, oLine, oCol, 0] )
+endfunc
 
 

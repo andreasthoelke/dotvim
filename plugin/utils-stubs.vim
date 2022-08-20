@@ -137,7 +137,7 @@ endfunc
 func! CreateInlineTestDec_js()
   " const greeter = (person: Person) => {
 
-  let hostLn1 = searchpos( '^const\s\(e\d_\)\@!', 'cnbW' )[0]
+  let hostLn1 = searchpos( '^const\s\w\(e\d_\)\@!', 'cnbW' )[0]
   let hostLn2 = searchpos( '^export\sconst\s\(e\d_\)\@!', 'cnbW' )[0]
   let hostLn3 = searchpos( '\v^(async\s)?function', 'cnbW' )[0]
 
