@@ -892,7 +892,7 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 
 " Disable certain unimpaired maps!:
 " let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
-let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': ''}
+let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': ''}
 
 
 

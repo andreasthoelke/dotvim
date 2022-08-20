@@ -751,6 +751,7 @@ To go to the next (overlapping) window:
 ]f [f   - next/prev file in folder
 ]b [b   - next/prev buffer in buffer list
 help unimpaired
+disable unimpaird maps: ~/.config/nvim/plugin/setup-general.vim#/Disable%20certain%20unimpaired
 
 go - bufferlist: ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it

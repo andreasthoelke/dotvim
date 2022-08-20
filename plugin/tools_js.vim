@@ -27,6 +27,10 @@ func! tools_js#bufferMaps()
   nnoremap <silent><buffer> <c-p> :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
+  nnoremap <silent><buffer> ]b :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> [b :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> ,<c-n> :call JS_MvEndOfBlock()<cr>
+
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
@@ -40,6 +44,17 @@ func! tools_js#bufferMaps()
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
+
+func! JS_MvEndOfBlock()
+  call JumpNextNonEmptyLine()
+  call search( '\v^\S', 'W' )
+endfunc
+
+func! JS_MvEndOfPrevBlock()
+  call JS_TopLevBindingBackw()
+  call JS_MvEndOfBlock()
+endfunc
+
 
 
 func! JS_Identif_ParagExport()
