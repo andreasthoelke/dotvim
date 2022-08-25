@@ -1170,6 +1170,9 @@ vnoremap <silent> [t <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! CommaItemStartForw() " ■
   normal! l
+  if GetCharAtCursor() == ','
+    normal! h
+  endif
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')

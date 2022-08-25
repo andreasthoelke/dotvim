@@ -23,13 +23,15 @@ func! tools_js#bufferMaps()
 
   nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
 
-  nnoremap <silent><buffer> <c-n> :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-p> :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> <c-n>         :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
+
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
-  nnoremap <silent><buffer> ]b :call JS_MvEndOfBlock()<cr>
-  nnoremap <silent><buffer> [b :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> ,<c-n> :call JS_MvEndOfBlock()<cr>
 
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
@@ -51,6 +53,7 @@ func! JS_MvEndOfBlock()
 endfunc
 
 func! JS_MvEndOfPrevBlock()
+  call JS_TopLevBindingBackw()
   call JS_TopLevBindingBackw()
   call JS_MvEndOfBlock()
 endfunc

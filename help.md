@@ -223,6 +223,10 @@ Telescope gh gist
 https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 https://github.com/nvim-telescope/telescope.nvim/blob/master/README.md\#default-mappings
 
+### telescope project
+https://github.com/nvim-telescope/telescope-project.nvim
+
+
 # Lunavim
 notes/notes-lunarvim.md
 
@@ -1129,6 +1133,18 @@ Go (in LLi) - jump to line (but stay in LocList)
 c-m/i - next/prev in QFL
 p - does not work! .. could set up a split?
 censor/filter warnings: ~/.vim/plugin/tools-langClientHIE-completion.vim#/\%20,%20'censorWarnings'.
+
+## Tabularize
+Tabularize /:
+Tabularize /:/l0
+Tabularize /:/l1r0
+(add 1 space left to the *field delimiter*)
+
+using this example:
+  nnoremap <silent><buffer> ,<c-n> :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> [b     :call JS_MvEndOfPrevBlock()<cr>
+~/.config/nvim/plugin/tools_js.vim#/nnoremap%20<silent><buffer>%20<c-p>
+
 
 ## Align, Indent, format
 

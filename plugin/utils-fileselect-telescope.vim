@@ -21,6 +21,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 nnoremap <leader>bs <cmd>lua require('telescope').extensions.vim_bookmarks.all({ width_line=0, width_text=40, shorten_path=true })<cr>
 
+
 nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
 
 " nnoremap <leader>bk <cmd>lua require('utils_general').fileViewB()<cr>

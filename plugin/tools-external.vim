@@ -135,10 +135,13 @@ endfunc
 func! ModulePath_MonoRepo()
   let path = expand('%:p:r')
   let cwd = getcwd()
+  let orgName = '@' . JsonConfKey( 'package.json', 'name' )
 
   let relPath    = substitute( path, cwd, '', '' )
-  let orgPath    = substitute( relPath, '/packages', '@org', '' )
+  " let orgPath    = substitute( relPath, '/packages', '@org', '' )
+  let orgPath    = substitute( relPath, '/packages', orgName, '' )
   let modulePath = substitute( orgPath, '/src', '', '' )
+  let modulePath = substitute( orgPath, '/_src', '', '' )
 
   let packageName = split( relPath, '/' )[1]
   return [packageName, modulePath]
