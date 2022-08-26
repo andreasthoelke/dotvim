@@ -141,7 +141,7 @@ func! ModulePath_MonoRepo()
   " let orgPath    = substitute( relPath, '/packages', '@org', '' )
   let orgPath    = substitute( relPath, '/packages', orgName, '' )
   let modulePath = substitute( orgPath, '/src', '', '' )
-  let modulePath = substitute( orgPath, '/_src', '', '' )
+  let modulePath = substitute( modulePath, '/_src', '', '' )
 
   let packageName = split( relPath, '/' )[1]
   return [packageName, modulePath]

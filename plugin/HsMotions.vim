@@ -701,6 +701,7 @@ let g:hlAreaID = 0
 " call clearmatches()
 
 " Just a new convenience motion attempt
+nnoremap <silent> * :call MvPrevLineStart()<cr>
 nnoremap <silent> ) :call MvLineStart()<cr>
 nnoremap <silent> ( :call MvNextLineStart()<cr>
 
@@ -719,6 +720,15 @@ func! MvNextLineStart()
     normal! w
   endif
 endfunc
+
+func! MvPrevLineStart()
+  normal! k^
+  let cw = expand('<cword>')
+  if cw == 'const' || cw == 'let'
+    normal! w
+  endif
+endfunc
+
 
 " nnoremap <silent> ,j :call FnAreaForw()<cr>
 " nnoremap <silent> ,k :call FnAreaBackw()<cr>

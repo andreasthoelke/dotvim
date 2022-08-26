@@ -234,7 +234,9 @@ func! TsPlus_RunPrinter()
   let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
   echom printerRunnablePath
   " call System_Float( 'node ' . printerRunnablePath )
-  call System_Float( 'yarn build && node ' . printerRunnablePath )
+  " call System_Float( 'yarn build && node ' . printerRunnablePath )
+  " NOTE: there needs to be a build script in packagage json with "tsc -b tsconfig.json"
+  call System_Float( 'yarn build-all && node ' . printerRunnablePath )
 endfunc
 
 func! TsPlus_RunPrinter_InTerm()
