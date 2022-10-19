@@ -702,21 +702,25 @@ let g:hlAreaID = 0
 
 " Just a new convenience motion attempt
 nnoremap <silent> * :call MvPrevLineStart()<cr>
-nnoremap <silent> ) :call MvLineStart()<cr>
-nnoremap <silent> ( :call MvNextLineStart()<cr>
+nnoremap <silent> ( :call MvLineStart()<cr>
+nnoremap <silent> ) :call MvNextLineStart()<cr>
 
 func! MvLineStart()
-  normal! j^
+  normal! ^
   let cw = expand('<cword>')
-  if cw == 'const' || cw == 'let'
+  if cw == 'const' || cw == 'export' || cw == 'val' || cw == 'def'
     normal! w
+    let cw = expand('<cword>')
+    if cw == 'const'
+      normal! w
+    endif
   endif
 endfunc
 
 func! MvNextLineStart()
-  normal! ^
+  normal! j^
   let cw = expand('<cword>')
-  if cw == 'const' || cw == 'let'
+  if cw == 'const' || cw == 'let' || cw == 'val' || cw == 'def'
     normal! w
   endif
 endfunc
@@ -724,8 +728,12 @@ endfunc
 func! MvPrevLineStart()
   normal! k^
   let cw = expand('<cword>')
-  if cw == 'const' || cw == 'let'
+  if cw == 'const' || cw == 'export' || cw == 'val' || cw == 'def'
     normal! w
+    let cw = expand('<cword>')
+    if cw == 'const'
+      normal! w
+    endif
   endif
 endfunc
 

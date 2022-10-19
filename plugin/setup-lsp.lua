@@ -632,28 +632,27 @@ inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
 -- ─   Scala                                            ──
 
 local api = vim.api
-local cmd = vim.cmd
+-- local cmd = vim.cmd
 
-local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  api.nvim_set_keymap(mode, lhs, rhs, options)
-end
+-- local function map(mode, lhs, rhs, opts)
+--   local options = { noremap = true }
+--   if opts then
+--     options = vim.tbl_extend("force", options, opts)
+--   end
+--   api.nvim_set_keymap(mode, lhs, rhs, options)
+-- end
 
 
 ----------------------------------
 -- OPTIONS -----------------------
 ----------------------------------
 -- global
-vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
-vim.opt_global.shortmess:remove("F"):append("c")
+-- vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
+-- vim.opt_global.shortmess:remove("F"):append("c")
 
 -- LSP mappings
 -- map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
--- -- map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
--- map("n", "gek", "<cmd>lua vim.lsp.buf.hover()<CR>")
+-- map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
 -- map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
 -- map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
 -- map("n", "gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
@@ -671,7 +670,8 @@ vim.opt_global.shortmess:remove("F"):append("c")
 -- map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
 -- map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
 
--- Example mappings for usage with nvim-dap. If you don't use that, you can skip these
+-- -- Example mappings for usage with nvim-dap. If you don't use that, you can
+-- -- skip these
 -- map("n", "<leader>dc", [[<cmd>lua require"dap".continue()<CR>]])
 -- map("n", "<leader>dr", [[<cmd>lua require"dap".repl.toggle()<CR>]])
 -- map("n", "<leader>dK", [[<cmd>lua require"dap.ui.widgets".hover()<CR>]])

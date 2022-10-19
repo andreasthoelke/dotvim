@@ -187,6 +187,19 @@ func! CreateInlineTestDec_js_function()
 endfunc
 
 
+func! CreateInlineTestDec_scala()
+  let hostLn = searchpos( 'def\s', 'cnb' )[0]
+  let hostDecName = matchstr( getline( hostLn ), 'def\s\zs\i*' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  let lineText = hostDecName . '(' . strInParan[0:-1] . ')'
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'val e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  call append( line('.') -1, lineText )
+  normal k0
+  call search('(')
+  normal l
+endfunc
 
 
 " e1_database4 = database4 (Just "eins") 123
@@ -208,7 +221,7 @@ endfunc
 
 func! GetNextTestDeclIndex( fn_linenum )
   " let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()
-  let lineNumPrevInlineTestDec = searchpos( '\v(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
+  let lineNumPrevInlineTestDec = searchpos( '\v(const\s|val\s|let\s)=[e|a]\d_', 'cnbW')[0]
   let thereIsAPrevTestDecl = lineNumPrevInlineTestDec > a:fn_linenum
   if thereIsAPrevTestDecl
     return 1 + eval( GetTestDeclIndex( lineNumPrevInlineTestDec ) )

@@ -78,6 +78,8 @@ func! FloatWin_FocusFirst()
       exec winnr . 'wincmd w'
     endif
   endfor
+  " This function will also jump the cursor into LSP hover float, which are 'modifiable off'.
+  set modifiable
 endfunc
 
 
