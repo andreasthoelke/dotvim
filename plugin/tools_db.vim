@@ -1,5 +1,5 @@
 
-
+" db-ui connections can be defined here: ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
 
 func! tools_db#bufferMaps()
   nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
@@ -43,6 +43,7 @@ let g:dbs = {
   \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',
   \ 'pets': 'mysql://root:PW@127.0.0.1:3306/pets',
   \ 'learn_dev': 'postgres:///learn_dev',
+  \ 'funcprog': 'postgres:///funcprog',
   \ 'todos_koa': 'mongodb://localhost:27017/todos_koa',
   \ 'pothos_prisma': 'sqlite:/Users/at/Documents/Architecture/examples/pothos/examples/prisma/prisma/dev.db',
   \ }

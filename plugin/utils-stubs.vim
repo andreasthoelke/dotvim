@@ -19,7 +19,7 @@ func! CreateJSDocComment_long()
   " let hostLn = searchpos( '^(export\s)?const\s\(e\d_\)\@!', 'cn' )[0]
   let hostLn = searchpos( '^\(export\s\(async\s\)\?\)\?const\s\(e\d_\)\@!', 'cn' )[0]
   let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze(\:)?\s' )
-  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
   " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   " echo paramNames
   " let fn_txt = len( [] ) == 0 ? hostDecName : hostDecName . ' ' . strInParan
@@ -32,7 +32,7 @@ endfunc
 func! CreateJSDocComment_short()
   let hostLn = searchpos( '^const\s\(e\d_\)\@!', 'cn' )[0]
   let hostDecName = matchstr( getline(hostLn ), '\vconst\s\zs\i*\ze\s' )
-  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
   " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   " echo paramNames
   " let fn_txt = len( [] ) == 0 ? hostDecName : hostDecName . ' ' . strInParan
@@ -85,7 +85,7 @@ func! CreateInlineTestDec_py()
   let func_ln = searchpos( '^def\s', 'cnb' )[0]
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
   let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
-  let strInParan = matchstr( getline(func_ln), '\v\(\zs.*\ze\)' )
+  let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   " echo "['first', 'sec', 'third']"[1:-2]
   let lineText = funcName . '(' . paramNames[1:-2] . ')'
@@ -111,10 +111,10 @@ func! CreateInlineTestDec_rescript ()
       let lineText = hostDecName
     else
       " let add = (a, b) => a + b
-      let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+      let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
       if strInParan == ''
         " let greetMore = name => {
-          let strInParan = matchstr( getline(hostLn ), '\v\=\zs.*\ze\=>' )
+          let strInParan = matchstr( getline(hostLn ), '\v\=\zs.{-}\ze\=>' )
         endif
 
         let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
@@ -175,7 +175,7 @@ endfunc
 func! CreateInlineTestDec_js_function()
   let hostLn = searchpos( 'function\s', 'cnb' )[0]
   let hostDecName = matchstr( getline( hostLn ), 'function\s\zs\i*' )
-  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
   let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
   let nextIndex = GetNextTestDeclIndex( hostLn )
@@ -188,9 +188,17 @@ endfunc
 
 
 func! CreateInlineTestDec_scala()
-  let hostLn = searchpos( 'def\s', 'cnb' )[0]
-  let hostDecName = matchstr( getline( hostLn ), 'def\s\zs\i*' )
-  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.*\ze\)' )
+  let hostLn1 = searchpos( 'def\s\w\(e\d_\)\@!', 'cnbW' )[0]
+  let hostLn2 = searchpos( '^val\s\(e\d_\)\@!', 'cnbW' )[0]
+  let hostLn3 = searchpos( '^object\s\(e\d_\)\@!', 'cnbW' )[0]
+
+  let hostLn = max( [hostLn1, hostLn2] )
+
+  let hostDecName = matchstr( getline( hostLn ), '\v(object|def|val)\s\zs\i*' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
+  let strInParan = substitute( strInParan, ':', ' =', 'g')
+  let strInParan = substitute( strInParan, 'String', '""', 'g')
+  let strInParan = substitute( strInParan, 'Int', '0', 'g')
   " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . strInParan[0:-1] . ')'
   let nextIndex = GetNextTestDeclIndex( hostLn )

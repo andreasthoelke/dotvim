@@ -102,7 +102,7 @@ let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do'
 " let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
 " Typescript and Purescript:
 let g:lineHotspotsPttn = MakeOrPttn( ['=', '=\>'] )
-let g:colonPttn = MakeOrPttn( ['\:\s', '-', '=', '\$'] )
+let g:colonPttn = MakeOrPttn( ['\:\s', '-', '=', 'then', 'else', '\$'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
@@ -122,6 +122,7 @@ endfunc
 " TODO make a local map for vim? -> this should probl use treesitter
 " NOW HERE: ~/.config/nvim/plugin/tools_rescript.vim#/nnoremap%20<silent><buffer>%20<c-n>
 
+" NOTE: These maps get overwritten by "tool_<languge>" buffer local maps!
 nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
 " nnoremap <silent> <c-n> :call vista#jump#NextTopLevel()<cr>
 func! TopLevBindingForw()
@@ -752,6 +753,10 @@ func! ColonForw()
   if chrs == '$('
     normal! ww
   endif
+  if chrs == 'if'
+    normal! w
+  endif
+
 endfunc
 
 func! ColonBackw()

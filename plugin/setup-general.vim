@@ -1437,9 +1437,9 @@ endfunction
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>oT :Vista!!<cr>
+nnoremap <leader>ot :Vista nvim_lsp<cr>
 " nnoremap <leader>ot :TagbarToggle<cr>
-nnoremap <leader>ot :SymbolsOutline<cr>
+nnoremap <leader>oT :SymbolsOutline<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>

@@ -590,7 +590,38 @@ in Chrome:
 nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 
-## Purs repl / Ghci/ Intero
+
+
+# Scala Printer
+
+## SBT support
+1. needs this printer file as Main
+    fpcourse/
+    src/main/scala/Main.scala
+
+`gew` `gee` this then namspace imports the indentif into Main/Printer
+
+2. start the sbt terminal with `space ro`
+
+`gei` does `runMain Printer`
+
+interactive programms can be seen in the running terminal
+
+## Scala-cli support
+
+1. needs this printer file as Printer.scala
+     /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/scala-cli-zio1/Printer.scala
+   in the same folder as the source file
+     /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/scala-cli-zio1/a_effects.scala
+
+`gew` `gee` again just imports the identif into the Printer.scala
+
+`gei` does `scala-cli .`
+`space gei` does `scala-cli .` in a new/temp terminal
+
+
+
+## (outdated) Purs repl / Ghci/ Intero
 
 leader io/l/k/h - intero open/load/kill/hide
 leader il - load just the current module
@@ -610,7 +641,10 @@ gel }/iI/ip - run multiple lines, e.g. imports
 currently off
 gel/c/C - show list of strings as lines
 'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
-ger - Curl send sting in line to localhost, show response
+
+ger - Curl send sting in line as an http request to localhost, show response
+~/.config/nvim/plugin/repl.vim#/func.%20WebserverRequestResponse.%20flags
+
 get/T - type hole. at cursor/ in do block (Todo: should not affect undo)
 leader cv - VirtualtextClear
 gen/N - runs an top-level val/function with no args in NodeJS.
@@ -1200,7 +1234,13 @@ echo json_decode( join( readfile("./package.json") ) ).scripts
 func! JsonConfKey( confFile, key )
 
 # Curl / http requests
+ger - Curl send sting in line as an http request to localhost, show response
+~/.config/nvim/plugin/repl.vim#/func.%20WebserverRequestResponse.%20flags
+
+or using lua plenary curl:
 ~/.config/nvim/notes/notes-lua-asyc-loop.md#/##%20Curl
+~/.config/nvim/lua/tools_external.lua#/--%20Curl
+
 but rather use ->
 ## Node axios
 ~/Documents/Server-Dev/b_tssetup/src/httptests.ts#/import%20http%20from

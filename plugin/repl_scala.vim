@@ -37,16 +37,26 @@ endfunc
 func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
   if len( lines )
-    if stridx( lines[0], "RESULT" ) >= 0
-      let resLines = [ lines[0][6:] ]
-      " let g:floatWin_win = FloatingSmallNew ( [ result[5:] ] )
-      " call FloatWin_FitWidthHeight()
-      silent let g:floatWin_win = FloatingSmallNew ( resLines )
+
+    let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
+    if len( resultVal )
+      silent let g:floatWin_win = FloatingSmallNew ( [resultVal] )
+      call ScalaSyntaxAdditions() 
       silent call FloatWin_FitWidthHeight()
       silent wincmd p
-
     endif
+
+    let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )
+    if len( errorTxt )
+      silent let g:floatWin_win = FloatingSmallNew ( [errorTxt] + lines )
+      call ScalaSyntaxAdditions() 
+      silent call FloatWin_FitWidthHeight()
+      silent wincmd p
+    endif
+
   endif
+
+  " call Scala_SyntaxInFloatWin()
 endfunc
 
 func! ScalaReplErrorCallback(job_id, data, event)
@@ -69,7 +79,8 @@ let g:ScalaReplCallbacks = {
       \ }
 
 func! ScalaReplRun()
-  call jobsend(g:ScalaReplID, "run\n" )
+  " call jobsend(g:ScalaReplID, "run\n" )
+  call jobsend(g:ScalaReplID, "runMain Printer\n" )
   " let g:floatWin_win = FloatingSmallNew([])
   " exec 'buffer' g:ScalaRepl_bufnr
   " call FloatWin_FitWidthHeight()
@@ -90,13 +101,16 @@ endfunc
 " - Forwards multi-line repl-outputs
 " - Splits a list of strings into lines
 " - Forwards other values
+" NOTE: not used!?
 func! ScalaReplSimpleResponseHandler( lines )
   " echo a:lines
   " return
   let l:lines = a:lines
   let l:lines = RemoveTermCodes( l:lines )
   let g:floatWin_win = FloatingSmallNew ( l:lines )
+
   call FloatWin_FitWidthHeight()
+  echoe 'done'
   return
 
   " Not sure why there is sometimes an additional one line return value.

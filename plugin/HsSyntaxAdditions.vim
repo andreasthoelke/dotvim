@@ -7,7 +7,7 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 
-au ag BufNewFile,BufRead        *.scala call ScalaSyntaxAdditions()
+au ag BufNewFile,BufRead        *.sc,*.scala call ScalaSyntaxAdditions()
 
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*ml call RescriptSyntaxAdditions()
@@ -294,16 +294,20 @@ func! RescriptSyntaxAdditions()
 "     ⊟  ⊡ | ⊖  ⊙ ▲
 
 " new unicode symbols
+" ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
+
+
 " « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟      e⃨
 "  ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ ⊍ ⊐ ⊔ ⊝ ⊟  ⋮ ⌇ ⌒  ⌔  ⌗ ⌘〈
 "  ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
 "  ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲   ➳  ➽  ⟀  ⟄
 "  ⌁  →  ⃯  ˃ ˪
 "  ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠃ ⠈ ⠁ ⠌     ﹚ ﹜ ⭡   ￪ ↑ ꜛ      ᐨ
-"  ⊝   ⊙  ⊖  ⊘ ⫞   ⊟  ⊡ | ⊖  ⊙
-"   ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  • ▪
+"  ☉⊙⊙◎⊖  ⊘ ⫞   ⊟  ⊡ | ⊖  ⊙
+"   ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 "   ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ✱ ❂ ❈
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳
+" Ɛ  𝑓ƒ ɱ ᙆ
 
 endfunc
 

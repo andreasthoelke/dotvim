@@ -1,26 +1,13 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 func! tools_scala#bufferMaps()
 
-  " tools_js#eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpression )
-  " nnoremap <silent><buffer> gel :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
-  " nnoremap <silent><buffer> gei :call tools_js#eval_line( line('.'), v:true, v:false, v:true )<cr>
-  " nnoremap <silent><buffer> geL :call tools_js#eval_line( line('.'), v:true, v:true, v:false )<cr>
-  " nnoremap <silent><buffer> geI :call tools_js#eval_line( line('.'), v:true, v:true, v:true )<cr>
-  " nnoremap <silent><buffer> <leader>gel :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
-  " nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:true )<cr>
-  " nnoremap <silent><buffer> <leader>geL :call tools_js#eval_line( line('.'), v:false, v:true, v:false )<cr>
-  " nnoremap <silent><buffer> <leader>geI :call tools_js#eval_line( line('.'), v:false, v:true, v:true )<cr>
-
-
-  nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
-
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( v:false )<cr>
-  nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( v:true )<cr>
-  nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>
-  nnoremap <silent><buffer>         geP :call Scala_RunPrinter_InTerm()<cr>
+  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( v:true )<cr>
 
-  " nnoremap <silent><buffer>         gei :call tools_js#eval_line( line('.'), v:true, v:false, v:false )<cr>
-  nnoremap <silent><buffer> <leader>gei :call tools_js#eval_line( line('.'), v:false, v:false, v:false )<cr>
+  nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>
+  nnoremap <silent><buffer>         gei :call Scala_RunPrinter()<cr>
+  nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinterInTerm()<cr>
+  " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
   nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
 
@@ -58,6 +45,15 @@ endfunc
 " - printer (run): packages/app/build/esm/runPrinter.js
 
 func! Scala_SetPrinterIdentif( forEffect )
+  let printerFilePath = expand('%:h') . '/Printer.scala'
+  if filereadable( printerFilePath )
+    call Scala_SetPrinterIdentif_ScalaCLI( a:forEffect )
+  else
+    call Scala_SetPrinterIdentif_SBT( a:forEffect )
+  endif
+endfunc
+
+func! Scala_SetPrinterIdentif_SBT( forEffect )
 
   let printerFilePath = 'src/main/scala/Main.scala'
   " is just the normal Main.scala for now
@@ -65,15 +61,23 @@ func! Scala_SetPrinterIdentif( forEffect )
   let packageName = split( getline(1), ' ' )[1]
   " this will get e.g. 'azio.abbcc'. it's independent from the file/folder - scala handles this.
 
-  let hostLn = searchpos( '^val\s', 'cnbW' )[0]
+  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
 
   call VirtualRadioLabel_lineNum( '«', hostLn )
 
+  " this just allows to use the simple gew map more often.
+  " let typeSign = matchstr( getline(hostLn), '\v(ZIO|Task|RIO|URIO|UIO|CAT)')
+  " if len( typeSign )
+  "   let forEffect = v:true
+  " else
+  "   let forEffect = a:forEffect
+  " endif
 
+  let forEffect = a:forEffect
 
   let importLine = "import " . packageName . "." . identif
-  if a:forEffect
+  if forEffect
     let bindingLine = "val printVal = " . identif
   else
     let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
@@ -86,31 +90,64 @@ func! Scala_SetPrinterIdentif( forEffect )
   call writefile( printerLines, printerFilePath )
 endfunc
 
-func! Scala_Identif_ParagExport()
-  let hostLn = searchpos( '^val\s', 'cnbW' )[0]
-  let hostDecName = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
+  let printerFilePath = expand('%:h') . '/Printer.scala'
+
+  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
   call VirtualRadioLabel_lineNum( '«', hostLn )
-  return hostDecName
+
+  let forEffect = a:forEffect
+
+  if forEffect
+    let bindingLine = "val printVal = " . identif
+  else
+    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
+  endif
+
+  let printerLines = readfile( printerFilePath, '\n' )
+  let printerLines[1] = bindingLine
+
+  call writefile( printerLines, printerFilePath )
 endfunc
 
 
+func! Scala_RunPrinter()
+  let printerFilePath = expand('%:h') . '/Printer.scala'
+  if !filereadable( printerFilePath )
+    " Using the running sbt repl session
+    call ScalaReplRun()
+    return
+  endif
 
-func! TsPlus_RunPrinter()
-  " node packages/app/build/esm/runPrinter.js
-  let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
-  echom printerRunnablePath
-  " call System_Float( 'node ' . printerRunnablePath )
-  " call System_Float( 'yarn build && node ' . printerRunnablePath )
-  " NOTE: there needs to be a build script in packagage json with "tsc -b tsconfig.json"
-  call System_Float( 'yarn build-all && node ' . printerRunnablePath )
+  " Use scala-cli
+  let cmd = 'scala-cli ' . expand('%:h')
+  let resLines = systemlist( cmd )
+  call Scala_showInFloat( resLines )
 endfunc
 
-func! TsPlus_RunPrinter_InTerm()
-  " node packages/app/build/esm/runPrinter.js
-  let printerRunnablePath = 'packages/' . g:TsPlusPrinter_packageName . '/build/esm/runPrinter.js'
-  " echom printerRunnablePath
-  " call System_Float( 'node ' . printerRunnablePath )
-  call TermOneShot( 'yarn build && node ' . printerRunnablePath )
+func! Scala_showInFloat( data )
+  let lines = RemoveTermCodes( a:data )
+
+  if !len( lines )
+    return
+  endif
+
+  " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
+
+  let result = functional#foldr( {line, accum -> accum . matchstr( line, '\v(RESULT|ERROR)\zs.*' ) }, "", lines )
+
+  silent let g:floatWin_win = FloatingSmallNew ( [result] )
+  call ScalaSyntaxAdditions() 
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfun
+
+
+func! Scala_RunPrinterInTerm()
+  let cmd = 'scala-cli ' . expand('%:h')
+  call TermOneShot( cmd )
 endfunc
 
 

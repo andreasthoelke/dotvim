@@ -498,11 +498,11 @@ endfunc
 
 func! JS_TopLevBindingForw()
   " normal! j
-  call search( '\v^(export|function|var|const|let)\s', 'W' )
+  call search( '\v^(export|enum|final|lazy|function|object|class|def|val|var|const|let)\s', 'W' )
 endfunc
 
 func! JS_TopLevBindingBackw()
-  call search( '\v^(export|function|var|const|let)\s', 'bW' )
+  call search( '\v^(export|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
   " normal! {
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc

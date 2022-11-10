@@ -5,18 +5,22 @@
 
 
 
-" nnoremap ger :call WebserverRequestResponse( '' )<cr>
+nnoremap ger :call WebserverRequestResponse( '' )<cr>
 " nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
 " nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
 " nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
 func! WebserverRequestResponse( flags )
-  let urlExtension = GetStringInQuotesFromLine( line('.') )
-  let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension
+  " let urlExtension = GetStringInQuotesFromLine( line('.') )
+  let urlExtension = GetLineFromCursor()
+  " let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension
+  let l:cmd = "curl " . a:flags . urlExtension
   let l:resultLines = split( system( l:cmd ), '\n' )
-  call FloatWinAndVirtText( l:resultLines[3:] )
+  let g:floatWin_win = FloatingSmallNew ( l:resultLines[3:] )
+  call FloatWin_FitWidthHeight()
+  " call FloatWinAndVirtText( l:resultLines )
   " call append( line('.'), l:resultLines )
 endfunc
-" !curl http://localhost:8000
+" !curl http://localhost:8080/up
 " req "abc"
 
 
