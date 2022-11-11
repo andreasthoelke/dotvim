@@ -21,7 +21,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
 
-  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+  nnoremap <silent><buffer>         gek :call Scala_LspTopLevelHover()<cr>
+  nnoremap <silent><buffer> <leader>gek :lua vim.lsp.buf.hover()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
@@ -32,6 +33,17 @@ func! tools_scala#bufferMaps()
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
+endfunc
+
+
+func! Scala_LspTopLevelHover()
+  let [oLine, oCol] = getpos('.')[1:2]
+  normal ^w
+  if expand('<cword>') =~ '\v(val|def)'
+    normal w
+  endif
+  lua vim.lsp.buf.hover()
+  call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
 " NOTE: deleted several JS motions and commands. i might want to copy
