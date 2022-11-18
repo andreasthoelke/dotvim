@@ -119,8 +119,8 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 
 Plug 'nanotee/sqls.nvim'
 
-Plug 'memgraph/cypher.vim'
-Plug 'neo4j-contrib/cypher-vim-syntax'
+" Plug 'memgraph/cypher.vim'
+" Plug 'neo4j-contrib/cypher-vim-syntax'
 Plug 'edgedb/edgedb-vim'
 
 " Git: --------------------------------------------------
@@ -365,6 +365,7 @@ Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " Plug 'plasticboy/vim-markdown'
 
 Plug 'jszakmeister/markdown2ctags'
+" NOTE: I modified the souce to stop http link highlighting: ~/.config/nvim/plugged/rel.vim/plugin/rel.vim#/au%20BufWinEnter%20*
 Plug 'aklt/rel.vim'
 
 

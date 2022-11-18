@@ -103,6 +103,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'match' conceal cchar=⌋
 
   syntax match Normal 'map' conceal cchar=➚
+  syntax match Normal 'as\ze(' conceal cchar=ꜜ
 
   syntax match Normal 'self' conceal cchar=∝
   syntax match Normal 'override' conceal cchar=≡
@@ -130,6 +131,9 @@ func! ScalaSyntaxAdditions ()
 
   syntax match InlineTestDeclaration '\v^val\se\d_\i{-}\s\=' conceal cchar=‥
   syntax match InlineTestDeclaration '\v^val\sa\d_\i{-}\s\=' conceal cchar=…
+
+  syntax match Normal '\v\/\/\>\susing\slib\s' conceal
+
 
 
   " Hide comment character at beginning of line

@@ -9,7 +9,14 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinterInTerm()<cr>
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
-  nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
+  " setting a new http app auto restarts the server
+  nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>:call Scala_ServerRestart()<cr>
+  " after changing the http app, this compiles and restarts the server *and* refetches the previous http client request
+  " refetching is now triggered in the server callback
+  nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>
+  " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
+  " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
+  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest()<cr>
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -21,8 +28,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
 
-  nnoremap <silent><buffer>         gek :call Scala_LspTopLevelHover()<cr>
-  nnoremap <silent><buffer> <leader>gek :lua vim.lsp.buf.hover()<cr>
+  nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
+  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
@@ -124,6 +131,25 @@ func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
   call writefile( printerLines, printerFilePath )
 endfunc
 
+func! Scala_SetServerApp_ScalaCLI()
+  let printerFilePath = expand('%:h') . '/PreviewServer.scala'
+
+  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  call VirtualRadioLabel_lineNum( '✱', hostLn )
+
+  let bindingLine = "val previewApp = " . identif
+
+  let printerLines = readfile( printerFilePath, '\n' )
+  let printerLines[1] = bindingLine
+
+  call writefile( printerLines, printerFilePath )
+
+endfunc
+
+
+
 
 func! Scala_RunPrinter()
   let printerFilePath = expand('%:h') . '/Printer.scala'
@@ -134,9 +160,25 @@ func! Scala_RunPrinter()
   endif
 
   " Use scala-cli
-  let cmd = 'scala-cli ' . expand('%:h')
+  " let cmd = 'scala-cli ' . expand('%:h')
+  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
   let resLines = systemlist( cmd )
   call Scala_showInFloat( resLines )
+endfunc
+
+func! Scala_filterCliLine( line, accum )
+  if a:line =~ '\v(compil)'
+    return a:accum
+  else
+
+    if a:line =~ '\v(RESULT|ERROR)'
+      let filteredLineStr = matchstr( a:line, '\v(RESULT|ERROR)\zs.*' )
+    else
+      let filteredLineStr = a:line
+    endif
+    return add( a:accum, filteredLineStr )
+
+  endif
 endfunc
 
 func! Scala_showInFloat( data )
@@ -148,9 +190,10 @@ func! Scala_showInFloat( data )
 
   " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
 
-  let result = functional#foldr( {line, accum -> accum . matchstr( line, '\v(RESULT|ERROR)\zs.*' ) }, "", lines )
+  " let result = functional#foldr( {line, accum -> accum . matchstr( line, '\v(RESULT|ERROR)\zs.*' ) }, "", lines )
+  let result = functional#foldr( function("Scala_filterCliLine") , [], lines )
 
-  silent let g:floatWin_win = FloatingSmallNew ( [result] )
+  silent let g:floatWin_win = FloatingSmallNew ( result )
   call ScalaSyntaxAdditions() 
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
@@ -158,9 +201,86 @@ endfun
 
 
 func! Scala_RunPrinterInTerm()
-  let cmd = 'scala-cli ' . expand('%:h')
+  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
   call TermOneShot( cmd )
 endfunc
+" scala-cli . --main-class PreviewServer
+
+
+" ─   " PreviewServer                                   ──
+" async running process scala-cli . --main-class PreviewServer
+" can be started in term (to debug) or as job (invisible)
+" no need for callback handlers
+" can be jobstop'ed and restarted with new compiled scala-cli . --main-class PreviewServer
+
+let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer"
+
+let g:ScalaServerCallbacks = {
+      \ 'on_stdout': function('ScalaServerMainCallback'),
+      \ 'on_stderr': function('ScalaReplErrorCallback'),
+      \ 'on_exit': function('ScalaReplExitCallback')
+      \ }
+
+func! Scala_ServerRestart ()
+  if !exists('g:Scala_ServerID')
+    call Scala_ServerStart()
+  else
+    call Scala_ServerStop()
+    call Scala_ServerStart()
+  endif
+endfunc
+
+
+func! Scala_ServerStart ()
+  if exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is already running' ) | return | endif
+  silent let g:Scala_ServerID = jobstart( g:Scala_ServerCmd, g:ScalaServerCallbacks )
+endfunc
+
+func! Scala_ServerStartT ()
+  if exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is already running' ) | return | endif
+  exec "8new"
+  let g:Scala_ServerID = termopen( g:Scala_ServerCmd )
+endfunc
+
+
+func! Scala_ServerStop ()
+  if !exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is not running' ) | return | endif
+  silent call jobstop( g:Scala_ServerID )
+  unlet g:Scala_ServerID
+endfunc
+
+
+func! ScalaServerMainCallback(job_id, data, event)
+  " call Scala_ServerClientRequest_rerun()
+  call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 1000 )
+  return
+  let lines = RemoveTermCodes( a:data )
+  if !len( lines )
+    return
+  endif
+  silent let g:floatWin_win = FloatingSmallNew ( lines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+func! Scala_ServerClientRequest()
+  let urlExtension = GetLineFromCursor()
+  let g:scala_serverRequestCmd = "curl " . "http://localhost:8002/" . urlExtension
+  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+  silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+func! Scala_ServerClientRequest_rerun()
+  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+  silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+
 
 
 

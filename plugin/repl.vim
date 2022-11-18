@@ -5,7 +5,8 @@
 
 
 
-nnoremap ger :call WebserverRequestResponse( '' )<cr>
+nnoremap <silent> ger         :call WebserverRequestResponse( '' )<cr>
+nnoremap <silent> <leader>ger :call WebserverRequestResponseTerm( '' )<cr>
 " nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
 " nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
 " nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
@@ -15,14 +16,21 @@ func! WebserverRequestResponse( flags )
   " let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension
   let l:cmd = "curl " . a:flags . urlExtension
   let l:resultLines = split( system( l:cmd ), '\n' )
-  let g:floatWin_win = FloatingSmallNew ( l:resultLines[3:] )
-  call FloatWin_FitWidthHeight()
-  " call FloatWinAndVirtText( l:resultLines )
-  " call append( line('.'), l:resultLines )
+  silent let g:floatWin_win = FloatingSmallNew ( l:resultLines[3:] )
+  " call ScalaSyntaxAdditions() 
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
 endfunc
 " !curl http://localhost:8080/up
 " req "abc"
 
+func! WebserverRequestResponseTerm( flags )
+  let urlExtension = GetLineFromCursor()
+  let cmd = "curl " . a:flags . urlExtension
+  call TermOneShot( cmd )
+endfunc
+" http://localhost:8080/download/stream
+" /Users/at/Documents/Server-Dev/effect-ts_zio/zio-examples/zio-quickstart-restful-webservice/src/main/scala/dev/zio/quickstart/download/
 
 "Note: when is a Node js call useful?
 nnoremap geN :call NodeJSRunFunction( expand('<cword>'), '' )<cr>

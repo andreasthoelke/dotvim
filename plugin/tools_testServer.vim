@@ -1,4 +1,5 @@
 
+" temp disabled! to use the gs.. maps for local (scala) preview server
 
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md#/#%20Test%20Server
@@ -66,7 +67,8 @@ func! T_GetSnapshotNameFromFolderPath( path )
 endfunc
 
 
-nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+" temp disabled
+" nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
 func! TestServerCmd ( chosenObj )
   exec a:chosenObj.cmd

@@ -102,7 +102,8 @@ let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do'
 " let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
 " Typescript and Purescript:
 let g:lineHotspotsPttn = MakeOrPttn( ['=', '=\>'] )
-let g:colonPttn = MakeOrPttn( ['\:\s', '-', '=', 'then', 'else', '\$'] )
+" Scala
+let g:colonPttn = MakeOrPttn( ['\:\s', '*>', '-', '=', 'then', 'else', '\$'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
