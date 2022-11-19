@@ -3,7 +3,7 @@
 
 
 
-
+" https://httpie.io/docs/cli/examples
 
 nnoremap <silent> ger         :call WebserverRequestResponse( '' )<cr>
 nnoremap <silent> <leader>ger :call WebserverRequestResponseTerm( '' )<cr>
@@ -23,6 +23,10 @@ func! WebserverRequestResponse( flags )
 endfunc
 " !curl http://localhost:8080/up
 " req "abc"
+" curl -X POST http://localhost:8002/owls
+" echo system( "http GET localhost:8002/zwei/aabb" )
+" NOTE: http --help  is nice
+
 
 func! WebserverRequestResponseTerm( flags )
   let urlExtension = GetLineFromCursor()

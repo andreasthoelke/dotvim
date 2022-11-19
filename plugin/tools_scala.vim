@@ -9,14 +9,16 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinterInTerm()<cr>
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
-  " setting a new http app auto restarts the server
-  nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>:call Scala_ServerRestart()<cr>
+  nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
   " after changing the http app, this compiles and restarts the server *and* refetches the previous http client request
   " refetching is now triggered in the server callback
   nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>
+  nnoremap <silent><buffer>         <leader>gsr :call Scala_ServerRestartTerm()<cr>
+  nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
   nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest()<cr>
+  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest2()<cr>
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -213,14 +215,6 @@ endfunc
 " no need for callback handlers
 " can be jobstop'ed and restarted with new compiled scala-cli . --main-class PreviewServer
 
-let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer"
-
-let g:ScalaServerCallbacks = {
-      \ 'on_stdout': function('ScalaServerMainCallback'),
-      \ 'on_stderr': function('ScalaReplErrorCallback'),
-      \ 'on_exit': function('ScalaReplExitCallback')
-      \ }
-
 func! Scala_ServerRestart ()
   if !exists('g:Scala_ServerID')
     call Scala_ServerStart()
@@ -229,6 +223,38 @@ func! Scala_ServerRestart ()
     call Scala_ServerStart()
   endif
 endfunc
+
+func! Scala_ServerRestartTerm ()
+  if !exists('g:Scala_ServerID')
+    call Scala_ServerStartT()
+  else
+    call Scala_ServerStop()
+    call Scala_ServerStartT()
+  endif
+endfunc
+
+
+func! ScalaServerMainCallback(job_id, data, event)
+  " call Scala_ServerClientRequest_rerun()
+  " call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 1000 )
+  return
+  let lines = RemoveTermCodes( a:data )
+  if !len( lines )
+    return
+  endif
+  silent let g:floatWin_win = FloatingSmallNew ( lines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer"
+
+let g:ScalaServerCallbacks = {
+      \ 'on_stdout': function('ScalaServerMainCallback'),
+      \ 'on_stderr': function('ScalaReplErrorCallback'),
+      \ 'on_exit': function('ScalaReplExitCallback')
+      \ }
 
 
 func! Scala_ServerStart ()
@@ -240,6 +266,7 @@ func! Scala_ServerStartT ()
   if exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is already running' ) | return | endif
   exec "8new"
   let g:Scala_ServerID = termopen( g:Scala_ServerCmd )
+  silent wincmd p
 endfunc
 
 
@@ -250,19 +277,6 @@ func! Scala_ServerStop ()
 endfunc
 
 
-func! ScalaServerMainCallback(job_id, data, event)
-  " call Scala_ServerClientRequest_rerun()
-  call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 1000 )
-  return
-  let lines = RemoveTermCodes( a:data )
-  if !len( lines )
-    return
-  endif
-  silent let g:floatWin_win = FloatingSmallNew ( lines )
-  silent call FloatWin_FitWidthHeight()
-  silent wincmd p
-endfunc
-
 func! Scala_ServerClientRequest()
   let urlExtension = GetLineFromCursor()
   let g:scala_serverRequestCmd = "curl " . "http://localhost:8002/" . urlExtension
@@ -271,6 +285,16 @@ func! Scala_ServerClientRequest()
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc
+
+func! Scala_ServerClientRequest2()
+  let urlExtension = GetLineFromCursor()
+  let g:scala_serverRequestCmd = "http " . "GET :8002/" . urlExtension
+  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+  silent let g:floatWin_win = FloatingSmallNew ( resultLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
 
 func! Scala_ServerClientRequest_rerun()
   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
