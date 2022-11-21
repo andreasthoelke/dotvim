@@ -687,7 +687,7 @@ func! ShowList_AsLines_Aligned( replReturnedLines ) " ■
     " if len( s:async_alignFnExpr )
     "   call FloatWin_do( 'call ' . s:async_alignFnExpr )
     " endif
-  elseif
+  else
     " Maybe an error?
     call FloatWin_ShowLines( replReturnedLines )
   endif

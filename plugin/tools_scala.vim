@@ -17,8 +17,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
-  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest()<cr>
-  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest2()<cr>
+  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('')<cr>
+  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest2('')<cr>
+  nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( '-X POST' )<cr>
+  nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest2( 'POST' )<cr>
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -34,8 +36,11 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
-  nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer>         ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
   nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer>         geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer>         ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer>         ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
@@ -163,7 +168,7 @@ func! Scala_RunPrinter()
 
   " Use scala-cli
   " let cmd = 'scala-cli ' . expand('%:h')
-  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
+  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer --class-path resources'
   let resLines = systemlist( cmd )
   call Scala_showInFloat( resLines )
 endfunc
@@ -248,7 +253,7 @@ func! ScalaServerMainCallback(job_id, data, event)
 endfunc
 
 
-let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer"
+let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
 
 let g:ScalaServerCallbacks = {
       \ 'on_stdout': function('ScalaServerMainCallback'),
@@ -277,28 +282,35 @@ func! Scala_ServerStop ()
 endfunc
 
 
-func! Scala_ServerClientRequest()
+func! Scala_ServerClientRequest( args )
   let urlExtension = GetLineFromCursor()
-  let g:scala_serverRequestCmd = "curl " . "http://localhost:8002/" . urlExtension
+  let g:scala_serverRequestCmd = "curl " . a:args . "http://localhost:8002/" . urlExtension
   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
   silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc
 
-func! Scala_ServerClientRequest2()
-  let urlExtension = GetLineFromCursor()
-  let g:scala_serverRequestCmd = "http " . "GET :8002/" . urlExtension
+func! Scala_ServerClientRequest2( args )
+  if GetLineFromCursor() =~ '\v^(val|\/\/)'
+    normal w
+  endif
+  let urlExtension = GetLineFromCursor() 
+  let urlExtension = shellescape( urlExtension, 1)
+  let g:scala_serverRequestCmd = "http " . a:args . " :8002/" . urlExtension . " --ignore-stdin"
   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
   silent let g:floatWin_win = FloatingSmallNew ( resultLines )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc
+" http --help
+" echo system( "http localhost:8002/fruits/a eins=zwei --ignore-stdin" )
+" echo system( "curl -X POST localhost:8002/fruits/a --raw eins=zwei" )
 
 
 func! Scala_ServerClientRequest_rerun()
   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
-  silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
+  silent let g:floatWin_win = FloatingSmallNew ( resultLines )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc

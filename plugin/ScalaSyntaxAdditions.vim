@@ -75,19 +75,37 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal '\vfor\ze(\W|\_$)' conceal cchar=⊃
   syntax match Normal 'yield' conceal cchar=⊂
+  syntax match Normal '>>=' conceal cchar=⫦
+  " andThen
+  syntax match Normal '>>>' conceal cchar=↣
+  " compose
+  syntax match Normal '<<<' conceal cchar=∘
 
-  syntax match Normal 'ZIO\ze\[' conceal cchar=ᴱ
+  " syntax match Normal 'ZIO\ze\[' conceal cchar=ᴱ
+  syntax match Normal 'ZIO' conceal cchar=ᴱ
   syntax match Normal 'UIO\ze\[' conceal cchar=ᴱ
   syntax match Normal 'IO\ze\[' conceal cchar=ᴱ
   syntax match Normal 'ZIO\.' conceal cchar=⁝
   syntax match Normal 'ZIO\.\$\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
-  syntax match Normal 'collect' conceal cchar=≚
+  syntax match Normal 'collect\ze\W' conceal cchar=≚
+  syntax match Normal 'collect\zeZ' conceal cchar=≚
   " syntax match Normal 'collect' conceal cchar=ꜛ
+  syntax match Normal 'Any' conceal cchar=װ
+  syntax match Normal 'Nothing' conceal cchar=╌
+  syntax match Normal 'Error' conceal cchar=⊖
+  syntax match Normal 'Http' conceal cchar=ʜ
+  syntax match Normal 'App' conceal cchar=≡
+  syntax match Normal 'Method\.' conceal cchar=⁝
+  syntax match Normal 'Request' conceal cchar=≻
+  syntax match Normal 'Response' conceal cchar=≺
+  syntax match Normal 'Random' conceal cchar=⌘
 
   syntax match Normal 'Exception' conceal cchar=◌
   " syntax match Normal 'IO\zeException' conceal cchar=⫠
   syntax match Normal 'IOException' conceal cchar=⊝
+
+  syntax match Normal '"""' conceal cchar=❞
 
   " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳ 
   syntax match Normal 'orElse' conceal cchar=◇
@@ -103,6 +121,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'match' conceal cchar=⌋
 
   syntax match Normal 'map' conceal cchar=➚
+  syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal 'as\ze(' conceal cchar=ꜜ
 
   syntax match Normal 'self' conceal cchar=∝

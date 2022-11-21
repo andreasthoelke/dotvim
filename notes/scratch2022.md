@@ -1,5 +1,9 @@
 
-
+# Scala references with Trouble
+ged  - show workspace errors
+ge]/[ - next/prev error
+ger   - show references of symbol under cursor
+]q [q - next/prev reference in workspace
 
 # Scala Printer
 
