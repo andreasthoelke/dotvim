@@ -1134,6 +1134,26 @@ ls -l | fzf | pbcopy
 
 # Git
 
+leader oG/g   - open git files list <c-a> to add/stage file
+l leader gS   - git status
+l leader gc/C - git commit staged / commit all changes
+leader ga/A   - Dirvish_git_add( path ) / unstage
+
+## Git process
+git init
+touch .gitignore
+echo .metals/ >> .gitignore
+echo .scala-build/ >> .gitignore
+git add *
+(check with leader oG)
+git commit -m 'initial commit'
+git status
+(or leader leader gS)
+Dirvish_git_add( path )
+
+
+
+
 notes/notes-git.md
 
 # degit

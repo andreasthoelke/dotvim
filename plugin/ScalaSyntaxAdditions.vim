@@ -49,7 +49,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal ")\zs:" conceal cchar=˃
   " When the type collon is the last char e.g. in enum defs
   syntax match Normal "\v:\ze$" conceal
-  syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
+  " syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
 
   syntax match Normal "^val\s" conceal
   syntax match Normal "\s\zsval\s" conceal
@@ -80,6 +80,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '>>>' conceal cchar=↣
   " compose
   syntax match Normal '<<<' conceal cchar=∘
+  syntax match Normal 'compose' conceal cchar=∘
 
   " syntax match Normal 'ZIO\ze\[' conceal cchar=ᴱ
   syntax match Normal 'ZIO' conceal cchar=ᴱ
@@ -90,16 +91,20 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'flatMap' conceal cchar=↣
   syntax match Normal 'collect\ze\W' conceal cchar=≚
   syntax match Normal 'collect\zeZ' conceal cchar=≚
+  syntax match Normal 'collect\zeH' conceal cchar=≚
   " syntax match Normal 'collect' conceal cchar=ꜛ
   syntax match Normal 'Any' conceal cchar=װ
   syntax match Normal 'Nothing' conceal cchar=╌
   syntax match Normal 'Error' conceal cchar=⊖
+  syntax match Normal 'Throwable' conceal cchar=⊖
   syntax match Normal 'Http' conceal cchar=ʜ
   syntax match Normal 'App' conceal cchar=≡
+  syntax match Normal 'ZIO.service' conceal cchar=⊟
   syntax match Normal 'Method\.' conceal cchar=⁝
   syntax match Normal 'Request' conceal cchar=≻
   syntax match Normal 'Response' conceal cchar=≺
   syntax match Normal 'Random' conceal cchar=⌘
+  syntax match Normal 'extends' conceal cchar=⟔
 
   syntax match Normal 'Exception' conceal cchar=◌
   " syntax match Normal 'IO\zeException' conceal cchar=⫠
@@ -125,7 +130,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'as\ze(' conceal cchar=ꜜ
 
   syntax match Normal 'self' conceal cchar=∝
-  syntax match Normal 'override' conceal cchar=≡
+  syntax match Normal 'override' conceal cchar=⟑
   syntax match Normal 'lazy' conceal cchar=~
   syntax match Normal 'final' conceal cchar=.
   syntax match Normal 'sealed' conceal cchar=.

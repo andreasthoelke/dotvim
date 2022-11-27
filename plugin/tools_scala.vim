@@ -17,10 +17,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
-  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('')<cr>
-  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest2('')<cr>
-  nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( '-X POST' )<cr>
-  nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest2( 'POST' )<cr>
+  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
+  nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
+  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
+  nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -156,6 +156,8 @@ func! Scala_SetServerApp_ScalaCLI()
 endfunc
 
 
+let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
+let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources"
 
 
 func! Scala_RunPrinter()
@@ -168,19 +170,23 @@ func! Scala_RunPrinter()
 
   " Use scala-cli
   " let cmd = 'scala-cli ' . expand('%:h')
-  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer --class-path resources'
+  " let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer --class-path resources'
+  let cmd = g:Scala_PrinterCmd
   let resLines = systemlist( cmd )
   call Scala_showInFloat( resLines )
 endfunc
 
 func! Scala_filterCliLine( line, accum )
-  if a:line =~ '\v(compil)'
+  " filter all lines that contain these words:
+  if a:line =~ '\v(compil|warn)'
     return a:accum
   else
 
     if a:line =~ '\v(RESULT|ERROR)'
+      " clean up / select from all lines that contain these words:
       let filteredLineStr = matchstr( a:line, '\v(RESULT|ERROR)\zs.*' )
     else
+      " keep all other lines as they are!
       let filteredLineStr = a:line
     endif
     return add( a:accum, filteredLineStr )
@@ -208,7 +214,8 @@ endfun
 
 
 func! Scala_RunPrinterInTerm()
-  let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
+  " let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
+  let cmd = g:Scala_PrinterCmd
   call TermOneShot( cmd )
 endfunc
 " scala-cli . --main-class PreviewServer
@@ -253,8 +260,6 @@ func! ScalaServerMainCallback(job_id, data, event)
 endfunc
 
 
-let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
-
 let g:ScalaServerCallbacks = {
       \ 'on_stdout': function('ScalaServerMainCallback'),
       \ 'on_stderr': function('ScalaReplErrorCallback'),
@@ -282,29 +287,34 @@ func! Scala_ServerStop ()
 endfunc
 
 
-func! Scala_ServerClientRequest( args )
-  let urlExtension = GetLineFromCursor()
-  let g:scala_serverRequestCmd = "curl " . a:args . "http://localhost:8002/" . urlExtension
-  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
-  silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
-  silent call FloatWin_FitWidthHeight()
-  silent wincmd p
-endfunc
+" func! Scala_ServerClientRequest( args )
+"   let urlExtension = GetLineFromCursor()
+"   let g:scala_serverRequestCmd = "curl " . a:args . "http://localhost:8002/" . urlExtension
+"   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+"   silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
+"   silent call FloatWin_FitWidthHeight()
+"   silent wincmd p
+" endfunc
 
-func! Scala_ServerClientRequest2( args )
+func! Scala_ServerClientRequest( args, mode )
   if GetLineFromCursor() =~ '\v^(val|\/\/)'
     normal w
   endif
   let urlExtension = GetLineFromCursor() 
-  let urlExtension = shellescape( urlExtension, 1)
-  let g:scala_serverRequestCmd = "http " . a:args . " :8002/" . urlExtension . " --ignore-stdin"
-  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
-  silent let g:floatWin_win = FloatingSmallNew ( resultLines )
-  silent call FloatWin_FitWidthHeight()
+  " let urlExtension = shellescape( urlExtension, 1)
+  let g:scala_serverRequestCmd = "http " . a:args . " :8002/" . urlExtension . " --ignore-stdin --stream"
+  if a:mode == 'term'
+    call TermOneShot( g:scala_serverRequestCmd )
+  else
+    let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+    silent let g:floatWin_win = FloatingSmallNew ( resultLines )
+    silent call FloatWin_FitWidthHeight()
+  endif
   silent wincmd p
 endfunc
 " http --help
 " echo system( "http localhost:8002/fruits/a eins=zwei --ignore-stdin" )
+" echo system( "http localhost:8002/users name=zwei age=44 --ignore-stdin" )
 " echo system( "curl -X POST localhost:8002/fruits/a --raw eins=zwei" )
 
 
