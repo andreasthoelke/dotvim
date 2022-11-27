@@ -115,8 +115,12 @@ nnoremap <leader><leader>gl :FzfCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 
+
+" NOTE: function! Dirvish_git_add( path )
+" ~/.config/nvim/plugin/file-manage.vim#/function.%20Dirvish_git_add.%20path
+
 " nnoremap <leader><leader>ga :FzfPreviewGitActions<cr>
-nnoremap <leader><leader>ga :CocCommand fzf-preview.GitActions<cr>
+nnoremap <leader>,ga :CocCommand fzf-preview.GitActions<cr>
 " nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
 nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
 

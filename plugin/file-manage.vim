@@ -273,7 +273,7 @@ augroup END
 function! g:DovishDelete(target) abort
   return 'del ' . a:target
 endfunction
-
+" https://github.com/roginfarrer/vim-dirvish-dovish
 
 
 " TODO: i tried to overwrite dirvishes custom search mapping here. Instead i've now just commented
@@ -293,6 +293,20 @@ let g:dirvish_git_indicators = {
       \ 'Unknown'   : '?'
       \ }
 " (btw, nice unicode symbols)
+
+
+nnoremap <silent> <leader>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
+nnoremap <silent> <leader>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>
+
+function! Dirvish_git_add( path )
+  call system( "git add " . a:path )
+  call ReloadKeepView()
+endfunc
+
+function! Dirvish_git_unstage( path )
+  call system( "git reset -- " . a:path )
+  call ReloadKeepView()
+endfunc
 
 " nnoremap _ :call LeftFloater()<cr>
 
