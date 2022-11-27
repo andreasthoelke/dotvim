@@ -25,7 +25,8 @@ nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
-nnoremap <leader><leader>gC :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 " Issue: this does not show the confirmation message in the float window:
 xnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 " git push:
@@ -59,8 +60,13 @@ func! GitCommitOverload( ... )
   call GitCommit( message )
 endfunc
 
-func! GitCommitCmd( commitMessage )
+func! GitCommitAllCmd( commitMessage )
   let cmd = 'git commit -a -m "' . a:commitMessage . '"'
+  return cmd
+endfunc
+
+func! GitCommitCmd( commitMessage )
+  let cmd = 'git commit -m "' . a:commitMessage . '"'
   return cmd
 endfunc
 
