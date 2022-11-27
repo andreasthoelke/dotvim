@@ -241,26 +241,39 @@ hi! def link TSFunction Function
 " hi! def link TSFunction SpGreen52
 " hi! def link TSFunction fnWireframe
 " hi! def link TSFunction hsTopLevelBind
-hi! def link TSConstant CommentMinus
-hi! def link TSMethod purescriptRecordKeys
-hi! def link TSProperty purescriptConstructor
-hi! def link TSParameter purescriptIdentifier
-hi! def link TSTagAttribute purescriptClasses
-hi! def link TSVariable purescriptFunctionDeclStart
+hi! def link @constant CommentMinus
+hi! def link @method purescriptRecordKeys
+hi! def link @property purescriptConstructor
+hi! def link @parameter purescriptIdentifier
+" hi! def link TSTagAttribute purescriptClasses
+" hi! def link TSVariable purescriptFunctionDeclStart
+hi! def link @variable purescriptFunctionDeclStart
+hi! def link @field purescriptFunctionDeclStart
+hi! def link @include @operator
+hi! def link @type Type
+" hi! def link @constant @operator
 
-hi! def link TSKeyword CommentMinus
-hi! def link TSTagDelimiter CommentMinus
-hi! def link TSPunctBracket CommentMinus
-hi! def link TSPunctDelimiter CommentMinus
+hi! def link @keyword CommentMinus
+" hi! def link TSTagDelimiter CommentMinus
+" hi! def link TSPunctBracket CommentMinus
+hi! def link @punctuation CommentMinus
+hi! def link @namespace CommentMinus
+" hi! def link TSPunctDelimiter CommentMinus
 " hi! def link TSVariable purescriptRecordKeys
 " hi! def link TSConstructor purescriptFunction
 " hi! def link TSTag purescriptIdentifier
 hi! def link pythonAttribute purescriptRecordKeys
 
+hi! def link @function.macro @constant.macro
+
 " purescriptType > Type
 " hi! Type guifg=#76E0D9 "middle blue"
 " hi! Type guifg=#6DC2BC "middle blue"
-hi! Type guifg=#548F84
+" hi! Type guifg=#548F84
+" hi! Type guifg=#467068
+hi! Type guifg=#3C6C67
+" hi! Type guifg=#47796E
+" hi! Type guifg=#467466
 " hi! hsTypeComment guifg=#45837F "Types in comments - toned down: brightness: 88 -> 51
 hi! link hsTypeComment Comment
 " hi! link hsForall Comment
@@ -505,7 +518,7 @@ hi Normal          guifg=#3F5C66 guibg=#121416
 hi Comment         guifg=#344B53
 hi CommentMinus    guifg=#273A40
 hi CommentMinusMinus guifg=#1D2B2F
-hi CommentPlus     guifg=#38595E
+" hi CommentPlus     guifg=#38595E
 " hi! ConcealOne  guifg=#2D505E
 " This is now used for all concealed cchars
 hi! ConcealOne  guifg=#2A4651

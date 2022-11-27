@@ -1,4 +1,7 @@
 
+leader od  - open dirvish in float!
+,,sr  - search in repo (previously leader gsr)
+
 # Scala references with Trouble
 ged  - show workspace errors
 ge]/[ - next/prev error
@@ -33,12 +36,20 @@ interactive programms can be seen in the running terminal
 `space gei` does `scala-cli .` in a new/temp terminal
 
 
+## Telescope useful maps
+leader>ts Telescope sessions<cr>
+> finding a git repo on disk!
+leader>tr Telescope repo list layout_strategy=vertical<cr>
+leader>tp Telescope project<cr>
+leader>ff Telescope find_files<cr>
+leader>fo Telescope oldfiles<cr>
+leader>fg Telescope live_grep<cr>
+leader>fb Telescope buffers<cr>
+leader>fh Telescope help_tags<cr>
 
-
-npx vite
-http://localhost:3000
-http://localhost:4040/graphql
-npx rescript build -w
+### Telescope project maps
+c  - create
+~/.config/nvim/help.md#/###%20telescope%20project
 
 Todos:
 ~/.config/nvim/help.md#/###%20TODO.%20nvim-treesitter-rescript

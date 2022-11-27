@@ -5,10 +5,13 @@ nnoremap <leader>te :Telescope
 nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
+" NOTE: these map  ~/.config/nvim/help.md#/###%20telescope%20project
+nnoremap <leader>th <cmd>Telescope highlights<cr>
+nnoremap <leader>tH <cmd>TSHighlightCapturesUnderCursor<cr>
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fo <cmd>Telescope find_files<cr>
+nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
