@@ -21,10 +21,9 @@ nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
 nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
-nnoremap <leader>ovp :FzfFilesCustom1 ~/.config/nvim/plugin<cr>
-nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
-
-nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
+" nnoremap <leader>ovp :FzfFilesCustom1 ~/.config/nvim/plugin<cr>
+" nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
+" nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
 
 
 nnoremap <silent> ,tn :tabnew<cr>

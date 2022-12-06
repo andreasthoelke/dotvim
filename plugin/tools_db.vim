@@ -104,7 +104,6 @@ func! DBRun( ... )
 
   let resLines = RemoveTermCodes( resLines )
 
-
   let g:query_res = resLines
 
   let str_resLines = functional#map( 'string', resLines )
@@ -126,7 +125,7 @@ func! tools_db#alignInFloatWin()
   silent exec "%s/\]//g"
   silent exec "%s/\'//g"
   silent exec "Tabularize /,"
-  silent exec "%s/,/|/g"
+  silent exec "%s/,/|/eg"
   call append( 1, '' )
   call FloatWin_FitWidthHeight()
   wincmd p

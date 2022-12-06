@@ -239,7 +239,7 @@ nnoremap <localleader><localleader>sp :set syntax=purescript<cr>
 nnoremap <localleader><localleader>sP :set syntax=purescript1<cr>
 nnoremap <localleader><localleader>sP :set syntax=python<cr>
 nnoremap <localleader><localleader>st :set syntax=typescript<cr>
-nnoremap <localleader><localleader>ss :set syntax=svelte<cr>
+nnoremap <localleader><localleader>ss :set syntax=scala<cr>
 nnoremap <localleader><localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 

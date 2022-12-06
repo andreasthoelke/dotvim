@@ -22,10 +22,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
   nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
-  nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-p>         :call Scala_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <c-n>         :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
 
@@ -116,6 +116,13 @@ func! Scala_SetPrinterIdentif_SBT( forEffect )
   call writefile( printerLines, printerFilePath )
 endfunc
 
+func! Scala_GetPackageName()
+  let hostLn = searchpos( '\v^package\s', 'cnbW' )[0]
+  " let identif = matchstr( getline(hostLn ), '\vpackage\s\zs\i*\ze\W' )
+  let packageName = split( getline( hostLn ), ' ' )[1]
+  return packageName
+endfunc
+
 func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
   let printerFilePath = expand('%:h') . '/Printer.scala'
 
@@ -125,6 +132,11 @@ func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
   call VirtualRadioLabel_lineNum( '«', hostLn )
 
   let forEffect = a:forEffect
+
+  let packageName = Scala_GetPackageName()
+  if len( packageName )
+    let identif = packageName . "." . identif
+  endif
 
   if forEffect
     let bindingLine = "val printVal = " . identif
@@ -157,7 +169,7 @@ endfunc
 
 
 let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources"
+let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources -nowarn"
 
 
 func! Scala_RunPrinter()
@@ -325,7 +337,20 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|case\sclass|enum|final|object|class|def)\s|val)'
 
+func! Scala_TopLevBindingForw()
+  normal! }
+  call search( g:Scala_TopLevPattern, 'W' )
+endfunc
+
+func! Scala_TopLevBindingBackw()
+  normal! {
+  call search( g:Scala_TopLevPattern, 'bW' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+" call search('\v^(\s*)?call', 'W')
 
 
 

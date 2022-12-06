@@ -155,7 +155,7 @@ func! BufferInnerBracket()
   let [oLine, oCol] = getpos('.')[1:2]
   call BracketStartForw()
   call InsertStringAtLoc(' ', line('.'), col('.')-2)
-  normal! b
+  normal! ge
   call FlipToPairChar('')
   call InsertStringAtLoc(' ', line('.'), col('.')-2)
   " normal! w%

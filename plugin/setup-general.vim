@@ -1409,19 +1409,34 @@ set noshowmode
 " -----------------------------------------------------------------
 
 " Vista:
+" internal setting:
+" h Vista
+" ~/.config/nvim/plugged/vista.vim/plugin/vista.vim#/let%20g.vista_floating_border%20=
 
 let g:vista_floating_delay = 10000
+let g:vista_highlight_whole_line = 0
+let g:vista_blink = [0, 0]
 " autocmd FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call vista#finder#fzf#Run()<CR>
-" autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call VistaJumpToLineButStayInBar()<CR>
+autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call VistaJumpToLineButStayInBar()<CR>
 
 func! VistaJumpToLineButStayInBar ()
-   call vista#jump#TagLine( GetInfoUnderCursor()[0] )
-   " wincmd p
-   " call vista#sidebar#Open()
-   " call vista#cursor#ShowTag()
-   call vista#cursor#ShowTagFor(line('.'))
+  let g:oldLine = line('.')
+  " let g:VistaoLine = getpos('.')[1]
+  call vista#jump#TagLine( GetInfoUnderCursor()[0] )
+  " call vista#sidebar#Open()
+  " call vista#cursor#ShowTag()
+  wincmd p
+  call vista#cursor#ShowTagFor(line('.'))
+  " call setpos('.', [0, g:VistaoLine, col('.'), 0] )
+  " normal (oldLine . "gg")
+  call T_DelayedCmd( "call VistaSetOldLine()", 200 )
 endfunc
 
+func! VistaSetOldLine()
+  call setpos('.', [0, g:oldLine, col('.'), 0] )
+  normal! ww
+endfunc
+" call setpos('.', [0, 1437, col('.'), 0] )
 
 function! GetInfoUnderCursor() abort
   if g:vista.provider ==# 'ctags'

@@ -14,6 +14,23 @@
 nnoremap <leader>ejd :call CreateJSDocComment_short()<cr>
 nnoremap <leader>ejD :call CreateJSDocComment_long()<cr>
 
+nnoremap <leader>esd :call CreateScalaDocComment_long()<cr>
+
+func! CreateScalaDocComment_long()
+  normal k
+  " let hostLn = searchpos( '^(export\s)?const\s\(e\d_\)\@!', 'cn' )[0]
+  let hostLn = searchpos( '^\(private\s\(lazy\s\)\?\)\?def\s\(e\d_\)\@!', 'cn' )[0]
+  let hostDecName = matchstr( getline(hostLn ), '\vdef\s\zs\i*\ze(\:)?\s' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
+  " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  " echo paramNames
+  " let fn_txt = len( [] ) == 0 ? hostDecName : hostDecName . ' ' . strInParan
+  " let fn_txt = hostDecName . ' ' . strInParan
+  let fn_txt = ''
+  let lines = ['/**', ' * ' . fn_txt, ' */']
+  call append( '.', lines )
+  normal jjlll
+endfunc
 
 func! CreateJSDocComment_long()
   " let hostLn = searchpos( '^(export\s)?const\s\(e\d_\)\@!', 'cn' )[0]
@@ -202,7 +219,7 @@ func! CreateInlineTestDec_scala()
   " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
   let lineText = hostDecName . '(' . strInParan[0:-1] . ')'
   let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'val e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  let lineText = 'lazy val e' . nextIndex . '_' . hostDecName . ' = ' . lineText
   call append( line('.') -1, lineText )
   normal k0
   call search('(')

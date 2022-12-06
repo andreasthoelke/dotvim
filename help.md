@@ -1178,6 +1178,10 @@ git rm userapp.mv.db --cached
 notes/notes-git.md
 
 # degit
+
+## Clone a directory into a directory (overwriting same named files)
+degit --force Jannyboy11/AdventOfCode2022/src/main/resources resources
+
 ## clone a github subdirectory/ folder
 this clones a subfolder from a github repo:
 npx degit gothinkster/realworld/api realworld_api
@@ -1188,7 +1192,7 @@ hmm, this doesn't seem to work:
 sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh examples https://github.com/hayes/pothos
 sh /Users/at/.config/nvim/utils/git_clone_subfolder.sh tree/master/examples https://github.com/hayes/pothos
 
-
+npx degit zio/zio-http/zio-http-example/src/main
 
 ## Intero Errors or Warnings
 
@@ -1419,8 +1423,12 @@ c-w \ - jump to it from leftmost win (c-w p to jump back to prev win)
 ? in win - show help
 p in win - to jump to tag but cursor stays in tagbar
 
-this actually works:
+this actually works: (in .md files!)
 call TagInStatusline()
+
+Tagbar
+works in .md files
+
 
 ## Lsp symbols outline
 

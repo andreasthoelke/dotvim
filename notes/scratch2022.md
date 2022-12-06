@@ -50,7 +50,6 @@ leader>fh Telescope help_tags<cr>
 ### Telescope project maps
 c  - create
 ~/.config/nvim/help.md#/###%20telescope%20project
-
 Todos:
 ~/.config/nvim/help.md#/###%20TODO.%20nvim-treesitter-rescript
 
