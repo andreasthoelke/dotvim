@@ -68,6 +68,7 @@ i might make manually unique string ids in data.ts.
 
 ## Vim to learn
 
+ctrl g  - echo filepath and scroll position (in zen mode)
 space ]t  - bracket end forward
 leader leader ]t   - BufferInnerBracket()
 space os - open scratch file in float

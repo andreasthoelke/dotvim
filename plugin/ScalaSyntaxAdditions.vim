@@ -139,7 +139,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal 'if\ze\W' conceal cchar=˻
   syntax match Normal 'else' conceal cchar=˼
-  syntax match Normal 'then' conceal cchar=˹
+  syntax match Normal 'then\ze\W' conceal cchar=˹
   syntax match Normal 'when' conceal cchar=?
 
   syntax match Normal 'case' conceal cchar=˰
@@ -183,12 +183,6 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vT\ze(,|\]|\s\])' conceal cchar=𝑡
   syntax match Normal '\vV\ze(,|\])' conceal cchar=𝑣
 
-" /**
-"  * Accum the `produce`d values `T` until `p` holds.
-"  */
-  syntax match Normal '\v^\/\*\*' conceal cchar=⠃
-  syntax match Normal '\v^\s\*\s' conceal
-  syntax match Normal '\v^\s\*\/' conceal
 
   syntax match InlineTestDeclaration '\v^(lazy\s)?val\se\d_\i{-}\s\=' conceal cchar=‥
   " syntax match InlineTestDeclaration '\v^val\se\d_\i{-}\s\=\s' conceal cchar=⠃
@@ -196,10 +190,39 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal '\v\/\/\>\susing\slib\s' conceal
 
-
-
   " Hide comment character at beginning of line
-  syntax match Normal '\v^\s*\zs\/\/\s' conceal
+  " syntax match Normal '\v\s*\zs\/\/\s' conceal
+  " syntax match Comment '\v\s\zs\/\/.*'
+  " syntax match BlackBG '\v\/\/' conceal
+  " syntax match Comment '\v\/\/\s\zs.*'
+  " syntax match BlackBG '\v\/\/\s\zsi{-}'
+
+  " This is effective in preventing the conceal unicode in normal comments
+  syntax match Comment '\v\/\/\s\zs.*'
+
+  " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
+  call matchadd('Conceal', '\/\/\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\i\s\zs\/\/', 12, -1, {'conceal': '⠃'})
+  call matchadd('Conceal', '^\/\/\s', 12, -1, {'conceal': ''})
+
+  " This uses the same approach for the Java-Doc comments:
+  " this line overwrites the unicode conceals
+  syntax match Comment '\v\*.*'
+
+" /**
+"  * Accum the `produce`d values `T` until `p` holds.
+"  */
+  syntax match Normal '\v\/\*\*' conceal cchar=⠃
+  " .. we can't use a normal syntax match to conceal the comment chars
+  " syntax match Normal '\v\s\*\s' conceal
+  " but use matchadd instead
+  call matchadd('Conceal', '\v\s\*\s', 12, -1, {'conceal': ''})
+  syntax match Normal '\v\s\*\/' conceal
+
+
+  " call matchadd('BlackBG', '\v\*.*', 12, -1 )
+
+  " call matchadd('Conceal', '\s\/\/', 12, -1, {'conceal': ''})
   " call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
   " call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
 

@@ -118,6 +118,9 @@ endfunc
 
 func! Scala_GetPackageName()
   let hostLn = searchpos( '\v^package\s', 'cnbW' )[0]
+  if !hostLn
+    return ""
+  endif
   " let identif = matchstr( getline(hostLn ), '\vpackage\s\zs\i*\ze\W' )
   let packageName = split( getline( hostLn ), ' ' )[1]
   return packageName

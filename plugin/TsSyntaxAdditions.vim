@@ -33,8 +33,6 @@ func! TsSyntaxAdditions ()
   syntax match Normal '({' conceal cchar=⟨
   syntax match Normal '})' conceal cchar=⟩
 
-  syntax match Normal "()" conceal cchar=∘
-
   syntax match Normal "\v\=\>" conceal cchar=⇒
 
   " The collon before a type or an object value
