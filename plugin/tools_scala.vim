@@ -10,8 +10,6 @@ func! tools_scala#bufferMaps()
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
   nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
-  " after changing the http app, this compiles and restarts the server *and* refetches the previous http client request
-  " refetching is now triggered in the server callback
   nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>
   nnoremap <silent><buffer>         <leader>gsr :call Scala_ServerRestartTerm()<cr>
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
@@ -34,6 +32,7 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer>         ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>

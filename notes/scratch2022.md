@@ -1,6 +1,12 @@
 
 leader od  - open dirvish in float!
+
 ,,sr  - search in repo (previously leader gsr)
+,,sr :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+,,sR :call SearchRepo( "─.*" . GetInputStr('Search in repo: ') )<cr>
+,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
+also:
+leader fg - and then can use regex like //.*List to earch in comments
 
 # Scala references with Trouble
 ged  - show workspace errors
@@ -67,6 +73,9 @@ i might make manually unique string ids in data.ts.
 
 
 ## Vim to learn
+
+)  - MvNextLineStart
+(  - this line (useful!) start
 
 ctrl g  - echo filepath and scroll position (in zen mode)
 space ]t  - bracket end forward

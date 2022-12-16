@@ -280,7 +280,9 @@ fun! GrepSearch(selType, mode)
   endif
 endfun
 
-nnoremap ,,sr :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+" nnoremap ,,sr :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+nnoremap ,,sR :call SearchRepo( "─.*" . GetInputStr('Search in repo: ') )<cr>
+nnoremap ,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
 " xnoremap gsr :<c-u>call SearchRepo( GetInputStr('Search in repo: ') )<cr>
 
 fun! SearchRepo( keyw )

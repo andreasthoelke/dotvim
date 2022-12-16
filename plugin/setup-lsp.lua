@@ -52,6 +52,7 @@ local on_attach = function(client, bnr)
   vim.cmd [[ command! LspFormat execute 'lua vim.lsp.buf.formatting()' ]]
 
   vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
+  vim.cmd("command! LspDocSymbols lua require('telescope.builtin').lsp_document_symbols()")
   vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
   vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
   vim.cmd("command! LspHover lua vim.lsp.buf.hover()")

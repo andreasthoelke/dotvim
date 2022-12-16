@@ -10,9 +10,13 @@ nnoremap <leader>th <cmd>Telescope highlights<cr>
 nnoremap <leader>tH <cmd>TSHighlightCapturesUnderCursor<cr>
 
 " Find files using Telescope command-line sugar.
+nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
+nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap ,,sr <cmd>Telescope grep_string<cr>
+" nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 

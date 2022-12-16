@@ -20,7 +20,8 @@ require('telescope').setup{
       n = {
         ["<c-o>"] = trouble.open_with_trouble
       },
-    }
+    },
+    layout_strategy = 'vertical'
   },
   pickers = {
     -- Default configuration for builtin pickers goes here:
