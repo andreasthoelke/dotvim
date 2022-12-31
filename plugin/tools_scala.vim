@@ -21,7 +21,23 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Scala_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
+  " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  onoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  nnoremap <silent><buffer> <leader>)     :call Scala_MvEndOfBlock()<cr>
+  onoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+  onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+
+  nnoremap <silent><buffer> * :call MvPrevLineStart()<cr>
+  nnoremap <silent><buffer> ( :call MvLineStart()<cr>
+  nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
+
+  nnoremap <silent><buffer> I :call Scala_ColonForw()<cr>
+  nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
+
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <c-n>         :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
@@ -51,10 +67,8 @@ endfunc
 
 func! Scala_LspTopLevelHover()
   let [oLine, oCol] = getpos('.')[1:2]
-  normal ^w
-  if expand('<cword>') =~ '\v(val|def)'
-    normal w
-  endif
+  normal ^
+  call SkipScalaSkipWords()
   lua vim.lsp.buf.hover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
@@ -339,7 +353,7 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
   normal! }
@@ -354,11 +368,76 @@ endfunc
 
 " call search('\v^(\s*)?call', 'W')
 
+func! Scala_MvStartOfBlock()
+  normal! k
+  exec "silent keepjumps normal! {"
+  normal! j^
+endfunc
 
 
+func! Scala_MvEndOfBlock()
+  normal! j
+  exec "silent keepjumps normal! }"
+  normal! k^
+endfunc
+
+func! BlockStart_VisSel()
+  normal! m'
+  normal! V
+  call Scala_MvStartOfBlock()
+  normal! o
+endfunc
 
 
+func! BlockEnd_VisSel()
+  normal! m'
+  normal! V
+  call Scala_MvEndOfBlock()
+  normal! o
+endfunc
 
+
+let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
+" echo "private" =~ g:Scala_MvStartLine_SkipWords
+
+func! SkipScalaSkipWords()
+  let cw = expand('<cword>')
+  if cw =~ g:Scala_MvStartLine_SkipWords
+    normal! w
+    call SkipScalaSkipWords()
+  endif
+endfunc
+
+func! MvLineStart()
+  normal! m'
+  normal! ^
+  call SkipScalaSkipWords()
+endfunc
+
+func! MvNextLineStart()
+  normal! m'
+  normal! j^
+  call SkipScalaSkipWords()
+endfunc
+
+func! MvPrevLineStart()
+  normal! m'
+  normal! k^
+  call SkipScalaSkipWords()
+endfunc
+
+let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'yield', 'then', 'else', '\$'] )
+
+func! Scala_ColonForw()
+  call SearchSkipSC( g:Scala_colonPttn, 'W' )
+  normal w
+endfunc
+
+func! Scala_ColonBackw()
+  normal bh
+  call SearchSkipSC( g:Scala_colonPttn, 'bW' )
+  normal w
+endfunc
 
 
 

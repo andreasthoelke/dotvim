@@ -1,4 +1,14 @@
 
+*  - previous line start
+c-o - any non-reversible jump should use "normal! m'" to add to the jump list
+
+## end of block motion
+J  - when at the beginning of the block, can just use the indent level motions
+leader)  - this jumps to the end of the block from any place inside the block. (reversible via c-o)
+
+[op]ii  - inside indent block (linewise delete, change, yank)
+[op]ai  - outer indent block (linewise delete, change, yank)
+
 leader od  - open dirvish in float!
 
 ,,sr  - search in repo (previously leader gsr)
@@ -90,9 +100,11 @@ space s; - strip semicolon .. and the af/ap/,j
 gsw - sets a test-printer expression in /scratch/.testPrinter.ts
 gsp - prints/call this (exported) identifier (cursor can be in a different place)
 
-
 sp qa - add cursor pos to quickfix list
 leader qq - toggle quickfix list
+
+## regex vim pattern
+[A-Z]{4}:  - find comment tags like: // NOTE:  , TODO:
 
 ### Lsp
 sp ca - code action

@@ -48,6 +48,7 @@ func! tools_js#bufferMaps()
 endfunc
 
 func! JS_MvEndOfBlock()
+  normal! m'
   call JumpNextNonEmptyLine()
   call search( '\v^\S', 'W' )
 endfunc

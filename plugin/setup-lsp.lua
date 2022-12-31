@@ -769,7 +769,7 @@ metals_config.on_attach = function(client, bufnr)
   require("metals").setup_dap()
 end
 
--- Autocmd that will actually be in charging of starting the whole thing
+-- Autocmd that will actually be in charge of starting the whole thing
 local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
 api.nvim_create_autocmd("FileType", {
   -- NOTE: You may or may not want java included here. You will need it if you

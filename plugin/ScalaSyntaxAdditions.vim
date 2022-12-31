@@ -1,11 +1,13 @@
 
-
+" ↔ ↕ ⇿ ⟷
+" ɪ и
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
+" ⇛ ≈ ⊪ ⊩ ⊧ ⤎ ⫻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣
 " ⊎ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ ∿ ∾  ≀ ≁ ➳  ➺  ➽
 " ⊟  ⊡ | ⊖  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
 " ”  ⍘ ’ ⍞  ⍣ ⍤⍦⍪⍳ ⍽ ⍿ ⎅ ⎇  ⎎ ⎚
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
-" « » ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ 
+" « » « ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ 
 " ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟  e⃨  ⊍ ⊐ ⊔ ⊝ ⊟
 " ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
 " ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
@@ -31,11 +33,12 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal "\v\&\&" conceal cchar=﹠
 
   " syntax match Normal '\vInt\ze(\W|\_$)' conceal cchar=I
-  syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
-  syntax match Normal 'String\.' conceal cchar=S
-  syntax match Normal 'String' conceal cchar=S
-  " syntax match Normal 'Int\.' conceal cchar=I
-  syntax match Normal '\vBoolean\ze(\W|\_$)' conceal cchar=B
+  " syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=s
+  syntax match Normal 'String\.' conceal cchar=s
+  syntax match Normal 'String' conceal cchar=s
+  syntax match Normal 'Int' conceal cchar=ɪ
+  " syntax match Normal 'Int\.' conceal cchar=ɪ
+  syntax match Normal '\vBoolean\ze(\W|\_$)' conceal cchar=ʙ
   " syntax match Normal 'true' conceal cchar=𝗍
   " syntax match Normal 'false' conceal cchar=𝖿
   syntax match Normal 't\zsrue' conceal
@@ -44,12 +47,11 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'List\ze\W' conceal cchar=⟬
   syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=˄
   syntax match Normal '\vSet\ze(\W|\_$)' conceal cchar=ᴺ
+  syntax match Normal '\vArray\ze(\W|\_$)' conceal cchar=ᴬ
   syntax match Normal 'Map\ze\W' conceal cchar=ʺ
   syntax match Normal 'empty' conceal cchar=∅
   syntax match Normal 'Iterable' conceal cchar=⟦
-  syntax match Normal '::' conceal cchar=∷
   " syntax match Normal 'Array\ze\W' conceal cchar=⟦
-  syntax match Normal 'Array' conceal cchar=A
   " syntax match Normal 'Tuple' conceal cchar=T
   " syntax match Normal 'tuple\:\s' conceal cchar=T
   " syntax match Normal 'tuple\:\[' conceal cchar=T
@@ -74,7 +76,10 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal "\s\zs:\ze(" conceal cchar=˃
   " When the type collon is the last char e.g. in enum defs
   syntax match Normal "\v:\ze$" conceal
+  " all :?
+  syntax match Normal ":" conceal
   " syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
+  syntax match Normal '::' conceal cchar=∷
 
   syntax match Normal "^val\s" conceal
   syntax match Normal "\s\zsval\s" conceal
@@ -85,24 +90,26 @@ func! ScalaSyntaxAdditions ()
 
   " TODO: can't match "export" twice? ~/Documents/Server-Dev/d_gql_edb/src/b_ramda_pipe_async_examples.ts#/export%20function%20ac
   " syntax match Normal "export\s\zsfunction\ze\s" conceal cchar=→
-  syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
-  syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
+  " syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
+  " syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
 
   " syntax match Normal '\s\zs>\ze\s' conceal cchar=▷
   " syntax match Normal '\s\zs<\ze\s' conceal cchar=◁
 
-  syntax match Normal 'i => {i' conceal cchar=_
-  syntax match Normal 'i => i' conceal cchar=»
-  syntax match Normal 'x => x\ze\s' conceal cchar=_
-  syntax match Normal 'x => x\ze\.' conceal cchar=_
+  " syntax match Normal 'i => {i' conceal cchar=_
+  " syntax match Normal 'i => i' conceal cchar=»
+  " syntax match Normal 'x => x\ze\s' conceal cchar=_
+  " syntax match Normal 'x => x\ze\.' conceal cchar=_
 
   syntax match Normal 'PartialFunction' conceal cchar=➔
   syntax match Normal "\v\-\>" conceal cchar=➔
+  syntax match Normal '@tailrec' conceal cchar=↶
 
   syntax match Normal '\vfor\ze(\W|\_$)' conceal cchar=⊃
   syntax match Normal 'yield' conceal cchar=⊂
   syntax match Normal '>>=' conceal cchar=⫦
   " andThen
+  syntax match Normal 'andThen' conceal cchar=↣
   syntax match Normal '>>>' conceal cchar=↣
   " compose
   syntax match Normal '<<<' conceal cchar=∘
@@ -161,6 +168,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal 'if\ze\W' conceal cchar=˻
   syntax match Normal 'else' conceal cchar=˼
+  syntax match Normal 'else\sif' conceal cchar=˼
   syntax match Normal 'then\ze\W' conceal cchar=˹
   syntax match Normal 'when' conceal cchar=?
 
@@ -169,7 +177,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal 'map' conceal cchar=➚
   syntax match Normal 'contramap' conceal cchar=↖
-  syntax match Normal 'as\ze(' conceal cchar=ꜜ
+  syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
 
   syntax match Normal 'self' conceal cchar=∝
   syntax match Normal 'override' conceal cchar=⟑
@@ -180,6 +188,8 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'private\sval\s' conceal cchar=ˌ
   syntax match Normal 'implicit' conceal cchar=𝑖
   syntax match Normal 'implicitly' conceal cchar=𝑖
+  syntax match Normal 'using' conceal cchar=⊨
+  syntax match Normal 'extension' conceal
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class' conceal cchar=C
   syntax match Normal 'case class' conceal cchar=˽
@@ -189,6 +199,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'derive\ze\W' conceal cchar=⌇
   syntax match Normal 'object' conceal cchar=
   syntax match Normal 'make' conceal cchar=˖
+  syntax match Normal 'unbounded' conceal cchar=˖
   syntax match Normal 'succeed' conceal cchar=ꜜ
 
   syntax match Normal '\s\zs\.' conceal cchar=ˍ
@@ -196,14 +207,18 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\.\ze\S' conceal cchar=ˍ
   syntax match Normal '\.\ze\S' conceal cchar= 
 
-  syntax match Normal '\v(\s|\(|\[)\zsA\ze(,|\]|\)|\s\=\>)' conceal cchar=𝑎
-  syntax match Normal '\v(\s|\(|\[)\zsR\ze(,|\]|\))' conceal cchar=𝑟
-  syntax match Normal '\v(\s|\(|\[)\zsE\ze(,|\]|\))' conceal cchar=𝑒
-  syntax match Normal '\v(\s|\(|\[)\zsB\ze(,|\]|\))' conceal cchar=𝑏
-  syntax match Normal '\v(\s|\(|\[)\zsC\ze(,|\]|\))' conceal cchar=𝑐
-  syntax match Normal '\v(\s|\(|\[)\zsS\ze(,|\]|\))' conceal cchar=𝑠
-  syntax match Normal '\vT\ze(,|\]|\s\])' conceal cchar=𝑡
-  syntax match Normal '\vV\ze(,|\])' conceal cchar=𝑣
+  syntax match Normal 'curried' conceal cchar=‹
+
+  " display Type variables as small cursive letters
+  syntax match Normal '\v(\s|\(|\[|\+)\zsA\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑎
+  syntax match Normal '\v(\s|\(|\[|\+)\zsR\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑟
+  syntax match Normal '\v(\s|\(|\[|\+)\zsE\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑒
+  syntax match Normal '\v(\s|\(|\[|\+)\zsB\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑏
+  syntax match Normal '\v(\s|\(|\[|\+)\zsC\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑐
+  syntax match Normal '\v(\s|\(|\[|\+)\zsS\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑠
+  syntax match Normal '\v(\s|\(|\[|\+)\zsT\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑡
+  syntax match Normal '\v(\s|\(|\[|\+)\zsV\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑣
+  syntax match Normal '\v(\s|\(|\[|\+)\zsU\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑢
 
 
   syntax match InlineTestDeclaration '\v^(lazy\s)?val\se\d_\i{-}\s\=' conceal cchar=‥
@@ -229,7 +244,8 @@ func! ScalaSyntaxAdditions ()
 
   " This uses the same approach for the Java-Doc comments:
   " this line overwrites the unicode conceals
-  syntax match Comment '\v\*.*'
+  " ISSUE: does it? .. it affected/prevented conceals after a multiplication (*) on normal lines
+  " syntax match Comment '\v\*.*'
 
 " /**
 "  * Accum the `produce`d values `T` until `p` holds.
@@ -238,7 +254,7 @@ func! ScalaSyntaxAdditions ()
   " .. we can't use a normal syntax match to conceal the comment chars
   " syntax match Normal '\v\s\*\s' conceal
   " but use matchadd instead
-  call matchadd('Conceal', '\v\s\*\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\v^\s\*\s', 12, -1, {'conceal': ''})
   syntax match Normal '\v\s\*\/' conceal
 
 

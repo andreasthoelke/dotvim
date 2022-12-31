@@ -102,8 +102,8 @@ let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do'
 " let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
 " Typescript and Purescript:
 let g:lineHotspotsPttn = MakeOrPttn( ['=', '=\>'] )
-" Scala
-let g:colonPttn = MakeOrPttn( ['\:\s', '*>', '-', '=', 'then', 'else', '\$'] )
+" Scala -> now in tools_scala
+let g:colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'then', 'else', '\$'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
@@ -371,8 +371,8 @@ endfunc
 
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 
-noremap J  :call ColumnLevelForwBackw(1)<cr>
-noremap K  :call ColumnLevelForwBackw(-1)<cr>
+nnoremap <silent> J  :call ColumnLevelForwBackw(1)<cr>
+nnoremap <silent> K  :call ColumnLevelForwBackw(-1)<cr>
 
 " onoremap J V:call IndentBlockEnd()<cr>
 " onoremap K V:call IndentBlockStart()<cr>
@@ -390,6 +390,21 @@ func! IndentBlockStart()
   let sLine = IndentBlockEndPos( line('.'), col('.'), -1 )
   call setpos('.', [0, sLine, col('.'), 0] )
 endfunc
+
+
+onoremap J  :<c-u>call IndentBlock_VisSel(1)<cr>
+onoremap K  :<c-u>call IndentBlock_VisSel(-1)<cr>
+vnoremap J  :<c-u>call IndentBlock_VisSel(1)<cr>
+vnoremap K  :<c-u>call IndentBlock_VisSel(-1)<cr>
+
+func! IndentBlock_VisSel(dir)
+  normal! m'
+  normal! V
+  call ColumnLevelForwBackw(a:dir)
+  normal! o
+endfunc
+
+
 
 " Move to (column 1/not indented code) block start or end. Just a quick fix because non intented lines/blocks dont with with ColumnLevelForwBackw
 func! ColumnLevelForwBackwCol1( direction )
@@ -519,6 +534,18 @@ func! IndentBlock_VisSel_Inside()
   call IndentBlockEnd()
   normal! o
 endfunc
+
+" Textobject for "outer" Indent Block
+onoremap ai :<c-u>call IndentBlock_VisSel_Around()<cr>
+vnoremap ai :<c-u>call IndentBlock_VisSel_Around()<cr>
+func! IndentBlock_VisSel_Around()
+  normal! m'
+  normal! V
+  call ColumnLevelForwBackw(1)
+  normal! o
+endfunc
+
+
 
 " From Stackoverflow: move to line of same indent!
 " nnoremap ,J ^:call IndentBlockEnd()<cr>:call   search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
@@ -702,42 +729,6 @@ let g:hlAreaID = 0
 " call matchdelete( abc )
 " call clearmatches()
 
-" Just a new convenience motion attempt
-nnoremap <silent> * :call MvPrevLineStart()<cr>
-nnoremap <silent> ( :call MvLineStart()<cr>
-nnoremap <silent> ) :call MvNextLineStart()<cr>
-
-func! MvLineStart()
-  normal! ^
-  let cw = expand('<cword>')
-  if cw == 'const' || cw == 'export' || cw == 'val' || cw == 'def'
-    normal! w
-    let cw = expand('<cword>')
-    if cw == 'const'
-      normal! w
-    endif
-  endif
-endfunc
-
-func! MvNextLineStart()
-  normal! j^
-  let cw = expand('<cword>')
-  if cw == 'const' || cw == 'let' || cw == 'val' || cw == 'def'
-    normal! w
-  endif
-endfunc
-
-func! MvPrevLineStart()
-  normal! k^
-  let cw = expand('<cword>')
-  if cw == 'const' || cw == 'export' || cw == 'val' || cw == 'def'
-    normal! w
-    let cw = expand('<cword>')
-    if cw == 'const'
-      normal! w
-    endif
-  endif
-endfunc
 
 
 " nnoremap <silent> ,j :call FnAreaForw()<cr>

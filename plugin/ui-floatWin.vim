@@ -410,11 +410,14 @@ func! FloatingBuffer( filePath )
   let opts.zindex = 4
 
   " let l:textbuf = nvim_create_buf(v:false, v:true)
+  " let g:floatWin_win_Pers = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
   let g:floatWin_win_Pers = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
   " let g:floatWin_win = nvim_open_win(l:textbuf, v:true, opts)
 endfunc
 " call FloatingBuffer( "/Users/at/.vim/notes/links2" )
 " call FloatingBuffer( "/Users/at/.vim/notes/links" )
+" call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )
+" call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.ab" )
 " let g:floatWin_win = nvim_open_win( "/Users/andreas.thoelke/.vim/notes/links", v:true, opts)
 " call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
 

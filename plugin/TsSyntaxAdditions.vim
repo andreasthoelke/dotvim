@@ -23,7 +23,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'i\zsdentity' conceal cchar=d
 
   " syntax match Normal 'List\ze\W' conceal cchar=⟬
-  syntax match Normal 'List' conceal cchar=L
+  syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=L
   " syntax match Normal 'Array\ze\W' conceal cchar=⟦
   syntax match Normal 'Array' conceal cchar=A
   syntax match Normal 'Tuple' conceal cchar=T
