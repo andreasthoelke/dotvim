@@ -1,8 +1,8 @@
 
 
 
-nnoremap ,ts :SessionTabSave tab-
-nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
+" nnoremap ,ts :SessionTabSave tab-
+" nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
 
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.config/nvim/utils/<cr>
@@ -26,10 +26,12 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 " nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
 
 
-nnoremap <silent> ,tn :tabnew<cr>
+" nnoremap <silent> ,tn :tabnew<cr>
+nnoremap <silent> ,tn :exec "tabe " . expand('%:p:h')<cr>
+" nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
+nnoremap \T :echo "use ,tn"<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \s :exec "new " . expand('%:p:h')<cr>
-nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
 nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
