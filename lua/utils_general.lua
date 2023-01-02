@@ -177,6 +177,110 @@ function M.fileViewB()
 end
 
 
+
+
+-- Focused search maps with presets/filters
+
+
+-- use leader sr to reload/source this file!
+local scala_parent_dir = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
+local scala_comments_rx = [[^(\s*)?(//|\*\s).*]]
+local scala_header_rx = [[─.*]]
+
+local scala_patterns_files = {
+  'BZioHttp/*_patterns.scala',
+  'BZioHttp/utils.scala',
+  'AZioHttp/TicTakToe.scala',
+}
+
+local scala_interest_files = {
+  -- 'BZioHttp/*_patterns.scala',
+  -- 'BZioHttp/utils.scala',
+  -- 'BZioHttp/wcl_*.scala',
+  'BZioHttp/*.scala',
+  'AZioHttp/*.scala',
+}
+
+
+function M.Search_patternfiles()
+  require('telescope.builtin').live_grep({
+    glob_pattern = scala_patterns_files,
+    cwd = scala_parent_dir,
+  } )
+end
+
+function M.Search_comments()
+  require('telescope.builtin').live_grep({
+    default_text = scala_comments_rx,
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+    -- path_display = { "smart" },
+  } )
+end
+
+function M.Search_headers()
+  require('telescope.builtin').live_grep({
+    default_text = scala_header_rx,
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+  } )
+end
+
+
+function M.Search_gs()
+  require('telescope.builtin').grep_string({
+    -- default_text = [[ab]],
+    search = "List",
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+  } )
+end
+
+
+
+function M.Search_greparg()
+  require('telescope').extensions.live_grep_args.live_grep_args({
+    -- default_text = [[def\s.*]],
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+    theme = 'dropdown',
+  } )
+end
+
+-- https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
+-- https://docs.rs/regex/1.7.0/regex/#syntax
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 return M
 
 

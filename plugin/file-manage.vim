@@ -34,7 +34,7 @@ nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \s :exec "new " . expand('%:p:h')<cr>
 
 nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
-nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
+" nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
@@ -43,7 +43,8 @@ nnoremap <leader>oF :FzfGFiles<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links2022.md" )<cr>
 nnoremap <leader>os :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>
-nnoremap <leader>ob :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>:Telescope vim_bookmarks all<cr>
+" nnoremap <leader>ob :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>:Telescope vim_bookmarks all<cr>
+nnoremap <leader>ob :Telescope vim_bookmarks all<cr>
 
 nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor() )<cr>
 xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
@@ -131,13 +132,13 @@ command! BufferDeleteInactive :call DeleteInactiveBufs()
 " nnoremap <silent> gp :<C-u>FzfPreviewProjectMrwFiles<CR>
 nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
 " This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
-nnoremap <silent> gp :<C-u>FzfHistory<CR>
+" nnoremap <silent> gp :<C-u>FzfHistory<CR>
 " This command uses a separate history file which should accumulate 2000 entries over time:
 nnoremap <silent> ,gp :<C-u>FzfPathsFromFile ~/.config/nvim/.vim_mru_files<CR>
 nnoremap <silent> ,,gp :<C-u>FzfPreviewOldFiles<CR>
 " nnoremap <silent> ,gp :<C-u>FZFMru<CR>
 nnoremap <silent> <leader>gp :topleft MRU<CR>
-nnoremap <silent> go :<C-u>FzfBuffer<cr>
+" nnoremap <silent> go :<C-u>FzfBuffer<cr>
 nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
 
 

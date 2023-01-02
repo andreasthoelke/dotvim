@@ -164,7 +164,7 @@ command! -bang -nargs=? -complete=dir FzfOpenHistory
 " Preview config: --preview and --preview-window config options in shell script: ~/.vim/rg-fzf-vim.sh#/--preview%20'bat%20--color=always
 
 " Multiline test: echo 'apple\norange\nbanana\nkiwi' | rg -U '(?s)orange.*kiwi' | fzf
-" Interactive regix across multiple lines(?): ~/.vim/rg-fzf-restart.sh#/RG_PREFIX="rg%20--column%20-U
+" Interactive regex across multiple lines(?): ~/.vim/rg-fzf-restart.sh#/RG_PREFIX="rg%20--column%20-U
 " Run with  ./rg-fzf-restart.sh marks.*something
 
 " Press F1 to open the file with less without leaving fzf

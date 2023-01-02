@@ -640,7 +640,7 @@ nnoremap v m'v
 
 " i usually to the inner word, and keep the space after it.
 " nnoremap cw ciw
-nnoremap cw ce
+nnoremap cw "_ce
 
 " Want to go to last visible char most of the times and g_ is tricky to type
 nnoremap $ m'g_
@@ -1530,6 +1530,13 @@ let g:EasyClipYankHistorySize = 6
 
 nmap ,p <plug>EasyClipPasteUnformattedAfter
 nmap ,P <plug>EasyClipPasteUnformattedBefore
+
+let g:EasyClipEnableBlackHoleRedirectForChangeOperator = 1
+
+" ~/.config/nvim/plugged/vim-easyclip/autoload/EasyClip/BlackHole.vim#/function.%20EasyClip#BlackHole#AddChangeBindings..
+" if g:EasyClipEnableBlackHoleRedirectForChangeOperator
+" call EasyClip#BlackHole#AddChangeBindings()
+" endif
 
 " Easyclip: ----------------------------------------
 

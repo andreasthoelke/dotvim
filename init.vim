@@ -37,6 +37,8 @@ Plug 'nvim-telescope/telescope-github.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
 
 Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-live-grep-args.nvim'
+Plug 'axkirillov/easypick.nvim'
 
 " Plug 'rmagatti/auto-session'
 " Plug 'rmagatti/session-lens'
@@ -103,8 +105,7 @@ Plug 'camspiers/lens.vim'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'andreasthoelke/vim-EnhancedJumps'
 
-" Just a default split command
-" Plug 'vimlab/split-term.vim'
+Plug 'voldikss/vim-floaterm'
 Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
 

@@ -300,6 +300,10 @@ glm - start markdown preview
 gsm - stop markdown preview
 ~/.vim/plugin/tools-markdown.vim#/Markdown-Preview
 
+call append('.', 'grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')) )
+grip --user=andreasthoelke --pass=nada9simgh '/Users/at/.config/nvim/help.md'
+https://github.com/joeyespo/grip
+
 mdbook https://rust-lang.github.io/mdBook/format/mdbook.html#including-portions-of-a-file
 
 ## Video
@@ -840,6 +844,11 @@ can tab multi sel. can use c-t or cv to open multiple wins/tabs. or! .. us <c-q>
 quickfix list open and ]q ready to go through the selected files.
 ~/.vim/plugin/file-manage.vim#/New%20file%20openers.
 leader gp - ctrlP. use <c-o>v - browse-open recent file in a split e.g. from a different project
+
+## glob patterns
+echo glob("~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/*_patterns.scala")
+echo glob("~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/*_patterns.scala", 1, 1)
+
 
 ## Fzf how to custom setup
 ~/.config/nvim/plugin/utils-fileselect-fzf.vim#/Fzf%20config%20summary
@@ -1684,6 +1693,8 @@ leader saf/p - source function or paragraph
 
 ~/.vim/plugin/notes-workflow.vim#/Mappings.
 
+" example evaluating a contatinated string as a command
+" nnoremap ,sp       :exec 'Telescope live_grep glob_pattern=*+(_patterns\|utils).scala cwd=' . g:ScalaPatternsDir<cr>
 
 
 ## Mapping Control ctrl keys to Option alt key

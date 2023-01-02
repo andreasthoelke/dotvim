@@ -1,5 +1,29 @@
 
-" nnoremap <leader>te <cmd>Telescope<cr>
+" NOTE: you can use vim search in normal mode and highlight keywords
+
+" Focused search maps with presets/filters
+
+" search in vim comment TAGS: in local project
+nnoremap ,st       <cmd>Telescope live_grep default_text=[A-Z]{4}:.*<cr>
+
+" search all text in designated PATTERN: files
+nnoremap ,sp <cmd>lua require('utils_general').Search_patternfiles()<cr>
+
+" search in COMMENTS: in select files across select projects
+nnoremap ,sc <cmd>lua require('utils_general').Search_comments()<cr>
+
+" search in HEADERS: in select files across select projects
+nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
+
+" search in DEFS: (method definitions) in select files across select projects
+nnoremap ,sd <cmd>lua require('utils_general').Search_defs()<cr>
+
+nnoremap ,sg <cmd>lua require('utils_general').Search_greparg()<cr>
+
+nnoremap ,ss <cmd>lua require('utils_general').Search_gs()<cr>
+
+ " (:.*List.*(\)|=))@=
+
 nnoremap <leader>te :Telescope 
 
 nnoremap <leader>ts <cmd>Telescope sessions<cr>
@@ -14,11 +38,17 @@ nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
 nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
+nnoremap <leader>fF <cmd>Telescope file_browser<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap ,,sr <cmd>Telescope grep_string<cr>
+" nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
+nnoremap <silent> gp <cmd>Telescope oldfiles<cr>
+nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
+nnoremap <silent> go <cmd>Telescope buffers<cr>
 
 " Using Lua functions
 " nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
@@ -27,9 +57,12 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 nnoremap <leader>bs <cmd>lua require('telescope').extensions.vim_bookmarks.all({ width_line=0, width_text=40, shorten_path=true })<cr>
-
+" another rel map  ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<leader>ob%20.Telescope
 
 nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
+
+" example evaluating a contatinated string as a command
+" nnoremap ,sp       :exec 'Telescope live_grep glob_pattern=*+(_patterns\|utils).scala cwd=' . g:ScalaPatternsDir<cr>
 
 " nnoremap <leader>bk <cmd>lua require('utils_general').fileViewB()<cr>
 
@@ -60,6 +93,18 @@ nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
 " vim.api.nvim_set_keymap('n', '<leader>sp', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], { noremap = true, silent = true })
 " vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
 " vim.api.nvim_set_keymap('n', '<leader>?', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
+
+" echo glob('/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/*_patterns.scala')
+" nnoremap ,,sR :call SearchRepo( "─.*" . GetInputStr('Search in repo: ') )<cr>
+" nnoremap ,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
+" nnoremap ,sh       <cmd>Telescope grep_string search=─<cr>
+" nnoremap ,sn       <cmd>Telescope grep_string use_regex=1 search="[A-Z]{4}:"<cr>
+" nnoremap ,sn       <cmd>Telescope grep_string use_regex=true<cr>
+" nnoremap ,sn       <cmd>Telescope live_grep<cr>
+" nnoremap ,sn :exec 'Telescope live_grep default_text=' . expand('<cword>')<cr>
+" input('Cmd: ', GetLineFromCursor() )
+" Telescope lsp_dynamic_workspace_symbols 
+" nnoremap <leader>te <cmd>Telescope<cr>
 
 
 

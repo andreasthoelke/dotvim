@@ -3,7 +3,8 @@
 
 " ─   Markdown-Preview                                   ■
 
-nnoremap glm :call StopChromium()<cr>:MarkdownPreview<cr>
+" nnoremap glm :call StopChromium()<cr>:MarkdownPreview<cr>
+nnoremap <leader>glm :Markdown<cr>
 " nnoremap gsm :call StopChromium()<cr>
 
 
@@ -113,10 +114,16 @@ function! OpenMarkdownPreview() abort
   endif
   " let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
   let g:markdown_job_id = jobstart('grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')))
+
   if g:markdown_job_id <= 0 | return | endif
   " call system('open http://localhost:6419')
   call LaunchChromium( 'http://localhost:6419' )
 endfunction
+
+" call append('.', 'grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')) )
+" grip --user=andreasthoelke --pass=nada9simgh '/Users/at/.config/nvim/help.md'
+
+
 
 " ─^  Simple Grip Server in Chromium                     ▲
 

@@ -1,6 +1,6 @@
 
 " ↔ ↕ ⇿ ⟷
-" ɪ и
+" ɪ и ᵓᵔ ᵛ
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " ⇛ ≈ ⊪ ⊩ ⊧ ⤎ ⫻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣
 " ⊎ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ ∿ ∾  ≀ ≁ ➳  ➺  ➽
@@ -46,6 +46,9 @@ func! ScalaSyntaxAdditions ()
 
   " syntax match Normal 'List\ze\W' conceal cchar=⟬
   syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=˄
+  " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=˅
+  syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵘ
+  " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵛ
   syntax match Normal '\vSet\ze(\W|\_$)' conceal cchar=ᴺ
   syntax match Normal '\vArray\ze(\W|\_$)' conceal cchar=ᴬ
   syntax match Normal 'Map\ze\W' conceal cchar=ʺ
