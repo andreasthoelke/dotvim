@@ -5,8 +5,14 @@ spell/
 sessions/
 __Tagbar__*
 notes/vimdump-*
+notes/*
 scratch/
 utils/rescript_vscode/
 notes/*-bk
 notes/test*
 tags
+.DS_Store
+.luarc.json
+.vim_mru_files
+
+
