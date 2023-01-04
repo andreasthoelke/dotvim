@@ -25,7 +25,7 @@ au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
-" au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
@@ -432,30 +432,33 @@ func! PythonSyntaxAdditions() " ■
 endfunc " ▲
 
 func! LuaSyntaxAdditions() " ■
-  call CodeMarkupSyntaxHighlights()
-  " Hide comment character at beginning of line
-  call matchadd('Conceal', '\v^\s*\zs--\s', 12, -1, {'conceal': ''})
-  " Hilde \" before comment after code
-  call matchadd('Conceal', '\s\zs\--\ze\s', 12, -1, {'conceal': ''})
-  " Conceal "%20" which is used for "h rel.txt" with space
-  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
-  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
-  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+  call clearmatches()
 
-  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+  " convertion: only conceal single quotes
+  syntax match Normal "'" conceal
+  syntax match Normal '\[\[' conceal cchar=❞
+  syntax match Normal '\]\]' conceal cchar=❞
 
-  call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
+  " This is effective in preventing the conceal unicode in normal comments
+  syntax match Comment '\v--\s\zs.*'
 
+  " syntax match Normal '--\s' conceal
+  " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
+  call matchadd('Conceal', '--\s', 12, -1, {'conceal': ''})
+
+  syntax match Normal 'local\s' conceal cchar=ˍ
+  syntax match Normal '^local\s' conceal
+  syntax match Normal 'function' conceal cchar=→
+  syntax match Normal 'end' conceal cchar=˻
+  syntax match Normal 'return' conceal cchar=←
+  syntax match Normal 'require' conceal cchar=⊟
+  syntax match Normal 'vim\.' conceal cchar=v
+
+  " This replaces: call CodeMarkupSyntaxHighlights()
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
-  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
-  " set commentstring=\ \"%s
   set commentstring=\ \--%s
-  " Original vim foldmarker string
-  " set foldmarker={{{,}}}
-  " set foldmarker=■■,▲▲
-  " set foldmarker=\ ■,\ ▲
 endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
@@ -464,7 +467,30 @@ func! MarkdownSyntaxAdditions()
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
 endfunc
 
-func! VimScriptSyntaxAdditions() " ■
+func! VimScriptSyntaxAdditions ()
+  call LuaSyntaxAdditions()
+
+  " syntax match Normal '^"\s' conceal
+  " This is effective in preventing the conceal unicode in normal comments
+  syntax match Comment '\v^"\s\zs.*'
+  syntax match Comment '\v^\s\s\zs"\s\zs.*'
+
+  " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
+  call matchadd('Conceal', '^"\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '^\s\s\zs"\s', 12, -1, {'conceal': ''})
+
+
+  syntax match Normal 'lua\s<<\sEOF' conceal cchar=˻
+  syntax match Normal '^EOF' conceal cchar=˹
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  set commentstring=\ \"%s
+endfunc
+
+
+
+func! VimScriptSyntaxAdditions_() " ■
   " echoe "why is this called?"
   call clearmatches()
   call CodeMarkupSyntaxHighlights()

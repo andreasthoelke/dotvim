@@ -39,6 +39,9 @@ require('telescope').setup{
 
   },
   extensions = {
+    heading = {
+      treesitter = true,
+    },
     -- Your extension configuration goes here:
     -- extension_name = {
     --   extension_config_key = value,
@@ -51,6 +54,18 @@ require('telescope').setup{
 require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
 require("telescope").load_extension( "file_browser" )
+require('telescope').load_extension('heading')
+require('telescope').load_extension('glyph')
+require('telescope').load_extension('scaladex')
+require('telescope').load_extension('env')
+require('telescope').load_extension('ag')
+
+vim.api.nvim_set_keymap('n',
+  '<leader>si',
+  [[<cmd>lua require('telescope').extensions.scaladex.scaladex.search()<cr>]],
+  { noremap = true, silent = true }
+)
+
 -- require("telescope").load_extension( "live-grep-args" )
 
 local bookmark_actions = require('telescope').extensions.vim_bookmarks.actions
@@ -65,41 +80,61 @@ function _G.TelBookmarks()
   }
 end
 
-local base_branch = "main"
+local base_branch = "eins"
 
 easypick.setup({
-	pickers = {
-		-- add your custom pickers here
-		-- below you can find some examples of what those can look like
+  pickers = {
+    -- add your custom pickers here
+    -- below you can find some examples of what those can look like
 
-		-- list files inside current folder with default previewer
-		{
-			-- name for your custom picker, that can be invoked using :Easypick <name> (supports tab completion)
-			name = "ls",
-			-- the command to execute, output has to be a list of plain text entries
-			command = "ls",
-			-- specify your custom previwer, or use one of the easypick.previewers
-			previewer = easypick.previewers.default()
-		},
+    -- list files inside current folder with default previewer
+    {
+      -- name for your custom picker, that can be invoked using :Easypick <name> (supports tab completion)
+      name = "ls",
+      -- the command to execute, output has to be a list of plain text entries
+      command = "ls",
+      -- specify your custom previwer, or use one of the easypick.previewers
+      previewer = easypick.previewers.default()
+    },
 
-		-- diff current branch with base_branch and show files that changed with respective diffs in preview 
-		{
-			name = "changed_files",
-			command = "git diff --name-only $(git merge-base HEAD " .. base_branch .. " )",
-			previewer = easypick.previewers.branch_diff({base_branch = base_branch})
-		},
-		
-		-- list files that have conflicts with diffs in preview
-		{
-			name = "conflicts",
-			command = "git diff --name-only --diff-filter=U --relative",
-			previewer = easypick.previewers.file_diff()
-		},
-	}
+    -- diff current branch with base_branch and show files that changed with respective diffs in preview 
+    {
+      name = "changed_files",
+      command = "git diff --name-only $(git merge-base HEAD " .. base_branch .. " )",
+      previewer = easypick.previewers.branch_diff({base_branch = base_branch})
+    },
+
+
+    {
+      name = "rg",
+      command = [[rg -U '(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s' -g 'utils.scala' --line-number --column --with-filename --no-heading]],
+      -- command = "rg List --line-number --column --with-filename --no-heading",
+      -- ISSUE: the previewer doesn't work
+      -- previewer = telescope.defaults.grep_previewer,
+      -- previewer = easypick.previewers.default(),
+      -- previewer = easypick.previewers.file_diff(),
+      -- action = easypick.actions.nvim_command( "echo " )
+    },
+  }
 })
 
 
+    -- vimgrep_arguments =  {
+    --   "rg",
+    --     "--color=never",
+    --     "--no-heading",
+    --     "--with-filename",
+    --     "--line-number",
+    --     "--column",
+    --     "--smart-case"
+    -- }
+
+
+
 -- lua put( require'utils_general'.abc() )
+
+-- nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, [[\s[A-Z]{3,}:]], {"-g", "**/AZioHttp/*.md", "-g", "**/BZioHttp/*.scala"})<cr>
+
 
 
 return M

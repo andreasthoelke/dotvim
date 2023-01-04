@@ -39,6 +39,12 @@ Plug 'nvim-telescope/telescope-project.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'nvim-telescope/telescope-live-grep-args.nvim'
 Plug 'axkirillov/easypick.nvim'
+Plug 'crispgm/telescope-heading.nvim'
+Plug 'ghassan0/telescope-glyph.nvim'
+Plug 'softinio/scaladex.nvim'
+Plug 'LinArcX/telescope-env.nvim'
+Plug 'kelly-lin/telescope-ag'
+
 
 " Plug 'rmagatti/auto-session'
 " Plug 'rmagatti/session-lens'
@@ -141,7 +147,7 @@ Plug 'rbong/vim-flog'
 Plug 'mhinz/vim-grepper'
 " Plug 'mileszs/ack.vim'
 " Search integration
-Plug 'rking/ag.vim'
+" Plug 'rking/ag.vim'
 
 " Tabline Statusline: -----------------------------------------------------------
 " Faster than airline and cleaner config?

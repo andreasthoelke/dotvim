@@ -4,7 +4,7 @@
 " Focused search maps with presets/filters
 
 " search in vim comment TAGS: in local project
-nnoremap ,st       <cmd>Telescope live_grep default_text=[A-Z]{4}:.*<cr>
+" nnoremap ,st       <cmd>Telescope live_grep default_text=[A-Z]{4}:.*<cr>
 
 " search all text in designated PATTERN: files
 nnoremap ,sp <cmd>lua require('utils_general').Search_patternfiles()<cr>
@@ -18,9 +18,51 @@ nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
 " search in DEFS: (method definitions) in select files across select projects
 nnoremap ,sd <cmd>lua require('utils_general').Search_defs()<cr>
 
-nnoremap ,sg <cmd>lua require('utils_general').Search_greparg()<cr>
+" lua vim.g.rgx_caps_tags = [[\s[A-Z]{3,}:]]
 
-nnoremap ,ss <cmd>lua require('utils_general').Search_gs()<cr>
+
+" ─   Rgx select pickers                                ──
+
+lua << EOF
+
+local scala_parent_dir = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
+local rgx_caps_tags = [[\s[A-Z]{3,}:]]
+local glb_projs1 = {
+  '-g', '**/AZioHttp/*.scala', 
+  '-g', '**/BZioHttp/*.scala'
+}
+local glb_patterns1 = {
+  '-g', '**/BZioHttp/utils.scala', 
+  '-g', '**/BZioHttp/*_patterns.scala'
+}
+
+-- search in comment TAGS: in local project
+vim.keymap.set( 'n',
+  ',st', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_caps_tags,
+    '.',
+    {}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sT', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_caps_tags,
+    scala_parent_dir,
+    glb_projs1
+    ) end )
+
+
+
+EOF
+
+
+" nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, vim.g.rgx_caps_tags, vim.g.glob_sct1)<cr>
+" nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, [[\s[A-Z]{3,}:]], {"-g", "**/AZioHttp/*.md", "-g", "**/BZioHttp/*.scala"})<cr>
+" nnoremap ,ss <cmd>lua require('utils_general').Colors()<cr>
+" nnoremap ,sg <cmd>lua require('utils_general').Colors(require("telescope.themes").get_dropdown{})<cr>
+" nnoremap ,sr <cmd>lua require('utils_general').Resources()<cr>
 
  " (:.*List.*(\)|=))@=
 
@@ -105,6 +147,8 @@ nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
 " input('Cmd: ', GetLineFromCursor() )
 " Telescope lsp_dynamic_workspace_symbols 
 " nnoremap <leader>te <cmd>Telescope<cr>
+" nnoremap ,sg <cmd>lua require('utils_general').Search_greparg()<cr>
+" nnoremap ,ss <cmd>lua require('utils_general').Search_gs()<cr>
 
 
 

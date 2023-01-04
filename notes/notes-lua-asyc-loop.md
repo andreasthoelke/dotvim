@@ -90,6 +90,7 @@ lua put( vim.g.sometestvar )
 lua print( vim.g.sometestvar )
 lua print( vim.g['sometestvar'] )
 
+require('utils_general').Concat({4,3}, {8, 9})  
 
 
 ### Set shell environment vars

@@ -1757,6 +1757,12 @@ to highligh colors in code (CSS, JS, HTML, VIM)
 
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
+# Environment variables
+can be viewed (and temp set) with :Telescope env
+<c-a> to append value to buffer
+<c-e> to temp edit the value
+~/.config_git/zsh/.zshrc#/#%20Environment%20variables
+
 # Shell / ZSH
 example config shell script: ~/Documents/Server-Dev/pg/a_pg_learn/server-setup.md#/##%20Config%20shell
 read shell variables: ~/.config/nvim/plugin/tools-tab-status-lines.vim#/func.%20PyVimVirtualEnvExt%20..

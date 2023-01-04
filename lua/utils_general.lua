@@ -177,6 +177,18 @@ function M.fileViewB()
 end
 
 
+function M.Search_greparg()
+  require('telescope').extensions.live_grep_args.live_grep_args({
+    -- default_text = [[def\s.*]],
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+    theme = 'dropdown',
+  } )
+end
+
+-- https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
+-- https://docs.rs/regex/1.7.0/regex/#syntax
+
 
 
 -- Focused search maps with presets/filters
@@ -186,6 +198,8 @@ end
 local scala_parent_dir = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
 local scala_comments_rx = [[^(\s*)?(//|\*\s).*]]
 local scala_header_rx = [[─.*]]
+-- local scala_multilineSignatures = [[(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s]]
+local scala_multilineSignatures = [[(def|extension).*=.*\n]]
 
 local scala_patterns_files = {
   'BZioHttp/*_patterns.scala',
@@ -226,9 +240,17 @@ function M.Search_headers()
   } )
 end
 
+function M.Search_typeSign()
+  require('telescope.builtin').live_grep({
+    default_text = scala_multilineSignatures,
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+  } )
+end
+
 
 function M.Search_gs()
-  require('telescope.builtin').grep_string({
+  require('telescope.builtin').live_grep({
     -- default_text = [[ab]],
     search = "List",
     glob_pattern = scala_interest_files,
@@ -237,45 +259,208 @@ function M.Search_gs()
 end
 
 
+-- First picker: https://github.com/nvim-telescope/telescope.nvim/blob/master/developers.md
 
-function M.Search_greparg()
-  require('telescope').extensions.live_grep_args.live_grep_args({
-    -- default_text = [[def\s.*]],
-    glob_pattern = scala_interest_files,
-    cwd = scala_parent_dir,
-    theme = 'dropdown',
-  } )
+-- ─   Rgx select picker                                ──
+
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require("telescope.config").values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
+
+local previewers = require("telescope.previewers")
+local sorters = require("telescope.sorters")
+
+function M.Resources(opts)
+  opts = opts or {}
+  pickers.new {
+    results_title = "Resources",
+    -- Run an external command and show the results in the finder window
+    finder = finders.new_oneshot_job({"terraform", "show"}),
+    sorter = sorters.get_fuzzy_file(),
+    previewer = previewers.new_buffer_previewer {
+      define_preview = function(self, entry, status)
+        -- Execute another command using the highlighted entry
+        return require('telescope.previewers.utils').job_maker(
+          {"terraform", "state", "list", entry.value},
+          self.state.bufnr,
+          {
+            callback = function(bufnr, content)
+              if content ~= nil then
+                require('telescope.previewers.utils').regex_highlighter(bufnr, 'terraform')
+              end
+            end,
+          })
+      end
+    },
+  }:find()
 end
 
--- https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
--- https://docs.rs/regex/1.7.0/regex/#syntax
+-- our picker function: colors
+-- local colors = function(opts)
+function M.Colors(opts)
+  -- opts = opts or {}
+  opts = {
+    -- This is a working example of a custom entry_maker
+    -- the arg "entry" is a line of text from the shell command in this case
+    entry_maker = function(entry)
+      local split = vim.split(entry, ":")
+      local rel_filepath = split[1]
+      local abs_filepath = vim.fn.getcwd() .. "/" .. rel_filepath
+      local line_num = tonumber(split[2])
+      return {
+        value = 43,
+        display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
+        ordinal = 4,
+      }
+
+      -- return {
+      --   -- value = entry,
+      --   value = split[1],
+      --   display = function(display_entry)
+      --     local hl_group
+      --     local display = utils.transform_path({}, display_entry.value)
+
+      --     display, hl_group = utils.transform_devicons(display_entry.path, display, false)
+
+      --     if hl_group then
+      --       return display, { { { 1, 3 }, hl_group } }
+      --     else
+      --       return display
+      --     end
+      --   end,
+      --   ordinal = rel_filepath,
+      --   filename = rel_filepath,
+      --   path = abs_filepath,
+      --   lnum = line_num,
+      -- }
+    end
+    }
+
+  pickers.new(opts, {
+    prompt_title = "colors",
+
+    -- finder = finders.new_table {
+    --   results = { "red", "green", "blue" }
+    -- },
+
+    -- finder = finders.new_table {
+    --   results = {
+    --     { "red", "#ff0000" },
+    --     { "green", "#00ff00" },
+    --     { "blue", "#0000ff" },
+    --   },
+    --   entry_maker = function(entry)
+    --     return {
+    --       value = entry[0],
+    --       display = entry[1],
+    --       ordinal = entry[1],
+    --     }
+    --   end
+    -- },
+
+    -- finder = finders.new_oneshot_job({ "rg", "scala" }, opts ),
+    finder = finders.new_oneshot_job({
+      "rg", "scala", "--line-number", "--column", "--with-filename"
+    }, opts ),
+
+    sorter = conf.generic_sorter(opts),
+    -- previewer = conf.grep_previewer(opts),
+
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        print(vim.inspect(selection))
+        -- vim.api.nvim_echo({ selection[1] }, "", false, true)
+        -- vim.api.nvim_put({ selection[1] }, "", false, true)
+      end)
+      return true
+    end,
+
+  }):find()
+end
+
+-- lua require('utils_general').Colors()
+
+-- printing/inspecting a table object!
+-- lua print( vim.inspect( vim.fn['bm#all_files']() ) )
+
+-- local action_state = require "telescope.actions.state"
+
+-- local actions1 = {}
+-- actions1.do_stuff = function(prompt_bufnr)
+--   local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+--   local entry = action_state.get_selected_entry()
+-- end
+
+-- local transform_mod = require("telescope.actions.mt").transform_mod
+
+-- local mod = {}
+-- mod.a1 = function(prompt_bufnr)
+--   -- your code goes here
+--   -- You can access the picker/global state as described above in (1).
+-- end
+
+-- mod.a2 = function(prompt_bufnr)
+--   -- your code goes here
+-- end
+-- mod = transform_mod(mod)
+
+-- Now the following is possible. This means that actions a2 will be executed
+-- after action a1. You can chain as many actions as you want.
+-- local action = mod.a1 + mod.a2
+-- action(bufnr) 
+
+local make_entry = require "telescope.make_entry"
+local tpat = "plugin/*.vim"
+-- local scapa = "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/"
+local scglo = {
+        "-g", "**/AZioHttp/*.md",
+        "-g", "**/BZioHttp/*.scala",
+}
 
 
+function M.Concat(t1,t2)
+  for i=1,#t2 do
+    t1[#t1+1] = t2[i]
+  end
+  return t1
+end
 
+-- require('utils_general').Concat({4,3}, {8, 9})  
+-- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
+-- vim.fn.join( {3,4}, {1, 2} )
 
+function M.RgxSelect_Picker(opts, rex_query, scala_parent_dir, globs)
+  opts = opts or {}
+  opts.entry_maker = make_entry.gen_from_vimgrep()
+  local rg_cmd = M.Concat(
+    { "rg",
+        rex_query,
+        "--line-number", "--column", "--with-filename",
+        "--multiline",
+        scala_parent_dir,
+    }, globs )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  pickers.new(opts, {
+    prompt_title = "rx sel",
+    finder = finders.new_oneshot_job( rg_cmd, opts ),
+    sorter = conf.generic_sorter(opts),
+    previewer = conf.grep_previewer(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        print(vim.inspect(selection))
+        -- vim.api.nvim_echo({ selection[1] }, "", false, true)
+        -- vim.api.nvim_put({ selection[1] }, "", false, true)
+      end)
+      return true
+    end,
+  }):find()
+end
 
 
 

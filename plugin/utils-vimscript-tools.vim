@@ -89,6 +89,43 @@ func! SourceRange() range
 endfunc
 " TIP: Range example function
 
+func! SourceLines( lines )
+  let tmpsofile = tempname()
+  call writefile( a:lines, l:tmpsofile)
+  if &filetype == 'lua'
+    exec "luafile " . l:tmpsofile
+  elseif &filetype == 'vim'
+    exec "source " . l:tmpsofile
+  else
+    exec "luafile " . l:tmpsofile
+    " echoe "File type not supported!"
+  endif
+  call delete(l:tmpsofile)
+endfunc
+
+func! SourcePrintCommented()
+  if &filetype == 'lua'
+    let expr = getline('.')[3:]
+    " let code = 'print( vim.inspect( ' . expr . ' ) )'
+    let code = 'vim.pretty_print(' . expr . ')'
+  elseif &filetype == 'markdown' || &filetype == 'purescript_scratch' || &filetype == ''
+    let expr = getline('.')
+    let code = 'print( vim.inspect( ' . expr . ' ) )'
+  elseif &filetype == 'vim'
+    let expr = getline('.')[1:]
+    let code = 'echo ' . expr
+  else
+    echoe &ft
+    echoe "File type not supported!"
+    return
+  endif
+  call SourceLines([ code ])
+endfunc
+
+" nnoremap <silent> <leader>gei :call SourcePrintCommented()<cr>
+nnoremap <silent> gei :call SourcePrintCommented()<cr>
+" [9, 8] + [1, 2]
+
 
 function! RangeAux(lnum1, lnum2) abort
   " echo a:lnum1 . ' - ' . a:lnum2
@@ -98,17 +135,6 @@ function! RangeAux(lnum1, lnum2) abort
   call highlightedyank#highlight#add( 'HighlightedyankRegion', pos1, pos2, 'line', 500)
 endfunction
 
-func! SourceLines( lines )
-  let tmpsofile = tempname()
-  call writefile( a:lines, l:tmpsofile)
-  " execute "source " . l:tmpsofile
-  if &filetype == 'lua'
-    exec "luafile " . l:tmpsofile
-  else
-    exec "source " . l:tmpsofile
-  endif
-  call delete(l:tmpsofile)
-endfunc
 
 nnoremap <silent> <leader>s m':set opfunc=OpSourceVimL<cr>g@
 vnoremap <silent> <leader>ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>

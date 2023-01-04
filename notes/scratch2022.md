@@ -1,4 +1,5 @@
 
+
 *  - previous line start
 c-o - any non-reversible jump should use "normal! m'" to add to the jump list
 
@@ -103,6 +104,11 @@ i might make manually unique string ids in data.ts.
 # Vim explore
 h Floaterm
 https://github.com/voldikss/vim-floaterm
+leader te h<tab>   - Telescope heading
+leader te gl<tab>  - Telescope glyph
+leader te sp - spell_suggest (on a word to replace)
+
+
 
 ## Vim to learn
 
