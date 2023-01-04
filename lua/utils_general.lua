@@ -433,14 +433,14 @@ end
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
 -- vim.fn.join( {3,4}, {1, 2} )
 
-function M.RgxSelect_Picker(opts, rex_query, scala_parent_dir, globs)
+function M.RgxSelect_Picker(opts, rgx_query, scala_parent_dir, globs)
   opts = opts or {}
   opts.entry_maker = make_entry.gen_from_vimgrep()
   local rg_cmd = M.Concat(
     { "rg",
-        rex_query,
+        rgx_query,
         "--line-number", "--column", "--with-filename",
-        "--multiline",
+        "--multiline", "--case-sensitive",
         scala_parent_dir,
     }, globs )
 

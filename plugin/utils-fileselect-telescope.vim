@@ -25,8 +25,24 @@ nnoremap ,sd <cmd>lua require('utils_general').Search_defs()<cr>
 
 lua << EOF
 
+local opts_1 = { initial_mode = 'insert' }
+local opts_2 = {
+  sorting_strategy = 'ascending',
+  -- default_text = [[(Seq|List)]],
+}
+
 local scala_parent_dir = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
-local rgx_caps_tags = [[\s[A-Z]{3,}:]]
+
+local rgx_caps_tag = [[\s[A-Z]{3,}:]]
+local rgx_comment = [[^(\s*)?(//|\*\s)]]
+local rgx_header = [[─.*]]
+-- local rgx_signature = [[(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s]]
+-- local rgx_signature = [[(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s]]
+-- local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=(\s|$)).*(List|Seq)]]
+-- local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*(\n)?.*(\n)?.*\s=\s).*(List|Seq|Iterable)]]
+local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s)]]
+local rgx_collection = [[(List|Seq|Iterable)]]
+
 local glb_projs1 = {
   '-g', '**/AZioHttp/*.scala', 
   '-g', '**/BZioHttp/*.scala'
@@ -36,11 +52,11 @@ local glb_patterns1 = {
   '-g', '**/BZioHttp/*_patterns.scala'
 }
 
--- search in comment TAGS: in local project
+-- search in comment TAGS:
 vim.keymap.set( 'n',
   ',st', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_caps_tags,
+  .RgxSelect_Picker( opts_1,
+    rgx_caps_tag,
     '.',
     {}
     ) end )
@@ -48,9 +64,84 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   ',sT', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
-    rgx_caps_tags,
+    rgx_caps_tag,
     scala_parent_dir,
     glb_projs1
+    ) end )
+
+-- search in COMMENTS:
+vim.keymap.set( 'n',
+  ',sc', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_comment,
+    '.',
+    {}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sC', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_comment,
+    scala_parent_dir,
+    glb_projs1
+    ) end )
+
+-- search in HEADERS:
+vim.keymap.set( 'n',
+  ',sh', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_header,
+    '.',
+    {}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sH', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_header,
+    scala_parent_dir,
+    glb_projs1
+    ) end )
+
+-- search in SIGNATURES:
+vim.keymap.set( 'n',
+  ',ss', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_signature,
+    '.',
+    {}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sS', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_signature,
+    scala_parent_dir,
+    glb_projs1
+    ) end )
+
+vim.keymap.set( 'n',
+  ',,ss', function() require( 'utils_general' )
+  .RgxSelect_Picker( opts_2,
+    rgx_signature,
+    scala_parent_dir,
+    glb_patterns1
+    ) end )
+
+vim.keymap.set( 'n',
+  ',,sc', function() require( 'utils_general' )
+  .RgxSelect_Picker( opts_2,
+    rgx_signature .. '.*' .. rgx_collection,
+    scala_parent_dir,
+    glb_patterns1
+    ) end )
+
+vim.keymap.set( 'n',
+  ',,sz', function() require( 'utils_general' )
+  .RgxSelect_Picker( opts_2,
+    rgx_signature .. '.*?' .. [[ZIO]],
+    scala_parent_dir,
+    glb_patterns1
     ) end )
 
 

@@ -17,7 +17,7 @@ leader od  - open dirvish in float!
 ,,sR :call SearchRepo( "─.*" . GetInputStr('Search in repo: ') )<cr>
 ,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
 also:
-leader fg - and then can use regex like //.*List to earch in comments
+leader fg - and then can use regex like //.*List to search in comments
 
 # Scala references with Trouble
 ged  - show workspace errors
@@ -133,6 +133,9 @@ leader qq - toggle quickfix list
 
 ## regex vim pattern
 [A-Z]{4}:  - find comment tags like: // NOTE:  , TODO:
+
+rust regex docs:
+https://docs.rs/regex/1.7.0/regex/#syntax
 
 ### Lsp
 sp ca - code action

@@ -6,6 +6,7 @@ sessions/
 __Tagbar__*
 notes/vimdump-*
 notes/*
+.metals/*
 scratch/
 utils/rescript_vscode/
 notes/*-bk

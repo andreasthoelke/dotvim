@@ -449,10 +449,11 @@ func! LuaSyntaxAdditions() " ■
   syntax match Normal 'local\s' conceal cchar=ˍ
   syntax match Normal '^local\s' conceal
   syntax match Normal 'function' conceal cchar=→
-  syntax match Normal 'end' conceal cchar=˻
+  syntax match Normal '\vend\ze(\W|\_$)' conceal cchar=˻
   syntax match Normal 'return' conceal cchar=←
   syntax match Normal 'require' conceal cchar=⊟
   syntax match Normal 'vim\.' conceal cchar=v
+  syntax match Normal 'vim.keymap\.set' conceal cchar=⊂
 
   " This replaces: call CodeMarkupSyntaxHighlights()
   syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
