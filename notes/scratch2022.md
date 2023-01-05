@@ -144,6 +144,10 @@ gti   - import identifier under cursor
 https://jose-elias-alvarez.medium.com/configuring-neovims-lsp-client-for-typescript-development-5789d58ea9c
 https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils
 
+TODO:
+Telescope dynamic_workspace_symols
+this currently only works within the .metals project folder!?
+
 ### Quick floats
 sp os - scratch
 sp ol - links

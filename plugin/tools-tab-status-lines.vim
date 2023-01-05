@@ -1,5 +1,7 @@
 
 
+let g:metals_status = ""
+
 " NVIM-scrollview config:
 
 let g:scrollview_current_only = 1
@@ -58,31 +60,19 @@ func! TestSL()
   call lightline#update()
 endfunc
 
+
+" ─   Status-line left & right components               ──
 let g:lightline.active = {}
 let g:lightline.inactive = {}
-" let g:lightline.active.left   = [ ['projectRootFolderName', 'relativepath'] ]
-" let g:lightline.inactive.left = [ ['projectRootFolderName', 'relativepath'] ]
+
+" Left side:
 let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
 let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepathOfWin'] ]
-
-" let g:lightline.active.right = [ ['lineinfo', 'percent']
-"                              \ , ['fpathBNum', 'percent']
-"                              \ , ['filename', 'fpathBNum'] ]
-
-" let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
-" let g:lightline.inactive.right = [ ['scrollbar'] ]
-" let g:lightline.active.right = [ ['line'], ['db', 'pyVirtEnvStr'] ]
-"
-" 2022-06 update: use the vertical small scrollbar again
-let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr'] ]
+" Right side:
+let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr', 'scalaMetalsStatus'] ]
 let g:lightline.inactive.right = [ ]
-" let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
-" let g:lightline.active.right = [ ['line', 'percent'] ]
-" let g:lightline.inactive.right = [ ['scrollbar'] ]
-" let g:lightline.inactive.right = [ [] ]
-" \ , ['gitbranch']
-" \ ]
 
+" Tabs:
 let g:lightline.tabline = {}
 let g:lightline.tabline.left  = [ [ 'tabs' ] ]
 let g:lightline.tabline.right = []
@@ -94,8 +84,6 @@ let g:lightline.tab = {
       " \ 'active':   [ 'tabnum', 'filename', 'modified' ],
       " \ 'inactive': [ 'tabnum', 'filename', 'modified' ] }
 
-
-" let g:lightline.subseparator = { 'left': '|', 'right': '|' }
 let g:lightline.subseparator = { 'left': '', 'right': '|' }
 
 " {noscrollbar#statusline(30,'\ ','■')}
@@ -110,6 +98,7 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
 let g:lightline.component_function.db = "DBUIInfos"
+let g:lightline.component_function.scalaMetalsStatus = "ScalaMetalsStatus"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
 let g:lightline.component_function.pyVirtEnvStr = 'PyVirtEnvStr'
 let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
@@ -120,6 +109,11 @@ let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
 
 let g:lightline.tab_component_function = {}
 let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+
+
+func! ScalaMetalsStatus()
+  return g:metals_status
+endfunc
 
 
 func! DBUIInfos ()

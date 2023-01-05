@@ -156,7 +156,7 @@ nnoremap <c-w><c-t> :tabe %<cr><c-o>
 
 " close tab and go to the previous window
 " nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
-nnoremap <localleader>x :call CloseTabGoToPrevious()<cr>
+nnoremap <silent><localleader>x :call CloseTabGoToPrevious()<cr>
 function! CloseTabGoToPrevious()
   if tabpagenr("$") > 1 && tabpagenr() > 1 && tabpagenr() < tabpagenr("$")
     tabclose | tabprev

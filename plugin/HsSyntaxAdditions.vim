@@ -480,9 +480,10 @@ func! VimScriptSyntaxAdditions ()
   call matchadd('Conceal', '^"\s', 12, -1, {'conceal': ''})
   call matchadd('Conceal', '^\s\s\zs"\s', 12, -1, {'conceal': ''})
 
-
   syntax match Normal 'lua\s<<\sEOF' conceal cchar=˻
   syntax match Normal '^EOF' conceal cchar=˹
+
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
 
   set conceallevel=2 " ■
   set concealcursor=ni " ▲

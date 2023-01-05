@@ -1258,6 +1258,13 @@ yow - to toggle line wrapping
 
 Align templates using UserChoiceAction/ quickmenu: ~/.vim/plugin/utils-align.vim#/Align%20Templates
 
+### Scala indent problem
+This neovim default script from 2016 (which i now deactivated):
+/opt/homebrew/Cellar/neovim/0.8.2/share/nvim/runtime/indent/sc_ala.vim_
+sets a custom indent expression which i can probe running:
+verbose set indentexpr?
+echo exists("*GetScalaIndent")
+
 ## Purs Browse Module
 
 # Format
