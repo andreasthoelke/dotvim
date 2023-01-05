@@ -159,12 +159,13 @@ EOF
 
 nnoremap <leader>te :Telescope 
 
+nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
 nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
 " NOTE: these map  ~/.config/nvim/help.md#/###%20telescope%20project
-nnoremap <leader>th <cmd>Telescope highlights<cr>
-nnoremap <leader>tH <cmd>TSHighlightCapturesUnderCursor<cr>
+nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
+nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
@@ -176,7 +177,6 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
 nnoremap <silent> gp <cmd>Telescope oldfiles<cr>
@@ -184,6 +184,7 @@ nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
 nnoremap <silent> go <cmd>Telescope buffers<cr>
 
 " Using Lua functions
+nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
 " nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 " nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>

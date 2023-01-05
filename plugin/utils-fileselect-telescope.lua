@@ -20,7 +20,13 @@ require('telescope').setup{
         -- ["<C-h>"] = "which_key"
       },
       n = {
-        ["<c-o>"] = trouble.open_with_trouble
+        ["<c-o>"] = trouble.open_with_trouble,
+        ["<c-a>"] = actions.send_selected_to_qflist,
+        ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true, silent = true } },
+        [",m"] = actions.select_all,
+        [",M"] = actions.drop_all,
+        ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
+
       },
     },
     layout_strategy = 'vertical',
@@ -53,7 +59,7 @@ require('telescope').setup{
 
 require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
-require("telescope").load_extension( "file_browser" )
+require('telescope').load_extension('file_browser')
 require('telescope').load_extension('heading')
 require('telescope').load_extension('glyph')
 require('telescope').load_extension('scaladex')

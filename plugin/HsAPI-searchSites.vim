@@ -38,8 +38,8 @@ func! GetInputStr( userPrompt, ...)
   let initStr = a:0 == 1 ? GetVisSel() : HsCursorKeyword()
   return input( a:userPrompt, initStr )
 endfunc
-nnoremap <leader>tti :echoe GetInputStr('Search keyword: ')<cr>
-vnoremap <leader>tti :<c-u>echoe GetInputStr('Search term: ', 'v')<cr>
+" nnoremap <leader>tti :echoe GetInputStr('Search keyword: ')<cr>
+" vnoremap <leader>tti :<c-u>echoe GetInputStr('Search term: ', 'v')<cr>
 
 " Issue: This labels the last sub-module as 'identifier'
 func! ParseModuleIdentifier( inStr ) " ■
@@ -145,8 +145,8 @@ nnoremap <leader>gsO :call UserChoiceAction( 'Run query on site', GetSearchParam
 " vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 " vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
-nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
-nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
+" nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
+" nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
 
 
 " TODO temp purescript version
@@ -271,7 +271,7 @@ endfunc
 
 let g:searchSites =  [ {'section':'Docs'} ]
 
-" https://www.stackage.org/lts-14.1/hoogle?q=Data.Either.fromLeft
+" htq1tps://www.stackage.org/lts-14.1/hoogle?q=Data.Either.fromLeft
 " module_mainTerm should join namespace and mainTerm via a '.' if both are provided
 let g:searchSites += [ {'label':'_Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
       \, 'module_mainTerm':'hoogle?q='

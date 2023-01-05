@@ -1741,6 +1741,10 @@ Examples with generic operator functions
 
 ## Syntax color, highlights
 
+treesitter syntax
+nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
+nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
+
 Telescope highlights
 we now have a fast Colorizer
 Filter ansi color escape codes: ~/.config/nvim/plugin/search-replace.vim#/func.%20RemoveTermCodes%20.lines.

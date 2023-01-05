@@ -14,8 +14,6 @@ nnoremap <leader>ov :vnew ~/.config/nvim/<cr>
 nnoremap <leader>oV :tabe ~/.config/nvim/<cr>
 nnoremap <leader>od :vnew ~/Documents/<cr>
 nnoremap <leader>oD :tabe ~/Documents/<cr>
-nnoremap <leader>oh :vnew ~/Documents/Haskell/6/<cr>
-nnoremap <leader>oH :tabe ~/Documents/Haskell/6/<cr>
 nnoremap <leader>op :vnew ~/Documents/PS/A/<cr>
 nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
 nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
@@ -40,6 +38,10 @@ nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
 nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
 
 nnoremap <leader>oF :FzfGFiles<cr>
+
+" nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
+nnoremap <leader>oh :vnew ~/.config/nvim/help.md<cr>
+nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links2022.md" )<cr>
 nnoremap <leader>os :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>

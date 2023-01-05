@@ -1,4 +1,6 @@
 
+find any git-repo in Documents/!  - leader tr
+search help tags - leader th
 
 *  - previous line start
 c-o - any non-reversible jump should use "normal! m'" to add to the jump list
@@ -54,6 +56,8 @@ interactive programms can be seen in the running terminal
 
 
 ## Telescope useful maps
+
+<leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
 leader>ts Telescope sessions<cr>
 > finding a git repo on disk!
 leader>tr Telescope repo list layout_strategy=vertical<cr>
@@ -63,6 +67,11 @@ leader>fo Telescope oldfiles<cr>
 leader>fg Telescope live_grep<cr>
 leader>fb Telescope buffers<cr>
 leader>fh Telescope help_tags<cr>
+
+treesitter syntax
+nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
+nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
+
 
 ### Telescope project maps
 d	delete currently selected project
@@ -111,6 +120,10 @@ leader te sp - spell_suggest (on a word to replace)
 
 
 ## Vim to learn
+
+nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
+nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
+
 
 )  - MvNextLineStart
 (  - this line (useful!) start

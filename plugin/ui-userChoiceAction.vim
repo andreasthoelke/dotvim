@@ -37,8 +37,8 @@ let g:choicesTest1 = [{'label':'choice 1', 'otherData':111}, {'label':'choice 2'
 let g:choicesTest2 = [{'label':'_Google', 'url':'http://www.google.de/search?q='}, {'section':'Local search:'}, {'label':'_In Hask dir', 'comm':'Fhask'}]
 "                      ( userPromptText,      optUserPromtValue_andFirstArg,            choices,       continuationFn,          contOtherArgs,          [winPos] ... )
 " call UserChoiceAction( 'Run query on site', input('Site query: ', HsCursorKeyword()), g:searchSites, function('BrowserQuery'), [{'browser':'default'}] )
-nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
-nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'term': expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
+" nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
+" nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'term': expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
 " try: replicateM Response MonadIO
 
 func! TestUserChoice1 ( choosenObj )
