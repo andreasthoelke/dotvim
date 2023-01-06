@@ -10,7 +10,7 @@ require('telescope').setup{
     -- Default configuration for telescope goes here:
     -- config_key = value,
     path_display = { 'shorten' },
-    initial_mode = 'normal',
+    -- initial_mode = 'normal',
     mappings = {
       i = {
         ["<c-o>"] = trouble.open_with_trouble
@@ -30,6 +30,43 @@ require('telescope').setup{
       },
     },
     layout_strategy = 'vertical',
+    sorting_strategy = 'ascending',
+    scroll_strategy = 'limit',
+    dynamic_preview_title = true,
+    -- sort_lastused = true,
+    -- selection_strategy = 'closest',
+    -- selection_strategy = 'reset',
+    -- default_selection_index = 3,
+    layout_config = {
+      horizontal = {
+        width = 0.92,
+        height = 0.92,
+        anchor = 'NW',
+        prompt_position = 'top',
+        sorting_strategy = 'ascending',
+        scroll_speed = 1,
+        preview_height = 0.5,
+      },
+      vertical = {
+        width = 0.92,
+        height = 0.92,
+        dynamic_preview_title = true,
+        prompt_position = 'top',
+        sorting_strategy = 'ascending',
+        scroll_speed = 1,
+        preview_height = 0.5,
+      },
+      center = {
+        width = 0.92,
+        height = 0.52,
+        -- anchor = 'S',
+        -- prompt_position = 'top',
+        sorting_strategy = 'ascending',
+        scroll_speed = 1,
+        preview_height = 0.5,
+      },
+      cursor = { width = 80, height = 20 },
+    },
   },
   pickers = {
     -- Default configuration for builtin pickers goes here:

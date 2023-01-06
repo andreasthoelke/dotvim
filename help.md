@@ -189,7 +189,7 @@ FzfFiles
 FzfFiles!
 FzfHelptags bang
 
-### Seach syntax
+### Search syntax
 
 sbtrkt fuzzy-match
 'wild exact-match (quoted) - use the --exact flag to invert the meaning of '!
@@ -211,7 +211,9 @@ CocCommand fzf-preview.VistaCtags
 CocCommand fzf-preview.CocReferences
 CocCommand fzf-preview.Marks
 
-GREP??
+### ripgrep
+examples/tests: ~/.config/nvim/notes/rg_test_globs.sh
+~/.config/nvim/lua/utils_general.lua#/function%20M.RgxSelect_Picker.opts,%20rgx_query,
 
 ## telescope.nvim
 
@@ -1700,7 +1702,7 @@ leader saf/p - source function or paragraph
 
 ~/.vim/plugin/notes-workflow.vim#/Mappings.
 
-" example evaluating a contatinated string as a command
+" example evaluating a concatinated string as a command
 " nnoremap ,sp       :exec 'Telescope live_grep glob_pattern=*+(_patterns\|utils).scala cwd=' . g:ScalaPatternsDir<cr>
 
 

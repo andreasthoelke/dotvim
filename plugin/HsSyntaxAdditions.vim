@@ -454,6 +454,7 @@ func! LuaSyntaxAdditions() " ■
   syntax match Normal 'require' conceal cchar=⊟
   syntax match Normal 'vim\.' conceal cchar=v
   syntax match Normal 'vim.keymap\.set' conceal cchar=⊂
+  syntax match Normal 'vim.pretty_print' conceal cchar=⌘
 
   " This replaces: call CodeMarkupSyntaxHighlights()
   syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'

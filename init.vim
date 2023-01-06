@@ -75,6 +75,8 @@ Plug 'roginfarrer/vim-dirvish-dovish'
 " Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'npm install && npm run build' }
 Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'bash install.sh' }
 
+" enhance the quickfix list
+Plug 'kevinhwang91/nvim-bqf'
 " Tools: ------------------------------------------
 " Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
 Plug 'majutsushi/tagbar'

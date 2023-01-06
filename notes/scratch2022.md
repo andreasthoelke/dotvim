@@ -161,6 +161,9 @@ TODO:
 Telescope dynamic_workspace_symols
 this currently only works within the .metals project folder!?
 
+# scala metals
+feature list: https://github.com/scalameta/nvim-metals/discussions/279
+
 ### Quick floats
 sp os - scratch
 sp ol - links

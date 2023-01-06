@@ -48,16 +48,20 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+  nnoremap <silent><buffer>         gej :lua vim.lsp.buf.signature_help()<cr>
   " this works super nice. there's another (default?) mapping for leader ?
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> ,sl   :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
+  nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
-  nnoremap <silent><buffer>         ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
-  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer>         geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer>         ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
-  nnoremap <silent><buffer>         ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer> ,ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
+  nnoremap <silent><buffer> geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>

@@ -429,11 +429,50 @@ function M.Concat(t1,t2)
   return t1
 end
 
+-- TODO: test this
+-- rg --sort flag options:
+-- none      (Default) Do not sort results. Fastest. Can be multi-threaded.
+-- path      Sort by file path. Always single-threaded.
+-- modified  Sort by the last modified time on a file. Always single-threaded.
+-- accessed  Sort by the last accessed time on a file. Always single-threaded.
+-- created   Sort by the creation time on a file. Always single-threaded.
+
 -- require('utils_general').Concat({4,3}, {8, 9})  
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
--- vim.fn.join( {3,4}, {1, 2} )
+-- vim.fn.join( {3,4}, 1 )
 
-function M.RgxSelect_Picker(opts, rgx_query, scala_parent_dir, globs)
+
+function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
+  opts = opts or {}
+  opts.entry_maker = make_entry.gen_from_vimgrep()
+  local rg_baseArgs = { 'rg',
+        rgx_query,
+        '--line-number', '--column',
+        -- '--with-filename',
+        '--multiline', '--case-sensitive',
+        -- '--max-depth', "1",
+        '--sort', 'accessed',
+        -- '--regexp', 'pcre2'
+    }
+  local rg_cmd = M.Concat( M.Concat( rg_baseArgs, globs ), paths )
+
+  pickers.new(opts, {
+    prompt_title = 'rx sel',
+    finder    = finders.new_oneshot_job( rg_cmd, opts ),
+    sorter    = conf.generic_sorter(opts),
+    previewer = conf.grep_previewer(opts),
+    attach_mappings = function( prompt_bufnr )
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        vim.pretty_print( selection )
+      end)
+      return true
+    end,
+  }):find()
+end
+
+function M.RgxSelect_Picker_bak(opts, rgx_query, parent_dir, globs)
   opts = opts or {}
   opts.entry_maker = make_entry.gen_from_vimgrep()
   local rg_cmd = M.Concat(
@@ -441,7 +480,7 @@ function M.RgxSelect_Picker(opts, rgx_query, scala_parent_dir, globs)
         rgx_query,
         "--line-number", "--column", "--with-filename",
         "--multiline", "--case-sensitive",
-        scala_parent_dir,
+        parent_dir,
     }, globs )
 
   pickers.new(opts, {
@@ -462,6 +501,52 @@ function M.RgxSelect_Picker(opts, rgx_query, scala_parent_dir, globs)
   }):find()
 end
 
+function M.RgxSelect_Picker_testPaths(opts, rgx_query, globs)
+  opts = opts or {}
+  opts.entry_maker = make_entry.gen_from_vimgrep()
+  local rg_cmd =
+  -- CONCLUSION: i can search in multiple paths. i can have multiple globs, but they all search in all paths; i can't
+  -- have a glob per path. globs in an abs path with from the command line ~/.config/nvim/notes/rg_test_globs.sh#/#%20this%20seems
+  -- but not with this telescope lua syntax!
+  -- having one parent dir with multiple sub-folder globs (like -- "-g", "**/AZioHttp/*.scala") almost(!) works; however
+  -- a sub-folder glob referring to the current working dir returns no results.
+    { "rg",
+        rgx_query,
+        "--line-number", "--column", "--with-filename",
+        "--multiline", "--case-sensitive",
+        -- "-g", "*Example.scala",
+        "-g", "*s.scala",
+        -- "-g", "**/AZioHttp/*.scala",
+        -- "-g", "**/BZioHttp/*.scala",
+        "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/",
+        "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/",
+        -- "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/",
+    }
+
+  -- local rg_cmd = M.Concat(
+  --   { "rg",
+  --       rgx_query,
+  --       "--line-number", "--column", "--with-filename",
+  --       "--multiline", "--case-sensitive",
+  --   }, globs )
+
+  pickers.new(opts, {
+    prompt_title = "rx sel",
+    finder = finders.new_oneshot_job( rg_cmd, opts ),
+    sorter = conf.generic_sorter(opts),
+    previewer = conf.grep_previewer(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        print(vim.inspect(selection))
+        -- vim.api.nvim_echo({ selection[1] }, "", false, true)
+        -- vim.api.nvim_put({ selection[1] }, "", false, true)
+      end)
+      return true
+    end,
+  }):find()
+end
 
 
 

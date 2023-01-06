@@ -15,8 +15,6 @@ nnoremap ,sc <cmd>lua require('utils_general').Search_comments()<cr>
 " search in HEADERS: in select files across select projects
 nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
 
-" search in DEFS: (method definitions) in select files across select projects
-nnoremap ,sd <cmd>lua require('utils_general').Search_defs()<cr>
 
 " lua vim.g.rgx_caps_tags = [[\s[A-Z]{3,}:]]
 
@@ -31,10 +29,11 @@ local opts_2 = {
   -- default_text = [[(Seq|List)]],
 }
 
-local scala_parent_dir = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
+local dir_a_scala3 = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
 
 local rgx_caps_tag = [[\s[A-Z]{3,}:]]
 local rgx_comment = [[^(\s*)?(//|\*\s)]]
+local rgx_main_symbol = [[(def\s|case\sclass|val\s[^e])]]
 local rgx_header = [[─.*]]
 -- local rgx_signature = [[(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s]]
 -- local rgx_signature = [[(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s]]
@@ -47,26 +46,61 @@ local glb_projs1 = {
   '-g', '**/AZioHttp/*.scala', 
   '-g', '**/BZioHttp/*.scala'
 }
-local glb_patterns1 = {
-  '-g', '**/BZioHttp/utils.scala', 
-  '-g', '**/BZioHttp/*_patterns.scala'
+
+local glb_projs2 = {
+  '-g', '**/AZioHttp/*.scala', 
+  '-g', '**/BZioHttp/*pattern*.scala'
 }
+
+local glb_patterns1 = {
+  '-g', '**/*pattern*.scala',
+  '-g', '**/*utils*.scala',
+}
+
+local glb_scala = { '-g', '*.scala', }
+
+local paths_projs1 = {
+  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/', 
+  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/',
+}
+
+local paths_patterns1 = {
+  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/', 
+}
+
+
+-- search in MAIN_SYMBOLS:
+vim.keymap.set( 'n',
+  'ge;', function() require( 'utils_general' )
+  .RgxSelect_Picker( opts_1,
+    rgx_main_symbol,
+    {},
+    {'.'}
+    ) end )
+
+vim.keymap.set( 'n',
+  'ge:', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_main_symbol,
+    glb_projs1,
+    {'..'}
+    ) end )
 
 -- search in comment TAGS:
 vim.keymap.set( 'n',
   ',st', function() require( 'utils_general' )
   .RgxSelect_Picker( opts_1,
     rgx_caps_tag,
-    '.',
-    {}
+    {},
+    {'.'}
     ) end )
 
 vim.keymap.set( 'n',
   ',sT', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_caps_tag,
-    scala_parent_dir,
-    glb_projs1
+    glb_projs1,
+    {'..'}
     ) end )
 
 -- search in COMMENTS:
@@ -74,16 +108,16 @@ vim.keymap.set( 'n',
   ',sc', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_comment,
-    '.',
-    {}
+    {},
+    {'.'}
     ) end )
 
 vim.keymap.set( 'n',
   ',sC', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_comment,
-    scala_parent_dir,
-    glb_projs1
+    glb_projs1,
+    {'..'}
     ) end )
 
 -- search in HEADERS:
@@ -91,16 +125,16 @@ vim.keymap.set( 'n',
   ',sh', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_header,
-    '.',
-    {}
+    {},
+    {'.'}
     ) end )
 
 vim.keymap.set( 'n',
   ',sH', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_header,
-    scala_parent_dir,
-    glb_projs1
+    glb_projs1,
+    {'..'}
     ) end )
 
 -- search in SIGNATURES:
@@ -108,46 +142,53 @@ vim.keymap.set( 'n',
   ',ss', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_signature,
-    '.',
-    {}
+    {},
+    {'.'}
     ) end )
 
 vim.keymap.set( 'n',
   ',sS', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_signature,
-    scala_parent_dir,
-    glb_projs1
+    glb_patterns1,
+    {'..'}
     ) end )
 
 vim.keymap.set( 'n',
-  ',,ss', function() require( 'utils_general' )
-  .RgxSelect_Picker( opts_2,
-    rgx_signature,
-    scala_parent_dir,
-    glb_patterns1
-    ) end )
-
-vim.keymap.set( 'n',
-  ',,sc', function() require( 'utils_general' )
-  .RgxSelect_Picker( opts_2,
+  ',si', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
     rgx_signature .. '.*' .. rgx_collection,
-    scala_parent_dir,
-    glb_patterns1
+    glb_projs1,
+    {'..'}
     ) end )
 
 vim.keymap.set( 'n',
-  ',,sz', function() require( 'utils_general' )
+  ',sz', function() require( 'utils_general' )
   .RgxSelect_Picker( opts_2,
     rgx_signature .. '.*?' .. [[ZIO]],
-    scala_parent_dir,
-    glb_patterns1
+    glb_projs1,
+    {'..'}
     ) end )
 
 
+local builtin = require('telescope.builtin')
+local themes = require('telescope.themes')
+
+local theme_opts = {
+    -- theme = "cursor",
+    sorting_strategy = "ascending",
+    results_title = false,
+    layout_strategy = "cursor",
+    layout_config = { width = 0.95, height = 25 },
+  }
+
+-- vim.keymap.set( 'n', 'ger',        function() builtin.lsp_references(themes.get_cursor()) end )
+vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_cursor( theme_opts )) end )
+-- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
 
 EOF
 
+" ~/.config/nvim/plugged/telescope.nvim/doc/telescope.txt
 
 " nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, vim.g.rgx_caps_tags, vim.g.glob_sct1)<cr>
 " nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, [[\s[A-Z]{3,}:]], {"-g", "**/AZioHttp/*.md", "-g", "**/BZioHttp/*.scala"})<cr>
@@ -168,7 +209,8 @@ nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
 nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
 
 " Find files using Telescope command-line sugar.
-nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
+nnoremap <leader>fR <cmd>Telescope lsp_references<cr>
+
 nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
