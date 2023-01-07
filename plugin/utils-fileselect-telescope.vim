@@ -23,7 +23,7 @@ nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
 
 lua << EOF
 
-local opts_1 = { initial_mode = 'insert' }
+local opts_1 = { initial_mode = 'normal' }
 local opts_2 = {
   sorting_strategy = 'ascending',
   -- default_text = [[(Seq|List)]],
@@ -170,6 +170,22 @@ vim.keymap.set( 'n',
     {'..'}
     ) end )
 
+vim.keymap.set( 'n',
+  '<leader>ogl', function() require( 'utils_general' )
+  .Git_commits_picker( opts_1)
+  end )
+
+vim.keymap.set( 'n',
+  '<leader>ogs', function() require( 'utils_general' )
+  .Git_status_picker( opts_1 )
+  end )
+
+vim.keymap.set( 'n',
+  '<leader>ogS', function() require( 'utils_general' )
+  .git_status2( opts_1 )
+  end )
+
+
 
 local builtin = require('telescope.builtin')
 local themes = require('telescope.themes')
@@ -195,6 +211,9 @@ EOF
 " nnoremap ,ss <cmd>lua require('utils_general').Colors()<cr>
 " nnoremap ,sg <cmd>lua require('utils_general').Colors(require("telescope.themes").get_dropdown{})<cr>
 " nnoremap ,sr <cmd>lua require('utils_general').Resources()<cr>
+
+" nnoremap <leader>tg <cmd>lua my_git_bcommits()<cr>
+
 
  " (:.*List.*(\)|=))@=
 

@@ -20,7 +20,7 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 
 " git status:
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
-nnoremap <leader>oG         :CocCommand fzf-preview.GitStatus<cr>
+nnoremap <leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
@@ -34,6 +34,7 @@ nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 " View in Github desktop:
 nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 
+nnoremap <leader>ogc <cmd>Git commit<cr>
 nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
 
 func! GetGitRoot()
@@ -69,6 +70,14 @@ func! GitCommitCmd( commitMessage )
   let cmd = 'git commit -m "' . a:commitMessage . '"'
   return cmd
 endfunc
+
+func! GitCommitFugitive()
+  exec '10new' 'Git commit'
+endfunc
+
+
+
+
 
 " ─^  Git                                                ▲
 
@@ -111,7 +120,7 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 nnoremap ,og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap <leader>oG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
-nnoremap <leader>og :FzfGFiles?<cr>
+nnoremap <leader><leader>og :FzfGFiles?<cr>
 
 " GitV => now using Flog to show a git tree
 " nnoremap <leader><leader>gL :FzfPreviewGitLogs<cr>

@@ -7,17 +7,32 @@ local easypick = require("easypick")
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 require('telescope').setup{
   defaults = {
-    -- Default configuration for telescope goes here:
     -- config_key = value,
     path_display = { 'shorten' },
+    -- file_ignore_patterns = {
+    --         '^.git/', '^target/', '^node%_modules/', '^.npm/', '^modules', 'dev.js', '^build/', '%[Cc]ache/', '%-cache',
+    --         '%.py[co]', '%.sw?', '%~', '%.a', "%.npz", "^.vscode",
+    --         '%.sql', '%.tags', '%.gemtags', '%.csv', '%.tsv', '%.tmp', '%.exe', "%.dat", "^dist",
+    --         '%.old', '%.plist', '%.pdf', '%.log', '%.jpg', '%.jpeg', '%.png', "%.obj", "^release",
+    --         '%.tar.gz', '%.tar', '%.zip', '%.class', '%.pdb', '%.dll', '%.bak', "%.lib", "^.idea",
+    --         '%.scan', '%.mca', '__pycache__', '^.mozilla/', '^.electron/', '%.bin', "^debug",
+    --         '^.vpython-root/', '^.gradle/', '^.nuget/', '^.cargo/', '^.evernote/', "^Debug",
+    --         '^.azure-functions-core-tools/', '^yay/', '%.class', '%.o', '%.so', "^Release",
+    --     },
+    -- prompt_prefix = "➔ ",
+    prompt_prefix = "  ",
+    -- selection_caret = "⇾ ",
+    selection_caret = "⠰ ",
     -- initial_mode = 'normal',
     mappings = {
       i = {
-        ["<c-o>"] = trouble.open_with_trouble
+        ["<c-o>"] = trouble.open_with_trouble,
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
         -- ["<C-h>"] = "which_key"
+        ["<C-s>"] = actions.cycle_previewers_next,
+        ["<C-a>"] = actions.cycle_previewers_prev,
       },
       n = {
         ["<c-o>"] = trouble.open_with_trouble,
@@ -25,7 +40,23 @@ require('telescope').setup{
         ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true, silent = true } },
         [",m"] = actions.select_all,
         [",M"] = actions.drop_all,
-        ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
+        -- ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
+
+        -- ["<esc>"] = actions.close,
+        -- ["<CR>"] = actions.select_default,
+        -- ["s"] = actions.select_horizontal,
+        -- ["v"] = actions.select_vertical,
+        -- ["t"] = actions.select_tab,
+        ["<c-y>"] = actions.preview_scrolling_up,
+        ["<c-e>"] = actions.preview_scrolling_down,
+        -- ["n"] = actions.cycle_history_next,
+        -- ["p"] = actions.cycle_history_prev,
+        -- ["j"] = actions.move_selection_next,
+        -- ["k"] = actions.move_selection_previous,
+        -- ["c"] = actions.close,
+        -- ["q"] = actions.send_to_qflist + actions.open_qflist,
+        -- ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
+        -- ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
 
       },
     },
@@ -33,6 +64,7 @@ require('telescope').setup{
     sorting_strategy = 'ascending',
     scroll_strategy = 'limit',
     dynamic_preview_title = true,
+    scroll_speed = 1,
     -- sort_lastused = true,
     -- selection_strategy = 'closest',
     -- selection_strategy = 'reset',
@@ -160,8 +192,6 @@ easypick.setup({
     },
   }
 })
-
-
     -- vimgrep_arguments =  {
     --   "rg",
     --     "--color=never",
@@ -171,11 +201,7 @@ easypick.setup({
     --     "--column",
     --     "--smart-case"
     -- }
-
-
-
 -- lua put( require'utils_general'.abc() )
-
 -- nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, [[\s[A-Z]{3,}:]], {"-g", "**/AZioHttp/*.md", "-g", "**/BZioHttp/*.scala"})<cr>
 
 

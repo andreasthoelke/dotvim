@@ -7,6 +7,13 @@ c-d/f   - to scroll the docs buffer!
 c-e     - to close the menue!
 ~/.config/nvim/plugin/setup-lsp.lua#/mapping%20=%20{
 
+# new git workflow
+leader ogs    - git status with delta diffs <tab> to stage/unstage
+leader ogc    - git commit message via fugitive
+leader ogl    - git commits
+
+
+
 *  - previous line start
 c-o - any non-reversible jump should use "normal! m'" to add to the jump list
 

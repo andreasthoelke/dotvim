@@ -548,6 +548,85 @@ function M.RgxSelect_Picker_testPaths(opts, rgx_query, globs)
   }):find()
 end
 
+local builtin = require("telescope.builtin")
+
+local delta = previewers.new_termopen_previewer {
+  get_command = function(entry)
+    return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!' }
+  end
+}
+
+
+M.Git_commits_picker = function(opts)
+  opts = opts or {}
+  opts.previewer = {
+    delta,
+    previewers.git_commit_message.new(opts),
+  }
+  builtin.git_commits(opts)
+      -- - `<cr>`: checks out the currently selected commit
+      -- - `<C-r>m`: resets current branch to selected commit using mixed mode
+      -- - `<C-r>s`: resets current branch to selected commit using soft mode
+      -- - `<C-r>h`: resets current branch to selected commit using hard mode
+
+end
+
+M.Git_status_picker = function(opts)
+  opts = opts or {}
+  opts.previewer = previewers.new_termopen_previewer({
+    get_command = function(entry)
+      if entry.status == "D " then
+        return { "git", "show", "HEAD:" .. entry.value }
+      elseif entry.status == "??" then
+        return { "bat", "--style=plain", entry.value }
+      end
+      return { "git", "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "HEAD", entry.path }
+      -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path }
+      -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', entry.current_file }
+    end,
+  })
+
+  -- Use icons that resemble the `git status` command line.
+  opts.git_icons = {
+    added = "A",
+    changed = "M",
+    copied = "C",
+    deleted = "-",
+    renamed = "R",
+    unmerged = "U",
+    untracked = "?",
+  }
+
+  builtin.git_status(opts)
+end
+
+
+-- ─   -- doesn't work currently                        ──
+local delta2 = previewers.new_termopen_previewer {
+  get_command = function(entry)
+    -- this is for status
+    -- You can get the AM things in entry.status. So we are displaying file if entry.status == '??' or 'A '
+    -- just do an if and return a different command
+    if entry.status == '??' or 'A ' then
+      return {'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path}
+    end
+    -- note we can't use pipes
+    -- this command is for git_commits and git_bcommits
+    return {'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!'}
+  end
+}
+
+
+M.git_status2 = function(opts)
+  opts = opts or {}
+  opts.previewer = delta2
+  -- opts.cwd = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/'
+  -- opts.use_git_root = true
+  builtin.git_status(opts)
+  -- <tab> to stage/unstage file
+  -- <cr> open file
+end
+
 
 
 
