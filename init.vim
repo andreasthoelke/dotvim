@@ -287,9 +287,14 @@ Plug 'hrsh7th/vim-vsnip'
 
 Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim'
 
-" For luasnip users.
+" couldn't get this to work
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'saadparwaiz1/cmp_luasnip'
+
+" " quite promising but a bit rough, would need time to setup up 
+" Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+" Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+" Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
 
 " Language Support: -----------------------------------------------------
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'

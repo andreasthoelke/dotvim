@@ -548,10 +548,10 @@ cmp.setup {
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-2),
-    ['<C-f>'] = cmp.mapping.scroll_docs(2),
+    ['<C-y>'] = cmp.mapping.scroll_docs(-2),
+    ['<C-e>'] = cmp.mapping.scroll_docs(2),
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
+    ['<C-c>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm {
       -- behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -690,42 +690,42 @@ local api = vim.api
 -- map("n", "<leader>dl", [[<cmd>lua require"dap".run_last()<CR>]])
 
 -- completion related settings
--- This is similiar to what I use
-local cmp = require("cmp")
-cmp.setup({
-  sources = {
-    { name = "nvim_lsp" },
-    { name = "vsnip" },
-  },
-  snippet = {
-    expand = function(args)
-      -- Comes from vsnip
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    -- None of this made sense to me when first looking into this since there
-    -- is no vim docs, but you can't have select = true here _unless_ you are
-    -- also using the snippet stuff. So keep in mind that if you remove
-    -- snippets you need to remove this select
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    -- I use tabs... some say you should stick to ins-completion but this is just here as an example
-    ["<Tab>"] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end,
-    ["<S-Tab>"] = function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        fallback()
-      end
-    end,
-  }),
-})
+-- This is almost a duplicate from above.
+-- local cmp = require("cmp")
+-- cmp.setup({
+--   sources = {
+--     { name = "nvim_lsp" },
+--     { name = "vsnip" },
+--   },
+--   snippet = {
+--     expand = function(args)
+--       -- Comes from vsnip
+--       vim.fn["vsnip#anonymous"](args.body)
+--     end,
+--   },
+--   mapping = cmp.mapping.preset.insert({
+--     -- None of this made sense to me when first looking into this since there
+--     -- is no vim docs, but you can't have select = true here _unless_ you are
+--     -- also using the snippet stuff. So keep in mind that if you remove
+--     -- snippets you need to remove this select
+--     ["<CR>"] = cmp.mapping.confirm({ select = true }),
+--     -- I use tabs... some say you should stick to ins-completion but this is just here as an example
+--     ["<Tab>"] = function(fallback)
+--       if cmp.visible() then
+--         cmp.select_next_item()
+--       else
+--         fallback()
+--       end
+--     end,
+--     ["<S-Tab>"] = function(fallback)
+--       if cmp.visible() then
+--         cmp.select_prev_item()
+--       else
+--         fallback()
+--       end
+--     end,
+--   }),
+-- })
 
 ----------------------------------
 -- LSP Setup ---------------------
@@ -748,6 +748,13 @@ metals_config.init_options.statusBarProvider = "on"
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+
+-- DEACTIVATED: COQ
+-- it only needs this line to work, even together with nvim-cmp.
+-- capabilities = require('coq').lsp_ensure_capabilities( capabilities )
+
+
 metals_config.capabilities = capabilities
 
 -- Debug settings if you're using nvim-dap
