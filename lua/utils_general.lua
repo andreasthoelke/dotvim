@@ -441,10 +441,10 @@ end
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
 -- vim.fn.join( {3,4}, 1 )
 
-
 function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
   opts = opts or {}
   opts.entry_maker = make_entry.gen_from_vimgrep()
+  -- opts.default_text = [[def\s.*]]
   local rg_baseArgs = { 'rg',
         rgx_query,
         '--line-number', '--column',

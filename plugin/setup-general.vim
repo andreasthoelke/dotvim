@@ -181,11 +181,12 @@ nnoremap <leader>ls :call SessionLoadForCWDStartify()<cr>
 
 let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-      \ { 'type': 'files',     'header': ['   MRU']            },
-      \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
+
+      " \ { 'type': 'files',     'header': ['   MRU']            },
+      " \ { 'type': 'sessions',  'header': ['   Sessions']       },
 
 let g:startify_custom_header = []
 

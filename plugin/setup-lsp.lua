@@ -524,55 +524,61 @@ null_ls.setup({
 
 -- Set completeopt to have a better completion experience
 -- vim.o.completeopt = 'noinsert,menuone,noselect'
-vim.o.completeopt = 'menuone,noselect'
+-- vim.o.completeopt = 'menuone,noselect'
+-- vim.o.completeopt = 'menu,menuone,noselect'
+-- vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
+vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
+
 -- help completeopt
 
 -- luasnip setup
-local luasnip = require 'luasnip'
+-- local luasnip = require 'luasnip'
 
 local cmp = require 'cmp'
 cmp.setup {
   completion = {
-    autocomplete = false, -- disable auto-completion.
+    -- autocomplete = false, -- disable auto-completion.
   },
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+      -- luasnip.lsp_expand(args.body)
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-2),
+    ['<C-f>'] = cmp.mapping.scroll_docs(2),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+      -- behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<c-n>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end,
-    ['<c-o>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end,
+    -- ['<c-n>'] = function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_next_item()
+    --   elseif luasnip.expand_or_jumpable() then
+    --     luasnip.expand_or_jump()
+    --   else
+    --     fallback()
+    --   end
+    -- end,
+    -- ['<c-o>'] = function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   elseif luasnip.jumpable(-1) then
+    --     luasnip.jump(-1)
+    --   else
+    --     fallback()
+    --   end
+    -- end,
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'luasnip' }, -- For luasnip users.
+    { name = 'vsnip' },
+    -- { name = 'luasnip' }, -- For luasnip users.
   }, {
       { name = 'buffer' },
     })
@@ -583,20 +589,20 @@ cmp.setup {
 }
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline('/', {
-  sources = {
-    { name = 'buffer' }
-  }
-})
+-- cmp.setup.cmdline('/', {
+--   sources = {
+--     { name = 'buffer' }
+--   }
+-- })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-      { name = 'cmdline' }
-    })
-})
+-- cmp.setup.cmdline(':', {
+--   sources = cmp.config.sources({
+--     { name = 'path' }
+--   }, {
+--       { name = 'cmdline' }
+--     })
+-- })
 
 _G.vimrc = _G.vimrc or {}
 _G.vimrc.cmp = _G.vimrc.cmp or {}
@@ -609,6 +615,7 @@ _G.vimrc.cmp.lsp = function()
     }
   })
 end
+
 _G.vimrc.cmp.snippet = function()
   cmp.complete({
     config = {
@@ -740,30 +747,31 @@ metals_config.init_options.statusBarProvider = "on"
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+-- metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+metals_config.capabilities = capabilities
 
 -- Debug settings if you're using nvim-dap
-local dap = require("dap")
+-- local dap = require("dap")
 
-dap.configurations.scala = {
-  {
-    type = "scala",
-    request = "launch",
-    name = "RunOrTest",
-    metals = {
-      runType = "runOrTestFile",
-      --args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
-    },
-  },
-  {
-    type = "scala",
-    request = "launch",
-    name = "Test Target",
-    metals = {
-      runType = "testTarget",
-    },
-  },
-}
+-- dap.configurations.scala = {
+--   {
+--     type = "scala",
+--     request = "launch",
+--     name = "RunOrTest",
+--     metals = {
+--       runType = "runOrTestFile",
+--       --args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
+--     },
+--   },
+--   {
+--     type = "scala",
+--     request = "launch",
+--     name = "Test Target",
+--     metals = {
+--       runType = "testTarget",
+--     },
+--   },
+-- }
 
 -- metals_config.on_attach = function(client, bufnr)
 --   require("metals").setup_dap()

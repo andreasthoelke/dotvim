@@ -2,6 +2,11 @@
 find any git-repo in Documents/!  - leader tr
 search help tags - leader th
 
+# auto completion menue
+c-d/f   - to scroll the docs buffer!
+c-e     - to close the menue!
+~/.config/nvim/plugin/setup-lsp.lua#/mapping%20=%20{
+
 *  - previous line start
 c-o - any non-reversible jump should use "normal! m'" to add to the jump list
 

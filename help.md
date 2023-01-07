@@ -292,6 +292,9 @@ help vim-markdown
 help vim-markdown-folding
 plugin config: ~/.vim/plugin/tools-markdown.vim#/let%20g.vim_markdown_follow_anchor%20=
 
+ISSUE:
+this produces huge js files that should not get into vim history: ~/.config/nvim/plugged/markdown-preview.nvim/app/out/
+
 ## Pandoc markdown docx conversion
 
 ~/.vim/notes/docx-markdown#/we%20would%20need
