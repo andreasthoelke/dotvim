@@ -72,7 +72,7 @@ local paths_patterns1 = {
 -- search in MAIN_SYMBOLS:
 vim.keymap.set( 'n',
   'ge;', function() require( 'utils_general' )
-  .RgxSelect_Picker( opts_1,
+  .RgxSelect_Picker( {},
     rgx_main_symbol,
     {},
     {'.'}
@@ -89,7 +89,7 @@ vim.keymap.set( 'n',
 -- search in comment TAGS:
 vim.keymap.set( 'n',
   ',st', function() require( 'utils_general' )
-  .RgxSelect_Picker( opts_1,
+  .RgxSelect_Picker( {},
     rgx_caps_tag,
     {},
     {'.'}

@@ -525,7 +525,10 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        vim.pretty_print( selection )
+        vim.cmd( "e " .. selection.filename )
+        vim.api.nvim_win_set_cursor(0, { selection.lnum, 0 })
+        vim.cmd "norm! zz"
+        -- vim.pretty_print( selection )
       end)
       return true
     end,
