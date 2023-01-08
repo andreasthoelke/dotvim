@@ -20,6 +20,11 @@ note that leader fga shows recursive use (mult step selection process)
 FzfFiles
 can take a path. else it works the same as History!!
 
+test 
+neu
+wc -l $/notes/fzf | cut -f1 -d' '
+wc notes/fzf | cut -f1 -d" "
+
 
 
 

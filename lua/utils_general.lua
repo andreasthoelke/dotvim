@@ -297,6 +297,59 @@ function M.Resources(opts)
   }:find()
 end
 
+
+
+function M.Git_diff_stat(opts)
+  -- opts = opts or {}
+  opts = {
+    -- "entry" is a line from "git diff --stat"
+    entry_maker = function(entry)
+      local split = vim.split(entry, [[|]])
+      local rel_filepath = split[1]:gsub("%s+", "")
+      local gstat = vim.F.if_nil( split[2], "" ):gsub("%s+", "")
+      local abs_filepath = vim.fn.getcwd() .. "/" .. rel_filepath
+      -- local wordCount = vim.fn.systemlist( 'wc ' .. abs_filepath .. " | awk '{print $1}'")[1]
+      local wc_output = vim.fn.systemlist( "wc " .. abs_filepath .. " | awk {'print $1 \":\" $2'}" )[1]
+      local wc_list = vim.split( wc_output, ":" )
+      local line_num = tonumber(split[2])
+      -- local gstat = vim.fn.systemlist( 'git diff HEAD --stat ' .. entry )[1]
+      return {
+        -- display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
+        value = abs_filepath,
+        display = "l:" .. wc_list[1] .. " | w:" .. wc_list[2] .. " | " .. rel_filepath .. " | " .. gstat,
+        ordinal = rel_filepath, -- this is for sorting?
+      }
+
+    end
+  }
+
+  pickers.new(opts, {
+    prompt_title = "git diff --stat",
+
+    finder = finders.new_oneshot_job({
+      -- "git", "ls-files", "--exclude-standard", "--cached"
+      -- 'git', 'diff', 'HEAD', '--stat'
+      'git', 'diff', 'HEAD', '--stat'
+    }, opts ),
+
+    sorter = conf.generic_sorter(opts),
+    -- previewer = conf.grep_previewer(opts),
+
+    attach_mappings = function( prompt_bufnr )
+      actions.select_default:replace(function()
+        actions.close( prompt_bufnr )
+        local selection = action_state.get_selected_entry()
+        vim.pretty_print( selection )
+      end)
+      return true
+    end,
+
+  }):find()
+end
+-- require('utils_general').Git_diff_stat()
+
+
+
 -- our picker function: colors
 -- local colors = function(opts)
 function M.Colors(opts)
@@ -382,7 +435,7 @@ function M.Colors(opts)
   }):find()
 end
 
--- lua require('utils_general').Colors()
+-- require('utils_general').Colors()
 
 -- printing/inspecting a table object!
 -- lua print( vim.inspect( vim.fn['bm#all_files']() ) )
@@ -440,6 +493,13 @@ end
 -- require('utils_general').Concat({4,3}, {8, 9})  
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
 -- vim.fn.join( {3,4}, 1 )
+-- vim.fn.systemlist( 'git diff HEAD --stat ' )
+-- vim.fn..slice({2,3}, 0, 1)
+-- {3,4}.1
+
+-- M.abb = {3, 4, 5}
+-- require'utils_general'.abb[1]
+
 
 function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
   opts = opts or {}
@@ -574,6 +634,12 @@ end
 M.Git_status_picker = function(opts)
   opts = opts or {}
   opts.previewer = previewers.new_termopen_previewer({
+    -- dyn_title = function(_, entry) return entry.value end,
+    dyn_title = function(_, entry)
+      -- PATTERN: run any synchronous shell command on a line entry.
+      return vim.fn.systemlist( 'git diff HEAD --stat ' .. entry.path )[1]
+      -- return entry.status
+    end,
     get_command = function(entry)
       if entry.status == "D " then
         return { "git", "show", "HEAD:" .. entry.value }
@@ -581,6 +647,10 @@ M.Git_status_picker = function(opts)
         return { "bat", "--style=plain", entry.value }
       end
       return { "git", "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "HEAD", entry.path }
+      -- return { "bat", entry.path }
+      -- return { "bash", "-c", "ls -ls | bat" }
+      -- return { "bash", "-c", "echo " .. entry.path .. "&& echo hi" }
+      -- return { "bash", "-c", "echo 'hi there' " .. entry.path .. "| bat" }
       -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path }
       -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', entry.current_file }
     end,

@@ -77,6 +77,7 @@ hi! TermCursorNC guibg=grey guifg=white
 
 " Terminal: ------------------------------------------------------------------------
 
+" newer, recommended
 func! System_Float( cmd )
   let resLines = systemlist( a:cmd )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )

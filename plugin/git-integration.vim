@@ -22,6 +22,9 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
 nnoremap <leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
+nnoremap <leader>ogs :call System_Float( 'git diff HEAD --stat' )<cr>
+" nnoremap <leader>oga :call System_Float( 'git add -A -v' )<cr>
+nnoremap <leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:
 nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
@@ -127,6 +130,7 @@ nnoremap <leader><leader>og :FzfGFiles?<cr>
 nnoremap <leader><leader>gL :CocCommand fzf-preview.GitLogs<cr>
 " nnoremap <leader><leader>gL :Flogsplit<cr>
 nnoremap <leader><leader>gl :FzfCommits<cr>
+nnoremap <leader>ogl :FzfCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 

@@ -8,9 +8,11 @@ c-e     - to close the menue!
 ~/.config/nvim/plugin/setup-lsp.lua#/mapping%20=%20{
 
 # new git workflow
-leader ogs    - git status with delta diffs <tab> to stage/unstage
+leader ogs    - lines changed per file! via git diff HEAD --stat
+leader ogd    - git status with delta diffs <tab> to stage/unstage
 leader ogc    - git commit message via fugitive
-leader ogl    - git commits
+leader oga    - stage all & commit message via fugitive
+leader ogl/L  - list of git commits (with date ago/telescope)
 
 
 

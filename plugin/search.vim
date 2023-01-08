@@ -111,6 +111,7 @@ cnoreabbrev hg HelpGrep
 nnoremap <leader>K K
 nnoremap <leader>vh :FzfHelptags<cr>
 nnoremap <leader>vm :FzfMaps<cr>
+nnoremap <leader>vM :Telescope keymaps<cr>
 nnoremap <leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()
