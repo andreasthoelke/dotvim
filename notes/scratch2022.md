@@ -1,4 +1,40 @@
 
+
+# Git_commits_picker
+- mapping
+- test with empty string
+- could it show the time ago?
+
+this now uses a custom `previewer` filed in opts.
+which is a list of two previewers? or do the function calls 'spred' new table fields?
+
+## checkout file
+- test checkout of entire commit
+- checkout only that file (but then how to proceed?)
+- checkout that one file out under a different name:
+  -> there's now git_log
+  -> this can also be done manually like this:
+  git show 97853e3:z_patterns.scala > z_patterns_ab.scala
+
+- put windows of different file versions side by side and use
+    :set scrollbind
+    :set noscrollbind
+
+
+
+
+# verb map
+needs to parse/get filename and line from the output.
+find the builtin code
+
+# gs maps
+ergonomic and scalable?
+
+
+
+
+
+
 find any git-repo in Documents/!  - leader tr
 search help tags - leader th
 
@@ -10,10 +46,22 @@ c-e     - to close the menue!
 # new git workflow
 leader ogs    - lines changed per file! via git diff HEAD --stat
 leader ogd    - git status with delta diffs <tab> to stage/unstage
-leader ogc    - git commit message via fugitive
+leader ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
 leader oga    - stage all & commit message via fugitive
 leader ogl/L  - list of git commits (with date ago/telescope)
 
+- checkout older version of file out under a different name
+- put windows of different file versions side by side and use
+:set scrollbind
+:set noscrollbind
+
+### Telescope git_bcommits
+This is a convienient alternative approach to see a diff via VimDiff in 
+two vim buffers side by side:
+Telescope git_bcommits    - Run this in the file/buffer you want to compare
+                          - find the commit/version you want to compare compare compare to
+                          - use <c-t> to open a new tab with two VimDiff buffers!
+                          - use :q on the 'Original' buffer to close the tab!
 
 
 *  - previous line start
@@ -138,7 +186,7 @@ leader te sp - spell_suggest (on a word to replace)
 nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
 nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
 
-
+\w   - easymotion wordmotion
 )  - MvNextLineStart
 (  - this line (useful!) start
 

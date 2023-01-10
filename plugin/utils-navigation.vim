@@ -1,5 +1,9 @@
 
 
+" ease confirming fugitive commit window
+nnoremap ,,w :w<cr><c-w>c
+
+
 " ─   Windows                                            ■
 
 

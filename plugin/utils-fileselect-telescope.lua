@@ -31,12 +31,11 @@ require('telescope').setup{
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
         -- ["<C-h>"] = "which_key"
-        ["<C-s>"] = actions.cycle_previewers_next,
-        ["<C-a>"] = actions.cycle_previewers_prev,
       },
       n = {
         ["<c-o>"] = trouble.open_with_trouble,
         ["<c-a>"] = actions.send_selected_to_qflist,
+        ["<C-p>"] = actions.cycle_previewers_next,
         ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true, silent = true } },
         [",m"] = actions.select_all,
         [",M"] = actions.drop_all,

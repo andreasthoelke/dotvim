@@ -1,5 +1,6 @@
 
 
+
 " Enables 'setlocal' for filestypes
 filetype plugin on
 
@@ -90,20 +91,6 @@ func! AttachAutosaveStopEvents()
 endfunc
 " Autosave: -------------------
 
-" Example: Auto insert/update info in source files!
-" autocmd BufWritePre,FileWritePre *.vim ks | call LastMod() | 's
-" Issue: This clutters the undo-history when used with autosave
-" func! LastMod()
-"   if line("$") > 20
-"     let l = 20
-"   else
-"     let l = line("$")
-"   endif
-"   exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " . strftime("%Y %b %d")
-" endfun
-
-
-" au ag VimEnter * cd ~/Documents
 
 " Cleanup: ----------------------------------------------------------------------------
 " NOTE This might slow down exiting vim
@@ -830,56 +817,6 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " ~/.vim/plugged/goyo.vim/autoload/goyo.vim#/execute%20'colo%20'.
 
 
-" ALE: --------------------------------------------------------
-" let g:hindent_on_save = 0
-" let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint', 'hdevtools']}
-let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint'],
-                    \'javascript': ['eslint'],}
-" let g:ale_linters = {'haskell': ['hlint']}
-" let g:ale_linters = {'haskell': ['ghc']}
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_insert_leave = 1
-let g:ale_enabled = 0
-" let g:ale_set_quickfix = 1
-" Note: Ale sets the loclist, not the quickfix-list!
-let g:ale_emit_conflict_warnings = 0
-nnoremap <leader>aa :ALEToggle<cr>
-
-" let g:ale_sign_error = '✖'
-let g:ale_sign_warning = '⚠'
-let g:ale_sign_error = '•'
-
-let g:sign_warning = '⚠'
-let g:sign_error = '•'
-
-let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\}
-
-" let g:ale_set_highlights = 0
-" hi link ALEErrorSign    Error
-" hi link ALEWarningSign  Warning
-" highlight clear ALEErrorSign
-" highlight clear ALEWarningSign
-
-" otherwise the bg-color looks off
-"= hi AleErrorSign   ctermfg=white
-
-" let g:airline#extensions#ale#enabled = 1
-" needed?
-
-" Configure Hline/Ale warnings!
-command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
-
-
-
-" Mappings in the style of unimpaired-next
-" nmap <silent> [W <Plug>(ale_first)
-" nmap <silent> [w <Plug>(ale_previous)
-" nmap <silent> ]w <Plug>(ale_next)
-" nmap <silent> ]W <Plug>(ale_last)
-" ALE: --------------------------------------------------------
-
 
 " UNIMPAIRED: -------------------------------------------------
 
@@ -900,88 +837,11 @@ let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': ''}
 " UNIMPAIRED: -------------------------------------------------
 
 
-" SYNTASIC: ---------------------------------------------------
-
-" Deactivate Syntasic for haskell dev in favour of Ale
-let g:syntastic_haskell_checkers = []
-let g:syntastic_javascript_checkers = ['jshint']
-
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-" turn off initially
-let g:syntastic_check_on_wq = 0
-
-" let g:psc_ide_syntastic_mode = 1
-
-"= hi SyntasticErrorSign   ctermfg=white
-"= hi SpellBad term=reverse ctermbg=darkgreen
-
-let g:syntastic_error_symbol = "•"
-let g:syntastic_style_error_symbol = "⚠"
-let g:syntastic_warning_symbol = "⚠"
-let g:syntastic_style_warning_symbol = "⚠"
-
-" Todo Temp:
-" nmap <leader>ss :SyntasticToggle<cr>
-" nnoremap <leader>sc :SyntasticCheck<cr>
-" nnoremap <leader>st :SyntasticToggleMode<cr>
-" nnoremap <leader>sr :SyntasticReset<cr>
-
-" SYNTASIC: ---------------------------------------------------
-
-
-" Neomake: ----------------------------------------------------
-" Neomake does the same as Ale
-" While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn,
-" Intero uses Neomake to show error and ghc warnings
-"= hi NeomakeErrorSign   ctermfg=white
-"= hi NeomakeWarningSign ctermfg=white
-"= hi NeomakeInfoSign    ctermfg=white
-"= hi NeomakeMessageSign ctermfg=white
-"= hi link NeomakeWarning Comment
-"= hi link NeomakeError Comment
-"= hi link NeomakeInfo Comment
-"= hi link NeomakeMessage Comment
-"= hi link NeomakeVirtualtextError Comment
-"= hi link NeomakeVirtualtextWarning Comment
-"= hi link NeomakeVirtualtextInfo Comment
-"= hi link NeomakeVirtualtextMessage Comment
-let g:neomake_virtualtext_prefix = ''
-
-"= hi ErrorSign   ctermfg=white
-"= hi WarningSign ctermfg=white
-"= hi IntoSign    ctermfg=white
-"= hi MessageSign ctermfg=white
-
-
-" Autoexpand quickfix list not always wanted? controlling this elsewhere
-" let g:neomake_open_list=2
-" let g:neomake_list_height=10
-
-let g:neomake_highlight_columns = 1
-let g:neomake_highlight_line = 1
-" Uses NVIMs nvim_buf_add_highlight feature
 
 nnoremap <leader>cs :sign unplace *<cr>
 
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
-" Neomake defaults
-let g:neomake_error_sign = {'text': '✖', 'texthl': 'Comment'}
-let g:neomake_warning_sign = {
-   \   'text': '⚠',
-   \   'texthl': 'Comment',
-   \ }
-let g:neomake_message_sign = {
-    \   'text': '➤',
-    \   'texthl': 'Comment',
-    \ }
-let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
-
-" Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
-" Neomake: ----------------------------------------------------
-
 
 " Replacing: ---------------------------------------------
 " nnoremap <leader>re "_die"0P`[

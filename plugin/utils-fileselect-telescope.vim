@@ -172,14 +172,24 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<leader>ogL', function() require( 'utils_general' )
-  .Git_commits_picker( opts_1)
+  .Git_commits_picker( opts_1, vim.fn.expand('%') )
   end )
+
+vim.keymap.set( 'n',
+  '<leader><leader>ogL', function() require( 'utils_general' )
+  .Git_commits_picker( opts_1 )
+  end )
+
 
 vim.keymap.set( 'n',
   '<leader>ogd', function() require( 'utils_general' )
   .Git_status_picker( opts_1 )
   end )
 
+-- vim.keymap.set( 'n',
+--   ',gl', function() require( 'utils_general' )
+--   .git_log( opts_1 )
+--   end )
 
 
 
@@ -208,6 +218,7 @@ EOF
 " nnoremap ,sg <cmd>lua require('utils_general').Colors(require("telescope.themes").get_dropdown{})<cr>
 
 nnoremap <leader>gds <cmd>lua require('utils_general').Git_diff_stat()<cr>
+nnoremap ,,df <cmd>lua vim.pretty_print( require('utils_general').Keymap_props( "gei" ) )<cr>
 
 " nnoremap <leader>tg <cmd>lua my_git_bcommits()<cr>
 

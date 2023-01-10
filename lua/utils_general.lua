@@ -1,9 +1,12 @@
 
--- local Path = require('plenary.path')
--- print( Path:new(vim.fn.stdpath('data'), 'sessions1') )
+
+
 
 local M = {}
 local api = vim.api
+
+-- print( require'plenary.path':new(vim.fn.stdpath('data'), 'sessions1', 'abc') )
+
 
 function M.makeScratch()
   api.nvim_command('enew') -- equivalent to :enew
@@ -12,13 +15,6 @@ function M.makeScratch()
   vim.bo[0].swapfile=false
 end
 
-
--- lua put( require'utils_general'.abc() )
-function M.abc()
-  return 'hi 5 there'
-end
-
--- print('hi from utils-general')
 
 function _G.put(...)
   local objects = {}
@@ -65,19 +61,29 @@ function _G.stline()
   )
 end
 
-local my_make_entry = {}
 
+-- -- filtering the vim bufferlist
+-- vim.api.nvim_list_bufs() 
+-- unpack( vim.api.nvim_list_bufs() )
+-- math.max( 4, 8, 1 )
+-- math.max( unpack( vim.api.nvim_list_bufs() ) )
+-- vim.tbl_filter(function(b) return 1 == vim.fn.buflisted(b) end, vim.api.nvim_list_bufs())
+-- vim.fn.fnamemodify(vim.api.nvim_buf_get_name(4), ":p:t")
+
+local my_make_entry = {}
 local devicons = require"nvim-web-devicons"
 local entry_display = require("telescope.pickers.entry_display")
+local actions = require "telescope.actions"
 
-local filter = vim.tbl_filter
-local map = vim.tbl_map
+local vfilter = vim.tbl_filter
+local vmap = vim.tbl_map
+
 
 function my_make_entry.gen_from_buffer_like_leaderf(opts)
   opts = opts or {}
   local default_icons, _ = devicons.get_icon("file", "", {default = true})
 
-  local bufnrs = filter(function(b)
+  local bufnrs = vfilter(function(b)
     return 1 == vim.fn.buflisted(b)
   end, vim.api.nvim_list_bufs())
 
@@ -86,7 +92,7 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
 
   local max_bufname = math.max(
     unpack(
-      map(function(bufnr)
+      vmap(function(bufnr)
         return vim.fn.strdisplaywidth(vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:t"))
       end, bufnrs)
     )
@@ -148,22 +154,25 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
   end
 end
 
--- doesn't work
+local action_set = require('telescope.actions.set')
+
+
 function M.fileView1()
   local actions_state = require("telescope.actions.state")
-
+  -- local opts = {}
   local opts = {
     attach_mappings = function(prompt_bufnr, map)
       local entry = actions_state.get_selected_entry()
-      require("telescope.actions.set").selected:replace( function()
+      action_set.select:replace( function()
         put( entry )
       end
       )
+      return true
     end
   }
   require("telescope.builtin").find_files(opts)
 end
--- lua put( require'utils_general'.fileView1() )
+-- require'utils_general'.fileView1()
 
 
 function M.fileView()
@@ -171,10 +180,12 @@ function M.fileView()
     entry_maker = my_make_entry.gen_from_buffer_like_leaderf(),
   })
 end
+-- require'utils_general'.fileView()
 
 function M.fileViewB()
-  require("telescope").extensions.file_browser({ previewer = true } )
+  require("telescope").extensions.file_browser.file_browser()
 end
+-- require'utils_general'.fileViewB()
 
 
 function M.Search_greparg()
@@ -185,6 +196,7 @@ function M.Search_greparg()
     theme = 'dropdown',
   } )
 end
+-- require'utils_general'.Search_greparg()
 
 -- https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
 -- https://docs.rs/regex/1.7.0/regex/#syntax
@@ -266,7 +278,6 @@ end
 local pickers = require "telescope.pickers"
 local finders = require "telescope.finders"
 local conf = require("telescope.config").values
-local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
 local previewers = require("telescope.previewers")
@@ -613,26 +624,107 @@ end
 
 local builtin = require("telescope.builtin")
 
-local delta = previewers.new_termopen_previewer {
-  get_command = function(entry)
-    return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!' }
-  end
-}
+
+-- ─   Custom actions command                           ──
+
+-- Copies an old version of the file intot the project folder using a new unique file name!
+-- PATTERN: example of running a shell command on a filename or git commit id.
+-- also an example of overriding/replacing an actions that is defined for a default picker.
+
+-- we are replacing select_default the default action, which is mapped to <CR> by default. To do this we need to call actions.select_default:replace and pass in a new function.
+-- In this new function we first close the picker with actions.close and then get the selection with action_state
+
+local function run_selection(prompt_bufnr, map)
+  actions.select_default:replace(function()
+    actions.close(prompt_bufnr)
+    local selection = action_state.get_selected_entry()
+    -- vim.pretty_print( selection )
+    -- vim.pretty_print( vim.fn.expand('%') )
+    -- vim.cmd([[!git log ]]..selection[1])
+    -- git show 97853e3:z_patterns.scala > z_patterns_ab.scala
+    local filename = vim.fn.expand('%')
+    local filename_root = vim.fn.expand('%:r')
+    local filename_extension = vim.fn.expand('%:e')
+    local newfilename = filename_root.."_"..selection.value.."."..filename_extension
+    vim.cmd([[!git show ]]..selection.value.. [[:]]..filename..[[ > ]]..newfilename )
+
+  end)
+  return true
+end
+
+function M.Git_log_picker( opts, filepath )
+  opts = opts or {}
+  opts.attach_mappings = run_selection
+
+  -- require('telescope.builtin').find_files(opts)
+  -- require('telescope.builtin').git_bcommits(opts)
+  M.Git_commits_picker( opts, filepath )
+end
+
+-- vim.fn.expand('%:r')
+-- vim.fn.expand('%:e')
 
 
-M.Git_commits_picker = function(opts)
+local opts_1 = { initial_mode = 'normal' }
+
+vim.keymap.set( 'n',
+  ',gl', function() require( 'utils_general' )
+  .Git_log_picker( opts_1, vim.fn.expand('%') )
+  end )
+
+
+function M.Git_commits_picker( opts, filepath )
   opts = opts or {}
   opts.previewer = {
-    delta,
+    previewers.new_termopen_previewer {
+
+      get_command = function(entry)
+        return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', filepath }
+      end,
+
+      dyn_title = function(_, entry)
+        -- return vim.fn.systemlist( 'git diff HEAD --stat ' .. entry.path )[1]
+        return entry.value
+      end,
+
+    },
     previewers.git_commit_message.new(opts),
   }
   builtin.git_commits(opts)
-      -- - `<cr>`: checks out the currently selected commit
-      -- - `<C-r>m`: resets current branch to selected commit using mixed mode
-      -- - `<C-r>s`: resets current branch to selected commit using soft mode
-      -- - `<C-r>h`: resets current branch to selected commit using hard mode
-
+  -- - `<cr>`: checks out the currently selected commit
+  -- - `<C-r>m`: resets current branch to selected commit using mixed mode
+  -- - `<C-r>s`: resets current branch to selected commit using soft mode
+  -- - `<C-r>h`: resets current branch to selected commit using hard mode
 end
+
+-- vim.fn.expand('%')
+-- vim.api.nvim_get_keymap('i')
+-- vim.api.nvim_exec("verb map <space>vm", true)
+
+function M.IndexOf(array, value)
+  for i, v in ipairs(array) do
+    if v == value then
+      return i
+    end
+  end
+  return nil
+end
+
+function M.Keymap_props( lhs_map_string )
+  local propsstr = vim.api.nvim_exec( "verbose map "..lhs_map_string, true )
+  local propslist = vim.split( propsstr, " " )
+  -- vim.pretty_print( propslist )
+  -- vim.pretty_print( M.IndexOf( propslist, "from" ) )
+  local fni = M.IndexOf( propslist, "from" ) + 1
+  local lni = M.IndexOf( propslist, "line" ) + 1
+  return {
+    filename = propslist[fni],
+    lnum = propslist[lni]
+  }
+end
+-- require('utils_general').Keymap_props("<space>vm")
+-- require('utils_general').Keymap_props("gei")
+
 
 M.Git_status_picker = function(opts)
   opts = opts or {}
