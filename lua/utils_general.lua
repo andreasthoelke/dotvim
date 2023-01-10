@@ -697,6 +697,9 @@ function M.Git_commits_picker( opts, filepath )
   -- - `<C-r>h`: resets current branch to selected commit using hard mode
 end
 
+
+-- ─   Keymap picker                                     ■
+
 -- vim.fn.expand('%')
 -- vim.api.nvim_get_keymap('i')
 -- vim.api.nvim_exec("verb map <space>vm", true)
@@ -710,8 +713,8 @@ function M.IndexOf(array, value)
   return nil
 end
 
-function M.Keymap_props( lhs_map_string )
-  local propsstr = vim.api.nvim_exec( "verbose map "..lhs_map_string, true )
+function M.Keymap_props( mode, lhs_map_string )
+  local propsstr = vim.api.nvim_exec( "verbose "..mode.."map "..lhs_map_string, true )
   local propslist = vim.split( propsstr, " " )
   -- vim.pretty_print( propslist )
   -- vim.pretty_print( M.IndexOf( propslist, "from" ) )
@@ -719,11 +722,46 @@ function M.Keymap_props( lhs_map_string )
   local lni = M.IndexOf( propslist, "line" ) + 1
   return {
     filename = propslist[fni],
-    lnum = propslist[lni]
+    lnum = tonumber( propslist[lni] )
   }
 end
--- require('utils_general').Keymap_props("<space>vm")
--- require('utils_general').Keymap_props("gei")
+-- require('utils_general').Keymap_props("n", "<space>vm")
+-- require('utils_general').Keymap_props("n", "gei")
+
+
+local function keymap_select_action( prompt_bufnr )
+  actions.select_default:replace(function()
+    actions.close(prompt_bufnr)
+    local selection = action_state.get_selected_entry()
+    -- vim.pretty_print( selection )
+    local keymap_props = M.Keymap_props( selection.mode, selection.lhs )
+    -- vim.pretty_print( keymap_props )
+    vim.cmd( "vnew " .. keymap_props.filename )
+    vim.api.nvim_win_set_cursor(0, { keymap_props.lnum, 0 })
+    vim.cmd "norm! zz"
+  end)
+  return true
+end
+
+function M.Keymap_picker( opts )
+  opts = opts or {}
+  opts.attach_mappings = keymap_select_action
+
+  require('telescope.builtin').keymaps( opts )
+  -- require('telescope.builtin').find_files( opts )
+end
+
+vim.keymap.set( 'n',
+  ',,vm', function() require( 'utils_general' )
+  .Keymap_picker( opts_1 )
+  end )
+
+
+
+
+
+-- ─^  Keymap picker                                     ▲
+
 
 
 M.Git_status_picker = function(opts)

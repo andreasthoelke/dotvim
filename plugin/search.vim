@@ -110,8 +110,9 @@ cnoreabbrev hg HelpGrep
 
 nnoremap <leader>K K
 nnoremap <leader>vh :FzfHelptags<cr>
-nnoremap <leader>vm :FzfMaps<cr>
-nnoremap <leader>vM :Telescope keymaps<cr>
+nnoremap <leader>vM :FzfMaps<cr>
+" now using: ~/.config/nvim/lua/utils_general.lua#/vim.keymap.set.%20'n',
+" nnoremap <leader>vM :Telescope keymaps<cr>
 nnoremap <leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()
