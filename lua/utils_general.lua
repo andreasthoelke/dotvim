@@ -154,6 +154,18 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
   end
 end
 
+
+
+function M.fileView()
+  require("telescope.builtin").buffers({
+    entry_maker = my_make_entry.gen_from_buffer_like_leaderf(),
+  })
+end
+-- require'utils_general'.fileView()
+
+
+
+
 local action_set = require('telescope.actions.set')
 
 
@@ -175,12 +187,6 @@ end
 -- require'utils_general'.fileView1()
 
 
-function M.fileView()
-  require("telescope.builtin").buffers({
-    entry_maker = my_make_entry.gen_from_buffer_like_leaderf(),
-  })
-end
--- require'utils_general'.fileView()
 
 function M.fileViewB()
   require("telescope").extensions.file_browser.file_browser()
@@ -311,10 +317,8 @@ end
 
 
 function M.Git_diff_stat(opts)
-  -- opts = opts or {}
-  opts = {
-    -- "entry" is a line from "git diff --stat"
-    entry_maker = function(entry)
+  opts = opts or {}
+  opts.entry_maker = function(entry)
       local split = vim.split(entry, [[|]])
       local rel_filepath = split[1]:gsub("%s+", "")
       local gstat = vim.F.if_nil( split[2], "" ):gsub("%s+", "")
@@ -327,12 +331,10 @@ function M.Git_diff_stat(opts)
       return {
         -- display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
         value = abs_filepath,
-        display = "l:" .. wc_list[1] .. " | w:" .. wc_list[2] .. " | " .. rel_filepath .. " | " .. gstat,
+        display = "li:" .. wc_list[1] .. " | wo:" .. wc_list[2] .. " | " .. rel_filepath .. " | " .. gstat,
         ordinal = rel_filepath, -- this is for sorting?
       }
-
     end
-  }
 
   pickers.new(opts, {
     prompt_title = "git diff --stat",
@@ -625,7 +627,7 @@ end
 local builtin = require("telescope.builtin")
 
 
--- ─   Custom actions command                           ──
+-- ─   Git commits picker                               ──
 
 -- Copies an old version of the file intot the project folder using a new unique file name!
 -- PATTERN: example of running a shell command on a filename or git commit id.
@@ -634,47 +636,25 @@ local builtin = require("telescope.builtin")
 -- we are replacing select_default the default action, which is mapped to <CR> by default. To do this we need to call actions.select_default:replace and pass in a new function.
 -- In this new function we first close the picker with actions.close and then get the selection with action_state
 
-local function run_selection(prompt_bufnr, map)
+local function GitCopyFileFromCommit_sel_action(prompt_bufnr, map)
   actions.select_default:replace(function()
     actions.close(prompt_bufnr)
     local selection = action_state.get_selected_entry()
-    -- vim.pretty_print( selection )
-    -- vim.pretty_print( vim.fn.expand('%') )
-    -- vim.cmd([[!git log ]]..selection[1])
-    -- git show 97853e3:z_patterns.scala > z_patterns_ab.scala
     local filename = vim.fn.expand('%')
     local filename_root = vim.fn.expand('%:r')
     local filename_extension = vim.fn.expand('%:e')
     local newfilename = filename_root.."_"..selection.value.."."..filename_extension
-    vim.cmd([[!git show ]]..selection.value.. [[:]]..filename..[[ > ]]..newfilename )
-
+    -- git show 97853e3:z_patterns.scala > z_patterns_ab.scala
+    -- TEMP: debug
+    vim.pretty_print( selection )
+    -- vim.cmd([[!git show ]]..selection.value.. [[:]]..filename..[[ > ]]..newfilename )
   end)
   return true
 end
 
-function M.Git_log_picker( opts, filepath )
-  opts = opts or {}
-  opts.attach_mappings = run_selection
-
-  -- require('telescope.builtin').find_files(opts)
-  -- require('telescope.builtin').git_bcommits(opts)
-  M.Git_commits_picker( opts, filepath )
-end
-
--- vim.fn.expand('%:r')
--- vim.fn.expand('%:e')
-
-
-local opts_1 = { initial_mode = 'normal' }
-
-vim.keymap.set( 'n',
-  ',gl', function() require( 'utils_general' )
-  .Git_log_picker( opts_1, vim.fn.expand('%') )
-  end )
-
-
 function M.Git_commits_picker( opts, filepath )
   opts = opts or {}
+  opts.attach_mappings = GitCopyFileFromCommit_sel_action
   opts.previewer = {
     previewers.new_termopen_previewer {
 
@@ -690,12 +670,36 @@ function M.Git_commits_picker( opts, filepath )
     },
     previewers.git_commit_message.new(opts),
   }
+
+  -- TODO: this doesn't show anything. how to write an entry maker for the git_commits picker?
+  -- could use git log --oneline
+  -- opts.entry_maker = function(entry)
+  --   return {
+  --     value = entry.value,
+  --     display = entry.value,
+  --     ordinal = entry.value
+  --   }
+  -- end
+
   builtin.git_commits(opts)
   -- - `<cr>`: checks out the currently selected commit
   -- - `<C-r>m`: resets current branch to selected commit using mixed mode
   -- - `<C-r>s`: resets current branch to selected commit using soft mode
   -- - `<C-r>h`: resets current branch to selected commit using hard mode
 end
+
+
+local opts_1 = { initial_mode = 'normal' }
+
+vim.keymap.set( 'n',
+  ',gl', function() require( 'utils_general' )
+  .Git_commits_picker( opts_1, vim.fn.expand('%') )
+  end )
+
+vim.keymap.set( 'n',
+  ',gL', function() require( 'utils_general' )
+  .Git_commits_picker( opts_1 )
+  end )
 
 
 -- ─   Keymap picker                                     ■
@@ -715,8 +719,8 @@ end
 
 function M.Keymap_props( mode, lhs_map_string )
   local propsstr = vim.api.nvim_exec( "verbose "..mode.."map "..lhs_map_string, true )
-  local propslist = vim.split( propsstr, " " )
-  -- vim.pretty_print( propslist )
+  local propsstr_clean = propsstr:gsub("\n", " ")
+  local propslist = vim.split( propsstr_clean, " " )
   -- vim.pretty_print( M.IndexOf( propslist, "from" ) )
   local fni = M.IndexOf( propslist, "from" ) + 1
   local lni = M.IndexOf( propslist, "line" ) + 1
@@ -736,9 +740,13 @@ local function keymap_select_action( prompt_bufnr )
     -- vim.pretty_print( selection )
     local keymap_props = M.Keymap_props( selection.mode, selection.lhs )
     -- vim.pretty_print( keymap_props )
-    vim.cmd( "vnew " .. keymap_props.filename )
-    vim.api.nvim_win_set_cursor(0, { keymap_props.lnum, 0 })
-    vim.cmd "norm! zz"
+    if keymap_props.filename ~= "lua" then
+      vim.cmd( "vnew " .. keymap_props.filename )
+    end
+    if keymap_props.lnum ~= nil then
+      vim.api.nvim_win_set_cursor(0, { keymap_props.lnum, 0 })
+      vim.cmd "norm! zz"
+    end
   end)
   return true
 end
@@ -746,14 +754,12 @@ end
 function M.Keymap_picker( opts )
   opts = opts or {}
   opts.attach_mappings = keymap_select_action
-
   require('telescope.builtin').keymaps( opts )
-  -- require('telescope.builtin').find_files( opts )
 end
 
 vim.keymap.set( 'n',
-  ',,vm', function() require( 'utils_general' )
-  .Keymap_picker( opts_1 )
+  '<space>vm', function() require( 'utils_general' )
+  .Keymap_picker()
   end )
 
 
@@ -802,6 +808,7 @@ M.Git_status_picker = function(opts)
 
   builtin.git_status(opts)
 end
+-- require('utils_general').Git_status_picker()
 
 
 -- ─   -- doesn't work currently                        ──

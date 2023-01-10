@@ -53,7 +53,7 @@ nnoremap <silent> <leader>se :call SourceRange()<cr>
 
 " Reload a lua module:
 nnoremap <silent> <leader>sR :lua put( package.loaded[vim.fn.expand('%:t:r')] )<cr>
-nnoremap <silent> <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>:echo 'reloaded!'<cr>
+nnoremap <silent> <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>:luafile %<cr>:echo 'reloaded!'<cr>
 nnoremap <silent> <leader><leader>sr :lua require( vim.fn.expand('%:t:r') )<cr>
 
 command! -nargs=+ Rld lua require'plenary'.reload.reload_module(<q-args>)
