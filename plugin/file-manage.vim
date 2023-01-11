@@ -511,8 +511,8 @@ command! -bang Args call fzf#run(fzf#wrap('args', {'source': argv()}, <bang>0))
   " - <c-w>L/H to reverse the command?
 
 
-nnoremap <leader>mv :call MoveFilesFromLeftWinToRightWin( 0 )<cr>
-nnoremap <leader>mV :call MoveFilesFromLeftWinToRightWin( 1 )<cr>q:<leader>"tP^W
+" nnoremap <leader>mv :call MoveFilesFromLeftWinToRightWin( 0 )<cr>
+" nnoremap <leader>mV :call MoveFilesFromLeftWinToRightWin( 1 )<cr>q:<leader>"tP^W
 
 " The list of filenames in the current tab
 func! TabWinFilenames()

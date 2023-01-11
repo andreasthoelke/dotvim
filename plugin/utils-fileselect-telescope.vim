@@ -1,19 +1,18 @@
 
-" NOTE: you can use vim search in normal mode and highlight keywords
-
+" maps now in plugin/utils_general_maps.lua
 " Focused search maps with presets/filters
 
 " search in vim comment TAGS: in local project
 " nnoremap ,st       <cmd>Telescope live_grep default_text=[A-Z]{4}:.*<cr>
 
 " search all text in designated PATTERN: files
-nnoremap ,sp <cmd>lua require('utils_general').Search_patternfiles()<cr>
+" nnoremap ,sp <cmd>lua require('utils_general').Search_patternfiles()<cr>
 
 " search in COMMENTS: in select files across select projects
-nnoremap ,sc <cmd>lua require('utils_general').Search_comments()<cr>
+" nnoremap ,sc <cmd>lua require('utils_general').Search_comments()<cr>
 
 " search in HEADERS: in select files across select projects
-nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
+" nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
 
 
 " lua vim.g.rgx_caps_tags = [[\s[A-Z]{3,}:]]
@@ -22,191 +21,6 @@ nnoremap ,sh <cmd>lua require('utils_general').Search_headers()<cr>
 " ─   Rgx select pickers                                ──
 
 lua << EOF
-
-local opts_1 = { initial_mode = 'normal' }
-local opts_2 = {
-  sorting_strategy = 'ascending',
-  -- default_text = [[(Seq|List)]],
-}
-
-local dir_a_scala3 = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
-
-local rgx_caps_tag = [[\s[A-Z]{3,}:]]
-local rgx_comment = [[^(\s*)?(//|\*\s)]]
-local rgx_main_symbol = [[(def\s|case\sclass|val\s[^e])]]
-local rgx_header = [[─.*]]
--- local rgx_signature = [[(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s]]
--- local rgx_signature = [[(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s]]
--- local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=(\s|$)).*(List|Seq)]]
--- local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*(\n)?.*(\n)?.*\s=\s).*(List|Seq|Iterable)]]
-local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s)]]
-local rgx_collection = [[(List|Seq|Iterable)]]
-
-local glb_projs1 = {
-  '-g', '**/AZioHttp/*.scala', 
-  '-g', '**/BZioHttp/*.scala'
-}
-
-local glb_projs2 = {
-  '-g', '**/AZioHttp/*.scala', 
-  '-g', '**/BZioHttp/*pattern*.scala'
-}
-
-local glb_patterns1 = {
-  '-g', '**/*pattern*.scala',
-  '-g', '**/*utils*.scala',
-}
-
-local glb_scala = { '-g', '*.scala', }
-
-local paths_projs1 = {
-  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/', 
-  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/',
-}
-
-local paths_patterns1 = {
-  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/', 
-}
-
-
--- search in MAIN_SYMBOLS:
-vim.keymap.set( 'n',
-  'ge;', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    {},
-    {'.'}
-    ) end )
-
-vim.keymap.set( 'n',
-  'ge:', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    glb_projs1,
-    {'..'}
-    ) end )
-
--- search in comment TAGS:
-vim.keymap.set( 'n',
-  ',st', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_caps_tag,
-    {},
-    {'.'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',sT', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_caps_tag,
-    glb_projs1,
-    {'..'}
-    ) end )
-
--- search in COMMENTS:
-vim.keymap.set( 'n',
-  ',sc', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_comment,
-    {},
-    {'.'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',sC', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_comment,
-    glb_projs1,
-    {'..'}
-    ) end )
-
--- search in HEADERS:
-vim.keymap.set( 'n',
-  ',sh', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_header,
-    {},
-    {'.'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',sH', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_header,
-    glb_projs1,
-    {'..'}
-    ) end )
-
--- search in SIGNATURES:
-vim.keymap.set( 'n',
-  ',ss', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_signature,
-    {},
-    {'.'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',sS', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_signature,
-    glb_patterns1,
-    {'..'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',si', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_signature .. '.*' .. rgx_collection,
-    glb_projs1,
-    {'..'}
-    ) end )
-
-vim.keymap.set( 'n',
-  ',sz', function() require( 'utils_general' )
-  .RgxSelect_Picker( opts_2,
-    rgx_signature .. '.*?' .. [[ZIO]],
-    glb_projs1,
-    {'..'}
-    ) end )
-
-vim.keymap.set( 'n',
-  '<leader>ogL', function() require( 'utils_general' )
-  .Git_commits_picker( opts_1, vim.fn.expand('%') )
-  end )
-
-vim.keymap.set( 'n',
-  '<leader><leader>ogL', function() require( 'utils_general' )
-  .Git_commits_picker( opts_1 )
-  end )
-
-
-vim.keymap.set( 'n',
-  '<leader>ogd', function() require( 'utils_general' )
-  .Git_status_picker( opts_1 )
-  end )
-
--- vim.keymap.set( 'n',
---   ',gl', function() require( 'utils_general' )
---   .git_log( opts_1 )
---   end )
-
-
-
-local builtin = require('telescope.builtin')
-local themes = require('telescope.themes')
-
-local theme_opts = {
-    -- theme = "cursor",
-    sorting_strategy = "ascending",
-    results_title = false,
-    layout_strategy = "cursor",
-    layout_config = { width = 0.95, height = 25 },
-  }
-
--- vim.keymap.set( 'n', 'ger',        function() builtin.lsp_references(themes.get_cursor()) end )
-vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_cursor( theme_opts )) end )
--- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
 
 EOF
 
@@ -217,8 +31,6 @@ EOF
 " nnoremap ,ss <cmd>lua require('utils_general').Colors()<cr>
 " nnoremap ,sg <cmd>lua require('utils_general').Colors(require("telescope.themes").get_dropdown{})<cr>
 
-nnoremap <leader>gds <cmd>lua require('utils_general').Git_diff_stat()<cr>
-nnoremap ,,df <cmd>lua vim.pretty_print( require('utils_general').Keymap_props( "gei" ) )<cr>
 
 " nnoremap <leader>tg <cmd>lua my_git_bcommits()<cr>
 
@@ -259,10 +71,10 @@ nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
 " nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
+" BOOKMARKS:
 nnoremap <leader>bs <cmd>lua require('telescope').extensions.vim_bookmarks.all({ width_line=0, width_text=40, shorten_path=true })<cr>
-" another rel map  ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<leader>ob%20.Telescope
 
-nnoremap <leader>bl <cmd>lua require('utils_general').fileView()<cr>
+" another rel map  ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<leader>ob%20.Telescope
 
 " example evaluating a contatinated string as a command
 " nnoremap ,sp       :exec 'Telescope live_grep glob_pattern=*+(_patterns\|utils).scala cwd=' . g:ScalaPatternsDir<cr>

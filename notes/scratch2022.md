@@ -1,5 +1,13 @@
 
 
+from some repo have 2 new regex searches/maps in vim folder:
+- for functions and commands vim/lua (only in vim folders)
+- for nnoremap and keymap only in vim folders
+leader vm  - regex approach
+leader leader vm - telescope vim.keymaps approach (filenames maybe in the title)
+leader vM  - fzf approach that sometimes shows the file name/linenum
+
+
 # Git_commits_picker
 - mapping
 - test with empty string
