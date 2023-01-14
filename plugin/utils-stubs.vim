@@ -217,13 +217,14 @@ func! CreateInlineTestDec_scala()
   let strInParan = substitute( strInParan, 'String', '""', 'g')
   let strInParan = substitute( strInParan, 'Int', '0', 'g')
   " let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
-  let lineText = hostDecName . '(' . strInParan[0:-1] . ')'
+  " let lineText = hostDecName . '(' . strInParan[0:-1] . ')'
+  let lineText = hostDecName
   let nextIndex = GetNextTestDeclIndex( hostLn )
   let lineText = 'lazy val e' . nextIndex . '_' . hostDecName . ' = ' . lineText
   call append( line('.') -1, lineText )
   normal k0
-  call search('(')
-  normal l
+  " call search('(')
+  normal $B
 endfunc
 
 

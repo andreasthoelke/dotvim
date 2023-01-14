@@ -627,6 +627,50 @@ end
 local builtin = require("telescope.builtin")
 
 
+
+local fwatch = require('fwatch')
+M.fwatch_handle = nil
+
+-- Keeps reloading the current window/buffer with the current filepath!
+function M.WatchFile_start()
+  local filename = vim.fn.expand('%')
+  local winID = vim.fn.win_getid()
+  vim.pretty_print( filename, winID )
+  M.fwatch_handle = fwatch.watch( filename, {
+    on_event = function()
+      -- WARNING: vim.schedule is needed, else nvim will hand in a lua loop.
+      vim.schedule( function ()
+        vim.api.nvim_call_function('win_execute', { winID, 'edit' })
+      end )
+    end
+  })
+end
+-- require('utils_general').WatchFile()
+-- vim.api.nvim_get_current_win()
+-- vim.fn.win_getid()
+-- vim.api.nvim_call_function('win_execute', {1019, 'new'})
+
+-- -- Calling VimScript functions
+-- vim.fn.call( 'TestEcho', {'abbc'} )
+-- vim.fn.call( 'StripString', {'abbc', 'bb'} )
+
+function M.WatchFile_stop()
+  fwatch.unwatch( M.fwatch_handle )
+  print( 'Stopped watching file!' )
+end
+
+
+vim.keymap.set( 'n',
+  '<leader>fw', function() require( 'utils_general' )
+  .WatchFile_start()
+  end )
+
+vim.keymap.set( 'n',
+  '<leader>fW', function() require( 'utils_general' )
+  .WatchFile_stop()
+  end )
+
+
 -- ─   Git commits picker                               ──
 
 -- Copies an old version of the file intot the project folder using a new unique file name!
@@ -751,16 +795,14 @@ local function keymap_select_action( prompt_bufnr )
   return true
 end
 
-function M.Keymap_picker( opts )
+-- just an example for overriding the select action of a builtin picker. Use Rgx search for keymaps instead.
+function M.examp_keymap_picker( opts )
   opts = opts or {}
   opts.attach_mappings = keymap_select_action
   require('telescope.builtin').keymaps( opts )
 end
 
-vim.keymap.set( 'n',
-  '<space>vm', function() require( 'utils_general' )
-  .Keymap_picker()
-  end )
+-- require('utils_general').examp_keymap_picker()
 
 
 

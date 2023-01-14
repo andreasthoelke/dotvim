@@ -190,12 +190,14 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'private' conceal cchar=ˌ
   syntax match Normal 'private\sval\s' conceal cchar=ˌ
   syntax match Normal 'implicit' conceal cchar=𝑖
+  syntax match Normal 'infix' conceal cchar=𝑖
   syntax match Normal 'implicitly' conceal cchar=𝑖
   syntax match Normal 'using' conceal cchar=⊨
   syntax match Normal 'extension' conceal
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class' conceal cchar=C
   syntax match Normal 'case class' conceal cchar=˽
+  syntax match Normal 'copy\ze\W' conceal cchar=˽
   syntax match Normal 'trait' conceal cchar=⟣
   syntax match Normal 'type\s' conceal
   syntax match Normal 'enum' conceal cchar=|

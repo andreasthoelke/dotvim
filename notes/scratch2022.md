@@ -1,4 +1,29 @@
 
+# list/search headings or full text
+with grep-rgx
+- in current .md file
+- in all past/history files
+- in a list of fixed files
+
+# bookmark the set of files to search
+- i could `ln` them into a central 'to search' folder(s)
+- recent files could show a column indicating
+  and under which marker key e.g. `a` they are bookmarked
+
+## other usecases
+list, browse, search
+### headers in ..
+- current file!
+- recent files (sorted)
+- bookmarked files
+
+# side navigator
+would show a custom view list with
+- main nav types (header, defs, case class)
+- icon based on type
+- colum for type-sig or documentation?
+- past and bookmarked files ranked lower
+
 
 from some repo have 2 new regex searches/maps in vim folder:
 - for functions and commands vim/lua (only in vim folders)

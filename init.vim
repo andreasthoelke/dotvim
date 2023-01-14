@@ -190,7 +190,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'plexigras/promptline.vim'
 " Tabline Statusline: -----------------------------------------------------------
 
-
+Plug 'rktjmp/fwatch.nvim'
 
 " Colorschemes: ------------------
 " Plug 'tomasr/molokai'
@@ -319,16 +319,6 @@ Plug 'mfussenegger/nvim-dap'
 " Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
 " I think tree-sitter is now handling this?
-" Plug 'jparise/vim-graphql'
-" Plug 'udalov/kotlin-vim'
-" Plug 'pantharshit00/vim-prisma'
-
-" Flutter/Dart
-" Plug 'dart-lang/dart-vim-plugin'
-" Does things like go to definition
-" Plug 'natebosch/vim-lsc'
-" Plug 'natebosch/vim-lsc-dart'
-" Plug 'thosakwe/vim-flutter'
 
 Plug 'inkarkat/vim-SyntaxRange'
 
@@ -435,34 +425,11 @@ Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plug 'Shougo/vimproc.vim', {'do': 'make'}
 
-" Plug 'bitc/vim-hdevtools'
-" still can't get it to work 9-2018
-" create a new project then run: "hdevtools check 'src/Lib.hs'" - runs
-" indefinetly
-" crashes vim on :HdevtoolsType command
-
-
-" Problem: this did not indent Record syntax properly
-" Plug 'neovimhaskell/haskell-vim'
-" Unicode supporting fork
-" Plug 'unclechu/haskell-vim'
-" TODO not sure why is used this
-" Plug 'unclechu/haskell-vim', { 'branch': 'my-fork' }
-" Plug 'idris-hackers/idris-vim'
 Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'
 
 " compliant with brittany
 Plug 'sbdchd/neoformat'
-
-" Syntax Checkers:
-" Plug 'jaspervdj/stylish-haskell'
-" Plug 'w0rp/ale'
-" Just 10 lines of code. uses "to" default map
-" Plug 'mpickering/hlint-refactor-vim'
-" Plug 'neomake/neomake'
-" TODO: do I still need syntasic when having coc-vim
-" Plug 'vim-syntastic/syntastic'
 
 
 " coc nvim:
@@ -476,41 +443,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " runtime coc-init.vim
 
 
-
-" Plug 'FrigoEU/psc-ide-vim'
-" Plug 'sriharshachilakapati/vimmer-ps'
-" Plug 'takiyu/lightline-languageclient.vim'
-
-" does this really echo PS diagnostics?
-" Plug 'Shougo/echodoc.vim'
-
-" old:
-" Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
-
-
-" Haskell IDE Engine HIE:
-" Plug 'autozimu/LanguageClient-neovim', {
-"       \ 'branch': 'next',
-"       \ 'do': './install.sh'
-"       \ }
-
-" backup old: HIE and deoplete
-" if has('nvim')
-"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  " Plug 'ncm2/ncm2'
-  " Plug 'ncm2/float-preview.nvim'
-  " Plug 'roxma/nvim-yarp'
-  " Plug 'ncm2/ncm2-bufword'
-  " Plug 'ncm2/ncm2-path'
-" else
-"   Plug 'Shougo/deoplete.nvim'
-  " Plug 'roxma/nvim-yarp'
-  " Plug 'roxma/vim-hug-neovim-rpc'
-" endif
-" Now substituted by HIE
-" Plug 'eagletmt/neco-ghc'
-" Plug 'ervandew/supertab'
-" did not work with omnicomplete so far
 
 Plug 'thalesmello/webcomplete.vim'
 
