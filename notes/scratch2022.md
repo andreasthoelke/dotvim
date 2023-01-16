@@ -1,4 +1,8 @@
 
+## topics crawler
+/Users/at/.vim/scratch/853
+
+
 # list/search headings or full text
 with grep-rgx
 - in current .md file
@@ -270,6 +274,19 @@ npx edgedb-js
 save in other folder
 connect to dracula and instance?
 
+### scala git process
+TODO:
+set up a lua map for Git_init_repo()
+git init
+touch .gitignore
+echo .metals/ >> .gitignore
+echo .bloop/ >> .gitignore
+echo .bsp/ >> .gitignore
+echo .scala-build/ >> .gitignore
+git add *
+(check with leader oG)
+git commit -m 'initial commit'
+git status
 
 
 

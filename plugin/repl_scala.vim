@@ -38,9 +38,11 @@ func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
   if len( lines )
 
-    let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
+    " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
+    let resultVal = matchstr( join( lines, "|" ), '\v(RESULT)\zs.*' )
+    let resultVal = split( resultVal, "|" )
     if len( resultVal )
-      silent let g:floatWin_win = FloatingSmallNew ( [resultVal] )
+      silent let g:floatWin_win = FloatingSmallNew ( resultVal )
       call ScalaSyntaxAdditions() 
       silent call FloatWin_FitWidthHeight()
       silent wincmd p

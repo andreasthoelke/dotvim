@@ -100,14 +100,21 @@ endfunc
 
 func! Scala_SetPrinterIdentif_SBT( forEffect )
 
-  let printerFilePath = 'src/main/scala/Main.scala'
+  let printerFilePath = 'src/main/scala/Printer.scala'
   " is just the normal Main.scala for now
 
-  let packageName = split( getline(1), ' ' )[1]
-  " this will get e.g. 'azio.abbcc'. it's independent from the file/folder - scala handles this.
+  " let packageName = split( getline(1), ' ' )[1]
+  let packageName = Scala_GetPackageName()
 
-  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
+  let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
+  let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
+
+  if len( objName )
+    let identif = packageName . "." . objName . "." . identif
+  endif
 
   call VirtualRadioLabel_lineNum( '«', hostLn )
 
@@ -121,16 +128,16 @@ func! Scala_SetPrinterIdentif_SBT( forEffect )
 
   let forEffect = a:forEffect
 
-  let importLine = "import " . packageName . "." . identif
+  " let importLine = "import " . packageName . "." . identif
   if forEffect
-    let bindingLine = "val printVal = " . identif
+    let bindingLine = "  val printVal = " . identif
   else
-    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
+    let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
   endif
 
   let printerLines = readfile( printerFilePath, '\n' )
-  let printerLines[0] = importLine
-  let printerLines[1] = bindingLine
+  " let printerLines[0] = importLine
+  let printerLines[5] = bindingLine
 
   call writefile( printerLines, printerFilePath )
 endfunc
