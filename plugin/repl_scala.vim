@@ -81,8 +81,8 @@ let g:ScalaReplCallbacks = {
       \ }
 
 func! ScalaReplRun()
-  " call jobsend(g:ScalaReplID, "run\n" )
-  call jobsend(g:ScalaReplID, "runMain Printer\n" )
+  call jobsend(g:ScalaReplID, "run\n" )
+  " call jobsend(g:ScalaReplID, "runMain Printer\n" )
   " let g:floatWin_win = FloatingSmallNew([])
   " exec 'buffer' g:ScalaRepl_bufnr
   " call FloatWin_FitWidthHeight()

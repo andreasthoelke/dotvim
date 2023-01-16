@@ -100,6 +100,7 @@ endfunc
 
 func! Scala_SetPrinterIdentif_SBT( forEffect )
 
+  " /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/Printer.scala
   let printerFilePath = 'src/main/scala/Printer.scala'
   " is just the normal Main.scala for now
 
@@ -202,7 +203,8 @@ let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resource
 
 
 func! Scala_RunPrinter()
-  let printerFilePath = expand('%:h') . '/Printer.scala'
+  " let printerFilePath = expand('%:h') . '/Printer.scala'
+  let printerFilePath = expand('%:h') . 'src/main/scala/Printer.scala'
   if !filereadable( printerFilePath )
     " Using the running sbt repl session
     call ScalaReplRun()
