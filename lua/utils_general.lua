@@ -7,6 +7,7 @@ local api = vim.api
 
 -- print( require'plenary.path':new(vim.fn.stdpath('data'), 'sessions1', 'abc') )
 
+local test = vim.lsp.buf_request_sync
 
 function M.makeScratch()
   api.nvim_command('enew') -- equivalent to :enew

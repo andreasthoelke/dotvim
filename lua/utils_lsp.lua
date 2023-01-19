@@ -27,17 +27,31 @@ function M.hover()
 end
 -- put( require'utils_lsp'.hover() )
 
+-- not supported for scala
+-- function M.type()
+--   local params = util.make_position_params()
+--   -- todo: set these params: see ~/.config/nvim/plugin/tools_js.vim#/Workaround.%20The%20type
+--   -- return params
+--   local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/type", params, 2000)
+--   return results_lsp
+-- end
+-- -- put( require'utils_lsp'.hover() )
 
 function M.type()
   TypeStr = {}
   local results_lsp = M.hover()
   for _, server_results in pairs(results_lsp) do
     if server_results.result then
-      TypeStr = server_results.result.contents[1].value
+      TypeStr = server_results.result.contents.value
     end
   end
-  return TypeStr
+  -- return TypeStr
+  return vim.api.nvim_call_function( "matchstr", { TypeStr, [[\v:\s\zs\w*]] } )
 end
+
+-- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
+-- vim.api.nvim_call_function( "matchstr", { "lazy val e1_sql: HeadZ\n", [[\v:\s\zs\w*]] } )
+
 
 function M.references()
   local params = util.make_position_params()

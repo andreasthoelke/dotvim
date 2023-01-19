@@ -1,4 +1,13 @@
 
+# Printer.scala todo:
+ideally non zio values would not be printed with zio
+as the error messages might look cleaner.
+
+~/.config/nvim/plugin/tools_scala.vim#/echoe%20"currently%20not
+also Printer should be a scala 2.13 syntax?!
+~/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci/Printer.scala#/object%20Print%20{
+
+
 ## topics crawler
 /Users/at/.vim/scratch/853
 

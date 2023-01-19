@@ -226,7 +226,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\v(\s|\(|\[|\+)\zsU\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑢
 
 
-  syntax match InlineTestDeclaration '\v^(lazy\s)?val\se\d_\i{-}\s\=' conceal cchar=‥
+  syntax match InlineTestDeclaration '\v^(lazy\s)?val\se\d(\d)?_\i{-}\s\=' conceal cchar=‥
   " syntax match InlineTestDeclaration '\v^val\se\d_\i{-}\s\=\s' conceal cchar=⠃
   syntax match InlineTestDeclaration '\v^val\sa\d_\i{-}\s\=' conceal cchar=…
 

@@ -1,8 +1,10 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 func! tools_scala#bufferMaps()
 
-  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( v:false )<cr>
-  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( v:true )<cr>
+  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
+  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "zio" )<cr>
+  nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
+  nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
   nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>
   nnoremap <silent><buffer>         gei :call Scala_RunPrinter()<cr>
@@ -23,13 +25,15 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <c-p>         :call Scala_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+
   nnoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
-  onoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+
   nnoremap <silent><buffer> <leader>)     :call Scala_MvEndOfBlock()<cr>
   onoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
   vnoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
-  onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
-  vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
 
   nnoremap <silent><buffer> * :call MvPrevLineStart()<cr>
   nnoremap <silent><buffer> ( :call MvLineStart()<cr>
@@ -71,6 +75,15 @@ func! tools_scala#bufferMaps()
 endfunc
 
 
+func! Scala_LspTypeAtPos(lineNum, colNum)
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, a:lineNum, a:colNum, 0] )
+  let typeStr = v:lua.require('utils_lsp').type()
+  call setpos('.', [0, oLine, oCol, 0] )
+  return typeStr
+endfunc
+" echo Scala_LspTypeAtPos(111, 10)
+
 func! Scala_LspTopLevelHover()
   let [oLine, oCol] = getpos('.')[1:2]
   normal ^
@@ -89,25 +102,25 @@ endfunc
 " - module:        @org/app/mySourceFile
 " - printer (run): packages/app/build/esm/runPrinter.js
 
-func! Scala_SetPrinterIdentif( forEffect )
+func! Scala_SetPrinterIdentif( mode )
   let printerFilePath = expand('%:h') . '/Printer.scala'
   if filereadable( printerFilePath )
-    call Scala_SetPrinterIdentif_ScalaCLI( a:forEffect )
+    call Scala_SetPrinterIdentif_ScalaCLI( a:mode )
   else
-    call Scala_SetPrinterIdentif_SBT( a:forEffect )
+    call Scala_SetPrinterIdentif_SBT( a:mode )
   endif
 endfunc
 
-func! Scala_SetPrinterIdentif_SBT( forEffect )
+func! Scala_SetPrinterIdentif_SBT( mode )
 
   " /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/Printer.scala
   let printerFilePath = 'src/main/scala/Printer.scala'
-  " is just the normal Main.scala for now
 
   " let packageName = split( getline(1), ' ' )[1]
   let packageName = Scala_GetPackageName()
 
-  let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
+  " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
+  let [hostLn, identifColon] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
 
   let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
@@ -127,13 +140,14 @@ func! Scala_SetPrinterIdentif_SBT( forEffect )
   "   let forEffect = a:forEffect
   " endif
 
-  let forEffect = a:forEffect
 
-  " let importLine = "import " . packageName . "." . identif
-  if forEffect
-    let bindingLine = "  val printVal = " . identif
+  if a:mode == "gallia"
+    let bindingLine = "  val printVal = " . identif . ".formatPrettyJson"
+  elseif a:mode == "gallias"
+    let bindingLine = "  val printVal = " . identif . ".formatPrettyJsons"
   else
-    let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
+    let bindingLine = "  val printVal = " . identif
+    " let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
   endif
 
   let printerLines = readfile( printerFilePath, '\n' )
@@ -153,7 +167,7 @@ func! Scala_GetPackageName()
   return packageName
 endfunc
 
-func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
+func! Scala_SetPrinterIdentif_ScalaCLI( mode )
   let printerFilePath = expand('%:h') . '/Printer.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
@@ -161,14 +175,12 @@ func! Scala_SetPrinterIdentif_ScalaCLI( forEffect )
 
   call VirtualRadioLabel_lineNum( '«', hostLn )
 
-  let forEffect = a:forEffect
-
   let packageName = Scala_GetPackageName()
   if len( packageName )
     let identif = packageName . "." . identif
   endif
 
-  if forEffect
+  if a:mode == "zio"
     let bindingLine = "val printVal = " . identif
   else
     let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
@@ -371,12 +383,12 @@ endfunc
 let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
-  normal! }
+  " normal! }
   call search( g:Scala_TopLevPattern, 'W' )
 endfunc
 
 func! Scala_TopLevBindingBackw()
-  normal! {
+  " normal! {
   call search( g:Scala_TopLevPattern, 'bW' )
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
@@ -416,12 +428,23 @@ let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
 " echo "private" =~ g:Scala_MvStartLine_SkipWords
 
 func! SkipScalaSkipWords()
+  if GetCharAtCursor() == "."
+    normal! l
+    return
+  endif
+  if GetCharAtCursor() == "/"
+    normal! w
+    return
+  endif
+
   let cw = expand('<cword>')
   if cw =~ g:Scala_MvStartLine_SkipWords
     normal! w
     call SkipScalaSkipWords()
   endif
 endfunc
+"   .mapValues[ Domain.Destination.Issues ] { employeeIssues =>
+
 
 func! MvLineStart()
   normal! m'

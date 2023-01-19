@@ -37,29 +37,46 @@ endfunc
 func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
   if len( lines )
-
     " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
-    let resultVal = matchstr( join( lines, "|" ), '\v(RESULT)\zs.*' )
-    let resultVal = split( resultVal, "|" )
+    let resultVal = matchstr( join( lines, "※" ), '\v(RESULT|ERROR:\s|Err\()\zs.*' )
+    let resultVal = split( resultVal, "※" )
+    " let resultVal = functional#map({ l -> matchstr( l, '\v(RESULT)\zs.*' ) }, resultVal )
+
     if len( resultVal )
+
+      if resultVal[0] =~ "error"
+        let resultVal = SubstituteInLines( resultVal, '\[error\]', "" )
+        let resultVal = StripLeadingSpaces( resultVal )
+
+        " let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s)\zs.*\ze\?' )
+        " NOTE: this is to show the focused error from Gallia.
+        " uncomment these two lines to see the full error message/stack
+        " let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s).*-\s\zs.*\ze\?' )
+        let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s|Err)\zs.*\ze(mode)' )
+        let resultVal = split( resultVal, "※" )
+      endif
+
       silent let g:floatWin_win = FloatingSmallNew ( resultVal )
       call ScalaSyntaxAdditions() 
       silent call FloatWin_FitWidthHeight()
       silent wincmd p
     endif
 
-    let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )
-    if len( errorTxt )
-      silent let g:floatWin_win = FloatingSmallNew ( [errorTxt] + lines )
-      call ScalaSyntaxAdditions() 
-      silent call FloatWin_FitWidthHeight()
-      silent wincmd p
-    endif
+    " let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )
+    " if len( errorTxt )
+    "   silent let g:floatWin_win = FloatingSmallNew ( [errorTxt] + lines )
+    "   call ScalaSyntaxAdditions() 
+    "   silent call FloatWin_FitWidthHeight()
+    "   silent wincmd p
+    " endif
 
   endif
 
   " call Scala_SyntaxInFloatWin()
 endfunc
+" ISSUE: TODO: with multiple print statements e.g. this currently produces two overlapping floatwindows
+" ~/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/galliamedium/initech/A_Basics.scala#/lazy%20val%20e3_count
+" there are two print events returned from the sbt-repl.
 
 func! ScalaReplErrorCallback(job_id, data, event)
   echom a:data
