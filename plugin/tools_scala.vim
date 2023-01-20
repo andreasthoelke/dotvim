@@ -84,6 +84,13 @@ func! Scala_LspTypeAtPos(lineNum, colNum)
 endfunc
 " echo Scala_LspTypeAtPos(111, 10)
 
+func! Scala_LspType()
+  let [oLine, oCol] = getpos('.')[1:2]
+  let typeStr = Scala_LspTypeAtPos(oLine, oCol)
+  return typeStr
+endfunc
+" echo Scala_LspType()
+
 func! Scala_LspTopLevelHover()
   let [oLine, oCol] = getpos('.')[1:2]
   normal ^
@@ -120,8 +127,10 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   let packageName = Scala_GetPackageName()
 
   " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
-  let [hostLn, identifColon] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
 
   let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
   let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
@@ -129,8 +138,6 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   if len( objName )
     let identif = packageName . "." . objName . "." . identif
   endif
-
-  call VirtualRadioLabel_lineNum( '«', hostLn )
 
   " this just allows to use the simple gew map more often.
   " let typeSign = matchstr( getline(hostLn), '\v(ZIO|Task|RIO|URIO|UIO|CAT)')
@@ -140,15 +147,26 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   "   let forEffect = a:forEffect
   " endif
 
+  let mode = a:mode
 
-  if a:mode == "gallia"
+  " for specific lsp types the rendering mode is set here
+  if     typeStr == "HeadU"
+    let mode = "gallia"
+  elseif typeStr == "HeadZ"
+    let mode = "gallias"
+  endif
+
+  if mode == "gallia"
     let bindingLine = "  val printVal = " . identif . ".formatPrettyJson"
-  elseif a:mode == "gallias"
+  elseif mode == "gallias"
     let bindingLine = "  val printVal = " . identif . ".formatPrettyJsons"
   else
     let bindingLine = "  val printVal = " . identif
     " let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
   endif
+
+  echo "Printer: " . identif . " - " . typeStr . " - " . mode
+  call VirtualRadioLabel_lineNum( "« " . typeStr . " - " . mode, hostLn )
 
   let printerLines = readfile( printerFilePath, '\n' )
   " let printerLines[0] = importLine

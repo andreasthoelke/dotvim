@@ -46,7 +46,7 @@ function M.type()
     end
   end
   -- return TypeStr
-  return vim.api.nvim_call_function( "matchstr", { TypeStr, [[\v:\s\zs\w*]] } )
+  return vim.api.nvim_call_function( "matchstr", { TypeStr, [[\v:\s\zs.*\ze\n]] } )
 end
 
 -- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
