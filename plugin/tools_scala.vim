@@ -129,9 +129,9 @@ func! Scala_SetPrinterIdentif_SBT( mode )
 
   " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
 
-  normal! j
+  normal! ww
   let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
-  normal! k
+  normal! bb
 
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
 

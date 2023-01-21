@@ -19,7 +19,8 @@ func! VirtualRadioLabel( label )
 endfunc
 
 func! VirtualRadioLabel_lineNum( label, lineNum )
-  let ns = nvim_create_namespace( a:label )
+  " let ns = nvim_create_namespace( a:label )
+  let ns = nvim_create_namespace( "PrinterLabels" )
   let bn = bufnr('')
 
   " Clear all virtual text of this label

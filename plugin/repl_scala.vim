@@ -38,7 +38,7 @@ func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
   if len( lines )
     " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
-    let resultVal = matchstr( join( lines, "※" ), '\v(RESULT|ERROR:\s|Err\()\zs.*' )
+    let resultVal = matchstr( join( lines, "※" ), '\v(Caused\sby:\s|RESULT|ERROR:\s|Err\()\zs.*' )
     let resultVal = split( resultVal, "※" )
     " let resultVal = functional#map({ l -> matchstr( l, '\v(RESULT)\zs.*' ) }, resultVal )
 

@@ -63,6 +63,13 @@ function _G.stline()
 end
 
 
+function M.Tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
+
 -- -- filtering the vim bufferlist
 -- vim.api.nvim_list_bufs() 
 -- unpack( vim.api.nvim_list_bufs() )

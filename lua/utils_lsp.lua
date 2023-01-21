@@ -7,6 +7,7 @@ local M = {}
 
 local vim = vim
 local util = require 'vim.lsp.util'
+local utilsg = require'utils_general'
 
 
 local function get_available_client(method)
@@ -22,7 +23,7 @@ function M.hover()
   local params = util.make_position_params()
   -- todo: set these params: see ~/.config/nvim/plugin/tools_js.vim#/Workaround.%20The%20type
   -- return params
-  return vim.lsp.buf_request_sync(0, "textDocument/hover", params, 4000)
+  return vim.lsp.buf_request_sync(0, "textDocument/hover", params, 2000)
 end
 -- put( require'utils_lsp'.hover() )
 
@@ -48,7 +49,14 @@ function M.LspType()
       typeString = server_results.result.contents.value
     end
   end
-  local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\n]] } )
+  local split = vim.split(typeString, "\n")
+  -- put( split )
+  -- put( utilsg.Tablelength( split ) )
+  -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\n]] } )
+  local retval = vim.api.nvim_call_function( "matchstr", { split[2], [[\v:\s\zs.*]] } )
+  -- local retval = vim.api.nvim_call_function( "matchstr", { retval, [[\v:\s\zs.*\ze\n]] } )
+  -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\]\n]] } )
+  -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )
   return retval
 end
 -- -- put( require'utils_lsp'.LspType() )
