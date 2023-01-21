@@ -66,6 +66,7 @@ nnoremap <silent> go <cmd>Telescope buffers<cr>
 
 " Using Lua functions
 nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
+" nnoremap <leader>gp <cmd>lua require('telescope.builtin').oldfiles()<cr>
 " nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 " nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>

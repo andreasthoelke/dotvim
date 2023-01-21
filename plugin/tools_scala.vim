@@ -2,6 +2,7 @@
 func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
+  nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "plain json" )<cr>
   nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "zio" )<cr>
   nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
@@ -78,16 +79,16 @@ endfunc
 func! Scala_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  let typeStr = v:lua.require('utils_lsp').type()
+  let l:typeStr = v:lua.require'utils_lsp'.LspType()
   call setpos('.', [0, oLine, oCol, 0] )
-  return typeStr
+  return l:typeStr
 endfunc
 " echo Scala_LspTypeAtPos(111, 10)
 
 func! Scala_LspType()
   let [oLine, oCol] = getpos('.')[1:2]
-  let typeStr = Scala_LspTypeAtPos(oLine, oCol)
-  return typeStr
+  let l:typeStr = Scala_LspTypeAtPos(oLine, oCol)
+  return l:typeStr
 endfunc
 " echo Scala_LspType()
 
@@ -127,10 +128,18 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   let packageName = Scala_GetPackageName()
 
   " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
+
+  normal! j
   let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
+  normal! k
+
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
 
-  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  let l:typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  if l:typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
 
   let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
   let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
@@ -147,16 +156,27 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   "   let forEffect = a:forEffect
   " endif
 
+  let force_mode = a:mode
   let mode = a:mode
 
   " for specific lsp types the rendering mode is set here
-  if     typeStr == "HeadU"
+  if     l:typeStr == "HeadU"
     let mode = "gallia"
-  elseif typeStr == "HeadZ"
+  elseif l:typeStr == "HeadZ"
+    let mode = "gallias"
+  elseif l:typeStr =~ "Self2"
     let mode = "gallias"
   endif
 
-  if mode == "gallia"
+  if force_mode == "plain json"
+
+    if     mode == "gallia"
+      let bindingLine = "  val printVal = " . identif . ".formatJson"
+    elseif mode == "gallias"
+      let bindingLine = "  val printVal = " . identif . ".formatJsonl"
+    endif
+
+  elseif mode == "gallia"
     let bindingLine = "  val printVal = " . identif . ".formatPrettyJson"
   elseif mode == "gallias"
     let bindingLine = "  val printVal = " . identif . ".formatPrettyJsons"
@@ -165,8 +185,8 @@ func! Scala_SetPrinterIdentif_SBT( mode )
     " let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
   endif
 
-  echo "Printer: " . identif . " - " . typeStr . " - " . mode
-  call VirtualRadioLabel_lineNum( "« " . typeStr . " - " . mode, hostLn )
+  echo "Printer: " . identif . " - " . l:typeStr . " - " . mode
+  call VirtualRadioLabel_lineNum( "« " . l:typeStr . " - " . mode, hostLn )
 
   let printerLines = readfile( printerFilePath, '\n' )
   " let printerLines[0] = importLine

@@ -190,6 +190,23 @@ vim.keymap.set( 'n',
 
 
 
+-- local file_ignore_patterns = {
+--   '^.git/', '^target/', '^node%_modules/', '^.npm/', '^modules', 'dev.js', '^build/', '%[Cc]ache/', '%-cache',
+--   '^scala-doc/',
+--   '%.sql', '%.tags', 'tags', '%.gemtags',
+-- }
+
+
+-- Just the oldfiles map
+-- vim.keymap.set( 'n',
+--   'gp', function() require( 'telescope.builtin' )
+--     .oldfiles(
+--       {
+--         file_ignore_patterns = file_ignore_patterns
+--       }
+--     ) end )
+
+
 
 
 

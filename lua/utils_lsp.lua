@@ -3,11 +3,11 @@
 
 -- from https://github.com/matsui54/denite-nvim-lsp/blob/bee2eb082f54f4a77ecf34c624afa363902f2c73/lua/lsp_denite.lua
 -- also maybe https://github.com/amirrezaask/fuzzy.nvim/blob/d98135c8a30c517f085eede5810b73a62060b016/lua/fuzzy/lsp.lua
+local M = {}
 
 local vim = vim
 local util = require 'vim.lsp.util'
 
-local M = {}
 
 local function get_available_client(method)
   for id, client in pairs(vim.lsp.buf_get_clients()) do
@@ -22,8 +22,7 @@ function M.hover()
   local params = util.make_position_params()
   -- todo: set these params: see ~/.config/nvim/plugin/tools_js.vim#/Workaround.%20The%20type
   -- return params
-  local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/hover", params, 2000)
-  return results_lsp
+  return vim.lsp.buf_request_sync(0, "textDocument/hover", params, 4000)
 end
 -- put( require'utils_lsp'.hover() )
 
@@ -37,18 +36,22 @@ end
 -- end
 -- -- put( require'utils_lsp'.hover() )
 
-function M.type()
-  TypeStr = {}
-  local results_lsp = M.hover()
+function M.LspType()
+  local typeString = ""
+  local results_lsp, err = M.hover()
+  if results_lsp == nil then
+    vim.pretty_print( err )
+    return err
+  end
   for _, server_results in pairs(results_lsp) do
     if server_results.result then
-      TypeStr = server_results.result.contents.value
+      typeString = server_results.result.contents.value
     end
   end
-  -- return TypeStr
-  return vim.api.nvim_call_function( "matchstr", { TypeStr, [[\v:\s\zs.*\ze\n]] } )
+  local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\n]] } )
+  return retval
 end
-
+-- -- put( require'utils_lsp'.LspType() )
 -- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
 -- vim.api.nvim_call_function( "matchstr", { "lazy val e1_sql: HeadZ\n", [[\v:\s\zs\w*]] } )
 

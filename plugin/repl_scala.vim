@@ -57,9 +57,13 @@ func! ScalaReplMainCallback(job_id, data, event)
       endif
 
       silent let g:floatWin_win = FloatingSmallNew ( resultVal )
+      " silent let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( resultVal )
+
       call ScalaSyntaxAdditions() 
       silent call FloatWin_FitWidthHeight()
       silent wincmd p
+    else
+      " echo "Done with no result value"
     endif
 
     " let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )
