@@ -40,7 +40,6 @@ func! ScalaReplMainCallback(job_id, data, event)
     " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
     let resultVal = matchstr( join( lines, "※" ), '\v(Caused\sby:\s|RESULT|ERROR:\s|Err\()\zs.*' )
     let resultVal = split( resultVal, "※" )
-    " let resultVal = functional#map({ l -> matchstr( l, '\v(RESULT)\zs.*' ) }, resultVal )
 
     if len( resultVal )
 
@@ -63,7 +62,17 @@ func! ScalaReplMainCallback(job_id, data, event)
       silent call FloatWin_FitWidthHeight()
       silent wincmd p
     else
-      " echo "Done with no result value"
+
+      let resultVal = matchstr( join( lines, "※" ), '\v(FILEVIEW)\zs.*\ze↧' )
+      let resultVal = split( resultVal, "※" )
+
+      if len( resultVal )
+        " silent let g:floatWin_win = FloatingSmallNew ( resultVal )
+        silent let g:floatWin_win = FloatingBuffer ( resultVal[0] )
+        silent call FloatWin_FitWidthHeight()
+        silent wincmd p
+      endif
+
     endif
 
     " let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )

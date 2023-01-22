@@ -2,6 +2,8 @@
 func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
+  nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
+  nnoremap <silent><buffer>         gef :call Scala_SetPrinterIdentif( "file1" )<cr>
   nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "plain json" )<cr>
   nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "zio" )<cr>
   nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
@@ -148,13 +150,18 @@ func! Scala_SetPrinterIdentif_SBT( mode )
     let identif = packageName . "." . objName . "." . identif
   endif
 
-  " this just allows to use the simple gew map more often.
-  " let typeSign = matchstr( getline(hostLn), '\v(ZIO|Task|RIO|URIO|UIO|CAT)')
-  " if len( typeSign )
-  "   let forEffect = v:true
-  " else
-  "   let forEffect = a:forEffect
-  " endif
+  " // this just needs a place to evaluate
+  " val dirPath = s"${System.getProperty("user.dir")}/data/printer/"  
+  " // 8) set the ".tsv" file extension to create a table/column view. or "" for RESULT prints
+  " val filePath = dirPath + "view.tsv"
+  " // 10) use "writeFileContent" to simple (non Gallia) values. empty this line to not write a file.
+  " val doVal = tutorial.A.ds3.write( filePath )
+  " // 12) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
+  " val replTag = "RESULT"
+  " // 14) info can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
+  " val info = readme.A.e10_sql.forceSize.toString + "\n"
+  " // 16) define the formatting for the RESULT val. Use "" with FILEVIEW.
+  " val printVal = readme.A.e10_sql.formatTable
 
   let force_mode = a:mode
   let mode = a:mode
@@ -164,35 +171,64 @@ func! Scala_SetPrinterIdentif_SBT( mode )
     let mode = "gallia"
   elseif l:typeStr == "HeadZ"
     let mode = "gallias"
-  elseif l:typeStr =~ "Self2"
+  elseif l:typeStr =~ "Self"
     let mode = "gallias"
   endif
 
-  if force_mode == "plain json"
 
-    if     mode == "gallia"
-      let bindingLine = "  val printVal = " . identif . ".formatJson"
-    elseif mode == "gallias"
-      let bindingLine = "  val printVal = " . identif . ".formatJsonl"
-    endif
+
+  if    force_mode == "table"
+    let _filePath = '""'
+    let _doVal    = '""'
+    let _replTag  = '"RESULT"'
+    let _info     = identif . '.forceSize.toString + "\n"'
+    let _printVal = identif . '.formatPrettyTable'
+    let mode = force_mode " just for the virtual label
+
+  elseif force_mode == "file1"
+    let _filePath = 'dirPath + "view.tsv"'
+    let _doVal    = identif . ".write(filePath)"
+    let _replTag  = '"FILEVIEW"'
+    let _info     = '""'
+    let _printVal = '"↧"'
+    let mode = force_mode " just for the virtual label
 
   elseif mode == "gallia"
-    let bindingLine = "  val printVal = " . identif . ".formatPrettyJson"
+    let _filePath = '""'
+    let _doVal    = '""'
+    let _replTag  = '"RESULT"'
+    let _info     = '""'
+    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Json" : "PrettyJson")
+
   elseif mode == "gallias"
-    let bindingLine = "  val printVal = " . identif . ".formatPrettyJsons"
+    let _filePath = '""'
+    let _doVal    = '""'
+    let _replTag  = '"RESULT"'
+    let _info     = identif . '.forceSize.toString + "\n"'
+    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Jsonl" : "PrettyJsons")
+
   else
-    let bindingLine = "  val printVal = " . identif
-    " let bindingLine = "  val printVal = ZIO.succeed( " . identif . " )"
+    let _filePath = '""'
+    let _doVal    = '""'
+    let _replTag  = '"RESULT"'
+    let _info     = '""'
+    let _printVal = identif
+
   endif
 
-  echo "Printer: " . identif . " - " . l:typeStr . " - " . mode
-  call VirtualRadioLabel_lineNum( "« " . l:typeStr . " - " . mode, hostLn )
+  let formatter = matchstr( _printVal, '\vformat\zs.*' )
+  echo "Printer: " . identif . " - " . l:typeStr . " - " . mode . " " . formatter
+  call VirtualRadioLabel_lineNum( "« " . l:typeStr . " " . mode . " " . formatter, hostLn )
 
-  let printerLines = readfile( printerFilePath, '\n' )
-  " let printerLines[0] = importLine
-  let printerLines[5] = bindingLine
+  let plns = readfile( printerFilePath, '\n' )
 
-  call writefile( printerLines, printerFilePath )
+  let plns[7]  = "  val filePath = " . _filePath
+  let plns[9]  = "  val doVal    = " . _doVal
+  let plns[11] = "  val replTag  = " . _replTag
+  let plns[13] = "  val info     = " . _info
+  let plns[15] = "  val printVal = " . _printVal
+
+  call writefile( plns, printerFilePath )
 endfunc
 
 func! Scala_GetPackageName()
@@ -462,7 +498,8 @@ func! BlockEnd_VisSel()
 endfunc
 
 
-let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
+" let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
+let g:Scala_MvStartLine_SkipWordsL = ['val', 'def', 'lazy', 'private', 'final', 'override']
 " echo "private" =~ g:Scala_MvStartLine_SkipWords
 
 func! SkipScalaSkipWords()
@@ -476,7 +513,8 @@ func! SkipScalaSkipWords()
   endif
 
   let cw = expand('<cword>')
-  if cw =~ g:Scala_MvStartLine_SkipWords
+  " if cw =~ g:Scala_MvStartLine_SkipWords
+  if count( g:Scala_MvStartLine_SkipWordsL, cw )
     normal! w
     call SkipScalaSkipWords()
   endif
