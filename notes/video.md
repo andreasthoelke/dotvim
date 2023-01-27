@@ -132,6 +132,10 @@ mpv World\'s\ smallest\ cat\ ð¿°¨-\ BBC-W86cTIoMv2U.mp4
 
 mpv mpv-shot0001.jpg
 
+youtube-dl --help
+ytdl --help
+ytdl W86cTIoMv2U -j
+
 youtube-dl W86cTIoMv2U -e --get-title
 youtube-dl qK4G2KpmqFU -e --get-title
 youtube-dl qK4G2KpmqFU -e --write-sub

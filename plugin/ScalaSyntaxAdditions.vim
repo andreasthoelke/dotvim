@@ -11,10 +11,10 @@
 " ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟  e⃨  ⊍ ⊐ ⊔ ⊝ ⊟
 " ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
 " ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
-" ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
+" ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
 " ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
 " ➳  ➽  ⟀  ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
-" ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝
+" ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 " ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ✱ ❂ ❈  ♽
@@ -83,6 +83,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal ":" conceal
   " syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
   syntax match Normal '::' conceal cchar=∷
+  syntax match Normal ':::' conceal cchar=☷
 
   syntax match Normal "^val\s" conceal
   syntax match Normal "\s\zsval\s" conceal
@@ -224,6 +225,12 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\v(\s|\(|\[|\+)\zsT\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑡
   syntax match Normal '\v(\s|\(|\[|\+)\zsV\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑣
   syntax match Normal '\v(\s|\(|\[|\+)\zsU\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑢
+
+  " TODO: can somehow not match this properly
+  " syntax match Normal ': \A$' conceal cchar=𝑎
+  " syntax match Normal ': \zsR$' conceal cchar=𝑟
+  " syntax match Normal ': \zsE$' conceal cchar=𝑒
+  " syntax match Normal ': \zsB$' conceal cchar=𝑏
 
 
   syntax match InlineTestDeclaration '\v^(lazy\s)?val\se\d(\d)?_\i{-}\s\=' conceal cchar=‥

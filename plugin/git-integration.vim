@@ -130,7 +130,7 @@ nnoremap <leader><leader>og :FzfGFiles?<cr>
 nnoremap <leader><leader>gL :CocCommand fzf-preview.GitLogs<cr>
 " nnoremap <leader><leader>gL :Flogsplit<cr>
 nnoremap <leader><leader>gl :FzfCommits<cr>
-nnoremap <leader>ogl :FzfCommits<cr>
+nnoremap <leader><leader>ogl :FzfCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>
 

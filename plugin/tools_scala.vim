@@ -289,8 +289,8 @@ let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resource
 
 
 func! Scala_RunPrinter()
-  " let printerFilePath = expand('%:h') . '/Printer.scala'
-  let printerFilePath = expand('%:h') . 'src/main/scala/Printer.scala'
+  let printerFilePath = expand('%:h') . '/Printer.scala'
+  " let printerFilePath = expand('%:h') . 'src/main/scala/Printer.scala'
   if !filereadable( printerFilePath )
     " Using the running sbt repl session
     call ScalaReplRun()

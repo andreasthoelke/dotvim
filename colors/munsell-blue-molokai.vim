@@ -419,7 +419,7 @@ hi! Highlight1 guifg=#F6DC69
 
 hi! def link mkdHeading SpGreen52
 " hi! def link mkdNonListItemBlock FloatBorder
-hi! def link mkdNonListItemBlock CommentPlus
+" hi! def link mkdNonListItemBlock CommentPlus
 hi! def link mkdListItemLine purescriptIdentifier
 hi! def link mkdListItemLine mkdListItemLine
 hi! def link mkdCode Statement
@@ -619,21 +619,22 @@ hi link yamlPlainScalar purescriptIdentifier
 
 hi link dhallLabel Define
 
+hi LspInfo1 guifg=#416469
 
-hi link DiagnosticSignError Comment
-hi link DiagnosticSignWarn Comment
-hi link DiagnosticSignInfo Comment
-hi link DiagnosticSignHint Comment
+hi link DiagnosticSignError LspInfo1
+hi link DiagnosticSignWarn LspInfo1
+hi link DiagnosticSignInfo LspInfo1
+hi link DiagnosticSignHint LspInfo1
 
-hi link DiagnosticVirtualTextError Comment
-hi link DiagnosticVirtualTextWarn Comment
-hi link DiagnosticVirtualTextInfo Comment
-hi link DiagnosticVirtualTextHint Comment
+hi link DiagnosticVirtualTextError LspInfo1
+hi link DiagnosticVirtualTextWarn LspInfo1
+hi link DiagnosticVirtualTextInfo LspInfo1
+hi link DiagnosticVirtualTextHint LspInfo1
 
-hi link DiagnosticFloatingError Comment
-hi link DiagnosticFloatingWarn Comment
-hi link DiagnosticFloatingInfo Comment
-hi link DiagnosticFloatingHint Comment
+hi link DiagnosticFloatingError LspInfo1
+hi link DiagnosticFloatingWarn LspInfo1
+hi link DiagnosticFloatingInfo LspInfo1
+hi link DiagnosticFloatingHint LspInfo1
 
 hi link CocErrorHighlight NONE
 hi link CocWarningHighlight NONE

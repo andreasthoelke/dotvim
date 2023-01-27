@@ -151,12 +151,12 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  '<leader>ogL', function() require( 'utils_general' )
+  '<leader>ogl', function() require( 'utils_general' )
   .Git_commits_picker( opts_1, vim.fn.expand('%') )
   end )
 
 vim.keymap.set( 'n',
-  '<leader><leader>ogL', function() require( 'utils_general' )
+  '<leader>ogL', function() require( 'utils_general' )
   .Git_commits_picker( opts_1 )
   end )
 

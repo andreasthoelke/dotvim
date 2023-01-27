@@ -85,10 +85,10 @@ let g:auto_save_events = ["WinLeave", "VimLeavePre", "InsertLeave", "TextChanged
 " let g:gutentags_add_default_project_roots = ['.gitignore', 'README.md']
 
 " Note: Only used by Magit? ? Plugin will "set updatetime=200"
-func! AttachAutosaveStopEvents()
-  autocmd! BufEnter,WinEnter <buffer> let g:auto_save = 0 | echo "Autsave off"
-  autocmd! BufHidden,WinLeave <buffer> let g:auto_save = 1 | echo "Autsave on"
-endfunc
+" func! AttachAutosaveStopEvents()
+"   autocmd! BufEnter,WinEnter <buffer> let g:auto_save = 0 | echo "Autsave off"
+"   autocmd! BufHidden,WinLeave <buffer> let g:auto_save = 1 | echo "Autsave on"
+" endfunc
 " Autosave: -------------------
 
 

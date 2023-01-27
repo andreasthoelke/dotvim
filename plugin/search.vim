@@ -1,96 +1,6 @@
 
-"  ..
-
-" ─   Vim legacy search config                          ──
-
-" The following is legacy config copied from vimrc: TODO cleanup
-
-" Search within subdirectories
-set path+=**
-" Also use *somecars to fuzzy the first part of the filename
-
-" Find files and populate the quickfix list
-command! -nargs=1 FindFile call FindFiles(<q-args>)
-func! FindFiles(filename)
-  let error_file = tempname()
-  silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
-  set errorformat=%f:%l:%m
-  exe "cfile ". error_file
-  copen
-  call delete(error_file)
-endfunc
-
-" set hlsearch
-
-" nnoremap / :set hlsearch<cr>:noh<cr>/\v
-" this seems needed to reactivate hlsearch after nohlsearch
-" also the "\v" flag makes sure that I can type regex consistent with other regex engines
-nnoremap / :set hlsearch<cr>:noh<cr>/\v
-" vnoremap / /\v
-" nnoremap <M-/> /
-
-" Search visually selected text
-vnoremap // y/<C-R>"<CR>
-
-func! VimSearch( )
-  " exec 'set hlsearch'
-  " exec 'nohlsearch'
-  exec "normal /\v"
-endfunc
-" call VimSearch()
 
 
-" HOW TO SEARCH:
-" http://vimdoc.sourceforge.net/htmldoc/pattern.html
-
-" Silver searcher -
-" --------------------------------------------------------------------------------
-let g:ag_highlight=1
-
-" --------------------------------------------------------------------------------
-
-" Search next: Select, deselect. Similar to "*" / "#"
-" nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
-nnoremap <silent> ga :call HiSearchCursorWord()<cr>
-nnoremap <silent> g- m':set nohlsearch<cr>
-" nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
-nnoremap <silent> <Esc> m':set nohlsearch<cr>:call FloatWin_close()<cr>
-" Don't add seach next/prev to the jumplist
-nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
-nnoremap <silent> N :keepjumps normal! N<cr>
-" Note "normal!" ignores all mappings - to prevent recursion
-
-func! HiSearchCursorWord()
-  normal! m'
-  let cword = expand('<cword>')
-  let @/= l:cword
-  call histadd( 'search', l:cword )
-  set hlsearch
-endfunc
-
-" " The Silver Searcher
-" if executable('ag')
-"   " Use ag over grep
-"   set grepprg=ag\ --nogroup\ --nocolor
-"   " let g:ctrlp_use_caching = 0
-" endif
-
-
-
-
-" https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
-" TODO deprecate these maps
-" nnoremap <silent> gsg :call GoogleSearch("word")<cr>
-" vmap <silent> gsg :<c-u>call GoogleSearch("visSel")<cr>
-
-" nnoremap <silent> gsh :call DocsForCursorWord()<cr>
-" vmap <silent> gsh :call DocsForVisSel()<cr>
-
-" nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
-
-" Now in HsAPIExplore:
-" nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
-" vmap <silent> gsd :call HoogleForVisSel()<cr>
 
 command! GithubSearch call GithubSearch("word")
 
@@ -172,17 +82,17 @@ let g:ag_highlight=1
 
 " --------------------------------------------------------------------------------
 
-" Search next: Select, deselect. Similar to "*" / "#"
-" nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+" ─   Search next                                       ──
+" Select, deselect. Similar to "*" / "#"
 nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
-" nnoremap <silent> <c-[> m':set nohlsearch<cr>
-" nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
+
+" NOTE: my "escape" map escapes hlsearch and float win which is ok in most cases. but sometimes i have to use g- to only escape hlsearch and leave the float win open.
 nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
+
 " Don't add seach next/prev to the jumplist
 nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
-" Note "normal!" ignores all mappings - to prevent recursion
 
 func! HiSearchCursorWord()
   normal! m'
@@ -192,42 +102,38 @@ func! HiSearchCursorWord()
   set hlsearch
 endfunc
 
-" " The Silver Searcher
-" if executable('ag')
-"   " Use ag over grep
-"   set grepprg=ag\ --nogroup\ --nocolor
-"   " let g:ctrlp_use_caching = 0
-" endif
-"
-" 
 
-" vim Grepper: ------------------------------
 
-" Repo files:
+" legacy
+" " vim Grepper: ------------------------------
+
+" " Repo files:
+" " command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
 " command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
-command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
-" Open buffers:
-command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <args>
+" " Open buffers:
+" command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <args>
 
-" Notes:
-command! -nargs=1 Fnotes    :tabe % | Grepper -tool git -side          -query <args> /Users/at/.vim/notes
-command! -nargs=1 FnotesAll :tabe % | Grepper           -side          -query <args> /Users/at/.vim/notes
-" Haskell code:
-" command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
-command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/at/Documents/Haskell/6/HsTraining1/** /Users/at/Documents/Haskell/6/HsTrainingBook2/**
+" " Notes:
+" command! -nargs=1 Fnotes    :tabe % | Grepper -tool git -side          -query <args> /Users/at/.vim/notes
+" command! -nargs=1 FnotesAll :tabe % | Grepper           -side          -query <args> /Users/at/.vim/notes
+" " Haskell code:
+" " command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
+" command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/at/Documents/Haskell/6/HsTraining1/** /Users/at/Documents/Haskell/6/HsTrainingBook2/**
 
-" Vim code:
-command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/at/.vim/plugin/ /Users/at/.vim/utils/ /Users/at/.vimrc
-" Plugin code:
-command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <args> /Users/at/.vim/plugged/**
+" " Vim code:
+" command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/at/.vim/plugin/ /Users/at/.vim/utils/ /Users/at/.vimrc
+" " Plugin code:
+" command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <args> /Users/at/.vim/plugged/**
 
-" command! -nargs=1 FrepoDel  :tabe | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
+" " command! -nargs=1 FrepoDel  :tabe | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
 
-command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
-" TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
+" command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
+" " TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
+
 
 command! -nargs=1 Help call HelpOpen( <q-args> )
 
+" TODO: adapt to telescope
 func! FindInDeletedCode( pattern )
   let l:cmd = "git log -c -S'" . a:pattern . "'"
   let l:resultLines = split( system( l:cmd ), '\n' )
