@@ -82,7 +82,7 @@ endfunc
 func! T_DelayedCmd( cmd, time )
    call timer_start( a:time, { tid -> execute( a:cmd, "" )})
 endfunc
-" call T_DelayedCmd( "echo 'hi there'", 1000 )
+" T_DelayedCmd( "echo 'hi there'", 1000 )
 
 func! T_echo( str )
   call T_DelayedCmd( 'echom "' . a:str . '"', 500 )

@@ -12,7 +12,7 @@ nnoremap <leader>on :vnew ~/.config/nvim/notes/<cr>
 nnoremap <leader>oN :tabe ~/.config/nvim/notes/<cr>
 nnoremap <leader>ov :vnew ~/.config/nvim/<cr>
 nnoremap <leader>oV :tabe ~/.config/nvim/<cr>
-nnoremap <leader>od :vnew ~/Documents/<cr>
+" nnoremap <leader>od :vnew ~/Documents/<cr>
 nnoremap <leader>oD :tabe ~/Documents/<cr>
 nnoremap <leader>op :vnew ~/Documents/PS/A/<cr>
 nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
@@ -371,16 +371,45 @@ function! Dirvish_toggle() abort
     if fdir ==# ''
         let fdir = '.'
     endif
-
     call dirvish#open(fdir)
-
     if !empty(path)
+        " NOTE: this moves the cursor to the current file!
         call search('\V\^'.escape(path, '\').'\$', 'cw')
     endif
 endfunction
 
+func! PathSelect_withCB( startPath, cbFnName )
+  let g:PathSelect_cbFnName = a:cbFnName
+  call Dirvish_Float( a:startPath )
+  nnoremap <silent> <leader>i :call PathSelect_callCB()<cr>
+endfunc
+
+func! PathSelect_callCB()
+  call call( g:PathSelect_cbFnName, [getline(".")] )
+  call FloatWin_close()
+endfunc
 
 
+func! Dirvish_Float( path )
+  call Float1Show()
+  call dirvish#open( a:path )
+endfunc
+" Dirvish_Float( '/Users/at/Documents/Bookmarks/' )
+" call( function('Dirvish_Float'), ['/Users/at/Documents/Bookmarks/'] )
+
+func! Float1Show()
+  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, FloatOpts1())
+endfunc
+" Float1Show()
+
+func! FloatOpts1()
+  let width  = float2nr(&columns * 0.5)
+  let height = float2nr(&lines * 0.6)
+  let top    = ((&lines - height) / 2) - 1
+  let left   = (&columns - width) / 2
+  let opts   = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal' }
+  return opts
+endfunc
 
 
 " ─^  Dirvish                                            ▲

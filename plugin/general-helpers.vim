@@ -51,6 +51,25 @@ func! GetLanguageByCurrentFileExtension()
   endif
 endfunc
 
+" NOTE: there a also VimBookmark maps: ~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
+
+nnoremap <leader>bf :call BookmarkFile()<cr>
+command! BookmarkFile call BookmarkFile()
+
+let g:BookmarkCurrentFolder = "/Users/at/Documents/Bookmarks/notes_1_2023/"
+
+func! BookmarkFile()
+ let g:CurrentFilePath = expand( '%:p' )
+ call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "BookmarkFile_CB" )
+endfunc
+" BookmarkFile()
+
+func! BookmarkFile_CB( folderPath )
+  let cmd = "ln " . escape(g:CurrentFilePath, '\') . " " . g:BookmarkCurrentFolder
+  echo cmd
+  call system( cmd )
+endfunc
+
 
 " ─   Links Rel                                          ■
 

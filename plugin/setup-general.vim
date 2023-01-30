@@ -1272,7 +1272,16 @@ set noshowmode
 " Vista:
 " internal setting:
 " h Vista
-" ~/.config/nvim/plugged/vista.vim/plugin/vista.vim#/let%20g.vista_floating_border%20=
+" ~nurb4Google/.config/nvim/plugged/vista.vim/plugin/vista.vim#/let%20g.vista_floating_border%20=
+
+
+let g:vista_default_executive = 'ctags'
+
+let g:vista_executive_for = {
+      \ 'scala': 'vim_lsp',
+      \ 'markdown': 'toc',
+      \ }
+
 
 let g:vista_floating_delay = 10000
 let g:vista_highlight_whole_line = 0
@@ -1313,7 +1322,8 @@ endfunction
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>ot :Vista nvim_lsp<cr>
+" nnoremap <leader>ot :Vista nvim_lsp<cr>
+nnoremap <leader>ot :Vista<cr>
 " nnoremap <leader>ot :TagbarToggle<cr>
 nnoremap <leader>oT :SymbolsOutline<cr>
 " discontinued maps

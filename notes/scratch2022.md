@@ -1,81 +1,10 @@
 
 
-# Printer.scala todo:
-ideally non zio values would not be printed with zio
-as the error messages might look cleaner.
-
-~/.config/nvim/plugin/tools_scala.vim#/echoe%20"currently%20not
-also Printer should be a scala 2.13 syntax?!
-~/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci/Printer.scala#/object%20Print%20{
 
 
 ## topics crawler
 /Users/at/.vim/scratch/853
 
-
-# list/search headings or full text
-with grep-rgx
-- in current .md file
-- in all past/history files
-- in a list of fixed files
-
-# bookmark the set of files to search
-- i could `ln` them into a central 'to search' folder(s)
-- recent files could show a column indicating
-  and under which marker key e.g. `a` they are bookmarked
-
-## other usecases
-list, browse, search
-### headers in ..
-- current file!
-- recent files (sorted)
-- bookmarked files
-
-# side navigator
-would show a custom view list with
-- main nav types (header, defs, case class)
-- icon based on type
-- colum for type-sig or documentation?
-- past and bookmarked files ranked lower
-
-
-from some repo have 2 new regex searches/maps in vim folder:
-- for functions and commands vim/lua (only in vim folders)
-- for nnoremap and keymap only in vim folders
-leader vm  - regex approach
-leader leader vm - telescope vim.keymaps approach (filenames maybe in the title)
-leader vM  - fzf approach that sometimes shows the file name/linenum
-
-
-# Git_commits_picker
-- mapping
-- test with empty string
-- could it show the time ago?
-
-this now uses a custom `previewer` filed in opts.
-which is a list of two previewers? or do the function calls 'spred' new table fields?
-
-## checkout file
-- test checkout of entire commit
-- checkout only that file (but then how to proceed?)
-- checkout that one file out under a different name:
-  -> there's now git_log
-  -> this can also be done manually like this:
-  git show 97853e3:z_patterns.scala > z_patterns_ab.scala
-
-- put windows of different file versions side by side and use
-    :set scrollbind
-    :set noscrollbind
-
-
-
-
-# verb map
-needs to parse/get filename and line from the output.
-find the builtin code
-
-# gs maps
-ergonomic and scalable?
 
 
 
@@ -129,39 +58,6 @@ leader od  - open dirvish in float!
 ,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
 also:
 leader fg - and then can use regex like //.*List to search in comments
-
-# Scala references with Trouble
-ged  - show workspace errors
-ge]/[ - next/prev error
-ger   - show references of symbol under cursor
-]q [q - next/prev reference in workspace
-
-# Scala Printer
-
-## SBT support
-1. needs this printer file as Main
-    fpcourse/
-    src/main/scala/Main.scala
-
-`gew` `gee` this then namspace imports the indentif into Main/Printer
-
-2. start the sbt terminal with `space ro`
-
-`gei` does `runMain Printer`
-
-interactive programms can be seen in the running terminal
-
-## Scala-cli support
-
-1. needs this printer file as Printer.scala
-     /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/scala-cli-zio1/Printer.scala
-   in the same folder as the source file
-     /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/scala-cli-zio1/a_effects.scala
-
-`gew` `gee` again just imports the identif into the Printer.scala
-
-`gei` does `scala-cli .`
-`space gei` does `scala-cli .` in a new/temp terminal
 
 
 ## Telescope useful maps
@@ -218,88 +114,6 @@ use the Comment implement (not the node) version
 the add a custom Node type to the interface [Node]
 
 i might make manually unique string ids in data.ts.
-
-# Vim explore
-h Floaterm
-https://github.com/voldikss/vim-floaterm
-leader te h<tab>   - Telescope heading
-leader te gl<tab>  - Telescope glyph
-leader te sp - spell_suggest (on a word to replace)
-
-
-
-## Vim to learn
-
-nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
-nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
-
-\w   - easymotion wordmotion
-)  - MvNextLineStart
-(  - this line (useful!) start
-
-ctrl g  - echo filepath and scroll position (in zen mode)
-space ]t  - bracket end forward
-leader leader ]t   - BufferInnerBracket()
-space os - open scratch file in float
-space ob - search for bookmarks
-
-new js/ts 'yank around {} block' map: y<leader>ab
-
-space s; - strip semicolon .. and the af/ap/,j
-
-gsw - sets a test-printer expression in /scratch/.testPrinter.ts
-gsp - prints/call this (exported) identifier (cursor can be in a different place)
-
-sp qa - add cursor pos to quickfix list
-leader qq - toggle quickfix list
-
-## regex vim pattern
-[A-Z]{4}:  - find comment tags like: // NOTE:  , TODO:
-
-rust regex docs:
-https://docs.rs/regex/1.7.0/regex/#syntax
-
-### Lsp
-sp ca - code action
-gti   - import identifier under cursor
-~/.config/nvim/plugin/setup-lsp.lua#/buf_map.bufnr,%20"n",%20"gts",
-https://jose-elias-alvarez.medium.com/configuring-neovims-lsp-client-for-typescript-development-5789d58ea9c
-https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils
-
-TODO:
-Telescope dynamic_workspace_symols
-this currently only works within the .metals project folder!?
-
-# scala metals
-feature list: https://github.com/scalameta/nvim-metals/discussions/279
-
-### Quick floats
-sp os - scratch
-sp ol - links
-sp ob - vim bookmarks
-
-gdo - go to definition in float
-
-npx edgedb-js
-save in other folder
-connect to dracula and instance?
-
-### scala git process
-TODO:
-set up a lua map for Git_init_repo()
-git init
-touch .gitignore
-echo .metals/ >> .gitignore
-echo .bloop/ >> .gitignore
-echo .bsp/ >> .gitignore
-echo .scala-build/ >> .gitignore
-git add *
-(check with leader oG)
-git commit -m 'initial commit'
-git status
-
-
-
 
 
 
