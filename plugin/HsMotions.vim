@@ -71,7 +71,8 @@ let g:anyCharsNotBracketOrEqu = '[^=(]+'
 
 let g:topLevTypeSig = '^\i\+\s\:\:'
 " let g:topLevBind = '^\(\i\+\s\)\+=\s'
-let g:topLevBind = '\v^\i[^:]*\='
+" let g:topLevBind = '\v^\i[^:]*\='
+let g:topLevBind = '\v^(func|nnoremap|\#)'
 " let g:hsBinding = '\(\i\+\s\)\+=\s'
 " let g:hsBinding = '\v\i+\s([(),={}a-zA-Z0-9]+\s\=\s)'
 " Issue: there are some missing chars '|:"

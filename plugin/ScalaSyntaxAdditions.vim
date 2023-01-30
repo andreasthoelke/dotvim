@@ -179,7 +179,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'case' conceal cchar=˰
   syntax match Normal '\vmatch\ze(\W|\_$)' conceal cchar=⌋
 
-  syntax match Normal 'map' conceal cchar=➚
+  syntax match Normal '\.\zsmap' conceal cchar=➚
   syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
 
@@ -225,6 +225,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\v(\s|\(|\[|\+)\zsT\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑡
   syntax match Normal '\v(\s|\(|\[|\+)\zsV\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑣
   syntax match Normal '\v(\s|\(|\[|\+)\zsU\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑢
+  syntax match Normal '\v(\s|\(|\[|\+)\zsK\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑘
 
   " TODO: can somehow not match this properly
   " syntax match Normal ': \A$' conceal cchar=𝑎
