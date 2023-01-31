@@ -1,9 +1,20 @@
 
 
-## topics crawler
-/Users/at/.vim/scratch/853
+" ─   Link files to Bookmark folder & search             ■
+
+  " 1]_BOOKMARK_FILES_INTO_FOLDERS:
+  <leader>lf :call LinkPathToFolder()<cr>
+
+  " 2]_SET_SEARCH_FOLDER_PATH:
+  ,,sf :call FolderSearch_setPath()<cr>
+
+  " 3]_SEARCH_IN_FOLDER:
+  ,sf :call FolderSearch_run("")<cr>
+  <leader>of :call FolderSearch_run("^#")<cr>
 
 
+# Vim-Works
+/Users/at/Documents/Bookmarks/notes_1_2023/vim_works.md
 
 find any git-repo in Documents/!  - leader tr
 search help tags - leader th

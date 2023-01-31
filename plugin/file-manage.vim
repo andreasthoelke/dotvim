@@ -382,7 +382,7 @@ func! PathSelect_withCB( startPath, cbFnName )
   call Dirvish_Float( a:startPath )
   nnoremap <silent><leader>i :call PathSelect_callCB()<cr>
 endfunc
-
+"  |
 func! PathSelect_callCB()
   let folderPath = getline('.')
   call call( g:PathSelect_cbFnName, [folderPath] )
@@ -411,6 +411,10 @@ func! FloatOpts1()
   return opts
 endfunc
 
+func! IsInFloatWin()
+  return v:lua.vim.api.nvim_win_get_config(0).relative != ""
+endfunc
+" IsInFloatWin()
 
 " ─^  Dirvish                                            ▲
 

@@ -62,10 +62,26 @@ nnoremap <leader>lf :call LinkPathToFolder()<cr>
 command! LinkPathToFolder call LinkPathToFolder()
 
 func! LinkPathToFolder()
- let g:LinkPath_temp = expand( '%:p' )
+ let g:LinkPath_temp = getline('.')
+ if isdirectory( g:LinkPath_temp )
+   echo "Linking directory: " . g:LinkPath_temp
+ elseif filereadable( g:LinkPath_temp )
+   echo "Linking file: " . g:LinkPath_temp
+ else
+   if &ft != "dirvish"
+     echo "Path not readable. Not in a dirvish buffer! Is cursor on a valid file path?"
+   else
+     echo "Path not readable."
+   endif
+   return
+ endif
+ if &ft == "dirvish" && IsInFloatWin()
+   call FloatWin_close()
+   " as we are about to open another dirvish float, close this one
+ endif
  call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "LinkPathToFolder_cb" )
 endfunc
-
+"  |
 func! LinkPathToFolder_cb( folderPath )
   " Creates a soft link that works for files and folders
   let cmd = "ln -s " . escape(g:LinkPath_temp, '\') . " " . a:folderPath
@@ -92,7 +108,7 @@ nnoremap ,sf :call FolderSearch_run("")<cr>
 nnoremap <leader>of :call FolderSearch_run("^#")<cr>
 
 func! FolderSearch_run( rgx )
-  call Telescope_folder_rgx( g:FolderSearch_lastPath, a:rgx )
+  call Telescope_folder_rgx( g:FolderSearch_Path, a:rgx )
 endfunc
 
 " Live grep a folder of files (or symlinks). Lines are (optionally) pre-filtered by a regex.
