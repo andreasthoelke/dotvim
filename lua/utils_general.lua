@@ -532,7 +532,7 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
         -- '--with-filename',
         '--multiline', '--case-sensitive',
         -- '--max-depth', "1",
-        '--sort', 'accessed',
+        '--sort', 'accessed', '-L', -- -L = traverse symlinks
         -- '--regexp', 'pcre2'
     }
   local rg_cmd = M.Concat( M.Concat( rg_baseArgs, globs ), paths )

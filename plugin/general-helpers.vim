@@ -51,24 +51,60 @@ func! GetLanguageByCurrentFileExtension()
   endif
 endfunc
 
+
+
+" ─   Link files to Bookmark folder & search             ■
 " NOTE: there a also VimBookmark maps: ~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
 
-nnoremap <leader>bf :call BookmarkFile()<cr>
-command! BookmarkFile call BookmarkFile()
+" 1]_BOOKMARK_FILES_INTO_FOLDERS:
+" Symlink file/folder path of current line to a folder (inside Documents/Bookmarks)
+nnoremap <leader>lf :call LinkPathToFolder()<cr>
+command! LinkPathToFolder call LinkPathToFolder()
 
-let g:BookmarkCurrentFolder = "/Users/at/Documents/Bookmarks/notes_1_2023/"
-
-func! BookmarkFile()
- let g:CurrentFilePath = expand( '%:p' )
- call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "BookmarkFile_CB" )
+func! LinkPathToFolder()
+ let g:LinkPath_temp = expand( '%:p' )
+ call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "LinkPathToFolder_cb" )
 endfunc
-" BookmarkFile()
 
-func! BookmarkFile_CB( folderPath )
-  let cmd = "ln " . escape(g:CurrentFilePath, '\') . " " . g:BookmarkCurrentFolder
-  echo cmd
+func! LinkPathToFolder_cb( folderPath )
+  " Creates a soft link that works for files and folders
+  let cmd = "ln -s " . escape(g:LinkPath_temp, '\') . " " . a:folderPath
+  echo "Linked! " . cmd
   call system( cmd )
 endfunc
+
+" 2]_SET_SEARCH_FOLDER_PATH:
+let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/'
+nnoremap ,,sf :call FolderSearch_setPath()<cr>
+
+func! FolderSearch_setPath()
+  call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "FolderSearch_setPath_cb" )
+  echo "FolderSearch path is: " . g:FolderSearch_Path
+endfunc
+"  |
+func! FolderSearch_setPath_cb( folderPath )
+  let g:FolderSearch_Path = a:folderPath
+  echo "FolderSearch path set! - " . a:folderPath
+endfunc
+
+" 3]_SEARCH_IN_FOLDER:
+nnoremap ,sf :call FolderSearch_run("")<cr>
+nnoremap <leader>of :call FolderSearch_run("^#")<cr>
+
+func! FolderSearch_run( rgx )
+  call Telescope_folder_rgx( g:FolderSearch_lastPath, a:rgx )
+endfunc
+
+" Live grep a folder of files (or symlinks). Lines are (optionally) pre-filtered by a regex.
+func! Telescope_folder_rgx( folderPath, rgx )
+  " (opts, rgx_query, globs, paths)
+  call v:lua.require'utils_general'.RgxSelect_Picker( {"initial_mode": "insert"}, a:rgx, {}, [a:folderPath])
+endfunc
+" Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "^#" )
+" Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "nvim" )
+
+" ─^  Link files to Bookmark folder & search             ▲
+
 
 
 " ─   Links Rel                                          ■

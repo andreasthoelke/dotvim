@@ -35,9 +35,8 @@ nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
 " nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
-nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
-
-nnoremap <leader>oF :FzfGFiles<cr>
+" nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
+" nnoremap <leader>oF :FzfGFiles<cr>
 
 " nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
 nnoremap <leader>oh :vnew ~/.config/nvim/help.md<cr>
@@ -381,12 +380,13 @@ endfunction
 func! PathSelect_withCB( startPath, cbFnName )
   let g:PathSelect_cbFnName = a:cbFnName
   call Dirvish_Float( a:startPath )
-  nnoremap <silent> <leader>i :call PathSelect_callCB()<cr>
+  nnoremap <silent><leader>i :call PathSelect_callCB()<cr>
 endfunc
 
 func! PathSelect_callCB()
-  call call( g:PathSelect_cbFnName, [getline(".")] )
-  call FloatWin_close()
+  let folderPath = getline('.')
+  call call( g:PathSelect_cbFnName, [folderPath] )
+  " call FloatWin_close()
 endfunc
 
 

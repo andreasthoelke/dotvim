@@ -1,13 +1,7 @@
 
 
-
-
 ## topics crawler
 /Users/at/.vim/scratch/853
-
-
-
-
 
 
 
