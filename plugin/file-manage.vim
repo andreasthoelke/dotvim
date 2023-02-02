@@ -390,25 +390,47 @@ func! Compare_file_size(f1, f2)
   return getfsize(a:f1) < getfsize(a:f2) ? 1 : -1
 endfunc
 
+func! Compare_path_size(f1, f2)
+  return v:lua.vim.loop.fs_stat(a:f1).size < v:lua.vim.loop.fs_stat(a:f2).size ? 1 : -1
+endfunc
+
+func! Compare_path_linescount(f1, f2)
+  return LinesCountOfPath(a:f1) < LinesCountOfPath(a:f2) ? 1 : -1
+endfunc
+" Compare_path_linescount("/Users/at/.config/nvim/plugin/file-manage.vim", "/Users/at/.config/nvim/plugin/functional.vim")
+" Compare_path_linescount("/Users/at/.config/nvim/plugin/functional.vim", "/Users/at/.config/nvim/plugin/file-manage.vim")
+
 
 " CAUTION: Use only with Dirvish buffer. All lines need to represent file paths.
-nnoremap <leader><leader>ds :call DirvishSortByModified()<cr>
+nnoremap <leader><leader>dm :call DirvishSortByModified()<cr>
+nnoremap ,,dm :lua DirvishShowModified()<cr>
 func! DirvishSortByModified()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_file_modified' )
   call setline(1, lines)
   lua DirvishShowModified()
+  call timer_start(1, {-> execute( 'setlocal conceallevel=3' )})
+endfunc
+
+nnoremap <leader><leader>ds :call DirvishSortBySize()<cr>
+nnoremap ,,ds :lua DirvishShowSize()<cr>
+func! DirvishSortBySize()
+  let lines = getline(1, line('$'))
+  eval lines->sort( 'Compare_path_size' )
+  call setline(1, lines)
+  lua DirvishShowSize()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
 endfunc
 
-nnoremap <leader><leader>dS :call DirvishSortBySize()<cr>
-func! DirvishSortBySize()
+nnoremap <leader><leader>dS :call DirvishSortByLineCount()<cr>
+func! DirvishSortByLineCount()
   let lines = getline(1, line('$'))
-  eval lines->sort( 'Compare_file_size' )
+  eval lines->sort( 'Compare_path_linescount' )
   call setline(1, lines)
-  " lua DirvishShowSize()
+  lua DirvishShowSize()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
 endfunc
+
 
 func! FilesCountOfFolder( filePath )
   return v:lua.vim.loop.fs_stat( a:filePath ).nlink - 2
@@ -417,7 +439,7 @@ endfunc
 " FilesCountOfFolder("plugin/syntax")
 
 func! LinesCountOfPath( filePath )
-  return split( systemlist( 'find ' . a:filePath . ' -name "*" -print0 | gwc -l --files0=-' )[-1] )[0]
+  return str2nr( split( systemlist( 'find ' . a:filePath . ' -name "*" -print0 | gwc -l --files0=-' )[-1] )[0] )
   " return split( system( "find " . a:filePath . " -type f -exec wc -l {} \\; \| awk \'{total += $1} END{print total}'" ) )[0]
 endfunc
 " LinesCountOfPath("plugin/")

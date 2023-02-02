@@ -1,7 +1,13 @@
 
+## DirvishSortByModified
+  <leader><leader>dm :call DirvishSortByModified()<cr>
+  ,,dm :lua DirvishShowModified()<cr>
+## DirvishSortBySize
+  <leader><leader>ds :call DirvishSortBySize()<cr>
+  ,,ds :lua DirvishShowSize()<cr>
 
-" ─   Link files to Bookmark folder & search             ■
 
+# Link files to Bookmark folder & search
   " 1]_BOOKMARK_FILES_INTO_FOLDERS:
   <leader>lf :call LinkPathToFolder()<cr>
 

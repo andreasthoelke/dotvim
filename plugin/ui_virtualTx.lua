@@ -42,7 +42,7 @@ end
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").mtime.sec
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").size
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/syntax")
--- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/test1").size
+-- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/")
 -- vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim")
 
 function _G.VirtualTxShow( linenr, dispTxt, align )
