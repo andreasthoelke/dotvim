@@ -386,6 +386,11 @@ endfunc
 " Compare_file_modified("/Users/at/.config/nvim/plugin/file-manage.vim", "/Users/at/.config/nvim/plugin/functional.vim")
 " Compare_file_modified("/Users/at/.config/nvim/plugin/functional.vim", "/Users/at/.config/nvim/plugin/file-manage.vim")
 
+func! Compare_file_size(f1, f2)
+  return getfsize(a:f1) < getfsize(a:f2) ? 1 : -1
+endfunc
+
+
 " CAUTION: Use only with Dirvish buffer. All lines need to represent file paths.
 nnoremap <leader><leader>ds :call DirvishSortByModified()<cr>
 func! DirvishSortByModified()
@@ -396,14 +401,39 @@ func! DirvishSortByModified()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
 endfunc
 
+nnoremap <leader><leader>dS :call DirvishSortBySize()<cr>
+func! DirvishSortBySize()
+  let lines = getline(1, line('$'))
+  eval lines->sort( 'Compare_file_size' )
+  call setline(1, lines)
+  " lua DirvishShowSize()
+  call timer_start(1, {-> execute('setlocal conceallevel=3')})
+endfunc
 
-" func! DirvishShowModified()
-"   let lines = getline(1, line('$'))
-"   for fp in lines
-"    v:lua.VirtualTxShow( 50, 'eins2', 'right_align' )
-"   endfor
-" endfunc
-" VirtualTxShow( 50, 'eins2', 'right_align' )
+func! FilesCountOfFolder( filePath )
+  return v:lua.vim.loop.fs_stat( a:filePath ).nlink - 2
+endfunc
+" FilesCountOfFolder("plugin/")
+" FilesCountOfFolder("plugin/syntax")
+
+func! LinesCountOfPath( filePath )
+  return split( systemlist( 'find ' . a:filePath . ' -name "*" -print0 | gwc -l --files0=-' )[-1] )[0]
+  " return split( system( "find " . a:filePath . " -type f -exec wc -l {} \\; \| awk \'{total += $1} END{print total}'" ) )[0]
+endfunc
+" LinesCountOfPath("plugin/")
+" LinesCountOfPath("plugin/syntax")
+" v:lua.vim.fn.LinesCountOfPath( "plugin/" )
+
+func! LinesCountOfFile( filePath )
+  return split( system("wc -l " . a:filePath) )[0]
+endfunc
+" LinesCountOfFile( "plugin/file-manage.vim" )
+" LinesCountOfFile( "plugin/syntax/*" )
+" find plugin/syntax/ -type f -exec wc -l {} \; | awk '{total += $1} END{print total}'
+" find plugin/file-manage.vim -type f -exec wc -l {} \; | awk '{total += $1} END{print total}'
+" find plugin/syntax -name "*" -print0 | gwc -l --files0=-
+
+
 
 " ─   Path Select Dialog                                ──
 

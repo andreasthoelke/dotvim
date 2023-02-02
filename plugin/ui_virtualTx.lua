@@ -40,9 +40,12 @@ end
 -- vim.fn.getftime("/Users/at/.config/nvim/plugin/file-manage.vim") - vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim")
 -- vim.fn.strftime("%d:%H:%M", vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim"))
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").mtime.sec
+-- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").size
+-- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/syntax")
+-- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/test1").size
 -- vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim")
 
-_G.VirtualTxShow = function( linenr, dispTxt, align )
+function _G.VirtualTxShow( linenr, dispTxt, align )
   local opts = {
     id = linenr + 1, -- just a unique id in this case
     virt_text = { { dispTxt, 'CommentSection' } },
@@ -55,16 +58,41 @@ end
 -- VirtualTxShow( 50, 'eins2', 'right_align' )
 
 
-_G.DirvishShowModified = function()
+function _G.DirvishShowModified()
   local lines = vim.api.nvim_buf_get_lines( 0, 0, -1, true )
   for ln, fp in ipairs( lines ) do
     local timeModifiedInSec = vim.loop.fs_stat( fp ).mtime.sec
-    local msg = TimeAgoStr( timeModifiedInSec ) 
-    VirtualTxShow( ln -1, msg, 'right_align' )
+    local msg = TimeAgoStr( timeModifiedInSec )
+    -- VirtualTxShow( ln -1, msg, 'right_align' )
+    VirtualTxShow( ln -1, '  ' .. msg )
   end
 end
 -- DirvishShowModified()
 
+-- Show size of files as <n> lines
+-- Show size of folders as <n> files <n> lines (in total)
+function _G.DirvishShowSize()
+  local lines = vim.api.nvim_buf_get_lines( 0, 0, -1, true )
+  for ln, fp in ipairs( lines ) do
+    local linesCount = vim.fn.LinesCountOfPath( fp )
+    local isDir = vim.loop.fs_stat( fp ).type == "directory"
+    local msg = ""
+    if isDir then
+      local filesCount = vim.fn.FilesCountOfFolder( fp )
+      msg = linesCount .. " l " .. filesCount .. " f"
+    else
+      msg = linesCount .. " l"
+    end
+    VirtualTxShow( ln -1, '  ' .. msg )
+  end
+end
+-- DirvishShowModified()
+-- vim.fn.LinesCountOfPath( "plugin/" )
+-- vim.fn.FilesCountOfFolder( "plugin/" )
+-- vim.fn.LinesCountOfPath( "plugin/" )
+-- vim.fn.FilesCountOfFolder( "plugin/file-manage.vim" )
+-- vim.loop.fs_stat( "plugin/file-manage.vim" )
+-- vim.loop.fs_stat( "plugin/" ).type
 
 -- from: https://github.com/f-person/lua-timeago/blob/master/init.lua
 local function round(num) return math.floor(num + 0.5) end
@@ -101,7 +129,7 @@ function _G.TimeAgoStr( timeInSec )
 
     local diff_months = diff_days / 30
     if diff_months < 11.5 then
-        return round(diff_months) .. ' m'
+        return round(diff_months) .. ' M'
     end
 
     local diff_years = diff_days / 365.25
