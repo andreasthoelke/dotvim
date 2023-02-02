@@ -377,6 +377,36 @@ function! Dirvish_toggle() abort
     endif
 endfunction
 
+" echo strftime('%c', getftime(getline('.')))
+
+
+func! Compare_file_modified(f1, f2)
+  return getftime(a:f1) < getftime(a:f2) ? 1 : -1
+endfunc
+" Compare_file_modified("/Users/at/.config/nvim/plugin/file-manage.vim", "/Users/at/.config/nvim/plugin/functional.vim")
+" Compare_file_modified("/Users/at/.config/nvim/plugin/functional.vim", "/Users/at/.config/nvim/plugin/file-manage.vim")
+
+" CAUTION: Use only with Dirvish buffer. All lines need to represent file paths.
+nnoremap <leader><leader>ds :call DirvishSortByModified()<cr>
+func! DirvishSortByModified()
+  let lines = getline(1, line('$'))
+  eval lines->sort( 'Compare_file_modified' )
+  call setline(1, lines)
+  lua DirvishShowModified()
+  call timer_start(1, {-> execute('setlocal conceallevel=3')})
+endfunc
+
+
+" func! DirvishShowModified()
+"   let lines = getline(1, line('$'))
+"   for fp in lines
+"    v:lua.VirtualTxShow( 50, 'eins2', 'right_align' )
+"   endfor
+" endfunc
+" VirtualTxShow( 50, 'eins2', 'right_align' )
+
+" ─   Path Select Dialog                                ──
+
 func! PathSelect_withCB( startPath, cbFnName )
   let g:PathSelect_cbFnName = a:cbFnName
   call Dirvish_Float( a:startPath )

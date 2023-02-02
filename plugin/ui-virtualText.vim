@@ -41,13 +41,19 @@ function! VirtualtextClear()
   call v:lua.vim.api.nvim_buf_del_extmark( l:buffer, g:nsid_def, 1 )
 endfunction
 
-function! VirtualtextShowMessage(message, hlgroup)
+func! VirtualtextShowMessage(message, hlgroup)
   let l:cursor_position = getcurpos()
   let l:line = line('.')
   let l:buffer = bufnr('')
   call nvim_buf_set_virtual_text(l:buffer, g:nsid_def, l:line-1, [[a:message, a:hlgroup]], {})
-endfunction
-" call VirtualtextShowMessage( 'a test', 'CommentSection' )
+endfunc
+" VirtualtextShowMessage( 'a test', 'CommentSection' )
+
+func! VirtualTextShow( lineNum, msg )
+  call nvim_buf_set_extmark( bufnr(), g:nsid_def, a:lineNum -1, [[a:msg, 'CommentSection']], {})
+endfunc
+" VirtualTextShow( line('.'), "hi" )
+" v:lua.VirtualTxShow( 55, 'eins2', 'right_align' )
 
 func! VirtualtextShowMessage_off(message, hlgroup) " ■
   let l:cursor_position = getcurpos()

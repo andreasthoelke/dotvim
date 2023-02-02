@@ -44,6 +44,8 @@ hi ErrorMsg        guifg=#960050 guibg=#151719
 hi! def link Error purescriptIdentifier
 hi! def link ErrorMsg purescriptIdentifier
 
+hi! def link Repeat @constant
+
 hi Exception       guifg=#A6E22E               gui=bold
 hi Float           guifg=#AE81FF
 
@@ -83,7 +85,7 @@ hi ScrollView guibg=none guifg=#262626
 hi PreCondit       guifg=#A6E22E               gui=bold
 hi PreProc         guifg=#A6E22E
 hi Question        guifg=#66D9EF
-hi Repeat          guifg=#F92672               gui=bold
+" hi Repeat          guifg=#F92672               gui=bold
 hi SpecialChar     guifg=#F92672               gui=bold
 hi SpecialComment  guifg=#7E8E91
 hi Special         guifg=#2F646E guibg=bg      gui=italic
