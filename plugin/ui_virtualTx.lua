@@ -74,25 +74,29 @@ end
 function _G.DirvishShowSize()
   local lines = vim.api.nvim_buf_get_lines( 0, 0, -1, true )
   for ln, fp in ipairs( lines ) do
-    local linesCount = vim.fn.LinesCountOfPath( fp )
-    local isDir = vim.loop.fs_stat( fp ).type == "directory"
     local msg = ""
-    if isDir then
-      local filesCount = vim.fn.FilesCountOfFolder( fp )
-      msg = linesCount .. " l " .. filesCount .. " f"
-    else
-      msg = linesCount .. " l"
+    if not vim.fn.PathInfoSkip( fp ) then
+      local linesCount = vim.fn.LinesCountOfPath( fp )
+      local isDir = vim.loop.fs_stat( fp ).type == "directory"
+      if isDir then
+        local filesCount = vim.fn.FilesCountOfFolder( fp )
+        msg = linesCount .. " l " .. filesCount .. " f"
+      else
+        msg = linesCount .. " l"
+      end
     end
     VirtualTxShow( ln -1, '  ' .. msg )
   end
 end
--- DirvishShowModified()
+-- DirvishShowSize()
 -- vim.fn.LinesCountOfPath( "plugin/" )
 -- vim.fn.FilesCountOfFolder( "plugin/" )
 -- vim.fn.LinesCountOfPath( "plugin/" )
 -- vim.fn.FilesCountOfFolder( "plugin/file-manage.vim" )
 -- vim.loop.fs_stat( "plugin/file-manage.vim" )
 -- vim.loop.fs_stat( "plugin/" ).type
+-- vim.fn.PathInfoSkip( ".meals/" )
+-- vim.fn.PathInfoSkip( ".metals/" )
 
 -- from: https://github.com/f-person/lua-timeago/blob/master/init.lua
 local function round(num) return math.floor(num + 0.5) end

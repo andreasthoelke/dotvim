@@ -226,14 +226,36 @@ let g:ctrlp_clear_cache_on_exit = 0
 " Example of how to set up custom maps
 " autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
 
-" Sort folders at the top
-let g:dirvish_mode = ':sort ,^.*[\/],'
+" let g:dirvish_mode = ':sort ,^.*[\/],'
+" let g:dirvish_mode = 2
+let g:dirvish_mode = ":call DirvishSetup1()"
 
-" let g:dirvish_relative_paths = 1
+nnoremap <leader><leader>df :call Dirvish_filter_toggle()<cr>
+let g:dirvish_filter = v:false
+func! Dirvish_filter_toggle()
+  let g:dirvish_filter = ! g:dirvish_filter
+  if g:dirvish_filter
+    let g:dirvish_mode = ":call DirvishSetup2()"
+  else
+    let g:dirvish_mode = ":call DirvishSetup1()"
+  endif
+  normal R
+endfunc
+
+func! DirvishSetup1()
+  exec 'sort ,^.*[\/],'
+endfunc
+
+func! DirvishSetup2()
+  exec 'sort ,^.*[\/],'
+  exec 'silent keeppatterns g/\.metals\|\.git\|.scala-build\|\.bsp\|\.vscode\|scala-doc/d _'
+endfunc
 
 
 augroup dirvish_config
   autocmd!
+
+  " autocmd FileType dirvish call DirvishSetup()
   " Map `t` to open in new tab.
   " Example: buffer local maps
   " TODO: only these seem to work properly!!
@@ -268,8 +290,6 @@ augroup dirvish_config
   " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
   autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
   autocmd FileType dirvish nnoremap <silent> <buffer> I I
-
-
 augroup END
 
 " https://github.com/roginfarrer/vim-dirvish-dovish
@@ -381,6 +401,7 @@ endfunction
 
 
 func! Compare_file_modified(f1, f2)
+  if PathInfoSkip( a:f1 ) | return 1 | endif
   return getftime(a:f1) < getftime(a:f2) ? 1 : -1
 endfunc
 " Compare_file_modified("/Users/at/.config/nvim/plugin/file-manage.vim", "/Users/at/.config/nvim/plugin/functional.vim")
@@ -391,6 +412,7 @@ func! Compare_file_size(f1, f2)
 endfunc
 
 func! Compare_path_size(f1, f2)
+  if PathInfoSkip( a:f1 ) | return 1 | endif
   return v:lua.vim.loop.fs_stat(a:f1).size < v:lua.vim.loop.fs_stat(a:f2).size ? 1 : -1
 endfunc
 
@@ -431,18 +453,31 @@ func! DirvishSortByLineCount()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
 endfunc
 
+func! PathInfoSkip( filePath )
+  let fname = split( a:filePath, '/' )[-1]
+  if fname == ".metals" || fname == ".git" || fname == ".scala-build" || fname == ".scala-doc"
+    return v:true
+  else
+    return v:false
+  endif
+endfunc
+" PathInfoSkip( "plugin/.metals/" )
+" PathInfoSkip( "plugin/.metls" )
 
 func! FilesCountOfFolder( filePath )
+  if PathInfoSkip( a:filePath ) | return 0 | endif
   return v:lua.vim.loop.fs_stat( a:filePath ).nlink - 2
 endfunc
 " FilesCountOfFolder("plugin/")
 " FilesCountOfFolder("plugin/syntax")
 
 func! LinesCountOfPath( filePath )
+  if PathInfoSkip( a:filePath ) | return 0 | endif
   return str2nr( split( systemlist( 'find ' . a:filePath . ' -name "*" -print0 | gwc -l --files0=-' )[-1] )[0] )
   " return split( system( "find " . a:filePath . " -type f -exec wc -l {} \\; \| awk \'{total += $1} END{print total}'" ) )[0]
 endfunc
 " LinesCountOfPath("plugin/")
+" LinesCountOfPath("/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/.scala-build/")
 " LinesCountOfPath("plugin/syntax")
 " v:lua.vim.fn.LinesCountOfPath( "plugin/" )
 
