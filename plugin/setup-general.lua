@@ -96,6 +96,20 @@ end
 -- vim.fn.strpart("einszwei", 1, 2)
 
 
+local function open_nvim_tree()
+  -- open the tree
+  require("nvim-tree.api").tree.open()
+end
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
+local function open_tab_silent(node)
+  local api = require("nvim-tree.api")
+  api.node.open.tab(node)
+  vim.cmd.tabprev()
+end
+
+
 Nvim_tree = require("nvim-tree").setup({
   -- sort_by = "case_sensitive",
   hijack_netrw = false,
@@ -105,7 +119,8 @@ Nvim_tree = require("nvim-tree").setup({
     signcolumn = "no", -- i might need this for `m`- marks
     mappings = {
       list = {
-       { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
+        { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
+        { key = "T", action = "open_tab_silent", action_cb = open_tab_silent },
       },
     },
   },

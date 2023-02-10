@@ -382,6 +382,17 @@ hi! def link NvimTreeOpenedFolderName Comment
 hi! def link NvimTreeNormal CommentMinus
 hi! def link NvimTreeRootFolder CommentSection
 
+" Startify
+hi! def link StartifyPath Comment
+hi! def link StartifyBracket Comment
+hi! def link StartifyNumber Comment
+hi! def link StartifyBracket CommentMinus
+hi! def link StartifySlash CommentMinus
+hi! def link StartifyFile Statement 
+hi! def link StartifyNumber Type
+
+
+
 " VimScript colors
 hi! Todo guifg=#969696 guibg=#000000
 " hi! def link Todo Error
