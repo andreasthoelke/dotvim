@@ -1,4 +1,27 @@
 
+## Nvim Tree
+
+l no   - toggle nvim-tree open
+l nf   - find current buffer in tree
+b      - set base/root dir
+B      - show only open paths!
+<>     - sibling moves
+P      - parent node
+
+maps: ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20<leader>nf
+highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
+
+## vim DBUI
+:DBUI  needs to :DBUIFindBuffer of a .sql file
+`gei` evaluates paragraphs
+initially the DB is empty. you first need to create data with ->
+localhost:8080/docs
+try -> execute to create party, then vote and find the person, vote and party in the DB!
+
+more maps and scripts: 
+/.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
+
+
 ## DirvishSortByModified
   <leader><leader>dm :call DirvishSortByModified()<cr>
   ,,dm :lua DirvishShowModified()<cr>

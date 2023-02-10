@@ -373,6 +373,15 @@ hi! def link diffRemoved Macro
 hi! def link gitHunk Comment
 hi! def link diffSubname Comment
 
+" Nvim Tree
+" ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/Default%20linked%20group
+hi! def link NvimTreeOpenedFile Operator
+" hi! def link NvimTreeOpenedFile CommentSection
+hi! def link NvimTreeFolderName CommentMinus
+hi! def link NvimTreeOpenedFolderName Comment
+hi! def link NvimTreeNormal CommentMinus
+hi! def link NvimTreeRootFolder CommentSection
+
 " VimScript colors
 hi! Todo guifg=#969696 guibg=#000000
 " hi! def link Todo Error
@@ -555,6 +564,8 @@ hi SpecialKey      guifg=#465457
 
 " Seach
 hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
+" TODO: i'd like the search highlight to look similar to the Visual (selection), so the foreground syntax-color is still visible
+" hi Search guibg=#282828 gui=none
 
 " Visual selection
 " hi Visual guibg=#2E2E2E gui=none

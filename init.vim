@@ -11,6 +11,8 @@ Plug 'junegunn/vim-plug'
 Plug 'aymericbeaumet/vim-symlink'
 
 " File Selectors Browsers: ------------------------------------------
+Plug 'nvim-tree/nvim-tree.lua'
+
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
 

@@ -36,7 +36,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=s
   syntax match Normal 'String\.' conceal cchar=s
   syntax match Normal 'String' conceal cchar=s
-  syntax match Normal 'Int' conceal cchar=ɪ
+  syntax match Normal 'Int\ze\s' conceal cchar=ɪ
   " syntax match Normal 'Int\.' conceal cchar=ɪ
   syntax match Normal '\vBoolean\ze(\W|\_$)' conceal cchar=ʙ
   " syntax match Normal 'true' conceal cchar=𝗍
@@ -126,8 +126,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'ZIO\.' conceal cchar=⁝
   syntax match Normal 'ZIO\.\$\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
-  syntax match Normal 'tap' conceal cchar=⌄
-  " syntax match Normal 'tap' conceal cchar=≏
+  syntax match Normal 'tap\ze\W' conceal cchar=⌄
   syntax match Normal 'collect\ze\W' conceal cchar=≚
   syntax match Normal 'collect\zeZ' conceal cchar=≚
   syntax match Normal 'collect\zeH' conceal cchar=≚
@@ -142,7 +141,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'ZIO.service' conceal cchar=⊟
   syntax match Normal 'package\ze\s' conceal cchar=⊟
   syntax match Normal 'package\ze\s' conceal cchar=⊟
-  syntax match Normal 'live' conceal cchar=
+  syntax match Normal 'live\ze\s' conceal cchar=
   syntax match Normal 'live:' conceal cchar=
   syntax match Normal '\vLive(:)?' conceal cchar=
   syntax match Normal 'ZLayer' conceal cchar=﬘
@@ -184,6 +183,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
 
   syntax match Normal 'self' conceal cchar=∝
+  syntax match Normal 'this' conceal cchar=∝
   syntax match Normal 'override' conceal cchar=⟑
   syntax match Normal 'lazy' conceal cchar=~
   syntax match Normal 'final' conceal cchar=.
@@ -204,7 +204,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'enum' conceal cchar=|
   syntax match Normal 'derive\ze\W' conceal cchar=⌇
   syntax match Normal 'object' conceal cchar=
-  syntax match Normal 'make' conceal cchar=˖
+  " syntax match Normal 'make' conceal cchar=˖
   syntax match Normal 'unbounded' conceal cchar=˖
   syntax match Normal 'succeed' conceal cchar=ꜜ
 
@@ -216,16 +216,16 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'curried' conceal cchar=‹
 
   " display Type variables as small cursive letters
-  syntax match Normal '\v(\s|\(|\[|\+)\zsA\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑎
-  syntax match Normal '\v(\s|\(|\[|\+)\zsR\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑟
-  syntax match Normal '\v(\s|\(|\[|\+)\zsE\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑒
-  syntax match Normal '\v(\s|\(|\[|\+)\zsB\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑏
-  syntax match Normal '\v(\s|\(|\[|\+)\zsC\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑐
-  syntax match Normal '\v(\s|\(|\[|\+)\zsS\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑠
-  syntax match Normal '\v(\s|\(|\[|\+)\zsT\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑡
-  syntax match Normal '\v(\s|\(|\[|\+)\zsV\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑣
-  syntax match Normal '\v(\s|\(|\[|\+)\zsU\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑢
-  syntax match Normal '\v(\s|\(|\[|\+)\zsK\ze(:|,|\]|\)|\s\=\>|\s(\>|\<|\=))' conceal cchar=𝑘
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsA\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑎
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsR\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑟
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsE\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑒
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsB\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑏
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsC\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑐
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsS\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑠
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsT\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑡
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsV\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑣
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsU\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑢
+  syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsK\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑘
 
   " TODO: can somehow not match this properly
   " syntax match Normal ': \A$' conceal cchar=𝑎

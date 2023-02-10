@@ -204,7 +204,7 @@ func! CreateInlineTestDec_js_function()
 endfunc
 
 
-func! CreateInlineTestDec_scala()
+func! CreateInlineTestDec_scala1()
   let hostLn1 = searchpos( 'def\s\w\(e\d_\)\@!', 'cnbW' )[0]
   let hostLn2 = searchpos( '^val\s\(e\d_\)\@!', 'cnbW' )[0]
   let hostLn3 = searchpos( '^object\s\(e\d_\)\@!', 'cnbW' )[0]
@@ -224,6 +224,18 @@ func! CreateInlineTestDec_scala()
   call append( line('.') -1, lineText )
   normal k0
   " call search('(')
+  normal $B
+endfunc
+
+func! CreateInlineTestDec_scala()
+  let hostLn = searchpos( '\v^(val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
+
+  let hostDecName = matchstr( getline( hostLn ), '\v(val|def|object|trait|enum|case\sclass)\s\zs\i*' )
+  let lineText = hostDecName
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'lazy val e' . nextIndex . '_' . hostDecName . ' = ' . lineText
+  call append( line('.') -1, lineText )
+  normal k0
   normal $B
 endfunc
 

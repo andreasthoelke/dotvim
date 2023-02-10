@@ -55,9 +55,116 @@ local trouble = require("trouble").setup {
   use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
 }
 
+-- https://github.com/nvim-tree/nvim-tree.lua
+-- disable netrw at the very start of your init.lua (strongly advised)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+-- vim.opt.termguicolors = true
 
 
+-- ─   Nvim Tree                                        ──
+-- maps: ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20<leader>nf
+-- highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
 
+local lib = require("nvim-tree.lib")
+
+function _G.TreeNode()
+  vim.pretty_print( require("nvim-tree.lib").get_node_at_cursor().absolute_path )
+end
+
+local tree_setBaseDir = function()
+  local api = require("nvim-tree.api")
+  -- local dir = vim.fn.expand('%:p:h')
+  local dir = lib.get_node_at_cursor().absolute_path
+  -- put( dir )
+  api.tree.change_root(dir)
+end
+
+local tree_root_folder_label = function(path)
+  -- return ".../" .. vim.fn.fnamemodify(path, ":t")
+  local lpath = vim.split( path, [[/]] )
+  local dir = lpath[ #lpath ]
+  local parentDir = lpath[ #lpath -1 ]
+  local parentStr = vim.fn.strpart( parentDir, 0, 4 )
+  -- return parentStr .. " /" .. dir
+  -- return dir .. " (" .. parentStr .. ")"
+  return dir .. " |" .. parentDir
+end
+-- vim.split( "/User/at/Docs/eins", [[/]] )[2]
+-- vim.fn.strpart("einszwei", 1, 2)
+
+
+Nvim_tree = require("nvim-tree").setup({
+  -- sort_by = "case_sensitive",
+  hijack_netrw = false,
+  remove_keymaps = {"<C-k>", "<C-j>"},
+  view = {
+    width = 30,
+    signcolumn = "no", -- i might need this for `m`- marks
+    mappings = {
+      list = {
+       { key = "b", action = "base_dir", action_cb = tree_setBaseDir },
+      },
+    },
+  },
+  renderer = {
+    group_empty = true,
+    highlight_git = true,
+    highlight_opened_files = "name",
+    -- highlight_modified = "name",
+    indent_width = 1,
+    root_folder_label = tree_root_folder_label,
+    icons = {
+      show = {
+        file = true,
+        folder = false,
+        folder_arrow = false,
+      },
+      glyphs = {
+        git = {
+          unstaged = "˖",
+          staged = "✓",
+          unmerged = "",
+          renamed = "➜",
+          untracked = "★",
+          deleted = "",
+          ignored = "◌",
+        },
+      },
+
+    }
+  },
+  diagnostics = {
+    enable = true,
+    show_on_dirs = false,
+    show_on_open_dirs = true,
+    debounce_delay = 50,
+    severity = {
+      min = vim.diagnostic.severity.HINT,
+      max = vim.diagnostic.severity.ERROR,
+    },
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    },
+  },
+  hijack_directories = {
+    enable = false,
+  },
+  filters = {
+    dotfiles = false,
+  },
+  -- sync_root_with_cwd = true,
+  -- update_focused_file = {
+  -- enable = true,
+  -- update_root = true,
+  -- ignore_list = {},
+  -- },
+})
 
 
 

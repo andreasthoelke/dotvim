@@ -142,6 +142,10 @@ nnoremap <silent> <leader>gp :topleft MRU<CR>
 " nnoremap <silent> go :<C-u>FzfBuffer<cr>
 nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
 
+nnoremap <silent> <leader>nf <cmd>NvimTreeFindFile<cr>
+nnoremap <silent> <leader>no <cmd>NvimTreeToggle<cr>
+" nnoremap <silent> ,tt <cmd>lua require('utils_general').fileView()<cr>
+
 
 " ─   CtrlP                                              ■
 
@@ -228,10 +232,10 @@ let g:ctrlp_clear_cache_on_exit = 0
 
 " let g:dirvish_mode = ':sort ,^.*[\/],'
 " let g:dirvish_mode = 2
-let g:dirvish_mode = ":call DirvishSetup1()"
+let g:dirvish_mode = ":call DirvishSetup2()"
 
 nnoremap <leader><leader>df :call Dirvish_filter_toggle()<cr>
-let g:dirvish_filter = v:false
+let g:dirvish_filter = v:true
 func! Dirvish_filter_toggle()
   let g:dirvish_filter = ! g:dirvish_filter
   if g:dirvish_filter
@@ -248,7 +252,7 @@ endfunc
 
 func! DirvishSetup2()
   exec 'sort ,^.*[\/],'
-  exec 'silent keeppatterns g/\.metals\|\.git\|.scala-build\|\.bsp\|\.vscode\|scala-doc/d _'
+  exec 'silent keeppatterns g/\.metals\|\.scala-build\|\.bsp\|\.vscode\|scala-doc/d _'
 endfunc
 
 

@@ -201,19 +201,20 @@ end
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 
 
+-- python 1
 -- https://github.com/microsoft/pyright
-lspconfig.pyright.setup({
-  capabilities = capabilities,
-  on_attach = function(client)
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
-    on_attach(client)
-  end,
-  flags = flags,
-  settings = {
-    disableOrganizeImports = true,
-  },
-})
+-- lspconfig.pyright.setup({
+--   capabilities = capabilities,
+--   on_attach = function(client)
+--     client.resolved_capabilities.document_formatting = false
+--     client.resolved_capabilities.document_range_formatting = false
+--     on_attach(client)
+--   end,
+--   flags = flags,
+--   settings = {
+--     disableOrganizeImports = true,
+--   },
+-- })
 
 
 lspconfig.tsserver.setup({
@@ -446,11 +447,11 @@ null_ls.setup({
       diagnostics_format = diagnostics_format,
       extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
     }),
-    -- python
-    d.flake8.with({
-      diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
-    }),
+    -- python 2
+    -- d.flake8.with({
+    --   diagnostics_format = diagnostics_format,
+    --   prefer_local = ".venv/bin",
+    -- }),
     f.isort.with({
       diagnostics_format = diagnostics_format,
       prefer_local = ".venv/bin",

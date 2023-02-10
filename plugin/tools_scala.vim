@@ -286,7 +286,7 @@ endfunc
 
 
 let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources -nowarn"
+let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources -nowarn -Ymacro-annotations"
 
 
 func! Scala_RunPrinter()
@@ -455,16 +455,18 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
-  " normal! }
+  normal! }
   call search( g:Scala_TopLevPattern, 'W' )
 endfunc
 
 func! Scala_TopLevBindingBackw()
-  " normal! {
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Scala_TopLevPattern, 'bW' )
+  normal! {
+  call search( g:Scala_TopLevPattern, 'W' )
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
 

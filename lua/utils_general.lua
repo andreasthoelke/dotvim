@@ -756,7 +756,7 @@ vim.keymap.set( 'n',
 
 -- ─   Keymap picker                                     ■
 
--- vim.fn.expand('%')
+-- vim.fn.expand('%:p:h')
 -- vim.api.nvim_get_keymap('i')
 -- vim.api.nvim_exec("verb map <space>vm", true)
 
@@ -820,7 +820,7 @@ end
 
 
 
-M.Git_status_picker = function(opts)
+function M.Git_status_picker(opts)
   opts = opts or {}
   opts.previewer = previewers.new_termopen_previewer({
     -- dyn_title = function(_, entry) return entry.value end,

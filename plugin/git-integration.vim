@@ -22,7 +22,7 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
 nnoremap <leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
 nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
-nnoremap <leader>ogs :call System_Float( 'git diff HEAD --stat' )<cr>
+nnoremap <leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
 " nnoremap <leader>oga :call System_Float( 'git add -A -v' )<cr>
 nnoremap <leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:

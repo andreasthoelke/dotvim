@@ -11,10 +11,10 @@ local dir_nvim = [[/Users/at/.config/nvim/plugin]]
 
 local rgx_caps_tag = [[\s[A-Z]{3,}:]]
 local rgx_comment = [[^(\s*)?(//|\*\s)]]
-local rgx_main_symbol = [[(def\s|case\sclass|val\s[^e])]]
+local rgx_main_symbol = [[(def\s|case\sclass|enum\s|val\s[^e])]]
 local rgx_main_symbol_vim = [[^(func!\s|function|command!)]]
 -- local rgx_keymap_vimlua = [[keymap.*\n.*\n]]
-local rgx_keymap_vim = [[(^\w(noremap\s|map\s)|keymap.*\n.*\n)]]
+local rgx_keymap_vim = [[((noremap\s|map\s)|keymap.*\n.*\n)]]
 local rgx_header = [[─.*]]
 -- local rgx_signature = [[(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s]]
 -- local rgx_signature = [[(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s]]
@@ -162,7 +162,7 @@ vim.keymap.set( 'n',
 
 
 vim.keymap.set( 'n',
-  '<leader>ogd', function() require( 'utils_general' )
+  '<leader>ogs', function() require( 'utils_general' )
   .Git_status_picker( opts_1 )
   end )
 
