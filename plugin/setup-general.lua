@@ -105,7 +105,7 @@ Nvim_tree = require("nvim-tree").setup({
     signcolumn = "no", -- i might need this for `m`- marks
     mappings = {
       list = {
-       { key = "b", action = "base_dir", action_cb = tree_setBaseDir },
+       { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
       },
     },
   },

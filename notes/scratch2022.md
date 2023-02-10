@@ -8,8 +8,13 @@ B      - show only open paths!
 <>     - sibling moves
 P      - parent node
 
+settings: ~/.config/nvim/plugin/setup-general.lua#/--%20Nvim%20Tree
 maps: ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20<leader>nf
 highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
+
+TODO/Issues:
+  can not have different roots in different tabs/wins
+
 
 ## vim DBUI
 :DBUI  needs to :DBUIFindBuffer of a .sql file
