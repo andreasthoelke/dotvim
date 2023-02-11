@@ -42,6 +42,28 @@ nnoremap <leader>ogc <cmd>Git commit<cr>
 " ease confirming fugitive commit window
 nnoremap ,,w :w<cr><c-w>c
 
+nnoremap <leader>ogg :G<cr>
+
+nnoremap <silent> <leader><leader>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
+nnoremap <silent> <leader><leader>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>
+
+nnoremap <silent> <leader>gi :<c-u>call Dirvish_git_ignore( getline('.') )<cr>
+function! Dirvish_git_add( path )
+  call system( "git add " . a:path )
+  call ReloadKeepView()
+endfunc
+
+function! Dirvish_git_unstage( path )
+  call system( "git reset -- " . a:path )
+  call ReloadKeepView()
+endfunc
+
+function! Dirvish_git_ignore( path )
+  let fname = fnamemodify( a:path, ":t" )
+  call system( "echo " . fname . " >> .gitignore" )
+  call ReloadKeepView()
+endfunc
+
 
 func! GetGitRoot()
   return systemlist('git root')[0]

@@ -124,7 +124,6 @@ end
 
 
 
--- ISSUE: 
 vim.keymap.set("n", "]g", bookmNext)
 vim.keymap.set("n", "[g", bookmPrev)
 vim.keymap.set("n", "<leader>ms", require("nvim-tree.api").marks.navigate.select)
@@ -142,6 +141,9 @@ Nvim_tree = require("nvim-tree").setup({
     signcolumn = "yes", -- i might need this for `m`- marks
     mappings = {
       list = {
+        -- ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/view.mappings.list%20=%20{
+        { key = "i", action = "edit" },
+        { key = "p", action = "preview" },
         { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
         { key = "T", action = "open_tab_silent", action_cb = open_tab_silent },
       },

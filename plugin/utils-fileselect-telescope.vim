@@ -61,7 +61,7 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 
 nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
 nnoremap <silent> gp <cmd>Telescope oldfiles<cr>
-nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
+" nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
 nnoremap <silent> go <cmd>Telescope buffers<cr>
 
 " Using Lua functions

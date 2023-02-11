@@ -5,7 +5,7 @@ local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
 
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
-require('telescope').setup{
+Telesc = require('telescope').setup{
   defaults = {
     -- config_key = value,
     path_display = { 'shorten' },
@@ -38,6 +38,7 @@ require('telescope').setup{
       n = {
         ["<c-o>"] = trouble.open_with_trouble,
         ["<c-a>"] = actions.send_selected_to_qflist,
+        ["<c-d>"] = actions.delete_buffer,
         ["<C-p>"] = actions.cycle_previewers_next,
         ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true, silent = true } },
         [",m"] = actions.select_all,

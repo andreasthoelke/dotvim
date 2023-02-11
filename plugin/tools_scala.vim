@@ -16,7 +16,7 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
   nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>
-  nnoremap <silent><buffer>         <leader>gsr :call Scala_ServerRestartTerm()<cr>
+  nnoremap <silent><buffer>         ,,gsr :call Scala_ServerRestartTerm()<cr>
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>

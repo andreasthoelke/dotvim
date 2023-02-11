@@ -17,15 +17,15 @@
 " Data.Set.insert
 " +bytestring concat
 
-nnoremap ,gsd :call HsAPIQueryShowFloat( HsCursorKeyword(), 15, 0 )<cr>
-vnoremap ,gsd :call HsAPIQueryShowFloat( GetVisSel(),       15, 0 )<cr>
-nnoremap ,gSd :call HsAPIQueryShowFloat( HsCursorKeyword(), 60, 0 )<cr>
-vnoremap ,gSd :call HsAPIQueryShowFloat( GetVisSel(),       60, 0 )<cr>
+" nnoremap ,gsd :call HsAPIQueryShowFloat( HsCursorKeyword(), 15, 0 )<cr>
+" vnoremap ,gsd :call HsAPIQueryShowFloat( GetVisSel(),       15, 0 )<cr>
+" nnoremap ,gSd :call HsAPIQueryShowFloat( HsCursorKeyword(), 60, 0 )<cr>
+" vnoremap ,gSd :call HsAPIQueryShowFloat( GetVisSel(),       60, 0 )<cr>
 
-nnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
-vnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
-nnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
-vnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
+" nnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+" vnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+" nnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+" vnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
 
 let g:hoogle_search_buf_size = 10

@@ -142,9 +142,13 @@ nnoremap <silent> <leader>gp :topleft MRU<CR>
 " nnoremap <silent> go :<C-u>FzfBuffer<cr>
 nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
 
-nnoremap <silent> <leader>nf <cmd>NvimTreeFindFile<cr>
-nnoremap <silent> <leader>no <cmd>NvimTreeToggle<cr>
+" nnoremap <silent> <leader>nf <cmd>NvimTreeFindFile<cr>
+" nnoremap <silent> <leader>no <cmd>NvimTreeToggle<cr>
 " nnoremap <silent> ,tt <cmd>lua require('utils_general').fileView()<cr>
+nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
+nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p
+nnoremap <silent> ,gs <cmd>NvimTreeFindFile<cr>
+nnoremap <silent> ,go <cmd>NvimTreeToggle<cr>
 
 
 " ─   CtrlP                                              ■
@@ -314,8 +318,8 @@ endfunction
 
 let g:dirvish_git_show_ignored = 1
 let g:dirvish_git_indicators = {
-      \ 'Modified'  : '✹',
-      \ 'Staged'    : '✚',
+      \ 'Modified'  : '₊',
+      \ 'Staged'    : 'ˆ',
       \ 'Untracked' : '✭',
       \ 'Renamed'   : '➜',
       \ 'Unmerged'  : '═',
@@ -324,26 +328,16 @@ let g:dirvish_git_indicators = {
       \ }
 " (btw, nice unicode symbols)
 
+" from nvim-tree glyphs
+" unstaged = "₊",
+" staged = "ˆ",
+" unmerged = "",
+" renamed = "➜",
+" untracked = "★",
+" deleted = "",
+" ignored = "◌",
 
-nnoremap <silent> <leader>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
-nnoremap <silent> <leader>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>
 
-nnoremap <silent> <leader>gi :<c-u>call Dirvish_git_ignore( getline('.') )<cr>
-function! Dirvish_git_add( path )
-  call system( "git add " . a:path )
-  call ReloadKeepView()
-endfunc
-
-function! Dirvish_git_unstage( path )
-  call system( "git reset -- " . a:path )
-  call ReloadKeepView()
-endfunc
-
-function! Dirvish_git_ignore( path )
-  let fname = fnamemodify( a:path, ":t" )
-  call system( "echo " . fname . " >> .gitignore" )
-  call ReloadKeepView()
-endfunc
 
 " nnoremap _ :call LeftFloater()<cr>
 

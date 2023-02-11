@@ -15,6 +15,11 @@ highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
 TODO/Issues:
   can not have different roots in different tabs/wins
 
+cleanup buffers:
+ - telescope buffers (go) can 'm' multiselect and <c-d> to delete buffers
+ - nvim tree's preview (p) doesn't keep the buffers in the list
+ - or there 'leader bd' when closing a window
+
 ### Marks/bookmarks workflow
 m     - mark files in the tree
 ]g[g  - load next/prev marked files in buffer (will ask if there a multiple wins)
@@ -66,11 +71,19 @@ c-e     - to close the menue!
 ~/.config/nvim/plugin/setup-lsp.lua#/mapping%20=%20{
 
 # new git workflow
-leader ogs    - 'status' by showing diffs of all hunks
-leader ogS    - just the lines count changed per file! via git diff HEAD --stat
-leader ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
-leader oga    - stage all & commit message via fugitive
-leader ogl/L  - list of git commits (with date ago/telescope)
+l ogs    - 'status' by showing diffs of all hunks
+l ogS    - just the lines count changed per file! via git diff HEAD --stat
+l ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
+l oga    - stage all & commit message via fugitive
+l ogl/L  - list of git commits (with date ago/telescope)
+l l gg   - git gutter, only for unstaged changes
+]c[c          - navigate hunks
+l ogg    - fugitive main. use 's' to stage and 'u' to unstage. 'cc' to commit
+
+can stage/unstage files in dirvish
+<l><l>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
+<l><l>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>
+
 
 - checkout older version of file out under a different name
 - put windows of different file versions side by side and use

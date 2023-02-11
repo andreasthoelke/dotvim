@@ -88,6 +88,7 @@ func! T_echo( str )
   call T_DelayedCmd( 'echom "' . a:str . '"', 500 )
 endfunc
 " call T_echo( 'hi 2 there')
+" in lua: -- vim.fn.call( 'T_DelayedCmd', {'echo "hi there"', 1000} )
 
   " exec "call TestUserChoice1( {'otherData':123} )" ■
   " exec "call TestUserChoice1(" . string( {'otherData':123} ) . ")"

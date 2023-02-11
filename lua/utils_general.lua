@@ -521,6 +521,12 @@ end
 -- M.abb = {3, 4, 5}
 -- require'utils_general'.abb[1]
 
+function _G.FocusLine_Delayed( lineNum )
+  local lineCmd = "norm! " .. lineNum .. "gg"
+  vim.fn.call( 'T_DelayedCmd', { lineCmd, 100 } )
+  vim.fn.call( 'T_DelayedCmd', { "norm! zz", 110 } )
+end
+
 
 function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
   opts = opts or {}
@@ -546,15 +552,27 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        vim.cmd( "e " .. selection.filename )
-        vim.api.nvim_win_set_cursor(0, { selection.lnum, 0 })
-        vim.cmd "norm! zz"
+        vim.cmd.edit( selection.filename )
+        FocusLine_Delayed( selection.lnum )
+
+        -- local bufid = vim.fn.bufadd( selection.filename )
+        -- if vim.api.nvim_buf_is_valid(bufid) then
+        --   vim.api.nvim_win_set_cursor( winHand, { selection.lnum, 0 })
+        --   vim.cmd "norm! zz"
+        -- else
+        -- end
+        -- ISSUE: -- i tried these to prevent "invlid buffer id" of first load
+        -- local bufid = vim.fn.bufadd( selection.filename )
+        -- vim.fn.bufloaded( bufid )
+        -- vim.cmd( selection.lnum .. "gg" )
         -- vim.pretty_print( selection )
       end)
       return true
     end,
   }):find()
 end
+-- vim.fn.winnr
+
 
 function M.RgxSelect_Picker_bak(opts, rgx_query, parent_dir, globs)
   opts = opts or {}
@@ -661,6 +679,7 @@ end
 -- -- Calling VimScript functions
 -- vim.fn.call( 'TestEcho', {'abbc'} )
 -- vim.fn.call( 'StripString', {'abbc', 'bb'} )
+-- vim.fn.call( 'T_DelayedCmd', {'echo "hi there"', 1000} )
 
 function M.WatchFile_stop()
   fwatch.unwatch( M.fwatch_handle )

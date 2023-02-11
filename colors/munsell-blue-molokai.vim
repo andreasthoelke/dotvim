@@ -375,13 +375,15 @@ hi! def link diffSubname Comment
 
 " Nvim Tree
 " ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/Default%20linked%20group
-hi! def link NvimTreeOpenedFile Operator
+" hi! def link NvimTreeOpenedFile Operator
+hi! def link NvimTreeOpenedFile purescriptRecordKeys
 " hi! def link NvimTreeOpenedFile CommentSection
 hi! def link NvimTreeFolderName CommentMinus
 hi! def link NvimTreeOpenedFolderName Comment
 hi! def link NvimTreeNormal CommentMinus
 hi! def link NvimTreeRootFolder CommentSection
 hi! def link NvimTreeBookmark Comment
+hi! def link NvimTreeGitStaged purescriptIdentifier
 
 " Startify
 hi! def link StartifyPath CommentMinus
@@ -433,7 +435,6 @@ hi! def link TagbarKind Type
 " Symbol Outline
 " hi! def link FocusedSymbol PmenuSel
 " hi! def link FocusedSymbol purescriptIdentifierDot1
-" hi! def link FocusedSymbol purescriptIdentifer
 hi! FocusedSymbol guifg=#A2AEB0
 
 " Markdown colors
