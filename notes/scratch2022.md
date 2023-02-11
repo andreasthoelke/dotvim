@@ -15,6 +15,13 @@ highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
 TODO/Issues:
   can not have different roots in different tabs/wins
 
+### Marks/bookmarks workflow
+m     - mark files in the tree
+]g[g  - load next/prev marked files in buffer (will ask if there a multiple wins)
+        this works with zen mode only if the tree gets reloaded with leader nf
+B     - in tree will filter to only the list of marked/open files
+
+
 
 ## vim DBUI
 :DBUI  needs to :DBUIFindBuffer of a .sql file
@@ -59,8 +66,8 @@ c-e     - to close the menue!
 ~/.config/nvim/plugin/setup-lsp.lua#/mapping%20=%20{
 
 # new git workflow
-leader ogs    - lines changed per file! via git diff HEAD --stat
-leader ogd    - git status with delta diffs <tab> to stage/unstage
+leader ogs    - 'status' by showing diffs of all hunks
+leader ogS    - just the lines count changed per file! via git diff HEAD --stat
 leader ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
 leader oga    - stage all & commit message via fugitive
 leader ogl/L  - list of git commits (with date ago/telescope)
@@ -153,6 +160,53 @@ use the Comment implement (not the node) version
 the add a custom Node type to the interface [Node]
 
 i might make manually unique string ids in data.ts.
+
+
+### Quick floats
+sp os - scratch
+sp ol - links
+sp ob - vim bookmarks
+
+gdo - go to definition in float
+
+## Vim to learn
+
+nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
+nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
+
+\w   - easymotion wordmotion
+)  - MvNextLineStart
+(  - this line (useful!) start
+
+ctrl g  - echo filepath and scroll position (in zen mode)
+space ]t  - bracket end forward
+leader leader ]t   - BufferInnerBracket()
+space os - open scratch file in float
+space ob - search for bookmarks
+
+new js/ts 'yank around {} block' map: y<leader>ab
+
+space s; - strip semicolon .. and the af/ap/,j
+
+gsw - sets a test-printer expression in /scratch/.testPrinter.ts
+gsp - prints/call this (exported) identifier (cursor can be in a different place)
+
+sp qa - add cursor pos to quickfix list
+leader qq - toggle quickfix list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,6 +28,9 @@ func! SourceFile ()
   endif
 endfunc
 
+" seems to do the same with python
+nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
+
 
 inoremap <expr> jk pumvisible() ? "<C-e>" : "<Esc>"
 

@@ -110,13 +110,36 @@ local function open_tab_silent(node)
 end
 
 
+local function bookmNext()
+  local api = require("nvim-tree.api")
+  api.marks.navigate.next()
+  api.marks.navigate.next()
+end
+
+local function bookmPrev()
+  local api = require("nvim-tree.api")
+  api.marks.navigate.prev()
+  api.marks.navigate.prev()
+end
+
+
+
+-- ISSUE: 
+vim.keymap.set("n", "]g", bookmNext)
+vim.keymap.set("n", "[g", bookmPrev)
+vim.keymap.set("n", "<leader>ms", require("nvim-tree.api").marks.navigate.select)
+
+
 Nvim_tree = require("nvim-tree").setup({
   -- sort_by = "case_sensitive",
   hijack_netrw = false,
+  git = {
+    enable = true,
+  },
   remove_keymaps = {"<C-k>", "<C-j>"},
   view = {
-    width = 30,
-    signcolumn = "no", -- i might need this for `m`- marks
+    width = 28,
+    signcolumn = "yes", -- i might need this for `m`- marks
     mappings = {
       list = {
         { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
@@ -138,9 +161,10 @@ Nvim_tree = require("nvim-tree").setup({
         folder_arrow = false,
       },
       glyphs = {
+        bookmark = "⠰",
         git = {
-          unstaged = "˖",
-          staged = "✓",
+          unstaged = "₊",
+          staged = "ˆ",
           unmerged = "",
           renamed = "➜",
           untracked = "★",
@@ -152,9 +176,9 @@ Nvim_tree = require("nvim-tree").setup({
     }
   },
   diagnostics = {
-    enable = true,
-    show_on_dirs = false,
-    show_on_open_dirs = true,
+    enable = false,
+    -- show_on_dirs = true,
+    -- show_on_open_dirs = true,
     debounce_delay = 50,
     severity = {
       min = vim.diagnostic.severity.HINT,

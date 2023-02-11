@@ -381,15 +381,16 @@ hi! def link NvimTreeFolderName CommentMinus
 hi! def link NvimTreeOpenedFolderName Comment
 hi! def link NvimTreeNormal CommentMinus
 hi! def link NvimTreeRootFolder CommentSection
+hi! def link NvimTreeBookmark Comment
 
 " Startify
-hi! def link StartifyPath Comment
-hi! def link StartifyBracket Comment
-hi! def link StartifyNumber Comment
+hi! def link StartifyPath CommentMinus
+hi! def link StartifyBracket CommentMinus
+hi! def link StartifyNumber CommentMinus
 hi! def link StartifyBracket CommentMinus
 hi! def link StartifySlash CommentMinus
 hi! def link StartifyFile Statement 
-hi! def link StartifyNumber Type
+hi! def link StartifyNumber CommentMinus
 
 
 

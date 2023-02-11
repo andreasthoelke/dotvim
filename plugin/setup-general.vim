@@ -1483,7 +1483,10 @@ let g:markbar_isopen = v:false
 func! MarkbarOpen()
   if !g:markbar_isopen
     call g:standard_controller.openMarkbar()
-    set syntax=typescript
+    " set syntax=typescript
+    set syntax=scala
+    " doesn''t work for some reason
+    " call ScalaSyntaxAdditions()
     let g:markbar_isopen = v:true
     wincmd p
   else

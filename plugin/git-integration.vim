@@ -38,7 +38,10 @@ nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 
 nnoremap <leader>ogc <cmd>Git commit<cr>
-nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
+
+" ease confirming fugitive commit window
+nnoremap ,,w :w<cr><c-w>c
+
 
 func! GetGitRoot()
   return systemlist('git root')[0]
