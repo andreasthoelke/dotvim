@@ -84,13 +84,15 @@ endfunc
 "  |
 func! LinkPathToFolder_cb( folderPath )
   " Creates a soft link that works for files and folders
-  let cmd = "ln -s " . escape(g:LinkPath_temp, '\') . " " . a:folderPath
+  " let cmd = "ln -s " . escape(g:LinkPath_temp, '\') . " " . a:folderPath
+  " NOTE: symbolic links (ln -s) causes issues with nvim-tree / telescope
+  let cmd = "ln " . escape(g:LinkPath_temp, '\') . " " . a:folderPath
   echo "Linked! " . cmd
   call system( cmd )
 endfunc
 
 " 2]_SET_SEARCH_FOLDER_PATH:
-let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/'
+let g:FolderSearch_Path = '/Users/at/Documents/Notes/'
 nnoremap ,,sf :call FolderSearch_setPath()<cr>
 
 func! FolderSearch_setPath()

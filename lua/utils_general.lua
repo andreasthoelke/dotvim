@@ -527,6 +527,15 @@ function _G.FocusLine_Delayed( lineNum )
   vim.fn.call( 'T_DelayedCmd', { "norm! zz", 110 } )
 end
 
+function _G.LoadAndFocusLine_Delayed( filePath, lineNum )
+  local loadCmd = "edit " .. filePath
+  local lineCmd = "norm! " .. lineNum .. "gg"
+  -- vim.fn.call( 'T_DelayedCmd', { loadCmd, 2000 } )
+  vim.cmd "edit /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/effect_zio.md"
+  -- vim.fn.call( 'T_DelayedCmd', { lineCmd, 800 } )
+  -- vim.fn.call( 'T_DelayedCmd', { "norm! zz", 900 } )
+end
+
 
 function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
   opts = opts or {}
@@ -553,25 +562,21 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
         vim.cmd.edit( selection.filename )
+         -- autocmd BufReadPost * lua require'nvim-tree'.refresh()
+        -- workaround, see below
         FocusLine_Delayed( selection.lnum )
-
-        -- local bufid = vim.fn.bufadd( selection.filename )
-        -- if vim.api.nvim_buf_is_valid(bufid) then
-        --   vim.api.nvim_win_set_cursor( winHand, { selection.lnum, 0 })
-        --   vim.cmd "norm! zz"
-        -- else
-        -- end
-        -- ISSUE: -- i tried these to prevent "invlid buffer id" of first load
-        -- local bufid = vim.fn.bufadd( selection.filename )
-        -- vim.fn.bufloaded( bufid )
-        -- vim.cmd( selection.lnum .. "gg" )
+        -- LoadAndFocusLine_Delayed( selection.filename, selection.lnum )
         -- vim.pretty_print( selection )
       end)
       return true
     end,
   }):find()
 end
--- vim.fn.winnr
+-- ISSUE: -- i tried these to prevent "invlid buffer id" of first load
+-- local bufid = vim.fn.bufadd( selection.filename )
+--   vim.api.nvim_win_set_cursor( winHand, { selection.lnum, 0 })
+--   vim.cmd "norm! zz"
+-- vim.fn.bufloaded( bufid )
 
 
 function M.RgxSelect_Picker_bak(opts, rgx_query, parent_dir, globs)

@@ -82,6 +82,14 @@ local tree_setBaseDir = function()
   api.tree.change_root(dir)
 end
 
+local tree_openFolderDirvish = function()
+  -- local api = require("nvim-tree.api")
+  local dir = lib.get_node_at_cursor().absolute_path
+  vim.cmd "wincmd p"
+  vim.cmd.edit( dir )
+end
+
+
 local tree_root_folder_label = function(path)
   -- return ".../" .. vim.fn.fnamemodify(path, ":t")
   local lpath = vim.split( path, [[/]] )
@@ -123,10 +131,13 @@ local function bookmPrev()
 end
 
 
+local tree_api = require("nvim-tree.api")
 
 vim.keymap.set("n", "]g", bookmNext)
 vim.keymap.set("n", "[g", bookmPrev)
 vim.keymap.set("n", "<leader>ms", require("nvim-tree.api").marks.navigate.select)
+
+-- local aa = require("nvim-tree.api").fs.copy.
 
 
 Nvim_tree = require("nvim-tree").setup({
@@ -135,7 +146,7 @@ Nvim_tree = require("nvim-tree").setup({
   git = {
     enable = true,
   },
-  remove_keymaps = {"<C-k>", "<C-j>"},
+  remove_keymaps = {"d", "e", ".", "s", "c", "D", "<C-k>", "<C-j>"},
   view = {
     width = 28,
     signcolumn = "yes", -- i might need this for `m`- marks
@@ -144,6 +155,20 @@ Nvim_tree = require("nvim-tree").setup({
         -- ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/view.mappings.list%20=%20{
         { key = "i", action = "edit" },
         { key = "p", action = "preview" },
+        { key = "<leader>dd", action = "trash" },
+        { key = "<leader>yy", action = "copy" },
+        { key = "<leader>re", action = "rename" },
+
+        { key = "<leader>/", action = "search_node" }, -- can use regex and expand child folders!
+        { key = "<leader>rf", action = "run_file_command" }, -- vim shell with the abs file path
+        -- { key = "<leader>ti", action = "toggle_file_info" }, -- errors after closing the float win
+        { key = "<leader>so", action = "system_open" }, -- opens finder explorer
+
+        { key = "<leader>re", action = "rename" },
+        { key = "<leader>pp", action = "paste_file", action_cb = tree_api.fs.paste },
+        { key = "<leader>pP", action = "paste_cut_file", action_cb = tree_api.fs.paste },
+
+        { key = "<leader>o", action = "dirvish_folder", action_cb = tree_openFolderDirvish },
         { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
         { key = "T", action = "open_tab_silent", action_cb = open_tab_silent },
       },
@@ -174,7 +199,6 @@ Nvim_tree = require("nvim-tree").setup({
           ignored = "◌",
         },
       },
-
     }
   },
   diagnostics = {
@@ -207,7 +231,12 @@ Nvim_tree = require("nvim-tree").setup({
   -- },
 })
 
+-- source
+-- /Users/at/.config/nvim/plugged/nvim-tree.lua/
 
+-- API
+-- ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/-%20api.fs.%20*nvim-tree.api.fs*
+-- ~/.config/nvim/plugged/nvim-tree.lua/lua/nvim-tree/actions/dispatch.lua#/--%20Tree%20modifiers
 
 
 

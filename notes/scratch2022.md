@@ -48,6 +48,8 @@ more maps and scripts:
 
 
 # Link files to Bookmark folder & search
+new: all notes go to Documents/Notes folder, only *hard* links go to Documents/Bookmark folders
+
   " 1]_BOOKMARK_FILES_INTO_FOLDERS:
   <leader>lf :call LinkPathToFolder()<cr>
 
