@@ -24,15 +24,15 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 " nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
 
 
-" nnoremap <silent> ,tn :tabnew<cr>
-nnoremap <silent> ,tn :exec "tabe " . expand('%:p:h')<cr>
-" nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
-nnoremap \T :echo "use ,tn"<cr>
-nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
-nnoremap \s :exec "new " . expand('%:p:h')<cr>
-
-nnoremap ,v :exec "leftabove 25vnew " . expand('%:p:h')<cr>
-" nnoremap ,s :exec "leftabove 25new " . expand('%:p:h')<cr>
+" ─   Dirvish 'newWin' maps                             ──
+nnoremap ,v         :call Dirvish_newWin( "vnew" )<cr>
+nnoremap ,,v        :exec "vnew ."<cr>
+nnoremap ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
+nnoremap ,,V        :exec "leftabove 30vnew ."<cr>
+nnoremap ,tn        :call Dirvish_newWin( "tabe" )<cr>
+nnoremap ,,tn       :exec "tabe ."<cr>
+nnoremap ,sn        :call Dirvish_newWin( "new" )<cr>
+nnoremap ,,sn       :exec "new ."<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 " nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
@@ -394,9 +394,17 @@ function! Dirvish_toggle() abort
         call search('\V\^'.escape(path, '\').'\$', 'cw')
     endif
 endfunction
+" strftime('%c', getftime(getline('.')))
 
-" echo strftime('%c', getftime(getline('.')))
-
+func! Dirvish_newWin( cmd )
+  let folder = expand('%:h')
+  let file = expand('%:p')
+  exec a:cmd folder
+  call search('\V\^'.escape(file, '\').'\$', 'cw')
+endfunc
+" Dirvish_newWin( 'vnew' )
+" expand('%:p')
+" expand('%:h')
 
 func! Compare_file_modified(f1, f2)
   if PathInfoSkip( a:f1 ) | return 1 | endif

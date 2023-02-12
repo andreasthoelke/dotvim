@@ -1,4 +1,16 @@
 
+# ─   Dirvish 'newWin' maps                             ──
+==>> file in parent folder || project root folder <<==
+,v         :call Dirvish_newWin( "vnew" )<cr>
+,,v        :exec "vnew ."<cr>
+,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
+,,V        :exec "leftabove 30vnew ."<cr>
+,tn        :call Dirvish_newWin( "tabe" )<cr>
+,,tn       :exec "tabe ."<cr>
+,sn        :call Dirvish_newWin( "new" )<cr>
+,,sn       :exec "new ."<cr>
+
+
 ## Nvim Tree
 
 l no   - toggle nvim-tree open
