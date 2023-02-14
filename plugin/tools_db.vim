@@ -39,15 +39,18 @@ let g:db_ui_execute_on_save = 0
 let g:db_ui_show_database_icon = 1
 let g:db_ui_use_nerd_fonts = 1
 
-let g:dbs = {
-  \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',
-  \ 'pets': 'mysql://root:PW@127.0.0.1:3306/pets',
-  \ 'learn_dev': 'postgres:///learn_dev',
-  \ 'funcprog': 'postgres:///funcprog',
-  \ 'todos_koa': 'mongodb://localhost:27017/todos_koa',
-  \ 'pothos_prisma': 'sqlite:/Users/at/Documents/Architecture/examples/pothos/examples/prisma/prisma/dev.db',
-  \ }
+" these are additional permanent connections. activate this as needed
+" let g:dbs = {
+"   \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',
+"   \ 'pets': 'mysql://root:PW@127.0.0.1:3306/pets',
+"   \ 'learn_dev': 'postgres:///learn_dev',
+"   \ 'funcprog': 'postgres:///funcprog',
+"   \ 'todos_koa': 'mongodb://localhost:27017/todos_koa',
+"   \ 'pothos_prisma': 'sqlite:/Users/at/Documents/Architecture/examples/pothos/examples/prisma/prisma/dev.db',
+"   \ }
+
 " mysql://root:PW@127.0.0.1:3306/pets
+"  \ 'finito_sqlite': 'sqlite:/Users/at/Documents/.config/libro-finito/db.sqlite',
 " mysql://root:PW@127.0.0.1:3306/air_routes
 
 " use DBUIFindBuffer (leader DD) to set the g:db variable for a buffer (needed to issue queries)
@@ -85,9 +88,13 @@ endfunc
 command! -range=% DBRun call DBRun( <line1>, <line2> )
 " Note: this applies to the whole buffer when no visual-sel
 
+map ,dr <Plug>(DBUI_ExecuteQuery)
+
 nnoremap <leader>dl :call DBRun( line('.'), line('.') )<cr>
 nnoremap <leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
 vnoremap <leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+" db_ui#query( "select * from collections" )
 
 func! DBRun( ... )
   let startLine = a:0 ? a:1 : 1
@@ -96,6 +103,8 @@ func! DBRun( ... )
   let lines = getline(startLine, endLine)
   let sqlStr = join(lines, "\n")
 
+  " NOTE_TODO: this doesn't work with sqlite!!
+  " help db_ui
   let resLines = db_ui#query( sqlStr )
   if len( resLines ) == 0
     echo "query completed!"

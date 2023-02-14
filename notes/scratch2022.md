@@ -62,6 +62,14 @@ more maps and scripts:
 # Link files to Bookmark folder & search
 new: all notes go to Documents/Notes folder, only *hard* links go to Documents/Bookmark folders
 
+"Collections of file links"
+
+  "add to collection" - "collection add" => ,ca
+  "point to collection" - "collection point" => ,cp
+  "collection search header" => ,csh
+  "collection search all" => ,csj
+  "collection search signatures" => ,css (todo)
+
   " 1]_BOOKMARK_FILES_INTO_FOLDERS:
   <leader>lf :call LinkPathToFolder()<cr>
 
@@ -71,6 +79,9 @@ new: all notes go to Documents/Notes folder, only *hard* links go to Documents/B
   " 3]_SEARCH_IN_FOLDER:
   ,sf :call FolderSearch_run("")<cr>
   <leader>of :call FolderSearch_run("^#")<cr>
+
+,ca   collection add
+
 
 
 # Vim-Works
@@ -93,6 +104,7 @@ l ogl/L  - list of git commits (with date ago/telescope)
 l l gg   - git gutter, only for unstaged changes
 ]c[c          - navigate hunks
 l ogg    - fugitive main. use 's' to stage and 'u' to unstage. 'cc' to commit
+l G/I    - nvim-tree: show ignored/git status files
 
 can stage/unstage files in dirvish
 <l><l>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
@@ -119,6 +131,16 @@ c-o - any non-reversible jump should use "normal! m'" to add to the jump list
 ## end of block motion
 J  - when at the beginning of the block, can just use the indent level motions
 leader)  - this jumps to the end of the block from any place inside the block. (reversible via c-o)
+
+### word motions
+#### forward
+w/W    - beginning of word/Word
+e/E    - end word/Word
+#### backward
+b/B    - beginning of word/Word
+\e    - end of word
+,ge   - end of word
+
 
 [op]ii  - inside indent block (linewise delete, change, yank)
 [op]ai  - outer indent block (linewise delete, change, yank)

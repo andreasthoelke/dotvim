@@ -7,7 +7,7 @@ localhost:8080/docs
 try -> execute to create party, then vote and find the person, vote and party in the DB!
 
 more maps and scripts: 
-/.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
+~/.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
 
 # MySQL
 

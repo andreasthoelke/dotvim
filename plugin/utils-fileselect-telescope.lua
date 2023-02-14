@@ -13,7 +13,7 @@ Telesc = require('telescope').setup{
             '^.git/', '^target/', '^node%_modules/', '^.npm/', '^modules', 'dev.js', '^build/', '%[Cc]ache/', '%-cache',
             '^scala-doc/',
     --         '%.py[co]', '%.sw?', '%~', '%.a', "%.npz", "^.vscode",
-            '%.sql', '%.tags', 'tags', '%.gemtags',
+            '%.tags', 'tags', '%.gemtags',
             -- '%.csv', '%.tsv', '%.tmp',
             '%.exe', "%.dat", "^dist",
     --         '%.old', '%.plist', '%.pdf', '%.log', '%.jpg', '%.jpeg', '%.png', "%.obj", "^release",

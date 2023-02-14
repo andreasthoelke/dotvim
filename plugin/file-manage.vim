@@ -33,6 +33,8 @@ nnoremap ,tn        :call Dirvish_newWin( "tabe" )<cr>
 nnoremap ,,tn       :exec "tabe ."<cr>
 nnoremap ,sn        :call Dirvish_newWin( "new" )<cr>
 nnoremap ,,sn       :exec "new ."<cr>
+nnoremap ,Sn        :call Dirvish_newWin( "above 13new" )<cr>
+nnoremap ,,Sn       :exec "above 13new ."<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 " nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>

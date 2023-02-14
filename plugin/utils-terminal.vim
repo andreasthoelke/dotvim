@@ -23,10 +23,19 @@ endfunc
 nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
 
 
-nnoremap <silent> gwt :echo "Running terminal command .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>:call ShellReturn( GetLineFromCursor() )<cr>
+" nnoremap <silent> gwt :echo "Running terminal command .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>:call ShellReturn( GetLineFromCursor() )<cr>
+nnoremap <silent> gwt :echo "Running terminal command .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>:call System_Float( getline('.') )<cr>
 vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
 nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 
+nnoremap gej :call RunTerm_showFloat()<cr>
+nnoremap geJ :call TermOneShot_FloatBuffer( getline('.') )<cr>
+
+func! RunTerm_showFloat()
+ echo "Running terminal command .."
+ call T_DelayedCmd( "echo ''", 2000 )
+ call System_Float( getline('.') )
+endfunc
 
 " ─   One shot async Terminal                            ■
 
@@ -42,7 +51,8 @@ endfunc
 " echo 'hi'
 
 func! TermOneShotCB (job_id, data, event)
-  call append('.', a:data )
+  let resLines = RemoveTermCodes( a:data )
+  call append('.', resLines )
   silent call FloatWin_FitWidthHeight()
 endfunc
 
@@ -59,6 +69,8 @@ let g:TermOneShotCBs = {
       \ }
 
 func! TermOneShot_FloatBuffer( cmd )
+  echo "Running terminal command .."
+  call T_DelayedCmd( "echo ''", 2000 )
   " silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
   silent let g:floatWin_win = FloatingSmallNew ( [] )
   silent call FloatWin_FitWidthHeight()
@@ -80,6 +92,7 @@ hi! TermCursorNC guibg=grey guifg=white
 " newer, recommended
 func! System_Float( cmd )
   let resLines = systemlist( a:cmd )
+  let resLines = RemoveTermCodes( resLines )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p

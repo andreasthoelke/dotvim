@@ -89,6 +89,15 @@ local tree_openFolderDirvish = function()
   vim.cmd.edit( dir )
 end
 
+local tree_viewPathInPrevWin = function()
+  -- local api = require("nvim-tree.api")
+  local dir = lib.get_node_at_cursor().absolute_path
+  vim.cmd "wincmd p"
+  vim.cmd.edit( dir )
+  vim.cmd "wincmd p"
+end
+
+
 
 local tree_root_folder_label = function(path)
   -- return ".../" .. vim.fn.fnamemodify(path, ":t")
@@ -148,7 +157,7 @@ Nvim_tree = require("nvim-tree").setup({
   },
   remove_keymaps = {"d", "e", ".", "s", "c", "D", "<C-k>", "<C-j>"},
   view = {
-    width = 28,
+    width = 22,
     signcolumn = "yes", -- i might need this for `m`- marks
     mappings = {
       list = {
@@ -158,6 +167,9 @@ Nvim_tree = require("nvim-tree").setup({
         { key = "<leader>dd", action = "trash" },
         { key = "<leader>yy", action = "copy" },
         { key = "<leader>re", action = "rename" },
+
+        { key = "<leader>I", action = "toggle_git_ignored" },
+        { key = "<leader>G", action = "toggle_git_clean" },
 
         { key = "<leader>/", action = "search_node" }, -- can use regex and expand child folders!
         { key = "<leader>rf", action = "run_file_command" }, -- vim shell with the abs file path
@@ -169,6 +181,7 @@ Nvim_tree = require("nvim-tree").setup({
         { key = "<leader>pP", action = "paste_cut_file", action_cb = tree_api.fs.paste },
 
         { key = "<leader>o", action = "dirvish_folder", action_cb = tree_openFolderDirvish },
+        { key = "<leader>i", action = "dirvish_folder", action_cb = tree_viewPathInPrevWin },
         { key = "<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
         { key = "T", action = "open_tab_silent", action_cb = open_tab_silent },
       },

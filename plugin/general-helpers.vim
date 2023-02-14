@@ -56,9 +56,17 @@ endfunc
 " ─   Link files to Bookmark folder & search             ■
 " NOTE: there a also VimBookmark maps: ~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
 
-" 1]_BOOKMARK_FILES_INTO_FOLDERS:
+  "edit collections" - "collections edit" => ,ce
+  "add to collection" - "collection add" => ,ca
+  "point to collection" - "collection point" => ,cp
+  "collection search header" => ,csh
+  "collection search all" => ,csj
+  "collection search signatures" => ,css (todo)
+
+" 1] "add to collection" - "collection add" => ,ca
+" _BOOKMARK_FILES_INTO_FOLDERS:
 " Symlink file/folder path of current line to a folder (inside Documents/Bookmarks)
-nnoremap <leader>lf :call LinkPathToFolder()<cr>
+nnoremap ,ca :call LinkPathToFolder()<cr>
 command! LinkPathToFolder call LinkPathToFolder()
 
 func! LinkPathToFolder()
@@ -91,9 +99,13 @@ func! LinkPathToFolder_cb( folderPath )
   call system( cmd )
 endfunc
 
-" 2]_SET_SEARCH_FOLDER_PATH:
-let g:FolderSearch_Path = '/Users/at/Documents/Notes/'
-nnoremap ,,sf :call FolderSearch_setPath()<cr>
+" 2] "edit collections" - "collection edit" => ,ce
+nnoremap ,ce :call FolderSearch_setPath()<cr>
+
+" 2] "point to collection" - "collection point" => ,cp
+" _SET_SEARCH_FOLDER_PATH:
+let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/'
+nnoremap ,cp :call FolderSearch_setPath()<cr>
 
 func! FolderSearch_setPath()
   call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "FolderSearch_setPath_cb" )
@@ -105,9 +117,15 @@ func! FolderSearch_setPath_cb( folderPath )
   echo "FolderSearch path set! - " . a:folderPath
 endfunc
 
-" 3]_SEARCH_IN_FOLDER:
-nnoremap ,sf :call FolderSearch_run("")<cr>
-nnoremap <leader>of :call FolderSearch_run("^#")<cr>
+
+" 3]_COLLECTION_SEARCH:
+"    "collection search all" => ,csj
+nnoremap ,csj :call FolderSearch_run("")<cr>
+"    "collection search header" => ,csh
+nnoremap ,csh :call FolderSearch_run("^#")<cr>
+"    "collection search signature" => ,css
+nnoremap ,css :call FolderSearch_run("def\s")<cr>
+
 
 func! FolderSearch_run( rgx )
   call Telescope_folder_rgx( g:FolderSearch_Path, a:rgx )
@@ -120,6 +138,7 @@ func! Telescope_folder_rgx( folderPath, rgx )
 endfunc
 " Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "^#" )
 " Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "nvim" )
+
 
 " ─^  Link files to Bookmark folder & search             ▲
 

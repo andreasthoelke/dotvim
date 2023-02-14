@@ -64,11 +64,15 @@ nnoremap \^ <c-^>
 
 " Jump to rightmost window
 nnoremap <c-w>\ <c-w>4l
+nnoremap <c-w>L <c-w>4l
+nnoremap <c-w>H <c-w>4h
+nnoremap <c-w>K <c-w>4k
+nnoremap <c-w>J <c-w>4j
 
-nnoremap <c-w>J :call WinMove('j')<cr>
-nnoremap <c-w>K :call WinMove('k')<cr>
-nnoremap <c-w>H :call WinMove('h')<cr>
-nnoremap <c-w>L :call WinMove('l')<cr>
+" nnoremap <c-w>J :call WinMove('j')<cr>
+" nnoremap <c-w>K :call WinMove('k')<cr>
+" nnoremap <c-w>H :call WinMove('h')<cr>
+" nnoremap <c-w>L :call WinMove('l')<cr>
 
 func! WinMove (dir)
   let [oLine, oCol] = getpos('.')[1:2]
