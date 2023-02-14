@@ -157,8 +157,14 @@ noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>Tabm
 noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
 
 " zoom/duplicate the current buffer in a new tab
-nnoremap <c-w>t :tabe %<cr>
+nnoremap <c-w>t :call TabNewFocus()<cr>
 nnoremap <c-w><c-t> :tabe %<cr>
+
+func! TabNewFocus()
+  let [oLine, oCol] = getpos('.')[1:2]
+  exec "tabedit %"
+  call setpos('.', [0, oLine, oCol, 0] )
+endfunc
 
 " close tab and go to the previous window
 " nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>

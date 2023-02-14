@@ -158,6 +158,7 @@ Nvim_tree = require("nvim-tree").setup({
   remove_keymaps = {"d", "e", ".", "s", "c", "D", "<C-k>", "<C-j>"},
   view = {
     width = 22,
+    -- preserve_window_proportions = true,
     signcolumn = "yes", -- i might need this for `m`- marks
     mappings = {
       list = {
