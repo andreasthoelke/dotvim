@@ -150,6 +150,8 @@ vim.keymap.set( 'n',
     {'..'}
     ) end )
 
+-- ─   Git picker maps                                  ──
+
 vim.keymap.set( 'n',
   '<leader>ogl', function() require( 'utils_general' )
   .Git_commits_picker( opts_1, vim.fn.expand('%') )
@@ -229,7 +231,68 @@ vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_
 -- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
 
 
+-- ─   Lsp maps                                         ──
+-- also at:
+-- ~/.config/nvim/plugin/tools_scala.vim#/Lsp%20maps
 
+-- vim.keymap.set( 'n',
+--   'gD', function()
+--     vim.lsp.buf.declaration()
+--   end )
+
+vim.keymap.set( 'n',
+  ']d', function()
+    vim.diagnostic.goto_next()
+  end )
+
+vim.keymap.set( 'n',
+  '[d', function()
+    vim.diagnostic.goto_prev()
+  end )
+
+
+
+
+
+
+  -- buf_map(bnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
+  -- -- buf_map(bnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+  -- -- now in /Users/at/.config/nvim/plugin/setup-lsp.vim
+  -- -- Now a buffer map in tools_rescript.vim
+  -- -- buf_map(bnr, 'n', 'gek', '<cmd>lua vim.lsp.buf.hover()<CR>')
+  -- buf_map(bnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+  -- buf_map(bnr, 'n', '<space><space>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+  -- buf_map(bnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
+  -- buf_map(bnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
+  -- buf_map(bnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
+  -- buf_map(bnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+  -- buf_map(bnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+  -- buf_map(bnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+  -- -- Now a buffer map in tools_rescript.vim
+  -- -- buf_map(bnr, 'n', 'ger', '<cmd>lua vim.lsp.buf.references()<CR>')
+  -- buf_map(bnr, 'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>')
+  -- buf_map(bnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
+  -- buf_map(bnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+  -- buf_map(bnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>')
+  -- buf_map(bnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+
+  -- buf_map(bnr, 'n', '<space>?', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
+
+  -- vim.cmd [[ command! LspFormat execute 'lua vim.lsp.buf.formatting()' ]]
+
+  -- vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
+  -- vim.cmd("command! LspDocSymbols lua require('telescope.builtin').lsp_document_symbols()")
+  -- vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
+  -- vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
+  -- vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
+  -- vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
+  -- vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
+  -- vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
+  -- vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
+  -- vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
+  -- vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
+  -- vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
+  -- vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
 
 
 

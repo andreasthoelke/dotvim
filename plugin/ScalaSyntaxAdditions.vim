@@ -215,6 +215,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal 'curried' conceal cchar=‹
 
+
   " display Type variables as small cursive letters
   syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsA\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑎
   syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsR\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑟
@@ -226,6 +227,17 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsV\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑣
   syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsU\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑢
   syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsK\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑘
+
+  syntax match Normal '\s\zsA\ze\*' conceal cchar=𝑎
+  syntax match Normal '\s\zsR\ze\*' conceal cchar=𝑟
+  syntax match Normal '\s\zsE\ze\*' conceal cchar=𝑒
+  syntax match Normal '\s\zsB\ze\*' conceal cchar=𝑏
+  syntax match Normal '\s\zsC\ze\*' conceal cchar=𝑐
+  syntax match Normal '\s\zsS\ze\*' conceal cchar=𝑠
+  syntax match Normal '\s\zsT\ze\*' conceal cchar=𝑡
+  syntax match Normal '\s\zsV\ze\*' conceal cchar=𝑣
+  syntax match Normal '\s\zsU\ze\*' conceal cchar=𝑢
+  syntax match Normal '\s\zsK\ze\*' conceal cchar=𝑘
 
   " TODO: can somehow not match this properly
   " syntax match Normal ': \A$' conceal cchar=𝑎

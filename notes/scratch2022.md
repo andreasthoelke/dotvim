@@ -1,5 +1,22 @@
 
-# ─   Dirvish 'newWin' maps                             ──
+# ─   Telescope Rgx search                           ──
+ge;       - main (scala) symbols/bindings in this repo
+ge:       - main (scala) symbols/bindings in selected (parent-based) repos
+,st       - tags (NOTE:) in current project
+,sT       - tags (NOTE:) in selected projects
+,sc       - comments in current project
+,sC       - comments in selected projects
+,sh       - headings in current project
+,sH       - headings in selected projects
+,ss       - signatures in current project
+,sS       - signatures in selected projects
+,si       - signatures with collection types in selected projects
+,si       - signatures with Zio types in selected projects
+
+maps, regexes and glob definitions:
+~/.config/nvim/plugin/utils_general_maps.lua#/--%20search%20in
+
+# ─   Dirvish 'newWin' maps                          ──
 ==>> file in parent folder || project root folder <<==
 ,v         :call Dirvish_newWin( "vnew" )<cr>
 ,,v        :exec "vnew ."<cr>
@@ -70,19 +87,6 @@ new: all notes go to Documents/Notes folder, only *hard* links go to Documents/B
   "collection search all" => ,csj
   "collection search signatures" => ,css (todo)
 
-  " 1]_BOOKMARK_FILES_INTO_FOLDERS:
-  <leader>lf :call LinkPathToFolder()<cr>
-
-  " 2]_SET_SEARCH_FOLDER_PATH:
-  ,,sf :call FolderSearch_setPath()<cr>
-
-  " 3]_SEARCH_IN_FOLDER:
-  ,sf :call FolderSearch_run("")<cr>
-  <leader>of :call FolderSearch_run("^#")<cr>
-
-,ca   collection add
-
-
 
 # Vim-Works
 /Users/at/Documents/Bookmarks/notes_1_2023/vim_works.md
@@ -101,6 +105,7 @@ l ogS    - just the lines count changed per file! via git diff HEAD --stat
 l ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
 l oga    - stage all & commit message via fugitive
 l ogl/L  - list of git commits (with date ago/telescope)
+           maps: ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Git%20picker
 l l gg   - git gutter, only for unstaged changes
 ]c[c          - navigate hunks
 l ogg    - fugitive main. use 's' to stage and 'u' to unstage. 'cc' to commit
@@ -109,7 +114,6 @@ l G/I    - nvim-tree: show ignored/git status files
 can stage/unstage files in dirvish
 <l><l>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
 <l><l>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>
-
 
 - checkout older version of file out under a different name
 - put windows of different file versions side by side and use
@@ -146,13 +150,6 @@ b/B    - beginning of word/Word
 [op]ai  - outer indent block (linewise delete, change, yank)
 
 leader od  - open dirvish in float!
-
-,,sr  - search in repo (previously leader gsr)
-,,sr :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
-,,sR :call SearchRepo( "─.*" . GetInputStr('Search in repo: ') )<cr>
-,,<leader>sr :call SearchRepo( "\/\/.*" . GetInputStr('Search in repo: ') )<cr>
-also:
-leader fg - and then can use regex like //.*List to search in comments
 
 
 ## Telescope useful maps

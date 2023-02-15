@@ -53,6 +53,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
 
+" ─     Lsp maps                                        ──
+" -- also at:
+" ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Lsp%20maps
+
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
   nnoremap <silent><buffer>         gej :lua vim.lsp.buf.signature_help()<cr>

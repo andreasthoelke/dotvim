@@ -17,6 +17,9 @@ local flags = {
   debounce_text_changes = 150,
 }
 
+-- these are currently not used for scala or null_ls. see maps here
+-- ~/.config/nvim/plugin/utils_general_maps.lua#/--%20also%20at.
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bnr)
@@ -429,96 +432,96 @@ lspconfig.sumneko_lua.setup {
 -- ─   null-ls                                          ──
 
 -- vim.g.null_ls_disable = true
-local null_ls = require("null-ls")
+-- local null_ls = require("null-ls")
 
 
 -- https://github.com/jose-elias-alvarez/null-ls.nvim
-local diagnostics_format = "[#{c}] #{m} (#{s})"
-local f = null_ls.builtins.formatting
-local d = null_ls.builtins.diagnostics
-null_ls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-  sources = {
-    -- codepell
-    d.codespell.with({
-      -- handlers = handlers,
-      diagnostics_format = diagnostics_format,
-      extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
-    }),
-    -- python 2
-    -- d.flake8.with({
-    --   diagnostics_format = diagnostics_format,
-    --   prefer_local = ".venv/bin",
-    -- }),
-    f.isort.with({
-      diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
-      extra_args = { "--profile", "black" },
-    }),
-    f.black.with({
-      diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
-      extra_args = { "--fast" },
-    }),
-    -- javascript/typescript
-    -- d.eslint_d.with({
-    --   diagnostics_format = diagnostics_format,
-    -- }),
-    f.prettier.with({
-      diagnostics_format = diagnostics_format,
-      filetypes = { "html", "json", "yaml", "markdown" },
-    }),
-    -- sh/bash
-    d.shellcheck.with({
-      diagnostics_format = diagnostics_format,
-    }),
-    f.shfmt.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "-i", "2" },
-    }),
-    -- lua
-    f.stylua.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "--indent-type", "Spaces" },
-    }),
-    -- json
-    f.fixjson.with({
-      diagnostics_format = diagnostics_format,
-    }),
-    -- yaml
-    d.yamllint.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
-    }),
-    -- sql
-    f.sqlformat.with({
-      diagnostics_format = diagnostics_format,
-    }),
-    -- toml
-    f.taplo.with({
-      diagnostics_format = diagnostics_format,
-    }),
-    -- css/scss/sass/less
-    f.stylelint.with({
-      diagnostics_format = diagnostics_format,
-    }),
-  },
-})
+-- local diagnostics_format = "[#{c}] #{m} (#{s})"
+-- local f = null_ls.builtins.formatting
+-- local d = null_ls.builtins.diagnostics
+-- null_ls.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+--   sources = {
+--     -- codepell
+--     d.codespell.with({
+--       -- handlers = handlers,
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
+--     }),
+--     -- python 2
+--     -- d.flake8.with({
+--     --   diagnostics_format = diagnostics_format,
+--     --   prefer_local = ".venv/bin",
+--     -- }),
+--     f.isort.with({
+--       diagnostics_format = diagnostics_format,
+--       prefer_local = ".venv/bin",
+--       extra_args = { "--profile", "black" },
+--     }),
+--     f.black.with({
+--       diagnostics_format = diagnostics_format,
+--       prefer_local = ".venv/bin",
+--       extra_args = { "--fast" },
+--     }),
+--     -- javascript/typescript
+--     -- d.eslint_d.with({
+--     --   diagnostics_format = diagnostics_format,
+--     -- }),
+--     f.prettier.with({
+--       diagnostics_format = diagnostics_format,
+--       filetypes = { "html", "json", "yaml" },
+--     }),
+--     -- sh/bash
+--     d.shellcheck.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--     f.shfmt.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "-i", "2" },
+--     }),
+--     -- lua
+--     f.stylua.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "--indent-type", "Spaces" },
+--     }),
+--     -- json
+--     f.fixjson.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--     -- yaml
+--     d.yamllint.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
+--     }),
+--     -- sql
+--     f.sqlformat.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--     -- toml
+--     f.taplo.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--     -- css/scss/sass/less
+--     f.stylelint.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--   },
+-- })
 
 
 
-null_ls.setup({
-  sources = {
-    null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.completion.spell,
-    null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
-  },
-  on_attach = on_attach
-})
+-- null_ls.setup({
+--   sources = {
+--     null_ls.builtins.diagnostics.eslint_d,
+--     null_ls.builtins.code_actions.eslint_d,
+--     null_ls.builtins.formatting.prettier,
+--     null_ls.builtins.completion.spell,
+--     null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+--   },
+--   on_attach = on_attach
+-- })
 
 
 -- ─   nvim-cmp setup                                    ■
