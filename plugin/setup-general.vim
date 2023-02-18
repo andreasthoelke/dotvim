@@ -1266,7 +1266,20 @@ set noshowmode
 " https://unicode-table.com/en/blocks/supplemental-mathematical-operators/
 
 
-" -----------------------------------------------------------------
+
+" Plantuml Previewer.vim
+
+" " let g:plantuml_previewer#plantuml_jar_path = "/opt/homebrew/bin/plantuml"
+" let g:plantuml_previewer#plantuml_jar_path = "/opt/homebrew/Cellar/plantuml/1.2023.1/libexec/plantuml.jar"
+
+" let g:plantuml_previewer#plantuml_jar_path = "/Users/at/Downloads/plantuml.jar"
+
+au FileType plantuml let g:plantuml_previewer#plantuml_jar_path = get(
+    \  matchlist(system('cat `which plantuml` | grep plantuml.jar'), '\v.*\s[''"]?(\S+plantuml\.jar).*'),
+    \  1,
+    \  0
+    \)
+
 " -----------------------------------------------------------------
 
 " Vista:

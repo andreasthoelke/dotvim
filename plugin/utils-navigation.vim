@@ -62,6 +62,13 @@ endfunc
 
 nnoremap \^ <c-^>
 
+
+nnoremap <leader><c-w>L <c-w>L
+nnoremap <leader><c-w>H <c-w>H
+nnoremap <leader><c-w>K <c-w>K<c-w>=
+nnoremap <leader><c-w>J <c-w>J<c-w>=
+
+
 " Jump to rightmost window
 nnoremap <c-w>\ <c-w>4l
 nnoremap <c-w>L <c-w>4l

@@ -25,16 +25,17 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
 
 " ─   Dirvish 'newWin' maps                             ──
-nnoremap ,v         :call Dirvish_newWin( "vnew" )<cr>
-nnoremap ,,v        :exec "vnew ."<cr>
-nnoremap ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
-nnoremap ,,V        :exec "leftabove 30vnew ."<cr>
-nnoremap ,tn        :call Dirvish_newWin( "tabe" )<cr>
-nnoremap ,,tn       :exec "tabe ."<cr>
-nnoremap ,sn        :call Dirvish_newWin( "new" )<cr>
-nnoremap ,,sn       :exec "new ."<cr>
-nnoremap ,Sn        :call Dirvish_newWin( "above 13new" )<cr>
-nnoremap ,,Sn       :exec "above 13new ."<cr>
+nnoremap <silent> <leader>-  :Dirvish .<cr>
+nnoremap <silent> ,v         :call Dirvish_newWin( "vnew" )<cr>
+nnoremap <silent> ,,v        :exec "vnew ."<cr>
+nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
+nnoremap <silent> ,,V        :exec "leftabove 30vnew ."<cr>
+nnoremap <silent> ,tn        :call Dirvish_newWin( "tabe" )<cr>
+nnoremap <silent> ,,tn       :exec "tabe ."<cr>
+nnoremap <silent> ,sn        :call Dirvish_newWin( "new" )<cr>
+nnoremap <silent> ,,sn       :exec "new ."<cr>
+nnoremap <silent> ,Sn        :call Dirvish_newWin( "above 13new" )<cr>
+nnoremap <silent> ,,Sn       :exec "above 13new ."<cr>
 
 " nnoremap <leader>of :FzfPreviewGitFiles<cr>
 " nnoremap <leader>of :CocCommand fzf-preview.GitFiles<cr>
@@ -261,6 +262,10 @@ func! DirvishSetup2()
   exec 'silent keeppatterns g/\.metals\|\.scala-build\|\.bsp\|\.vscode\|scala-doc/d _'
 endfunc
 
+
+" NOTE: Dirvish buffer maps can also be put here:
+" ~/.config/nvim/ftplugin/dirvish.vim#/Maps
+" currently this contains the dovish maps for copy, move files
 
 augroup dirvish_config
   autocmd!

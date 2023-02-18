@@ -250,6 +250,16 @@ vim.keymap.set( 'n',
     vim.diagnostic.goto_prev()
   end )
 
+vim.keymap.set( 'n',
+  '<leader>ca', function()
+    vim.lsp.buf.code_action()
+  end )
+
+
+
+
+
+
 
 
 

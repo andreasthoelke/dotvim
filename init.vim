@@ -342,6 +342,10 @@ Plug 'euclio/vim-markdown-composer'
 
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 
+Plug 'weirongxu/plantuml-previewer.vim'
+Plug 'tyru/open-browser.vim'
+Plug 'aklt/plantuml-syntax'
+
 " Code Navagation Editing: ---------------------------------------------
 " Plug 'easymotion/vim-easymotion'
 Plug 'andreasthoelke/vim-easymotion'

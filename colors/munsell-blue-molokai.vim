@@ -384,6 +384,7 @@ hi! def link NvimTreeNormal CommentMinus
 hi! def link NvimTreeRootFolder CommentSection
 hi! def link NvimTreeBookmark Comment
 hi! def link NvimTreeGitStaged purescriptIdentifier
+hi! def link NvimTreeGitNew purescriptIdentifier
 
 " Startify
 hi! def link StartifyPath CommentMinus

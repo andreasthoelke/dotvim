@@ -30,6 +30,7 @@ nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor
 
 nnoremap gej :call RunTerm_showFloat()<cr>
 nnoremap geJ :call TermOneShot_FloatBuffer( getline('.') )<cr>
+nnoremap <leader>gej :call TermOneShot( getline('.') )<cr>
 
 func! RunTerm_showFloat()
  echo "Running terminal command .."

@@ -5,7 +5,7 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
   nnoremap <silent><buffer>         gef :call Scala_SetPrinterIdentif( "file1" )<cr>
   nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "plain json" )<cr>
-  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "zio" )<cr>
+  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "effect" )<cr>
   nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
@@ -107,20 +107,15 @@ func! Scala_LspTopLevelHover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
-" NOTE: deleted several JS motions and commands. i might want to copy
-" and adapt these to scala at one point
-" other motions: ~/.config/nvim/plugin/HsMotions.vim#/Just%20a%20new
 
-" Process: import identif into runPrinter.ts, build --watch will update runPrinter.js
-" - source file:   packages/app/src/mySourceFile.ts
-" - printer:       packages/app/src/runPrinter.ts
-" - module:        @org/app/mySourceFile
-" - printer (run): packages/app/build/esm/runPrinter.js
 
 func! Scala_SetPrinterIdentif( mode )
   let printerFilePath = expand('%:h') . '/Printer.scala'
+  let printerFilePathCats = expand('%:h') . '/PrinterCats.scala'
   if filereadable( printerFilePath )
     call Scala_SetPrinterIdentif_ScalaCLI( a:mode )
+  else if filereadable( printerFilePathCats )
+    call Scala_SetPrinterIdentif_Cats( a:mode )
   else
     call Scala_SetPrinterIdentif_SBT( a:mode )
   endif
@@ -147,6 +142,8 @@ func! Scala_SetPrinterIdentif_SBT( mode )
     echo "Lsp timeout .. try again"
     return
   endif
+  " echo l:typeStr
+  " return
 
   let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
   let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
@@ -246,6 +243,32 @@ func! Scala_GetPackageName()
   return packageName
 endfunc
 
+func! Scala_SetPrinterIdentif_Cats( mode )
+  let printerFilePath = expand('%:h') . '/PrinterCats.scala'
+
+  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  call VirtualRadioLabel_lineNum( '«', hostLn )
+
+  let packageName = Scala_GetPackageName()
+  if len( packageName )
+    let identif = packageName . "." . identif
+  endif
+
+  if a:mode == "effect"
+    let bindingLine = "val printVal = " . identif
+  else
+    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
+  endif
+
+  let printerLines = readfile( printerFilePath, '\n' )
+  let printerLines[1] = bindingLine
+
+  call writefile( printerLines, printerFilePath )
+endfunc
+
+
 func! Scala_SetPrinterIdentif_ScalaCLI( mode )
   let printerFilePath = expand('%:h') . '/Printer.scala'
 
@@ -259,7 +282,7 @@ func! Scala_SetPrinterIdentif_ScalaCLI( mode )
     let identif = packageName . "." . identif
   endif
 
-  if a:mode == "zio"
+  if a:mode == "effect"
     let bindingLine = "val printVal = " . identif
   else
     let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
