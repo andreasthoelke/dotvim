@@ -9,9 +9,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
-  nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>
-  nnoremap <silent><buffer>         gei :call Scala_RunPrinter()<cr>
-  nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinterInTerm()<cr>
+  nnoremap <silent><buffer>         gei :call Scala_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinter( "term"  )<cr>
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
   nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
@@ -107,18 +106,52 @@ func! Scala_LspTopLevelHover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
+func! Scala_BufferCatsOrZio()
+  let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
+  let lineCats = searchpos( '\v^import\scats\.effect', 'cnbW' )[0]
+  if     lineZio && lineCats
+    return 'both'
+  elseif lineZio && !lineCats
+    return 'zio'
+  elseif !lineZio && lineCats
+    return 'cats'
+  elseif !lineZio && !lineCats
+    return 'none'
+  endif
+endfunc
+
+func! Scala_RepoBuildTool()
+  let millPath  = filereadable( getcwd() . '/build.sc' )
+  let sbtPath   = filereadable( getcwd() . '/build.sbt' )
+  let scliPath  = filereadable( getcwd() . '/dependencies.scala' )
+  if     millPath && !sbtPath
+    return 'mill'
+  elseif !millPath && sbtPath
+    return 'sbt'
+  elseif scliPath && !sbtPath
+    return 'scala-cli'
+  else
+    return 'none'
+  endif
+endfunc
 
 
 func! Scala_SetPrinterIdentif( mode )
-  let printerFilePath = expand('%:h') . '/Printer.scala'
-  let printerFilePathCats = expand('%:h') . '/PrinterCats.scala'
-  if filereadable( printerFilePath )
-    call Scala_SetPrinterIdentif_ScalaCLI( a:mode )
-  else if filereadable( printerFilePathCats )
-    call Scala_SetPrinterIdentif_Cats( a:mode )
+  let effType  = Scala_BufferCatsOrZio()
+  let repoType = Scala_RepoBuildTool()
+  " echo effType repoType
+  if     repoType == 'scala-cli' && effType == 'zio'
+    let fntag = 'ScalaCliZio'
+  elseif repoType == 'scala-cli' && effType == 'cats'
+    let fntag = 'ScalaCliCats'
+  elseif repoType == 'sbt'
+    let fntag = 'SBT'
   else
-    call Scala_SetPrinterIdentif_SBT( a:mode )
+    echoe "not supported"
+    return
   endif
+  " echo fntag
+  call call( 'Scala_SetPrinterIdentif_' . fntag, [a:mode] )
 endfunc
 
 func! Scala_SetPrinterIdentif_SBT( mode )
@@ -243,33 +276,96 @@ func! Scala_GetPackageName()
   return packageName
 endfunc
 
-func! Scala_SetPrinterIdentif_Cats( mode )
-  let printerFilePath = expand('%:h') . '/PrinterCats.scala'
+func! Sc_PackagePrefix()
+  let name = Scala_GetPackageName()
+  return len(name) ? name . "." : ""
+endfunc
 
-  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+func! Scala_GetObjectName( identifLine )
+  " NOTE: supports only one level objects
+  let hostLnObj      = searchpos( '\v^object\s', 'cnbW' )[0]
+  let hostLnObjClose = searchpos( '\v^\}', 'cnW' )[0]
 
-  call VirtualRadioLabel_lineNum( '«', hostLn )
-
-  let packageName = Scala_GetPackageName()
-  if len( packageName )
-    let identif = packageName . "." . identif
-  endif
-
-  if a:mode == "effect"
-    let bindingLine = "val printVal = " . identif
+  if a:identifLine > hostLnObj && a:identifLine < hostLnObjClose
+    let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
+    return objName
   else
-    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
+    return ""
   endif
+endfunc
 
-  let printerLines = readfile( printerFilePath, '\n' )
-  let printerLines[1] = bindingLine
-
-  call writefile( printerLines, printerFilePath )
+func! Sc_ObjectPrefix( identifLine )
+  let name = Scala_GetObjectName( a:identifLine )
+  return len(name) ? name . "." : ""
 endfunc
 
 
-func! Scala_SetPrinterIdentif_ScalaCLI( mode )
+
+func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
+
+  normal! ww
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
+  normal! bb
+
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  if typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
+  " echo typeStr
+  " return
+
+  " Support nesting in objects
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+
+  if     typeStr =~ "IO"
+    let typeMode = "cats"
+  elseif typeStr =~ "IO" && typeStr =~ "List"
+    let typeMode = "cats_collection"
+  elseif typeStr =~ "List"
+    let typeMode = "collection"
+  else
+    let typeMode = "plain"
+  endif
+
+  echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
+  call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
+
+  if     a:keyCmdMode == 'effect' || typeMode == 'cats'
+    let _replTag  = '"RESULT"'
+    let _info     = 'IO( "" )'         " an effect returning a string
+    let _printVal = identif          " already an effect
+
+  elseif typeMode == 'collection'
+    let _replTag  = '"RESULT"'
+    let _info     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printVal = "IO( " . identif . " )"                  " an effect now
+
+  elseif typeMode == 'cats_collection'
+    let _replTag  = '"RESULT"'
+    let _info     = identif . '.map( _.size.toString ).map( s => s + "\n" )'       " an effect returning a string
+    let _printVal = identif                                 " already an effect
+
+  elseif typeMode == 'plain'
+    let _replTag  = '"RESULT"'
+    let _info     = 'IO( "" )'                                " an effect returning a string
+    let _printVal = "IO( " . identif . " )"                 " an effect now
+  endif
+
+  let printerFilePath = getcwd() . '/PrinterCats.scala'
+  let plns = readfile( printerFilePath, '\n' )
+
+  let plns[5] = "  val replTag  = " . _replTag
+  let plns[7] = "  val info     = " . _info
+  let plns[9] = "  val printVal = " . _printVal
+
+  call writefile( plns, printerFilePath )
+endfunc
+
+
+func! Scala_SetPrinterIdentif_ScalaCliZio( mode )
   let printerFilePath = expand('%:h') . '/Printer.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
@@ -277,10 +373,8 @@ func! Scala_SetPrinterIdentif_ScalaCLI( mode )
 
   call VirtualRadioLabel_lineNum( '«', hostLn )
 
-  let packageName = Scala_GetPackageName()
-  if len( packageName )
-    let identif = packageName . "." . identif
-  endif
+  " Support nesting in objects
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
   if a:mode == "effect"
     let bindingLine = "val printVal = " . identif
@@ -312,26 +406,40 @@ func! Scala_SetServerApp_ScalaCLI()
 endfunc
 
 
-let g:Scala_ServerCmd = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterCmd = "scala-cli . --main-class Printer --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_ServerCmd      = "scala-cli . --main-class PreviewServer --class-path resources"
+let g:Scala_PrinterZioCmd  = "scala-cli . --main-class printzio.Printer --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
 
+func! Scala_RunPrinter( termType )
+  let effType  = Scala_BufferCatsOrZio()
+  let repoType = Scala_RepoBuildTool()
+  " echo effType repoType
 
-func! Scala_RunPrinter()
-  let printerFilePath = expand('%:h') . '/Printer.scala'
-  " let printerFilePath = expand('%:h') . 'src/main/scala/Printer.scala'
-  if !filereadable( printerFilePath )
-    " Using the running sbt repl session
-    call ScalaReplRun()
+  if     effType == 'zio'
+    let cmd = g:Scala_PrinterZioCmd
+  elseif effType == 'cats'
+    let cmd = g:Scala_PrinterCatsCmd
+  else
+    echoe "not supported: " . effType
     return
   endif
 
-  " Use scala-cli
-  " let cmd = 'scala-cli ' . expand('%:h')
-  " let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer --class-path resources'
-  let cmd = g:Scala_PrinterCmd
-  let resLines = systemlist( cmd )
-  call Scala_showInFloat( resLines )
+  if     repoType == 'scala-cli' && a:termType == 'float'
+    let resLines = systemlist( cmd )
+    call Scala_showInFloat( resLines )
+
+  elseif repoType == 'scala-cli' && a:termType == 'term'
+    call TermOneShot( cmd )
+
+  elseif repoType == 'sbt'
+    call ScalaReplRun()
+
+  else
+    echoe "not supported: " . repoType
+    return
+  endif
 endfunc
+
 
 func! Scala_filterCliLine( line, accum )
   " filter all lines that contain these words:
@@ -368,14 +476,6 @@ func! Scala_showInFloat( data )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfun
-
-
-func! Scala_RunPrinterInTerm()
-  " let cmd = 'scala-cli ' . expand('%:h') . ' --main-class Printer'
-  let cmd = g:Scala_PrinterCmd
-  call TermOneShot( cmd )
-endfunc
-" scala-cli . --main-class PreviewServer
 
 
 " ─   " PreviewServer                                   ──
