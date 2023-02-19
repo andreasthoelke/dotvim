@@ -320,11 +320,13 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   " Support nesting in objects
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
-  if     typeStr =~ "IO"
-    let typeMode = "cats"
-  elseif typeStr =~ "IO" && typeStr =~ "List"
+  if      typeStr =~ "IO" && typeStr =~ "List"
     let typeMode = "cats_collection"
-  elseif typeStr =~ "List"
+  elseif  typeStr =~ "IO"
+    let typeMode = "cats"
+  elseif  typeStr =~ "IO" && typeStr =~ "List"
+    let typeMode = "cats_collection"
+  elseif  typeStr =~ "List"
     let typeMode = "collection"
   else
     let typeMode = "plain"
