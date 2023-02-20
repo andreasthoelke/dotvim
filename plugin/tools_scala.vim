@@ -144,6 +144,10 @@ func! Scala_SetPrinterIdentif( mode )
     let fntag = 'ScalaCliZio'
   elseif repoType == 'scala-cli' && effType == 'cats'
     let fntag = 'ScalaCliCats'
+  elseif repoType == 'scala-cli' && effType == 'none'
+    let fntag = 'ScalaCliCats'
+  elseif repoType == 'scala-cli' && effType == 'both'
+    let fntag = 'ScalaCliCats'
   elseif repoType == 'sbt'
     let fntag = 'SBT'
   else
@@ -359,16 +363,20 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   let printerFilePath = getcwd() . '/PrinterCats.scala'
   let plns = readfile( printerFilePath, '\n' )
 
-  let plns[5] = "  val replTag  = " . _replTag
-  let plns[7] = "  val info     = " . _info
-  let plns[9] = "  val printVal = " . _printVal
+  " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
+  " 9) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
+  let plns[9]  = "  val replTag  = " . _replTag
+  " 11) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
+  let plns[11] = "  val info     = " . _info
+  " 13) the effect (or wrapped simple value) to be printed including packageName and object namespace
+  let plns[13] = "  val printVal = " . _printVal
 
   call writefile( plns, printerFilePath )
 endfunc
 
 
 func! Scala_SetPrinterIdentif_ScalaCliZio( mode )
-  let printerFilePath = expand('%:h') . '/Printer.scala'
+  let printerFilePath = getcwd() . '/PrinterZio.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
@@ -409,8 +417,9 @@ endfunc
 
 
 let g:Scala_ServerCmd      = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterZioCmd  = "scala-cli . --main-class printzio.Printer --class-path resources -nowarn -Ymacro-annotations"
-let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterZioCmd  = "scala-cli . --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
+" let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
@@ -419,7 +428,7 @@ func! Scala_RunPrinter( termType )
 
   if     effType == 'zio'
     let cmd = g:Scala_PrinterZioCmd
-  elseif effType == 'cats'
+  elseif effType == 'cats' || effType == 'both' || effType == 'none'
     let cmd = g:Scala_PrinterCatsCmd
   else
     echoe "not supported: " . effType

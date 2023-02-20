@@ -87,6 +87,8 @@ new: all notes go to Documents/Notes folder, only *hard* links go to Documents/B
   "collection search all" => ,csj
   "collection search signatures" => ,css (todo)
 
+set a default/start collection here: ~/.config/nvim/plugin/general-helpers.vim#/let%20g.FolderSearch_Path%20=
+.. currently its "notes_stack"
 
 # Vim-Works
 /Users/at/Documents/Bookmarks/notes_1_2023/vim_works.md

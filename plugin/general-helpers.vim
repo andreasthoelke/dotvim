@@ -104,7 +104,7 @@ nnoremap ,ce :call FolderSearch_setPath()<cr>
 
 " 2] "point to collection" - "collection point" => ,cp
 " _SET_SEARCH_FOLDER_PATH:
-let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/'
+let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/notes_stack/'
 nnoremap ,cp :call FolderSearch_setPath()<cr>
 
 func! FolderSearch_setPath()

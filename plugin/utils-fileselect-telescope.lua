@@ -4,6 +4,11 @@ local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
 
+
+local function open_above(promtbufnr)
+ return require("telescope.actions.set").edit( promtbufnr, "leftabove 13new")
+end
+
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 Telesc = require('telescope').setup{
   defaults = {
@@ -29,6 +34,7 @@ Telesc = require('telescope').setup{
     -- initial_mode = 'normal',
     mappings = {
       i = {
+        ["<c-S>"] = open_above,
         ["<c-o>"] = trouble.open_with_trouble,
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
@@ -36,6 +42,7 @@ Telesc = require('telescope').setup{
         -- ["<C-h>"] = "which_key"
       },
       n = {
+        ["<c-S>"] = open_above,
         ["<c-o>"] = trouble.open_with_trouble,
         ["<c-a>"] = actions.send_selected_to_qflist,
         ["<c-d>"] = actions.delete_buffer,
