@@ -127,6 +127,20 @@ local function open_tab_silent(node)
 end
 
 
+-- command! -nargs=1 DirvishFloat1 call Dirvish_Float( <args> )
+vim.cmd("command! -nargs=1 NvimTreeRevealFile lua NvimTree_find_file( <args> )")
+
+-- First expands the tree, jumps back to the original win, then highlights the path
+function _G.NvimTree_find_file( path )
+  local api = require("nvim-tree.api")
+  api.tree.focus()
+  vim.cmd('wincmd p')
+  api.tree.find_file( path )
+end
+-- NvimTreeRevealFile "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/H_Cats.scala"
+-- NvimTreeRevealFile "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/resources/day03.in"
+-- NvimTreeRevealFile "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/resources"
+
 local function bookmNext()
   local api = require("nvim-tree.api")
   api.marks.navigate.next()

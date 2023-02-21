@@ -13,3 +13,19 @@ nmap <silent><buffer> <leader>yy <Plug>(dovish_yank)
 xmap <silent><buffer> <leader>yy <Plug>(dovish_yank)
 nmap <silent><buffer> <leader>pp <Plug>(dovish_copy)
 nmap <silent><buffer> <leader>mv <Plug>(dovish_move)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

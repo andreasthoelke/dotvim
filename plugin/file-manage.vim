@@ -25,6 +25,9 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
 
 " ─   Dirvish 'newWin' maps                             ──
+" TODO: might want to make these consistent with: ~/.config/nvim/plugin/utils-fileselect-telescope.lua#/["<c-s><c-u>"]%20=%20open_above,
+" TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
+
 nnoremap <silent> <leader>-  :Dirvish .<cr>
 nnoremap <silent> ,v         :call Dirvish_newWin( "vnew" )<cr>
 nnoremap <silent> ,,v        :exec "vnew ."<cr>
@@ -519,6 +522,8 @@ func! PathSelect_callCB()
   " call FloatWin_close()
 endfunc
 
+command! -nargs=1 DirvishFloat1 call Dirvish_Float( <args> )
+" DirvishFloat "/Users/at/Documents"
 
 func! Dirvish_Float( path )
   call Float1Show()

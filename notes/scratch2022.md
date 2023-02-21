@@ -1,4 +1,6 @@
 
+
+
 # ─   Telescope Rgx search                           ──
 ge;       - main (scala) symbols/bindings in this repo
 ge:       - main (scala) symbols/bindings in selected (parent-based) repos
@@ -15,6 +17,13 @@ ge:       - main (scala) symbols/bindings in selected (parent-based) repos
 
 maps, regexes and glob definitions:
 ~/.config/nvim/plugin/utils_general_maps.lua#/--%20search%20in
+
+
+new telescope select maps
+<c-s>b  - select below
+<c-s>u  - select up
+          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/utils-fileselect-telescope.lua#/["<c-s><c-u>"]%20=%20open_above,
+          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
 
 # ─   Dirvish 'newWin' maps                          ──
 ==>> file in parent folder || project root folder <<==

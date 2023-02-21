@@ -166,6 +166,7 @@ EOF
 nnoremap <leader>st :Startify<cr>
 nnoremap <leader>ls :call SessionLoadForCWDStartify()<cr>
 
+
 let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
       \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
@@ -188,6 +189,10 @@ let g:startify_session_dir = stdpath('data') . '/sessions'
 " __Users__at__Documents__Architecture__examples__graphql-relay-js
 
 func! SessionLoadForCWDStartify()
+  if &ft == 'NvimTree' 
+    wincmd l 
+  endif
+
   let sessionFile = substitute( getcwd(), '/', '__', 'g' )
   " let sessionPath = g:startify_session_dir . '/' . sessionFile
   exec 'SLoad ' . sessionFile

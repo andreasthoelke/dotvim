@@ -9,6 +9,11 @@ local function open_above(promtbufnr)
  return require("telescope.actions.set").edit( promtbufnr, "leftabove 13new")
 end
 
+local function open_below(promtbufnr)
+ return require("telescope.actions.set").edit( promtbufnr, "20new")
+end
+
+
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 Telesc = require('telescope').setup{
   defaults = {
@@ -34,7 +39,10 @@ Telesc = require('telescope').setup{
     -- initial_mode = 'normal',
     mappings = {
       i = {
-        ["<c-S>"] = open_above,
+          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/utils-fileselect-telescope.lua#/["<c-s><c-u>"]%20=%20open_above,
+          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
+        ["<c-s><c-u>"] = open_above,
+        ["<c-s><c-b>"] = open_below,
         ["<c-o>"] = trouble.open_with_trouble,
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
@@ -42,7 +50,8 @@ Telesc = require('telescope').setup{
         -- ["<C-h>"] = "which_key"
       },
       n = {
-        ["<c-S>"] = open_above,
+        ["<c-s><c-u>"] = open_above,
+        ["<c-s><c-b>"] = open_below,
         ["<c-o>"] = trouble.open_with_trouble,
         ["<c-a>"] = actions.send_selected_to_qflist,
         ["<c-d>"] = actions.delete_buffer,
