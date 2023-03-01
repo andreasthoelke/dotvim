@@ -322,8 +322,8 @@ vnoremap <silent> ,<c-l> }-g_
 nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
 
 " Keep jumps with native paragraph motions
-nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
-nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+nnoremap <silent> } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+nnoremap <silent> { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 " ─   Line (compensating conceal)                        ■
 

@@ -90,6 +90,9 @@ func! Scala_LspTypeAtPos(lineNum, colNum)
   return l:typeStr
 endfunc
 " echo Scala_LspTypeAtPos(111, 10)
+" echo Scala_LspTypeAtPos(line('.'), col('.'))
+" TODO: keep refining: ~/.config/nvim/lua/utils_lsp.lua#/if%20retval%20==
+
 
 func! Scala_LspType()
   let [oLine, oCol] = getpos('.')[1:2]
@@ -287,8 +290,19 @@ endfunc
 
 func! Scala_GetObjectName( identifLine )
   " NOTE: supports only one level objects
+  let [oLine, oCol] = getpos('.')[1:2]
   let hostLnObj      = searchpos( '\v^object\s', 'cnbW' )[0]
+  call setpos('.', [0, hostLnObj, 0, 0] )
   let hostLnObjClose = searchpos( '\v^\}', 'cnW' )[0]
+  call setpos('.', [0, oLine, oCol, 0] )
+  " echo a:identifLine hostLnObj hostLnObjClose
+  " return
+
+  let scala33colonnotation = getline(hostLnObj) =~ ":"
+  let identifIndented = getline(a:identifLine)[1] == " "
+  if scala33colonnotation && !identifIndented
+    return ""
+  endif
 
   if a:identifLine > hostLnObj && a:identifLine < hostLnObjClose
     let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
@@ -324,11 +338,11 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   " Support nesting in objects
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
-  if      typeStr =~ "IO" && typeStr =~ "List"
+  if      typeStr =~ "IO\[" && typeStr =~ "List"
     let typeMode = "cats_collection"
-  elseif  typeStr =~ "IO"
+  elseif  typeStr =~ "IO\["
     let typeMode = "cats"
-  elseif  typeStr =~ "IO" && typeStr =~ "List"
+  elseif  typeStr =~ "IO\[" && typeStr =~ "List"
     let typeMode = "cats_collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
@@ -351,7 +365,10 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
 
   elseif typeMode == 'cats_collection'
     let _replTag  = '"RESULT"'
-    let _info     = identif . '.map( _.size.toString ).map( s => s + "\n" )'       " an effect returning a string
+    " NOTE: the following line works, but:
+    " it runs the program (identif) twice, issuing side-effect twice (e.g. printing).
+    " let _info     = identif . '.map( _.size.toString ).map( s => s + "\n" )'       " an effect returning a string
+    let _info     = 'IO( "" )'
     let _printVal = identif                                 " already an effect
 
   elseif typeMode == 'plain'

@@ -266,11 +266,11 @@ lspconfig.rescriptls.setup ({
 })
 
 -- https://github.com/ocaml/ocaml-lsp
-lspconfig.ocamllsp.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
+-- lspconfig.ocamllsp.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls
@@ -291,7 +291,7 @@ lspconfig.graphql.setup({
 -- https://github.com/lighttiger2505/sqls
 -- https://github.com/nanotee/sqls.nvim
 -- mysql://root:PW@127.0.0.1:3306/pets
-require('lspconfig').sqls.setup{
+lspconfig.sqls.setup{
   on_attach = function(client, bufnr)
     require('sqls').on_attach(client, bufnr)
   end,
@@ -408,24 +408,41 @@ table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
 lspconfig.lua_ls.setup {
+  capabilities = capabilities,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
   settings = {
     Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = runtime_path,
-      },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
+        globals = { 'vim' },
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
         library = vim.api.nvim_get_runtime_file("", true),
+        checkThirdParty = false
       },
     },
   },
+  -- settings = {
+  --   Lua = {
+  --     runtime = {
+  --       -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+  --       version = 'LuaJIT',
+  --       -- Setup your lua path
+  --       path = runtime_path,
+  --     },
+  --     diagnostics = {
+  --       -- Get the language server to recognize the `vim` global
+  --       globals = {'vim'},
+  --     },
+  --     workspace = {
+  --       -- Make the server aware of Neovim runtime files
+  --       library = vim.api.nvim_get_runtime_file("", true),
+  --     },
+  --   },
+  -- },
 }
 
 

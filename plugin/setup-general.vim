@@ -1557,7 +1557,7 @@ let g:markbar_delete_mark_mapping   = '<c-x>'
 
 
 " Rel Links: -------------
-nmap gk <Plug>(Rel)
+nmap <leader>gk <Plug>(Rel)
 " see "h rel-links" or help:rel.txt#/should%20refer
 " example: ~/.vimrc#/set
 " help rel.txt

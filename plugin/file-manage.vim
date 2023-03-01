@@ -523,7 +523,21 @@ func! PathSelect_callCB()
 endfunc
 
 command! -nargs=1 DirvishFloat1 call Dirvish_Float( <args> )
-" DirvishFloat "/Users/at/Documents"
+" DirvishFloat1 "/Users/at/Documents"
+
+
+command! -nargs=1 PathFloat call Path_Float( <args> )
+
+func! Path_Float( path )
+  call Float1Show()
+  if isdirectory( a:path )
+    call dirvish#open( a:path )
+  else
+    exec 'edit' a:path
+  endif
+endfunc
+" call Path_Float( '/Users/at/Documents/Notes/laminar.md' )
+" call Path_Float( '/Users/at/Documents/Notes' )
 
 func! Dirvish_Float( path )
   call Float1Show()

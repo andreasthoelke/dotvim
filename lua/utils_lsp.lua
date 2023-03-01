@@ -55,8 +55,14 @@ function M.LspType()
   local split = vim.split(typeString, "\n")
   -- put( split )
   -- put( utilsg.Tablelength( split ) )
+  local slen = utilsg.Tablelength( split )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\n]] } )
   local retval = vim.api.nvim_call_function( "matchstr", { split[2], [[\v:\s\zs.*]] } )
+
+  if retval == "" then
+    retval = vim.api.nvim_call_function( "matchstr", { split[slen-1], [[\v:\s\zs.*]] } )
+  end
+
   -- local retval = vim.api.nvim_call_function( "matchstr", { retval, [[\v:\s\zs.*\ze\n]] } )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\]\n]] } )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )

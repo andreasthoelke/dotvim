@@ -1,5 +1,20 @@
 
 
+TODO:
+copy path should (optionally?) include the current line num
+at the cursor, so you can get to the same pos in the file 
+in a different window.
+- note this can also be done with global marks
+
+//> using lib "dev.zio::zio::2.0.3"
+//> using scala "3.3.0-RC3"
+
+TODO:
+word motions, `cw` should not include the ','
+  ???, "eins"
+  qe, "eins"
+  q, "eins"
+
 
 # ─   Telescope Rgx search                           ──
 ge;       - main (scala) symbols/bindings in this repo

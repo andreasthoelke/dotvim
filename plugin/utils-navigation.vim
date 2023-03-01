@@ -154,17 +154,16 @@ endfunc
 " ─   Tabs                                               ■
 
 " next - prev tab
-" nnoremap <silent> <c-f> :tabnext<cr>
-" nnoremap <silent> <c-d> :tabprevious<cr>
+nnoremap <silent> <c-f> :tabnext<cr>
+nnoremap <silent> <c-d> :tabprevious<cr>
 
 " prevent the default maps (seems to navigate the buffer)
-nnoremap <silent> <c-f> :<cr>
-nnoremap <silent> <c-d> :<cr>
-
-nnoremap <silent> <c-f><c-l> :tabnext<cr>
-nnoremap <silent> <c-f><c-h> :tabprevious<cr>
-nnoremap <silent> <c-f>l :tabnext<cr>
-nnoremap <silent> <c-f>h :tabprevious<cr>
+" nnoremap <silent> <c-f> :<cr>
+" nnoremap <silent> <c-d> :<cr>
+" nnoremap <silent> <c-f><c-l> :tabnext<cr>
+" nnoremap <silent> <c-f><c-h> :tabprevious<cr>
+" nnoremap <silent> <c-f>l :tabnext<cr>
+" nnoremap <silent> <c-f>h :tabprevious<cr>
 
 " Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
