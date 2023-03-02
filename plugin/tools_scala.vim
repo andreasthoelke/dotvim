@@ -111,7 +111,7 @@ endfunc
 
 func! Scala_BufferCatsOrZio()
   let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
-  let lineCats = searchpos( '\v^import\scats\.effect', 'cnbW' )[0]
+  let lineCats = searchpos( '\v^import\scats\.', 'cnbW' )[0]
   if     lineZio && lineCats
     return 'both'
   elseif lineZio && !lineCats
@@ -126,7 +126,7 @@ endfunc
 func! Scala_RepoBuildTool()
   let millPath  = filereadable( getcwd() . '/build.sc' )
   let sbtPath   = filereadable( getcwd() . '/build.sbt' )
-  let scliPath  = filereadable( getcwd() . '/dependencies.scala' )
+  let scliPath  = filereadable( getcwd() . '/build.scala' )
   if     millPath && !sbtPath
     return 'mill'
   elseif !millPath && sbtPath
@@ -142,7 +142,7 @@ endfunc
 func! Scala_SetPrinterIdentif( mode )
   let effType  = Scala_BufferCatsOrZio()
   let repoType = Scala_RepoBuildTool()
-  " echo effType repoType
+  echo effType repoType
   if     repoType == 'scala-cli' && effType == 'zio'
     let fntag = 'ScalaCliZio'
   elseif repoType == 'scala-cli' && effType == 'cats'
