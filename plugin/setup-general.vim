@@ -837,7 +837,18 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
 let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': ''}
 
+" " hmm, i can't make this 'silent'
+" nnoremap <silent> ]<Space> :call LinesAdd1()<cr>
+" nnoremap <silent> 4]<Space> :call LinesAdd4()<cr>
 
+" func! LinesAdd1()
+"   exec 'put =repeat(nr2char(10), 1)|silent ''[-'
+" endfunc
+
+
+" func! LinesAdd4()
+"   exec 'put =repeat(nr2char(10), 4)|silent ''[-'
+" endfunc
 
 " UNIMPAIRED: -------------------------------------------------
 

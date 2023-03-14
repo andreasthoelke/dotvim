@@ -51,7 +51,6 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
-
 " ─     Lsp maps                                        ──
 " -- also at:
 " ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Lsp%20maps
@@ -304,6 +303,11 @@ func! Scala_GetObjectName( identifLine )
     return ""
   endif
 
+  if scala33colonnotation && identifIndented
+    let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\:' )
+    return objName
+  endif
+
   if a:identifLine > hostLnObj && a:identifLine < hostLnObjClose
     let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
     return objName
@@ -316,7 +320,7 @@ func! Sc_ObjectPrefix( identifLine )
   let name = Scala_GetObjectName( a:identifLine )
   return len(name) ? name . "." : ""
 endfunc
-
+" Scala_GetObjectName(line('.'))
 
 
 func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
@@ -610,7 +614,7 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(inline|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
   normal! }

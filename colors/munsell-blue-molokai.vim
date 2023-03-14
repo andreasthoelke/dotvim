@@ -542,6 +542,7 @@ hi Normal          guifg=#3F5C66 guibg=#121416
 " hi Comment         guifg=#3D5862
 hi Comment         guifg=#344B53
 hi CommentMinus    guifg=#273A40
+hi CommentMinusCursive    guifg=#273A40 gui=italic
 hi CommentMinusMinus guifg=#1D2B2F
 " hi CommentPlus     guifg=#38595E
 " hi! ConcealOne  guifg=#2D505E

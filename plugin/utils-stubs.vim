@@ -228,7 +228,7 @@ func! CreateInlineTestDec_scala1()
 endfunc
 
 func! CreateInlineTestDec_scala()
-  let hostLn = searchpos( '\v^(val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
+  let hostLn = searchpos( '\v^(inline|val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
 
   let hostDecName = matchstr( getline( hostLn ), '\v(val|def|object|trait|enum|case\sclass)\s\zs\i*' )
   let lineText = hostDecName

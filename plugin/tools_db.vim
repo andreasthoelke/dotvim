@@ -39,6 +39,11 @@ let g:db_ui_execute_on_save = 0
 let g:db_ui_show_database_icon = 1
 let g:db_ui_use_nerd_fonts = 1
 
+let g:dbs = {
+  \ 'learn_dev': 'postgres:///learn_dev',
+  \ 'funcprog': 'postgres:///funcprog',
+  \ }
+
 " these are additional permanent connections. activate this as needed
 " let g:dbs = {
 "   \ 'air_routes': 'mysql://root:PW@127.0.0.1:3306/air_routes',

@@ -20,7 +20,7 @@ Telesc = require('telescope').setup{
     -- config_key = value,
     path_display = { 'shorten' },
     file_ignore_patterns = {
-            '^.git/', '^target/', '^node%_modules/', '^.npm/', '^modules', 'dev.js', '^build/', '%[Cc]ache/', '%-cache',
+            '^.git/', '^target/', '^node%_modules/', '^.npm/', '^modules', 'dev.js', '%[Cc]ache/', '%-cache',
             '^scala-doc/',
     --         '%.py[co]', '%.sw?', '%~', '%.a', "%.npz", "^.vscode",
             '%.tags', 'tags', '%.gemtags',

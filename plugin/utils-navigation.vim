@@ -118,8 +118,8 @@ let g:rel_open = 'vsplit'
 " Resize: Using <c-./,> maps from Karabiner
 " Note: Can't Control-map non-alphanum chars like "."/period:
 " nnoremap <c-.> :exec "resize +4"<cr>
-nnoremap ≥ :vertical resize +4<cr>
-nnoremap ≤ :resize +4<cr>
+nnoremap <silent> ≥ :vertical resize +4<cr>
+nnoremap <silent> ≤ :resize +4<cr>
 
 " Note: - "<c-s-.>", "<c-s-,>", "<c-.>", "<c-,>" are not possible within Vim, thus remapping these
 " keys to "alt-t",   "alt-s-,", "alt-.", "alt-,". Used "alt-t" instead of "alt-s-." which is a partial character

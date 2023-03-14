@@ -1810,8 +1810,22 @@ Plugins are installed via git here: /Users/at/.oh-my-zsh/custom/plugins/
 # Terminal settings
 
 ## Alacritty
+update 2023-03
 
+i'm now using the MonoLisa font in the setting here:
 /Users/at/.config/alacritty/alacritty.yml
+
+it also displays italic fonts for scala data constructors.
+
+i keep using the old '0.10.0 dev' version of alacritty (see the about menu). bc/ the colors are more vivit.
+these old version are here:
+/Users/at/apps_bin/alacritty/
+
+i have now run this command in terminal to have slightly thinner font (but i can't see the difference)
+defaults write org.alacritty AppleFontSmoothing -int 0
+unset this(?)
+defaults write org.alacritty AppleFontSmoothing -int 1
+
 Man alacritty
 :!alacritty - to open a new Alacritty MacOS App!/ window
 grt on "alacritty" will launch - alacritty

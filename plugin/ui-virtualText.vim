@@ -27,7 +27,8 @@ func! VirtualRadioLabel_lineNum( label, lineNum )
   call nvim_buf_clear_highlight( bn, ns, 0, -1)
   call v:lua.vim.api.nvim_buf_del_extmark( bn, ns, 1 )
 
-  call nvim_buf_set_virtual_text( bn, ns, a:lineNum -1, [[a:label, 'CommentSection']], {})
+  " call nvim_buf_set_virtual_text( bn, ns, a:lineNum -1, [[a:label, 'CommentSection']], {})
+  call nvim_buf_set_virtual_text( bn, ns, line('.') -1, [[a:label, 'CommentMinusCursive']], {})
 endfunc
 
 " NVim Virtual Text: ------------------

@@ -51,15 +51,49 @@ new telescope select maps
 ,sn        :call Dirvish_newWin( "new" )<cr>
 ,,sn       :exec "new ."<cr>
 
+## dovish
+l to <Plug>(dovish_create_file)
+l mk <Plug>(dovish_create_directory)
+l dd <Plug>(dovish_delete)
+l re <Plug>(dovish_rename)
+l yy <Plug>(dovish_yank)
+l yy <Plug>(dovish_yank)
+l pp <Plug>(dovish_copy) -- need to first yank
+l mv <Plug>(dovish_move) -- need to first yank
+
+https://github.com/roginfarrer/vim-dirvish-dovish/blob/main/README.md
 
 ## Nvim Tree
 
-l no   - toggle nvim-tree open
-l nf   - find current buffer in tree
-b      - set base/root dir
+l go   - toggle nvim-tree open
+l gs   - find current buffer in tree
+l b    - set base/root dir
 B      - show only open paths!
 <>     - sibling moves
 P      - parent node
+
+i", action = "edit" },
+p", action = "preview" },
+<leader>dd", action = "trash" },
+<leader>yy", action = "copy" },
+<leader>re", action = "rename" },
+
+<leader>I", action = "toggle_git_ignored" },
+<leader>G", action = "toggle_git_clean" },
+
+<leader>/", action = "search_node" }, -- can use regex and expand child folders!
+<leader>rf", action = "run_file_command" }, -- vim shell with the abs file path
+<leader>so", action = "system_open" }, -- opens finder explorer
+
+<leader>re", action = "rename" },
+<leader>pp", action = "paste_file", action_cb = tree_api.fs.paste },
+<leader>pP", action = "paste_cut_file", action_cb = tree_api.fs.paste },
+
+<leader>o", action = "dirvish_folder", action_cb = tree_openFolderDirvish },
+<leader>i", action = "dirvish_folder", action_cb = tree_viewPathInPrevWin },
+<leader>b", action = "base_dir", action_cb = tree_setBaseDir },
+T", action = "open_tab_silent", action_cb = open_tab_silent },
+
 
 settings: ~/.config/nvim/plugin/setup-general.lua#/--%20Nvim%20Tree
 maps: ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20<leader>nf
@@ -95,7 +129,7 @@ more maps and scripts:
 ## DirvishSortByModified
   <leader><leader>dm :call DirvishSortByModified()<cr>
   ,,dm :lua DirvishShowModified()<cr>
-## DirvishSortBySize
+## DirvishSortBySize lines count
   <leader><leader>ds :call DirvishSortBySize()<cr>
   ,,ds :lua DirvishShowSize()<cr>
 
@@ -266,8 +300,17 @@ gsp - prints/call this (exported) identifier (cursor can be in a different place
 sp qa - add cursor pos to quickfix list
 leader qq - toggle quickfix list
 
+## vim bookmarks
 
-
+L bb BookmarkToggle
+L ba BookmarkAnnotate
+L bs BookmarkShowAll
+L bn BookmarkNext
+L bp BookmarkPrev
+L bc BookmarkClear
+LLbd BookmarkClear
+L bk BookmarkMoveUp
+L bj BookmarkMoveDown
 
 
 

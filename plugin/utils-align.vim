@@ -160,6 +160,7 @@ func! BufferInnerBracket()
   call InsertStringAtLoc(' ', line('.'), col('.')-2)
   " normal! w%
   call setpos('.', [0, oLine, oCol, 0] )
+  normal! lh
 endfunc
 
 
