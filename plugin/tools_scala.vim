@@ -326,7 +326,7 @@ endfunc
 func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
 
   normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
   normal! bb
 
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
@@ -337,6 +337,7 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     return
   endif
   " echo typeStr
+  " echo hostLn identifCol
   " return
 
   " Support nesting in objects
@@ -614,7 +615,7 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(inline|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
   normal! }

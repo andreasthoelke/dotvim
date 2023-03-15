@@ -148,7 +148,6 @@ func! InsertStringAtLoc( str, line, col )
 endfunc
 " echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
-nnoremap <silent> <leader><leader>]t :call BufferInnerBracket()<cr>
 nnoremap <silent> ,,t :call BufferInnerBracket()<cr>
 
 func! BufferInnerBracket()
@@ -162,6 +161,31 @@ func! BufferInnerBracket()
   call setpos('.', [0, oLine, oCol, 0] )
   normal! lh
 endfunc
+
+nnoremap <silent> cis :call SignatureDo()<cr>hi
+nnoremap <silent> das :call SignatureDo()<cr>hhhxxl
+
+func! SignatureRemovePrep()
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, oLine, 0, 0] )
+  let lineText = getline( line('.') )
+  let [lineCollon, idxCollon] = searchpos( "\:", 'n' )
+  let [lineEq, idxEq] = searchpos( "= ", 'n' )
+  if lineCollon != oLine || lineEq != oLine
+    echo "no type sig found"
+    return
+  endif
+
+  let textBefore = lineText[:idxCollon -2]
+  let textAfter = lineText[idxEq -2:]
+
+  normal! "_dd
+  call append( line('.')-1, textBefore . ": " . textAfter )
+  normal! k
+  call setpos('.', [0, oLine, 0, 0] )
+  call search('=')
+endfunc
+
 
 
 
