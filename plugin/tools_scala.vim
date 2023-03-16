@@ -615,6 +615,7 @@ func! Scala_ServerClientRequest_rerun()
   silent wincmd p
 endfunc
 
+" NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 let g:Scala_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
