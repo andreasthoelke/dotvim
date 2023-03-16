@@ -182,8 +182,11 @@ func! TabNewFocus()
 endfunc
 
 " close tab and go to the previous window
-" nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
-nnoremap <silent><localleader>x :call CloseTabGoToPrevious()<cr>
+
+" new 2023-03
+nnoremap <silent> <c-w>C :call CloseTabGoToPrevious()<cr>
+
+nnoremap <silent><localleader>x :echo "use c-w C"<cr>
 function! CloseTabGoToPrevious()
   if tabpagenr("$") > 1 && tabpagenr() > 1 && tabpagenr() < tabpagenr("$")
     tabclose | tabprev

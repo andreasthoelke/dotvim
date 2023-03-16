@@ -162,15 +162,15 @@ func! BufferInnerBracket()
   normal! lh
 endfunc
 
-nnoremap <silent> cis :call SignatureDo()<cr>hi
-nnoremap <silent> das :call SignatureDo()<cr>hhhxxl
+nnoremap <silent> cis :call SignatureRemovePrep()<cr>hi
+nnoremap <silent> das :call SignatureRemovePrep()<cr>:undojoin<cr>hhh2xl
 
 func! SignatureRemovePrep()
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, oLine, 0, 0] )
   let lineText = getline( line('.') )
   let [lineCollon, idxCollon] = searchpos( "\:", 'n' )
-  let [lineEq, idxEq] = searchpos( "= ", 'n' )
+  let [lineEq, idxEq] = searchpos( '\v\=(\s|\_$)', 'n' )
   if lineCollon != oLine || lineEq != oLine
     echo "no type sig found"
     return
