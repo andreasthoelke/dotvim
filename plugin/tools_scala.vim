@@ -9,6 +9,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
+  nnoremap <silent><buffer> <leader>es  :call Scala_AddSignature()<cr>
+
   nnoremap <silent><buffer>         gei :call Scala_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinter( "term"  )<cr>
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
@@ -321,6 +323,40 @@ func! Sc_ObjectPrefix( identifLine )
   return len(name) ? name . "." : ""
 endfunc
 " Scala_GetObjectName(line('.'))
+
+
+func! Scala_AddSignature()
+  normal! ww
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
+  normal! bb
+
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  if typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
+  " echo typeStr
+  " echo hostLn identifCol
+  " return
+
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, hostLn, 0, 0] )
+
+  let lineText = getline( hostLn )
+  let [lineEq, idxEq] = searchpos( '\v\=(\s|\_$)', 'n' )
+
+  let textBefore = lineText[:idxEq -3]
+  let textAfter = lineText[idxEq -2:]
+
+  normal! "_dd
+  call append( hostLn -1, textBefore . ": " . typeStr . textAfter )
+  normal! k
+  call setpos('.', [0, hostLn, 0, 0] )
+  call search('=')
+
+endfunc
 
 
 func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
@@ -704,7 +740,7 @@ func! MvPrevLineStart()
   call SkipScalaSkipWords()
 endfunc
 
-let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'yield', 'then', 'else', '\$'] )
+let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'extends', 'yield', 'then', 'else', '\$'] )
 
 func! Scala_ColonForw()
   call SearchSkipSC( g:Scala_colonPttn, 'W' )

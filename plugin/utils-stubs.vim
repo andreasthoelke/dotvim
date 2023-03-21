@@ -14,7 +14,7 @@
 nnoremap <leader>ejd :call CreateJSDocComment_short()<cr>
 nnoremap <leader>ejD :call CreateJSDocComment_long()<cr>
 
-nnoremap <leader>esd :call CreateScalaDocComment_long()<cr>
+nnoremap <leader>ed :call CreateScalaDocComment_long()<cr>
 
 func! CreateScalaDocComment_long()
   normal k

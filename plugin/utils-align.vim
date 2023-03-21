@@ -67,6 +67,7 @@ endfunc
 let g:alignTempl = [
       \  {'label':'_space',     'pttns': ['/ / {"left_margin": 0, "right_margin": 0}']}
       \, {'label':'_= equal',   'pttns': ['=']}
+      \, {'label':'_[ bracket',   'pttns': ['/\[/']}
       \, {'label':'_, comma',   'pttns': ['/\,/']}
       \, {'label':'_<- bind',   'pttns': ['/<-/']}
       \, {'label':'_> case',   'pttns': ['/->/']}
