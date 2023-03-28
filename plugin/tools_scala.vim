@@ -457,10 +457,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZio( mode )
 endfunc
 
 func! Scala_SetServerApp_ScalaCLI()
-  let printerFilePath = expand('%:h') . '/PreviewServer.scala'
+  let printerFilePath = getcwd() . '/PreviewServer.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
   call VirtualRadioLabel_lineNum( '✱', hostLn )
 
@@ -615,7 +616,7 @@ endfunc
 
 " func! Scala_ServerClientRequest( args )
 "   let urlExtension = GetLineFromCursor()
-"   let g:scala_serverRequestCmd = "curl " . a:args . "http://localhost:8002/" . urlExtension
+"   let g:scala_serverRequestCmd = "curl " . a:args . "http://localhost:8003/" . urlExtension
 "   let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
 "   silent let g:floatWin_win = FloatingSmallNew ( resultLines[3:] )
 "   silent call FloatWin_FitWidthHeight()
@@ -623,12 +624,10 @@ endfunc
 " endfunc
 
 func! Scala_ServerClientRequest( args, mode )
-  if GetLineFromCursor() =~ '\v^(val|\/\/)'
-    normal w
-  endif
-  let urlExtension = GetLineFromCursor() 
-  " let urlExtension = shellescape( urlExtension, 1)
-  let g:scala_serverRequestCmd = "http " . a:args . " :8002/" . urlExtension . " --ignore-stdin --stream"
+
+  let urlEx = matchstr( getline("."), '\v//\s\zs.*' )
+
+  let g:scala_serverRequestCmd = "http " . a:args . " :8080/" . urlEx . " --ignore-stdin --stream"
   if a:mode == 'term'
     call TermOneShot( g:scala_serverRequestCmd )
   else

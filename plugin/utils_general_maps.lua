@@ -168,6 +168,10 @@ vim.keymap.set( 'n',
   .Git_status_picker( opts_1 )
   end )
 
+vim.keymap.set( 'n',
+  '<leader>ogd', function() require( 'utils_general' )
+  .Git_diff_to_master( opts_1 )
+  end )
 
 -- search in VIM_MAIN_SYMBOLS:
 vim.keymap.set( 'n',

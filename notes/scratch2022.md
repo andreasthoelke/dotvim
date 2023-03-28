@@ -1,5 +1,7 @@
 
 
+
+
 TODO:
 copy path should (optionally?) include the current line num
 at the cursor, so you can get to the same pos in the file 
@@ -319,14 +321,35 @@ ge]/[ - next/prev error
 ger   - show references of symbol under cursor
 ]q [q - next/prev reference in workspace
 
+## git fetch an update from the remote repo
+https://github.com/git-guides/git-pull
+git remote update
+git status -uno
+git pull
+git config pull.rebase false
+git pull
+
+# Java JDK JVM version management
+see
+j/Documents/Bookmarks/notes_tools/vim_works.md#/##%20Managing%20the
+~/Documents/Bookmarks/notes_tools/vim_works.md#/CONSLUSION.
 
 
+## Http requests curl
+ gsf :call Scala_ServerClientRequest('', 'float')<cr>
+,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
+ gsF :call Scala_ServerClientRequest('', 'term')<cr>
+,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
 
+## thin fonts 
+~/Documents/Notes/vim_works.md#/#%20alacritty%20fork
 
-
-
-
-
+ok, i have now decided to use
+=> thin & pale fonts in alacritty 0.12.0 rc2
+    using this terminal command: 
+    defaults write org.alacritty AppleFontSmoothing -int 0
+instead of
+- thicker, blorred and bright/fresh colored fonts in alacritty 0.10.0
 
 

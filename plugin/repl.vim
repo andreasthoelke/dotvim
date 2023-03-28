@@ -5,16 +5,19 @@
 
 " https://httpie.io/docs/cli/examples
 
-nnoremap <silent> ger         :call WebserverRequestResponse( '' )<cr>
+" NOTE: there's now ~/.config/nvim/plugin/tools_scala.vim#/func.%20Scala_ServerClientRequest.%20args,
+
+nnoremap <silent> gwr         :call WebserverRequestResponse( '' )<cr>
 nnoremap <silent> <leader>ger :call WebserverRequestResponseTerm( '' )<cr>
 " nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
 " nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
 " nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
 func! WebserverRequestResponse( flags )
-  " let urlExtension = GetStringInQuotesFromLine( line('.') )
-  let urlExtension = GetLineFromCursor()
-  " let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension
-  let l:cmd = "curl " . a:flags . urlExtension
+
+  let urlEx = matchstr( getline("."), '\v//\s\zs.*' )
+
+  let l:cmd = "curl " . a:flags . " http://localhost:8002/" . urlEx
+
   let l:resultLines = split( system( l:cmd ), '\n' )
   silent let g:floatWin_win = FloatingSmallNew ( l:resultLines[3:] )
   " call ScalaSyntaxAdditions() 
@@ -23,10 +26,12 @@ func! WebserverRequestResponse( flags )
 endfunc
 " !curl http://localhost:8080/up
 " req "abc"
+" http://localhost:8002/random
 " curl -X POST http://localhost:8002/owls
 " echo system( "http GET localhost:8002/zwei/aabb" )
 " NOTE: http --help  is nice
 
+" echo matchstr( getline("."), '\v//\s\zs.*' )
 
 func! WebserverRequestResponseTerm( flags )
   let urlExtension = GetLineFromCursor()

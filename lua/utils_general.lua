@@ -705,7 +705,7 @@ vim.keymap.set( 'n',
 
 -- ─   Git commits picker                               ──
 
--- Copies an old version of the file intot the project folder using a new unique file name!
+-- Copies an old version of the file into the project folder using a new unique file name!
 -- PATTERN: example of running a shell command on a filename or git commit id.
 -- also an example of overriding/replacing an actions that is defined for a default picker.
 
@@ -883,6 +883,50 @@ function M.Git_status_picker(opts)
   builtin.git_status(opts)
 end
 -- require('utils_general').Git_status_picker()
+
+-- ─   Diff to main / master                            ──
+-- Show a diff to the main/master branch
+
+-- note this is just a poc/first version. "..master" inverts the git diff colors
+-- would have to use 'main' if master does not exist.
+function M.Git_diff_to_master(opts)
+  opts = opts or {}
+  opts.previewer = previewers.new_termopen_previewer({
+    -- dyn_title = function(_, entry) return entry.value end,
+    dyn_title = function(_, entry)
+      -- PATTERN: run any synchronous shell command on a line entry.
+      return vim.fn.systemlist( 'git diff ..master --stat ' .. entry.path )[1]
+      -- return entry.status
+    end,
+    get_command = function(entry)
+      if entry.status == "D " then
+        return { "git", "show", "master:" .. entry.value }
+      elseif entry.status == "??" then
+        return { "bat", "--style=plain", entry.value }
+      end
+      return { "git", "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "..master", entry.path }
+    end,
+  })
+
+  -- Use icons that resemble the `git status` command line.
+  opts.git_icons = {
+    added = "A",
+    changed = "M",
+    copied = "C",
+    deleted = "-",
+    renamed = "R",
+    unmerged = "U",
+    untracked = "?",
+  }
+
+  builtin.git_files(opts)
+end
+-- require('utils_general').Git_status_picker()
+
+
+
+
+
 
 
 -- ─   -- doesn't work currently                        ──

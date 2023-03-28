@@ -1,4 +1,5 @@
 
+"                   ﰟ 
 " ↔ ↕ ⇿ ⟷
 " ɪ и ᵓᵔ ᵛ     ->    ⃣
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
@@ -17,7 +18,7 @@
 " ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
-" ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ✱ ❂ ❈  ♽
+" ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
 
 func! ScalaSyntaxAdditions ()
@@ -112,6 +113,10 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '@tailrec' conceal cchar=↵
   syntax match Normal 'inline' conceal cchar=⇐
 
+
+  syntax match Normal '@\i*' conceal cchar=❈
+  syntax match Normal '@query' conceal cchar=𝑞
+
   syntax match Normal '\vfor\ze(\W|\_$)' conceal cchar=⊃
   syntax match Normal 'yield' conceal cchar=⊂
   syntax match Normal '>>=' conceal cchar=⫦
@@ -139,7 +144,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Nothing' conceal cchar=╌
   syntax match Normal 'Error' conceal cchar=⊖
   syntax match Normal 'Throwable' conceal cchar=⊖
-  syntax match Normal 'fail' conceal cchar=⊖
+  syntax match Normal 'fail\ze\W' conceal cchar=⊖
   syntax match Normal 'Http' conceal cchar=ʜ
   syntax match Normal 'App\ze\W' conceal cchar=≡
   syntax match Normal 'ZIO.service' conceal cchar=≡
@@ -247,7 +252,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsU\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑢
   " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsK\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑘
 
-  syntax match Normal '\[\zsF' conceal cchar=𝑣
+  syntax match Normal '\[\zsF\ze\W' conceal cchar=𝑣
   syntax match Normal 'F\ze\[' conceal cchar=𝑣
 
   " syntax match Normal '\s\zsA\ze\*' conceal cchar=𝑎

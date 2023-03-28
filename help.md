@@ -1300,7 +1300,12 @@ echo json_decode( join( readfile("./package.json") ) ).scripts
 func! JsonConfKey( confFile, key )
 
 # Curl / http requests
-ger - Curl send sting in line as an http request to localhost, show response
+
+" NOTE: there's now
+~/.config/nvim/plugin/tools_scala.vim#/func.%20Scala_ServerClientRequest.%20args,
+
+
+gar - Curl send sting in line as an http request to localhost, show response
 ~/.config/nvim/plugin/repl.vim#/func.%20WebserverRequestResponse.%20flags
 
 or using lua plenary curl:
