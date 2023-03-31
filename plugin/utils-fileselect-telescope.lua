@@ -14,6 +14,10 @@ local function open_below(promtbufnr)
 end
 
 
+-- NOTE: there's 
+-- lua/utils_general.lua
+-- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
+
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 Telesc = require('telescope').setup{
   defaults = {
@@ -166,6 +170,9 @@ local bookmark_actions = require('telescope').extensions.vim_bookmarks.actions
 
 function _G.TelBookmarks()
   require('telescope').extensions.vim_bookmarks.all {
+    -- width_line=0,
+    -- width_text=40,
+    -- shorten_path=true,
     attach_mappings = function(_, map)
       map('i', '<C-x>', bookmark_actions.delete_selected_or_at_cursor)
       map('n', 'dd', bookmark_actions.delete_selected_or_at_cursor)
@@ -173,6 +180,8 @@ function _G.TelBookmarks()
     end
   }
 end
+
+
 
 local base_branch = "eins"
 

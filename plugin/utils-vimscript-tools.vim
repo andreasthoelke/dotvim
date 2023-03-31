@@ -135,7 +135,7 @@ function! RangeAux(lnum1, lnum2) abort
   " echo a:lnum2
   let pos1 = [0, a:lnum1, 1, 0]
   let pos2 = [0, a:lnum2, 1, 0]
-  call highlightedyank#highlight#add( 'HighlightedyankRegion', pos1, pos2, 'line', 500)
+  " call highlightedyank#highlight#add( 'HighlightedyankRegion', pos1, pos2, 'line', 500)
 endfunction
 
 

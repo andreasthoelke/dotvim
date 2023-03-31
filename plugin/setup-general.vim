@@ -288,6 +288,7 @@ require 'colorizer'.setup {
 }
 EOF
 
+au TextYankPost * silent! lua vim.highlight.on_yank {higroup="Visual", timeout=300}
 
 " Style Colors: ----------------------------{{{
 " Change colors in the colorscheme: Open vimfiles/colors/molokai
@@ -1416,9 +1417,9 @@ nmap S <Plug>G_SubstituteOverMotionMap
 nmap SS <Plug>SubstituteLine
 
 " Cut Move:
-nmap <localleader>d <Plug>MoveMotionPlug
-xmap <localleader>d <Plug>MoveMotionXPlug
-nmap <localleader>dd <Plug>MoveMotionLinePlug
+nmap <leader>d <Plug>MoveMotionPlug
+xmap <leader>d <Plug>MoveMotionXPlug
+nmap <leader>dd <Plug>MoveMotionLinePlug
 
 " Yank Buffer History: Save yank history to file - allows to paste in other vim instance
 let g:EasyClipShareYanks = 1
@@ -1448,21 +1449,47 @@ hi! link HighlightedyankRegion Search
 
 " Vim-Bookmarks
 let g:bookmark_no_default_key_mappings = 1
+let g:bookmark_auto_save = 0
 
 let g:bookmark_sign = ''
 let g:bookmark_annotation_sign = ''
 
-nmap <Leader>bb <Plug>BookmarkToggle
-nmap <Leader>ba <Plug>BookmarkAnnotate
-nmap <Leader>bs <Plug>BookmarkShowAll
+" nmap <Leader>bb <Plug>BookmarkToggle
+" nmap <Leader>ba <Plug>BookmarkAnnotate
+nnoremap <leader>ba :call BookmarkAnnotate_save()<cr>
+" nmap <Leader>bs <Plug>BookmarkShowAll
 nmap <Leader>bn <Plug>BookmarkNext
 nmap <Leader>bp <Plug>BookmarkPrev
-nmap <Leader>bc <Plug>BookmarkClear
-nmap <Leader><Leader>bd <Plug>BookmarkClear
+" nmap <Leader>bc <Plug>BookmarkClear
+nmap <Leader>bc :BookmarkClear_save()<cr>
+nmap <Leader><Leader>bd :BookmarkClear_save()<cr>
 " nmap <Leader>x <Plug>BookmarkClearAll
-nmap <Leader>bk <Plug>BookmarkMoveUp
-nmap <Leader>bj <Plug>BookmarkMoveDown
+" nmap <Leader>bk <Plug>BookmarkMoveUp
+" nmap <Leader>bj <Plug>BookmarkMoveDown
 " nmap <Leader>g <Plug>BookmarkMoveToLine
+" NOTE: there's also BookmarkClearAll
+
+nnoremap <leader>bs :call BookmarkTelescope_load()<cr>
+
+func! BookmarkTelescope_load()
+  call BookmarkLoad( "/Users/at/.vim-bookmarks", 0, 1 )
+  lua TelBookmarks()
+endfunc
+
+func! BookmarkAnnotate_save()
+  call BookmarkLoad( "/Users/at/.vim-bookmarks", 0, 1 )
+  call BookmarkAnnotate()
+  call BookmarkSave( "/Users/at/.vim-bookmarks", 1 )
+endfunc
+
+func! BookmarkClear_save()
+  call BookmarkLoad( "/Users/at/.vim-bookmarks", 0, 1 )
+  call BookmarkClear()
+  call BookmarkSave( "/Users/at/.vim-bookmarks", 1 )
+endfunc
+
+
+
 
 
 " ─   Marks                                          ──

@@ -26,7 +26,9 @@ Plug 'junegunn/fzf.vim'
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
 
 Plug 'MattesGroeger/vim-bookmarks'
-Plug 'tom-anders/telescope-vim-bookmarks.nvim'
+" Plug 'tom-anders/telescope-vim-bookmarks.nvim'
+" just a PR for del bookmarks fix
+Plug 'mrsflv/telescope-vim-bookmarks.nvim'
 
 " Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
@@ -100,7 +102,7 @@ Plug 'skywind3000/vim-preview'
 Plug 'andreasthoelke/vim-easyclip'
 " TODO replace with smaller plugins
 " Briefly highlight the yanked region
-Plug 'machakann/vim-highlightedyank'
+" Plug 'machakann/vim-highlightedyank'
 " Highlight trailing whitespace
 Plug 'ntpeters/vim-better-whitespace'
 " Display marks with nearby code

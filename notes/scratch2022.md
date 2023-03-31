@@ -1,6 +1,27 @@
 
 
 
+next what does orga do in sbt??
+
+requirements:
+1. "server"
+long running app
+there should be a separate (permannent) visible sbt session running
+there'll be an sbt:<package>run call for the server app to start
+the thin server app file will not have routes as input but rather refer to services
+i need to research/test a sequence of keystrokes to stop and restart the server app
+so without restarting the terminal or even sbt!
+
+2. "printer"
+the same as above (with similar infrastructure, commands?) but will 
+end after a value is printed
+
+3. "test"
+zio test may provide me with modular infrastructure
+~testQuick incrementally build the project (in this sbt session)
+i could also print in tests
+
+
 
 TODO:
 copy path should (optionally?) include the current line num
@@ -313,6 +334,9 @@ L bc BookmarkClear
 LLbd BookmarkClear
 L bk BookmarkMoveUp
 L bj BookmarkMoveDown
+
+'i', '<C-x>', delete_selected_or_at_cursor
+'n', 'dd', delete_selected_or_at_cursor
 
 
 # Scala references with Trouble

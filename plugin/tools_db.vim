@@ -24,13 +24,13 @@ func! tools_db#bufferMaps()
 endfunc
 
 
-nnoremap <silent> <leader>du :DBUIToggle<CR>
-nnoremap <silent> <leader>df :DBUIFindBuffer<CR>
-nnoremap <silent> <leader>dr :DBUIRenameBuffer<CR>
-nnoremap <silent> <leader>dL :DBUILastQueryInfo<CR>
+nnoremap <silent> <leader><leader>du :DBUIToggle<CR>
+nnoremap <silent> <leader><leader>df :DBUIFindBuffer<CR>
+nnoremap <silent> <leader><leader>dr :DBUIRenameBuffer<CR>
+nnoremap <silent> <leader><leader>dL :DBUILastQueryInfo<CR>
 
-nnoremap <silent> <leader>DD :DBUIFindBuffer<CR>
-nmap <silent> <leader>dd <Plug>(DBUI_ExecuteQuery)
+nnoremap <silent> <leader><leader>DD :DBUIFindBuffer<CR>
+nmap <silent> <leader><leader>dd <Plug>(DBUI_ExecuteQuery)
 
 let g:db_ui_save_location = '~/.config/db_ui'
 let g:db_ui_tmp_query_location = '~/.local/share/db_ui'
@@ -95,9 +95,9 @@ command! -range=% DBRun call DBRun( <line1>, <line2> )
 
 map ,dr <Plug>(DBUI_ExecuteQuery)
 
-nnoremap <leader>dl :call DBRun( line('.'), line('.') )<cr>
-nnoremap <leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap <leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+nnoremap <leader><leader>dl :call DBRun( line('.'), line('.') )<cr>
+nnoremap <leader><leader>d :let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader><leader>d :<c-u>let g:opContFn='DBRun'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 " db_ui#query( "select * from collections" )
 
