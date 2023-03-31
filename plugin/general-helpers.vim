@@ -358,9 +358,12 @@ inoremap \fp <C-R>=getcwd()<CR>
 " Normal mode: "%p
 " Insert mode: i<c-r>%
 
-nnoremap <leader>cp :let @* = @%<cr>:let @" = @%<cr>
+set clipboard=unnamedplus
+
+" nnoremap <leader>cp :let @+ = @%<cr>:let @" = @%<cr>
+nnoremap <leader>cp :FilepathCopyAbs<cr>
 " nnoremap <leader>sp :e <c-r>"<cr>
-nnoremap <leader>sp :e <c-r>*<cr>
+nnoremap <leader>sp :e <c-r>+<cr>
 nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
 
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
