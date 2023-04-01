@@ -1,4 +1,6 @@
 
+" NOTE: the new 'gei' = SourcePrintCommented!
+
 " Documentation:
 " https://vim-jp.org/vimdoc-en/index.html
 " https://w0rp.com/blog/post/vim-script-for-the-javascripter/

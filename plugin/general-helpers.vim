@@ -358,19 +358,37 @@ inoremap \fp <C-R>=getcwd()<CR>
 " Normal mode: "%p
 " Insert mode: i<c-r>%
 
+
+func! CopyFilePathAndLineNum()
+  let pathWithLineNum = expand("%:p") . "|" . line(".")
+  let @+ = pathWithLineNum
+  let @" = pathWithLineNum
+  return pathWithLineNum
+endfunc
+
+func! SetFilePathAndLineNum()
+  let [filePath, lineNum] = split( @+, "|" )
+  exec "edit" filePath
+  exec ("normal " . lineNum . "gg^")
+  " return [filePath, lineNum]
+endfunc
+
+
 set clipboard=unnamedplus
 
+nnoremap <leader>cp :call CopyFilePathAndLineNum()<cr>
+nnoremap <leader>sp :call SetFilePathAndLineNum()<cr>
+
 " nnoremap <leader>cp :let @+ = @%<cr>:let @" = @%<cr>
-nnoremap <leader>cp :FilepathCopyAbs<cr>
 " nnoremap <leader>sp :e <c-r>"<cr>
-nnoremap <leader>sp :e <c-r>+<cr>
-nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
+" nnoremap <leader>sp :e <c-r>+<cr>
+" nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
 
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
 nnoremap <leader>Fpc :let @* = @%<cr>:let @" = @%<cr>
 nnoremap <leader>FpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>
 command! FilepathCopy    let @* = @%            | let @" = @%
-command! FilepathCopyAbs let @* = expand("%:p") | let @" = expand("%:p")
+command! FilepathCopyAbs let @+ = expand("%:p") | let @" = expand("%:p")
 
 " nnoremap <leader>sf i<c-r>=fnamemodify('package.yaml',':h:t')<cr><esc>^
 command! PasteFilepath :normal i<c-r>=expand("%:p")<cr><esc>^

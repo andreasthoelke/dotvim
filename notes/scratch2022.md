@@ -39,6 +39,11 @@ word motions, `cw` should not include the ','
   q, "eins"
 
 
+# vim maps
+
+NOTE: the new 'gei' = SourcePrintCommented!
+to run vimscript/lua commands in .md
+
 # ─   Telescope Rgx search                           ──
 ge;       - main (scala) symbols/bindings in this repo
 ge:       - main (scala) symbols/bindings in selected (parent-based) repos
