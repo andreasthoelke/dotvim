@@ -537,7 +537,7 @@ func! Path_Float( path )
   endif
 endfunc
 " call Path_Float( '/Users/at/Documents/Notes/laminar.md' )
-" call Path_Float( '/Users/at/Documents/Notes' )
+" Path_Float( '/Users/at/Documents/Notes' )
 
 func! Dirvish_Float( path )
   call Float1Show()

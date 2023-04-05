@@ -143,6 +143,11 @@ endfunc
 " ─^  Link files to Bookmark folder & search             ▲
 
 
+nnoremap ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call DirvishSortByModified()<cr>
+" Path_Float( '/Users/at/Documents/Notes' )
+
+
+
 
 " ─   Links Rel                                          ■
 
@@ -367,10 +372,17 @@ func! CopyFilePathAndLineNum()
 endfunc
 
 func! SetFilePathAndLineNum()
-  let [filePath, lineNum] = split( @+, "|" )
-  exec "edit" filePath
-  exec ("normal " . lineNum . "gg^")
-  " return [filePath, lineNum]
+  let items = split( @+, "|" )
+  if     len( items )
+    exec "edit" items[0]
+    " echo "edit" items[0]
+  endif
+
+  if len( items ) == 2
+    exec ("normal " . items[1] . "gg^zz")
+    " echo ("normal " . items[1] . "gg^")
+  endif
+
 endfunc
 
 

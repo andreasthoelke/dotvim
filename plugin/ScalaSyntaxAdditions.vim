@@ -2,7 +2,7 @@
 "                   ﰟ 
 " ↔ ↕ ⇿ ⟷
 " ɪ и ᵓᵔ ᵛ     ->    ⃣
-" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
+" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
 " ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ ∿ ∾  ≀ ≁ ➳  ➺  ➽
 " ⊟  ⊡ | ⊖  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
@@ -20,6 +20,58 @@
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 " ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
+
+func! SmithySyntaxAdditions ()
+  call tools_scala#bufferMaps()
+  " call clearmatches()
+
+  " syntax match Normal '@\i*' conceal cchar=❈
+
+  syntax match Normal '"' conceal
+  syntax match Normal '""' conceal cchar=∅
+  syntax match Normal "\v\S\zs:" conceal
+  syntax match Normal "{" conceal
+  syntax match Normal "}" conceal
+  syntax match Normal "(" conceal cchar= 
+  syntax match Normal ")" conceal
+  syntax match Normal "\/\/\s" conceal
+
+  syntax match Normal 'use\s' conceal cchar=⁝
+  syntax match Normal 'namespace\ze\s' conceal cchar=⊟
+
+  syntax match Normal '^service' conceal cchar=≡
+  syntax match Normal '^structure' conceal cchar=˽
+  syntax match Normal '^operation' conceal cchar=⊃
+
+  syntax match Normal 'input:\s' conceal
+  syntax match Normal 'output:' conceal cchar=⊂
+  syntax match Normal 'errors:' conceal cchar=⊖
+
+  syntax match Normal '@error' conceal cchar=⊖
+  syntax match Normal 'Error' conceal cchar=⊖
+
+  syntax match Normal 'version:' conceal cchar=𝑣
+
+  syntax match Normal 'string' conceal cchar=s
+  syntax match Normal 'String' conceal cchar=s
+  syntax match Normal 'integer' conceal cchar=ɪ
+  syntax match Normal 'boolean' conceal cchar=ʙ
+
+  syntax match Normal '@idempotent' conceal cchar=𝑖
+  syntax match Normal '@http' conceal cchar=ʜ
+  syntax match Normal '@httpHeader' conceal cchar=^
+  syntax match Normal '@httpQuery' conceal cchar=𝑞
+  syntax match Normal '@simpleRestJson' conceal cchar=
+  syntax match Normal 'method:\s' conceal
+  syntax match Normal 'uri:\s' conceal
+  syntax match Normal 'code:\s' conceal
+
+  syntax match Normal '@required' conceal cchar=.
+
+  set conceallevel=2
+  set concealcursor=ni
+endfunc
+
 
 func! ScalaSyntaxAdditions ()
 
@@ -148,7 +200,6 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Http' conceal cchar=ʜ
   syntax match Normal 'App\ze\W' conceal cchar=≡
   syntax match Normal 'ZIO.service' conceal cchar=≡
-  syntax match Normal 'package\ze\s' conceal cchar=⊟
   syntax match Normal 'package\ze\s' conceal cchar=⊟
   syntax match Normal 'live\ze\s' conceal cchar=≈
   syntax match Normal 'live' conceal cchar=≈

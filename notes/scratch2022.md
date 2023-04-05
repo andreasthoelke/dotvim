@@ -1,7 +1,6 @@
 
 
 
-next what does orga do in sbt??
 
 requirements:
 1. "server"
@@ -24,13 +23,9 @@ i could also print in tests
 
 
 TODO:
-copy path should (optionally?) include the current line num
-at the cursor, so you can get to the same pos in the file 
-in a different window.
-- note this can also be done with global marks
 
-//> using lib "dev.zio::zio::2.0.3"
-//> using scala "3.3.0-RC3"
+consider metals docu here:
+https://github.com/keynmol/dot/blob/master/nvim/init.lua
 
 TODO:
 word motions, `cw` should not include the ','
@@ -168,10 +163,12 @@ new: all notes go to Documents/Notes folder, only *hard* links go to Documents/B
 "Collections of file links"
 
   "add to collection" - "collection add" => ,ca
-  "point to collection" - "collection point" => ,cp
+  "point to collection" - "collection point" => ,cp or ,ce
   "collection search header" => ,csh
   "collection search all" => ,csj
   "collection search signatures" => ,css (todo)
+
+  "show notes folder sorted by last modified" => ,cm
 
 set a default/start collection here: ~/.config/nvim/plugin/general-helpers.vim#/let%20g.FolderSearch_Path%20=
 .. currently its "notes_stack"
@@ -305,8 +302,12 @@ gdo - go to definition in float
 
 ## Vim to learn
 
-nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
-nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
+,cm  - show Notes folder sorted by date modified
+       use dirvish map to open a file, (t, s, ?)
+
+
+<leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
+<leader>oH :tabe ~/.config/nvim/help.md<cr>
 
 \w   - easymotion wordmotion
 )  - MvNextLineStart
@@ -363,6 +364,11 @@ see
 j/Documents/Bookmarks/notes_tools/vim_works.md#/##%20Managing%20the
 ~/Documents/Bookmarks/notes_tools/vim_works.md#/CONSLUSION.
 
+## monitor / watch / tail a file
+leader fw / W
+  Keeps reloading the current window/buffer with the current filepath!
+function M.WatchFile_start()
+
 
 ## Http requests curl
  gsf :call Scala_ServerClientRequest('', 'float')<cr>
@@ -380,5 +386,9 @@ ok, i have now decided to use
     defaults write org.alacritty AppleFontSmoothing -int 0
 instead of
 - thicker, blorred and bright/fresh colored fonts in alacritty 0.10.0
+
+
+
+
 
 

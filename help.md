@@ -132,6 +132,12 @@ Watch file changes: https://github.com/rktjmp/fwatch.nvim
 
 HsMotions should be reworked using treesitter. ~/.vim/plugin/HsMotions.vim#/TODO%20make%20a
 
+## monitor / watch / tail a file
+leader fw / W
+  Keeps reloading the current window/buffer with the current filepath!
+function M.WatchFile_start()
+
+
 ## the current cursor in alacritty
 
 - the current cursor has these shifting colors depending on the foreground color the cursor is on.

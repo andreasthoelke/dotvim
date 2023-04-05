@@ -222,8 +222,8 @@ end
 
 lspconfig.tsserver.setup({
   on_attach = function(client, bufnr)
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
     local ts_utils = require("nvim-lsp-ts-utils")
     ts_utils.setup({})
     ts_utils.setup_client(client)
@@ -242,28 +242,28 @@ lspconfig.tsserver.setup({
 })
 
 
-lspconfig.purescriptls.setup ({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  settings = {
-    purescript = {
-      addSpagoSources = true, -- e.g. any purescript language-server config here
-      censorWarnings = {"ShadowedName", "UnusedName", "UnusedDeclaration", "UnusedImport", "MissingTypeDeclaration"},
-    }
-  },
-  flags = flags,
-})
--- Options: https://github.com/nwolverson/vscode-ide-purescript/blob/master/package.json
--- https://github.com/purescript/purescript/blob/9534e24d3fb87d6c6b222c8b31d13b57cc5c3e04/src/Language/PureScript/Errors.hs
+-- lspconfig.purescriptls.setup ({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   settings = {
+--     purescript = {
+--       addSpagoSources = true, -- e.g. any purescript language-server config here
+--       censorWarnings = {"ShadowedName", "UnusedName", "UnusedDeclaration", "UnusedImport", "MissingTypeDeclaration"},
+--     }
+--   },
+--   flags = flags,
+-- })
+-- -- Options: https://github.com/nwolverson/vscode-ide-purescript/blob/master/package.json
+-- -- https://github.com/purescript/purescript/blob/9534e24d3fb87d6c6b222c8b31d13b57cc5c3e04/src/Language/PureScript/Errors.hs
 
 
-lspconfig.rescriptls.setup ({
-  -- cmd = {"node", "/Users/at/.config/nvim/plugged/vim-rescript/server/out/server.js", "--stdio"},
-  cmd = {"node", "/Users/at/.config/nvim/utils/rescript_vscode/server/out/server.js", "--stdio"},
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
+-- lspconfig.rescriptls.setup ({
+--   -- cmd = {"node", "/Users/at/.config/nvim/plugged/vim-rescript/server/out/server.js", "--stdio"},
+--   cmd = {"node", "/Users/at/.config/nvim/utils/rescript_vscode/server/out/server.js", "--stdio"},
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 -- https://github.com/ocaml/ocaml-lsp
 -- lspconfig.ocamllsp.setup({
@@ -358,11 +358,13 @@ lspconfig.html.setup({
 })
 
 -- https://github.com/bash-lsp/bash-language-server
+-- npm i -g bash-language-server
 lspconfig.bashls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
 })
+
 
 -- https://github.com/redhat-developer/yaml-language-server
 lspconfig.yamlls.setup({
@@ -444,6 +446,24 @@ lspconfig.lua_ls.setup {
   --   },
   -- },
 }
+
+-- ─   Smithy                                           ──
+
+-- https://github.com/keynmol/dot/blob/0736187795fd65f84072ed0831681aa3aaf74906/nvim/init.lua#L482
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+      pattern = { "*.smithy" },
+      callback = function() vim.cmd("setfiletype smithy") end
+    })
+
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#smithy_ls
+
+lspconfig.smithy_ls.setup ({
+  cmd = { 'cs', 'launch', 'com.disneystreaming.smithy:smithy-language-server:latest.release', '--', '0' },
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
+
 
 
 -- ─   null-ls                                          ──

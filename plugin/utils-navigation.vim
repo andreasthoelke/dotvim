@@ -249,7 +249,8 @@ nnoremap <leader>vq :qa!<cr>
 " nnoremap <localleader>w :w<cr>
 
 nnoremap <localleader>t. :echo "use leeader t."<cr>
-nnoremap <silent><leader>et :t.<cr>
+nnoremap <silent><leader>ee :t.<cr>
+nnoremap <silent><leader>ep :t.<cr>
 
 " Vim Plug:
 " nnoremap <leader>pc :PlugClean<cr>

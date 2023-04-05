@@ -10,6 +10,9 @@ au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
 
+au ag BufNewFile,BufRead,WinNew *.sh      call tools_scala#bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
+
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxAdditions()
