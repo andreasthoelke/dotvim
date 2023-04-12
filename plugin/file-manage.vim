@@ -31,6 +31,15 @@ nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 nnoremap <silent> <leader>-  :Dirvish .<cr>
 nnoremap <silent> ,v         :call Dirvish_newWin( "vnew" )<cr>
 nnoremap <silent> ,,v        :exec "vnew ."<cr>
+nnoremap <silent> ,<leader>v :exec "vnew " . getline('.')<cr>
+nnoremap <silent> <leader>,v :exec "vnew " . getline('.')<cr>
+nnoremap <silent> <c-w>F :exec "vnew " . getline('.')<cr>
+nnoremap <silent> <c-w><leader>v :exec "vnew " . getline('.')<cr>
+nnoremap <silent> <c-w><leader>s :exec "new " . getline('.')<cr>
+nnoremap <silent> <c-w><leader>o :call FloatingBuffer( getline('.') )<cr>
+
+
+
 nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
 nnoremap <silent> ,,V        :exec "leftabove 30vnew ."<cr>
 nnoremap <silent> ,tn        :call Dirvish_newWin( "tabe" )<cr>

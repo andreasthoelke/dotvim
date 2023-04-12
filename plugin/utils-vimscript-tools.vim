@@ -128,8 +128,14 @@ func! SourcePrintCommented()
 endfunc
 
 " nnoremap <silent> <leader>gei :call SourcePrintCommented()<cr>
-nnoremap <silent> gei :call SourcePrintCommented()<cr>
+" nnoremap <silent> gei :call SourcePrintCommented()<cr>
 " [9, 8] + [1, 2]
+
+au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
+
+func! VScriptToolsBufferMaps()
+  nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
+endfunc
 
 
 function! RangeAux(lnum1, lnum2) abort

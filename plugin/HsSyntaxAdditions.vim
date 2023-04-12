@@ -405,6 +405,7 @@ endfunc
 " Syntax Color Haskell: --------------------
 
 func! PythonSyntaxAdditions() " ■
+  call tools_scala#bufferMaps()
   nnoremap <silent><buffer> gei :call repl_py#eval_line( line('.') )<cr>
 
   call clearmatches()

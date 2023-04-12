@@ -67,12 +67,20 @@ new telescope select maps
 ==>> file in parent folder || project root folder <<==
 ,v         :call Dirvish_newWin( "vnew" )<cr>
 ,,v        :exec "vnew ."<cr>
+l, v       :"vnew " . getline('.')
 ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
 ,,V        :exec "leftabove 30vnew ."<cr>
 ,tn        :call Dirvish_newWin( "tabe" )<cr>
 ,,tn       :exec "tabe ."<cr>
 ,sn        :call Dirvish_newWin( "new" )<cr>
 ,,sn       :exec "new ."<cr>
+
+## file view 2023-04
+view a file path:
+  right, below and float
+c-w l v :exec "vnew " . getline('.')<cr>
+c-w l s :exec "new " . getline('.')<cr>
+c-w l o :call FloatingBuffer( getline('.') )<cr>
 
 ## dovish
 l to <Plug>(dovish_create_file)

@@ -1197,7 +1197,12 @@ git rm userapp.mv.db --cached
 
 notes/notes-git.md
 
-# degit
+### make a github remote repo
+create it on github, then:
+git remote add origin https://github.com/andreasthoelke/notes.git
+git branch -M main
+git push -u origin main
+git status
 
 ## Clone a directory into a directory (overwriting same named files)
 degit --force Jannyboy11/AdventOfCode2022/src/main/resources resources

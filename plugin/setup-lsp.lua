@@ -2,10 +2,10 @@
 local lspconfig = require 'lspconfig'
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
-  vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
-    noremap = true,
-    silent = true,
-  })
+  -- vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
+  --   noremap = true,
+  --   silent = true,
+  -- })
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -26,7 +26,7 @@ local on_attach = function(client, bnr)
   -- put( client )
 
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  -- vim.api.nvim_buf_set_option(bnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_map(bnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
@@ -206,18 +206,18 @@ end
 
 -- python 1
 -- https://github.com/microsoft/pyright
--- lspconfig.pyright.setup({
---   capabilities = capabilities,
---   on_attach = function(client)
---     client.resolved_capabilities.document_formatting = false
---     client.resolved_capabilities.document_range_formatting = false
---     on_attach(client)
---   end,
---   flags = flags,
---   settings = {
---     disableOrganizeImports = true,
---   },
--- })
+lspconfig.pyright.setup({
+  capabilities = capabilities,
+  on_attach = function(client)
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
+    on_attach(client)
+  end,
+  flags = flags,
+  settings = {
+    disableOrganizeImports = true,
+  },
+})
 
 
 lspconfig.tsserver.setup({

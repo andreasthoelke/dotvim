@@ -51,7 +51,7 @@ nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
 nnoremap <leader>fR <cmd>Telescope lsp_references<cr>
 
 nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fF <cmd>Telescope file_browser<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>

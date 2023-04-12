@@ -367,12 +367,13 @@ inoremap \fp <C-R>=getcwd()<CR>
 func! CopyFilePathAndLineNum()
   let pathWithLineNum = expand("%:p") . "|" . line(".")
   let @+ = pathWithLineNum
+  let @* = pathWithLineNum
   let @" = pathWithLineNum
   return pathWithLineNum
 endfunc
 
 func! SetFilePathAndLineNum()
-  let items = split( @+, "|" )
+  let items = split( @*, "|" )
   if     len( items )
     exec "edit" items[0]
     " echo "edit" items[0]
