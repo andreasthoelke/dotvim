@@ -73,6 +73,39 @@ func! SmithySyntaxAdditions ()
 endfunc
 
 
+func! PythonSyntaxAdditions() " ■
+  call tools_python#bufferMaps()
+  " nnoremap <silent><buffer> gei :call repl_py#eval_line( line('.') )<cr>
+
+  call clearmatches()
+
+  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+  syntax match ConcealQuotes "'" conceal
+  syntax match ConcealQuotes '"' conceal
+
+  call CodeMarkupSyntaxHighlights()
+  " Hide comment character at beginning of line
+  call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  call matchadd('Conceal', '\s\zs\#\ze\s', 12, -1, {'conceal': ''})
+  " Conceal "%20" which is used for "h rel.txt" with space
+  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+
+  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+
+  set conceallevel=2
+  set concealcursor=ni
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
+  set commentstring=\ \#%s
+
+
+endfunc " ▲
+
+
 func! ScalaSyntaxAdditions ()
 
   call tools_scala#bufferMaps()
