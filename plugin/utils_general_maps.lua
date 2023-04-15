@@ -175,7 +175,7 @@ vim.keymap.set( 'n',
 
 -- search in VIM_MAIN_SYMBOLS:
 vim.keymap.set( 'n',
-  '<leader>ge;', function() require( 'utils_general' )
+  ',svs', function() require( 'utils_general' )
   .RgxSelect_Picker(
     {},
     rgx_main_symbol_vim,
@@ -186,13 +186,25 @@ vim.keymap.set( 'n',
 
 -- search in VIM_KEYMAPS:
 vim.keymap.set( 'n',
-  '<leader>vm', function() require( 'utils_general' )
+  ',svm', function() require( 'utils_general' )
   .RgxSelect_Picker(
     {},
     rgx_keymap_vim,
     {},
     { dir_nvim }
     ) end )
+
+
+-- search in entire vim code:
+vim.keymap.set( 'n',
+  ',svv', function() require( 'utils_general' )
+  .RgxSelect_Picker(
+    {},
+    "",
+    {},
+    { dir_nvim }
+    ) end )
+
 
 
 

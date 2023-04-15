@@ -1,6 +1,11 @@
 
-
-
+# open from dirvish float
+I - full
+U - up
+A - right
+X - down
+Y - left
+T - tab
 
 requirements:
 1. "server"
@@ -40,6 +45,11 @@ NOTE: the new 'gei' = SourcePrintCommented!
 to run vimscript/lua commands in .md
 
 # ─   Telescope Rgx search                           ──
+
+,svs      - search vim symbols
+,svm      - search vim maps
+,svv      - search vim all code
+
 ge;       - main (scala) symbols/bindings in this repo
 ge:       - main (scala) symbols/bindings in selected (parent-based) repos
 ,st       - tags (NOTE:) in current project

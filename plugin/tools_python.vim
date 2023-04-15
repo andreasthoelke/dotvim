@@ -58,7 +58,7 @@ func! tools_python#bufferMaps()
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
 
   " Stubs and inline tests
-  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_Py()<cr>
+  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_py()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
@@ -237,7 +237,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " from t2 import fruits as symToEval
   let _import = "from " . Py_GetPackageName() . " import " . identif . " as symToEval"
-  let _printVal = "print( symToEval )"
+  let _printVal = "pprint( symToEval )"
 
   if     typeMode == 'collection'
     let _info     = "print( len( symToEval ) )"
