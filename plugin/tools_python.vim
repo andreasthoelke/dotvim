@@ -92,122 +92,25 @@ func! Py_LspTopLevelHover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
-func! Py_SetPrinterIdentif_SBT( mode )
-
-  " /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/Printer.scala
-  let printerFilePath = 'src/main/scala/Printer.scala'
-
-  " let packageName = split( getline(1), ' ' )[1]
-  let packageName = Py_GetPackageName()
-
-  " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
-
-  normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
-  normal! bb
-
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-
-  let l:typeStr = Py_LspTypeAtPos(hostLn, identifCol)
-  if l:typeStr == "timeout"
-    echo "Lsp timeout .. try again"
-    return
-  endif
-  " echo l:typeStr
-  " return
-
-  let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
-  let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
-
-  if len( objName )
-    let identif = packageName . "." . objName . "." . identif
-  endif
-
-  " // this just needs a place to evaluate
-  " val dirPath = s"${System.getProperty("user.dir")}/data/printer/"  
-  " // 8) set the ".tsv" file extension to create a table/column view. or "" for RESULT prints
-  " val filePath = dirPath + "view.tsv"
-  " // 10) use "writeFileContent" to simple (non Gallia) values. empty this line to not write a file.
-  " val doVal = tutorial.A.ds3.write( filePath )
-  " // 12) PyReplMainCallback will parse "RESULT" or "FILEVIEW"
-  " val replTag = "RESULT"
-  " // 14) info can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
-  " val info = readme.A.e10_sql.forceSize.toString + "\n"
-  " // 16) define the formatting for the RESULT val. Use "" with FILEVIEW.
-  " val printVal = readme.A.e10_sql.formatTable
-
-  let force_mode = a:mode
-  let mode = a:mode
-
-  " for specific lsp types the rendering mode is set here
-  if     l:typeStr == "HeadU"
-    let mode = "gallia"
-  elseif l:typeStr == "HeadZ"
-    let mode = "gallias"
-  elseif l:typeStr =~ "Self"
-    let mode = "gallias"
-  endif
-
-
-
-  if    force_mode == "table"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT"'
-    let _info     = identif . '.forceSize.toString + "\n"'
-    let _printVal = identif . '.formatPrettyTable'
-    let mode = force_mode " just for the virtual label
-
-  elseif force_mode == "file1"
-    let _filePath = 'dirPath + "view.tsv"'
-    let _doVal    = identif . ".write(filePath)"
-    let _replTag  = '"FILEVIEW"'
-    let _info     = '""'
-    let _printVal = '"↧"'
-    let mode = force_mode " just for the virtual label
-
-  elseif mode == "gallia"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT"'
-    let _info     = '""'
-    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Json" : "PrettyJson")
-
-  elseif mode == "gallias"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT"'
-    let _info     = identif . '.forceSize.toString + "\n"'
-    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Jsonl" : "PrettyJsons")
-
-  else
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT"'
-    let _info     = '""'
-    let _printVal = identif
-
-  endif
-
-  let formatter = matchstr( _printVal, '\vformat\zs.*' )
-  echo "Printer: " . identif . " - " . l:typeStr . " - " . mode . " " . formatter
-  call VirtualRadioLabel_lineNum( "« " . l:typeStr . " " . mode . " " . formatter, hostLn )
-
-  let plns = readfile( printerFilePath, '\n' )
-
-  let plns[7]  = "  val filePath = " . _filePath
-  let plns[9]  = "  val doVal    = " . _doVal
-  let plns[11] = "  val replTag  = " . _replTag
-  let plns[13] = "  val info     = " . _info
-  let plns[15] = "  val printVal = " . _printVal
-
-  call writefile( plns, printerFilePath )
-endfunc
-
 func! Py_GetPackageName()
-  return expand('%:t:r')
-endfunc
+  let thisModuleName = expand('%:t:r')
+  let parentFolderPath = expand('%:h')
 
+  if filereadable( parentFolderPath . '/printer.py' )
+    return thisModuleName
+  endif
+
+  let grandParentFolderPath = fnamemodify( parentFolderPath, ':h' )
+  " echo grandParentFolderPath
+  " return
+  if filereadable( grandParentFolderPath . '/printer.py' )
+    let parentPackageName = fnamemodify( parentFolderPath, ':t' )
+    return parentPackageName . "." . thisModuleName
+  else
+    echoe 'printer.py not found!'
+  endif
+
+endfunc
 
 func! Py_SetPrinterIdentif( keyCmdMode )
 
