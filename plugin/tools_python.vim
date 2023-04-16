@@ -114,9 +114,11 @@ endfunc
 
 func! Py_SetPrinterIdentif( keyCmdMode )
 
-  let [hostLn, identifCol] = searchpos( '^\i*\ze\=', 'cnbW' )
+  " let [hostLn, identifCol] = searchpos( '^def\s\zs\i*\ze\=', 'cnbW' )
+  let hostLn = line('.')
+  let identifCol = 5
 
-  let identif = matchstr( getline(hostLn ), '^\i*\ze\=' )
+  let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
   " echo identif hostLn identifCol
   " return
 
@@ -125,6 +127,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
     echo "Lsp timeout .. try again"
     return
   endif
+  let typeStr = typeStr[6:]
   " echo typeStr
   " echo hostLn identifCol
   " return
@@ -140,10 +143,10 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " from t2 import fruits as symToEval
   let _import = "from " . Py_GetPackageName() . " import " . identif . " as symToEval"
-  let _printVal = "pprint( symToEval )"
+  let _printVal = "pprint( symToEval() )"
 
   if     typeMode == 'collection'
-    let _info     = "print( len( symToEval ) )"
+    let _info     = "print( len( symToEval() ) )"
   elseif typeMode == 'plain'
     let _info     = ""
   endif

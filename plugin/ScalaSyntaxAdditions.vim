@@ -80,6 +80,8 @@ func! PythonSyntaxAdditions() " ■
   call clearmatches()
 
   syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+  " def d2_seclev(): return seclev(url1)
+  syntax match InlineTestDeclaration '\v^def\se\d_\i{-}\(\)\:\sreturn' conceal cchar=‥
   syntax match ConcealQuotes "'" conceal
   syntax match ConcealQuotes '"' conceal
 
