@@ -79,13 +79,33 @@ func! PythonSyntaxAdditions() " ■
 
   call clearmatches()
 
-  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
-  " def d2_seclev(): return seclev(url1)
-  syntax match InlineTestDeclaration '\v^def\se\d_\i{-}\(\)\:\sreturn' conceal cchar=‥
   syntax match ConcealQuotes "'" conceal
   syntax match ConcealQuotes '"' conceal
+  " call CodeMarkupSyntaxHighlights()
 
-  call CodeMarkupSyntaxHighlights()
+
+
+  syntax match Normal '\vlist\ze(\W|\_$)' conceal cchar=˄
+  syntax match Normal '\vset\ze(\W|\_$)' conceal cchar=ᴺ
+  syntax match Normal '\vtuple\ze\[' conceal cchar=T
+  syntax match Normal '\W\zsstr\ze\W' conceal cchar=s
+
+  syntax match Normal "def\s" conceal
+
+  syntax match Normal "()" conceal cchar=∘
+  syntax match Normal "():" conceal
+
+  syntax match Normal ")\zs:" conceal cchar=˃
+  syntax match Normal "\s\zs:\ze(" conceal cchar=˃
+
+  syntax match Normal "\v\-\>" conceal cchar=➔
+  syntax match Normal "return\ze\s" conceal cchar=←
+
+  syntax match Normal "\v\S\zs:" conceal
+
+  syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
+  syntax match InlineTestDeclaration '\v^def\se\d_\k{-}\(\)\:\sreturn' conceal cchar=‥
+
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
   " Hilde \" before comment after code

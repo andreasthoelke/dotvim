@@ -109,9 +109,13 @@ func! CreateInlineTestDec_py()
   let nextIndex = GetNextTestDeclIndex(func_ln)
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
   let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
-  call append( '.', lineText )
+  call append( line('.') -1, lineText )
+  " normal l
+  normal k0
+  normal $B
   call search('(')
-  normal l
+  normal b
+
 endfunc
 " Tests:
 " def mult(aa, bb):

@@ -132,7 +132,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   " echo hostLn identifCol
   " return
 
-  if     typeStr =~ "list"
+  if     typeStr =~ "list" || typeStr =~ "set"
     let typeMode = "collection"
   else
     let typeMode = "plain"
@@ -162,47 +162,6 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   call writefile( plns, printerFilePath )
 endfunc
 
-
-func! Py_SetPrinterIdentif_PyCliZio( mode )
-  let printerFilePath = getcwd() . '/PrinterZio.scala'
-
-  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-
-  call VirtualRadioLabel_lineNum( '«', hostLn )
-
-  " Support nesting in objects
-  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
-
-  if a:mode == "effect"
-    let bindingLine = "val printVal = " . identif
-  else
-    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
-  endif
-
-  let printerLines = readfile( printerFilePath, '\n' )
-  let printerLines[1] = bindingLine
-
-  call writefile( printerLines, printerFilePath )
-endfunc
-
-func! Py_SetServerApp_PyCLI()
-  let printerFilePath = getcwd() . '/PreviewServer.scala'
-
-  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
-
-  call VirtualRadioLabel_lineNum( '✱', hostLn )
-
-  let bindingLine = "val previewApp = " . identif
-
-  let printerLines = readfile( printerFilePath, '\n' )
-  let printerLines[1] = bindingLine
-
-  call writefile( printerLines, printerFilePath )
-
-endfunc
 
 
 let g:Py_PrinterCmd  = "python printer.py"
@@ -238,7 +197,7 @@ endfun
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 " let g:Py_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
-let g:Py_TopLevPattern = '\v^(def|\i*\s\=\s)'
+let g:Py_TopLevPattern = '\v(^class|def|\i*\s\=\s)'
 
 func! Py_TopLevBindingForw()
   normal! }
