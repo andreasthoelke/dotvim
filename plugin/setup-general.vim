@@ -12,8 +12,9 @@ filetype plugin on
 
 " let g:python_host_prog = '/usr/bin/python2'
 " let g:python3_host_prog = '/opt/homebrew/bin/python3'
-let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
-let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
+" let g:python_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
+" let g:python3_host_prog = '/Users/at/.pyenv/versions/py3nvim/bin/python'
 
 
 " avoid |hit enter| prompts
@@ -1418,7 +1419,7 @@ nmap SS <Plug>SubstituteLine
 
 " Cut Move:
 nmap <leader>d <Plug>MoveMotionPlug
-xmap <leader>d <Plug>MoveMotionXPlug
+xmap <leader>dd <Plug>MoveMotionXPlug
 nmap <leader>dd <Plug>MoveMotionLinePlug
 
 " Yank Buffer History: Save yank history to file - allows to paste in other vim instance

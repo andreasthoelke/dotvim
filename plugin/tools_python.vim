@@ -285,7 +285,7 @@ func! MvPrevLineStart()
   call SkipPySkipWords()
 endfunc
 
-let g:Py_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'extends', 'yield', 'then', 'else', '\$'] )
+let g:Py_colonPttn = MakeOrPttn( ['\:\s', '=', 'with', 'as', 'if', 'return'] )
 
 func! Py_ColonForw()
   call SearchSkipSC( g:Py_colonPttn, 'W' )

@@ -89,6 +89,10 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal '\vset\ze(\W|\_$)' conceal cchar=ᴺ
   syntax match Normal '\vtuple\ze\[' conceal cchar=T
   syntax match Normal '\W\zsstr\ze\W' conceal cchar=s
+  syntax match Normal '\W\zsstr\:' conceal cchar=s
+
+  syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃
+  syntax match Normal '\s\zsas\ze\s' conceal cchar=⊂
 
   syntax match Normal "def\s" conceal
 

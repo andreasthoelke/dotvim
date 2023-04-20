@@ -135,7 +135,8 @@ func! Scala_RepoBuildTool()
   elseif scliPath && !sbtPath
     return 'scala-cli'
   else
-    return 'none'
+    " temp, bc/ i'm now using project.scala in sub folders
+    return 'scala-cli'
   endif
 endfunc
 
@@ -476,9 +477,9 @@ endfunc
 
 
 let g:Scala_ServerCmd      = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterZioCmd  = "scala-cli . --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
 " let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
-let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterCatsCmd = "scala-cli . --py --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
@@ -510,10 +511,14 @@ func! Scala_RunPrinter( termType )
   endif
 endfunc
 
+" The '--py' option is experimental.
+" Please bear in mind that non-ideal user experience should be expected.
+" If you encounter any bugs or have feedback to share, make sure to reach out to the maintenance team at https://github.com/VirtusLab/scala-cli
+
 
 func! Scala_filterCliLine( line, accum )
   " filter all lines that contain these words:
-  if a:line =~ '\v(compil|warn)'
+  if a:line =~ '\v^(compil|\[warn|Please|The|If)'
     return a:accum
   else
 
