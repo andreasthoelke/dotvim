@@ -514,11 +514,16 @@ endfunc
 " The '--py' option is experimental.
 " Please bear in mind that non-ideal user experience should be expected.
 " If you encounter any bugs or have feedback to share, make sure to reach out to the maintenance team at https://github.com/VirtusLab/scala-cli
+" Scala CLI (v. 1.0.0-RC1) cannot post process TASTY files from Scala 3.3.0-RC4.
+"  since post processing only cleans up source paths in TASTY file and it should not affect your application.
+" To get rid of this message, please update Scala CLI version.
 
 
 func! Scala_filterCliLine( line, accum )
   " filter all lines that contain these words:
-  if a:line =~ '\v^(compil|\[warn|Please|The|If)'
+  if a:line =~ '\v^(compil|\[warn|Please|The|If|Scala|To)'
+    return a:accum
+  elseif a:line =~ '\v(TASTY)'
     return a:accum
   else
 

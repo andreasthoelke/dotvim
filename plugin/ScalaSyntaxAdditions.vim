@@ -20,6 +20,9 @@
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 " ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
+" 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
+" ⠃
+
 
 func! SmithySyntaxAdditions ()
   call tools_scala#bufferMaps()
@@ -161,6 +164,25 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=˄
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=˅
   syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵘ
+
+  " syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⠃
+  " syntax match Normal 'py_' conceal cchar=⠃
+  " syntax match Normal 'py\ze\"' conceal cchar=⠃
+  " syntax match Normal 'py\.module' conceal cchar=𝑖
+
+  syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⁝
+  syntax match Normal 'py_' conceal cchar=ᴵ
+  syntax match Normal 'py\ze\"' conceal cchar=⁝
+  syntax match Normal 'py\.eval' conceal cchar=⁝
+  " syntax match Normal '\.\zsas\ze\[' conceal cchar=⁝
+  syntax match Normal 'py\.module' conceal cchar=𝑖
+  syntax match Normal 'py\.\`with\`' conceal cchar=⊃
+  " syntax match Normal '\.bracketAccess' conceal cchar=⟦
+  " syntax match Normal '\.bracketUpdate' conceal cchar=⟦
+
+  " syntax match Normal '\.toPythonProxy' conceal cchar=‹
+  " syntax match Normal '\.toPythonCopy' conceal cchar=‹
+  " syntax match Normal '\v\s\zspy\ze(\W|\_$)' conceal cchar=𝑝
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵛ
   syntax match Normal '\vSet\ze(\W|\_$)' conceal cchar=ᴺ
   syntax match Normal '\vArray\ze(\W|\_$)' conceal cchar=ᴬ
@@ -363,6 +385,12 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\.\ze\S' conceal cchar= 
 
   syntax match Normal 'curried' conceal cchar=‹
+
+  syntax match Normal '\.toPythonProxy' conceal cchar=≀
+  syntax match Normal '\.toPythonCopy' conceal cchar=≀
+  syntax match Normal '\.as\ze\[' conceal cchar=⁝
+  syntax match Normal '\.bracketAccess' conceal cchar=⠰
+  syntax match Normal '\.bracketUpdate' conceal cchar=ꜜ
 
 
   " display Type variables as small cursive letters
