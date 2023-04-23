@@ -9,6 +9,8 @@ func! tools_python#bufferMaps()
   nnoremap <silent><buffer>         gegj :call Py_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Py_SetPrinterIdentif( "gallias" )<cr>
 
+  nnoremap <silent><buffer> <leader>es  :call Py_AddSignature()<cr>
+
   nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
 
@@ -58,11 +60,37 @@ func! tools_python#bufferMaps()
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
 
   " Stubs and inline tests
-  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_py()<cr>
+  nnoremap <silent><buffer> <leader>et :call Py_InlineTestDec()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
+
+
+func! Py_InlineTestDec()
+  let func_ln = searchpos( '^def\s', 'cnb' )[0]
+  " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
+  let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
+  let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
+  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' )[0] )
+  let paramNames = '"'. paramNames . '"'
+  " let paramNames = '"' . SubstituteInLines( split( strInParan, ',' ), '\s', '' ) . '"'
+  " echo "['first', 'sec', 'third']"[1:-2]
+  let lineText = funcName . '(' . paramNames[1:-2] . ')'
+  let nextIndex = GetNextTestDeclIndex(func_ln)
+  " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
+  let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
+  call append( line('.') -1, lineText )
+  " normal l
+  normal k0
+  normal $B
+  call search('(')
+  normal b
+endfunc
+" Tests:
+" def mult(aa, bb):
+"   return aa * bb
+" e1_mult = mult('aa', 'bb')
 
 
 func! Py_LspTypeAtPos(lineNum, colNum)
@@ -112,6 +140,40 @@ func! Py_GetPackageName()
 
 endfunc
 
+func! Py_AddSignature()
+
+  let hostLn = line('.')
+  let identifCol = 5
+
+  let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
+
+  let typeStr = Py_LspTypeAtPos(hostLn, identifCol)
+  if typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
+  let typeStr = typeStr[6:]
+
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, hostLn, 0, 0] )
+
+  let lineText = getline( hostLn )
+  let [lineEq, idxEq] = searchpos( '\v\:(\s|\_$)', 'n' )
+
+  let textBefore = lineText[:idxEq -2]
+  let textAfter = lineText[idxEq:]
+  " echo textBefore . "||" . textAfter
+  " return
+
+  normal! "_dd
+  call append( hostLn -1, textBefore . " -> " . typeStr . ":" . textAfter )
+  normal! k
+  call setpos('.', [0, hostLn, 0, 0] )
+  " call search('=')
+
+endfunc
+
+
 func! Py_SetPrinterIdentif( keyCmdMode )
 
   " let [hostLn, identifCol] = searchpos( '^def\s\zs\i*\ze\=', 'cnbW' )
@@ -134,6 +196,8 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   if     typeStr =~ "list" || typeStr =~ "set"
     let typeMode = "collection"
+  elseif typeStr =~ "DataFrame" || typeStr =~ "Series"
+    let typeMode = "DataFrame"
   else
     let typeMode = "plain"
   endif
@@ -146,8 +210,14 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let _printVal = "pprint( symToEval() )"
 
   if     typeMode == 'collection'
+    let _type     = "print( type( symToEval() ) )"
     let _info     = "print( len( symToEval() ) )"
+  elseif typeMode == 'DataFrame'
+    let _type     = ""
+    let _info     = "print( symToEval().shape )"
+    let _printVal = "pprint( symToEval()[0:30] )"
   elseif typeMode == 'plain'
+    let _type     = "print( type( symToEval() ) )"
     let _info     = ""
   endif
 
@@ -156,6 +226,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
 
   let plns[2] = _import
+  let plns[4] = _type
   let plns[5] = _info
   let plns[7] = _printVal
 
@@ -285,7 +356,7 @@ func! MvPrevLineStart()
   call SkipPySkipWords()
 endfunc
 
-let g:Py_colonPttn = MakeOrPttn( ['\:\s', '=', 'with', 'as', 'if', 'return'] )
+let g:Py_colonPttn = MakeOrPttn( ['\:\s', '=', '->', 'with', 'as', 'if', 'return'] )
 
 func! Py_ColonForw()
   call SearchSkipSC( g:Py_colonPttn, 'W' )

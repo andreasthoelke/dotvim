@@ -216,6 +216,8 @@ lspconfig.pyright.setup({
   flags = flags,
   settings = {
     disableOrganizeImports = true,
+    -- TODO: this seems to have no effect?
+    reportUnusedVariable = false,
   },
 })
 

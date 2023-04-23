@@ -98,30 +98,6 @@ func! CreateInlineTestDec()
 endfun
 
 
-func! CreateInlineTestDec_py()
-  let func_ln = searchpos( '^def\s', 'cnb' )[0]
-  " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
-  let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
-  let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
-  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
-  " echo "['first', 'sec', 'third']"[1:-2]
-  let lineText = funcName . '(' . paramNames[1:-2] . ')'
-  let nextIndex = GetNextTestDeclIndex(func_ln)
-  " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
-  let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
-  call append( line('.') -1, lineText )
-  " normal l
-  normal k0
-  normal $B
-  call search('(')
-  normal b
-
-endfunc
-" Tests:
-" def mult(aa, bb):
-"   return aa * bb
-" e1_mult = mult('aa', 'bb')
-
 
 func! CreateInlineTestDec_rescript ()
   " const greeter = (person: Person) => {

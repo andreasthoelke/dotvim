@@ -86,7 +86,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match ConcealQuotes '"' conceal
   " call CodeMarkupSyntaxHighlights()
 
-
+  syntax match Normal '""' conceal cchar=∅
 
   syntax match Normal '\vlist\ze(\W|\_$)' conceal cchar=˄
   syntax match Normal '\vset\ze(\W|\_$)' conceal cchar=ᴺ
@@ -96,6 +96,10 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃
   syntax match Normal '\s\zsas\ze\s' conceal cchar=⊂
+
+  syntax match Normal 'import\s' conceal cchar=⁝
+  syntax match Normal 'class' conceal cchar=□
+  syntax match Normal 'lambda' conceal cchar=λ
 
   syntax match Normal "def\s" conceal
 
@@ -112,6 +116,9 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=' conceal cchar=‥
   syntax match InlineTestDeclaration '\v^def\se\d_\k{-}\(\)\:\sreturn' conceal cchar=‥
+
+  " This is effective in preventing the conceal unicode in normal comments
+  syntax match Comment '\v#\s\zs.*'
 
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})
@@ -131,6 +138,7 @@ func! PythonSyntaxAdditions() " ■
   " set commentstring=\ \"%s
   set commentstring=\ \#%s
 
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
 
 endfunc " ▲
 
@@ -172,6 +180,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⁝
   syntax match Normal 'py_' conceal cchar=ᴵ
+  syntax match Normal 'Py_' conceal cchar=ᴵ
   syntax match Normal 'py\ze\"' conceal cchar=⁝
   syntax match Normal 'py\.eval' conceal cchar=⁝
   " syntax match Normal '\.\zsas\ze\[' conceal cchar=⁝
