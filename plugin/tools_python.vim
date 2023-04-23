@@ -72,11 +72,13 @@ func! Py_InlineTestDec()
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
   let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
   let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
-  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' )[0] )
+  let paramNames = string( split( strInParan, ',' )[0] )
+  let paramNames = substitute( paramNames, "'", "", 'g' )
+  let paramNames = paramNames[1:-2]
   let paramNames = '"'. paramNames . '"'
   " let paramNames = '"' . SubstituteInLines( split( strInParan, ',' ), '\s', '' ) . '"'
   " echo "['first', 'sec', 'third']"[1:-2]
-  let lineText = funcName . '(' . paramNames[1:-2] . ')'
+  let lineText = funcName . '(' . paramNames . ')'
   let nextIndex = GetNextTestDeclIndex(func_ln)
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
   let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
@@ -84,7 +86,7 @@ func! Py_InlineTestDec()
   " normal l
   normal k0
   normal $B
-  call search('(')
+  " call search('(')
   normal b
 endfunc
 " Tests:
