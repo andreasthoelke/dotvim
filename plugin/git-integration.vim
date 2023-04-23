@@ -33,7 +33,8 @@ nnoremap <leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit mess
 " Issue: this does not show the confirmation message in the float window:
 xnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 " git push:
-nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
+" nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
+nnoremap <leader><leader>gP :call System_Float( 'git push' )<cr>
 " View in Github desktop:
 nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 

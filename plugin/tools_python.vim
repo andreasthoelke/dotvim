@@ -68,11 +68,15 @@ endfunc
 
 
 func! Py_InlineTestDec()
-  let func_ln = searchpos( '^def\s', 'cnb' )[0]
+  let func_ln = searchpos( '^def\s\(e\d_\)\@!', 'cnb' )[0]
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
   let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
   let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
-  let paramNames = string( split( strInParan, ',' )[0] )
+  let paramNames = split( strInParan, ',' )
+  if len( paramNames )
+    let paramNames = paramNames[0]
+  endif
+  let paramNames = string( paramNames )
   let paramNames = substitute( paramNames, "'", "", 'g' )
   let paramNames = paramNames[1:-2]
   let paramNames = '"'. paramNames . '"'
@@ -83,11 +87,9 @@ func! Py_InlineTestDec()
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
   let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
   call append( line('.') -1, lineText )
-  " normal l
-  normal k0
-  normal $B
-  " call search('(')
-  normal b
+  normal k^
+  call search('return')
+  normal w
 endfunc
 " Tests:
 " def mult(aa, bb):
@@ -210,14 +212,16 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   " from t2 import fruits as symToEval
   let _import = "from " . Py_GetPackageName() . " import " . identif . " as symToEval"
   let _printVal = "pprint( symToEval() )"
+  let _printSetting = ""
 
   if     typeMode == 'collection'
     let _type     = "print( type( symToEval() ) )"
     let _info     = "print( len( symToEval() ) )"
   elseif typeMode == 'DataFrame'
-    let _type     = ""
+    let _type     = "print( symToEval().dtypes )"
     let _info     = "print( symToEval().shape )"
-    let _printVal = "pprint( symToEval()[0:30] )"
+    let _printSetting = "pd.options.display.width = None"
+    let _printVal = "print( symToEval().head(30) )"
   elseif typeMode == 'plain'
     let _type     = "print( type( symToEval() ) )"
     let _info     = ""
@@ -227,9 +231,12 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let plns = readfile( printerFilePath, '\n' )
 
 
+  let plns[0] = "import pandas as pd"
+  let plns[1] = "from pprint import pprint"
   let plns[2] = _import
   let plns[4] = _type
   let plns[5] = _info
+  let plns[6] = _printSetting
   let plns[7] = _printVal
 
   call writefile( plns, printerFilePath )
