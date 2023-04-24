@@ -144,7 +144,7 @@ endfunc
 func! Scala_SetPrinterIdentif( mode )
   let effType  = Scala_BufferCatsOrZio()
   let repoType = Scala_RepoBuildTool()
-  echo effType repoType
+  " echo effType repoType
   if     repoType == 'scala-cli' && effType == 'zio'
     let fntag = 'ScalaCliZio'
   elseif repoType == 'scala-cli' && effType == 'cats'
@@ -388,6 +388,8 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let typeMode = "cats_collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
+  elseif  typeStr =~ "Array"
+    let typeMode = "array"
   else
     let typeMode = "plain"
   endif
@@ -404,6 +406,11 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let _replTag  = '"RESULT"'
     let _info     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
     let _printVal = "IO( " . identif . " )"                  " an effect now
+
+  elseif typeMode == 'array'
+    let _replTag  = '"RESULT"'
+    let _info     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printVal = "IO( " . identif . ".toList )"                  " an effect now
 
   elseif typeMode == 'cats_collection'
     let _replTag  = '"RESULT"'
