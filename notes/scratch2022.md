@@ -46,6 +46,11 @@ to run vimscript/lua commands in .md
 
 # ─   Telescope Rgx search                           ──
 
+,sa       - all scala code
+,sA       - all scala code in selected projects
+,ss(ge;)  - all scala symbols
+,sS(ge:)  - all scala symbols in selected projects
+
 ,svs      - search vim symbols
 ,svm      - search vim maps
 ,svv      - search vim all code
@@ -75,6 +80,8 @@ new telescope select maps
 
 # ─   Dirvish 'newWin' maps                          ──
 ==>> file in parent folder || project root folder <<==
+,o         dirvish float in parent folder
+,,o        dirvish float in project root folder
 ,v         :call Dirvish_newWin( "vnew" )<cr>
 ,,v        :exec "vnew ."<cr>
 l, v       :"vnew " . getline('.')

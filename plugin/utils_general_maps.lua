@@ -49,12 +49,48 @@ local paths_patterns1 = {
 }
 
 
--- search in MAIN_SYMBOLS:
+-- function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
+
+-- search in [A]ll scala code:
+vim.keymap.set( 'n',
+  ',sa', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    "",
+    {"-g", "*.scala"},
+    {'.'}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sA', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    "",
+    {"-g", "*.scala"},
+    {'/Users/at/Documents/Proj/b_expl_stack/'}
+    ) end )
+
+-- search in scala [S]ymbols:
+vim.keymap.set( 'n',
+  ',ss', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_main_symbol,
+    {"-g", "*.scala"},
+    {'.'}
+    ) end )
+
+vim.keymap.set( 'n',
+  ',sS', function() require( 'utils_general' )
+  .RgxSelect_Picker( {},
+    rgx_main_symbol,
+    {"-g", "*.scala"},
+    {'/Users/at/Documents/Proj/b_expl_stack/'}
+    ) end )
+
+-- search in scala [S]ymbols (ge;):
 vim.keymap.set( 'n',
   'ge;', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_main_symbol,
-    {},
+    {"-g", "*.scala"},
     {'.'}
     ) end )
 
@@ -62,9 +98,11 @@ vim.keymap.set( 'n',
   'ge:', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_main_symbol,
-    glb_projs1,
-    {'..'}
+    {"-g", "*.scala"},
+    {'/Users/at/Documents/Proj/b_expl_stack/'}
     ) end )
+
+
 
 -- search in comment TAGS:
 vim.keymap.set( 'n',
@@ -119,7 +157,7 @@ vim.keymap.set( 'n',
 
 -- search in SIGNATURES:
 vim.keymap.set( 'n',
-  ',ss', function() require( 'utils_general' )
+  ',sg', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_signature,
     {},
@@ -127,7 +165,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sS', function() require( 'utils_general' )
+  ',sG', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
     rgx_signature,
     glb_patterns1,

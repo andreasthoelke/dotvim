@@ -147,7 +147,7 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 " There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
 " nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap yoG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
-nnoremap ,og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
+" nnoremap ,og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap <leader>oG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
 nnoremap <leader><leader>og :FzfGFiles?<cr>
