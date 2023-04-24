@@ -26,8 +26,8 @@ func! tools_python#bufferMaps()
   nnoremap <silent><buffer> ( :call MvLineStart()<cr>
   nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
 
-  nnoremap <silent><buffer> I :call Py_ColonForw()<cr>
-  nnoremap <silent><buffer> Y :call Py_ColonBackw()<cr>
+  nnoremap <silent><buffer> I :call Py_ColumnForw()<cr>
+  nnoremap <silent><buffer> Y :call Py_ColumnBackw()<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Py_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Py_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
@@ -365,16 +365,16 @@ func! MvPrevLineStart()
   call SkipPySkipWords()
 endfunc
 
-let g:Py_colonPttn = MakeOrPttn( ['\:\s', '=', '->', 'with', 'as', 'if', 'return'] )
+let g:Py_columnPttn = MakeOrPttn( ['\:\s', '=', '->', '#', 'with', 'as', 'if', 'return'] )
 
-func! Py_ColonForw()
-  call SearchSkipSC( g:Py_colonPttn, 'W' )
+func! Py_ColumnForw()
+  call SearchSkipSC( g:Py_columnPttn, 'W' )
   normal w
 endfunc
 
-func! Py_ColonBackw()
+func! Py_ColumnBackw()
   normal bh
-  call SearchSkipSC( g:Py_colonPttn, 'bW' )
+  call SearchSkipSC( g:Py_columnPttn, 'bW' )
   normal w
 endfunc
 

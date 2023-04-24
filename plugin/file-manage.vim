@@ -39,7 +39,8 @@ nnoremap <silent> <c-w><leader>s :exec "new " . getline('.')<cr>
 nnoremap <silent> <c-w><leader>o :call FloatingBuffer( getline('.') )<cr>
 
 
-
+nnoremap <silent> ,O         :call Dirvish_Float( expand("%:h") )<cr>
+nnoremap <silent> ,,O        :call Dirvish_Float( getcwd() )<cr>
 nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
 nnoremap <silent> ,,V        :exec "leftabove 30vnew ."<cr>
 nnoremap <silent> ,tn        :call Dirvish_newWin( "tabe" )<cr>
@@ -381,7 +382,7 @@ let g:dirvish_git_indicators = {
 " Using the float win: https://github.com/justinmk/vim-dirvish/issues/167
 nnoremap <silent> - <Plug>(dirvish_up)
 
-nnoremap <silent><leader>od :call Dirvish_toggle()<CR>
+
 
 func! Dirvish_open(cmd, bg) abort
   let path = getline('.')
@@ -430,7 +431,7 @@ func! NewBufferFromDirvish( pos )
 endfunc
 
 
-func! Dirvish_toggle() abort
+func! Dirvish_centered_float() abort
     let width  = float2nr(&columns * 0.5)
     let height = float2nr(&lines * 0.8)
     let top    = ((&lines - height) / 2) - 1
@@ -580,7 +581,7 @@ func! Path_Float( path )
     exec 'edit' a:path
   endif
 endfunc
-" call Path_Float( '/Users/at/Documents/Notes/laminar.md' )
+" Path_Float( '/Users/at/Documents/Notes/laminar.md' )
 " Path_Float( '/Users/at/Documents/Notes' )
 
 func! Dirvish_Float( path )
@@ -844,7 +845,7 @@ endfunc
 " A dirvish buffer will be the 'next folder path'
 func! CurrentNextFolderPath ()
   let path = expand('%:p')
-  let filename = expand('%:t') " filename in empty in Dirvish
+  let filename = expand('%:t') " filename is empty in Dirvish
   let folderpath = substitute( path, filename, '', '' )
   return folderpath
 endfunc
