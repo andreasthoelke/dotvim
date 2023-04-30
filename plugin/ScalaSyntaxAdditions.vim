@@ -3,7 +3,7 @@
 " ↔ ↕ ⇿ ⟷
 " ɪ и ᵓᵔ ᵛ     ->    ⃣
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
-" ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
+" ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻◻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
 " ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ ∿ ∾  ≀ ≁ ➳  ➺  ➽
 " ⊟  ⊡ | ⊖  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
 " ”  ⍘ ’ ⍞  ⍣ ⍤⍦⍪⍳ ⍽ ⍿ ⎅ ⎇  ⎎ ⎚
@@ -18,10 +18,10 @@
 " ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
-" ◆  ◇  ◈  ◻  ◽  ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
+" ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
 " 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
-" ⠃
+" ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
 
 
 func! SmithySyntaxAdditions ()
@@ -99,7 +99,7 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class' conceal cchar=□
-  syntax match Normal 'lambda' conceal cchar=λ
+  syntax match Normal 'lambda' conceal cchar=□
 
   syntax match Normal "def\s" conceal
 
@@ -160,7 +160,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=s
   " syntax match Normal 'String\.' conceal cchar=s
   syntax match Normal '\W\zsString' conceal cchar=s
-  syntax match Normal '\W\zsInt\ze\s' conceal cchar=ɪ
+  syntax match Normal '\v\W\zsInt\ze(\W|\_$)' conceal cchar=ɪ
   " syntax match Normal 'Int\.' conceal cchar=ɪ
   syntax match Normal '\vBoolean\ze(\W|\_$)' conceal cchar=ʙ
   " syntax match Normal 'true' conceal cchar=𝗍
@@ -172,6 +172,11 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=˄
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=˅
   syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵘ
+  syntax match Normal 'Nil' conceal cchar=◻
+  syntax match Normal 'None' conceal cchar=≢
+  syntax match Normal 'Some' conceal cchar=≡
+  syntax match Normal 'Option' conceal cchar=≟
+  syntax match Normal 'Either' conceal cchar=∥
 
   " syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⠃
   " syntax match Normal 'py_' conceal cchar=⠃
@@ -206,8 +211,6 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal "def\ze\s" conceal cchar=→
   syntax match Normal "def\s" conceal
   syntax match Normal 'Unit' conceal cchar=✴
-  syntax match Normal 'Option' conceal cchar=∦
-  syntax match Normal 'Either' conceal cchar=∥
 
   syntax match Normal "<-" conceal cchar=←
   syntax match Normal "<--" conceal cchar=←
@@ -255,6 +258,8 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'x => x\ze\.' conceal cchar=_
 
   syntax match Normal 'PartialFunction' conceal cchar=➔
+  syntax match Normal 'Function1' conceal cchar=➔
+  syntax match Normal 'Function1:' conceal cchar=➔
   syntax match Normal "\v\-\>" conceal cchar=➔
   syntax match Normal "\v\--\>" conceal cchar=➔
   syntax match Normal '@tailrec' conceal cchar=↵
@@ -287,6 +292,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'ZIO\.' conceal cchar=⁝
   " syntax match Normal 'ZIO\.\$\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
+  syntax match Normal 'flatMap:' conceal cchar=↣
   syntax match Normal 'WithZIO' conceal cchar=↣
   syntax match Normal 'tap\ze\W' conceal cchar=⌄
   " syntax match Normal 'collect\ze\W' conceal cchar=≚
@@ -450,6 +456,7 @@ func! ScalaSyntaxAdditions ()
 
   " This is effective in preventing the conceal unicode in normal comments
   syntax match Comment '\v\/\/\s\zs.*'
+  syntax match Comment '\v^\s\*\zs\zs.*'
 
   " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '\/\/\s', 12, -1, {'conceal': ''})
@@ -493,6 +500,9 @@ func! ScalaSyntaxAdditions ()
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
   " set commentstring=\ \/\/%s
+
+  " setl isk+=<,>,$,#,+,-,*,/,%,&,=,!,:,124,~,?,^
+  setl isk+=?
 
 endfunc
 

@@ -253,7 +253,7 @@ e/E    - end word/Word
 #### backward
 b/B    - beginning of word/Word
 \e    - end of word
-,ge   - end of word
+(,ge   - end of word) .. shadowed
 
 
 [op]ii  - inside indent block (linewise delete, change, yank)

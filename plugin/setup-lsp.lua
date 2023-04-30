@@ -293,12 +293,12 @@ lspconfig.graphql.setup({
 -- https://github.com/lighttiger2505/sqls
 -- https://github.com/nanotee/sqls.nvim
 -- mysql://root:PW@127.0.0.1:3306/pets
-lspconfig.sqls.setup{
+lspconfig.sqlls.setup{
   on_attach = function(client, bufnr)
-    require('sqls').on_attach(client, bufnr)
+    require('sqlls').on_attach(client, bufnr)
   end,
   settings = {
-    sqls = {
+    sqlls = {
       connections = {
         {
           alias = 'mysql_pets',

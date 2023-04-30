@@ -69,6 +69,7 @@ vim.keymap.set( 'n',
     ) end )
 
 -- search in scala [S]ymbols:
+-- (also not gel for the lsp symbols in the current file)
 vim.keymap.set( 'n',
   ',ss', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
@@ -85,21 +86,21 @@ vim.keymap.set( 'n',
     {'/Users/at/Documents/Proj/b_expl_stack/'}
     ) end )
 
--- search in scala [S]ymbols (ge;):
+-- search in [A]ll scala code:
 vim.keymap.set( 'n',
   'ge;', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    {"-g", "*.scala"},
-    {'.'}
+    .RgxSelect_Picker( {},
+      "",
+      {"-g", "*.scala"},
+      {'.'}
     ) end )
 
 vim.keymap.set( 'n',
   'ge:', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    {"-g", "*.scala"},
-    {'/Users/at/Documents/Proj/b_expl_stack/'}
+    .RgxSelect_Picker( {},
+      "",
+      {"-g", "*.scala"},
+      {'/Users/at/Documents/Proj/b_expl_stack/'}
     ) end )
 
 

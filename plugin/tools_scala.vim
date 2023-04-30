@@ -74,6 +74,7 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
   nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
@@ -146,7 +147,7 @@ func! Scala_SetPrinterIdentif( mode )
   let repoType = Scala_RepoBuildTool()
   " echo effType repoType
   if     repoType == 'scala-cli' && effType == 'zio'
-    let fntag = 'ScalaCliZio'
+    let fntag = 'ScalaCliZIO'
   elseif repoType == 'scala-cli' && effType == 'cats'
     let fntag = 'ScalaCliCats'
   elseif repoType == 'scala-cli' && effType == 'none'
@@ -388,8 +389,22 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let typeMode = "cats_collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
-  elseif  typeStr =~ "Array"
+  elseif  typeStr =~ "Iterable"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Set"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Vector"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Seq"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Map"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Array" 
     let typeMode = "array"
+  elseif  typeStr =~ "\(Iterator"
+    let typeMode = "tupled-iterator"
+  elseif  typeStr =~ "Iterator"
+    let typeMode = "iterator"
   else
     let typeMode = "plain"
   endif
@@ -397,33 +412,44 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
   call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
 
+  " Default values
+  let _replTag    = '"RESULT"'
+  let _info       = '""'
+  let _infoEf     = 'IO( "" )'
+  let _printVal   = '""'
+  let _printValEf = 'IO( "" )'
+
   if     a:keyCmdMode == 'effect' || typeMode == 'cats'
-    let _replTag  = '"RESULT"'
-    let _info     = 'IO( "" )'         " an effect returning a string
     let _printVal = identif          " already an effect
 
-  elseif typeMode == 'collection'
-    let _replTag  = '"RESULT"'
-    let _info     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
-    let _printVal = "IO( " . identif . " )"                  " an effect now
+  elseif typeMode == 'collectionIO'
+    let _infoEf     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printValEf = "IO( " . identif . " )"                  " an effect now
 
   elseif typeMode == 'array'
-    let _replTag  = '"RESULT"'
-    let _info     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
-    let _printVal = "IO( " . identif . ".toList )"                  " an effect now
+    let _infoEf     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printValEf = "IO( " . identif . ".toList )"                  " an effect now
+
+  elseif typeMode == 'collection'
+    let _info     = identif . ".length.toString + '\n'"
+    let _printVal = identif . '.mkString("\n")'                 
+
+  elseif typeMode == 'iterator'
+    let _info     = "printVal.length.toString + '\n'"
+    let _printVal = identif . ".toList"                 
+
+  elseif typeMode == 'tupled-iterator'
+    let _printVal = identif . "._1.toList.toString + '\n' + " . identif . "._2.toList.toString"                
 
   elseif typeMode == 'cats_collection'
-    let _replTag  = '"RESULT"'
     " NOTE: the following line works, but:
     " it runs the program (identif) twice, issuing side-effect twice (e.g. printing).
-    " let _info     = identif . '.map( _.size.toString ).map( s => s + "\n" )'       " an effect returning a string
-    let _info     = 'IO( "" )'
-    let _printVal = identif                                 " already an effect
+    " NEW ATTEMPT: .. still to be tested
+    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.toString ) )' 
+    " let _printVal = identif                                 " already an effect
 
   elseif typeMode == 'plain'
-    let _replTag  = '"RESULT"'
-    let _info     = 'IO( "" )'                                " an effect returning a string
-    let _printVal = "IO( " . identif . " )"                 " an effect now
+    let _printVal = identif
   endif
 
   let printerFilePath = getcwd() . '/PrinterCats.scala'
@@ -432,16 +458,136 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
   " 9) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
   let plns[9]  = "  val replTag  = " . _replTag
-  " 11) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
-  let plns[11] = "  val info     = " . _info
-  " 13) the effect (or wrapped simple value) to be printed including packageName and object namespace
-  let plns[13] = "  val printVal = " . _printVal
+  " 11) the effect (or wrapped simple value) to be printed including packageName and object namespace
+  let plns[11] = "  val printVal   = " . _printVal
+  let plns[12] = "  val printValEf = " . _printValEf
+  " 14) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
+  let plns[14] = "  val info     = " . _info
+  let plns[15] = "  val infoEf   = " . _infoEf
+
+  call writefile( plns, printerFilePath )
+endfunc
+
+" val app =
+"   for
+"     in <- P.infoEf
+"     pv <- P.printValEf
+"     _ <- IO.println( P.replTag + P.info + in + P.printVal + pv )
+"   yield ()
+
+" @main
+" def runCatsApp() = app.unsafeRunSync()
+
+func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
+
+  normal! ww
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
+  normal! bb
+
+  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+
+  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  if typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
+  " echo typeStr
+  " echo hostLn identifCol
+  " return
+
+  " Support nesting in objects
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+
+  if      typeStr =~ "ZIO\[" && typeStr =~ "List"
+    let typeMode = "zio_collection"
+  elseif  typeStr =~ "IO\["  || typeStr =~ "UIO\["
+    let typeMode = "zio"
+  " elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
+  "   let typeMode = "zio_collection"
+  elseif  typeStr =~ "List"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Iterable"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Set"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Vector"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Seq"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Map"
+    let typeMode = "collection"
+  elseif  typeStr =~ "Array" 
+    let typeMode = "array"
+  elseif  typeStr =~ "\(Iterator"
+    let typeMode = "tupled-iterator"
+  elseif  typeStr =~ "Iterator"
+    let typeMode = "iterator"
+  else
+    let typeMode = "plain"
+  endif
+
+  echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
+  call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
+
+  " Default values
+  let _replTag    = '"RESULT"'
+  let _info       = '""'
+  let _infoEf     = 'ZIO.succeed( "" )'
+  let _printVal   = '""'
+  let _printValEf = 'ZIO.succeed( "" )'
+
+  if     a:keyCmdMode == 'effect' || typeMode == 'zio'
+    let _printValEf = identif          " already an effect
+
+  elseif typeMode == 'collectionIO'
+    " TODO: not clear where this came from
+    let _infoEf     = "ZIO.succeed( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printValEf = "ZIO.succeed( " . identif . " )"                  " an effect now
+
+  elseif typeMode == 'array'
+    let _infoEf     = "ZIO.succeed( " . identif . ".size.toString + '\n' )"    " an effect returning a string
+    let _printValEf = "ZIO.succeed( " . identif . ".toList )"                  " an effect now
+
+  elseif typeMode == 'collection'
+    let _info     = identif . ".length.toString + '\n'"
+    let _printVal = identif . '.mkString("\n")'                 
+
+  elseif typeMode == 'iterator'
+    let _info     = "printVal.length.toString + '\n'"
+    let _printVal = identif . ".toList"                 
+
+  elseif typeMode == 'tupled-iterator'
+    let _printVal = identif . "._1.toList.toString + '\n' + " . identif . "._2.toList.toString"                
+
+  elseif typeMode == 'zio_collection'
+    " NOTE: the following line works, but:
+    " it runs the program (identif) twice, issuing side-effect twice (e.g. printing).
+    " NEW ATTEMPT: .. still to be tested
+    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.toString ) )' 
+    " let _printVal = identif                                 " already an effect
+
+  elseif typeMode == 'plain'
+    let _printVal = identif
+  endif
+
+  let printerFilePath = getcwd() . '/PrinterZio.scala'
+  let plns = readfile( printerFilePath, '\n' )
+
+  " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
+  " 9) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
+  let plns[9]  = "  val replTag  = " . _replTag
+  " 11) the effect (or wrapped simple value) to be printed including packageName and object namespace
+  let plns[11] = "  val printVal   = " . _printVal
+  let plns[12] = "  val printValEf = " . _printValEf
+  " 14) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
+  let plns[14] = "  val info     = " . _info
+  let plns[15] = "  val infoEf   = " . _infoEf
 
   call writefile( plns, printerFilePath )
 endfunc
 
 
-func! Scala_SetPrinterIdentif_ScalaCliZio( mode )
+func! Scala_SetPrinterIdentif_ScalaCliZio_( mode )
   let printerFilePath = getcwd() . '/PrinterZio.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
@@ -484,9 +630,10 @@ endfunc
 
 
 let g:Scala_ServerCmd      = "scala-cli . --main-class PreviewServer --class-path resources"
-let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
+" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
 " let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
 let g:Scala_PrinterCatsCmd = "scala-cli . --py --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations"
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
@@ -715,7 +862,7 @@ endfunc
 
 
 " let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
-let g:Scala_MvStartLine_SkipWordsL = ['val', 'def', 'lazy', 'private', 'final', 'override']
+let g:Scala_MvStartLine_SkipWordsL = ['val', 'def', 'case', 'lazy', 'private', 'final', 'override']
 " echo "private" =~ g:Scala_MvStartLine_SkipWords
 
 func! SkipScalaSkipWords()
@@ -756,7 +903,7 @@ func! MvPrevLineStart()
   call SkipScalaSkipWords()
 endfunc
 
-let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'extends', 'yield', 'then', 'else', '\$'] )
+let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 func! Scala_ColonForw()
   call SearchSkipSC( g:Scala_colonPttn, 'W' )

@@ -633,9 +633,9 @@ let g:wordmotion_prefix = ","
 " Add start of visual mode to jumplist
 nnoremap v m'v
 
-" i usually to the inner word, and keep the space after it.
+" i usually change the inner word, and keep the space after it.
 " nnoremap cw ciw
-nnoremap cw "_ce
+nnoremap cw "_cw
 
 " Want to go to last visible char most of the times and g_ is tricky to type
 nnoremap $ m'g_
