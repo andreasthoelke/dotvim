@@ -21,6 +21,7 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
+  " NOTE these are now global as well: /Users/at/.config/nvim/plugin/repl.vim
   nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
   nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
   nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
@@ -154,8 +155,12 @@ func! Scala_SetPrinterIdentif( mode )
     let fntag = 'ScalaCliCats'
   elseif repoType == 'scala-cli' && effType == 'both'
     let fntag = 'ScalaCliCats'
+  elseif repoType == 'sbt' && effType == 'cats'
+    let fntag = 'ScalaCliCats'
+    " setting vars in printer.scala should not depend on sbt vs scala-cli?
   elseif repoType == 'sbt'
-    let fntag = 'SBT'
+    " let fntag = 'SBT'
+    let fntag = 'ScalaCliCats'
   else
     echoe "not supported"
     return
@@ -387,6 +392,8 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let typeMode = "cats"
   elseif  typeStr =~ "IO\[" && typeStr =~ "List"
     let typeMode = "cats_collection"
+  elseif  typeStr =~ "\(List"
+    let typeMode = "tupled-collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
@@ -431,15 +438,18 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let _printValEf = "IO( " . identif . ".toList )"                  " an effect now
 
   elseif typeMode == 'collection'
-    let _info     = identif . ".length.toString + '\n'"
+    let _info     = identif . ".size.toString + '\n'"
     let _printVal = identif . '.mkString("\n")'                 
 
   elseif typeMode == 'iterator'
-    let _info     = "printVal.length.toString + '\n'"
+    let _info     = "printVal.size.toString + '\n'"
     let _printVal = identif . ".toList"                 
 
   elseif typeMode == 'tupled-iterator'
     let _printVal = identif . "._1.toList.toString + '\n' + " . identif . "._2.toList.toString"                
+
+  elseif typeMode == 'tupled-collection'
+    let _printVal = identif . "._1.toString + '\n' + " . identif . "._2.toString"                
 
   elseif typeMode == 'cats_collection'
     " NOTE: the following line works, but:
@@ -504,6 +514,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "zio"
   " elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
   "   let typeMode = "zio_collection"
+  elseif  typeStr =~ "\(List"
+    let typeMode = "tupled-collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
@@ -549,15 +561,18 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let _printValEf = "ZIO.succeed( " . identif . ".toList )"                  " an effect now
 
   elseif typeMode == 'collection'
-    let _info     = identif . ".length.toString + '\n'"
+    let _info     = identif . ".size.toString + '\n'"
     let _printVal = identif . '.mkString("\n")'                 
 
   elseif typeMode == 'iterator'
-    let _info     = "printVal.length.toString + '\n'"
+    let _info     = "printVal.size.toString + '\n'"
     let _printVal = identif . ".toList"                 
 
   elseif typeMode == 'tupled-iterator'
     let _printVal = identif . "._1.toList.toString + '\n' + " . identif . "._2.toList.toString"                
+
+  elseif typeMode == 'tupled-collection'
+    let _printVal = identif . "._1.toString + '\n' + " . identif . "._2.toString"                
 
   elseif typeMode == 'zio_collection'
     " NOTE: the following line works, but:
@@ -657,7 +672,8 @@ func! Scala_RunPrinter( termType )
     call TermOneShot( cmd )
 
   elseif repoType == 'sbt'
-    call ScalaReplRun()
+    " call ScalaReplRun()
+    call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
 
   else
     echoe "not supported: " . repoType
@@ -789,15 +805,16 @@ endfunc
 
 func! Scala_ServerClientRequest( args, mode )
 
-  let urlEx = matchstr( getline("."), '\v//\s\zs.*' )
+  let urlEx = matchstr( getline("."), '\v(//\s)?\zs.*' )
 
   let g:scala_serverRequestCmd = "http " . a:args . " :8080/" . urlEx . " --ignore-stdin --stream"
   if a:mode == 'term'
     call TermOneShot( g:scala_serverRequestCmd )
   else
     let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
-    silent let g:floatWin_win = FloatingSmallNew ( resultLines )
-    silent call FloatWin_FitWidthHeight()
+    call Scala_showInFloat( resultLines )
+    " silent let g:floatWin_win = FloatingSmallNew ( resultLines )
+    " silent call FloatWin_FitWidthHeight()
   endif
   silent wincmd p
 endfunc
@@ -815,17 +832,19 @@ func! Scala_ServerClientRequest_rerun()
 endfunc
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^((\s*)?\zs(sealed|inline|private|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 
 func! Scala_TopLevBindingForw()
-  normal! }
+  " normal! }
+  normal! jj
   call search( g:Scala_TopLevPattern, 'W' )
 endfunc
 
 func! Scala_TopLevBindingBackw()
   " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Scala_TopLevPattern, 'bW' )
-  normal! {
+  " normal! {
+  normal! kk
   call search( g:Scala_TopLevPattern, 'W' )
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
@@ -870,7 +889,7 @@ func! SkipScalaSkipWords()
     normal! l
     return
   endif
-  if GetCharAtCursor() == "/"
+  if GetCharAtCursor() == "/" || GetCharAtCursor() == "*"
     normal! w
     return
   endif

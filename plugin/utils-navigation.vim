@@ -248,7 +248,7 @@ nnoremap <leader>vq :qa!<cr>
 " nnoremap gw :w<cr>
 " nnoremap <localleader>w :w<cr>
 
-nnoremap <localleader>t. :echo "use leeader t."<cr>
+nnoremap <localleader>t. :echo "use leader ee"<cr>
 nnoremap <silent><leader>ee :t.<cr>
 nnoremap <silent><leader>ep :t.<cr>
 

@@ -13,6 +13,7 @@ local function open_below(promtbufnr)
  return require("telescope.actions.set").edit( promtbufnr, "20new")
 end
 
+local entry_display = require "telescope.pickers.entry_display"
 
 -- NOTE: there's 
 -- lua/utils_general.lua
@@ -124,30 +125,75 @@ Telesc = require('telescope').setup{
       cursor = { width = 80, height = 20 },
     },
   },
-  pickers = {
-    -- Default configuration for builtin pickers goes here:
-    -- picker_name = {
-    --   picker_config_key = value,
-    --   ...
-    -- }
-    -- Now the picker_config_key will be applied every time you call this
-    -- builtin picker
-    -- find_files = {
-    -- }
+  -- pickers = {
+  --   -- Default configuration for builtin pickers goes here:
+  --   -- picker_name = {
+  --   --   picker_config_key = value,
+  --   --   ...
+  --   -- }
+  --   -- Now the picker_config_key will be applied every time you call this
+  --   -- builtin picker
+  --   -- find_files = {
+  --   -- }
+  -- },
 
-
-  },
   extensions = {
-    heading = {
-      treesitter = true,
-    },
-    -- Your extension configuration goes here:
-    -- extension_name = {
-    --   extension_config_key = value,
-    -- }
-    -- please take a look at the readme of the extension you want to configure
+      bookmarks = {
+        selected_browser = 'chrome',
+      },
+    -- ['ui-select'] = {
+    --   -- require('telescope.themes').get_dropdown {
+    --   --   layout_config = {
+    --   --     width = 0.8,
+    --   --     height = 0.8,
+    --   --   }
+    --   -- },
+    --   specific_opts = {
+    --     ['browser-bookmarks'] = {
+    --       make_displayer = function()
+    --         return entry_display.create {
+    --           separator = ' ',
+    --           items = {
+    --             { width = 0.5 },
+    --             { remaining = true },
+    --           },
+    --           -- Use this instead if `buku_include_tags` is true:
+    --           -- items = {
+    --           --   { width = 0.3 },
+    --           --   { width = 0.2 },
+    --           --   { remaining = true },
+    --           -- },
+    --         }
+    --       end,
+    --       make_display = function(displayer)
+    --         return function(entry)
+    --           return displayer {
+    --             entry.value.text.name,
+    --             -- Uncomment if `buku_include_tags` is true:
+    --             -- { entry.value.text.tags, 'Special' },
+    --             { entry.value.text.url, 'Comment' },
+    --           }
+    --         end
+    --       end,
+    --     },
+    --   },
+    -- },
+   },
 
-  }
+  -- extensions = {
+  --   heading = {
+  --       treesitter = true,
+  --     },
+  --   bookmarks = {
+  --       selected_browser = "chrome",
+  --     },
+  --   -- Your extension configuration goes here:
+  --   -- extension_name = {
+  --   --   extension_config_key = value,
+  --   -- }
+  --   -- please take a look at the readme of the extension you want to configure
+
+  -- }
 }
 
 require'telescope'.load_extension('project')
@@ -158,6 +204,8 @@ require('telescope').load_extension('glyph')
 require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
+require('telescope').load_extension('ui-select')
+require('telescope').load_extension('bookmarks')
 
 vim.api.nvim_set_keymap('n',
   '<leader>si',
@@ -182,7 +230,7 @@ function _G.TelBookmarks()
   }
 end
 
-
+-- require("telescope").extensions.bookmarks.bookmarks({ filter = "Scala" })
 
 local base_branch = "eins"
 

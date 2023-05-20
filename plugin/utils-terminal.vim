@@ -30,6 +30,7 @@ nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor
 
 nnoremap gej :call RunTerm_showFloat()<cr>
 nnoremap geJ :call TermOneShot_FloatBuffer( getline('.') )<cr>
+nnoremap ,gej :call TermOneShotFloat( getline('.') )<cr>
 nnoremap <leader>gej :call TermOneShot( getline('.') )<cr>
 
 func! RunTerm_showFloat()
@@ -50,6 +51,16 @@ func! TermOneShot( cmd )
 endfunc
 " The following line works (only) without shellescape()
 " echo 'hi'
+
+func! TermOneShotFloat( cmd )
+  silent let g:floatWin_win = FloatingTerm()
+  let g:TermID = termopen( a:cmd )
+  " normal G
+  call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
+endfunc
+" NOTE: the above works with some httpie requests, where systemlist fails:
+" http -v post localhost:8080/cities city=London country=UK
+
 
 func! TermOneShotCB (job_id, data, event)
   let resLines = RemoveTermCodes( a:data )

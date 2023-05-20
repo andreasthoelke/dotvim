@@ -33,8 +33,8 @@ func! SmithySyntaxAdditions ()
   syntax match Normal '"' conceal
   syntax match Normal '""' conceal cchar=∅
   syntax match Normal "\v\S\zs:" conceal
-  syntax match Normal "{" conceal
-  syntax match Normal "}" conceal
+  " syntax match Normal "{" conceal
+  " syntax match Normal "}" conceal
   syntax match Normal "(" conceal cchar= 
   syntax match Normal ")" conceal
   syntax match Normal "\/\/\s" conceal
@@ -57,8 +57,8 @@ func! SmithySyntaxAdditions ()
 
   syntax match Normal 'string' conceal cchar=s
   syntax match Normal 'String' conceal cchar=s
-  syntax match Normal 'integer' conceal cchar=ɪ
-  syntax match Normal 'boolean' conceal cchar=ʙ
+  syntax match Normal 'Integer' conceal cchar=ɪ
+  syntax match Normal 'Boolean' conceal cchar=ʙ
 
   syntax match Normal '@idempotent' conceal cchar=𝑖
   syntax match Normal '@http' conceal cchar=ʜ
@@ -99,7 +99,7 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class' conceal cchar=□
-  syntax match Normal 'lambda' conceal cchar=□
+  syntax match Normal 'lambda' conceal cchar=→
 
   syntax match Normal "def\s" conceal
 
@@ -177,6 +177,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Some' conceal cchar=≡
   syntax match Normal 'Option' conceal cchar=≟
   syntax match Normal 'Either' conceal cchar=∥
+  syntax match Normal 'NonEmptyList' conceal cchar=ᴻ
 
   " syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⠃
   " syntax match Normal 'py_' conceal cchar=⠃
@@ -456,7 +457,11 @@ func! ScalaSyntaxAdditions ()
 
   " This is effective in preventing the conceal unicode in normal comments
   syntax match Comment '\v\/\/\s\zs.*'
-  syntax match Comment '\v^\s\*\zs\zs.*'
+  syntax match Comment '\v\s\*\zs\zs.*'
+
+  " TODO: this case doesn't 'unmatch' the conceals in the comment. seems minor.
+  " /** Decomposes the `NonEmptyList` into an element and a (possibly empty) `List` */
+  " syntax match Comment '\v\*\*\zs\zs.*'
 
   " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '\/\/\s', 12, -1, {'conceal': ''})
@@ -475,7 +480,7 @@ func! ScalaSyntaxAdditions ()
   " .. we can't use a normal syntax match to conceal the comment chars
   " syntax match Normal '\v\s\*\s' conceal
   " but use matchadd instead
-  call matchadd('Conceal', '\v^\s\*\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\v\s\*\s', 12, -1, {'conceal': ''})
   syntax match Normal '\v\s\*\/' conceal
 
 

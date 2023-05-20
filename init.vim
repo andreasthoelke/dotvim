@@ -30,6 +30,9 @@ Plug 'MattesGroeger/vim-bookmarks'
 " just a PR for del bookmarks fix
 Plug 'mrsflv/telescope-vim-bookmarks.nvim'
 
+Plug 'dhruvmanila/browser-bookmarks.nvim', { 'tag': '*' }
+Plug 'kkharji/sqlite.lua'
+
 " Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
@@ -48,6 +51,7 @@ Plug 'ghassan0/telescope-glyph.nvim'
 Plug 'softinio/scaladex.nvim'
 Plug 'LinArcX/telescope-env.nvim'
 Plug 'kelly-lin/telescope-ag'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
 
 
 " Plug 'rmagatti/auto-session'
@@ -63,6 +67,8 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " Plug 'kshenoy/vim-ctrlp-args'
 
 Plug 'vim-denops/denops.vim'
+
+" Plug 'ekalinin/Dockerfile.vim'
 
 Plug 'lambdalisue/guise.vim'
 
@@ -390,6 +396,7 @@ Plug 'jszakmeister/markdown2ctags'
 " NOTE: I modified the souce to stop http link highlighting: ~/.config/nvim/plugged/rel.vim/plugin/rel.vim#/au%20BufWinEnter%20*
 Plug 'aklt/rel.vim'
 
+Plug 'jceb/vim-orgmode'
 
 Plug 'purescript-contrib/purescript-vim'
 " TODO this was causing a mapping for 'w' and "e" that would jump across ":" and "."

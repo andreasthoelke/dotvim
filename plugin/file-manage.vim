@@ -153,7 +153,7 @@ nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
 nnoremap <silent> ,gp :<C-u>FzfPathsFromFile ~/.config/nvim/.vim_mru_files<CR>
 nnoremap <silent> ,,gp :<C-u>FzfPreviewOldFiles<CR>
 " nnoremap <silent> ,gp :<C-u>FZFMru<CR>
-nnoremap <silent> <leader>gp :topleft MRU<CR>
+" nnoremap <silent> <leader>gp :topleft MRU<CR>
 " nnoremap <silent> go :<C-u>FzfBuffer<cr>
 nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
 
@@ -164,6 +164,8 @@ nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
 nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p
 nnoremap <silent> ,gs <cmd>NvimTreeFindFile<cr>
 nnoremap <silent> ,go <cmd>NvimTreeToggle<cr>
+nnoremap <silent> <leader>gp <cmd>Telescope find_files<cr>
+nnoremap <silent> ,gp        <cmd>Telescope file_browser<cr>
 
 
 " ─   CtrlP                                              ■

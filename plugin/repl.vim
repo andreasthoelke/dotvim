@@ -1,6 +1,10 @@
 
 
 
+nnoremap <silent>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
+nnoremap <silent>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
+nnoremap <silent>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
+nnoremap <silent>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
 
 " https://httpie.io/docs/cli/examples

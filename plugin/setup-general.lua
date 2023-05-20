@@ -438,5 +438,29 @@ Nvim_tree = require("nvim-tree").setup({
 -- ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/-%20api.fs.%20*nvim-tree.api.fs*
 -- ~/.config/nvim/plugged/nvim-tree.lua/lua/nvim-tree/actions/dispatch.lua#/--%20Tree%20modifiers
 
+-- https://github.com/dhruvmanila/browser-bookmarks.nvim
+-- local bookmlib = require('browser-bookmarks').setup({
+--   -- override default configuration values
+--   selected_browser = 'chrome',
+-- })
+
+-- vim.keymap.set(
+--   'n', '<leader>fb',
+--   require('browser-bookmarks').select, {
+--     desc = 'Fuzzy search browser bookmarks',
+--   })
+
+local telescLib = require('telescope').load_extension('bookmarks')
+
+-- vim.keymap.set(
+--   'n', '<leader>tb',
+--     require('telescope').extensions.bookmarks.bookmarks()
+--   )
+
+
+
+
+
+
 
 

@@ -34,7 +34,7 @@ endfunc
 nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
 
 
-inoremap <expr> jk pumvisible() ? "<C-e>" : "<Esc>"
+" inoremap <expr> jk pumvisible() ? "<C-e>" : "<Esc>"
 
 
 " the vimrc

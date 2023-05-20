@@ -42,6 +42,7 @@ nnoremap <leader>te :Telescope
 nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
 nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
+" nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
 " NOTE: these map  ~/.config/nvim/help.md#/###%20telescope%20project
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
@@ -57,15 +58,18 @@ nnoremap <leader>fF <cmd>Telescope file_browser<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
+" nnoremap <leader>fb <cmd>Telescope buffers<cr>
+" this is now used for chrome bookmarksearch, use 'go' instead
 
-nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
+" nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
 nnoremap <silent> gp <cmd>Telescope oldfiles<cr>
 " nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
 nnoremap <silent> go <cmd>Telescope buffers<cr>
 
 " Using Lua functions
 nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
+nnoremap <leader>tb <cmd>lua require('telescope').extensions.bookmarks.bookmarks()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope').extensions.bookmarks.bookmarks()<cr>
 " nnoremap <leader>gp <cmd>lua require('telescope.builtin').oldfiles()<cr>
 " nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>

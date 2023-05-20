@@ -11,6 +11,8 @@ au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
 
 au ag BufNewFile,BufRead,WinNew *.sh      call tools_scala#bufferMaps()
+
+au ag BufRead,BufNewFile *.smithy		setfiletype smithy
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()

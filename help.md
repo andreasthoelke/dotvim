@@ -1504,6 +1504,10 @@ https://github.com/tom-anders/telescope-vim-bookmarks.nvim
 
 leader c-o - FzfPreviewJumps
 
+## Chrome Bookmark search
+~/.config/nvim/plugin/utils-fileselect-telescope.vim#/nnoremap%20<leader>fb%20<cmd>lua
+Telescope bookmarks initial_mode=normal default_text=Scala/Ref-Projs/
+
 ## Bookmarks Shortcuts / Popular links
 
 also consider:

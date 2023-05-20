@@ -120,6 +120,12 @@ func! ScalaReplRun()
   " normal G
 endfunc
 
+func! ScalaSbtSession_RunMain( main_path )
+  let cmd = "runMain " . a:main_path . "\n"
+  call jobsend(g:ScalaReplID, cmd )
+endfunc
+
+
 func! ScalaReplPost( message )
   call jobsend(g:ScalaReplID, a:message . "\n" )
   let g:floatWin_win = FloatingSmallNew([])

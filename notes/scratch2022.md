@@ -1,4 +1,26 @@
 
+# scaladex
+l si
+1. search for a keyword ("cats")
+2. select specific lib and org
+3. select sublib
+4. <c-s> will open this lib in the browser
+   then go to version in the browser and copy e.g. the sbt string
+4. <cr> copies to the clipboard.
+5. do ""P to ouput the ivy string! (it's in a weired register)
+   import $ivy.`org.typelevel::cats-core:2.9.0`
+   (don't know how to get the sbt string)
+
+
+
+# 5-2023 file views
+<leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
+<leader>go <cmd>NvimTreeToggle<cr><c-w>p
+,gs <cmd>NvimTreeFindFile<cr>
+,go <cmd>NvimTreeToggle<cr>
+<leader>gp <cmd>Telescope find_files<cr>
+,gp        <cmd>Telescope file_browser<cr>
+
 # open from dirvish float
 I - full
 U - up
@@ -32,6 +54,9 @@ TODO:
 consider metals docu here:
 https://github.com/keynmol/dot/blob/master/nvim/init.lua
 
+to update sbt build
+MetalsImportBuild
+
 TODO:
 word motions, `cw` should not include the ','
   ???, "eins"
@@ -44,7 +69,7 @@ word motions, `cw` should not include the ','
 NOTE: the new 'gei' = SourcePrintCommented!
 to run vimscript/lua commands in .md
 
-# ─   Telescope Rgx search                           ──
+# ─   Telescope Rgx regex search                           ──
 
 ,sa       - all scala code
 ,sA       - all scala code in selected projects
@@ -91,6 +116,10 @@ l, v       :"vnew " . getline('.')
 ,,tn       :exec "tabe ."<cr>
 ,sn        :call Dirvish_newWin( "new" )<cr>
 ,,sn       :exec "new ."<cr>
+
+window move is now e.g.:
+nnoremap <leader><c-w>L <c-w>L
+
 
 ## file view 2023-04
 view a file path:
@@ -369,6 +398,9 @@ L bj BookmarkMoveDown
 'i', '<C-x>', delete_selected_or_at_cursor
 'n', 'dd', delete_selected_or_at_cursor
 
+## Chrome Bookmark search
+~/.config/nvim/plugin/utils-fileselect-telescope.vim#/nnoremap%20<leader>fb%20<cmd>lua
+Telescope bookmarks initial_mode=normal default_text=Scala/Ref-Projs/
 
 # Scala references with Trouble
 ged  - show workspace errors
@@ -401,6 +433,21 @@ function M.WatchFile_start()
  gsF :call Scala_ServerClientRequest('', 'term')<cr>
 ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
+## Http requests httpie
+use 'gej' for simple GET requests
+use ',gej' for POST requests
+http -v get localhost:8080/cities/127/weather
+http -v post localhost:8080/cities city=London country=UK
+http post localhost:8080/cities city=London country=UK
+
+### httpie shortform requests!
+  use 'gsf' for get requests
+cities/127/weather
+  use ',gsf' for post requests!
+cities city=London country=UK
+cities city=London country=UK -v
+  note how the --verbose option can still be passed!
+  also ',gsF' or 'gsF' runs in an term for e.g. streaming responses
 
 ## thin fonts 
 ~/Documents/Notes/vim_works.md#/#%20alacritty%20fork
@@ -411,6 +458,7 @@ ok, i have now decided to use
     defaults write org.alacritty AppleFontSmoothing -int 0
 instead of
 - thicker, blorred and bright/fresh colored fonts in alacritty 0.10.0
+
 
 
 
