@@ -18,6 +18,7 @@ func! ScalaReplStart ()
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
   let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
+  call jobsend(g:ScalaReplID, "project core\n" )
 endfunc
 
 

@@ -297,6 +297,9 @@ Plug 'hrsh7th/vim-vsnip'
 
 Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim'
 
+" https://github.com/DNLHC/glance.nvim/blob/master/README.md
+Plug 'dnlhc/glance.nvim'
+
 " couldn't get this to work
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'saadparwaiz1/cmp_luasnip'

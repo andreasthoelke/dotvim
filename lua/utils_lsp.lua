@@ -11,7 +11,7 @@ local utilsg = require'utils_general'
 
 -- vim.api.nvim_win_get_config(0)
 -- vim.api.nvim_win_get_config(0).relative
--- lua vim.pretty_print(vim.api.nvim_win_get_config(0))
+-- lua vim.print(vim.api.nvim_win_get_config(0))
 
 local function get_available_client(method)
   for id, client in pairs(vim.lsp.buf_get_clients()) do
@@ -44,7 +44,7 @@ function M.LspType()
   local typeString = ""
   local results_lsp, err = M.hover()
   if results_lsp == nil then
-    vim.pretty_print( err )
+    vim.print( err )
     return err
   end
   for _, server_results in pairs(results_lsp) do

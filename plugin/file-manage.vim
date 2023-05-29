@@ -38,6 +38,7 @@ nnoremap <silent> <leader>,v :exec "vnew " . getline('.')<cr>
 nnoremap <silent> <c-w>F :exec "vnew " . getline('.')<cr>
 nnoremap <silent> <c-w><leader>v :exec "vnew " . getline('.')<cr>
 nnoremap <silent> <c-w><leader>s :exec "new " . getline('.')<cr>
+nnoremap <silent> <c-w><leader>t :exec "tabedit " . getline('.')<cr>
 nnoremap <silent> <c-w><leader>o :call FloatingBuffer( getline('.') )<cr>
 
 nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
@@ -486,8 +487,8 @@ endfunc
 
 
 " CAUTION: Use only with Dirvish buffer. All lines need to represent file paths.
-nnoremap <leader><leader>dm :call DirvishSortByModified()<cr>
-nnoremap ,,dm :lua DirvishShowModified()<cr>
+nnoremap <leader><leader>im :call DirvishSortByModified()<cr>
+nnoremap ,,im :lua DirvishShowModified()<cr>
 func! DirvishSortByModified()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_file_modified' )
@@ -496,8 +497,8 @@ func! DirvishSortByModified()
   call timer_start(1, {-> execute( 'setlocal conceallevel=3' )})
 endfunc
 
-nnoremap <leader><leader>ds :call DirvishSortBySize()<cr>
-nnoremap ,,ds :lua DirvishShowSize()<cr>
+nnoremap <leader><leader>is :call DirvishSortBySize()<cr>
+nnoremap ,,is :lua DirvishShowSize()<cr>
 func! DirvishSortBySize()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_path_size' )

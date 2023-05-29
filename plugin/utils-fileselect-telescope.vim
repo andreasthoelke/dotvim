@@ -56,6 +56,10 @@ nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fF <cmd>Telescope file_browser<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+
+nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
+
+
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 " nnoremap <leader>fb <cmd>Telescope buffers<cr>

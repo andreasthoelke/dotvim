@@ -284,7 +284,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '>>>' conceal cchar=↣
   " compose
   syntax match Normal '<<<' conceal cchar=∘
-  syntax match Normal 'compose' conceal cchar=∘
+  " syntax match Normal 'compose' conceal cchar=∘
 
   " syntax match Normal 'ZIO\ze\[' conceal cchar=ᴱ
   " syntax match Normal 'ZIO' conceal cchar=ᴱ
@@ -363,7 +363,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'dify' conceal cchar=✴
   syntax match Normal 'enqueue' conceal cchar=«
   syntax match Normal 'dequeue' conceal cchar=»
-  syntax match Normal 'complete' conceal cchar=⟢
+  syntax match Normal 'complete\ze(\W)' conceal cchar=⟢
   " syntax match Normal '\vget\ze(\W|\_$)' conceal cchar=⟡
 
   syntax match Normal 'self' conceal cchar=∝
@@ -480,7 +480,9 @@ func! ScalaSyntaxAdditions ()
   " .. we can't use a normal syntax match to conceal the comment chars
   " syntax match Normal '\v\s\*\s' conceal
   " but use matchadd instead
-  call matchadd('Conceal', '\v\s\*\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '\v^\s\*\s', 12, -1, {'conceal': ''})
+  " this is for doc comments that are indented. while preventing to affect multiplication e.g. 3 * 4
+  call matchadd('Conceal', '\v\s\zs\s\*\s', 12, -1, {'conceal': ''})
   syntax match Normal '\v\s\*\/' conceal
 
 

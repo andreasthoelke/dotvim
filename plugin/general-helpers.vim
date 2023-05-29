@@ -104,7 +104,9 @@ nnoremap ,ce :call FolderSearch_setPath()<cr>
 
 " 2] "point to collection" - "collection point" => ,cp
 " _SET_SEARCH_FOLDER_PATH:
-let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/notes_stack/'
+" let g:FolderSearch_Path = '/Users/at/Documents/Bookmarks/notes_stack/'
+" after vim restart I'll search through ALL notes by default.
+let g:FolderSearch_Path = '/Users/at/Documents/Notes/'
 nnoremap ,cp :call FolderSearch_setPath()<cr>
 
 func! FolderSearch_setPath()

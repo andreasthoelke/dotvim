@@ -1,4 +1,5 @@
-
+how to find a healine in vim code?
+what is filtering the tree / target folder??
 # scaladex
 l si
 1. search for a keyword ("cats")
@@ -12,14 +13,6 @@ l si
    (don't know how to get the sbt string)
 
 
-
-# 5-2023 file views
-<leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
-<leader>go <cmd>NvimTreeToggle<cr><c-w>p
-,gs <cmd>NvimTreeFindFile<cr>
-,go <cmd>NvimTreeToggle<cr>
-<leader>gp <cmd>Telescope find_files<cr>
-,gp        <cmd>Telescope file_browser<cr>
 
 # open from dirvish float
 I - full
@@ -47,6 +40,9 @@ zio test may provide me with modular infrastructure
 ~testQuick incrementally build the project (in this sbt session)
 i could also print in tests
 
+## sbt printer repl
+l ro :call ScalaReplStart()<cr>
+l rq :call ScalaReplStop()<cr>
 
 
 TODO:
@@ -72,6 +68,8 @@ to run vimscript/lua commands in .md
 # ─   Telescope Rgx regex search                           ──
 
 ,sa       - all scala code
+            (note this one now works with live regex! ~/.config/nvim/plugin/utils-fileselect-telescope.vim#/nnoremap%20,sa%20<cmd>Telescope
+            ^enum.*\(  vs ^enum.*\[
 ,sA       - all scala code in selected projects
 ,ss(ge;)  - all scala symbols
 ,sS(ge:)  - all scala symbols in selected projects
@@ -94,7 +92,7 @@ ge:       - main (scala) symbols/bindings in selected (parent-based) repos
 ,si       - signatures with Zio types in selected projects
 
 maps, regexes and glob definitions:
-~/.config/nvim/plugin/utils_general_maps.lua#/--%20search%20in
+/Users/at/.config/nvim/plugin/utils_general_maps.lua
 
 
 new telescope select maps
@@ -126,6 +124,8 @@ view a file path:
   right, below and float
 c-w l v :exec "vnew " . getline('.')<cr>
 c-w l s :exec "new " . getline('.')<cr>
+c-w l t :exec "tabedit " . getline('.')<cr>
+
 c-w l o :call FloatingBuffer( getline('.') )<cr>
 
 ## dovish
@@ -142,6 +142,14 @@ https://github.com/roginfarrer/vim-dirvish-dovish/blob/main/README.md
 
 ## Nvim Tree
 
+    5-2023 file views
+    <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
+    <leader>go <cmd>NvimTreeToggle<cr><c-w>p
+    ,gs <cmd>NvimTreeFindFile<cr>
+    ,go <cmd>NvimTreeToggle<cr>
+    <leader>gp <cmd>Telescope find_files<cr>
+    ,gp        <cmd>Telescope file_browser<cr>
+
 l go   - toggle nvim-tree open
 l gs   - find current buffer in tree
 l b    - set base/root dir
@@ -157,6 +165,13 @@ p", action = "preview" },
 
 <leader>I", action = "toggle_git_ignored" },
 <leader>G", action = "toggle_git_clean" },
+
+    *nvim-tree.filters.git_clean*
+    Do not show files with no git status. This will show ignored files when
+    |nvim-tree.git.ignore| is set, as they are effectively dirty.
+    Toggle via the `toggle_git_clean` action, default mapping `C`.
+      Type: `boolean`, Default: `false`
+
 
 <leader>/", action = "search_node" }, -- can use regex and expand child folders!
 <leader>rf", action = "run_file_command" }, -- vim shell with the abs file path
@@ -203,12 +218,12 @@ more maps and scripts:
 /.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
 
 
-## DirvishSortByModified
-  <leader><leader>dm :call DirvishSortByModified()<cr>
-  ,,dm :lua DirvishShowModified()<cr>
+## info & sort in Dirvish / SortBy Modified and size
+  <leader><leader>im :call DirvishSortByModified()<cr>
+  ,,im :lua DirvishShowModified()<cr>
 ## DirvishSortBySize lines count
-  <leader><leader>ds :call DirvishSortBySize()<cr>
-  ,,ds :lua DirvishShowSize()<cr>
+  <leader><leader>is :call DirvishSortBySize()<cr>
+  ,,is :lua DirvishShowSize()<cr>
 
 
 # Link files to Bookmark folder & search
@@ -258,6 +273,11 @@ can stage/unstage files in dirvish
 - put windows of different file versions side by side and use
 :set scrollbind
 :set noscrollbind
+
+## git removing files
+git rm -r --cached .bloop/
+git rm -r --cached .metals/
+
 
 ### Telescope git_bcommits
 This is a convienient alternative approach to see a diff via VimDiff in 
@@ -399,14 +419,26 @@ L bj BookmarkMoveDown
 'n', 'dd', delete_selected_or_at_cursor
 
 ## Chrome Bookmark search
+l fb
 ~/.config/nvim/plugin/utils-fileselect-telescope.vim#/nnoremap%20<leader>fb%20<cmd>lua
 Telescope bookmarks initial_mode=normal default_text=Scala/Ref-Projs/
 
-# Scala references with Trouble
+could also search (and edit!?) the (json) file:
+/Users/at/Library/Application Support/Google/Chrome/Default/Bookmarks
+
+
+# Scala references with Trouble (lsp based)
 ged  - show workspace errors
 ge]/[ - next/prev error
 ger   - show references of symbol under cursor
 ]q [q - next/prev reference in workspace
+
+# lsp 
+l lgr :Glance references<cr>
+l lgd :Glance definitions<cr>
+l lgt :Glance type_definitions<cr>
+l lgi :Glance implementations<cr>
+https://github.com/DNLHC/glance.nvim/blob/master/README.md
 
 ## git fetch an update from the remote repo
 https://github.com/git-guides/git-pull
@@ -449,6 +481,13 @@ cities city=London country=UK -v
   note how the --verbose option can still be passed!
   also ',gsF' or 'gsF' runs in an term for e.g. streaming responses
 
+## test an httpApp / routes in http4s ember server
+gss :call Scala_SetServerApp_ScalaCLI()<cr>
+gsr :call Scala_ServerRestart()<cr>
+,,gsr :call Scala_ServerRestartTerm()<cr>
+gsS :call Scala_ServerStop()<cr>
+
+
 ## thin fonts 
 ~/Documents/Notes/vim_works.md#/#%20alacritty%20fork
 
@@ -459,8 +498,10 @@ ok, i have now decided to use
 instead of
 - thicker, blorred and bright/fresh colored fonts in alacritty 0.10.0
 
-
-
+## github search
+i made some scripts
+general pattern:
+https://github.com/search?q=user%3Araquo+duplicate+ids&type=issues
 
 
 

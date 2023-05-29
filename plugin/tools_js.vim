@@ -39,6 +39,11 @@ func! tools_js#bufferMaps()
   nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
   nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
 
+  " nnoremap geR :Glance references<CR>
+  " nnoremap geD :Glance definitions<CR>
+  " nnoremap geY :Glance type_definitions<CR>
+  " nnoremap geM :Glance implementations<CR>
+
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js()<cr>
   nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js_function()<cr>

@@ -51,22 +51,24 @@ local paths_patterns1 = {
 
 -- function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
 
+-- now using regular live grep
+-- ~/.config/nvim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
 -- search in [A]ll scala code:
-vim.keymap.set( 'n',
-  ',sa', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    "",
-    {"-g", "*.scala"},
-    {'.'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   ',sa', function() require( 'utils_general' )
+--   .RgxSelect_Picker( {},
+--     "",
+--     {"-g", "*.scala"},
+--     {'.'}
+--     ) end )
 
-vim.keymap.set( 'n',
-  ',sA', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    "",
-    {"-g", "*.scala"},
-    {'/Users/at/Documents/Proj/b_expl_stack/'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   ',sA', function() require( 'utils_general' )
+--   .RgxSelect_Picker( {},
+--     "",
+--     {"-g", "*.scala"},
+--     {'/Users/at/Documents/Proj/b_expl_stack/'}
+--     ) end )
 
 -- search in scala [S]ymbols:
 -- (also not gel for the lsp symbols in the current file)
@@ -243,6 +245,19 @@ vim.keymap.set( 'n',
     {},
     { dir_nvim }
     ) end )
+
+-- search in entire vim headers:
+vim.keymap.set( 'n',
+  ',svh', function() require( 'utils_general' )
+  .RgxSelect_Picker(
+    {},
+    rgx_header,
+    {},
+    { dir_nvim }
+    ) end )
+
+
+
 
 
 

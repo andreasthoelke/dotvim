@@ -158,9 +158,10 @@ func! Scala_SetPrinterIdentif( mode )
   elseif repoType == 'sbt' && effType == 'cats'
     let fntag = 'ScalaCliCats'
     " setting vars in printer.scala should not depend on sbt vs scala-cli?
-  elseif repoType == 'sbt'
+  elseif repoType == 'sbt' && effType == 'both'
     " let fntag = 'SBT'
-    let fntag = 'ScalaCliCats'
+    " let fntag = 'ScalaCliCats'
+    let fntag = 'ScalaCliZIO'
   else
     echoe "not supported"
     return
@@ -394,6 +395,8 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let typeMode = "cats_collection"
   elseif  typeStr =~ "\(List"
     let typeMode = "tupled-collection"
+  elseif  typeStr =~ "^\("
+    let typeMode = "tupled-collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
@@ -427,7 +430,7 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   let _printValEf = 'IO( "" )'
 
   if     a:keyCmdMode == 'effect' || typeMode == 'cats'
-    let _printVal = identif          " already an effect
+    let _printValEf = identif          " already an effect
 
   elseif typeMode == 'collectionIO'
     let _infoEf     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
@@ -516,6 +519,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   "   let typeMode = "zio_collection"
   elseif  typeStr =~ "\(List"
     let typeMode = "tupled-collection"
+  elseif  typeStr =~ "^\("
+    let typeMode = "tupled-collection"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
@@ -586,6 +591,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   let printerFilePath = getcwd() . '/PrinterZio.scala'
+  let printerAtRoot = filereadable( printerFilePath )
+  if !printerAtRoot
+    let printerFilePath = getcwd() . '/modules/core/PrinterZio.scala'
+  endif
+
   let plns = readfile( printerFilePath, '\n' )
 
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
@@ -626,15 +636,15 @@ func! Scala_SetPrinterIdentif_ScalaCliZio_( mode )
 endfunc
 
 func! Scala_SetServerApp_ScalaCLI()
-  let printerFilePath = getcwd() . '/PreviewServer.scala'
+  let printerFilePath = getcwd() . '/PreviewServer_Ember.scala'
 
   let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
-  call VirtualRadioLabel_lineNum( '✱', hostLn )
+  call VirtualRadioLabel_lineNum( "« httpApp" , hostLn )
 
-  let bindingLine = "val previewApp = " . identif
+  let bindingLine = "val httpApp = " . identif
 
   let printerLines = readfile( printerFilePath, '\n' )
   let printerLines[1] = bindingLine
@@ -644,16 +654,19 @@ func! Scala_SetServerApp_ScalaCLI()
 endfunc
 
 
-let g:Scala_ServerCmd      = "scala-cli . --main-class PreviewServer --class-path resources"
+let g:Scala_ServerCmd_Zio   = "scala-cli . --main-class PreviewServer --class-path resources -nowarn -Ymacro-annotations"
+let g:Scala_ServerCmd_Ember = "scala-cli . --main-class server_ember.PreviewServer_Ember --class-path resources -nowarn -Ymacro-annotations"
 " let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
 " let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
 let g:Scala_PrinterCatsCmd = "scala-cli . --py --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
+" let g:Scala_PrinterCatsCmd = "bloop run root --main printcat.runCatsApp"
 let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations"
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
   let repoType = Scala_RepoBuildTool()
   " echo effType repoType
+  " return
 
   if     effType == 'zio'
     let cmd = g:Scala_PrinterZioCmd
@@ -673,7 +686,13 @@ func! Scala_RunPrinter( termType )
 
   elseif repoType == 'sbt'
     " call ScalaReplRun()
-    call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
+
+    " TODO: just temp for a prim zio sbt repo
+    if effType == 'both'  || effType == 'zio'
+      call ScalaSbtSession_RunMain( "printzio.runZioApp" )
+    else
+      call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
+    endif
 
   else
     echoe "not supported: " . repoType
@@ -776,13 +795,13 @@ let g:ScalaServerCallbacks = {
 
 func! Scala_ServerStart ()
   if exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is already running' ) | return | endif
-  silent let g:Scala_ServerID = jobstart( g:Scala_ServerCmd, g:ScalaServerCallbacks )
+  silent let g:Scala_ServerID = jobstart( g:Scala_ServerCmd_Ember, g:ScalaServerCallbacks )
 endfunc
 
 func! Scala_ServerStartT ()
   if exists('g:Scala_ServerID') | call T_echo( 'Scala_Server is already running' ) | return | endif
   exec "8new"
-  let g:Scala_ServerID = termopen( g:Scala_ServerCmd )
+  let g:Scala_ServerID = termopen( g:Scala_ServerCmd_Ember )
   silent wincmd p
 endfunc
 
