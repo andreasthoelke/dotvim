@@ -125,21 +125,21 @@ vim.keymap.set( 'n',
     ) end )
 
 -- search in COMMENTS:
-vim.keymap.set( 'n',
-  ',sc', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_comment,
-    {},
-    {'.'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   ',sc', function() require( 'utils_general' )
+--   .RgxSelect_Picker( {},
+--     rgx_comment,
+--     {},
+--     {'.'}
+--     ) end )
 
-vim.keymap.set( 'n',
-  ',sC', function() require( 'utils_general' )
-  .RgxSelect_Picker( {},
-    rgx_comment,
-    glb_projs1,
-    {'..'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   ',sC', function() require( 'utils_general' )
+--   .RgxSelect_Picker( {},
+--     rgx_comment,
+--     glb_projs1,
+--     {'..'}
+--     ) end )
 
 -- search in HEADERS:
 vim.keymap.set( 'n',
@@ -299,6 +299,8 @@ local theme_opts = {
 -- vim.keymap.set( 'n', 'ger',        function() builtin.lsp_references(themes.get_cursor()) end )
 vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_cursor( theme_opts )) end )
 -- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
+
+
 
 
 -- ─   Lsp maps                                         ──

@@ -241,6 +241,19 @@ local scala_interest_files = {
   'AZioHttp/*.scala',
 }
 
+function M.Search_collection_full()
+  require('telescope.builtin').live_grep({
+    cwd = vim.g.FolderSearch_Path,
+  } )
+end
+
+function M.Search_collection_md_headers()
+  require('telescope.builtin').live_grep({
+    default_text = "# " ,
+    cwd = vim.g.FolderSearch_Path,
+  } )
+end
+
 
 function M.Search_patternfiles()
   require('telescope.builtin').live_grep({
@@ -514,6 +527,7 @@ end
 -- require('utils_general').Concat({4,3}, {8, 9})  
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
 -- vim.fn.join( {3,4}, 1 )
+-- vim.g.FolderSearch_Path
 -- vim.fn.systemlist( 'git diff HEAD --stat ' )
 -- vim.fn..slice({2,3}, 0, 1)
 -- {3,4}.1

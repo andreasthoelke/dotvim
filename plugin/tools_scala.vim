@@ -70,9 +70,12 @@ func! tools_scala#bufferMaps()
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
-  nnoremap <silent><buffer> ,ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
-  nnoremap <silent><buffer> geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
+  nnoremap <silent><buffer> ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " " this is small and local
+  " nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
+  nnoremap <silent><buffer> ,ger <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> geR <cmd>Glance references<cr>
   nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
@@ -822,20 +825,27 @@ endfunc
 "   silent wincmd p
 " endfunc
 
-func! Scala_ServerClientRequest( args, mode )
+let g:httpport = 8080
 
+func! Scala_ServerClientRequest( args, mode )
   let urlEx = matchstr( getline("."), '\v(//\s)?\zs.*' )
 
-  let g:scala_serverRequestCmd = "http " . a:args . " :8080/" . urlEx . " --ignore-stdin --stream"
+  let g:scala_serverRequestCmd = "http " . a:args . " :" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
   if a:mode == 'term'
     call TermOneShot( g:scala_serverRequestCmd )
   else
     let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
-    call Scala_showInFloat( resultLines )
+    " call Scala_showInFloat( resultLines )
+    silent let g:floatWin_win = FloatingSmallNew ( resultLines )
+    silent exec "%!jq"
+    set ft=json
+    call TsSyntaxAdditions()
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
     " silent let g:floatWin_win = FloatingSmallNew ( resultLines )
     " silent call FloatWin_FitWidthHeight()
   endif
-  silent wincmd p
+  " silent wincmd p
 endfunc
 " http --help
 " echo system( "http localhost:8002/fruits/a eins=zwei --ignore-stdin" )

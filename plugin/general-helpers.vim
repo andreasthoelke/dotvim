@@ -128,6 +128,7 @@ nnoremap ,csh :call FolderSearch_run("^#")<cr>
 "    "collection search signature" => ,css
 nnoremap ,css :call FolderSearch_run("def\s")<cr>
 
+nnoremap ,csr <cmd>Telescope live_grep search_dirs=/Users/at/Documents/Notes<cr>
 
 func! FolderSearch_run( rgx )
   call Telescope_folder_rgx( g:FolderSearch_Path, a:rgx )

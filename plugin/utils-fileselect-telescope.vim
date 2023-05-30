@@ -59,6 +59,10 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 
 nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
 
+" nnoremap ,scr <cmd>Telescope live_grep search_dirs=/Users/at/Documents/Notes<cr>
+nnoremap ,scr <cmd>lua require('utils_general').Search_collection_full()<cr>
+nnoremap ,sch <cmd>lua require('utils_general').Search_collection_md_headers()<cr>
+
 
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>

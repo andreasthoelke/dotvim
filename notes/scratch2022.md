@@ -40,12 +40,21 @@ zio test may provide me with modular infrastructure
 ~testQuick incrementally build the project (in this sbt session)
 i could also print in tests
 
-## sbt printer repl
+## sbt printerzio repl
 l ro :call ScalaReplStart()<cr>
 l rq :call ScalaReplStop()<cr>
 
+this will do 'project core'
+see 8_zio_skunk_tradeIO project
+works in this multi module sbt project
+but i need to put the PrinterZio.scala file into the modules/core/ folder
 
-TODO:
+todos:
+- cats compliant
+- automate the project / module selection a bit?
+
+
+## TODO:
 
 consider metals docu here:
 https://github.com/keynmol/dot/blob/master/nvim/init.lua
@@ -74,6 +83,10 @@ to run vimscript/lua commands in .md
 ,ss(ge;)  - all scala symbols
 ,sS(ge:)  - all scala symbols in selected projects
 
+,scr      - full text in active 'collection folder' use over ,csj
+,sch      - header prefixed full text in active 'collection folder' use over ,csh
+,csj/h    - these include searching for filenames
+
 ,svs      - search vim symbols
 ,svm      - search vim maps
 ,svv      - search vim all code
@@ -100,6 +113,8 @@ new telescope select maps
 <c-s>u  - select up
           -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/utils-fileselect-telescope.lua#/["<c-s><c-u>"]%20=%20open_above,
           -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
+
+~/.config/nvim/plugin/utils-fileselect-telescope.vim#/nnoremap%20,sa%20<cmd>Telescope
 
 # ─   Dirvish 'newWin' maps                          ──
 ==>> file in parent folder || project root folder <<==
@@ -241,6 +256,18 @@ new: all notes go to Documents/Notes folder, only *hard* links go to Documents/B
 
 set a default/start collection here: ~/.config/nvim/plugin/general-helpers.vim#/let%20g.FolderSearch_Path%20=
 .. currently its "notes_stack"
+
+## new collection regex search 30.05.2023
+    simple full live regex:
+,scr <cmd>Telescope live_grep search_dirs=/Users/at/Documents/Notes<cr>
+
+    searches in current collection folder! with a regex (for header) default text
+,sch <cmd>lua require('utils_general').Search_collection_md_headers()<cr>
+
+CONCLUSION:
+use ,scr over ,csj
+use ,sch over ,csh
+
 
 # Vim-Works
 /Users/at/Documents/Bookmarks/notes_1_2023/vim_works.md
