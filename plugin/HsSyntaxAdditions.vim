@@ -443,6 +443,7 @@ func! MarkdownSyntaxAdditions()
   call clearmatches()
   call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  set foldmethod=marker
 endfunc
 
 func! VimScriptSyntaxAdditions ()

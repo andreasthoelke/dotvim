@@ -222,12 +222,24 @@ B     - in tree will filter to only the list of marked/open files
 
 
 
-## vim DBUI
+## vim tools_db / DBUI
+now prefer using psql within tools_db.vim
+1. set postgres db name using 'l ss'
+let g:dbname = 'zio_skunk_tradeIO'
+2. use gej in .sql file paragraph
+
+/Users/at/.config/nvim/plugin/tools_db.vim|94
+
+for DBUI:
+ll du   - toggle open the DBUI panel
+ll df   - to link a .sql buffer to a database connection
+A       - in panel to create a new connection (using a connection string like:
+          postgresql://at:at@localhost:5432/zio_skunk_tradeIO
+ll d}   - eval a motion. ll dib /ip should also work? 
+:DBRun  - for file or visSel
+
 :DBUI  needs to :DBUIFindBuffer of a .sql file
 `gei` evaluates paragraphs
-initially the DB is empty. you first need to create data with ->
-localhost:8080/docs
-try -> execute to create party, then vote and find the person, vote and party in the DB!
 
 more maps and scripts: 
 /.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
@@ -508,6 +520,11 @@ cities city=London country=UK -v
   note how the --verbose option can still be passed!
   also ',gsF' or 'gsF' runs in an term for e.g. streaming responses
 
+let g:httpport = 8080
+func! Scala_ServerClientRequest( args, mode )
+- json formats, uses TSSyntaxadditions
+
+
 ## test an httpApp / routes in http4s ember server
 gss :call Scala_SetServerApp_ScalaCLI()<cr>
 gsr :call Scala_ServerRestart()<cr>
@@ -530,6 +547,7 @@ i made some scripts
 general pattern:
 https://github.com/search?q=user%3Araquo+duplicate+ids&type=issues
 
-
+## vim substitute replace text
+.+1,127substitute/\.scala//g
 
 

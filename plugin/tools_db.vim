@@ -2,6 +2,7 @@
 " db-ui connections can be defined here: ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
 
 func! tools_db#bufferMaps()
+  nnoremap <silent><buffer> gej :call DB_eval_parag_psql()<cr>
   nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
   nnoremap <silent><buffer> ,ge <Plug>(sqls-execute-query)
 
@@ -88,6 +89,22 @@ func! DB_eval_parag()
   call DBRun( startLine, endLine )
 endfunc
 
+
+" psql -d zio_skunk_tradeIO -c "select * from accounts"
+let g:dbname = 'zio_skunk_tradeIO'
+
+func! DB_eval_parag_psql()
+  let [startLine, endLine] = ParagraphStartEndLines()
+  let lines = getline(startLine, endLine)
+  let sqlStr = join(lines, "\n")
+  
+  " psql -d zio_skunk_tradeIO -c "select * from accounts"
+  let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+  " echo cmd
+  " return
+
+  call System_Float( cmd )
+endfunc
 
 
 command! -range=% DBRun call DBRun( <line1>, <line2> )

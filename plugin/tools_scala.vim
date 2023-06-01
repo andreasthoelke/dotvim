@@ -292,6 +292,19 @@ func! Scala_GetPackageName()
   endif
   " let identif = matchstr( getline(hostLn ), '\vpackage\s\zs\i*\ze\W' )
   let packageName = split( getline( hostLn ), ' ' )[1]
+
+  " support compound packageNames across multiple lines. NOTE only 2 or 3
+  " consecutive lines are supported
+  if hostLn == 3
+    let packageName1 = split( getline( 1 ), ' ' )[1]
+    let packageName2 = split( getline( 2 ), ' ' )[1]
+    let packageName = packageName1 . "." . packageName2 . "." . packageName
+  endif
+  if hostLn == 2
+    let packageName1 = split( getline( 1 ), ' ' )[1]
+    let packageName = packageName1 . "." . packageName
+  endif
+
   return packageName
 endfunc
 
@@ -824,6 +837,7 @@ endfunc
 "   silent call FloatWin_FitWidthHeight()
 "   silent wincmd p
 " endfunc
+
 
 let g:httpport = 8080
 
