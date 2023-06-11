@@ -3,6 +3,7 @@
 
 func! tools_db#bufferMaps()
   nnoremap <silent><buffer> gej :call DB_eval_parag_psql()<cr>
+  nnoremap <silent><buffer> gel :call DB_eval_parag_sqlite()<cr>
   nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
   nnoremap <silent><buffer> ,ge <Plug>(sqls-execute-query)
 
@@ -105,6 +106,25 @@ func! DB_eval_parag_psql()
 
   call System_Float( cmd )
 endfunc
+
+
+" sqlite3 --help
+let g:dbname_sqlite = 'realworld-prod.sqlite'
+
+func! DB_eval_parag_sqlite()
+  let [startLine, endLine] = ParagraphStartEndLines()
+  let lines = getline(startLine, endLine)
+  let sqlStr = join(lines, "\n")
+  
+  " psql -d zio_skunk_tradeIO -c "select * from accounts"
+  " sqlite3 realworld-prod.sqlite "select * from users"
+  let cmd = 'sqlite3 ' . g:dbname_sqlite . ' "' . sqlStr . '"' . ' .mode -column'
+  " echo cmd
+  " return
+
+  call System_Float( cmd )
+endfunc
+
 
 
 command! -range=% DBRun call DBRun( <line1>, <line2> )

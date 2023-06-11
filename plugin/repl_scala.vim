@@ -18,7 +18,9 @@ func! ScalaReplStart ()
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
   let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
-  call jobsend(g:ScalaReplID, "project core\n" )
+  " TODO: this throws an error in sbt if there no project "core". but then works with root project for e.g. realworld tapir
+  call jobsend(g:ScalaReplID, "project printer\n" )
+  silent wincmd p
 endfunc
 
 

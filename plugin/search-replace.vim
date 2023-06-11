@@ -133,6 +133,7 @@ func! ReplaceLastPattern( motionType, ...)
   normal! m'
   " Get the the search patterns form the search history
   let lastPattern = histget( 'search', -1 )
+  let searchPattern = input('Edit search text: ', lastPattern)
   " Show user dialog to get the new text
   let replacementText = input('Enter replacement text: ')
   " a:0 is the number of optional args. Passing (e.g. 1) as the second arg in the visual mode map
@@ -147,7 +148,7 @@ func! ReplaceLastPattern( motionType, ...)
     " Note the special syntax to limit the affected columns of text
     let substituteCmd .= '\%>' . startColumn . 'c\%<' . endColumn . 'c'
   endif
-  let substituteCmd .= lastPattern . "/" . replacementText . "/ge"
+  let substituteCmd .= searchPattern . "/" . replacementText . "/ge"
   call ExecKeepView( substituteCmd )
   " exec substituteCmd
   " exec 'normal!' "\<C-o>"

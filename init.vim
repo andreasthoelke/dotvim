@@ -69,6 +69,8 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'vim-denops/denops.vim'
 
 " Plug 'ekalinin/Dockerfile.vim'
+" run language servers in docker containers. i don't need
+" Plug 'lspcontainers/lspcontainers.nvim'
 
 Plug 'lambdalisue/guise.vim'
 
@@ -277,6 +279,8 @@ Plug 'ray-x/navigator.lua'
 Plug 'folke/trouble.nvim'
 " https://github.com/folke/lsp-colors.nvim
 Plug 'folke/lsp-colors.nvim'
+
+
 
 " Completion engine
 " Plug 'hrsh7th/nvim-cmp'

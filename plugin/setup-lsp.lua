@@ -328,6 +328,8 @@ lspconfig.sqlls.setup{
 }
 
 
+require'lspconfig'.dockerls.setup{}
+
 -- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
 -- lspconfig.flow.setup({
 --   capabilities = capabilities,

@@ -1303,7 +1303,7 @@ au FileType plantuml let g:plantuml_previewer#plantuml_jar_path = get(
 " Vista:
 " internal setting:
 " h Vista
-" ~nurb4Google/.config/nvim/plugged/vista.vim/plugin/vista.vim#/let%20g.vista_floating_border%20=
+" ~/.config/nvim/plugged/vista.vim/plugin/vista.vim#/let%20g.vista_floating_border%20=
 
 
 let g:vista_default_executive = 'ctags'
@@ -1318,7 +1318,10 @@ let g:vista_floating_delay = 10000
 let g:vista_highlight_whole_line = 0
 let g:vista_blink = [0, 0]
 " autocmd FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call vista#finder#fzf#Run()<CR>
-autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call VistaJumpToLineButStayInBar()<CR>
+" this doesn't seem to work?
+" autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> <leader>k :<c-u>call VistaJumpToLineButStayInBar()<CR>
+
+nnoremap <silent> <leader>k :<c-u>call VistaJumpToLineButStayInBar()<CR>
 
 func! VistaJumpToLineButStayInBar ()
   let g:oldLine = line('.')
@@ -1334,10 +1337,11 @@ func! VistaJumpToLineButStayInBar ()
 endfunc
 
 func! VistaSetOldLine()
-  call setpos('.', [0, g:oldLine, col('.'), 0] )
-  normal! ww
+  call setpos('.', [0, g:oldLine, 0, 0] )
+  normal! w
 endfunc
-" call setpos('.', [0, 1437, col('.'), 0] )
+" setpos('.', [0, 1437, col('.'), 0] )
+" col('.')
 
 function! GetInfoUnderCursor() abort
   if g:vista.provider ==# 'ctags'

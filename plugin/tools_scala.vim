@@ -158,10 +158,12 @@ func! Scala_SetPrinterIdentif( mode )
     let fntag = 'ScalaCliCats'
   elseif repoType == 'scala-cli' && effType == 'both'
     let fntag = 'ScalaCliCats'
+  elseif repoType == 'sbt' && effType == 'none'
+    let fntag = 'ScalaCliZIO'
   elseif repoType == 'sbt' && effType == 'cats'
     let fntag = 'ScalaCliCats'
     " setting vars in printer.scala should not depend on sbt vs scala-cli?
-  elseif repoType == 'sbt' && effType == 'both'
+  elseif repoType == 'sbt' && (effType == 'both' || effType == 'zio')
     " let fntag = 'SBT'
     " let fntag = 'ScalaCliCats'
     let fntag = 'ScalaCliZIO'
@@ -291,18 +293,26 @@ func! Scala_GetPackageName()
     return ""
   endif
   " let identif = matchstr( getline(hostLn ), '\vpackage\s\zs\i*\ze\W' )
-  let packageName = split( getline( hostLn ), ' ' )[1]
+  let packageName1 = split( getline( hostLn -2 ) )
+  let packageName2 = split( getline( hostLn -1 ) )
+  let packageName3 = split( getline( hostLn    ) )
 
   " support compound packageNames across multiple lines. NOTE only 2 or 3
   " consecutive lines are supported
-  if hostLn == 3
-    let packageName1 = split( getline( 1 ), ' ' )[1]
-    let packageName2 = split( getline( 2 ), ' ' )[1]
-    let packageName = packageName1 . "." . packageName2 . "." . packageName
-  endif
-  if hostLn == 2
-    let packageName1 = split( getline( 1 ), ' ' )[1]
-    let packageName = packageName1 . "." . packageName
+
+
+  if len( packageName2 ) && packageName2[0] == "package"
+    let packageName2 = packageName2[1]
+    let packageName3 = packageName3[1]
+    let packageName = packageName2 . "." . packageName3
+
+    if len( packageName1 ) && packageName1[0] == "package"
+      let packageName1 = packageName1[1]
+      let packageName = packageName1 . "." . packageName
+    endif
+
+  else
+    let packageName = packageName3[1]
   endif
 
   return packageName
@@ -607,9 +617,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   let printerFilePath = getcwd() . '/PrinterZio.scala'
-  let printerAtRoot = filereadable( printerFilePath )
-  if !printerAtRoot
+  if !filereadable(printerFilePath)
     let printerFilePath = getcwd() . '/modules/core/PrinterZio.scala'
+  endif
+  if !filereadable(printerFilePath)
+    let printerFilePath = getcwd() . '/printer/PrinterZio.scala'
   endif
 
   let plns = readfile( printerFilePath, '\n' )
@@ -684,7 +696,7 @@ func! Scala_RunPrinter( termType )
   " echo effType repoType
   " return
 
-  if     effType == 'zio'
+  if     effType == 'zio' || effType == 'none'
     let cmd = g:Scala_PrinterZioCmd
   elseif effType == 'cats' || effType == 'both' || effType == 'none'
     let cmd = g:Scala_PrinterCatsCmd
@@ -704,7 +716,7 @@ func! Scala_RunPrinter( termType )
     " call ScalaReplRun()
 
     " TODO: just temp for a prim zio sbt repo
-    if effType == 'both'  || effType == 'zio'
+    if effType == 'both'  || effType == 'zio' || effType == 'none'
       call ScalaSbtSession_RunMain( "printzio.runZioApp" )
     else
       call ScalaSbtSession_RunMain( "printcat.runCatsApp" )

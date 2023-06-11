@@ -68,6 +68,12 @@ word motions, `cw` should not include the ','
   qe, "eins"
   q, "eins"
 
+## vista tag bar outline
+l ot - to open vista outline for .md files and lsp
+l k  - now jumps to the marker whils the cursor is staying in the vista window
+
+~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<silent>%20<leader>k
+note the buffer map in vista window didn't work.
 
 # vim maps
 
@@ -275,6 +281,8 @@ set a default/start collection here: ~/.config/nvim/plugin/general-helpers.vim#/
 
     searches in current collection folder! with a regex (for header) default text
 ,sch <cmd>lua require('utils_general').Search_collection_md_headers()<cr>
+
+~/.config/nvim/lua/utils_general.lua#/function%20M.Search_collection_md_headers..
 
 CONCLUSION:
 use ,scr over ,csj
@@ -542,12 +550,47 @@ ok, i have now decided to use
 instead of
 - thicker, blorred and bright/fresh colored fonts in alacritty 0.10.0
 
+# search websites (Google, Github, Scaladex?)
+l gso/O    - on visSel or cword or input() works well for Gitub repos, code, Google, etc?
+~/.config/nvim/plugin/HsAPI-searchSites.vim#/Search%20Params
+
 ## github search
 i made some scripts
 general pattern:
 https://github.com/search?q=user%3Araquo+duplicate+ids&type=issues
 
 ## vim substitute replace text
+\r<motion>   - replaces last pattern (set with visual select //)   ~/.config/nvim/plugin/search-replace.vim#/func.%20ReplaceLastPattern.%20motionType,
 .+1,127substitute/\.scala//g
+
+
+## PrinterZio.scala in sbt
+10.6.2023
+create printer/PrinterZio.scala
+put into sbt and adjust dependencies:
+    lazy val printer =
+      project
+        .in(file("printer"))
+        .settings(Seq(
+          libraryDependencies ++= zioLibs
+         ))
+        .dependsOn(arango, http, docker, velocypack)
+
+~/.config/nvim/plugin/tools_scala.vim#/let%20printerFilePath%20=
+
+/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio2/PrinterZio.scala
+this works though its attempting to "project core" to
+support muli projects like in the tradeIO project:
+/Users/at/Documents/Proj/_repos/8_zio_skunk_tradeIO/modules/core/PrinterZio.scala|2
+
+only rough support in these two files:
+~/.config/nvim/plugin/tools_scala.vim#/let%20printerFilePath%20=
+~/.config/nvim/plugin/repl_scala.vim#/TODO.%20this%20throws
+
+## 
+
+
+
+
 
 

@@ -249,7 +249,7 @@ end
 
 function M.Search_collection_md_headers()
   require('telescope.builtin').live_grep({
-    default_text = "# " ,
+    default_text = "# .*" ,
     cwd = vim.g.FolderSearch_Path,
   } )
 end

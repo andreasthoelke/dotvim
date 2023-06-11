@@ -43,6 +43,8 @@ hi ErrorMsg        guifg=#960050 guibg=#151719
 
 hi! def link Error purescriptIdentifier
 hi! def link ErrorMsg purescriptIdentifier
+" hi! def link Character purescriptIdentifier
+" hi! def link Identifier Normal
 
 hi! def link Repeat @constant
 
@@ -56,7 +58,9 @@ hi Folded          guifg=#465457 guibg=#111111
 
 " Now set as part of munsell colors below
 " hi Keyword        guifg=#2C9E71
-hi Identifier      guifg=#FD971F
+" hi Identifier      guifg=#FD971F
+" hi Identifier      guifg=#97BDCF
+hi Identifier      guifg=#5E878E
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
 hi Label           guifg=#3A768C               gui=none
@@ -110,7 +114,7 @@ hi Tag             guifg=#F92672               gui=italic
 " hi Todo            guifg=#FFFFFF guibg=bg      gui=bold
 
 hi Typedef         guifg=#66D9EF
-hi Type            guifg=#66D9EF               gui=none
+" hi Type            guifg=#66D9EF               gui=none
 hi Underlined      guifg=#808080               gui=underline
 
 hi VertSplit       guifg=#000000 guibg=#080808
@@ -126,7 +130,7 @@ hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 " ----------------------------------------------------------------------------
 hi Function              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 " hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
-hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+" hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
 hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#9DEEF2
 hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
 hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
