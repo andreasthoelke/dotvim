@@ -60,7 +60,7 @@ hi Folded          guifg=#465457 guibg=#111111
 " hi Keyword        guifg=#2C9E71
 " hi Identifier      guifg=#FD971F
 " hi Identifier      guifg=#97BDCF
-hi Identifier      guifg=#5E878E
+hi Identifier      guifg=#75959A
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
 hi Label           guifg=#3A768C               gui=none
@@ -253,10 +253,12 @@ hi! def link @property purescriptConstructor
 hi! def link @parameter purescriptIdentifier
 " hi! def link TSTagAttribute purescriptClasses
 " hi! def link TSVariable purescriptFunctionDeclStart
-hi! def link @variable purescriptFunctionDeclStart
+" hi! def link @variable purescriptFunctionDeclStart
 hi! def link @field purescriptFunctionDeclStart
 hi! def link @include @operator
 hi! def link @type Type
+hi! def link @tag purescriptOperator
+hi! def link @variable purescriptOperator
 " hi! def link @constant @operator
 
 hi! def link @keyword CommentMinus
@@ -285,7 +287,7 @@ hi! link hsTypeComment Comment
 " hi! link hsForall Comment
 
 " purescriptTypeVar > Identifier
-hi! Identifier guifg=#AAB27C "Misty moss - shift sage yellow from red to green"
+" hi! Identifier guifg=#AAB27C "Misty moss - shift sage yellow from red to green"
 hi! hsTypeVarComment guifg=#4C5037 "Type vars in comment - toned down: 70 -> 32
 
 " purescriptConstructor
