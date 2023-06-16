@@ -130,7 +130,6 @@ hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 " ----------------------------------------------------------------------------
 " Syntax Highlighting
 " ----------------------------------------------------------------------------
-hi Function              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 " hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 " hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
 hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
@@ -226,7 +225,6 @@ let g:materialmonokai_termcolors = 256 " does not support 16 color term right no
 " hi! Function guifg=#0087AF "munsell blue"
 " hi! Function guifg=#008EB8 "munsell blue"
 " hi! Function guifg=#1692CE "munsell blue"
-hi! Function guifg=#008EB8 "munsell blue"
 
 hi! purescriptFunction guifg=#008EB8 guibg=#000000
 
@@ -815,6 +813,20 @@ hi!          @lsp.type.method guifg=NONE
 " hi! def link @lsp.type.method Function
 " hi! def link @lsp.type.method Normal
 
+hi! Function guifg=#008EB8 "munsell blue"
+hi! FunctionDec guifg=#006482 "munsell blue"
+" this helps to destinguish method declaration vs
+" static definitions in scala traits ~/Documents/Proj/f_arango/zio-arango-repo/arangodb/src/main/scala/io/funkode/arangodb/ArangoClient.scala#/def%20database
+
+" note the difference in terms: declaration vs definition
+" also note that method *usage* will still be brownish
+" hi!          @lsp.typemod.method.declaration guifg=NONE
+hi! def link @lsp.typemod.method.declaration FunctionDec
+
+" hi!          @lsp.typemod.method.definition guifg=NONE
+hi! def link @lsp.typemod.method.definition Function
+
+
 " import paths should be rel dark
 hi!          @lsp.type.namespace guifg=NONE
 " hi! def link @lsp.type.namespace Structure
@@ -864,6 +876,8 @@ hi! VarDec guifg=#9BA5A8 "white-grey"
 
 hi!          @lsp.typemod.variable.definition guifg=NONE
 hi! def link @lsp.typemod.variable.definition VarDec
+
+
 
 
 
