@@ -61,6 +61,9 @@ hi Folded          guifg=#465457 guibg=#111111
 " hi Identifier      guifg=#FD971F
 " hi Identifier      guifg=#97BDCF
 hi Identifier      guifg=#75959A
+" hi Structure       guifg=#9DEEF2
+" hi Structure       guifg=#6C9FA7
+" hi @field      guifg=#75959A
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
 hi Label           guifg=#3A768C               gui=none
@@ -108,7 +111,6 @@ hi StatusLineNC guibg=#000000 gui=bold
 
 " hi StorageClass    guifg=#FD971F               gui=italic
 hi StorageClass    guifg=#3A768C               gui=none
-hi Structure       guifg=#66D9EF
 hi Tag             guifg=#F92672               gui=italic
 " hi Title           guifg=#ef5939
 " hi Todo            guifg=#FFFFFF guibg=bg      gui=bold
@@ -131,7 +133,6 @@ hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 hi Function              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 " hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 " hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
-hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#9DEEF2
 hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
 hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
 hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
@@ -254,11 +255,12 @@ hi! def link @parameter purescriptIdentifier
 " hi! def link TSTagAttribute purescriptClasses
 " hi! def link TSVariable purescriptFunctionDeclStart
 " hi! def link @variable purescriptFunctionDeclStart
-hi! def link @field purescriptFunctionDeclStart
+" hi! def link @field purescriptFunctionDeclStart
 hi! def link @include @operator
 hi! def link @type Type
 hi! def link @tag purescriptOperator
 hi! def link @variable purescriptOperator
+hi! def link @field Type
 " hi! def link @constant @operator
 
 hi! def link @keyword CommentMinus
@@ -273,6 +275,7 @@ hi! def link @namespace CommentMinus
 hi! def link pythonAttribute purescriptRecordKeys
 
 hi! def link @function.macro @constant.macro
+
 
 " purescriptType > Type
 " hi! Type guifg=#76E0D9 "middle blue"
@@ -763,9 +766,178 @@ hi! def link tsxCloseTag Comment
 
 hi! def link foldBraces purescriptIdentifier
 
-" ─   Rescript                                          ──
 
-hi! def link rescriptTSNamespace Function
-hi! def link rescriptTSRepeat Comment
+
+" ─   Lsp semantic hightlights                          ──
+
+" lua vim.print( vim.fn.getcompletion("@lsp", "highlight") )
+" use :Inspect!!
+
+" hi Structure       guifg=#9DEEF2
+hi! Class          guifg=#398D9A
+" hi! Structure      guifg=#6C9FA7
+
+" hi!          @lsp.type.class guifg=NONE
+hi! def link @lsp.type.class Class
+
+" hi!          @lsp.type.decorator guifg=NONE
+" hi! def link @lsp.type.decorator Function
+
+hi!          @lsp.type.enum guifg=NONE
+hi! def link @lsp.type.enum purescriptConstructor
+
+" hi! def link @method purescriptRecordKeys
+" hi! def link @property purescriptConstructor
+
+
+hi!          @lsp.type.enumMember guifg=NONE
+hi! def link @lsp.type.enumMember Constant
+
+" hi!          @lsp.type.function guifg=NONE
+" hi! def link @lsp.type.function Function
+
+hi! Trait       guifg=#71A6AF
+" hi! Trait       guifg=#328795
+
+" hi!          @lsp.type.interface guifg=NONE
+" hi!          @lsp.type.interface guifg=NONE
+" hi! def link @lsp.type.interface Structure
+hi! def link @lsp.type.interface Trait
+" hi! def link @lsp.type.interface purescriptconstructor
+" TODO: in a way traits/interfaces and enums are related? so the same color??
+
+" hi!          @lsp.type.macro guifg=NONE
+" hi! def link @lsp.type.macro Macro
+
+" similar to parameters above, method is affecting a lot!
+hi!          @lsp.type.method guifg=NONE
+" hi!          @lsp.type.method guifg=Blue
+" hi! def link @lsp.type.method Function
+" hi! def link @lsp.type.method Normal
+
+" import paths should be rel dark
+hi!          @lsp.type.namespace guifg=NONE
+" hi! def link @lsp.type.namespace Structure
+
+" PRO: this can highlight the param and the usages in the body of the function!
+" CON: it also highlighs other bindings! can i overwrite these?
+hi!          @lsp.type.parameter guifg=NONE
+" hi!          @lsp.type.parameter guifg=BLUE
+" hi! def link @lsp.type.parameter Identifier
+" hi! def link @lsp.type.parameter purescriptRecordKeys
+" hi! def link @lsp.type.parameter purescriptDelimiter
+
+" no effect seen ..
+" hi!          @lsp.type.property guifg=NONE
+hi! def link @lsp.type.property Identifier
+
+" hi!          @lsp.type.struct guifg=NONE
+" hi! def link @lsp.type.struct Structure
+
+" hi!          @lsp.type.type guifg=NONE
+" hi! def link @lsp.type.type Type
+
+" this makes type params a  bit darker
+" hi!          @lsp.type.typeParameter guifg=NONE
+hi! def link @lsp.type.typeParameter TypeDef
+
+hi! def link TypeDef Normal
+
+" hi! Variable guifg=#607062
+" hi! Variable guifg=#257036
+" hi! Variable guifg=#3F5C66 guibg=NONE
+hi! Variable guifg=#4A6C78 guibg=NONE
+
+" this one is quite invasive!
+" hi!          @lsp.type.variable guifg=NONE
+hi! def link @lsp.type.variable Variable
+" hi! def link @lsp.type.variable Identifier
+" hi! def link @lsp.type.variable Normal
+
+hi! ParamDec guifg=#BECACD "white-grey"
+" hi! ParamDec guifg=#0E0ACD "white-grey"
+
+" hi!          @lsp.typemod.parameter.declaration guifg=NONE
+hi! def link @lsp.typemod.parameter.declaration ParamDec
+
+hi! VarDec guifg=#9BA5A8 "white-grey"
+
+hi!          @lsp.typemod.variable.definition guifg=NONE
+hi! def link @lsp.typemod.variable.definition VarDec
+
+
+
+" @lsp.type.class         Structure
+" @lsp.type.decorator     Function
+" @lsp.type.enum          Structure
+" @lsp.type.enumMember    Constant
+" @lsp.type.function      Function
+" @lsp.type.interface     Structure
+" @lsp.type.macro         Macro
+" @lsp.type.method        Function
+" @lsp.type.namespace     Structure
+" @lsp.type.parameter     Identifier
+" @lsp.type.property      Identifier
+" @lsp.type.struct        Structure
+" @lsp.type.type          Type
+" hi! def link @lsp.type          Type
+" @lsp.type.typeParameter TypeDef
+" @lsp.type.variable      Identifier
+
+
+" lua vim.highlight.priorities.semantic_tokens
+
+" hi @lsp.type.function guifg=Yellow        " function names are yellow
+" hi @lsp.type.function guifg=Yellow        " function names are yellow
+" hi @lsp.type.variable.lua guifg=Green     " variables in lua are green
+" hi @lsp.mod.deprecated gui=strikethrough  " deprecated is crossed out
+" hi @lsp.typemod.function.async guifg=Blue " async functions are blue
+
+" default links:
+" @lsp.type.class         Structure
+" @lsp.type.decorator     Function
+" @lsp.type.enum          Structure
+" @lsp.type.enumMember    Constant
+" @lsp.type.function      Function
+" @lsp.type.interface     Structure
+" @lsp.type.macro         Macro
+" @lsp.type.method        Function
+" @lsp.type.namespace     Structure
+" @lsp.type.parameter     Identifier
+" @lsp.type.property      Identifier
+" @lsp.type.struct        Structure
+" @lsp.type.type          Type
+" hi! def link @lsp.type          Type
+" @lsp.type.typeParameter TypeDef
+" @lsp.type.variable      Identifier
+
+
+" -- Hide semantic highlights for functions
+" vim.api.nvim_set_hl(0, '@lsp.type.function', {})
+
+" -- Hide all semantic highlights
+" for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+"   vim.api.nvim_set_hl(0, group, {})
+" end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -8,11 +8,33 @@ nnoremap glb :call HandleURL()<cr>
 nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
-nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
-nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
+" nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
+nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
+" nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
+nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
 nnoremap <leader>glC :call LaunchChromium( 'http://localhost:4040/graphql' )<cr>
 nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>
 nnoremap glC :call StopChromium()<cr>
+
+let g:LaunchChromium_URL = "http://localhost:3000"
+
+func! LaunchChromium_setURL()
+  let g:LaunchChromium_URL = input( "LaunchChromium_URL: ", g:LaunchChromium_URL )
+  echo  "URL set to: " . g:LaunchChromium_URL 
+endfunc
+
+func! LaunchChromium_withDefURL()
+ let url = GetUrlFromLine( line('.') )
+
+ if url =~ "http"
+   call LaunchChromium( url )
+ else
+   call LaunchChromium( g:LaunchChromium_URL )
+ endif
+ echo "Launching Chromium .."
+ call T_DelayedCmd( "echo ''", 2000 )
+endfunc
+
 
 command! Finder :call OpenFinder()
 nnoremap glf :call OpenFinder()<cr>

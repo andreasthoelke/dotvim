@@ -22,6 +22,11 @@ func! GetSyntaxIDAtCursor()
 endfunc
 nnoremap <leader><leader>bn :echo GetSyntaxIDAtCursor()<cr>
 
+" NEW 2023-06:
+" use :Inspect 
+nnoremap <leader><leader>ti :Inspect<CR>
+nnoremap <leader><leader>tI :Inspect!<CR>
+" NOTE there's also ll ts/S for treesitter syntax inspect
 
 " STEP1: FIND THE SYNATX GROUP YOU WANT TO CHANGE:
 " also consider: :Telescope highlights - note the @variable links

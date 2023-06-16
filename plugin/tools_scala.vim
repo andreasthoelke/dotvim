@@ -27,7 +27,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
   nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
-  nnoremap <silent><buffer> <c-p>         :call Scala_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
 
@@ -48,8 +49,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <c-n>         :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+  " " find a new map if I actually use this:
+  " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
@@ -71,11 +74,11 @@ func! tools_scala#bufferMaps()
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
   " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
-  nnoremap <silent><buffer> ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
   " " this is small and local
   " nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
   nnoremap <silent><buffer> ,ger <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer> geR <cmd>Glance references<cr>
+  nnoremap <silent><buffer> ger <cmd>Glance references<cr>
   nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
@@ -887,20 +890,35 @@ func! Scala_ServerClientRequest_rerun()
 endfunc
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Scala_TopLevPattern = '\v^((\s*)?\zs(sealed|inline|private|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_TopLevPattern = '\v^(object|type|final|sealed|inline|class|trait)'
 
 func! Scala_TopLevBindingForw()
+  call search( g:Scala_TopLevPattern, 'W' )
+endfunc
+
+func! Scala_MainStartBindingForw()
   " normal! }
   normal! jj
-  call search( g:Scala_TopLevPattern, 'W' )
+  call search( g:Scala_MainStartPattern, 'W' )
 endfunc
 
 func! Scala_TopLevBindingBackw()
   " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Scala_TopLevPattern, 'bW' )
   " normal! {
+  " normal! kk
+  " call search( g:Scala_TopLevPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+
+func! Scala_MainStartBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:Scala_MainStartPattern, 'bW' )
+  " normal! {
   normal! kk
-  call search( g:Scala_TopLevPattern, 'W' )
+  call search( g:Scala_MainStartPattern, 'W' )
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
 

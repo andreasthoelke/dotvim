@@ -780,8 +780,16 @@ local metals_config = require("metals").bare_config()
 -- Example of settings
 metals_config.settings = {
   showImplicitArguments = true,
+  showImplicitConversionsAndClasses = true,
+  showInferredType = true,
+  superMethodLensesEnabled = true,
+  enableSemanticHighlighting = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 }
+
+-- vim.highlight.priorities.semantic_tokens
+vim.highlight.priorities.semantic_tokens = 125
+-- vim.highlight.priorities.semantic_tokens = 22
 
 -- *READ THIS*
 -- I *highly* recommend setting statusBarProvider to true, however if you do,

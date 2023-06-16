@@ -587,6 +587,14 @@ only rough support in these two files:
 ~/.config/nvim/plugin/tools_scala.vim#/let%20printerFilePath%20=
 ~/.config/nvim/plugin/repl_scala.vim#/TODO.%20this%20throws
 
+# syntax treesitter semantic hightlights inspect
+" use :Inspect 
+nnoremap ll ti :Inspect<CR>
+nnoremap ll tI :Inspect!<CR>
+" NOTE there's also ll ts/S for treesitter syntax inspect
+
+ll bn :echo GetSyntaxIDAtCursor()<cr>
+
 ## 
 
 

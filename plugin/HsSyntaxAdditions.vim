@@ -16,7 +16,7 @@ au ag BufRead,BufNewFile *.smithy		setfiletype smithy
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*ml call RescriptSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()

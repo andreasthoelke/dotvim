@@ -111,8 +111,9 @@ endfunc
 func! SourcePrintCommented()
   if &filetype == 'lua'
     let expr = getline('.')[3:]
-    " let code = 'print( vim.inspect( ' . expr . ' ) )'
-    let code = 'vim.pretty_print(' . expr . ')'
+    let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
+    " let code = 'vim.pretty_print(' . expr . ')'
+    " let code = 'vim.print(' . expr . ')'
   elseif &filetype == 'markdown' || &filetype == 'purescript_scratch' || &filetype == ''
     let expr = getline('.')
     let code = 'print( vim.inspect( ' . expr . ' ) )'
