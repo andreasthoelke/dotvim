@@ -295,7 +295,16 @@ endfunc
 func! GetLineFromCursor()
   return getline('.')[col('.')-1:]
 endfunc
-echo GetLineFromCursor()
+" echo GetLineFromCursor()
+
+func! GetFullLine_OrFromCursor()
+  let isCommentLine = getline( '.' ) =~ '\(\/\/\|\*\)'
+  if isCommentLine
+    return getline('.')[col('.')-1:]
+  else
+    return getline('.')
+  endif
+endfunc
 
 " Return the character under the cursor
 func! GetCharAtCursor()

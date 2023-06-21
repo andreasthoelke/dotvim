@@ -139,6 +139,12 @@ l, v       :"vnew " . getline('.')
 window move is now e.g.:
 nnoremap <leader><c-w>L <c-w>L
 
+window resize (quick expand) horiz  = c-.
+window resize (quick expand) verti  = c-.
+window resize        exp     horiz  = c-w >
+window resize        shrink  horiz  = c-w <
+window resize        exp     verti  = c-w +
+window resize        shrink  verti  = c-w -
 
 ## file view 2023-04
 view a file path:

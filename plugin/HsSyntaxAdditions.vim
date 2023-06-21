@@ -8,6 +8,7 @@ au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.sc,*.scala call tools_scala#bufferMaps()
 au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
 
 au ag BufNewFile,BufRead,WinNew *.sh      call tools_scala#bufferMaps()

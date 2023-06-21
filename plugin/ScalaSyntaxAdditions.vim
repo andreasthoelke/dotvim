@@ -25,7 +25,7 @@
 
 
 func! SmithySyntaxAdditions ()
-  call tools_scala#bufferMaps()
+  " call tools_scala#bufferMaps()
   " call clearmatches()
 
   " syntax match Normal '@\i*' conceal cchar=❈
@@ -145,7 +145,7 @@ endfunc " ▲
 
 func! ScalaSyntaxAdditions ()
 
-  call tools_scala#bufferMaps()
+  " call tools_scala#bufferMaps()
   call clearmatches()
   " return
 
@@ -312,6 +312,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'live\ze\s' conceal cchar=≈
   syntax match Normal 'live' conceal cchar=≈
   syntax match Normal 'live:' conceal cchar=⬿
+  " syntax match Normal 'new\ze\s' conceal cchar=⬿
   syntax match Normal 'Var' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
   syntax match Normal 'Signal' conceal cchar=~

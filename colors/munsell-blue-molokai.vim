@@ -808,9 +808,9 @@ hi! def link @lsp.type.interface Trait
 " hi! def link @lsp.type.macro Macro
 
 " similar to parameters above, method is affecting a lot!
-hi!          @lsp.type.method guifg=NONE
+" hi!          @lsp.type.method guifg=NONE
 " hi!          @lsp.type.method guifg=Blue
-" hi! def link @lsp.type.method Function
+hi! def link @lsp.type.method purescriptConstructor
 " hi! def link @lsp.type.method Normal
 
 hi! Function guifg=#008EB8 "munsell blue"
