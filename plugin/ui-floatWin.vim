@@ -104,7 +104,7 @@ func! FloatWin_ShowLines ( lines )
   endif
   let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( a:lines )
 endfunc
-" call FloatWin_ShowLines( ['eins', 'zwei'] )
+" FloatWin_ShowLines( ['eins', 'zwei'] )
 " call FloatWin_ShowLines( functional#map( 'string', v:lua.vim.lsp.diagnostic.get(0) ) )
 
 
