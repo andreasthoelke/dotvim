@@ -5,6 +5,16 @@ func! TsSyntaxAdditions ()
   call clearmatches()
 
 
+  " for Arangodb AQL
+  syntax keyword aqlKeywords
+        \ LET
+        \ FOR
+        \ IN
+        \ FILTER
+        \ UPDATE
+        \ WITH
+
+
   syntax match Normal "\v\=\=" conceal cchar=≡
   syntax match Normal "===" conceal cchar=≣
   " syntax match Normal "\s\zs\>\=\ze\s" conceal cchar=≥

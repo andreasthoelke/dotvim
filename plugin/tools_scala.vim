@@ -444,6 +444,8 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
     let typeMode = "tupled-iterator"
   elseif  typeStr =~ "Iterator"
     let typeMode = "iterator"
+  " elseif  typeStr =~ "CompletionStage"
+  "   let typeMode = "compl stg"
   else
     let typeMode = "plain"
   endif
@@ -544,6 +546,13 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "zio_collection"
   elseif  typeStr =~ "IO\["  || typeStr =~ "UIO\["
     let typeMode = "zio"
+
+  elseif  typeStr =~ "CompletionStage" && typeStr =~ "List"
+    let typeMode = "CompletionStageList"
+
+  elseif  typeStr =~ "CompletionStage"
+    let typeMode = "CompletionStage"
+
   " elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
   "   let typeMode = "zio_collection"
   elseif  typeStr =~ "\(List"
@@ -584,6 +593,12 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   if     a:keyCmdMode == 'effect' || typeMode == 'zio'
     let _printValEf = identif          " already an effect
+
+  elseif typeMode == 'CompletionStage'
+    let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
+
+  elseif typeMode == 'CompletionStageList'
+    let _printValEf = "Fiber.fromCompletionStage( " . identif . ' ).join.map( v => (v.size.toString + "\n" + v.toString ) )'
 
   elseif typeMode == 'collectionIO'
     " TODO: not clear where this came from
@@ -691,7 +706,10 @@ let g:Scala_ServerCmd_Ember = "scala-cli . --main-class server_ember.PreviewServ
 " let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
 let g:Scala_PrinterCatsCmd = "scala-cli . --py --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
 " let g:Scala_PrinterCatsCmd = "bloop run root --main printcat.runCatsApp"
+" let g:Scala_PrinterZioCmd  = 'scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --repository "https://maven-central.storage-download.googleapis.com/maven2"'
 let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations"
+" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --extra-jar '/Users/at/Documents/Proj/g_edgedb/edgedb-java-repo/build/libs/edgedb-java-0.1.1-SNAPSHOT-sources.jar'"
+" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --extra-jar '/Users/at/Documents/Proj/g_edgedb/edgedb-java-repo/examples/scala-examples/lib/com.edgedb.driver-0.1.1-SNAPSHOT.jar'"
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
@@ -890,7 +908,7 @@ func! Scala_ServerClientRequest_rerun()
 endfunc
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
+let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
 let g:Scala_TopLevPattern = '\v^(object|type|final|sealed|inline|class|trait)'
 
 func! Scala_TopLevBindingForw()

@@ -303,6 +303,7 @@ func! GetFullLine_OrFromCursor()
     return getline('.')[col('.')-1:]
   else
     return getline('.')
+    " return substitute( getline('.'), " ", "\ ", "" )
   endif
 endfunc
 

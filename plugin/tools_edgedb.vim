@@ -10,6 +10,7 @@ let g:edgedb_instance = '_1playground_2'
 
 
 func! tools_edgedb#bufferMaps()
+  nnoremap <silent><buffer> gej :call tools_edgedb#eval_parag( v:true )<cr>
   nnoremap <silent><buffer> gei :call tools_edgedb#eval_parag( v:true )<cr>
   nnoremap <silent><buffer> geI :call tools_edgedb#eval_parag( v:false )<cr>
 
@@ -20,32 +21,70 @@ func! tools_edgedb#bufferMaps()
   " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
   nnoremap <silent><buffer> <leader>geo :call tools_edgedb#eval_buffer( v:true )<cr>
 
-  nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cword>'), v:false )<cr>
-  nnoremap <silent><buffer> geT :call tools_edgedb#describe_object( expand('<cword>'), v:true )<cr>
-  nnoremap <silent><buffer> ,K :call tools_edgedb#describe_object( expand('<cword>'), v:false )<cr>
-  nnoremap <silent><buffer> ,,K :call tools_edgedb#describe_object( expand('<cword>'), v:true )<cr>
+  nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
+  nnoremap <silent><buffer> geT :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
+  nnoremap <silent><buffer> ,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
+  nnoremap <silent><buffer> ,,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
 
   nnoremap <silent><buffer> <leader>K :call tools_edgedb#describe_schema()<cr>
 
-  nnoremap <silent><buffer> gec :call tools_edgedb#query_objCount( expand('<cword>'), v:false )<cr>
+  nnoremap <silent><buffer> gec :call tools_edgedb#query_objCount( expand('<cWORD>'), v:false )<cr>
   nnoremap <silent><buffer> gea :call tools_edgedb#query_withProp( expand('<cWORD>'), v:false )<cr>
 
   nnoremap <silent><buffer> ges :call tools_edgedb#query_inParans( v:false )<cr>
 
-  nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFields( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFieldsWT( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> gsF :call tools_edgedb#queryAllObjectFields( expand('<cword>') )<cr>
-  nnoremap <silent><buffer> <leader>gsF :call tools_edgedb#queryAllObjectFields_InnerFields( expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gSk :call tools_edgedb#showObjectFields( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFieldsWT( expand('<cWORD>') )<cr>
+  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cWORD>') )<cr>
 
-  nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cword>') )<cr>
+  nnoremap <silent><buffer> gsf :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> gsF :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> ,gsF :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
+
+  nnoremap <silent><buffer> <leader>gsF :call tools_edgedb#queryAllObjectFields_InnerFields( expand('<cWORD>') )<cr>
+
+  nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cWORD>') )<cr>
+
+  " ─     Copied from Tools_Scala                         ──
+  nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+
+  nnoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+
+  nnoremap <silent><buffer> <leader>)     :call Scala_MvEndOfBlock()<cr>
+  onoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+
+  nnoremap <silent><buffer> * :call MvPrevLineStart()<cr>
+  nnoremap <silent><buffer> ( :call MvLineStart()<cr>
+  nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
+
+  nnoremap <silent><buffer> I :call Scala_ColonForw()<cr>
+  nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
+
+  nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+  " " find a new map if I actually use this:
+  " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
+
+  nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
+
+
 
 endfunc
 
 func! tools_edgedb#query_textObj( sel_str )
   " echoe a:sel_str
   " return
-  call tools_edgedb#runQueryShow( v:true, a:sel_str )
+  call tools_edgedb#runQueryShow( a:sel_str )
 endfunc
 
 
@@ -72,7 +111,7 @@ func! tools_edgedb#queryAllObjectFields_InnerFields( select_clause )
   endfor
   let q_linkFields = join( q_linkFieldsList, ', ' )
   let query = select_clause . ' {' . q_propFields . ', ' . q_linkFields . '}'
-  call tools_edgedb#runQueryShow( v:true, [query] )
+  call tools_edgedb#runQueryShow( [query] )
   " Can't parse/turn this string into a dictionary
   " let resLines = tools_edgedb#runQuery( [query] )
   " let resLines = join( resLines )
@@ -205,12 +244,24 @@ endfunc
 " echo UnexpandLines( ['[','eins','zwei',']','[drei','vier'] )
 
 func! tools_edgedb#queryAllObjectFields( obj_name )
-  let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
-  let fieldsStr = join( fieldNames, ', ' )
-  let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
+  " let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
+  " let fieldsStr = join( fieldNames, ', ' )
+  " let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
+  let query = 'select ' . a:obj_name . ' {*};'
   " let resLines = tools_edgedb#runQuery( query )
-  call tools_edgedb#runQueryShow( v:true, [query] )
+  call tools_edgedb#runQueryShow( [query] )
 endfunc
+
+func! tools_edgedb#queryAllObjectFields_withInnerObjs( obj_name )
+  " let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
+  " let fieldsStr = join( fieldNames, ', ' )
+  " let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
+  let query = 'select ' . a:obj_name . ' {**};'
+  " let resLines = tools_edgedb#runQuery( query )
+  call tools_edgedb#runQueryShow( [query] )
+endfunc
+
+
 
 func! tools_edgedb#showObjectFields( obj_name )
   let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
@@ -218,6 +269,7 @@ func! tools_edgedb#showObjectFields( obj_name )
   call tools_edgedb#bufferMaps()
   " set syntax=edgeql
   call FloatWin_FitWidthHeight()
+  wincmd p
 endfunc
 
 func! tools_edgedb#getObjectFields( obj_name )
@@ -314,7 +366,7 @@ func! tools_edgedb#query_withProp( text, details )
   " echoe objectProp
   " return
   let query = 'select ' . objectProp . ';'
-  call tools_edgedb#runQueryShow( v:true, [query] )
+  call tools_edgedb#runQueryShow( [query] )
 endfunc
 " echo substitute( 'aber]', ']', '', '')
 " echo substitute( 'aber]', ']\|)', '', '')
@@ -329,7 +381,7 @@ func! tools_edgedb#query_inParans( details )
   let lines = GetTextWithinLineColumns_asLines( sLine, sCol, eLine, eCol )
   " echoe lines
   " return
-  call tools_edgedb#runQueryShow( v:true, lines )
+  call tools_edgedb#runQueryShow( lines )
 endfunc
 " call tools_edgedb#query_inParans( 'ein' )
 " see search flags like bnWn /opt/homebrew/Cellar/neovim/0.6.0/share/nvim/runtime/doc/eval.txt#/search.{pattern}%20[,%20{flags}
@@ -341,7 +393,7 @@ func! tools_edgedb#query_objCount( word, details)
     let line = 'select count( ' . a:word . ' );'
   endif
 
-  call tools_edgedb#runQueryShow( v:true, [line] )
+  call tools_edgedb#runQueryShow( [line] )
 endfunc
 
 func! tools_edgedb#eval_parag( format )
@@ -361,7 +413,7 @@ func! tools_edgedb#describe_object( word, verbose )
     let line = ['describe object ' . a:word . ' as sdl;']
   endif
 
-  call tools_edgedb#runQueryShow( v:true, line )
+  call tools_edgedb#runQueryShow( line )
 endfunc
 
 command! EdgeDBStartInstance call tools_edgedb#startInstance()
@@ -381,19 +433,20 @@ func! tools_edgedb#showTypes ()
   let g:floatWin_win = FloatingSmallNew ( resLines )
   " call FloatWin_FocusFirst()
   call FloatWin_FitWidthHeight()
+  wincmd p
 endfunc
 
 command! EdgeDBShowSchema call tools_edgedb#describe_schema()
 
 func! tools_edgedb#describe_schema()
   let line = ['describe schema as sdl;']
-  call tools_edgedb#runQueryShow( v:true, line )
+  call tools_edgedb#runQueryShow( line )
 endfunc
 
 command! EdgeDBShowAllObjects call tools_edgedb#showAllObjects()
 
 func! tools_edgedb#showAllObjects()
-  call tools_edgedb#runQueryShow( v:true, ['select count( Object ); select Object { __type__: {name} }'] )
+  call tools_edgedb#runQueryShow( ['select count( Object ); select Object { __type__: {name} }'] )
 endfunc
 
 " 'select Object { __type__: {name} }'
@@ -407,16 +460,18 @@ func! tools_edgedb#eval_range ( format, ... )
   let lines = getline(startLine, endLine)
   " echoe lines
 
-  call tools_edgedb#runQueryShow( a:format, lines )
+  call tools_edgedb#runQueryShow( lines )
 endfunc
 
 
-func! tools_edgedb#runQueryShow ( format, query_lines )
+func! tools_edgedb#runQueryShow ( query_lines )
 
   let resLines = tools_edgedb#runQuery( a:query_lines )
   " echoe resLines
 
   let resLines = RemoveTermCodes( resLines )
+  let resLines = SubstituteInLines( resLines, ';', '' )
+  let resLines = SubstituteInLines( resLines, 'property ', '' )
 
   if len( resLines ) == 0
     echo "query completed!"
@@ -437,17 +492,24 @@ func! tools_edgedb#runQueryShow ( format, query_lines )
 
   " let str_resLines = functional#map( 'string', resLines )
 
+  if !g:withId
+    let resLines = functional#filter( {l -> !(l =~ "id")}, resLines )
+  endif
+
   let g:floatWin_win = FloatingSmallNew ( resLines )
   call tools_edgedb#bufferMaps()
   if synt == 'json'
     set syntax=json
+    set ft=json
   else
     set syntax=edgeql
+    set ft=edgeql
   endif
-  syntax match Normal "->" conceal cchar=→
-  syntax match Normal "::" conceal cchar=|
-  syntax match Normal ":=" conceal cchar=⫶
+  " syntax match Normal "->" conceal cchar=→
+  " syntax match Normal "::" conceal cchar=|
+  " syntax match Normal ":=" conceal cchar=⫶
   call FloatWin_FitWidthHeight()
+  wincmd p
 
   " call tools_db#alignInFloatWin()
 
@@ -456,7 +518,8 @@ endfunc
 
 func! tools_edgedb#runQuery( query_lines )
   " echoe a:query_lines
-  let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
+  " let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
+  let filenameSource = 'temp/lastQuery.edgeql'
   call writefile( a:query_lines, filenameSource )
 
   let resLines = systemlist( 'cat ' . filenameSource . ' | edgedb -d ' . g:edgedb_db )
