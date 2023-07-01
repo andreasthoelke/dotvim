@@ -19,7 +19,7 @@ au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.esdl,*edgeql call EdgeQLSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.esdl,*.edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 
@@ -33,6 +33,8 @@ au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
+
 au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
@@ -76,101 +78,6 @@ func! SQLSyntaxAdditions()
 endfunc
 
 
-
-func! EdgeQLSyntaxAdditions() " ■
-  call tools_edgedb#bufferMaps()
-
-  call clearmatches()
-  set conceallevel=2
-  set concealcursor=ni
-
-  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
-  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
-  call matchadd('Conceal', ';', 12, -1, {'conceal': ''})
-
-  syntax match CommentMinusMinus "{"
-  syntax match CommentMinusMinus "}"
-  syntax match CommentMinusMinus "("
-  syntax match CommentMinusMinus ")"
-
-  call matchadd('FunctionDec', '\vtype\s\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vinsert\s\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vselect\s\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vINSERT\s\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vSELECT\s\zs\w*', 11, -1)
-  call matchadd('Trait', '\vabstract\stype\s\zs\w*', 11, -1)
-
-  " properties
-  " call matchadd('Comment',      '\v\w*\ze:', 11, -1)
-  call matchadd('purescriptConstructor',      '\v\w*\ze:', 11, -1)
-  " namespaces
-  call matchadd('CommentMinus', '\v\w*\ze::', 11, -1)
-
-  " comments are overwriting other matchadds
-  call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
-  call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
-
-  syntax match Normal "\v\S\zs:" conceal
-
-  syntax match Normal 'with' conceal cchar=˪
-  syntax match Normal 'WITH' conceal cchar=˪
-  syntax match Normal 'update' conceal cchar=☼
-  syntax match Normal 'UPDATE' conceal cchar=☼
-  syntax match Normal 'select' conceal cchar=⁝
-  syntax match Normal 'insert' conceal cchar=⌄
-  syntax match Normal 'SELECT' conceal cchar=⁝
-  syntax match Normal 'INSERT' conceal cchar=⌄
-  syntax match Normal 'filter' conceal cchar=⇡
-  syntax match Normal 'FILTER' conceal cchar=⇡
-  syntax match Normal 'for\ze\s' conceal cchar=⊃
-  syntax match Normal 'FOR' conceal cchar=⊃
-  syntax match Normal 'in\ze\s' conceal cchar=⊂
-  syntax match Normal 'IN\ze\s' conceal cchar=⊂
-
-  syntax match Normal 'function' conceal cchar=➔
-  syntax match Normal 'type ' conceal
-  syntax match Normal 'abstract ' conceal
-  syntax match Normal 'property ' conceal
-  syntax match Normal 'module' conceal cchar=⊟
-  syntax match Normal 'required ' conceal cchar=ˌ
-  syntax match Normal 'link' conceal cchar=←
-  syntax match Normal 'multi ' conceal cchar=≡
-  syntax match Normal 'optional ' conceal cchar=≟
-  syntax match Normal 'extending' conceal cchar=⟔
-  syntax match Normal 'constraint' conceal cchar=˽
-
-  syntax match Normal 'set' conceal cchar=∥
-  syntax match Normal 'SET' conceal cchar=∥
-  syntax match Normal 'union' conceal cchar=‖
-  syntax match Normal 'UNION' conceal cchar=‖
-
-  syntax match Normal 'std::str' conceal cchar=s
-  syntax match Normal 'str' conceal cchar=s
-  syntax match Normal '<str>' conceal cchar=s
-  syntax match Normal '<json>' conceal cchar=⫕
-  syntax match Normal 'std::int32' conceal cchar=ɪ
-  syntax match Normal 'std::int64' conceal cchar=ɪ
-  syntax match Normal 'int32' conceal cchar=ɪ
-  syntax match Normal 'int64' conceal cchar=ɪ
-  syntax match Normal '<int64>' conceal cchar=ɪ
-  syntax match Normal 'std::float64' conceal cchar=ɪ
-  syntax match Normal 'Boolean' conceal cchar=ʙ
-
-  syntax match Normal 'using' conceal cchar=⊨
-
-  syntax match Normal 'if\ze\W' conceal cchar=˻
-  syntax match Normal 'else' conceal cchar=˼
-  syntax match Normal 'else\sif' conceal cchar=˼
-  " syntax match Normal 'then\ze(\W|\_$)' conceal cchar=˹
-  syntax match Normal '\v\s\zsthen\ze(\s|\_$)' conceal cchar=˹
-
-
-  syntax match Normal "->" conceal cchar=→
-  syntax match Normal "::" conceal cchar=ˍ
-  syntax match Normal ":=" conceal cchar=⫶
-  set commentstring=\#%s
-
-endfunc " ▲
 
 func! RescriptSyntaxAdditions()
   call tools_rescript#bufferMaps()

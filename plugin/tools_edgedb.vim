@@ -10,9 +10,10 @@ let g:edgedb_instance = '_1playground_2'
 
 
 func! tools_edgedb#bufferMaps()
-  nnoremap <silent><buffer> gej :call tools_edgedb#eval_parag( v:true )<cr>
-  nnoremap <silent><buffer> gei :call tools_edgedb#eval_parag( v:true )<cr>
-  nnoremap <silent><buffer> geI :call tools_edgedb#eval_parag( v:false )<cr>
+  nnoremap <silent><buffer> gej :let g:withId=0<cr>:call tools_edgedb#eval_parag()<cr>
+  nnoremap <silent><buffer> gei :let g:withId=0<cr>:call tools_edgedb#eval_parag()<cr>
+  nnoremap <silent><buffer> ,gej :let g:withId=1<cr>:call tools_edgedb#eval_parag()<cr>
+  nnoremap <silent><buffer> ,gei :let g:withId=1<cr>:call tools_edgedb#eval_parag()<cr>
 
   nnoremap gq    m':let g:opContFn='tools_edgedb#query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
   vnoremap gq :<c-u>let g:opContFn='tools_edgedb#query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
@@ -21,10 +22,10 @@ func! tools_edgedb#bufferMaps()
   " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='tools_edgedb#eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
   nnoremap <silent><buffer> <leader>geo :call tools_edgedb#eval_buffer( v:true )<cr>
 
-  nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
-  nnoremap <silent><buffer> geT :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
-  nnoremap <silent><buffer> ,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
-  nnoremap <silent><buffer> ,,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
+  nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cWORD>') )<cr>
+  " nnoremap <silent><buffer> geT :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
+  " nnoremap <silent><buffer> ,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
+  " nnoremap <silent><buffer> ,,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
 
   nnoremap <silent><buffer> <leader>K :call tools_edgedb#describe_schema()<cr>
 
@@ -37,27 +38,27 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> gsk :call tools_edgedb#showObjectFieldsWT( expand('<cWORD>') )<cr>
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cWORD>') )<cr>
 
-  nnoremap <silent><buffer> gsf :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> gsF :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> ,gsF :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> gsF :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> gsf :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> ,gsF :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> <leader>gsF :call tools_edgedb#queryAllObjectFields_InnerFields( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> gsK :silent call EdbReplPost( '\d object ' . expand('<cWORD>') )<cr>
 
   " ─     Copied from Tools_Scala                         ──
-  nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
-  nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-p> :call Edb_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <c-p>         :call Edb_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
 
-  nnoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
-  " onoremap <silent><buffer> <leader>(     :call Scala_MvStartOfBlock()<cr>
+  nnoremap <silent><buffer> <leader>(     :call Edb_MvStartOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>(     :call Edb_MvStartOfBlock()<cr>
   onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
   vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
 
-  nnoremap <silent><buffer> <leader>)     :call Scala_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> <leader>)     :call Edb_MvEndOfBlock()<cr>
   onoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
   vnoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
 
@@ -65,12 +66,12 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> ( :call MvLineStart()<cr>
   nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
 
-  nnoremap <silent><buffer> I :call Scala_ColonForw()<cr>
-  nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
+  nnoremap <silent><buffer> I :call Edb_ColonForw()<cr>
+  nnoremap <silent><buffer> Y :call Edb_ColonBackw()<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Edb_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Edb_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
   " " find a new map if I actually use this:
   " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
@@ -396,24 +397,77 @@ func! tools_edgedb#query_objCount( word, details)
   call tools_edgedb#runQueryShow( [line] )
 endfunc
 
-func! tools_edgedb#eval_parag( format )
+func! tools_edgedb#eval_parag()
   let [startLine, endLine] = ParagraphStartEndLines()
-  call tools_edgedb#eval_range( a:format, startLine, endLine )
+  call tools_edgedb#eval_range( startLine, endLine )
 endfunc
+
+
 
 func! tools_edgedb#eval_buffer( format )
   let [startLine, endLine] = [1, line('$')]
-  call tools_edgedb#eval_range( a:format, startLine, endLine )
+  call tools_edgedb#eval_range( startLine, endLine )
 endfunc
 
-func! tools_edgedb#describe_object( word, verbose )
-  if a:verbose
-    let line = ['describe object ' . a:word . ' as text;']
-  else
-    let line = ['describe object ' . a:word . ' as sdl;']
+
+func! tools_edgedb#filterProp( lines, propStr )
+  let lineNum = functional#find( a:lines, a:propStr )
+  if lineNum == -1
+    return a:lines
+  endif
+  return a:lines[ 0 : lineNum - 1 ] + a:lines[ lineNum + 3 : -1 ]
+endfunc
+
+" tools_edgedb#filterProp( resLines, "link __type__" )
+" functional#find(['eins', 'zwei', 'aber'], 'be') != -1 ? 'yes' : 'no'
+" find start line
+" delete range of lines
+" example to be filtered: 
+" type mov::Season {
+"     required single link __type__: schema::ObjectType {
+"         readonly := true;
+"     };
+"     required single link show: mov::Show;
+"     required single property id: std::uuid {
+"         readonly := true;
+"     };
+"     required single property number: std::int32;
+" };
+
+
+
+
+func! tools_edgedb#describe_object( word )
+  let cmd = "edgedb describe object " . a:word 
+
+  let resLines = systemlist( cmd )
+  let resLines = RemoveTermCodes( resLines )
+
+  if len( resLines ) == 0
+    echo "query completed!"
+    return
   endif
 
-  call tools_edgedb#runQueryShow( line )
+  if len( resLines ) == 1
+    if len( resLines[0] ) > 10
+      let resLines = split( resLines[0][1:-2], '\\n' )
+      " echoe resLines
+      " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
+    endif
+  endif
+
+  let resLines = tools_edgedb#filterProp( resLines, "link __type__" )
+  let resLines = tools_edgedb#filterProp( resLines, " id: std::uuid" )
+
+  let g:floatWin_win = FloatingSmallNew ( resLines )
+
+  set syntax=edgeql
+  set ft=edgeql
+  call EdgeQLSyntaxAdditions()
+
+  call FloatWin_FitWidthHeight()
+  wincmd p
+
 endfunc
 
 command! EdgeDBStartInstance call tools_edgedb#startInstance()
@@ -451,9 +505,9 @@ endfunc
 
 " 'select Object { __type__: {name} }'
 
-command! -range=% EdgeDBEval call tools_edgedb#eval_range( v:true, <line1>, <line2> )
+command! -range=% EdgeDBEval call tools_edgedb#eval_range( <line1>, <line2> )
 
-func! tools_edgedb#eval_range ( format, ... )
+func! tools_edgedb#eval_range ( ... )
   let startLine = a:0 ? a:1 : 1
   let endLine = a:0 ? a:2 : line('$')
 
@@ -493,7 +547,12 @@ func! tools_edgedb#runQueryShow ( query_lines )
   " let str_resLines = functional#map( 'string', resLines )
 
   if !g:withId
-    let resLines = functional#filter( {l -> !(l =~ "id")}, resLines )
+    let newResLines = functional#filter( {l -> !(l =~ "id")}, resLines )
+    " only filter lines with '"id" if there are other lines.
+    " some small objects props are return as a single line
+    if len(newResLines)
+      let resLines = newResLines
+    endif
   endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines )
@@ -576,8 +635,67 @@ endfunc
 
 
 
+" NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
+let g:Edb_MainStartPattern = '\v(select|insert|SELECT|INSERT|type|TYPE)'
+let g:Edb_TopLevPattern = '\v^(select|insert|SELECT|INSERT|type|TYPE)'
+
+func! Edb_TopLevBindingForw()
+  call search( g:Edb_TopLevPattern, 'W' )
+endfunc
+
+func! Edb_MainStartBindingForw()
+  " normal! }
+  normal! jj
+  call search( g:Edb_MainStartPattern, 'W' )
+endfunc
+
+func! Edb_TopLevBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:Edb_TopLevPattern, 'bW' )
+  " normal! {
+  " normal! kk
+  " call search( g:Edb_TopLevPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
 
 
+func! Edb_MainStartBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:Edb_MainStartPattern, 'bW' )
+  " normal! {
+  normal! kk
+  call search( g:Edb_MainStartPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+" call search('\v^(\s*)?call', 'W')
+
+func! Edb_MvStartOfBlock()
+  normal! k
+  exec "silent keepjumps normal! {"
+  normal! j^
+endfunc
+
+
+func! Edb_MvEndOfBlock()
+  normal! j
+  exec "silent keepjumps normal! }"
+  normal! k^
+endfunc
+
+
+let g:Edb_colonPttn = MakeOrPttn( ['\:\:', '\/\/', '*>', '-', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+
+func! Edb_ColonForw()
+  call SearchSkipSC( g:Edb_colonPttn, 'W' )
+  normal w
+endfunc
+
+func! Edb_ColonBackw()
+  normal bh
+  call SearchSkipSC( g:Edb_colonPttn, 'bW' )
+  normal w
+endfunc
 
 
 

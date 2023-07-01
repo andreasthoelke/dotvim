@@ -132,7 +132,7 @@ endfunc
 " nnoremap <silent> gei :call SourcePrintCommented()<cr>
 " [9, 8] + [1, 2]
 
-au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
+" au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
 func! VScriptToolsBufferMaps()
   nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>

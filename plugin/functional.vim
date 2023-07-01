@@ -75,6 +75,21 @@ func! functional#sum(list)
 endfunc
 " echo functional#sum( [3, 4, 5] )
 
+" temp needed this quickly. but there should be a better way
+func! functional#find(list, str)
+  for idx in range(0, len(a:list)-1)
+    if a:list[idx] =~ a:str 
+      return idx
+    endif
+  endfor
+  return -1
+endfunc
+" functional#find(['eins', 'zwei', 'aber'], 'be')
+" functional#find(['eins', 'zwei', 'aber'], 'ns')
+" functional#find(['eins', 'zwei', 'aber'], 'bei')
+" functional#find(['eins', 'zwei', 'aber'], 'be') != -1 ? 'yes' : 'no'
+" functional#find(['eins', 'zwei', 'aber'], 'ns') != -1 ? 'yes' : 'no'
+" functional#find(['eins', 'zwei', 'aber'], 'nsx') != -1 ? 'yes' : 'no'
 
 " Accessing global vars:
 " g:['x'] and g:x are equivalent
