@@ -51,7 +51,8 @@ endfunc
 " functional#filter( {x->x==3}, [2, 3, 4] )
 " echo functional#filter( {x-> x isnot# 3}, [2, 3, 4] )
 " echo functional#filter( {x-> x =~ 'e'}, ['eins', 'acht', 'zwei'] )
-" echo functional#filter( {x-> x !~ 'e'}, ['eins', 'acht', 'zwei'] )
+" functional#filter( {x-> x !~ 'e'}, ['eins', 'acht', 'zwei'] )
+" functional#filter( {x-> x =~ '^e'}, ['eins', 'acht', 'zwei'] )
 
 " foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
 func! functional#foldr(fabb, initB, listA)
@@ -73,7 +74,7 @@ endfunc
 func! functional#sum(list)
   return functional#foldr( {a,b->a+b}, 0, a:list )
 endfunc
-" echo functional#sum( [3, 4, 5] )
+" functional#sum( [3, 4, 5] )
 
 " temp needed this quickly. but there should be a better way
 func! functional#find(list, str)

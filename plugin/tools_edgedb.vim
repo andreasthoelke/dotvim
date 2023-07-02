@@ -256,8 +256,9 @@ func! tools_edgedb#prependModule( obj_name )
 endfunc
 
 func! tools_edgedb#queryAllObjectFields( obj_name )
-  let query = 'select count( ' . tools_edgedb#prependModule(a:obj_name) . ' );'
-  let query = query . 'select ' . tools_edgedb#prependModule(a:obj_name) . ' {*};'
+  let obj_name = split( a:obj_name, '\.' )[0]
+  let query = 'select count( ' . tools_edgedb#prependModule(obj_name) . ' );'
+  let query = query . 'select ' . tools_edgedb#prependModule(obj_name) . ' {*};'
   call tools_edgedb#runQueryShow( [query] )
 endfunc
 
@@ -438,8 +439,8 @@ endfunc
 
 
 
-func! tools_edgedb#describe_object( word )
-  let cmd = "edgedb describe object " . a:word 
+func! tools_edgedb#describe_object( obj_name )
+  let cmd = "edgedb describe object " . tools_edgedb#prependModule(a:obj_name) 
 
   let resLines = systemlist( cmd )
   let resLines = RemoveTermCodes( resLines )
@@ -513,7 +514,9 @@ func! tools_edgedb#eval_range ( ... )
   let endLine = a:0 ? a:2 : line('$')
 
   let lines = getline(startLine, endLine)
-  " echoe lines
+  " " TODO: wrap in with and the get count of result items?
+  " if split(lines[0])[0] == "select"
+  " endif
 
   call tools_edgedb#runQueryShow( lines )
 endfunc
@@ -559,8 +562,13 @@ func! tools_edgedb#runQueryShow ( query_lines )
   " endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines )
-  exec "%!jq"
-  exec "g/\"id\"\:/d"
+  if !(resLines[0] =~ "^error") && len(resLines) > 1
+    silent! exec "%!jq"
+    silent! exec "silent! g/\"id\"\:/d _"
+  endif
+
+  call tools_edgedb#addObjCountToBuffer()
+
   normal gg
 
   call tools_edgedb#bufferMaps()
@@ -571,14 +579,18 @@ func! tools_edgedb#runQueryShow ( query_lines )
     set syntax=edgeql
     set ft=edgeql
   endif
-  " syntax match Normal "->" conceal cchar=→
-  " syntax match Normal "::" conceal cchar=|
-  " syntax match Normal ":=" conceal cchar=⫶
+
   call FloatWin_FitWidthHeight()
   wincmd p
 
   " call tools_db#alignInFloatWin()
 
+endfunc
+
+func! tools_edgedb#addObjCountToBuffer()
+  let bufferLines = getline( 0, "$" )
+  let objStartLines = functional#filter( { l -> l == '{' }, bufferLines )
+  call append( 0, len(objStartLines) )
 endfunc
 
 

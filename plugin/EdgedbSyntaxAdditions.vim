@@ -6,7 +6,7 @@ func! EdgeQLSyntaxAdditions() " ■
   set conceallevel=2
   set concealcursor=ni
 
-  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
+  " call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
   " call matchadd('Conceal', ';', 12, -1, {'conceal': ''})
 
   syntax match CommentMinusMinus "{"
@@ -30,6 +30,10 @@ func! EdgeQLSyntaxAdditions() " ■
   " comments are overwriting other matchadds
   call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
   call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
+
+
+  syntax match Normal "\#\s" conceal
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
 
   syntax match Normal "\v\S\zs:" conceal
 
@@ -92,6 +96,7 @@ func! EdgeQLSyntaxAdditions() " ■
   syntax match Normal "->" conceal cchar=→
   syntax match Normal "::" conceal cchar=ˍ
   syntax match Normal ":=" conceal cchar=⫶
+
   set commentstring=\#%s
 
 endfunc " ▲
