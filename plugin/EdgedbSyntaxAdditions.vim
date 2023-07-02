@@ -1,16 +1,13 @@
 
 
-
 func! EdgeQLSyntaxAdditions() " ■
-  call tools_edgedb#bufferMaps()
 
   call clearmatches()
   set conceallevel=2
   set concealcursor=ni
 
   call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
-  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
-  call matchadd('Conceal', ';', 12, -1, {'conceal': ''})
+  " call matchadd('Conceal', ';', 12, -1, {'conceal': ''})
 
   syntax match CommentMinusMinus "{"
   syntax match CommentMinusMinus "}"
@@ -52,6 +49,7 @@ func! EdgeQLSyntaxAdditions() " ■
   syntax match Normal 'IN\ze\s' conceal cchar=⊂
 
   syntax match Normal 'function' conceal cchar=➔
+  syntax match Normal ';' conceal
   syntax match Normal 'type ' conceal
   syntax match Normal 'abstract ' conceal
   syntax match Normal 'property ' conceal

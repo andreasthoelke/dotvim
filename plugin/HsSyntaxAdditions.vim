@@ -3,6 +3,10 @@ augroup ag
 augroup end
 
 " ─   Filetype Specific Maps Tools Syntax               ──
+
+au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call tools_edgedb#bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
+
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
@@ -19,7 +23,6 @@ au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.esdl,*.edgeql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 

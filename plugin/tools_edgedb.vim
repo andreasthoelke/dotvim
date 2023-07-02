@@ -10,6 +10,9 @@ let g:edgedb_instance = '_1playground_2'
 
 
 func! tools_edgedb#bufferMaps()
+
+  nnoremap <silent><buffer> <leader>es :call EdgeQLSyntaxAdditions()<cr>
+
   nnoremap <silent><buffer> gej :let g:withId=0<cr>:call tools_edgedb#eval_parag()<cr>
   nnoremap <silent><buffer> gei :let g:withId=0<cr>:call tools_edgedb#eval_parag()<cr>
   nnoremap <silent><buffer> ,gej :let g:withId=1<cr>:call tools_edgedb#eval_parag()<cr>
@@ -29,8 +32,8 @@ func! tools_edgedb#bufferMaps()
 
   nnoremap <silent><buffer> <leader>K :call tools_edgedb#describe_schema()<cr>
 
-  nnoremap <silent><buffer> gec :call tools_edgedb#query_objCount( expand('<cWORD>'), v:false )<cr>
-  nnoremap <silent><buffer> gea :call tools_edgedb#query_withProp( expand('<cWORD>'), v:false )<cr>
+  nnoremap <silent><buffer> gec :call tools_edgedb#query_objCount( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> gea :call tools_edgedb#query_withProp( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> ges :call tools_edgedb#query_inParans( v:false )<cr>
 
@@ -244,21 +247,23 @@ func! UnexpandLines ( list )
 endfunc
 " echo UnexpandLines( ['[','eins','zwei',']','[drei','vier'] )
 
+func! tools_edgedb#prependModule( obj_name )
+  let line = split( getline( 1 ), " " )
+  if !len(line) || line[0] != "module"
+    return a:obj_name
+  endif
+  return line[1] . "::" . a:obj_name
+endfunc
+
 func! tools_edgedb#queryAllObjectFields( obj_name )
-  " let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
-  " let fieldsStr = join( fieldNames, ', ' )
-  " let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
-  let query = 'select ' . a:obj_name . ' {*};'
-  " let resLines = tools_edgedb#runQuery( query )
+  let query = 'select count( ' . tools_edgedb#prependModule(a:obj_name) . ' );'
+  let query = query . 'select ' . tools_edgedb#prependModule(a:obj_name) . ' {*};'
   call tools_edgedb#runQueryShow( [query] )
 endfunc
 
 func! tools_edgedb#queryAllObjectFields_withInnerObjs( obj_name )
-  " let fieldNames = tools_edgedb#getObjectFields( a:obj_name )
-  " let fieldsStr = join( fieldNames, ', ' )
-  " let query = 'select ' . a:obj_name . ' {' . fieldsStr . '};'
-  let query = 'select ' . a:obj_name . ' {**};'
-  " let resLines = tools_edgedb#runQuery( query )
+  let query = 'select count( ' . tools_edgedb#prependModule(a:obj_name) . ' );'
+  let query = query . 'select ' . tools_edgedb#prependModule(a:obj_name) . ' {**};'
   call tools_edgedb#runQueryShow( [query] )
 endfunc
 
@@ -362,7 +367,7 @@ endfunc
 " echo tools_edgedb#addStrFieldsToObjFields([{'name': 'other_places', 'isLinkType': 1, 'type': 'OtherPlace', 'isArray': 0}, {'name': 'castles', 'isLinkType': 1, 'type': 'Castle', 'isArray': 0}, {'name': 'cities', 'isLinkType': 1, 'type': 'City', 'isArray': 0}, {'name': 'important_places', 'isLinkType': 0, 'type': 'strA', 'isArray': 1}, {'name': 'name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'modern_name', 'isLinkType': 0, 'type': 'str', 'isArray': 0}, {'name': 'coffins', 'isLinkType': 0, 'type': 'int16', 'isArray': 0}])
 
 
-func! tools_edgedb#query_withProp( text, details )
+func! tools_edgedb#query_withProp( text )
   let objectProp = substitute( a:text, ')\|]', '', '')
   " echoe objectProp
   " return
@@ -387,12 +392,8 @@ endfunc
 " call tools_edgedb#query_inParans( 'ein' )
 " see search flags like bnWn /opt/homebrew/Cellar/neovim/0.6.0/share/nvim/runtime/doc/eval.txt#/search.{pattern}%20[,%20{flags}
 
-func! tools_edgedb#query_objCount( word, details)
-  if a:details
-    let line = 'select count( ' . a:word . ' );'
-  else
-    let line = 'select count( ' . a:word . ' );'
-  endif
+func! tools_edgedb#query_objCount( obj )
+  let line = 'select count( ' . tools_edgedb#prependModule(a:obj) . ' );'
 
   call tools_edgedb#runQueryShow( [line] )
 endfunc
@@ -544,18 +545,24 @@ func! tools_edgedb#runQueryShow ( query_lines )
     let synt = 'json'
   endif
 
-  " let str_resLines = functional#map( 'string', resLines )
-
-  if !g:withId
-    let newResLines = functional#filter( {l -> !(l =~ "id")}, resLines )
-    " only filter lines with '"id" if there are other lines.
-    " some small objects props are return as a single line
-    if len(newResLines)
-      let resLines = newResLines
-    endif
-  endif
+  " if !g:withId
+  "   let newResLines = resLines
+  "   " let newResLines = functional#filter( {l -> !(l =~ '\s\"id\"\:')}, resLines )
+  "   " let newResLines = SubstituteInLines( newResLines, '\v\"id":.*,', '' )
+  "   " substitute in lines till ,
+  "   " {"id": "1b0d2bb2-17e3-11ee-9fc1-5b64e2c5681c",
+  "   " only filter lines with '"id" if there are other lines.
+  "   " some small objects props are return as a single line
+  "   if len(newResLines) > 1
+  "     let resLines = newResLines
+  "   endif
+  " endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines )
+  exec "%!jq"
+  exec "g/\"id\"\:/d"
+  normal gg
+
   call tools_edgedb#bufferMaps()
   if synt == 'json'
     set syntax=json
