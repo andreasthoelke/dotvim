@@ -1,39 +1,63 @@
 
+" augroup edgedb
+"     autocmd BufRead,BufNewFile *.esdl,*.edgeql :set filetype=edgeql
+" augroup end
+" autocmd BufNewFile,BufRead *.edgeql setf edgeql
+" autocmd BufNewFile,BufRead *.esdl setf edgeql
+
+
+" NOTE: I deactivated the edgedb syntax highlight, but might want to take
+" inspiration from the regexes here: /Users/at/.config/nvim/plugged/edgedb-vim/syntax/edgeql.vim|1
+
+" Character classes
+" :help character-classes
+" /opt/homebrew/Cellar/neovim/0.9.0/share/nvim/runtime/doc/pattern.txt|500
 
 func! EdgeQLSyntaxAdditions() " ■
 
+  " set ft=text
+  set ft=edgeql
   call clearmatches()
-  set conceallevel=2
-  set concealcursor=ni
+  " set conceallevel=2
+  " set concealcursor=ni
 
   " call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
   " call matchadd('Conceal', ';', 12, -1, {'conceal': ''})
 
-  syntax match CommentMinusMinus "{"
-  syntax match CommentMinusMinus "}"
-  syntax match CommentMinusMinus "("
-  syntax match CommentMinusMinus ")"
+  call matchadd('FunctionDec', '\vtype\s\zs\u\w*', 11, -1)
+  " match only uppercase words and except an optional namespace part but don't match it.
+  call matchadd('FunctionDec', '\vinsert\s(\w*::)?\zs\u\w*', 11, -1)
+  call matchadd('FunctionDec', '\vselect\s(\w*::)?\zs\u\w*', 11, -1)
+  call matchadd('FunctionDec', '\vINSERT\s(\w*::)?\zs\u\w*', 11, -1)
+  call matchadd('FunctionDec', '\vSELECT\s(\w*::)?\zs\u\w*', 11, -1)
+  call matchadd('Trait', '\vabstract\stype\s\zs\u\w*', 11, -1)
 
-  call matchadd('FunctionDec', '\vtype\s\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vinsert\s(\w*::)?\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vselect\s(\w*::)?\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vINSERT\s(\w*::)?\zs\w*', 11, -1)
-  call matchadd('FunctionDec', '\vSELECT\s(\w*::)?\zs\w*', 11, -1)
-  call matchadd('Trait', '\vabstract\stype\s\zs\w*', 11, -1)
+  call matchadd('FunctionDec', '\v[is\s(\w*::)?\zs\u\w*', 11, -1)
+
+  call matchadd('FunctionDec', '\v::\u\w*', 11, -1)
+
+  " \(foo\)\@<!bar		any "bar" that's not in "foobar"
+  " \(\/\/.*\)\@<!in	"in" which is not after "//"
+
 
   " properties
   " call matchadd('Comment',      '\v\w*\ze:', 11, -1)
-  call matchadd('purescriptConstructor',      '\v\w*\ze:', 11, -1)
+  " call matchadd('purescriptConstructor',      '\w*\ze:', 11, -1)
+  " Note the 'negative lookaround here - it actually works to prevent metches inside comments!
+  call matchadd('purescriptConstructor',      '\(\#.*\)\@<!\w*\ze:', 11, -1)
+
   " namespaces
   call matchadd('CommentMinus', '\v\w*\ze::', 11, -1)
 
-  " comments are overwriting other matchadds
-  call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
-  call matchadd('CommentMinus', '\#\s\zs.*', 11, -1)
+  " 
+  " This is effective in preventing the conceal unicode in normal comments
+  syntax match CommentMinus '\v#\s\zs.*'
+  " IMPORTANT: this line would prevent the above effect!
+  " syntax match Normal "\#\s" conceal
 
+  " IMPORTANT: Only matchadd can coneal the comment chars when those are already match by the above syntax match!
+  call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
 
-  syntax match Normal "\#\s" conceal
-  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
 
   syntax match Normal "\v\S\zs:" conceal
 
@@ -97,7 +121,42 @@ func! EdgeQLSyntaxAdditions() " ■
   syntax match Normal "::" conceal cchar=ˍ
   syntax match Normal ":=" conceal cchar=⫶
 
+  syntax match CommentMinusMinus "{"
+  syntax match CommentMinusMinus "}"
+  syntax match CommentMinus "("
+  syntax match CommentMinus ")"
+  syntax match CommentMinus "<"
+  syntax match CommentMinus ">"
+  syntax match CommentMinus "\["
+  syntax match CommentMinus "\]"
+
+  " This is effective in preventing the conceal unicode in normal comments
+  " syntax match Comment '#\s\zs.*'
+
+  " syntax match Comment '\#\s\zs.*'
+  " syntax match Comment '\s\#\zs\zs.*'
+
+  " This is effective in preventing the conceal unicode in normal comments
+  " syntax match BlackBG '\v#\s\zs.*'
+
+  " comments are overwriting other matchadds
+  " call matchadd('CommentMinus', '\#\s\zs.*', 1001)
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+
+  " setl isk+=<,>,$,#,+,-,*,/,%,&,=,!,:,124,~,?,^
+  setl isk+=?
+
+  " setlocal foldmarker=\ ■,\ ▲
+  set foldmethod=marker
+
   set commentstring=\#%s
+
+  " CodeMarkup Header
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
+
 
 endfunc " ▲
 

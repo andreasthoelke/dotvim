@@ -563,6 +563,10 @@ hi! ConcealOne  guifg=#2A4651
 hi! link conceal ConcealOne
 " hi! link conceal Comment
 
+ " This defines the color of the cchar
+" hi! Conceal guibg=#000000
+hi! link Conceal Operator
+
 " Note: Cursor is show with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
 " Not sure when this is unsed

@@ -46,9 +46,6 @@ au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 
 " ─   Syntax Color                                     ──
 
-" This defines the color of the cchar
-" hi! Conceal guibg=#000000
-hi! link Conceal Operator
 
 
 func! HaskellTools()

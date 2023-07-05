@@ -263,8 +263,9 @@ func! tools_edgedb#queryAllObjectFields( obj_name )
 endfunc
 
 func! tools_edgedb#queryAllObjectFields_withInnerObjs( obj_name )
-  let query = 'select count( ' . tools_edgedb#prependModule(a:obj_name) . ' );'
-  let query = query . 'select ' . tools_edgedb#prependModule(a:obj_name) . ' {**};'
+  let obj_name = split( a:obj_name, '\.' )[0]
+  let query = 'select count( ' . tools_edgedb#prependModule(obj_name) . ' );'
+  let query = query . 'select ' . tools_edgedb#prependModule(obj_name) . ' {**};'
   call tools_edgedb#runQueryShow( [query] )
 endfunc
 
@@ -562,9 +563,11 @@ func! tools_edgedb#runQueryShow ( query_lines )
   " endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines )
-  if !(resLines[0] =~ "^error") && len(resLines) > 1
+  if !(resLines[0] =~ "error") && len(resLines) > 1
     silent! exec "%!jq"
-    silent! exec "silent! g/\"id\"\:/d _"
+    if !g:withId
+      silent! exec "silent! g/\"id\"\:/d _"
+    endif
   endif
 
   call tools_edgedb#addObjCountToBuffer()
@@ -584,15 +587,29 @@ func! tools_edgedb#runQueryShow ( query_lines )
   wincmd p
 
   " call tools_db#alignInFloatWin()
-
 endfunc
 
+" relies of jq json formatting
 func! tools_edgedb#addObjCountToBuffer()
   let bufferLines = getline( 0, "$" )
-  let objStartLines = functional#filter( { l -> l == '{' }, bufferLines )
-  call append( 0, len(objStartLines) )
+  if bufferLines[0][0] =~ '\d'
+    call setline( 1, bufferLines[0] . " eql obj" )
+  endif
+  let objStartLinesOuter = functional#filter( { l -> l == '{' }, bufferLines )
+  let objStartLinesInner = functional#filter( { l -> substitute( l, " ", "", "g" ) == '{' }, bufferLines )
+  " substitute( " ein ss ", " ", "", "g" )
+  let innerObjsCount = len(objStartLinesInner) - len(objStartLinesOuter)
+  if innerObjsCount
+    call append( 0, innerObjsCount . " inner obj"  )
+  endif
+  if len(objStartLinesOuter)
+    call append( 0, len(objStartLinesOuter) . " outer obj"  )
+  elseif len( bufferLines )
+    call append( 0, len(bufferLines) -1 . " lines" )
+  endif
 endfunc
 
+let g:edgedb_query_cmd = "edgedb query --output-format json-pretty --file temp/lastQuery.edgeql --database " . g:edgedb_db
 
 func! tools_edgedb#runQuery( query_lines )
   " echoe a:query_lines
@@ -600,7 +617,11 @@ func! tools_edgedb#runQuery( query_lines )
   let filenameSource = 'temp/lastQuery.edgeql'
   call writefile( a:query_lines, filenameSource )
 
-  let resLines = systemlist( 'cat ' . filenameSource . ' | edgedb -d ' . g:edgedb_db )
+  " let resLines = systemlist( 'cat ' . filenameSource . ' | edgedb -d ' . g:edgedb_db )
+
+  let cmd = "edgedb query --output-format json-pretty --file " . filenameSource . " --database " . g:edgedb_db
+  let resLines = systemlist( cmd )
+
   return resLines
 endfunc
 

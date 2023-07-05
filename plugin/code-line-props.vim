@@ -298,7 +298,7 @@ endfunc
 " echo GetLineFromCursor()
 
 func! GetFullLine_OrFromCursor()
-  let isCommentLine = getline( '.' ) =~ '\(\/\/\|\*\)'
+  let isCommentLine = getline( '.' ) =~ '\(\/\/\|\*\|\"\)'
   if isCommentLine
     return getline('.')[col('.')-1:]
   else
