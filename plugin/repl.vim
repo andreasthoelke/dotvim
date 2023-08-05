@@ -1,5 +1,6 @@
 
 
+nnoremap <silent> gsh :call Scala_ServerClientRequest_x()<cr>
 
 nnoremap <silent>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
 nnoremap <silent>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>

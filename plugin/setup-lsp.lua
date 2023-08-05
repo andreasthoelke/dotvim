@@ -293,39 +293,52 @@ lspconfig.graphql.setup({
 -- https://github.com/lighttiger2505/sqls
 -- https://github.com/nanotee/sqls.nvim
 -- mysql://root:PW@127.0.0.1:3306/pets
-lspconfig.sqlls.setup{
-  on_attach = function(client, bufnr)
-    require('sqlls').on_attach(client, bufnr)
-  end,
-  settings = {
-    sqlls = {
-      connections = {
-        {
-          alias = 'mysql_pets',
-          driver = 'mysql',
-          dataSourceName = 'root:PW@127.0.0.1:3306/pets',
-        },
-        {
-          alias = 'demo_world',
-          driver = 'mysql',
-          dataSourceName = 'root:root@tcp(127.0.0.1:13306)/world',
-        },
+-- lspconfig.sqlls.setup{
+--   on_attach = function(client, bufnr)
+--     require('sqlls').on_attach(client, bufnr)
+--   end,
+--   settings = {
+--     sqlls = {
+--       connections = {
+--         -- {
+--         --   alias = 'mysql_pets',
+--         --   driver = 'mysql',
+--         --   dataSourceName = 'root:PW@127.0.0.1:3306/pets',
+--         -- },
 
-        {
-          alias = 'pg_learn',
-          driver = 'postgresql',
-          dataSourceName = 'host=127.0.0.1 port=5432 user=postgres password=PW dbname=learn_dev',
-        },
-        {
-          alias = 'pg_demo',
-          driver = 'postgresql',
-          dataSourceName = 'host=127.0.0.1 port=15432 user=postgres password=mysecretpassword1234 dbname=dvdrental sslmode=disable',
-        },
+--         -- {
+--         --   alias = 'demo_world',
+--         --   driver = 'mysql',
+--         --   dataSourceName = 'root:root@tcp(127.0.0.1:13306)/world',
+--         -- },
 
-      },
-    },
-  },
-}
+--         -- {
+--         --   alias = 'pg_learn',
+--         --   driver = 'postgresql',
+--         --   dataSourceName = 'host=127.0.0.1 port=5432 user=postgres password=PW dbname=learn_dev',
+--         -- },
+
+--         -- {
+--         --   alias = 'pg_demo',
+--         --   driver = 'postgresql',
+--         --   dataSourceName = 'host=127.0.0.1 port=15432 user=postgres password=mysecretpassword1234 dbname=dvdrental sslmode=disable',
+--         -- },
+
+--         {
+--           alias = 'muse',
+--           -- driver = 'postgresql',
+--           adapter = 'postgres',
+--           dataSourceName = 'host=0.0.0.0 port=5432 user=postgres password=password dbname=muse',
+--         },
+
+
+--       },
+--     },
+--   },
+-- }
+
+-- /Users/at/.config/sql-language-server/.sqllsrc.json
+-- sql-language-server up --help
 
 
 require'lspconfig'.dockerls.setup{}
@@ -625,7 +638,13 @@ cmp.setup {
     { name = 'vsnip' },
     -- { name = 'luasnip' }, -- For luasnip users.
   }, {
-      { name = 'buffer' },
+      {
+        name = 'buffer',
+        -- NOTE: this prevents long url-code strings to spam the completion suggestion. effectively they are shorter now
+        option = {
+          keyword_pattern = [[\k\+]],
+        }
+      },
     })
   -- sources = {
   --   { name = 'nvim_lsp' },

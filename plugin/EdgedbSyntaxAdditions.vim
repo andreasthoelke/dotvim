@@ -28,6 +28,7 @@ func! EdgeQLSyntaxAdditions() " ■
   " match only uppercase words and except an optional namespace part but don't match it.
   call matchadd('FunctionDec', '\vinsert\s(\w*::)?\zs\u\w*', 11, -1)
   call matchadd('FunctionDec', '\vselect\s(\w*::)?\zs\u\w*', 11, -1)
+  call matchadd('FunctionDec', '\vupdate\s(\w*::)?\zs\u\w*', 11, -1)
   call matchadd('FunctionDec', '\vINSERT\s(\w*::)?\zs\u\w*', 11, -1)
   call matchadd('FunctionDec', '\vSELECT\s(\w*::)?\zs\u\w*', 11, -1)
   call matchadd('Trait', '\vabstract\stype\s\zs\u\w*', 11, -1)
@@ -35,6 +36,8 @@ func! EdgeQLSyntaxAdditions() " ■
   call matchadd('FunctionDec', '\v[is\s(\w*::)?\zs\u\w*', 11, -1)
 
   call matchadd('FunctionDec', '\v::\u\w*', 11, -1)
+
+  call matchadd('Keyword', 'Resolved\. Schema is up to date now\.', 11, -1)
 
   " \(foo\)\@<!bar		any "bar" that's not in "foobar"
   " \(\/\/.*\)\@<!in	"in" which is not after "//"
@@ -63,18 +66,29 @@ func! EdgeQLSyntaxAdditions() " ■
 
   syntax match Normal 'with' conceal cchar=˪
   syntax match Normal 'WITH' conceal cchar=˪
-  syntax match Normal 'update' conceal cchar=☼
-  syntax match Normal 'UPDATE' conceal cchar=☼
-  syntax match Normal 'select' conceal cchar=⁝
-  syntax match Normal 'insert' conceal cchar=⌄
+  syntax match Normal 'update' conceal cchar=→
+  syntax match Normal 'UPDATE' conceal cchar=→
+  " syntax match Normal 'select' conceal cchar=⁝
+  syntax match Normal '\(\#.*\)\@<!select' conceal cchar=⁝
+  " syntax match Normal 'insert' conceal cchar=⌄
+  " syntax match Normal 'insert' conceal cchar=⇣
+  " syntax match Normal 'insert' conceal cchar=↘
+  syntax match Normal '\(\#.*\)\@<!insert' conceal cchar=↘
   syntax match Normal 'SELECT' conceal cchar=⁝
   syntax match Normal 'INSERT' conceal cchar=⌄
-  syntax match Normal 'filter' conceal cchar=⇡
+  " syntax match Normal 'filter' conceal cchar=⇡
+  syntax match Normal '\(\#.*\)\@<!filter' conceal cchar=⇡
   syntax match Normal 'FILTER' conceal cchar=⇡
   syntax match Normal 'for\ze\s' conceal cchar=⊃
   syntax match Normal 'FOR' conceal cchar=⊃
   syntax match Normal 'in\ze\s' conceal cchar=⊂
   syntax match Normal 'IN\ze\s' conceal cchar=⊂
+
+  syntax match Normal 'like\ze\s' conceal cchar=≈
+  syntax match Normal 'ilike\ze\s' conceal cchar=≋
+
+  syntax match Normal 'and' conceal cchar=&
+  syntax match Normal '\s\zsor\ze\s' conceal cchar=‖
 
   syntax match Normal 'function' conceal cchar=➔
   syntax match Normal ';' conceal
@@ -91,13 +105,16 @@ func! EdgeQLSyntaxAdditions() " ■
   syntax match Normal 'extending' conceal cchar=⟔
   syntax match Normal 'constraint' conceal cchar=˽
 
-  syntax match Normal 'set' conceal cchar=∥
-  syntax match Normal 'SET' conceal cchar=∥
-  syntax match Normal 'union' conceal cchar=‖
-  syntax match Normal 'UNION' conceal cchar=‖
+
+  " syntax match Normal 'set' conceal cchar=∥
+  " syntax match Normal 'SET' conceal cchar=∥
+
+  syntax match Normal 'set\ze\s{' conceal cchar=→
+  syntax match Normal 'union' conceal cchar=⋿
+  syntax match Normal 'UNION' conceal cchar=⋿
 
   syntax match Normal 'std::str' conceal cchar=s
-  syntax match Normal 'str' conceal cchar=s
+  syntax match Normal 'str\ze\s' conceal cchar=s
   syntax match Normal '<str>' conceal cchar=s
   syntax match Normal '<json>' conceal cchar=⫕
   syntax match Normal 'std::int32' conceal cchar=ɪ

@@ -260,7 +260,8 @@ func! RunSearch ( searchParams, browser, siteProps )
   let queryStr = packageQuery . moduleQuery . mainTermQuery . languageQuery . optionsQuery
 
   if has_key( a:siteProps, 'baseUrl' )
-    exec '!open ' . shellescape( a:siteProps.baseUrl . queryStr )
+    " exec '!open ' . shellescape( a:siteProps.baseUrl . queryStr )
+    call LaunchChromium( a:siteProps.baseUrl . queryStr )
   elseif has_key( a:choosenObjCmd, 'command' )
     exec a:siteProps.command . ' ' . queryStr
   endif

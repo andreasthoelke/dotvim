@@ -41,9 +41,10 @@ let g:db_ui_execute_on_save = 0
 let g:db_ui_show_database_icon = 1
 let g:db_ui_use_nerd_fonts = 1
 
+  " \ 'learn_dev': 'postgres:///learn_dev',
+  " \ 'funcprog': 'postgres:///funcprog',
 let g:dbs = {
-  \ 'learn_dev': 'postgres:///learn_dev',
-  \ 'funcprog': 'postgres:///funcprog',
+  \ 'muse': 'postgresql://postgres:password@0.0.0.0:5432/muse',
   \ }
 
 " these are additional permanent connections. activate this as needed
@@ -93,6 +94,7 @@ endfunc
 
 " psql -d zio_skunk_tradeIO -c "select * from accounts"
 let g:dbname = 'zio_skunk_tradeIO'
+let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
 
 func! DB_eval_parag_psql()
   let [startLine, endLine] = ParagraphStartEndLines()
@@ -100,7 +102,8 @@ func! DB_eval_parag_psql()
   let sqlStr = join(lines, "\n")
   
   " psql -d zio_skunk_tradeIO -c "select * from accounts"
-  let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+  " let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+  let cmd = 'psql ' . g:dbconn . ' -c "' . sqlStr . '"'
   " echo cmd
   " return
 

@@ -308,6 +308,9 @@ hi! def link purescriptImportAs Type
 let g:color_sacramento_green_brighterD = '#066150'
 let g:color_sacramento_green_brighter = '#077D67'
 
+" hi! ResolvedOk guifg=#066150 guibg=#101010
+hi! ResolvedOk guifg='#2A554D' guibg=NONE
+
 " purescriptNumber > Number
 hi! def link purescriptNumber Number
 exec 'hi! Number guifg=' . g:color_sacramento_green_brighter

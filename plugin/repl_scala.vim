@@ -19,7 +19,7 @@ func! ScalaReplStart ()
   let g:ScalaRepl_bufnr = bufnr()
   let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
   " TODO: this throws an error in sbt if there no project "core". but then works with root project for e.g. realworld tapir
-  call jobsend(g:ScalaReplID, "project printer\n" )
+  " call jobsend(g:ScalaReplID, "project printer\n" )
   silent wincmd p
 endfunc
 
@@ -40,8 +40,8 @@ endfunc
 func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
   if len( lines )
-    " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
-    let resultVal = matchstr( join( lines, "※" ), '\v(Caused\sby:\s|RESULT|ERROR:\s|Err\()\zs.*' )
+    " let resultVal = matchstr( lines[0], '\v(RESULT_)\zs.*' )
+    let resultVal = matchstr( join( lines, "※" ), '\v(Caused\sby:\s|RESULT_|ERROR:\s|Err\()\zs.*' )
     let resultVal = split( resultVal, "※" )
 
     if len( resultVal )

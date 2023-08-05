@@ -27,6 +27,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
   nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
+  nnoremap <silent><buffer>        gsh :call Scala_ServerClientRequest_x()<cr>
+
   nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
@@ -211,15 +213,15 @@ func! Scala_SetPrinterIdentif_SBT( mode )
 
   " // this just needs a place to evaluate
   " val dirPath = s"${System.getProperty("user.dir")}/data/printer/"  
-  " // 8) set the ".tsv" file extension to create a table/column view. or "" for RESULT prints
+  " // 8) set the ".tsv" file extension to create a table/column view. or "" for RESULT_ prints
   " val filePath = dirPath + "view.tsv"
   " // 10) use "writeFileContent" to simple (non Gallia) values. empty this line to not write a file.
   " val doVal = tutorial.A.ds3.write( filePath )
-  " // 12) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
-  " val replTag = "RESULT"
+  " // 12) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
+  " val replTag = "RESULT_"
   " // 14) info can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
   " val info = readme.A.e10_sql.forceSize.toString + "\n"
-  " // 16) define the formatting for the RESULT val. Use "" with FILEVIEW.
+  " // 16) define the formatting for the RESULT_ val. Use "" with FILEVIEW.
   " val printVal = readme.A.e10_sql.formatTable
 
   let force_mode = a:mode
@@ -239,7 +241,7 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   if    force_mode == "table"
     let _filePath = '""'
     let _doVal    = '""'
-    let _replTag  = '"RESULT"'
+    let _replTag  = '"RESULT_"'
     let _info     = identif . '.forceSize.toString + "\n"'
     let _printVal = identif . '.formatPrettyTable'
     let mode = force_mode " just for the virtual label
@@ -255,21 +257,21 @@ func! Scala_SetPrinterIdentif_SBT( mode )
   elseif mode == "gallia"
     let _filePath = '""'
     let _doVal    = '""'
-    let _replTag  = '"RESULT"'
+    let _replTag  = '"RESULT_"'
     let _info     = '""'
     let _printVal = identif . '.format' . (force_mode == "plain json" ? "Json" : "PrettyJson")
 
   elseif mode == "gallias"
     let _filePath = '""'
     let _doVal    = '""'
-    let _replTag  = '"RESULT"'
+    let _replTag  = '"RESULT_"'
     let _info     = identif . '.forceSize.toString + "\n"'
     let _printVal = identif . '.format' . (force_mode == "plain json" ? "Jsonl" : "PrettyJsons")
 
   else
     let _filePath = '""'
     let _doVal    = '""'
-    let _replTag  = '"RESULT"'
+    let _replTag  = '"RESULT_"'
     let _info     = '""'
     let _printVal = identif
 
@@ -326,10 +328,10 @@ func! Sc_PackagePrefix()
   return len(name) ? name . "." : ""
 endfunc
 
-func! Scala_GetObjectName( identifLine )
-  " NOTE: supports only one level objects
+func! Scala_GetObjectName_bak( identifLine )
+  " NOTE: supports only one level of objects
   let [oLine, oCol] = getpos('.')[1:2]
-  let hostLnObj      = searchpos( '\v^object\s', 'cnbW' )[0]
+  let hostLnObj      = searchpos( '\v^(object|case\sclass)\s', 'cnbW' )[0]
   call setpos('.', [0, hostLnObj, 0, 0] )
   let hostLnObjClose = searchpos( '\v^\}', 'cnW' )[0]
   call setpos('.', [0, oLine, oCol, 0] )
@@ -343,16 +345,37 @@ func! Scala_GetObjectName( identifLine )
   endif
 
   if scala33colonnotation && identifIndented
-    let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\:' )
+    let objName = matchstr( getline( hostLnObj ), '\v(object|case\sclass)\s\zs\i*' )
     return objName
   endif
 
   if a:identifLine > hostLnObj && a:identifLine < hostLnObjClose
-    let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
+    let objName = matchstr( getline( hostLnObj ), '\v(object|case\sclass)\s\zs\i*\ze\W' )
     return objName
   else
     return ""
   endif
+endfunc
+
+
+func! Scala_GetObjectName( identifLine )
+  " NOTE: supports only one level of objects
+  let [oLine, oCol] = getpos('.')[1:2]
+  let hostLnObj      = searchpos( '\v^(object|case\sclass)\s', 'cnbW' )[0]
+  call setpos('.', [0, hostLnObj, 0, 0] )
+  let hostLnObjClose = searchpos( '\v^\}', 'cnW' )[0]
+  call setpos('.', [0, oLine, oCol, 0] )
+  " echo a:identifLine hostLnObj hostLnObjClose
+  " return
+
+  let identifIndented = getline(a:identifLine)[1] == " "
+  if !identifIndented
+    return ""
+  endif
+
+  let objName = matchstr( getline( hostLnObj ), '\v(object|case\sclass)\s\zs\i*' )
+  return objName
+
 endfunc
 
 func! Sc_ObjectPrefix( identifLine )
@@ -363,12 +386,22 @@ endfunc
 
 
 func! Scala_AddSignature()
-  normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
-  normal! bb
+
+  let cw = expand('<cword>')
+  if cw == "lazy"
+    normal! ww
+    let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
+    normal! bb
+  else
+    normal! w
+    let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
+    normal! b
+  endif
 
   let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
 
+  " echo hostLn identifCol
+  " return
   let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
   if typeStr == "timeout"
     echo "Lsp timeout .. try again"
@@ -454,7 +487,7 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
 
   " Default values
-  let _replTag    = '"RESULT"'
+  let _replTag    = '"RESULT_"'
   let _info       = '""'
   let _infoEf     = 'IO( "" )'
   let _printVal   = '""'
@@ -500,7 +533,7 @@ func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
   let plns = readfile( printerFilePath, '\n' )
 
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
-  " 9) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
+  " 9) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
   let plns[9]  = "  val replTag  = " . _replTag
   " 11) the effect (or wrapped simple value) to be printed including packageName and object namespace
   let plns[11] = "  val printVal   = " . _printVal
@@ -540,9 +573,16 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " return
 
   " Support nesting in objects
-  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+  let classObjPath = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn)[:-2]
+  let classObjIdentif = identif
 
-  if      typeStr =~ "ZIO\[" && typeStr =~ "List"
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+  " echo identif
+  " return
+
+  if      typeStr =~ "ZIO\[" && typeStr =~ "DataSource"
+    let typeMode = "QuillDSLive"
+  elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
     let typeMode = "zio_collection"
   elseif  typeStr =~ "IO\["  || typeStr =~ "UIO\["
     let typeMode = "zio"
@@ -585,7 +625,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
 
   " Default values
-  let _replTag    = '"RESULT"'
+  let _replTag    = '"RESULT_"'
   let _info       = '""'
   let _infoEf     = 'ZIO.succeed( "" )'
   let _printVal   = '""'
@@ -627,14 +667,28 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     " NOTE: the following line works, but:
     " it runs the program (identif) twice, issuing side-effect twice (e.g. printing).
     " NEW ATTEMPT: .. still to be tested
-    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.toString ) )' 
+    " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.toString ) )' 
+    " show list size, then break list item per line
+    " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.map(i => i.toString + "\n") ) )' 
+    " this works. and just shows linewise objects
+    " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.mkString("\n") ) )' 
+    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + pprint.apply(v, width=3) ) )' 
+
     " let _printVal = identif                                 " already an effect
+
+  elseif typeMode == 'QuillDSLive'
+  " this uses a live case class instance with a datasource layer field like here:
+  " /Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/main/scala/DPostgres.scala|21
+  " val printValEf   = ZIO.serviceWithZIO[dpostgres.DSLive](_.adf1).map( v => v.size.toString + "\n" + pprint.apply(v, width=3) )
+  " val printValEf   = ZIO.serviceWithZIO[dpostgres.DSLive](_.adf1).map( v => v.size.toString + "\n" + v.mkString("\n") )
+  let _printValEf = "ZIO.serviceWithZIO[" . classObjPath . "](_." . classObjIdentif . ").map( v => v.size.toString + '\n' + pprint.apply(v, width=3) )"
 
   elseif typeMode == 'plain'
     let _printVal = identif
   endif
 
-  let printerFilePath = getcwd() . '/PrinterZio.scala'
+  " let printerFilePath = getcwd() . '/PrinterZio.scala'
+  let printerFilePath = getcwd() . '/src/main/scala/PrinterZio.scala'
   if !filereadable(printerFilePath)
     let printerFilePath = getcwd() . '/modules/core/PrinterZio.scala'
   endif
@@ -645,14 +699,14 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let plns = readfile( printerFilePath, '\n' )
 
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
-  " 9) ScalaReplMainCallback will parse "RESULT" or "FILEVIEW"
-  let plns[9]  = "  val replTag  = " . _replTag
-  " 11) the effect (or wrapped simple value) to be printed including packageName and object namespace
-  let plns[11] = "  val printVal   = " . _printVal
-  let plns[12] = "  val printValEf = " . _printValEf
-  " 14) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
-  let plns[14] = "  val info     = " . _info
-  let plns[15] = "  val infoEf   = " . _infoEf
+  " 16) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
+  let plns[17]  = "  val replTag  = " . _replTag
+  " 18) the effect (or wrapped simple value) to be printed including packageName and object namespace
+  let plns[19] = "  val printVal   = " . _printVal
+  let plns[20] = "  val printValEf = " . _printValEf
+  " 21) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
+  let plns[22] = "  val info     = " . _info
+  let plns[23] = "  val infoEf   = " . _infoEf
 
   call writefile( plns, printerFilePath )
 endfunc
@@ -765,9 +819,9 @@ func! Scala_filterCliLine( line, accum )
     return a:accum
   else
 
-    if a:line =~ '\v(RESULT|ERROR)'
+    if a:line =~ '\v(RESULT_|ERROR)'
       " clean up / select from all lines that contain these words:
-      let filteredLineStr = matchstr( a:line, '\v(RESULT|ERROR)\zs.*' )
+      let filteredLineStr = matchstr( a:line, '\v(RESULT_|ERROR)\zs.*' )
     else
       " keep all other lines as they are!
       let filteredLineStr = a:line
@@ -784,10 +838,11 @@ func! Scala_showInFloat( data )
     return
   endif
 
-  " let resultVal = matchstr( lines[0], '\v(RESULT)\zs.*' )
+  " let resultVal = matchstr( lines[0], '\v(RESULT_)\zs.*' )
 
-  " let result = functional#foldr( {line, accum -> accum . matchstr( line, '\v(RESULT|ERROR)\zs.*' ) }, "", lines )
-  let result = functional#foldr( function("Scala_filterCliLine") , [], lines )
+  " let result = functional#foldr( {line, accum -> accum . matchstr( line, '\v(RESULT_|ERROR)\zs.*' ) }, "", lines )
+  let result = lines
+  let result = functional#foldr( function("Scala_filterCliLine") , [], result )
 
   silent let g:floatWin_win = FloatingSmallNew ( result )
   call ScalaSyntaxAdditions() 
@@ -871,20 +926,98 @@ endfunc
 "   silent wincmd p
 " endfunc
 
+" httpx -m PUT http://127.0.0.1:5000/actors -p filter_name "Robert Downey Jr." -j '{"age": 57, "height": 173}'
+" httpx --help
+
+" actors PUT -p filter_name "Robert Downey Jr." -j '{"age": 57, "height": 173}'
+" conversion for my short version: don't use the -m key. all options after URL are optional. but the sequnce is fixed to how they appear in the --help
+
 
 let g:httpport = 8080
+" let g:httpport = 5000
+" let g:httpdomain = '127.0.0.1'
+let g:httpdomain = 'localhost'
+
+func! Httpx_parse( source, result )
+  if     a:source[0][0] == "-"
+    let val = join( a:source, " " )
+    let rest = []
+
+  " elseif a:source[0] == "-j"
+  elseif a:source[0] =~ '\v(POST|PUT|DELETE|UPDATE)'
+    let val = "-m " . a:source[0]
+    let rest = a:source[1:]
+  else
+    let val = "-m GET"
+    let rest = a:source
+  endif
+
+  return [rest, a:result . " " . val]
+endfunc
+
+func! Scala_ServerClientRequest_x()
+  let sourceLineItems = split( matchstr( getline("."), '\v(//\s)?\zs.*' ), " " )
+
+  let url = sourceLineItems[0]
+  let sourceLineItems = sourceLineItems[1:]
+
+  " call append(line('.'), sourceLineItems)
+  
+  let extension = ""
+
+  while len( sourceLineItems )
+    let [sourceLineItems, extension] = Httpx_parse( sourceLineItems, extension )
+  endwhile
+
+  " echo extension
+  " return
+
+  let url = "http://" . g:httpdomain . ":" . g:httpport . "/" . url
+
+  let g:scala_serverRequestCmd = "httpx " . url . extension
+  " call append(line('.'), g:scala_serverRequestCmd)
+  " return
+
+  let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
+
+  let jsonStartLine = functional#find( resultLines, '\v^(\{|\[)' )
+  if jsonStartLine != -1
+    let resultLines = resultLines[jsonStartLine:]
+  endif
+  " call Scala_showInFloat( resultLines )
+  silent let g:floatWin_win = FloatingSmallNew ( resultLines )
+  if len( resultLines ) && !(resultLines[0] =~ 'error') && !(resultLines[0] =~ 'html')
+    if jsonStartLine != -1
+      silent exec "%!jq"
+      call tools_edgedb#addObjCountToBuffer()
+    endif
+  endif
+
+  set ft=json
+  call TsSyntaxAdditions()
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+
+endfunc
+
 
 func! Scala_ServerClientRequest( args, mode )
   let urlEx = matchstr( getline("."), '\v(//\s)?\zs.*' )
 
-  let g:scala_serverRequestCmd = "http " . a:args . " :" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
+  " let g:scala_serverRequestCmd = "http " . a:args . " :" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
+  let g:scala_serverRequestCmd = "http " . a:args . " " . g:httpdomain . ":" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
+  " call append(line('.'), g:scala_serverRequestCmd)
+  " return
   if a:mode == 'term'
     call TermOneShot( g:scala_serverRequestCmd )
   else
     let resultLines = split( system( g:scala_serverRequestCmd ), '\n' )
     " call Scala_showInFloat( resultLines )
     silent let g:floatWin_win = FloatingSmallNew ( resultLines )
-    silent exec "%!jq"
+    if len( resultLines ) && !(resultLines[0] =~ 'error') && !(resultLines[0] =~ 'html')
+      silent exec "%!jq"
+    endif
+
     set ft=json
     call TsSyntaxAdditions()
     silent call FloatWin_FitWidthHeight()

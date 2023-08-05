@@ -1,3 +1,5 @@
+
+
 how to find a healine in vim code?
 what is filtering the tree / target folder??
 # scaladex
@@ -70,7 +72,7 @@ word motions, `cw` should not include the ','
 
 ## vista tag bar outline
 l ot - to open vista outline for .md files and lsp
-l k  - now jumps to the marker whils the cursor is staying in the vista window
+l k  - now jumps to the marker while the cursor is staying in the vista window
 
 ~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<silent>%20<leader>k
 note the buffer map in vista window didn't work.
@@ -234,7 +236,7 @@ B     - in tree will filter to only the list of marked/open files
 
 
 
-## vim tools_db / DBUI
+## vim tools_db / DBUI / SQL
 now prefer using psql within tools_db.vim
 1. set postgres db name using 'l ss'
 let g:dbname = 'zio_skunk_tradeIO'
@@ -255,6 +257,22 @@ ll d}   - eval a motion. ll dib /ip should also work?
 
 more maps and scripts: 
 /.config/nvim/plugin/tools_db.vim#/nnoremap%20<silent>%20<leader>du
+api/instrument/US0378331005
+api/trade/ibm-123\?tradedate=2023-05-28
+
+tests/testOnly tradex.domain.tests.integration.*
+tests/testOnly tradex.domain.FrontOfficeOrderParsingServiceSpec.*
+
+val tradingCycle: ZIO[Any, Throwable, Nothing]
+
+### connections / settings
+/Users/at/.config/db_ui/connections.json|1
+
+### sqls / sqlls SQL language server
+/Users/at/.config/sqls/config.yml|1
+~/.config/nvim/plugin/setup-lsp.lua#/lspconfig.sqlls.setup{
+/Users/at/.config/nvim/plugin/setup-lsp.lua|296
+~/.config/nvim/plugin/tools_db.vim#/let%20g.dbs%20=
 
 
 ## info & sort in Dirvish / SortBy Modified and size
@@ -511,6 +529,31 @@ leader fw / W
   Keeps reloading the current window/buffer with the current filepath!
 function M.WatchFile_start()
 
+## httpx  (simpler syntax than httpie)
+httpx --help
+
+note this map implements a short form syntax
+relies on these vars:
+let g:httpport = 8080
+let g:httpport = 5000
+let g:httpdomain = '127.0.0.1'
+let g:httpdomain = 'localhost'
+also i can ommit GET
+else the -j and -p params are simply appended to the command
+
+nnoremap <silent> gsh :call Scala_ServerClientRequest_x()<cr>
+
+actors
+httpx http://127.0.0.1:5000/actors
+
+actors PUT -p filter_name "Robert Downey Jr." -j '{"age": 57, "height": 173}'
+
+httpx -m PUT http://127.0.0.1:5000/actors -p filter_name "Robert Downey Jr." -j '{"age": 59, "height": 173}'
+httpx http://127.0.0.1:5000/actors -m PUT -p filter_name "Robert Downey Jr." -j '{"age": 57, "height": 173}'
+
+actors POST -p name 'Natalie 2 Portman'
+httpx http://127.0.0.1:5000/actors -m POST -p name 'Natalie 2 Portman'
+
 
 ## Http requests curl
  gsf :call Scala_ServerClientRequest('', 'float')<cr>
@@ -535,6 +578,8 @@ cities city=London country=UK -v
   also ',gsF' or 'gsF' runs in an term for e.g. streaming responses
 
 let g:httpport = 8080
+let g:httpdomain = '127.0.0.1'
+    Note: for some reason this domain sometimes differs from localhost
 func! Scala_ServerClientRequest( args, mode )
 - json formats, uses TSSyntaxadditions
 
@@ -601,10 +646,15 @@ nnoremap ll tI :Inspect!<CR>
 
 ll bn :echo GetSyntaxIDAtCursor()<cr>
 
-## 
+## vim completion options
+are here: ~/.config/nvim/plugin/setup-lsp.lua#/option%20=%20{
+there are a lot of completion sources: https://github.com/hrsh7th/nvim-cmp/wiki/List-of-sources#buffer--vim-builtin-functionality
 
-
-
+### isKeyword option
+is now used by nvim-cmp
+@,48-57,/,.,-,_,+,,,#,$,%,~,=
+@,48-57,_,192-255
+a-z,A-Z,48-57,_,.,-,>
 
 
 

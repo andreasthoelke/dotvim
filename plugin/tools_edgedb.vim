@@ -26,9 +26,6 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> <leader>geo :call tools_edgedb#eval_buffer( v:true )<cr>
 
   nnoremap <silent><buffer> get :call tools_edgedb#describe_object( expand('<cWORD>') )<cr>
-  " nnoremap <silent><buffer> geT :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
-  " nnoremap <silent><buffer> ,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:false )<cr>
-  " nnoremap <silent><buffer> ,,K :call tools_edgedb#describe_object( expand('<cWORD>'), v:true )<cr>
 
   nnoremap <silent><buffer> <leader>K :call tools_edgedb#describe_schema()<cr>
 
@@ -45,6 +42,8 @@ func! tools_edgedb#bufferMaps()
   nnoremap <silent><buffer> gsf :let g:withId=0<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> ,gsF :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call tools_edgedb#queryAllObjectFields( expand('<cWORD>') )<cr>
+
+  nnoremap <silent><buffer> ,,gsd :call tools_edgedb#queryDeleteObject( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> <leader>gsF :call tools_edgedb#queryAllObjectFields_InnerFields( expand('<cWORD>') )<cr>
 
@@ -269,6 +268,12 @@ func! tools_edgedb#queryAllObjectFields_withInnerObjs( obj_name )
   call tools_edgedb#runQueryShow( [query] )
 endfunc
 
+func! tools_edgedb#queryDeleteObject( obj_name )
+  let obj_name = split( a:obj_name, '\.' )[0]
+  let query = 'delete ' . tools_edgedb#prependModule(obj_name) . ";"
+  call tools_edgedb#runQueryShow( [query] )
+endfunc
+
 
 
 func! tools_edgedb#showObjectFields( obj_name )
@@ -441,8 +446,9 @@ endfunc
 
 
 func! tools_edgedb#describe_object( obj_name )
-  let cmd = "edgedb describe object " . tools_edgedb#prependModule(a:obj_name) 
-
+  let obj_name = a:obj_name
+  let obj_name = split( obj_name, "(" )[0] " for function names
+  let cmd = "edgedb describe object " . tools_edgedb#prependModule(obj_name) 
   let resLines = systemlist( cmd )
   let resLines = RemoveTermCodes( resLines )
 
@@ -473,6 +479,39 @@ func! tools_edgedb#describe_object( obj_name )
 
 endfunc
 
+func! tools_edgedb#describe_schema( )
+  let cmd = "edgedb describe schema" 
+  let resLines = systemlist( cmd )
+  let resLines = RemoveTermCodes( resLines )
+
+  if len( resLines ) == 0
+    echo "query completed!"
+    return
+  endif
+
+  if len( resLines ) == 1
+    if len( resLines[0] ) > 10
+      let resLines = split( resLines[0][1:-2], '\\n' )
+      " echoe resLines
+      " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
+    endif
+  endif
+
+  let resLines = tools_edgedb#filterProp( resLines, "link __type__" )
+  let resLines = tools_edgedb#filterProp( resLines, " id: std::uuid" )
+
+  let g:floatWin_win = FloatingSmallNew ( resLines )
+
+  set syntax=edgeql
+  set ft=edgeql
+  call EdgeQLSyntaxAdditions()
+
+  call FloatWin_FitWidthHeight()
+  wincmd p
+
+endfunc
+
+
 command! EdgeDBStartInstance call tools_edgedb#startInstance()
 
 func! tools_edgedb#startInstance ()
@@ -494,11 +533,6 @@ func! tools_edgedb#showTypes ()
 endfunc
 
 command! EdgeDBShowSchema call tools_edgedb#describe_schema()
-
-func! tools_edgedb#describe_schema()
-  let line = ['describe schema as sdl;']
-  call tools_edgedb#runQueryShow( line )
-endfunc
 
 command! EdgeDBShowAllObjects call tools_edgedb#showAllObjects()
 
@@ -539,7 +573,8 @@ func! tools_edgedb#runQueryShow ( query_lines )
 
   if len( resLines ) == 1
     if len( resLines[0] ) > 10
-      let resLines = split( resLines[0][1:-2], '\\n' )
+      " let resLines = split( resLines[0][1:-2], '\\n' )
+      let resLines = split( resLines[0], '\\n' )
       " echoe resLines
       " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
     endif
@@ -562,12 +597,26 @@ func! tools_edgedb#runQueryShow ( query_lines )
   "   endif
   " endif
 
+
+  if resLines[0] =~ '\v(function|t_off_ype)'
+    let resLines[0] = resLines[0][1:]
+    let resLines[-1] = resLines[-1][:-2]
+
+    let resLines = tools_edgedb#filterProp( resLines, "link __type__" )
+    let resLines = tools_edgedb#filterProp( resLines, " id: std::uuid" )
+  endif
+
   let g:floatWin_win = FloatingSmallNew ( resLines )
-  if !(resLines[0] =~ "error") && len(resLines) > 1
+  if resLines[0] =~ '\v(function|t_off_ype)'
+    let synt = 'edgeql'
+  elseif !(resLines[0] =~ "error") && len(resLines) > 1
     silent! exec "%!jq"
     if !g:withId
       silent! exec "silent! g/\"id\"\:/d _"
     endif
+  elseif resLines[0][0] == "{" || resLines[0][0] == "["
+    silent! exec "%!jq"
+    let synt = 'json'
   endif
 
   call tools_edgedb#addObjCountToBuffer()
@@ -581,6 +630,8 @@ func! tools_edgedb#runQueryShow ( query_lines )
   else
     set syntax=edgeql
     set ft=edgeql
+
+    call EdgeQLSyntaxAdditions()
   endif
 
   call FloatWin_FitWidthHeight()
@@ -593,9 +644,10 @@ endfunc
 func! tools_edgedb#addObjCountToBuffer()
   let bufferLines = getline( 0, "$" )
   if bufferLines[0][0] =~ '\d'
-    call setline( 1, bufferLines[0] . " eql obj" )
+    call setline( 1, bufferLines[0] . " (val|db-cnt)" )
   endif
   let objStartLinesOuter = functional#filter( { l -> l == '{' }, bufferLines )
+  let objStartLinesOuterInArray = functional#filter( { l -> l == "  {" }, bufferLines )
   let objStartLinesInner = functional#filter( { l -> substitute( l, " ", "", "g" ) == '{' }, bufferLines )
   " substitute( " ein ss ", " ", "", "g" )
   let innerObjsCount = len(objStartLinesInner) - len(objStartLinesOuter)
@@ -604,8 +656,10 @@ func! tools_edgedb#addObjCountToBuffer()
   endif
   if len(objStartLinesOuter)
     call append( 0, len(objStartLinesOuter) . " outer obj"  )
+  elseif len(objStartLinesOuterInArray)
+    call append( 0, len(objStartLinesOuterInArray) . " outer obj in array"  )
   elseif len( bufferLines )
-    call append( 0, len(bufferLines) -1 . " lines" )
+    call append( 0, len(bufferLines) - 0 . " lines" )
   endif
 endfunc
 

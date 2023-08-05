@@ -124,6 +124,24 @@ func! Py_LspTopLevelHover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
+func! Py_GetPrinterPath()
+  let parentFolderPath = expand('%:h')
+  let printerPath = parentFolderPath . "/printer.py"
+
+  if filereadable( printerPath )
+    return printerPath
+  endif
+
+  let grandParentFolderPath = fnamemodify( parentFolderPath, ':h' )
+
+  let printerPath = grandParentFolderPath . "/printer.py"
+  if filereadable( printerPath )
+    return printerPath
+  else
+    echoe 'printer.py not found!'
+  endif
+endfunc
+
 func! Py_GetPackageName()
   let thisModuleName = expand('%:t:r')
   let parentFolderPath = expand('%:h')
@@ -211,44 +229,66 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " from t2 import fruits as symToEval
   let _import = "from " . Py_GetPackageName() . " import " . identif . " as symToEval"
-  let _printVal = "pprint( symToEval() )"
+
+  let _bindVal  = "valu = symToEval()"
+  let _bindIsColl = 'isColl = "list" in str(type(valu))'
+
+  let _print_type = "print( str(type(valu)) + ' | ' + '" . typeStr . "' )"
+  " let _print_type = "if isColl: print( type( valu[0] ) )"
+  let _print_info = "if isColl: print( len( valu ) )"
+
   let _printSetting = ""
 
-  if     typeMode == 'collection'
-    let _type     = "print( type( symToEval() ) )"
-    let _info     = "print( len( symToEval() ) )"
-  elseif typeMode == 'DataFrame'
-    let _type     = "print( symToEval().dtypes )"
-    let _info     = "print( symToEval().shape )"
-    let _printSetting = "pd.options.display.width = None"
-    let _printVal = "print( symToEval().head(30) )"
-  elseif typeMode == 'plain'
-    let _type     = "print( type( symToEval() ) )"
-    let _info     = ""
-  endif
+  let _printVal1 = "if isColl:"
+  let _printVal2 = "  for x in valu: print(x)"
+  let _printVal3 = "else: print(valu)"
 
-  let printerFilePath = getcwd() . '/printer.py'
+  " if     typeMode == 'collection'
+  "   let _print_type     = "print( type( valu ) )"
+  "   let _print_info     = "print( len( valu ) )"
+  "   " if (11 > 10 and "ab" in "xdabed"): 
+  "   "     for x in [2, 33, 44, 55, 66]: print(x)
+  "   let _printVal1 = "if (len(valu) >  and "ab" in "xdabed"):"
+  " elseif typeMode == 'DataFrame'
+  "   let _print_type     = "print( valu.dtypes )"
+  "   let _print_info     = "print( valu.shape )"
+  "   let _printSetting = "pd.options.display.width = None"
+  "   let _printVal1 = "print( valu.head(30) )"
+  " elseif typeMode == 'plain'
+  "   let _print_type     = "print( type( valu ) )"
+  "   let _print_info     = ""
+  " endif
+
+  " let printerFilePath = getcwd() . '/printer.py'
+  let printerFilePath = Py_GetPrinterPath()
   let plns = readfile( printerFilePath, '\n' )
 
 
-  let plns[0] = "import pandas as pd"
+  " let plns[0] = "import pandas as pd"
+  let plns[0] = ""
   let plns[1] = "from pprint import pprint"
   let plns[2] = _import
-  let plns[4] = _type
-  let plns[5] = _info
-  let plns[6] = _printSetting
-  let plns[7] = _printVal
+  let plns[4] = _bindVal
+  let plns[5] = _bindIsColl
+  let plns[6] = _print_type
+  let plns[7] = _print_info
+  let plns[8] = _printSetting
+  let plns[10] = _printVal1
+  let plns[11] = _printVal2
+  let plns[12] = _printVal3
 
   call writefile( plns, printerFilePath )
 endfunc
 
 
 
-let g:Py_PrinterCmd  = "python printer.py"
+" let g:Py_PrinterCmd  = "python printer.py"
 
 func! Py_RunPrinter( termType )
 
-  let cmd = g:Py_PrinterCmd
+  " let cmd = g:Py_PrinterCmd
+  let cmd = "python " . Py_GetPrinterPath()
+  " let cmd = "python app/printer.py"
 
   if     a:termType == 'float'
     let resLines = systemlist( cmd )
@@ -266,9 +306,15 @@ func! Py_showInFloat( data )
   if !len( lines )
     return
   endif
-  " let result = functional#foldr( function("Py_filterCliLine") , [], lines )
-  let result = lines
-  silent let g:floatWin_win = FloatingSmallNew ( result )
+  " let resLines = functional#foldr( function("Py_filterCliLine") , [], lines )
+  let resLines = lines
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+
+  " if resLines[0][0] == "{" || resLines[0][0] == "["
+  "   silent! exec "%!jq"
+  "   let synt = 'json'
+  " endif
+
   call PythonSyntaxAdditions() 
   silent call FloatWin_FitWidthHeight()
   silent wincmd p

@@ -67,7 +67,7 @@ function M.LspType()
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )
   return retval
 end
--- -- put( require'utils_lsp'.LspType() )
+-- put( require'utils_lsp'.LspType() )
 -- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
 -- vim.api.nvim_call_function( "matchstr", { "lazy val e1_sql: HeadZ\n", [[\v:\s\zs\w*]] } )
 

@@ -1,6 +1,6 @@
 
-"                   ﰟ 
-" ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩  ⍊  ⌄
+"                   ﰟ   ⁜ ⁘ ⁗   ⁞ ⁑
+" ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩ → ⍊  ⌄
 " ɪ и ᵓᵔ ᵛ     ->    ⃣
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " ⇤  ⇠  ⇜  ⇐  ↙  ↢  ↤  ⇠  ⇽
@@ -14,7 +14,7 @@
 " ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
 " ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  < ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
 " ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩        𝑟S  ʀS
-" ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ↘   ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
+" ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ↘  ⇓ ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
 " ➳  ➽  ⟀  ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
 " ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
@@ -185,6 +185,9 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'py\ze\"' conceal cchar=⠃
   " syntax match Normal 'py\.module' conceal cchar=𝑖
 
+  " protoquill:
+  syntax match Normal 'lift' conceal cchar=ᴵ
+
   syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⁝
   syntax match Normal 'py_' conceal cchar=ᴵ
   syntax match Normal 'Py_' conceal cchar=ᴵ
@@ -212,6 +215,7 @@ func! ScalaSyntaxAdditions ()
 
   " syntax match Normal "def\ze\s" conceal cchar=→
   syntax match Normal "def\s" conceal
+  syntax match Normal 'unit' conceal cchar=✴
   syntax match Normal 'Unit' conceal cchar=✴
 
   syntax match Normal "<-" conceal cchar=←
@@ -296,7 +300,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'flatMap' conceal cchar=↣
   syntax match Normal 'flatMap:' conceal cchar=↣
   syntax match Normal 'WithZIO' conceal cchar=↣
-  syntax match Normal 'tap\ze\W' conceal cchar=⌄
+  " syntax match Normal 'tap\ze\W' conceal cchar=⌄
   " syntax match Normal 'collect\ze\W' conceal cchar=≚
   " syntax match Normal 'collect\zeZ' conceal cchar=≚
   " syntax match Normal 'collect\zeH' conceal cchar=≚
@@ -319,6 +323,8 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Signal' conceal cchar=~
   syntax match Normal '\vLive(:)?' conceal cchar=≈
   syntax match Normal 'ZLayer' conceal cchar=⊟
+  syntax match Normal 'ULayer' conceal cchar=⊟
+  syntax match Normal 'Layer' conceal cchar=⊟
   syntax match Normal 'fromFunction' conceal cchar=˽
   " syntax match Normal 'ULayer' conceal cchar=﬘
   " syntax match Normal 'Layer' conceal cchar=﬘
@@ -355,6 +361,8 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal '\.\zsmap' conceal cchar=➚
   syntax match Normal 'map\:' conceal cchar=➚
+  " syntax match Normal '\(\#.*\)\@<!filter' conceal cchar=⇡
+  syntax match Normal 'filter' conceal cchar=⇡
   syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
   " Refs
