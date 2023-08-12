@@ -299,6 +299,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
+Plug 'f3fora/cmp-spell'
+
 Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim'
 
 " https://github.com/DNLHC/glance.nvim/blob/master/README.md

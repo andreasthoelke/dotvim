@@ -72,6 +72,10 @@ func! SQLSyntaxAdditions()
   syntax match Normal "::" conceal cchar=|
   syntax match Normal ":=" conceal cchar=⫶
 
+  syntax match sqlKeyword "returning"
+  syntax match sqlKeyword "\s\zsdo"
+  syntax match sqlStatement "conflict"
+
   call matchadd('BlackBG', '\v("|--|//|#)\s─(\^|\s)\s{2}\S.*', 11, -1 )
   call matchadd('Conceal', '"""', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})

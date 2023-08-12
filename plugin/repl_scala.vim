@@ -37,59 +37,119 @@ endfunc
 "   call jobsend(g:ScalaReplID, "%run " . expand('%') . "\n")
 " endfunc
 
+let g:ReplReceive_open = v:true
+let g:ReplReceive_additional = []
+let g:Repl_waitforanotherlargechunk = v:false
+let g:Repl_wait_receivedsofar = []
+
+func! ReplReceiveOpen_reset()
+  let g:ReplReceive_open = v:true
+  let g:Repl_waitforanotherlargechunk = v:false
+  let g:Repl_wait_receivedsofar = []
+  echo "receive open. unseen info lines: " . len( g:ReplReceive_additional )
+  " echo g:ReplReceive_additional
+  let g:ReplReceive_additional = []
+endfunc
+
 func! ScalaReplMainCallback(job_id, data, event)
   let lines = RemoveTermCodes( a:data )
-  if len( lines )
-    " let resultVal = matchstr( lines[0], '\v(RESULT_)\zs.*' )
-    let resultVal = matchstr( join( lines, "※" ), '\v(Caused\sby:\s|RESULT_|ERROR:\s|Err\()\zs.*' )
-    let resultVal = split( resultVal, "※" )
+  if !len( lines ) | return | endif
 
-    if len( resultVal )
+  if g:Repl_waitforanotherlargechunk
 
-      if resultVal[0] =~ "error"
-        let resultVal = SubstituteInLines( resultVal, '\[error\]', "" )
-        let resultVal = StripLeadingSpaces( resultVal )
-
-        " let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s)\zs.*\ze\?' )
-        " NOTE: this is to show the focused error from Gallia.
-        " uncomment these two lines to see the full error message/stack
-        " let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s).*-\s\zs.*\ze\?' )
-        let resultVal = matchstr( join( resultVal, "※" ), '\v(ERROR:\s|Err)\zs.*\ze(mode)' )
-        let resultVal = split( resultVal, "※" )
-      endif
-
-      silent let g:floatWin_win = FloatingSmallNew ( resultVal )
-      " silent let g:floatWin_win = v:lua.vim.lsp.util.open_floating_preview( resultVal )
-
-      call ScalaSyntaxAdditions() 
-      silent call FloatWin_FitWidthHeight()
-      silent wincmd p
+    if (len( lines ) > 8) 
+      let g:Repl_waitforanotherlargechunk = v:true
+      let g:Repl_wait_receivedsofar[-1] = g:Repl_wait_receivedsofar[-1] . lines[0]
+      let g:Repl_wait_receivedsofar += lines[2:]
+      return
     else
 
-      let resultVal = matchstr( join( lines, "※" ), '\v(FILEVIEW)\zs.*\ze↧' )
-      let resultVal = split( resultVal, "※" )
+      let g:Repl_waitforanotherlargechunk = v:false
 
-      if len( resultVal )
-        " silent let g:floatWin_win = FloatingSmallNew ( resultVal )
-        silent let g:floatWin_win = FloatingBuffer ( resultVal[0] )
-        silent call FloatWin_FitWidthHeight()
-        silent wincmd p
-      endif
+      let g:Repl_wait_receivedsofar[-1] = g:Repl_wait_receivedsofar[-1] . lines[0]
+      let g:Repl_wait_receivedsofar += lines[2:]
 
+      let resultVal = g:Repl_wait_receivedsofar
+
+      let g:ReplReceive_open = v:false
+      call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
+
+      let g:floatWin_win = FloatingSmallNew ( resultVal )
+      call ScalaSyntaxAdditions() 
+      call FloatWin_FitWidthHeight()
+      wincmd p
+
+      return
     endif
-
-    " let errorTxt = matchstr( lines[0], '\v(ERROR)\zs.*' )
-    " if len( errorTxt )
-    "   silent let g:floatWin_win = FloatingSmallNew ( [errorTxt] + lines )
-    "   call ScalaSyntaxAdditions() 
-    "   silent call FloatWin_FitWidthHeight()
-    "   silent wincmd p
-    " endif
 
   endif
 
-  " call Scala_SyntaxInFloatWin()
+
+  if !g:ReplReceive_open 
+    let g:ReplReceive_additional += lines
+    echo "add info lines: " . len( g:ReplReceive_additional )
+    return 
+  endif
+
+
+  let searchString1 = join( lines, "※" )
+
+  if searchString1 =~ "error"
+    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception:\s|ERROR:\s|Err\()\zs.*' )
+    let foundList1 = split( foundString1, "※" )
+    if !(len( foundList1 ) > 0) | return | endif
+
+    let foundList1[0] = matchstr( foundList1[0], '\v(error:\s|Err)\zs.*' )
+
+    let foundList1 = SubstituteInLines( foundList1, '\[error\]', "" )
+    let foundList1 = StripLeadingSpaces( foundList1 )
+    " "at " indicates WHERE the error occured. -> skip these lines
+    let foundList1 = functional#filter( {line -> !(line =~ '^at\s')}, foundList1 )
+    let foundList1 = functional#filter( {line -> !(line =~ '^stack\s')}, foundList1 )
+
+    " it seems errors are sent twice by the repl. and only the second one occurences
+    " has the Details: line in the same batch of lines.
+    if !(len( foundList1 ) > 1) | return | endif
+
+    let resultVal = foundList1
+
+
+    let g:ReplReceive_open = v:false
+    call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
+
+    let g:floatWin_win = FloatingSmallNew ( resultVal )
+    call ScalaSyntaxAdditions() 
+    call FloatWin_FitWidthHeight()
+    wincmd p
+
+  else
+
+    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception:\s|ERROR:\s|Err\()\zs.*' )
+    let foundList1 = split( foundString1, "※" )
+    if !(len( foundList1 ) > 0) | return | endif
+
+    if (len( foundList1 ) > 8) 
+      let g:Repl_waitforanotherlargechunk = v:true
+      let g:Repl_wait_receivedsofar = foundList1
+      " just save, don't show
+    else
+
+      let resultVal = foundList1
+
+      let g:ReplReceive_open = v:false
+      call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
+
+      let g:floatWin_win = FloatingSmallNew ( resultVal )
+      call ScalaSyntaxAdditions() 
+      call FloatWin_FitWidthHeight()
+      wincmd p
+
+    endif
+
+  endif
+
 endfunc
+
 " ISSUE: TODO: with multiple print statements e.g. this currently produces two overlapping floatwindows
 " ~/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/galliamedium/initech/A_Basics.scala#/lazy%20val%20e3_count
 " there are two print events returned from the sbt-repl.

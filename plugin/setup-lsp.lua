@@ -597,6 +597,25 @@ cmp.setup {
   completion = {
     -- autocomplete = false, -- disable auto-completion.
   },
+
+  -- window = {
+  --   completion = {
+  --     winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+  --     col_offset = -3,
+  --     side_padding = 0,
+  --   },
+  -- },
+  -- formatting = {
+  --   fields = { "kind", "abbr", "menu" },
+  --   format = function(entry, vim_item)
+  --     local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+  --     local strings = vim.split(kind.kind, "%s", { trimempty = true })
+  --     kind.kind = " " .. (strings[1] or "") .. " "
+  --     kind.menu = "    (" .. (strings[2] or "") .. ")"
+  --     return kind
+  --   end,
+  -- },
+
   snippet = {
     expand = function(args)
       -- luasnip.lsp_expand(args.body)
@@ -643,7 +662,13 @@ cmp.setup {
         -- NOTE: this prevents long url-code strings to spam the completion suggestion. effectively they are shorter now
         option = {
           keyword_pattern = [[\k\+]],
-        }
+        },
+
+        -- note tested yet. 
+        -- entry_filter = function(entry, ctx)
+        --   return require('cmp.types').lsp.CompletionItemKind[ctx:get_kind()] ~= 'Text'
+        -- end
+
       },
     })
   -- sources = {
@@ -651,6 +676,16 @@ cmp.setup {
   --   { name = 'luasnip' },
   -- },
 }
+
+-- Set configuration for specific filetype.
+cmp.setup.filetype('markdown', {
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' },
+  }, {
+    -- { name = 'buffer' },
+  })
+})
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 -- cmp.setup.cmdline('/', {

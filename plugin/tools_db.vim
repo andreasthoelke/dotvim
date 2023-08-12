@@ -93,8 +93,10 @@ endfunc
 
 
 " psql -d zio_skunk_tradeIO -c "select * from accounts"
-let g:dbname = 'zio_skunk_tradeIO'
+" let g:dbname = 'zio_skunk_tradeIO'
+let g:dbname = 'realworld-prod.sqlite'
 let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
+" let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
 
 func! DB_eval_parag_psql()
   let [startLine, endLine] = ParagraphStartEndLines()
@@ -103,9 +105,16 @@ func! DB_eval_parag_psql()
   
   " psql -d zio_skunk_tradeIO -c "select * from accounts"
   " let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
-  let cmd = 'psql ' . g:dbconn . ' -c "' . sqlStr . '"'
+  " let cmd = 'psql ' . g:dbconn . ' -c "' . sqlStr . '"'
   " echo cmd
   " return
+
+  if g:dbname =~ 'sqlite'
+    " let cmd = 'sqlite3 ' . g:dbname . ' "' . sqlStr . '"' . ' .mode -column'
+    let cmd = 'sqlite3 ' . g:dbname . ' "' . sqlStr . '"' . ' -column'
+  else
+    let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+  endif
 
   call System_Float( cmd )
 endfunc

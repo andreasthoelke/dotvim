@@ -87,6 +87,7 @@ func! tools_scala#bufferMaps()
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
+  nnoremap <silent><buffer> <leader>ey :call CreateInlineTestDec_indent_scala()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
@@ -580,7 +581,10 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " echo identif
   " return
 
-  if      typeStr =~ "ZIO\[" && typeStr =~ "DataSource"
+
+  if      typeStr =~ "ZIO\[" && typeStr =~ "DataSource_off" && typeStr =~ "\]\]"
+    let typeMode = "QuillDSLive_coll"
+  elseif  typeStr =~ "ZIO\[" && typeStr =~ "DataSource_off" || typeStr =~ "QIO\["
     let typeMode = "QuillDSLive"
   elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
     let typeMode = "zio_collection"
@@ -632,7 +636,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let _printValEf = 'ZIO.succeed( "" )'
 
   if     a:keyCmdMode == 'effect' || typeMode == 'zio'
-    let _printValEf = identif          " already an effect
+    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
+    " let _printValEf = identif          " already an effect
 
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
@@ -676,15 +681,23 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
     " let _printVal = identif                                 " already an effect
 
+  elseif typeMode == 'QuillDSLive_coll'
+    " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
+    let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => (v.size.toString + "\n" + pprint.apply(v, width=3) ) )'
+
+
   elseif typeMode == 'QuillDSLive'
   " this uses a live case class instance with a datasource layer field like here:
   " /Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/main/scala/DPostgres.scala|21
   " val printValEf   = ZIO.serviceWithZIO[dpostgres.DSLive](_.adf1).map( v => v.size.toString + "\n" + pprint.apply(v, width=3) )
   " val printValEf   = ZIO.serviceWithZIO[dpostgres.DSLive](_.adf1).map( v => v.size.toString + "\n" + v.mkString("\n") )
-  let _printValEf = "ZIO.serviceWithZIO[" . classObjPath . "](_." . classObjIdentif . ").map( v => v.size.toString + '\n' + pprint.apply(v, width=3) )"
+  " let _printValEf = "ZIO.serviceWithZIO[" . classObjPath . "](_." . classObjIdentif . ").map( v => v.size.toString + '\n' + pprint.apply(v, width=3) )"
+  " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
+  let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => pprint.apply(v, width=3) )'
 
   elseif typeMode == 'plain'
-    let _printVal = identif
+    " let _printVal = identif
+    let _printVal = 'pprint.apply(' . identif . ', width=3 )'
   endif
 
   " let printerFilePath = getcwd() . '/PrinterZio.scala'
@@ -698,6 +711,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   let plns = readfile( printerFilePath, '\n' )
 
+  " object P { // <<== this needs to be line 16!
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
   " 16) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
   let plns[17]  = "  val replTag  = " . _replTag
@@ -1042,7 +1056,7 @@ endfunc
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
-let g:Scala_TopLevPattern = '\v^(object|type|final|sealed|inline|class|trait)'
+let g:Scala_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)'
 
 func! Scala_TopLevBindingForw()
   call search( g:Scala_TopLevPattern, 'W' )

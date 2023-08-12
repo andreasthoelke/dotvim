@@ -220,6 +220,19 @@ func! CreateInlineTestDec_scala()
   normal $B
 endfunc
 
+func! CreateInlineTestDec_indent_scala()
+  " let hostLn = searchpos( '\v^\s\s(inline|val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
+  let hostLn = searchpos( '\v^\s\s(inline|val|def|object|trait|enum|case\sclass)\s(e\d_)@!', 'cnbW' )[0]
+
+  let hostDecName = matchstr( getline( hostLn ), '\v(val|def|object|trait|enum|case\sclass)\s\zs\i*' )
+  let lineText = hostDecName
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = "  val e" . nextIndex . '_' . hostDecName . ' = ' . lineText
+  call append( line('.') -1, lineText )
+  normal k0
+  normal $B
+endfunc
+
 
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec_hs()
