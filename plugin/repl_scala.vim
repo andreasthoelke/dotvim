@@ -71,6 +71,8 @@ func! ScalaReplMainCallback(job_id, data, event)
 
       let resultVal = g:Repl_wait_receivedsofar
 
+      let resultVal = functional#filter( {line -> !(line =~ 'hikari')}, resultVal )
+
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
@@ -94,8 +96,8 @@ func! ScalaReplMainCallback(job_id, data, event)
 
   let searchString1 = join( lines, "※" )
 
-  if searchString1 =~ "error"
-    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception:\s|ERROR:\s|Err\()\zs.*' )
+  if searchString1 =~ "(error|Exception)"
+    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthead|Exception:\s|ERROR:\s|Err\()\zs.*' )
     let foundList1 = split( foundString1, "※" )
     if !(len( foundList1 ) > 0) | return | endif
 
@@ -124,7 +126,7 @@ func! ScalaReplMainCallback(job_id, data, event)
 
   else
 
-    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception:\s|ERROR:\s|Err\()\zs.*' )
+    let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthread|Exception:\s|ERROR:\s|Err\()\zs.*' )
     let foundList1 = split( foundString1, "※" )
     if !(len( foundList1 ) > 0) | return | endif
 

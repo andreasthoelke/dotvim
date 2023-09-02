@@ -155,6 +155,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal "\s\zs\>\=\ze\s" conceal cchar=≥
   syntax match Normal "\v\+\+" conceal cchar=⧺
   syntax match Normal "\v\|\|" conceal cchar=‖
+  syntax match Normal "\v\>\+\>" conceal cchar=»
   " syntax match Normal "\v\&\&" conceal cchar=﹠
 
   " syntax match Normal '\vInt\ze(\W|\_$)' conceal cchar=I
@@ -292,9 +293,10 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'compose' conceal cchar=∘
 
   " syntax match Normal 'ZIO\ze\[' conceal cchar=ᴱ
-  " syntax match Normal 'ZIO' conceal cchar=ᴱ
-  " syntax match Normal 'UIO\ze\[' conceal cchar=ᴱ
-  " syntax match Normal 'IO\ze\[' conceal cchar=ᴵ
+  syntax match Normal 'ZIO' conceal cchar=♽
+  syntax match Normal 'RIO' conceal cchar=♽
+  syntax match Normal 'UIO\ze\[' conceal cchar=♽
+  syntax match Normal 'IO\ze\[' conceal cchar=♽
   " syntax match Normal 'ZIO\.' conceal cchar=⁝
   " syntax match Normal 'ZIO\.\$\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣

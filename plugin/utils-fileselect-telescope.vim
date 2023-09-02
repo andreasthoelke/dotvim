@@ -69,10 +69,41 @@ nnoremap ,sch <cmd>lua require('utils_general').Search_collection_md_headers()<c
 " nnoremap <leader>fb <cmd>Telescope buffers<cr>
 " this is now used for chrome bookmarksearch, use 'go' instead
 
+
+" ─   File openers                                      ──
+
+nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
+
+nnoremap <silent> go <cmd>Telescope find_files<cr>
+nnoremap <silent> ,gp        <cmd>Telescope file_browser<cr>
+
+nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
+nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p
+
+nnoremap <silent> gb <cmd>Telescope buffers<cr>
+
+" nnoremap <silent> ,gs <cmd>NvimTreeFindFile<cr>
+" nnoremap <silent> ,go <cmd>NvimTreeToggle<cr>
+
 " nnoremap <silent> <leader>gp :<C-u>FzfHistory<CR>
-nnoremap <silent> gp <cmd>Telescope oldfiles<cr>
 " nnoremap <silent> <leader>go :<C-u>FzfBuffer<cr>
-nnoremap <silent> go <cmd>Telescope buffers<cr>
+
+" nnoremap <silent> gp :<C-u>FzfPreviewFromResources project_mru<CR>
+" nnoremap <silent> gp :<C-u>FzfPreviewProjectMrwFiles<CR>
+" nnoremap <silent> gP :<C-u>FzfPreviewProjectMruFiles<CR>
+" This allows to multiselect & c-q and open in *new tab* vs the above uses the current window.
+" nnoremap <silent> gp :<C-u>FzfHistory<CR>
+" This command uses a separate history file which should accumulate 2000 entries over time:
+" nnoremap <silent> ,gp :<C-u>FzfPathsFromFile ~/.config/nvim/.vim_mru_files<CR>
+" nnoremap <silent> ,,gp :<C-u>FzfPreviewOldFiles<CR>
+" nnoremap <silent> ,gp :<C-u>FZFMru<CR>
+" nnoremap <silent> <leader>gp :topleft MRU<CR>
+" nnoremap <silent> go :<C-u>FzfBuffer<cr>
+" nnoremap <silent> ,go <cmd>lua require('utils_general').fileView()<cr>
+" nnoremap <silent> <leader>nf <cmd>NvimTreeFindFile<cr>
+" nnoremap <silent> <leader>no <cmd>NvimTreeToggle<cr>
+" nnoremap <silent> ,tt <cmd>lua require('utils_general').fileView()<cr>
+
 
 " Using Lua functions
 nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>
