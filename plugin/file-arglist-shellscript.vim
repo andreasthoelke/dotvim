@@ -6,7 +6,8 @@
 
 " CtrlP support: Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
 command! CtrlPArgs call ctrlp#init( ctrlpArgs#id() )
-nnoremap <leader>sA :CtrlPArgs<cr>
+" nnoremap <leader>sA :CtrlPArgs<cr>
+nnoremap <leader>sA :Args<cr>
 nnoremap <leader>dA :call ArglistDelFiles()<cr>
 nnoremap <leader>cA :call ArglistClear()<cr>
 
