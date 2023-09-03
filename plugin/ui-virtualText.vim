@@ -6,11 +6,26 @@
 " Get syntax group id
 " echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
 
+func! VirtualHighlightMatchedStrings( searchList )
+  let bufferLines = getline( 0, "$" )
+  let lineNumsMatched = FindList( bufferLines, a:searchList )
 
+  let ns = nvim_create_namespace( "MatchedStrings" )
+  let bn = bufnr('')
 
-" let bufferLines = getline( 0, "$" )
+  call nvim_buf_clear_namespace( bn, ns, 0, line('$') )
 
-" getline( 0, "$" )
+  for lineNum in lineNumsMatched
+    " call nvim_buf_set_extmark( bn, ns, lineNum -1, -1, [['<<', 'CommentMinusCursive']])
+    call nvim_buf_set_virtual_text( bn, ns, lineNum, [["« ", 'CommentMinusCursive']], {})
+  endfor
+endfunc
+
+" VirtualHighlightMatchedStrings( ['" abcd', 'endfunc'] )
+" VirtualHighlightMatchedStrings( ['" axcd', 'endfunc'] )
+" abcd
+" axcd
+
 
 func! VirtualRadioLabel( label )
   let ns = nvim_create_namespace( a:label )
