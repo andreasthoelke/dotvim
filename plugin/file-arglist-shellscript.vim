@@ -117,7 +117,8 @@ endfunc
 " ─   fzf                                                ■
 " 
 
-let g:fzf_layout = { 'up': '~40%' }
+" let g:fzf_layout = { 'up': '~60%' }
+" let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.85} }
 
 command! -bang Args call fzf#run(fzf#wrap('args', {'source': argv()}, <bang>0))
 

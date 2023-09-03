@@ -3,37 +3,60 @@
 " ─   R list                                             ■
 
 " A list for (primarily) filepaths as arguments
-" using the prefix leader "r"
+" Using the prefix leader "r"
+" Alerts and filters duplicate strings (maintains a Set of strings). 
 
-let Rlist = []
+let g:Rlist = []
 
 " Show the Filepath R list with fzf. use c-v/t/x to open a file or folderpath in dirvish
-nnoremap <silent> <leader>rs :Rlist<cr>
+nnoremap <silent> <leader>rs :call Rlist_Highlight()<cr>:call Scala_showInFloat( [len(g:Rlist)] + g:Rlist )<cr>
+nnoremap <silent> <leader>rr :call Rlist_Highlight()<cr>:echo "Rlist count: " len(g:Rlist)<cr>
 
-command! -bang Rlist call fzf#run(fzf#wrap('args', {'source': Rlist}, <bang>0))
+nnoremap <silent> <leader>ra :set opfunc=Rlist_Add_op<cr>g@
+nnoremap <silent> <leader>rd :set opfunc=Rlist_Delete_op<cr>g@
 
-nnoremap <silent> <leader>v :set opfunc=ArglistToggle_op<cr>g@
-" l aa  - toggels the vis-selection of lines
-vnoremap <silent> <leader>vv :<c-u>call Arglist_toggleItems( getline("'<", "'>") )<cr>
-
-" clear the list
-nnoremap <leader>ac :call ArglistClear()<cr>
+nnoremap <leader>rc :call Rlist_Clear()<cr>
 
 
-func! FPList_Add_op( _ )
-  call FPList_Add( getline( "'[", "']" ) )
+func! Rlist_Add_op( _ )
+  call Rlist_Add( getline( "'[", "']" ) )
 endfunc
 
-func! FPList_Delete_op( _ )
-  call FPList_Delete( getline( "'[", "']" ) )
+func! Rlist_Delete_op( _ )
+  call Rlist_Delete( getline( "'[", "']" ) )
 endfunc
 
 
-" Remove a string from the list if already present, add it otherwise.
-func! FPList_Add( listOfStr )
-
+func! Rlist_Add( listOfStr )
+  let duplicates = FindMany  ( g:Rlist, a:listOfStr )
+  let newItems   = FilterMany( a:listOfStr, g:Rlist )
+  let g:Rlist += newItems
+  call VirtualHighlightMatchedStrings( g:Rlist )
+  if len( duplicates )
+    echo "Added " . len( newItems ) . " new elem to Rlist. Total: " . len( g:Rlist ) . "\n" . "Rejected " . len(duplicates) . " duplicates: " . string( duplicates ) 
+  else
+    echo "Added " . len( a:listOfStr ) . " new elem to Rlist. Total: " . len( g:Rlist )
+  endif
 endfunc
 
+func! Rlist_Delete( listOfStr )
+  let foundElems    = FindMany  ( g:Rlist, a:listOfStr )
+  let notFoundElems = FilterMany( a:listOfStr, g:Rlist )
+  let filteredRlist = FilterMany( g:Rlist, a:listOfStr )
+  let g:Rlist = filteredRlist
+  call VirtualHighlightMatchedStrings( g:Rlist )
+  echo "Deleted " . len(foundElems) . " elem from Rlist. Total: " . len( g:Rlist ) . ".\n" . (len(notFoundElems) ? len(notFoundElems) . " where not found: " . string( notFoundElems ) : "")
+endfunc
+
+func! Rlist_Highlight()
+  call VirtualHighlightMatchedStrings( g:Rlist )
+endfunc
+
+func! Rlist_Clear()
+  let g:Rlist = []
+  call VirtualHighlightMatchedStrings( g:Rlist )
+  echo "Rlist cleared"
+endfunc
 
 " ─^  R list                                             ▲
 

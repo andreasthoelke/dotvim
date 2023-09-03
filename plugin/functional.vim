@@ -35,7 +35,7 @@ endfunction
 func! functional#map(fn, list)
   let new_list = deepcopy( a:list )
   " return map(new_list, {_, x -> a:fn( x ) })
-  return map(new_list, {_, x -> call( a:fn, [x]) })
+  return map(new_list, {idx, x -> call( a:fn, [x]) })
 endfunc
 " echo functional#map( 'toupper', ['eins', 'zwei'] )
 " echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
@@ -46,7 +46,7 @@ endfunc
 
 func! functional#filter(fn, l)
   let new_list = deepcopy(a:l)
-  return filter(new_list, {_, x -> call( a:fn, [x] )} )
+  return filter(new_list, {idx, x -> call( a:fn, [x] )} )
 endfunc
 " functional#filter( {x->x==3}, [2, 3, 4] )
 " echo functional#filter( {x-> x isnot# 3}, [2, 3, 4] )
@@ -100,6 +100,46 @@ endfunc
 " let [folderPathTarget;_] = Filter( {path-> path isnot# folderPathSource}, TabWinFilenames() )
 
 
+" Search each element of searchList in list. Log the index of list if an elem of searchList matches.
+" Return a list of list indices that (whose values) where matched by an item in searchList.
+func! FindList( list, searchList )
+  let matchedIndices = []
+  let indicies = functional#foldr( {searchStr, accumIndices -> add( accumIndices, functional#find( a:list, searchStr ) ) }, matchedIndices, a:searchList )
+  return indicies->filter( "v:val >= 0")
+endfunc
+
+" FindList( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
+" FindList( ['aa', 'bb'], ['dd', 'bb', 'aa'] )
+" FindList( getline(0, "$"), ["endfunc", "func! FindList( list, searchList )"] )
+
+" Search each element of searchList in list. Log the *value* of list if an elem of searchList matches.
+" Return a list of values that where matched by an item in searchList.
+func! FindMany( list, searchList )
+  if !len(a:list)
+    return []
+  endif
+  let matchedIndices = FindList( a:list, a:searchList )
+  let matchedVals = []
+  return functional#foldr( {idx, accumMatchedVals -> add( accumMatchedVals, a:list[idx] ) }, matchedVals, matchedIndices )
+endfunc
+
+" FindMany( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
+" FindMany( ['aa', 'bb'], ['dd', 'bb', 'aa'] )
+" FindMany( getline(0, "$"), ["endfunc", "func! FindMany( list, searchList )"] )
+
+" Search each element of searchList in list. Delete the value of list if an elem of searchList matches.
+" Return a list of values that where *not* matched by an item in searchList.
+func! FilterMany( list, searchList )
+  let remainingVals = copy( a:list )
+  return functional#foldr( {valToDelete, accumRemaining -> accumRemaining->filter({_,val -> val != valToDelete}) }, remainingVals, a:searchList )
+endfunc
+
+" FilterMany( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
+
+
+" ─   Chaining & function composition                   ──
+
+
 func! Id( a )
   return a:a
 endfunc
@@ -115,24 +155,18 @@ func! Plus2( num )
   return (num + 2)
 endfunc
 
-" Search each element of searchList in list. Log the index of list if an elem of searchList matches.
-" Return a list of list indices that (whose values) where matched by an item in searchList.
-func! FindList( list, searchList )
-  let matchedIndices = []
-  return functional#foldr( {searchStr, accumIndices -> add( accumIndices, functional#find( a:list, searchStr ) ) }, matchedIndices, a:searchList )
+
+func! Tf()
+  return ['dd', 'bb', 'aa', 'axa']
+    \ ->filter( {i,w -> !(w =~ 'x')} )
+    \ ->map( {i,w -> w . "V" . i} )
+    \ ->sort()
+    \ ->join('-')
 endfunc
 
-" FindList( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
-" FindList( getline(0, "$"), ["endfunc", "func! FindList( list, searchList )"] )
+" Tf()
 
-
-
-
-
-
-
-
-
+" string functions: /opt/homebrew/Cellar/neovim/0.9.0/share/nvim/runtime/doc/usr_41.txt|594
 
 
 
