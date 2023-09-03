@@ -1,13 +1,12 @@
 
 let g:arangodb_db = '_system'
 
-nnoremap <silent> <leader>adw :call LaunchChromium("http://localhost:8529")<cr>
-
-nnoremap <silent> <leader>ads :call AdbStart()<cr>
-nnoremap <silent> <leader>adS :call AdbStop()<cr>
-nnoremap <silent> <leader>adr :call AdbReplStart()<cr>
-nnoremap <silent> <leader>adR :call AdbReplStop()<cr>
-nnoremap <silent> <leader>adm :call Adb_bufferMaps()<cr>
+" nnoremap <silent> <leader>adw :call LaunchChromium("http://localhost:8529")<cr>
+" nnoremap <silent> <leader>ads :call AdbStart()<cr>
+" nnoremap <silent> <leader>adS :call AdbStop()<cr>
+" nnoremap <silent> <leader>adr :call AdbReplStart()<cr>
+" nnoremap <silent> <leader>adR :call AdbReplStop()<cr>
+" nnoremap <silent> <leader>adm :call Adb_bufferMaps()<cr>
 
 func! Adb_bufferMaps()
   " nnoremap <silent><buffer> gei :call Adb_eval_parag( v:true )<cr>

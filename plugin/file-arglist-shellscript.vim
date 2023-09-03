@@ -3,11 +3,32 @@
 
 " ─   Arglist                                            ■
 
+" new maps 2023-09
+
+" Show the arglist with fzf. use c-v/t/x to open a file or folderpath in dirvish
+nnoremap <silent> <leader>vs :Args<cr>
+
+" ADDING & TOGGLING
+" Arglist items toggle motions. examples:
+" l al  - toggels a single filepath in the arglist
+" l aj  - toggels 2 lines
+" l a}  - toggels a paragraph of lines
+nnoremap <silent> <leader>v :set opfunc=ArglistToggle_op<cr>g@
+" l aa  - toggels the vis-selection of lines
+vnoremap <silent> <leader>vv :<c-u>call Arglist_toggleItems( getline("'<", "'>") )<cr>
+
+" clear the list
+nnoremap <leader>ac :call ArglistClear()<cr>
+
+" issure: currently folders can not be toggled in dirvish. also the auto-switch between local and 
+" global paths is confusing. so exporing a simple self made 'read filepath' list
+" the leader v or leader x maps might be used for other things if i keep not using the arglist
+
 
 " CtrlP support: Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
 command! CtrlPArgs call ctrlp#init( ctrlpArgs#id() )
 " nnoremap <leader>sA :CtrlPArgs<cr>
-nnoremap <leader>sA :Args<cr>
+" nnoremap <leader>sA :Args<cr>
 nnoremap <leader>dA :call ArglistDelFiles()<cr>
 nnoremap <leader>cA :call ArglistClear()<cr>
 

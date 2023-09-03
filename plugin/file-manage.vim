@@ -259,50 +259,52 @@ endfunc
 " ~/.config/nvim/ftplugin/dirvish.vim#/Maps
 " currently this contains the dovish maps for copy, move files
 
-augroup dirvish_config
-  autocmd!
+" augroup dirvish_config
+"   autocmd!
 
-  " autocmd FileType dirvish call DirvishSetup()
-  " Map `t` to open in new tab.
-  " Example: buffer local maps
-  " TODO: only these seem to work properly!!
-  autocmd FileType dirvish
-        \ |nnoremap <silent><buffer>,<cr> :call NewBufferFromDirvish("cr")<cr>
-        \ |nnoremap <silent><buffer>I :call NewBufferFromDirvish("cr")<cr>
-        \ |nnoremap <silent><buffer>U    :call NewBufferFromDirvish("u")<cr>
-        \ |nnoremap <silent><buffer>A    :call NewBufferFromDirvish("v")<cr>
-        \ |nnoremap <silent><buffer>X    :call NewBufferFromDirvish("s")<cr>
-        \ |nnoremap <silent><buffer>Y    :call NewBufferFromDirvish("y")<cr>
-        \ |nnoremap <silent><buffer>T    :call NewBufferFromDirvish("t")<cr>
-        \ |xnoremap <silent><buffer>t :call dirvish#open('tabedit', 1)<CR>
+"   " autocmd FileType dirvish call DirvishSetup()
+"   " Map `t` to open in new tab.
+"   " Example: buffer local maps
+"   " TODO: only these seem to work properly!!
+"   autocmd FileType dirvish
+"         \ |nnoremap <silent><buffer>,<cr> :call NewBufferFromDirvish("cr")<cr>
+"         \ |nnoremap <silent><buffer>I :call NewBufferFromDirvish("cr")<cr>
+"         \ |nnoremap <silent><buffer>U    :call NewBufferFromDirvish("u")<cr>
+"         \ |nnoremap <silent><buffer>A    :call NewBufferFromDirvish("v")<cr>
+"         \ |nnoremap <silent><buffer>X    :call NewBufferFromDirvish("s")<cr>
+"         \ |nnoremap <silent><buffer>Y    :call NewBufferFromDirvish("y")<cr>
+"         \ |nnoremap <silent><buffer>T    :call NewBufferFromDirvish("t")<cr>
+"         \ |nnoremap <silent><buffer>i    :call Dirvish_open("edit", 0)<cr>
+"         \ |nnoremap <silent><buffer>a    :call Dirvish_open("vsplit", 0)<cr>
+"         \ |xnoremap <silent><buffer>t :call dirvish#open('tabedit', 1)<CR>
 
-  " Map `gr` to reload.
-  " autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
-  " autocmd FileType dirvish nnoremap <silent><buffer> X :argadd getline('.')<cr>
-  autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewPathInFloatWin( getline('.') )<cr>
-  autocmd FileType dirvish nnoremap <silent><buffer> <leader>P :call PreviewFolderDetailedFloatWin( getline('.') )<cr>
-  " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
-  autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
-  " autocmd FileType dirvish nnoremap <silent><buffer> T ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>
+"   " Map `gr` to reload.
+"   " autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
+"   " autocmd FileType dirvish nnoremap <silent><buffer> X :argadd getline('.')<cr>
+"   autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewPathInFloatWin( getline('.') )<cr>
+"   autocmd FileType dirvish nnoremap <silent><buffer> <leader>P :call PreviewFolderDetailedFloatWin( getline('.') )<cr>
+"   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
+"   autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+"   " autocmd FileType dirvish nnoremap <silent><buffer> T ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>
 
-  " autocmd FileType dirvish nmap <silent><buffer> /
-  " Todo: set a meaningful buffername to be seen in tabline
-  " autocmd FileType dirvish exe "keepalt file" fnamemodify(bufname(), ':.')
+"   " autocmd FileType dirvish nmap <silent><buffer> /
+"   " Todo: set a meaningful buffername to be seen in tabline
+"   " autocmd FileType dirvish exe "keepalt file" fnamemodify(bufname(), ':.')
 
-  " autocmd FileType dirvish nnoremap <nowait><buffer><silent><C-V> :call dirvish#open("vsplit", 1)<CR>:q<CR>
+"   " autocmd FileType dirvish nnoremap <nowait><buffer><silent><C-V> :call dirvish#open("vsplit", 1)<CR>:q<CR>
 
-  autocmd FileType dirvish nmap <silent> <buffer> <CR>  :call Dirvish_open('edit'   , 0)<CR>
-  " autocmd FileType dirvish nmap <silent> <buffer> v     :call Dirvish_open('vsplit' , 0)<CR>
-  " autocmd FileType dirvish nmap <silent> <buffer> V     :call Dirvish_open('vsplit' , 1)<CR>
-  " autocmd FileType dirvish nmap <silent><buffer> s     :call Dirvish_open('split'  , 0)<CR>
-  " autocmd FileType dirvish nmap <silent><buffer> S     :call Dirvish_open('split'  , 1)<CR>
-  " autocmd FileType dirvish nmap <silent> <buffer> t     :call Dirvish_open('tabedit', 1)<CR>
-  " autocmd FileType dirvish nmap <silent> <buffer> T     :call Dirvish_open('tabedit', 1)<CR>
-  autocmd FileType dirvish nmap <silent> <buffer> -     <Plug>(dirvish_up)
-  " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
-  autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
-  " autocmd FileType dirvish nnoremap <silent> <buffer> I I
-augroup END
+"   autocmd FileType dirvish nmap <silent> <buffer> <CR>  :call Dirvish_open('edit'   , 0)<CR>
+"   " autocmd FileType dirvish nmap <silent> <buffer> v     :call Dirvish_open('vsplit' , 0)<CR>
+"   " autocmd FileType dirvish nmap <silent> <buffer> V     :call Dirvish_open('vsplit' , 1)<CR>
+"   " autocmd FileType dirvish nmap <silent><buffer> s     :call Dirvish_open('split'  , 0)<CR>
+"   " autocmd FileType dirvish nmap <silent><buffer> S     :call Dirvish_open('split'  , 1)<CR>
+"   " autocmd FileType dirvish nmap <silent> <buffer> t     :call Dirvish_open('tabedit', 1)<CR>
+"   " autocmd FileType dirvish nmap <silent> <buffer> T     :call Dirvish_open('tabedit', 1)<CR>
+"   autocmd FileType dirvish nmap <silent> <buffer> -     <Plug>(dirvish_up)
+"   " autocmd FileType dirvish nmap <silent> <buffer> <ESC> :bd<CR>
+"   autocmd FileType dirvish nmap <silent> <buffer> q     :bd<CR>
+"   " autocmd FileType dirvish nnoremap <silent> <buffer> I I
+" augroup END
 
 " https://github.com/roginfarrer/vim-dirvish-dovish
 " ~/.config/nvim/ftplugin/dirvish.vim#/Maps
@@ -366,9 +368,9 @@ nnoremap <silent> - <Plug>(dirvish_up)
 func! Dirvish_open(cmd, bg) abort
   let path = getline('.')
   if isdirectory(path)
-    if a:cmd ==# 'edit' && a:bg ==# '0'
+    " if a:cmd ==# 'edit' && a:bg ==# '0'
       call dirvish#open(a:cmd, 0)
-    endif
+    " endif
   else
     if a:bg
       call dirvish#open(a:cmd, 1)

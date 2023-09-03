@@ -861,6 +861,8 @@ nnoremap <leader>cs :sign unplace *<cr>
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
 
+" NOTE: are 'replace' maps outdated? commented for now. need leader r for 'reading' filespaths into list
+
 " Replacing: ---------------------------------------------
 " nnoremap <leader>re "_die"0P`[
 " nmap <leader>re ve"0pb
@@ -868,10 +870,10 @@ command! ClearSigns :sign unplace *
 " nmap <leader>rf "_daf"0PB
 
 " Replace inner word
-nnoremap <leader>rw "_diw"0Pb
+" nnoremap <leader>rw "_diw"0Pb
 " nmap yrw "_diw"0Pb
-nnoremap yriw "_diw"0Pb
-nnoremap yrw Pl"_dwb
+" nnoremap yriw "_diw"0Pb
+" nnoremap yrw Pl"_dwb
 " Register, black hole, delete, inner word, paste from yank register, go to beginning
 
 " Replace words
@@ -880,7 +882,8 @@ nnoremap yrw Pl"_dwb
 " beginning of pasted text.
 
 " Replace rest of the line
-nnoremap <leader>r0 "_d$"0p`[
+" use S for substitute?
+" nnoremap <leader>r0 "_d$"0p`[
 
 " Make deleting to black hole register easier?
 nnoremap D "_d

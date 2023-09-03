@@ -492,7 +492,8 @@ hi! SpGreen9 guifg=#0D77BD
 
 " Dirvish{{{
 hi! def link DirvishPathTail Function
-hi! def link DirvishArg DataConstructor
+hi! def link DirvishArg String
+hi! def link DirvishSuffix   SpecialKey
 
 " Markbar
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark

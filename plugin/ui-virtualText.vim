@@ -7,6 +7,11 @@
 " echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
 
 
+
+" let bufferLines = getline( 0, "$" )
+
+" getline( 0, "$" )
+
 func! VirtualRadioLabel( label )
   let ns = nvim_create_namespace( a:label )
   let bn = bufnr('')

@@ -1,5 +1,43 @@
 
 
+" ─   R list                                             ■
+
+" A list for (primarily) filepaths as arguments
+" using the prefix leader "r"
+
+let Rlist = []
+
+" Show the Filepath R list with fzf. use c-v/t/x to open a file or folderpath in dirvish
+nnoremap <silent> <leader>rs :Rlist<cr>
+
+command! -bang Rlist call fzf#run(fzf#wrap('args', {'source': Rlist}, <bang>0))
+
+nnoremap <silent> <leader>v :set opfunc=ArglistToggle_op<cr>g@
+" l aa  - toggels the vis-selection of lines
+vnoremap <silent> <leader>vv :<c-u>call Arglist_toggleItems( getline("'<", "'>") )<cr>
+
+" clear the list
+nnoremap <leader>ac :call ArglistClear()<cr>
+
+
+func! FPList_Add_op( _ )
+  call FPList_Add( getline( "'[", "']" ) )
+endfunc
+
+func! FPList_Delete_op( _ )
+  call FPList_Delete( getline( "'[", "']" ) )
+endfunc
+
+
+" Remove a string from the list if already present, add it otherwise.
+func! FPList_Add( listOfStr )
+
+endfunc
+
+
+" ─^  R list                                             ▲
+
+
 
 
 " ─   ApplyCmdTemplate                                   ■

@@ -62,7 +62,7 @@ func! functional#foldr(fabb, initB, listA)
   endfor
   return accum
 endfun
-" echo Foldr( {a, b -> a + b}, 0, [2, 4, 6] )
+" functional#foldr( {a, b -> a + b}, 0, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 10, 6] )
 
@@ -76,16 +76,16 @@ func! functional#sum(list)
 endfunc
 " functional#sum( [3, 4, 5] )
 
-" temp needed this quickly. but there should be a better way
 func! functional#find(list, str)
   for idx in range(0, len(a:list)-1)
-    if a:list[idx] =~ a:str 
+    if a:list[idx] == a:str 
       return idx
     endif
   endfor
   return -1
 endfunc
 " functional#find(['eins', 'zwei', 'aber'], 'be')
+" functional#find(['eins', 'zwei', 'aber'], 'eins')
 " functional#find(['eins', 'zwei', 'aber'], 'ns')
 " functional#find(['eins', 'zwei', 'aber'], 'bei')
 " functional#find(['eins', 'zwei', 'aber'], 'be') != -1 ? 'yes' : 'no'
@@ -114,6 +114,25 @@ endfunc
 func! Plus2( num )
   return (num + 2)
 endfunc
+
+" Search each element of searchList in list. Log the index of list if an elem of searchList matches.
+" Return a list of list indices that (whose values) where matched by an item in searchList.
+func! FindList( list, searchList )
+  let matchedIndices = []
+  return functional#foldr( {searchStr, accumIndices -> add( accumIndices, functional#find( a:list, searchStr ) ) }, matchedIndices, a:searchList )
+endfunc
+
+" FindList( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
+" FindList( getline(0, "$"), ["endfunc", "func! FindList( list, searchList )"] )
+
+
+
+
+
+
+
+
+
 
 
 

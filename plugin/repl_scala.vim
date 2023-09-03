@@ -1,6 +1,6 @@
 
-nnoremap <silent> <leader>ro :call ScalaReplStart()<cr>
-nnoremap <silent> <leader>rq :call ScalaReplStop()<cr>
+nnoremap <silent> <leader><leader>ro :call ScalaReplStart()<cr>
+nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
 " nnoremap <silent> dr         :call ScalaReplReload()<cr>
 
 " nnoremap <silent> ,gei      :silent call ScalaReplPost( GetLineFromCursor() )<cr>
