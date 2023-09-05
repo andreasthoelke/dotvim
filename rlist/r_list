@@ -1,0 +1,5 @@
+caliban-series-2.x/examples/src/main/scala/example/ExampleApi.scala
+caliban-series-2.x/examples/src/main/scala/example/ExampleData.scala
+caliban-series-2.x/examples/src/main/scala/example/ziohttp/AuthExampleApp.scala
+caliban-series-2.x/examples/src/main/scala/example/ziohttp/ExampleApp.scala
+hi there
