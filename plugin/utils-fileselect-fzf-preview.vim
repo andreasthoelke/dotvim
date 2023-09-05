@@ -1,3 +1,5 @@
+
+
 " ─   fzf preview                                        ■
 
 " nmap <leader>f [fzf-p]

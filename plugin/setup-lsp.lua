@@ -375,12 +375,13 @@ lspconfig.html.setup({
 })
 
 -- https://github.com/bash-lsp/bash-language-server
+-- -- TODO: filter all the warnings about double quotes, ect.
 -- npm i -g bash-language-server
-lspconfig.bashls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-})
+-- lspconfig.bashls.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- })
 
 
 -- https://github.com/redhat-developer/yaml-language-server

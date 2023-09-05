@@ -207,7 +207,8 @@ let g:fzf_action = {
 
 " Default fzf layout
 " - Popup window (center of the screen)
-let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.85} }
+" let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.85} }
+let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.7} }
 " - Popup window (center of the current window)
 " let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
 " - Popup window (anchored to the bottom of the current window)

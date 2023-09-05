@@ -8,7 +8,7 @@ let  g:dirvish_dovish_map_keys = 0
 nmap <silent><buffer> <leader>to <Plug>(dovish_create_file)
 nmap <silent><buffer> <leader>mk <Plug>(dovish_create_directory)
 nmap <silent><buffer> <leader>dd <Plug>(dovish_delete)
-nmap <silent><buffer> <leader>re <Plug>(dovish_rename)
+nmap <silent><buffer> <leader>ree <Plug>(dovish_rename)
 nmap <silent><buffer> <leader>yy <Plug>(dovish_yank)
 xmap <silent><buffer> <leader>yy <Plug>(dovish_yank)
 nmap <silent><buffer> <leader>pp <Plug>(dovish_copy)
