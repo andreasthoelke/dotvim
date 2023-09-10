@@ -1,15 +1,23 @@
 #!/bin/zsh
-r_source=''
-r_dest=Rsh_path
-r_el=$1
+lc=$0:a:h
+comp=$(dirname $lc)
+lib=/Users/at/.config/nvim/rlist
+r_source=
+r_dest=
+r_opt=
+r_list=$(< $lc/r_list)
+> $lc/out
 
 
 
 
 
-# You can edit this script freely, but:
-# <<== This must be line 11! Below is the written command string
-echo $r_source $r_dest $r_el
+
+# <<== line 16
+while read r_el
+do
+  echo 'rlist element:' $r_el | tee -a $ld/out
+done <<<$r_list
 
 
 

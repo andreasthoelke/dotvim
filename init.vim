@@ -10,6 +10,9 @@ Plug 'junegunn/vim-plug'
 " Plug 'moll/vim-bbye' " optional dependency
 Plug 'aymericbeaumet/vim-symlink'
 
+
+Plug 'github/copilot.vim'
+
 " File Selectors Browsers: ------------------------------------------
 Plug 'nvim-tree/nvim-tree.lua'
 

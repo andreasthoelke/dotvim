@@ -277,44 +277,13 @@ let Cbs1 = {
       \ 'on_exit': function('OnEv1')
       \ }
 
-" command! PursRepl :let PursReplID = jobstart("spago repl", Cbs1)
-
-" let Tid = jobstart("ls")
-
-"--*
-
-" echo jobsend(g:Tid, "ls /n")
-
-"--*
-
-" ----------------------------------------------------------------------------------
 
 
 
-" INSTALLING A PACKAGE REQUIRES:
-" "bower install --save <packagename> | pulp build"
-" "spago install <packagename> && spago build"
-" command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
-"       \ PursInstall
-"       \ echom jobstart("spago install " . <q-args> . " && spago build", Cbs1)
 
 
-" nnoremap <leader>sx y$:echom <c-r>"<cr>
-
-"com! -buffer -nargs=* -complete=custom,PSCIDEcompleteIdentifier
-"       \ Ptype
-"       \ call PSCIDEtype(len(<q-args>) ? <q-args> : PSCIDEgetKeyword(), v:true)
-" com! -buffer -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
-"       \ Psearch
-"       \ call PSCIDEsearch(len(<q-args>) ? <q-args> : PSCIDEgetKeyword())
 
 
-" ----------------------------------------------------------------------------------
-" 1. <leader>su to compile this script
-" 2. run this line with <leader>sx
-" jobstart("pulp repl", Cbs1)
-" 3. check that the returned int is 7
-" ----------------------------------------------------------------------------------
 
 
 

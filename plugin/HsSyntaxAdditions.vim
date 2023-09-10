@@ -15,7 +15,8 @@ au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sc,*.scala call tools_scala#bufferMaps()
 au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
 
-au ag BufNewFile,BufRead,WinNew *.sh      call tools_scala#bufferMaps()
+" the filetype .shtp is used in rlist to separate active .sh script from mere command templates.
+au ag BufNewFile,BufRead,WinNew *.sh,.shtp call ShellSyntaxAdditions()
 
 au ag BufRead,BufNewFile *.smithy		setfiletype smithy
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
@@ -46,6 +47,12 @@ au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 
 " ─   Syntax Color                                     ──
 
+
+
+func! ShellSyntaxAdditions()
+  set ft=sh
+  call tools_scala#bufferMaps()
+endfunc
 
 
 func! HaskellTools()

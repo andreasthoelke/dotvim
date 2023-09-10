@@ -297,6 +297,14 @@ func! GetLineFromCursor()
 endfunc
 " echo GetLineFromCursor()
 
+func! GetLineFromCursor_dirvish()
+  if &ft == 'dirvish'
+    return getline('.')
+  else
+    return getline('.')[col('.')-1:]
+  endif
+endfunc
+
 func! GetFullLine_OrFromCursor()
   let isCommentLine = getline( '.' ) =~ '\(\/\/\|\*\|\"\)'
   if isCommentLine

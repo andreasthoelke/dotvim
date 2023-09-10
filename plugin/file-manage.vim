@@ -63,7 +63,7 @@ nnoremap <leader>os :call FloatingBuffer( "/Users/at/Documents/Notes/scratch2023
 " nnoremap <leader>ob :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>:Telescope vim_bookmarks all<cr>
 nnoremap <leader>ob :Telescope vim_bookmarks all<cr>
 
-nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor() )<cr>
+nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor_dirvish() )<cr>
 xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
 " nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
@@ -77,29 +77,30 @@ xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
 " endfunc
 
 func! PreviewPathInFloatWin_vs()
-call PreviewPathInFloatWin( GetVisSel() )
+  call PreviewPathInFloatWin( GetVisSel() )
 endfunc
 
 func! PreviewPathInFloatWin( filePath )
-" let fp = fnameescape( fnamemodify( a:filePath, ":p") )
-let fp = fnamemodify( a:filePath, ":p")
-" if IsFolderPath( fp )
-if isdirectory( fp )
-" let lines = systemlist( 'ls ' . fp )
-" let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
-let lines = systemlist( 'exa -T --icons --level=2 --ignore-glob=".git|node_modules" ' . fp )
-else
-let lines = readfile( fp, "\n" )
-endif
-call FloatWin_ShowLines( lines )
+  " let fp = fnameescape( fnamemodify( a:filePath, ":p") )
+  let fp = fnamemodify( a:filePath, ":p")
+  " if IsFolderPath( fp )
+  if isdirectory( fp )
+    " let lines = systemlist( 'ls ' . fp )
+    " let lines = systemlist( 'exa -T --icons --level=2 ' . fp )
+    let lines = systemlist( 'exa -T --icons --level=2 --ignore-glob=".git|node_modules" ' . fp )
+  else
+    let lines = readfile( fp, "\n" )
+  endif
+  call FloatWin_ShowLines( lines )
 endfunc
-" call PreviewPathInFloatWin( "/Users/at/.vim/notes/links" )
+" PreviewPathInFloatWin( "/Users/at/.vim/notes/links" )
+" PreviewPathInFloatWin( "/Users/at/.vim/notes/" )
 " call PreviewPathInFloatWin( "/Users/at/.vim/notes/" )
 " call PreviewPathInFloatWin( "~/.config/karabiner/karabiner.json" )
 
 func! PreviewFileInFloatWin( filePath )
-" call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
-call FloatWin_ShowLines( readfile( fnameescape(a:filePath), "\n" ) )
+  " call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
+  call FloatWin_ShowLines( readfile( fnameescape(a:filePath), "\n" ) )
 endfunc
 " call PreviewPathInFloatWin( '/Users/at/.vim/notes/links' )
 " call PreviewPathInFloatWin( '/Users/at/.vim/notes/my folder/' )
@@ -108,37 +109,37 @@ endfunc
 " call PreviewPathInFloatWin( '/Volumes/GoogleDrive/My Drive/temp/drei.txt' )
 
 func! PreviewFolderDetailedFloatWin( filePath )
-let fp = fnameescape( a:filePath )
-if IsFolderPath( fp )
-" let lines = systemlist( 'ls ' . fp )
-let lines = systemlist( 'exa -T --git --long --icons --level=2 ' . fp )
-else
-let lines = readfile( a:filePath, "\n" )
-endif
-call FloatWin_ShowLines( lines )
+  let fp = fnameescape( a:filePath )
+  if IsFolderPath( fp )
+    " let lines = systemlist( 'ls ' . fp )
+    let lines = systemlist( 'exa -T --git --long --icons --level=2 ' . fp )
+  else
+    let lines = readfile( a:filePath, "\n" )
+  endif
+  call FloatWin_ShowLines( lines )
 endfunc
 
 
 " https://stackoverflow.com/questions/1534835/how-do-i-close-all-buffers-that-arent-shown-in-a-window-in-vim
 
 function! DeleteInactiveBufs()
-"From tabpagebuflist() help, get a list of all buffers in all tabs
-let tablist = []
-for i in range(tabpagenr('$'))
+  "From tabpagebuflist() help, get a list of all buffers in all tabs
+  let tablist = []
+  for i in range(tabpagenr('$'))
     call extend(tablist, tabpagebuflist(i + 1))
-endfor
-"Below originally inspired by Hara Krishna Dara and Keith Roberts
-"http://tech.groups.yahoo.com/group/vim/message/56425
-let nWipeouts = 0
-for i in range(1, bufnr('$'))
+  endfor
+  "Below originally inspired by Hara Krishna Dara and Keith Roberts
+  "http://tech.groups.yahoo.com/group/vim/message/56425
+  let nWipeouts = 0
+  for i in range(1, bufnr('$'))
     if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
-    "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
-        " silent exec 'bwipeout!' i
-        silent exec 'bdelete!' i
-        let nWipeouts = nWipeouts + 1
+      "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
+      " silent exec 'bwipeout!' i
+      silent exec 'bdelete!' i
+      let nWipeouts = nWipeouts + 1
     endif
-endfor
-echomsg nWipeouts . ' buffer(s) wiped out'
+  endfor
+  echomsg nWipeouts . ' buffer(s) wiped out'
 endfunction
 command! Bdi :call DeleteInactiveBufs()
 command! BufferDeleteInactive :call DeleteInactiveBufs()
@@ -159,8 +160,8 @@ nnoremap <leader><leader>gp :CtrlPMRU<cr>
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
-  \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
+      \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
+      \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 " This needs a restart to take effect.
 
 let g:ctrlp_root_markers = ['src/', '.gitignore', 'package.yaml', '.git/']
@@ -185,10 +186,10 @@ let g:ctrlp_match_current_file = 1
 
 " Customize CtrlP mappings:
 let g:ctrlp_prompt_mappings = {
-  \ 'PrtDeleteEnt()':       ['<c-x>'],
-  \ 'PrtClearCache()':      ['<c-R>', '<F5>'],
-  \ 'AcceptSelection("h")': ['<c-cr>', '<c-s>'],
-  \ }
+      \ 'PrtDeleteEnt()':       ['<c-x>'],
+      \ 'PrtClearCache()':      ['<c-R>', '<F5>'],
+      \ 'AcceptSelection("h")': ['<c-cr>', '<c-s>'],
+      \ }
 
 " let g:ctrlp_extensions = ['dir', 'undo', 'line', 'changes']
 " let g:ctrlp_extensions = ['dir', 'line']
@@ -369,7 +370,7 @@ func! Dirvish_open(cmd, bg) abort
   let path = getline('.')
   if isdirectory(path)
     " if a:cmd ==# 'edit' && a:bg ==# '0'
-      call dirvish#open(a:cmd, 0)
+    call dirvish#open(a:cmd, 0)
     " endif
   else
     if a:bg
@@ -413,22 +414,22 @@ endfunc
 
 
 func! Dirvish_centered_float() abort
-    let width  = float2nr(&columns * 0.5)
-    let height = float2nr(&lines * 0.8)
-    let top    = ((&lines - height) / 2) - 1
-    let left   = (&columns - width) / 2
-    let opts   = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal' }
-    let fdir = expand('%:h')
-    let path = expand('%:p')
-    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-    if fdir ==# ''
-        let fdir = '.'
-    endif
-    call dirvish#open(fdir)
-    if !empty(path)
-        " NOTE: this moves the cursor to the current file!
-        call search('\V\^'.escape(path, '\').'\$', 'cw')
-    endif
+  let width  = float2nr(&columns * 0.5)
+  let height = float2nr(&lines * 0.8)
+  let top    = ((&lines - height) / 2) - 1
+  let left   = (&columns - width) / 2
+  let opts   = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal' }
+  let fdir = expand('%:h')
+  let path = expand('%:p')
+  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+  if fdir ==# ''
+    let fdir = '.'
+  endif
+  call dirvish#open(fdir)
+  if !empty(path)
+    " NOTE: this moves the cursor to the current file!
+    call search('\V\^'.escape(path, '\').'\$', 'cw')
+  endif
 endfunction
 " strftime('%c', getftime(getline('.')))
 

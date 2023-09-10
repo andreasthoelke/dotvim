@@ -22,7 +22,7 @@ func! Rlist_get()
 endfunc
 
 func! Rlist_set( list )
-  return writefile( a:list, Rlist_path() )
+  call writefile( a:list, Rlist_path() )
 endfunc
 
 
@@ -84,15 +84,15 @@ endfunc
 " ─   INITIALIZING                                       ■
 " RunList uses these three files:
 func! Rsh_path()
-  return g:Rlist_basepath . "r.sh"
+  return g:Rlist_cwd . "r.sh"
 endfunc
 
 func! Rlist_path()
-  return g:Rlist_basepath . "r_list"
+  return g:Rlist_cwd . "r_list"
 endfunc
 
 func! Rcmds_path()
-  return g:Rlist_basepath . "r_cmds.sh"
+  return g:Rlist_cwd . "r_cmds.sh"
 endfunc
 
 " The files can be initialized with ll ri
@@ -108,12 +108,11 @@ func! R_init()
   let lns[0] = '#!/bin/zsh'
   let lns[1] = "r_source=''"
   let lns[2] = "r_dest=''"
-  let lns[3] = "r_el=$1"
-  let lns[9] = '# You can edit this script freely, but:'
-  let lns[10] = '# <<== This must be line 11! Below is the written command string'
+  let lns[3] = "r_opt=''"
+  let lns[4] = "r_el=$1"
+  let lns[10] = '# <<== line 11'
   let lns[11] = "echo $r_el"  " NOTE: List item 11 is buffer line 12 (1 based).
-  call system( "mkdir " . g:Rlist_basepath )
-  " call system( "touch " . g:Rlist_basepath . "r_cmds" )
+  call system( "mkdir " . g:Rlist_cwd )
   call system( "cp /Users/at/.config/nvim/rlist/r_cmds.sh " . Rcmds_path() )
   call system( "touch " . Rlist_path() )
   call writefile( lns, Rsh_path() )
@@ -121,13 +120,21 @@ func! R_init()
 endfunc
 
 " By default the rlist folder is global (shared across vim instances and projects):
-let g:Rlist_basepath = '/Users/at/.config/nvim/rlist/'
+let g:Rlist_cwd = '/Users/at/.config/nvim/rlist/_work/'
 
 " But you can initialize a local rlist using ll rI:
-nnoremap <silent> <leader><leader>rI :let g:Rlist_basepath = "rlist/"<cr>:call R_init()<cr>
+nnoremap <silent> <leader><leader>rI :let g:Rlist_cwd = "rlist/"<cr>:call R_init()<cr>
 
 " Or you can l ss on the following line to keep a use case specific script.
-" let g:Rlist_basepath = 'rlist_feature_version/'
+" let g:Rlist_cwd = 'rlist_feature_version/'
+
+func! Rlist_cwd()
+  return g:Rlist_cwd
+endfunc
+
+func! Rlist_cwd_set( path )
+  let g:Rlist_cwd = a:path
+endfunc
 
 
 " ─^  INITIALIZING                                       ▲
@@ -142,7 +149,7 @@ nnoremap <silent> <leader><leader>rI :let g:Rlist_basepath = "rlist/"<cr>:call R
 " The runner will call r.sh (in it's current state): /Users/at/.config/nvim/rlist/r.sh
 " n-times with each val in: /Users/at/.config/nvim/rlist/r_list
 
-" You can quickly preview (and edit) using l res
+" You can quickly preview (and edit) r.sh using l res
 nnoremap <silent> <leader>rep :call Rsh_show()<cr>
 func! Rsh_show()
   call FloatingBuffer( Rsh_path() )
@@ -216,12 +223,13 @@ endfunc
 
 " ─   SET r_source AND r_dest                            ■
 
-" l rS/D allow to set the r_source and r_dest static vars from the clipboard
+" l rS/D/O allow to set the r_source, r_dest, r_opt static vars from the clipboard
+" The clipboard content will be single-quoted. Thus numbers, arrays might not work.
 
 nnoremap <silent> <leader>rS :call R_source_set( @* )<cr>
 func! R_source_set( val )
   let lns = readfile( Rsh_path() )
-  let lns[1] = "r_source=" . a:val
+  let lns[1] = "r_source='" . a:val . "'"
   call writefile( lns, Rsh_path() )
   echo "Set: " . "r_source=" . a:val . " => " . Rsh_path()
 endfunc
@@ -229,10 +237,20 @@ endfunc
 nnoremap <silent> <leader>rD :call R_dest_set( @* )<cr>
 func! R_dest_set( val )
   let lns = readfile( Rsh_path() )
-  let lns[2] = "r_dest=" . a:val
+  let lns[2] = "r_dest='" . a:val . "'"
   call writefile( lns, Rsh_path() )
   echo "Set: " . "r_dest=" . a:val . " => " . Rsh_path()
 endfunc
+
+nnoremap <silent> <leader>rO :call R_opt_set( @* )<cr>
+func! R_opt_set( val )
+  let lns = readfile( Rsh_path() )
+  let lns[3] = "r_opt='" . a:val . "'"
+  call writefile( lns, Rsh_path() )
+  echo "Set: " . "r_opt=" . a:val . " => " . Rsh_path()
+endfunc
+
+
 
 " ─^  SET r_source AND r_dest                            ▲
 
@@ -247,9 +265,55 @@ endfunc
 " Below creates the runner code from just the path to the r_list and r.sh.
 " just feeds r_els into the r.sh script
 func! Rlist_cmdrunnercode()
-  return "cat " . g:Rlist_basepath . "r_list " . "| (while read arg; do " . g:Rlist_basepath . "r.sh" . " $arg; done)"
+  " return "cat " . g:Rlist_cwd . "r_list " . "| (while read arg; do " . g:Rlist_cwd . "r.sh" . " $arg; done)"
+  return g:Rlist_cwd . "r.sh"
 endfunc
 " Rlist_cmdrunnercode()
+
+
+
+
+" ─   Exec range in buffer                              ──
+
+
+" chmod +x /Users/at/.config/nvim/r_buffer_range.sh
+" #!/bin/zsh
+" system("/Users/at/.config/nvim/r_buffer_range.sh")
+
+
+
+nnoremap <silent> <leader>re :set opfunc=Rbuffer_exec_op<cr>g@
+
+
+func! Rbuffer_exec_op( _ )
+   call Rbuffer_exec( getline( "'[", "']" ) )
+endfunc
+
+let g:Rbuffer_path = "/Users/at/.config/nvim/r_buffer_range.sh"
+
+func! Rbuffer_exec( lines )
+  call writefile( ["#!/bin/zsh", ""] + a:lines, g:Rbuffer_path )
+ echo "Running terminal command .."
+ call T_DelayedCmd( "echo ''", 2000 )
+ call System_Float( g:Rbuffer_path )
+endfunc
+
+" echo ab
+" echo cd
+
+nnoremap <silent> <leader>ree :call Rbuffer_exec_again()<cr>
+func! Rbuffer_exec_again()
+ echo "Running terminal command .."
+ call T_DelayedCmd( "echo ''", 2000 )
+ call System_Float( g:Rbuffer_path )
+endfunc
+
+nnoremap <silent> <leader>res :call Rsh_show()<cr>
+func! Rsh_show()
+  call FloatingBuffer( g:Rbuffer_path )
+endfunc
+
+
 
 
 
