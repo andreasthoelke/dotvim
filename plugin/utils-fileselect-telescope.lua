@@ -259,8 +259,8 @@ easypick.setup({
 
     {
       name = "rg",
-      command = [[rg -U '(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s' -g 'utils.scala' --line-number --column --with-filename --no-heading]],
-      -- command = "rg List --line-number --column --with-filename --no-heading",
+      -- command = [[rg -U '(def|extension).*(\n)?.*(\n)?.*(\n)?.*\s=\s' -g 'utils.scala' --line-number --column --with-filename --no-heading]],
+      command = "rg List --line-number --column --with-filename --no-heading",
       -- ISSUE: the previewer doesn't work
       -- previewer = telescope.defaults.grep_previewer,
       -- previewer = easypick.previewers.default(),

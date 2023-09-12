@@ -466,3 +466,9 @@ func! ParagraphStartEndLines()
 endfunc
 " echo ParagraphStartEndLines()
 
+func! WrapWith(inner, around)
+  return a:around . a:inner . a:around
+endfunc
+
+
+
