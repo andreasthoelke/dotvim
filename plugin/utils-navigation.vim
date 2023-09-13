@@ -148,6 +148,10 @@ func! HsImportsJump ( term )
   call search( a:term )
 endfunc
 
+function! ThirdSplit()
+  exec winheight(0)/3 . "split"
+endfunction
+
 " ─^  Windows                                            ▲
 
 

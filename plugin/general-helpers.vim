@@ -149,7 +149,11 @@ endfunc
 nnoremap ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call DirvishSortByModified()<cr>
 " Path_Float( '/Users/at/Documents/Notes' )
 
+nnoremap ,cS :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
+nnoremap <leader>os :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
 
+
+nnoremap <leader>ob :Telescope vim_bookmarks all<cr>
 
 
 " ─   Links Rel                                          ■

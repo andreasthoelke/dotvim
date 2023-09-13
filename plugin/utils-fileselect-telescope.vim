@@ -44,7 +44,6 @@ nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 " nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
-" NOTE: these map  ~/.config/nvim/help.md#/###%20telescope%20project
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
 nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
 

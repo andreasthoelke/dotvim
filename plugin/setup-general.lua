@@ -6,6 +6,7 @@
 -- Todo: make these maps general per languge and put them here or
 -- ~/.config/nvim/plugin/setup-lsp.vim#/nnoremap%20<silent><buffer>%20ger
 
+-- ─   Trouble diagnostics                              ──
 
 local trouble = require("trouble").setup {
   position = "bottom", -- position of the list can be: bottom, top, left, right

@@ -5,19 +5,41 @@
 " TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
 
 
-nnoremap <silent> <leader>-  :Dirvish .<cr>
-nnoremap <silent> ,o         :call Dirvish_Float( expand("%:h") )<cr>
-nnoremap <silent> ,,o        :call Dirvish_Float( getcwd() )<cr>
-nnoremap <silent> ,v         :call Dirvish_newWin( "vnew" )<cr>
-nnoremap <silent> ,,v        :exec "vnew ."<cr>
-nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
-nnoremap <silent> ,,V        :exec "leftabove 30vnew ."<cr>
-nnoremap <silent> ,tn        :call Dirvish_newWin( "tabe" )<cr>
-nnoremap <silent> ,,tn       :exec "tabe ."<cr>
-nnoremap <silent> ,sn        :call Dirvish_newWin( "new" )<cr>
-nnoremap <silent> ,,sn       :exec "new ."<cr>
-nnoremap <silent> ,Sn        :call Dirvish_newWin( "above 13new" )<cr>
-nnoremap <silent> ,,Sn       :exec "above 13new ."<cr>
+" nnoremap <silent> <leader>-  :Dirvish .<cr>
+" nnoremap <silent> ,o         :call Dirvish_Float( expand("%:h") )<cr>
+" nnoremap <silent> ,,o        :call Dirvish_Float( getcwd() )<cr>
+" nnoremap <silent> ,v         :call Dirvish_newWin( "vnew" )<cr>
+" nnoremap <silent> ,,v        :exec "vnew ."<cr>
+" nnoremap <silent> ,V         :call Dirvish_newWin( "leftabove 30vnew" )<cr>
+" nnoremap <silent> ,,V        :exec "leftabove 30vnew ."<cr>
+" nnoremap <silent> ,tn        :call Dirvish_newWin( "tabe" )<cr>
+" nnoremap <silent> ,,tn       :exec "tabe ."<cr>
+" nnoremap <silent> ,sn        :call Dirvish_newWin( "new" )<cr>
+" nnoremap <silent> ,,sn       :exec "new ."<cr>
+" nnoremap <silent> ,Sn        :call Dirvish_newWin( "above 13new" )<cr>
+" nnoremap <silent> ,,Sn       :exec "above 13new ."<cr>
+
+" 2023-09: use consistent direction maps
+nnoremap <silent> ,o         :call NewBuf_parentFolder( "float" )<cr>
+nnoremap <silent> ,,o        :call NewBuf_rootFolder  ( "float" )<cr>
+nnoremap <silent> ,i         :call NewBuf_parentFolder( "full" )<cr>
+nnoremap <silent> ,,i        :call NewBuf_rootFolder  ( "full" )<cr>
+nnoremap <silent> -          :call NewBuf_parentFolder( "full" )<cr>
+nnoremap <silent> <leader>-  :call NewBuf_rootFolder  ( "full" )<cr>
+" NOTE: the map ",t" is too ergonomic to be used new tab
+nnoremap <silent> ,tn        :call NewBuf_parentFolder( "tab" )<cr>
+nnoremap <silent> ,,t        :call NewBuf_rootFolder  ( "tab" )<cr>
+" Rare! keep these for illustration and consistency?
+nnoremap <silent> ,T         :call NewBuf_parentFolder( "tab_bg" )<cr>
+nnoremap <silent> ,,T        :call NewBuf_rootFolder  ( "tab_bg" )<cr>
+nnoremap <silent> ,v         :call NewBuf_parentFolder( "right" )<cr>
+nnoremap <silent> ,,v        :call NewBuf_rootFolder  ( "right" )<cr>
+nnoremap <silent> ,V         :call NewBuf_parentFolder( "left" )<cr>
+nnoremap <silent> ,,V        :call NewBuf_rootFolder  ( "left" )<cr>
+nnoremap <silent> ,u         :call NewBuf_parentFolder( "up" )<cr>
+nnoremap <silent> ,,u        :call NewBuf_rootFolder  ( "up" )<cr>
+nnoremap <silent> ,sn        :call NewBuf_parentFolder( "down" )<cr>
+nnoremap <silent> ,,sn       :call NewBuf_rootFolder  ( "down" )<cr>
 
 
 nnoremap <silent> ,<leader>v :exec "vnew " . GetFullLine_OrFromCursor()<cr>
@@ -195,23 +217,20 @@ func! Dirvish_open(cmd, bg) abort
   endif
 endfunc
 
-" cr full
-" u  top
-" v  right
-" s  bottom 
-" y  left 
-" t  new tab 
 
-func! NewBufferFromDirvish( pos )
-  let cmd = DirvishCmd( a:pos )
-  if IsInFloatWin()
-    wincmd c
-  endif
+
+" ─   Standardized Buffer Direction maps                ──
+
+" In divish buffers or paths in .md files spin off a new buffer from that path.
+func! NewBuf_fromLine( direction )
+  let path = getline('.')
+  let cmd = NewBufCmds( path )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
   exec cmd
 endfunc
 
-" direction:
-"    1 float | 2 full | 3 tab | 4 right | 5 left | 6 up | 5 down 
+
+" DIRECTION IDS  <==>   BUF-open Commands:
 
 func! NewBufCmds_templ()
   let mp = {}
@@ -220,11 +239,16 @@ func! NewBufCmds_templ()
   let mp['tab']   = 'tabedit _PATH_'
   let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious'
   let mp['right'] = 'vnew _PATH_'
-  let mp['left']  = 'leftabove 30vnew _PATH_'
-  let mp['up']    = 'leftabove 20new _PATH_'
+  let mp['right_bg'] = 'vnew _PATH_ | wincmd p'
+  " let mp['left']  = 'leftabove 30vnew _PATH_'
+  let mp['left']  = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_'
+  " let mp['up']    = 'leftabove 20new _PATH_'
+  " let mp['up']    = 'leftabove new _PATH_'
+  let mp['up']   = 'leftabove '. winheight(0)/4 . 'new _PATH_'
   let mp['down']  = 'new _PATH_'
   return mp
 endfunc
+
 
 func! NewBufCmds( path )
   return NewBufCmds_templ()->map( {_idx, cmdTmp -> substitute( cmdTmp, '_PATH_', a:path, "" )} )
@@ -237,6 +261,22 @@ endfunc
 
 func! Exec( cmd )
   exec a:cmd
+endfunc
+
+
+func! NewBuf_parentFolder( direction )
+  let parentFolderPath = expand('%:h')
+  let file = expand('%:p')
+  let cmd = NewBufCmds( parentFolderPath )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  call search('\V\^'.escape(file, '\').'\$', 'cw')
+endfunc
+
+func! NewBuf_rootFolder( direction )
+  let cmd = NewBufCmds( getcwd() )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
 endfunc
 
 func! Dirvish_newWin( cmd )
@@ -273,8 +313,9 @@ endfunc
 
 
 " CAUTION: Use only with Dirvish buffer. All lines need to represent file paths.
-nnoremap <leader><leader>im :call DirvishSortByModified()<cr>
-nnoremap ,,im :lua DirvishShowModified()<cr>
+" see /Users/at/.config/nvim/ftplugin/dirvish.vim|14
+" nnoremap <leader><leader>im :call DirvishSortByModified()<cr>
+" nnoremap ,,im :lua DirvishShowModified()<cr>
 func! DirvishSortByModified()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_file_modified' )
@@ -283,8 +324,8 @@ func! DirvishSortByModified()
   call timer_start(1, {-> execute( 'setlocal conceallevel=3' )})
 endfunc
 
-nnoremap <leader><leader>is :call DirvishSortBySize()<cr>
-nnoremap ,,is :lua DirvishShowSize()<cr>
+" nnoremap <leader><leader>is :call DirvishSortBySize()<cr>
+" nnoremap ,,is :lua DirvishShowSize()<cr>
 func! DirvishSortBySize()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_path_size' )

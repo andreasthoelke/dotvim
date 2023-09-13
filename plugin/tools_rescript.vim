@@ -152,7 +152,7 @@ func! RS_EvalParagIdentif()"  ■
   " Temp comment out test lines (they are of the form e_12, use a_12 to keep them while evaluating)
   " Issue/Todo: File updates issue an Lsp user prompt: "do you want to rebuild?" Therefore modifying the buffer
   " comment lines (insert "// ") when a pattern matches
-  " Substitute example: ~/.config/nvim/help.md#/###%20Substitute%20in
+  " Substitute example: /Users/at/Documents/Notes/help.md#/###%20Substitute%20in
   " let [oLine, oCol] = getpos('.')[1:2]
   let l:maintainedCursorPos = getpos('.')
   let l:save_view = winsaveview()

@@ -1,38 +1,6 @@
 
 
 
-" nnoremap ,ts :SessionTabSave tab-
-" nnoremap ,to :tabnew<cr>:SessionTabOpen! tab-
-
-" Shortcuts to popular folders:
-nnoremap <leader>ou :tabe ~/.config/nvim/utils/<cr>
-nnoremap <leader>or :vnew ~/.config/nvim/plugin/<cr>
-nnoremap <leader>oR :tabe ~/.config/nvim/plugin/<cr>
-nnoremap <leader>on :vnew ~/.config/nvim/notes/<cr>
-nnoremap <leader>oN :tabe ~/.config/nvim/notes/<cr>
-nnoremap <leader>ov :vnew ~/.config/nvim/<cr>
-nnoremap <leader>oV :tabe ~/.config/nvim/<cr>
-" nnoremap <leader>od :vnew ~/Documents/<cr>
-nnoremap <leader>oD :tabe ~/Documents/<cr>
-nnoremap <leader>op :vnew ~/Documents/PS/A/<cr>
-nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
-nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
-nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
-
-" nnoremap <leader>ovp :FzfFilesCustom1 ~/.config/nvim/plugin<cr>
-" nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
-" nnoremap <leader>ovv :FzfFilesCustom1 ~/.config/nvim/<cr>
-
-
-
-" nnoremap <leader>oh :call FloatingBuffer( '~/.config/nvim/help.md' )<cr>
-nnoremap <leader>oh :vnew ~/.config/nvim/help.md<cr>
-nnoremap <leader>oH :tabe ~/.config/nvim/help.md<cr>
-
-nnoremap <leader>ol :call FloatingBuffer( "/Users/at/.vim/notes/links2022.md" )<cr>
-nnoremap <leader>os :call FloatingBuffer( "/Users/at/Documents/Notes/scratch2023.md" )<cr>
-" nnoremap <leader>ob :call FloatingBuffer( "/Users/at/.vim/notes/scratch2022.md" )<cr>:Telescope vim_bookmarks all<cr>
-nnoremap <leader>ob :Telescope vim_bookmarks all<cr>
 
 nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor_dirvish() )<cr>
 xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>

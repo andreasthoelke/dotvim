@@ -619,7 +619,7 @@ vmap iv ,Ho,L
 " Note: <c-m> and <c-i> is now unmappable
 " nnoremap <silent> <c-m> :call FnAreaForw()<cr>
 " nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
-" Instead use option-key / alt-key maps that are sent by karabiner. see ~/.config/nvim/help.md#/###%20Mapping%20Alt
+" Instead use option-key / alt-key maps that are sent by karabiner. see /Users/at/Documents/Notes/help.md.md#/###%20Mapping%20Alt
 " nnoremap <silent> µ :call HotspotForw()<cr>
 " nnoremap <silent> <tab> :call HotspotBackw()<cr>
 
