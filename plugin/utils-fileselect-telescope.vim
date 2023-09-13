@@ -73,8 +73,8 @@ nnoremap ,sch <cmd>lua require('utils_general').Search_collection_md_headers()<c
 
 nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
 
-nnoremap <silent> go <cmd>Telescope find_files<cr>
-nnoremap <silent> ,gp        <cmd>Telescope file_browser<cr>
+nnoremap <silent> go  <cmd>Telescope find_files hidden=true<cr>
+nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>
 
 nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
 nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p

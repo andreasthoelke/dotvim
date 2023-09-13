@@ -18,13 +18,15 @@ local entry_display = require "telescope.pickers.entry_display"
 -- NOTE: there's 
 -- lua/utils_general.lua
 -- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
+-- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
+
 
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 Telesc = require('telescope').setup{
   defaults = {
     -- config_key = value,
     path_display = { 'shorten' },
-    hidden = true,
+    hidden = true,  -- ISSUE: this doesn't have an effect. to show files like .gitignore use nnoremap <silent> go <cmd>Telescope find_files hidden=true<cr>
     file_ignore_patterns = {
             '^.git/', '^node%_modules/', '^.npm/', 'dev.js', '%[Cc]ache/', '%-cache',
             '^scala-doc/',
