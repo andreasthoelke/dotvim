@@ -466,6 +466,12 @@ func! VimScriptSyntaxAdditions ()
   syntax match Comment '\v^"\s\zs.*'
   syntax match Comment '\v^\s\s\zs"\s\zs.*'
 
+  syntax match Normal 'func!' conceal cchar=→
+  syntax match Normal 'endfunc' conceal cchar=˻
+  syntax match Normal 'endif' conceal cchar=˻
+  syntax match Normal 'let ' conceal
+  syntax match Normal 'call ' conceal
+
   " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '^"\s', 12, -1, {'conceal': ''})
   call matchadd('Conceal', '^\s\s\zs"\s', 12, -1, {'conceal': ''})

@@ -135,8 +135,34 @@ endfunc
 " au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
 func! VScriptToolsBufferMaps()
+  nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+
   nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
+  call tools_scala#bufferMaps_shared()
 endfunc
+
+" NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
+let g:Vim_MainStartPattern = '\v^(\#|func\!|function|local)'
+
+
+func! Vim_MainStartBindingForw()
+  " normal! }
+  normal! jj
+  call search( g:Vim_MainStartPattern, 'W' )
+endfunc
+
+func! Vim_MainStartBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:Vim_MainStartPattern, 'bW' )
+  " normal! {
+  normal! kk
+  call search( g:Vim_MainStartPattern, 'W' )
+endfunc
+
+
+
+
 
 
 function! RangeAux(lnum1, lnum2) abort

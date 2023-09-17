@@ -15,22 +15,50 @@ nnoremap <buffer> ,,im :lua DirvishShowModified()<cr>
 nnoremap <buffer> <leader><leader>is :call DirvishSortBySize()<cr>
 nnoremap <buffer> ,,is :lua DirvishShowSize()<cr>
 
-" 2023-09: use consistent direction maps
+
+
+" ─   NewBuf from path                                   ■
+" In dirvish i can use these standardized direction maps without prefix
+" nnoremap <silent><buffer>p  :call NewBuf_fromLine("preview")<cr>
+" nnoremap <silent><buffer>on :call NewBuf_fromLine("float")<cr>
+" nnoremap <silent><buffer>i  :call NewBuf_fromLine("full")<cr>
+" nnoremap <silent><buffer>tn :call NewBuf_fromLine("tab")<cr>
+" nnoremap <silent><buffer>ts :call NewBuf_fromLine("tab_spinoff")<cr>
+" nnoremap <silent><buffer>tb :call NewBuf_fromLine("tab_bg")<cr>
+" " _
+" nnoremap <silent><buffer>vn :call NewBuf_fromLine("right")<cr>
+" nnoremap <silent><buffer>vb :call NewBuf_fromLine("right_bg")<cr>
+" nnoremap <silent><buffer>an :call NewBuf_fromLine("left")<cr>
+" nnoremap <silent><buffer>un :call NewBuf_fromLine("up")<cr>
+" nnoremap <silent><buffer>ub :call NewBuf_fromLine("up_bg")<cr>
+" nnoremap <silent><buffer>sn :call NewBuf_fromLine("down")<cr>
+" nnoremap <silent><buffer>sb :call NewBuf_fromLine("down_bg")<cr>
+
+nnoremap <silent><buffer>p  :call NewBuf_fromLine("preview")<cr>
 nnoremap <silent><buffer>o :call NewBuf_fromLine("float")<cr>
-nnoremap <silent><buffer>i :call NewBuf_fromLine("full")<cr>
+nnoremap <silent><buffer>i  :call NewBuf_fromLine("full")<cr>
 nnoremap <silent><buffer>t :call NewBuf_fromLine("tab")<cr>
-nnoremap <silent><buffer>T :call NewBuf_fromLine("tab_bg")<cr>
+nnoremap <silent><buffer>Ts :call NewBuf_fromLine("tab_spinoff")<cr>
+nnoremap <silent><buffer>Tb :call NewBuf_fromLine("tab_bg")<cr>
+" _
 nnoremap <silent><buffer>v :call NewBuf_fromLine("right")<cr>
-nnoremap <silent><buffer>V :call NewBuf_fromLine("left")<cr>
+nnoremap <silent><buffer>Vb :call NewBuf_fromLine("right_bg")<cr>
+nnoremap <silent><buffer>a :call NewBuf_fromLine("left")<cr>
 nnoremap <silent><buffer>u :call NewBuf_fromLine("up")<cr>
+nnoremap <silent><buffer>Ub :call NewBuf_fromLine("up_bg")<cr>
 nnoremap <silent><buffer>s :call NewBuf_fromLine("down")<cr>
+nnoremap <silent><buffer>Sb :call NewBuf_fromLine("down_bg")<cr>
+
+
+" ─^  NewBuf from path                                   ▲
+
 
 " In a divish buffer I rarely use visual selection. but i'd want to use 'v' for splits
-nnoremap <silent><buffer>,v v
-nnoremap <silent><buffer>,V V
-nnoremap <silent><buffer>,<c-V> <c-V>
+nnoremap <silent><buffer> <localleader>v v
+nnoremap <silent><buffer> <localleader>V V
+nnoremap <silent><buffer> <localleader><c-V> <c-V>
 
-nnoremap <silent><buffer>,u u
+nnoremap <silent><buffer> <localleader>u u
 
 
 

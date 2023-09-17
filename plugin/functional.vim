@@ -76,6 +76,18 @@ func! functional#sum(list)
 endfunc
 " functional#sum( [3, 4, 5] )
 
+func! functional#findP(list, fnPred)
+  for idx in range(0, len(a:list)-1)
+    if call( a:fnPred, [ a:list[idx] ] )
+      return idx
+    endif
+  endfor
+  return -1
+endfunc
+" functional#findP( ['aa', 'bb', 'aea', 'dd', 'de'], {x-> x =~ 'e'} )
+" functional#findP( ['aea', 'bbe', 'aea', 'dd', 'de'], {x-> x !~# 'e'} )
+" functional#findP( ['aa', 'bb', 'aa', 'dd', 'de', 'ee'], {x-> x !~# '\v(a|b|d)'} )
+
 func! functional#find(list, str)
   for idx in range(0, len(a:list)-1)
     if a:list[idx] == a:str 
@@ -84,6 +96,7 @@ func! functional#find(list, str)
   endfor
   return -1
 endfunc
+
 " functional#find(['eins', 'zwei', 'aber'], 'be')
 " functional#find(['eins', 'zwei', 'aber'], 'eins')
 " functional#find(['eins', 'zwei', 'aber'], 'ns')
@@ -107,8 +120,8 @@ func! FindList( list, searchList )
   let indicies = functional#foldr( {searchStr, accumIndices -> add( accumIndices, functional#find( a:list, searchStr ) ) }, matchedIndices, a:searchList )
   return indicies->filter( "v:val >= 0")
 endfunc
-
 " FindList( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
+" FindList( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )->sort()
 " FindList( ['aa', 'bb'], ['dd', 'bb', 'aa'] )
 " FindList( getline(0, "$"), ["endfunc", "func! FindList( list, searchList )"] )
 
@@ -122,7 +135,6 @@ func! FindMany( list, searchList )
   let matchedVals = []
   return functional#foldr( {idx, accumMatchedVals -> add( accumMatchedVals, a:list[idx] ) }, matchedVals, matchedIndices )
 endfunc
-
 " FindMany( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
 " FindMany( ['aa', 'bb'], ['dd', 'bb', 'aa'] )
 " FindMany( getline(0, "$"), ["endfunc", "func! FindMany( list, searchList )"] )
@@ -133,7 +145,6 @@ func! FilterMany( list, searchList )
   let remainingVals = copy( a:list )
   return functional#foldr( {valToDelete, accumRemaining -> accumRemaining->filter({_,val -> val != valToDelete}) }, remainingVals, a:searchList )
 endfunc
-
 " FilterMany( ['aa', 'bb', 'cc', 'dd'], ['dd', 'bb', 'aa'] )
 
 
@@ -163,8 +174,16 @@ func! Tf()
     \ ->sort()
     \ ->join('-')
 endfunc
-
 " Tf()
+
+func! CompareLength( a, b )
+  let a = len( a:a )
+  let b = len( a:b )
+  return a == b ? 0 : a > b ? 1 : -1
+endfunc
+" ['ccc', 'bbb-bb', 'aa', 'ddddd', 'e']->sort('CompareLength')
+
+
 
 " string functions: /opt/homebrew/Cellar/neovim/0.9.0/share/nvim/runtime/doc/usr_41.txt|594
 

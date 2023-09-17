@@ -158,7 +158,8 @@ nnoremap <leader>ob :Telescope vim_bookmarks all<cr>
 
 " ─   Links Rel                                          ■
 
-nnoremap <leader>cl :call LinkRefToClipBoard()<cr>
+" Deprecated, use ~/.config/nvim/plugin/NewBuf-direction-maps.vim#/Link%20paths
+" nnoremap <leader>cl :call LinkRefToClipBoard()<cr>
 command! LinkRefToClipBoard call LinkRefToClipBoard()
 
 func! LinkRefToClipBoard()
@@ -370,34 +371,12 @@ inoremap \fp <C-R>=getcwd()<CR>
 " Normal mode: "%p
 " Insert mode: i<c-r>%
 
-
-func! CopyFilePathAndLineNum()
-  let pathWithLineNum = expand("%:p") . "|" . line(".")
-  let @+ = pathWithLineNum
-  let @* = pathWithLineNum
-  let @" = pathWithLineNum
-  return pathWithLineNum
-endfunc
-
-func! SetFilePathAndLineNum()
-  let items = split( @*, "|" )
-  if     len( items )
-    exec "edit" items[0]
-    " echo "edit" items[0]
-  endif
-
-  if len( items ) == 2
-    exec ("normal " . items[1] . "gg^zz")
-    " echo ("normal " . items[1] . "gg^")
-  endif
-
-endfunc
-
-
 set clipboard=unnamedplus
 
-nnoremap <leader>cp :call CopyFilePathAndLineNum()<cr>
-nnoremap <leader>sp :call SetFilePathAndLineNum()<cr>
+
+
+
+" Deprecated, use ~/.config/nvim/plugin/NewBuf-direction-maps.vim#/Link%20paths
 
 " nnoremap <leader>cp :let @+ = @%<cr>:let @" = @%<cr>
 " nnoremap <leader>sp :e <c-r>"<cr>
@@ -405,10 +384,10 @@ nnoremap <leader>sp :call SetFilePathAndLineNum()<cr>
 " nnoremap <leader>sP :let @* = @%<cr>:e <c-r>"<cr>:let @" = @*<cr>
 
 " nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
-nnoremap <leader>Fpc :let @* = @%<cr>:let @" = @%<cr>
-nnoremap <leader>FpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>
-command! FilepathCopy    let @* = @%            | let @" = @%
-command! FilepathCopyAbs let @+ = expand("%:p") | let @" = expand("%:p")
+" nnoremap <leader>Fpc :let @* = @%<cr>:let @" = @%<cr>
+" nnoremap <leader>FpC :let @* = expand("%:p")<cr>:let @" = expand("%:p")<cr>
+" command! FilepathCopy    let @* = @%            | let @" = @%
+" command! FilepathCopyAbs let @+ = expand("%:p") | let @" = expand("%:p")
 
 " nnoremap <leader>sf i<c-r>=fnamemodify('package.yaml',':h:t')<cr><esc>^
 command! PasteFilepath :normal i<c-r>=expand("%:p")<cr><esc>^

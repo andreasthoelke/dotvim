@@ -231,8 +231,8 @@ function _G.TelBookmarks()
     end
   }
 end
-
 -- require("telescope").extensions.bookmarks.bookmarks({ filter = "Scala" })
+-- vim.fs.dirname("plugged/cmp-buffer/LICENSE")
 
 local base_branch = "eins"
 

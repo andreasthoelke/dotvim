@@ -99,6 +99,14 @@ local tree_viewPathInPrevWin = function()
   vim.cmd "wincmd p"
 end
 
+local tree_NewBuf_fromNode = function( direction )
+  local path = lib.get_node_at_cursor().absolute_path
+  vim.cmd "wincmd p"  -- Note the new-buf cmd will be applied to the previously visited windown
+  vim.cmd "wincmd p"
+end
+
+
+  -- let cmd = NewBufCmds( path )[ a:direction ] 
 
 
 local tree_root_folder_label = function(path)
@@ -275,6 +283,7 @@ local function on_attach(bufnr)
     -- local node = api.tree.get_node_under_cursor()
     -- your code goes here
     tree_openFolderDirvish()
+
   end, opts('dirvish_folder'))
 
   vim.keymap.set('n', '<leader>i', function()
@@ -294,6 +303,13 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'T', function()
     local node = api.tree.get_node_under_cursor()
     -- your code goes here
+    api.node.open.tab(node)
+    vim.cmd.tabprev()
+  end, opts('open_tab_silent'))
+
+
+  vim.keymap.set('n', 'T', function()
+    local path = api.tree.get_node_under_cursor()
     api.node.open.tab(node)
     vim.cmd.tabprev()
   end, opts('open_tab_silent'))

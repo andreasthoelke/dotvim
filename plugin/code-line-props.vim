@@ -315,6 +315,12 @@ func! GetFullLine_OrFromCursor()
   endif
 endfunc
 
+" An abs path or url is often the longest word in a line
+func! GetLongestWord_inLine()
+  return getline('.')->split()->sort('CompareLength')[-1]
+endfunc
+" split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')
+
 " Return the character under the cursor
 func! GetCharAtCursor()
   return getline('.')[col('.')-1]

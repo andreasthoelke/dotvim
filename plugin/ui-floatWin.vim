@@ -218,6 +218,7 @@ endfunc
 " Test this:
 " autocmd User FloatPreviewWinOpen call DoSomething()
 
+" Get the winline() of a specific line in the current buffer without (visibly) moving the cursor to this line.
 func! BufferLineToWinLine( bufferLineNum )
   let l:winview = winsaveview()
   call cursor( a:bufferLineNum, 0 )
@@ -225,7 +226,8 @@ func! BufferLineToWinLine( bufferLineNum )
   call winrestview(l:winview)
   return winLine
 endfunc
-" echo BufferLineToWinLine( line('.') ) == winline()
+" BufferLineToWinLine( line('.') ) == winline()
+" BufferLineToWinLine( line('.') )
 
 " func! BufferLineToWinLine_nofolds( bufferLineNum )
 "   return a:bufferLineNum - winsaveview()['topline']

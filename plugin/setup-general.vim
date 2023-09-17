@@ -856,7 +856,7 @@ let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': ''}
 
 
 
-nnoremap <leader>cs :sign unplace *<cr>
+nnoremap <leader><leader>cs :sign unplace *<cr>
 
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
@@ -1171,7 +1171,6 @@ func! FindYarnPackageRootFolderOfCurrentBuffer()
     return folderPathOfPackageJson
   endif
 endfunc
-
 
 " not currently using this
 " function! <SID>AutoProjectRootCD()

@@ -1,6 +1,7 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 func! tools_scala#bufferMaps()
 
+" ─     PrinterZio                                      ──
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
   nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
   nnoremap <silent><buffer>         gef :call Scala_SetPrinterIdentif( "file1" )<cr>
@@ -29,8 +30,23 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer>        gsh :call Scala_ServerClientRequest_x()<cr>
 
+
+  " Stubs and inline tests
+  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
+  nnoremap <silent><buffer> <leader>ey :call CreateInlineTestDec_indent_scala()<cr>
+
+  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
+
   nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+
+  call tools_scala#bufferMaps_shared()
+
+endfunc
+
+func! tools_scala#bufferMaps_shared()
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
 
@@ -51,8 +67,6 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
   " " find a new map if I actually use this:
   " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
@@ -84,12 +98,6 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
   nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
-
-  " Stubs and inline tests
-  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
-  nnoremap <silent><buffer> <leader>ey :call CreateInlineTestDec_indent_scala()<cr>
-
-  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
 
@@ -1160,7 +1168,7 @@ func! MvPrevLineStart()
   call SkipScalaSkipWords()
 endfunc
 
-let g:Scala_colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_colonPttn = MakeOrPttn( ['\:', '\/\/', '*>', '-', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 func! Scala_ColonForw()
   call SearchSkipSC( g:Scala_colonPttn, 'W' )
