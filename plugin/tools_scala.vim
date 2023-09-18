@@ -42,6 +42,10 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
+  " this works super nice. there's another (default?) mapping for leader ?
+  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+
   call tools_scala#bufferMaps_shared()
 
 endfunc
@@ -80,9 +84,6 @@ func! tools_scala#bufferMaps_shared()
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
   nnoremap <silent><buffer>         gej :lua vim.lsp.buf.signature_help()<cr>
-  " this works super nice. there's another (default?) mapping for leader ?
-  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
   nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>

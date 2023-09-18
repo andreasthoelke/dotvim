@@ -19,14 +19,14 @@ nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsol
 nnoremap <silent> <leader><leader><leader>ct  :call ClipBoard_LinkPath_makeAbsolute( "full" )<cr>
 
 func! ClipBoard_LinkPath_makeLocal()
-  let [path; maybeLinkExt] = @*->split('#')
+  let [path; maybeLinkExt] = @*->split('‖')
   let relPath = fnamemodify( path, ":.")
   let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
   call ClipBoard_LinkPath( relPath, linkExt, "don't shorten" )
 endfunc
 
 func! ClipBoard_LinkPath_makeAbsolute( shorten )
-  let [path; maybeLinkExt] = @*->split('#')
+  let [path; maybeLinkExt] = @*->split('‖')
   let relPath = fnamemodify( path, ":p")
   let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
   call ClipBoard_LinkPath( relPath, linkExt, a:shorten )
@@ -47,7 +47,8 @@ endfunc
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
-  let cp = path . "#" . a:linkExtension
+  let linkExtension = subs a:linkExtension
+  let cp = path . "‖" . a:linkExtension
   let @+ = cp
   let @* = cp
   let @" = cp
@@ -56,6 +57,7 @@ func! ClipBoard_LinkPath( path, linkExtension, shorten )
 endfunc
 
 func! Link_jumpToLine( linkExtList )
+  echo a:linkExtList
   let linkKey = a:linkExtList[0]
   let linkVal = a:linkExtList[1:]
   if linkKey == ":"

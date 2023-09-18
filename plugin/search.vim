@@ -127,7 +127,7 @@ endfunc
 
 " " command! -nargs=1 FrepoDel  :tabe | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
 
-" command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
+command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
 " " TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
 
 
