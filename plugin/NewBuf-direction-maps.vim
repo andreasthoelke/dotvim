@@ -109,7 +109,7 @@ endfunc
 
 " In divish buffers or paths in .md files spin off a new buffer from that path.
 func! NewBuf_fromLine( direction )
-  let [path; maybeLinkExt] = getline('.')->split('#')
+  let [path; maybeLinkExt] = getline('.')->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
@@ -117,7 +117,7 @@ func! NewBuf_fromLine( direction )
 endfunc
 
 func! NewBuf_fromLineWord( direction )
-  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('#')
+  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
@@ -125,7 +125,7 @@ func! NewBuf_fromLineWord( direction )
 endfunc
 
 func! NewBuf_fromClipPath( direction )
-  let [path; maybeLinkExt] = @*->split('#')
+  let [path; maybeLinkExt] = @*->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd

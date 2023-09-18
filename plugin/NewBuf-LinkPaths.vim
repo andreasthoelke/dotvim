@@ -47,25 +47,26 @@ endfunc
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
-  let linkExtension = subs a:linkExtension
-  let cp = path . "‖" . a:linkExtension
+  let linkExtension = substitute( a:linkExtension, " ", "ˍ", "g" )
+  let cp = path . "‖" . linkExtension
   let @+ = cp
   let @* = cp
   let @" = cp
   echom 'path:' path
-  if len( a:linkExtension ) | echom 'ext:' a:linkExtension | endif
+  if len( linkExtension ) | echom 'ext:' linkExtension | endif
 endfunc
 
-func! Link_jumpToLine( linkExtList )
-  echo a:linkExtList
-  let linkKey = a:linkExtList[0]
-  let linkVal = a:linkExtList[1:]
+func! Link_jumpToLine( linkExtension )
+  let linkExtension = substitute( a:linkExtension, "ˍ", " ", "g" )
+  let linkKey = linkExtension[0]
+  let linkVal = linkExtension[1:]
   if linkKey == ":"
     call setpos( '.', [0, linkVal, 0, 0] )
   elseif linkKey == "/"
     if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
       echo 'Line not found: ' linkVal
     endif
+    normal ^
   else
     echoe 'unsupported linkKey: ' . linkKey
   endif

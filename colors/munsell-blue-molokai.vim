@@ -272,6 +272,8 @@ hi! def link @namespace CommentMinus
 " hi! def link TSTag purescriptIdentifier
 hi! def link pythonAttribute purescriptRecordKeys
 
+" hi! def link CopilotSuggestion Function
+
 hi! def link @function.macro @constant.macro
 
 
@@ -559,6 +561,8 @@ hi CommentMinusMinus guifg=#1D2B2F
 " hi! ConcealOne  guifg=#2D505E
 " This is now used for all concealed cchars
 hi! ConcealOne  guifg=#2A4651
+
+hi! CopilotSuggestion  guifg=#4A7780
 
 " Conceal: Leaving the default link to Operator currently
 " hi conceal         guifg=#BCBCBC guibg=none

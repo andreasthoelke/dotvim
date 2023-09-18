@@ -8,7 +8,8 @@ imap <silent><script><expr> <c-o> copilot#Suggest()
 imap <silent><script><expr> <c-u> copilot#Next()
 imap <silent><script><expr> <c-c> copilot#Dismiss()
 
-highlight CopilotSuggestion guifg=#555555
+" ~/.config/nvim/colors/munsell-blue-molokai.vim‖/hi!ˍCopilot
+" hi! CopilotSuggestion  guifg=#4A7780
 
 let g:copilot_filetypes = {
                               \ '*': v:false,
