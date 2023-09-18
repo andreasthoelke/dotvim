@@ -14,6 +14,23 @@ nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linenum  ( "full" )<cr>
 nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
 nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
 
+nnoremap <silent> <leader>ct                  :call ClipBoard_LinkPath_makeLocal()<cr>
+nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsolute( "shorten" )<cr>
+nnoremap <silent> <leader><leader><leader>ct  :call ClipBoard_LinkPath_makeAbsolute( "full" )<cr>
+
+func! ClipBoard_LinkPath_makeLocal()
+  let [path; maybeLinkExt] = @*->split('#')
+  let relPath = fnamemodify( path, ":.")
+  let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
+  call ClipBoard_LinkPath( relPath, linkExt, "don't shorten" )
+endfunc
+
+func! ClipBoard_LinkPath_makeAbsolute( shorten )
+  let [path; maybeLinkExt] = @*->split('#')
+  let relPath = fnamemodify( path, ":p")
+  let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
+  call ClipBoard_LinkPath( relPath, linkExt, a:shorten )
+endfunc
 
 func! ClipBoard_LinkPath_plain( shorten )
   call ClipBoard_LinkPath( expand('%:p'), "", a:shorten )
@@ -24,7 +41,7 @@ func! ClipBoard_LinkPath_linenum( shorten )
 endfunc
 
 func! ClipBoard_LinkPath_linesearch( shorten )
-  let searchStr = LineSearch_makeShortUnique_orWarn( getline('.') )
+  let searchStr = getline('.')->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
   call ClipBoard_LinkPath( expand('%:p'), "/" . searchStr, a:shorten )
 endfunc
 
@@ -34,18 +51,17 @@ func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let @+ = cp
   let @* = cp
   let @" = cp
-  echom 'ClipB path:' path
-  if len( a:linkExtension ) | echom 'ClipB linkExtension:' a:linkExtension | endif
+  echom 'path:' path
+  if len( a:linkExtension ) | echom 'ext:' a:linkExtension | endif
 endfunc
 
 func! Link_jumpToLine( linkExtList )
-  if !len( a:linkExtList ) | return | endif
-  let linkKey = a:linkExtList[0][0]
-  let linkVal = a:linkExtList[0][1:]
+  let linkKey = a:linkExtList[0]
+  let linkVal = a:linkExtList[1:]
   if linkKey == ":"
     call setpos( '.', [0, linkVal, 0, 0] )
   elseif linkKey == "/"
-    if !search( '\V\^' . escape( linkVal, '\') . '\$', 'cw' ) 
+    if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
       echo 'Line not found: ' linkVal
     endif
   else
@@ -60,20 +76,21 @@ endfunc
 func! LineSearch_makeShortUnique_orWarn( fullString )
   let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]
   let idx = attempts->functional#findP({ str -> LineSearch_isUniqueInBuf( str ) })
-  if idx == -1 | echoe "The current line string is not unique in this buffer, so it might find a similar line in this buffer." | endif
+  if idx == -1 | echo "The current line is not unique in this buffer." | endif
   return attempts[ idx ]
 endfunc
-
+" LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc Xabbcc 5abbcc 6abbcc 7abbcc' )
+" LineSearch_makeShortUnique_orWarn('LineSearch_akeSortUnique_orWarn( fulltring )' )
+" abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
 
 func! LineSearch_isUniqueInBuf( searchChars )
-  return search( a:searchChars, 'nw' ) == line('.')
+  " return search( escape(a:searchChars, '\'), 'nbw' ) == line('.')
+  return search( '\V\' . escape(a:searchChars, '\'), 'nbw' ) == line('.')
 endfunc
-" echo LineStart_isUnique( "  let link" )
-" echo LineStart_isUnique( "  let linkKey" )
-" echo getline('.')->split()
+" LineSearch_isUniqueInBuf( 'abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 
 let g:LineSearch_ScalaSkipWords = "sealed|inline|private|given|final|trait|override|def|abstract|type|val|lazy|case|enum|final|object|class"
-let g:LineSearch_VimSkipWords = ['let', 'if', 'func!']
+let g:LineSearch_VimSkipWords = ['let', 'if', 'func', 'func!']
 let g:LineSearch_SkipWords_ptn = '\v(' . g:LineSearch_VimSkipWords->join('|') . '|' . g:LineSearch_ScalaSkipWords . ')'
 
 func! LineSearchStr_skipLeadingKeywords( sourceStr )

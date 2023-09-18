@@ -8,23 +8,22 @@
 
 " SELF
 nnoremap <silent> <c-w>o    :call NewBuf_self        ( "float" )<cr>
-" nnoremap <silent> <c-w>i     :call NewBuf_self        ( "full" )<cr>
 nnoremap <silent> <c-w>t    :call NewBuf_self        ( "tab" )<cr>
-nnoremap <silent> <c-w>Ts    :call NewBuf_self        ( "tab_spinoff" )<cr>
+nnoremap <silent> <c-w>T    :call NewBuf_self        ( "tab_spinoff" )<cr>
 nnoremap <silent> <c-w>v    :call NewBuf_self        ( "right" )<cr>
-nnoremap <silent> <c-w>Vb    :call NewBuf_self        ( "right_bg" )<cr>
+nnoremap <silent> <c-w>V    :call NewBuf_self        ( "right_bg" )<cr>
 nnoremap <silent> <c-w>a    :call NewBuf_self        ( "left" )<cr>
 nnoremap <silent> <c-w>u    :call NewBuf_self        ( "up" )<cr>
 nnoremap <silent> <c-w>s    :call NewBuf_self        ( "down" )<cr>
-nnoremap <silent> <c-w>Sb    :call NewBuf_self        ( "down_bg" )<cr>
+nnoremap <silent> <c-w>S    :call NewBuf_self        ( "down_bg" )<cr>
 
 " PARENT & ROOT
 nnoremap <silent> ,o        :call NewBuf_parentFolder( "float" )<cr>
 nnoremap <silent> ,,o       :call NewBuf_rootFolder  ( "float" )<cr>
 nnoremap <silent> ,i        :call NewBuf_parentFolder( "full" )<cr>
 nnoremap <silent> ,,i       :call NewBuf_rootFolder  ( "full" )<cr>
-nnoremap <silent> -          :call NewBuf_parentFolder( "full" )<cr>
-nnoremap <silent> <leader>-  :call NewBuf_rootFolder  ( "full" )<cr>
+nnoremap <silent> -         :call NewBuf_parentFolder( "full" )<cr>
+nnoremap <silent> <leader>- :call NewBuf_rootFolder  ( "full" )<cr>
 nnoremap <silent> ,t        :call NewBuf_parentFolder( "tab" )<cr>
 nnoremap <silent> ,,t       :call NewBuf_rootFolder  ( "tab" )<cr>
 " _
@@ -41,36 +40,34 @@ nnoremap <silent> ,,sn      :call NewBuf_rootFolder  ( "down" )<cr>
 " ─   NewBuf from path                                  ──
 
 " LINE-WORD
-nnoremap <silent> <c-w><leader>p   :call NewBuf_fromLineWord( "preview" )<cr>
+nnoremap <silent> <c-w><leader>p  :call NewBuf_fromLineWord( "preview" )<cr>
 nnoremap <silent> <c-w><leader>o  :call NewBuf_fromLineWord( "float" )<cr>
 nnoremap <silent> <c-w><leader>i  :call NewBuf_fromLineWord( "full" )<cr>
 nnoremap <silent> <c-w><leader>t  :call NewBuf_fromLineWord( "tab" )<cr>
-nnoremap <silent> <c-w><leader>Ts  :call NewBuf_fromLineWord( "tab_spinoff" )<cr>
-nnoremap <silent> <c-w><leader>Tb  :call NewBuf_fromLineWord( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader>T  :call NewBuf_fromLineWord( "tab_bg" )<cr>
 " _
 nnoremap <silent> <c-w><leader>v  :call NewBuf_fromLineWord( "right" )<cr>
-nnoremap <silent> <c-w><leader>Vb  :call NewBuf_fromLineWord( "right_bg" )<cr>
+nnoremap <silent> <c-w><leader>V  :call NewBuf_fromLineWord( "right_bg" )<cr>
 nnoremap <silent> <c-w><leader>a  :call NewBuf_fromLineWord( "left" )<cr>
 nnoremap <silent> <c-w><leader>u  :call NewBuf_fromLineWord( "up" )<cr>
-nnoremap <silent> <c-w><leader>Ub  :call NewBuf_fromLineWord( "up_bg" )<cr>
+nnoremap <silent> <c-w><leader>U  :call NewBuf_fromLineWord( "up_bg" )<cr>
 nnoremap <silent> <c-w><leader>s  :call NewBuf_fromLineWord( "down" )<cr>
-nnoremap <silent> <c-w><leader>Sb  :call NewBuf_fromLineWord( "down_bg" )<cr>
+nnoremap <silent> <c-w><leader>S  :call NewBuf_fromLineWord( "down_bg" )<cr>
 
-" CLIP-BORD
-nnoremap <silent> <c-w>,p   :call NewBuf_fromLineWord( "preview" )<cr>
-nnoremap <silent> <c-w>,o  :call NewBuf_fromLineWord( "float" )<cr>
-nnoremap <silent> <c-w>,i  :call NewBuf_fromLineWord( "full" )<cr>
-nnoremap <silent> <c-w>,t  :call NewBuf_fromLineWord( "tab" )<cr>
-nnoremap <silent> <c-w>,Ts  :call NewBuf_fromLineWord( "tab_spinoff" )<cr>
-nnoremap <silent> <c-w>,Tb  :call NewBuf_fromLineWord( "tab_bg" )<cr>
+" CLIP-BOARD
+nnoremap <silent> <c-w>,p  :call NewBuf_fromClipPath( "preview" )<cr>
+nnoremap <silent> <c-w>,o  :call NewBuf_fromClipPath( "float" )<cr>
+nnoremap <silent> <c-w>,i  :call NewBuf_fromClipPath( "full" )<cr>
+nnoremap <silent> <c-w>,t  :call NewBuf_fromClipPath( "tab" )<cr>
+nnoremap <silent> <c-w>,T  :call NewBuf_fromClipPath( "tab_bg" )<cr>
 " _                     
-nnoremap <silent> <c-w>,v  :call NewBuf_fromLineWord( "right" )<cr>
-nnoremap <silent> <c-w>,Vb  :call NewBuf_fromLineWord( "right_bg" )<cr>
-nnoremap <silent> <c-w>,a  :call NewBuf_fromLineWord( "left" )<cr>
-nnoremap <silent> <c-w>,u  :call NewBuf_fromLineWord( "up" )<cr>
-nnoremap <silent> <c-w>,Ub  :call NewBuf_fromLineWord( "up_bg" )<cr>
-nnoremap <silent> <c-w>,s  :call NewBuf_fromLineWord( "down" )<cr>
-nnoremap <silent> <c-w>,Sb  :call NewBuf_fromLineWord( "down_bg" )<cr>
+nnoremap <silent> <c-w>,v  :call NewBuf_fromClipPath( "right" )<cr>
+nnoremap <silent> <c-w>,V  :call NewBuf_fromClipPath( "right_bg" )<cr>
+nnoremap <silent> <c-w>,a  :call NewBuf_fromClipPath( "left" )<cr>
+nnoremap <silent> <c-w>,u  :call NewBuf_fromClipPath( "up" )<cr>
+nnoremap <silent> <c-w>,U  :call NewBuf_fromClipPath( "up_bg" )<cr>
+nnoremap <silent> <c-w>,s  :call NewBuf_fromClipPath( "down" )<cr>
+nnoremap <silent> <c-w>,S  :call NewBuf_fromClipPath( "down_bg" )<cr>
 
 nnoremap <c-w>o :echo "not active"<cr>
 nnoremap <silent> <c-w>dd <c-w>o
@@ -112,25 +109,27 @@ endfunc
 
 " In divish buffers or paths in .md files spin off a new buffer from that path.
 func! NewBuf_fromLine( direction )
-  let [path; linkL] = getline('.')->split('#')
+  let [path; maybeLinkExt] = getline('.')->split('#')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
 func! NewBuf_fromLineWord( direction )
-  let [path; linkL] = GetLongestWord_inLine()->split('#')
+  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('#')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
 func! NewBuf_fromClipPath( direction )
-  let [path; linkL] = @*->split('#')
-  " let path = GetLongestWord_inLine()
+  let [path; maybeLinkExt] = @*->split('#')
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
 

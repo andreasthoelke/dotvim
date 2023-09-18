@@ -1168,7 +1168,8 @@ func! MvPrevLineStart()
   call SkipScalaSkipWords()
 endfunc
 
-let g:Scala_colonPttn = MakeOrPttn( ['\:', '\/\/', '*>', '-', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_colonPttn = MakeOrPttn( ['\:', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+
 
 func! Scala_ColonForw()
   call SearchSkipSC( g:Scala_colonPttn, 'W' )
