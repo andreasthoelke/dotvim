@@ -1,16 +1,18 @@
 local M = {}
 
 local actions = require("telescope.actions")
+local action_set = require "telescope.actions.set"
 local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
 
 
 local function open_above(promtbufnr)
- return require("telescope.actions.set").edit( promtbufnr, "leftabove 13new")
+ return require("telescope.actions.set").edit( promtbufnr, "leftabove 13new" )
 end
 
 local function open_below(promtbufnr)
- return require("telescope.actions.set").edit( promtbufnr, "20new")
+ -- return require("telescope.actions.set").edit( promtbufnr, "20new")
+ return require("telescope.actions.set").edit( promtbufnr, "botright 13new" )
 end
 
 local entry_display = require "telescope.pickers.entry_display"
@@ -208,6 +210,7 @@ require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
 require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
+require('telescope').load_extension('frecency')
 
 vim.api.nvim_set_keymap('n',
   '<leader>si',

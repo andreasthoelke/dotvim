@@ -22,7 +22,8 @@ nnoremap <leader>K K
 nnoremap <leader>vh :FzfHelptags<cr>
 nnoremap <leader>vM :FzfMaps<cr>
 " now using: ~/.config/nvim/lua/utils_general.lua#/vim.keymap.set.%20'n',
-nnoremap <leader><leader>vm :Telescope keymaps<cr>
+" nnoremap <leader><leader>vm :Telescope keymaps<cr>
+nnoremap <leader><leader>vm :lua require('utils_general').examp_keymap_picker()<cr>
 nnoremap <leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()

@@ -1,5 +1,7 @@
 
 
+local action_state = require "telescope.actions.state"
+
 
 
 local M = {}
@@ -27,6 +29,29 @@ function _G.put(...)
   print(table.concat(objects, '\n'))
   return ...
 end
+
+
+function _G.putt( table, title )
+  vim.notify( vim.inspect( table ), "info", {
+    title = title or "lua table",
+    timeout = 40000,
+    on_open = function(win)
+      local buf = vim.api.nvim_win_get_buf(win)
+      vim.api.nvim_buf_set_option(buf, "filetype", "lua")
+    end,
+  })
+end
+
+-- function _G.printTable( table )
+--   local output = ""
+--   for key, value in pairs( table ) do
+--     -- add value to output
+--     output = output .. key .. ": " .. value .. "\n"
+--   end
+--   vim.print(output)
+-- end
+
+
 
 function _G.floatWinShow(...)
   local objects = {}
@@ -169,6 +194,7 @@ function M.fileView()
     entry_maker = my_make_entry.gen_from_buffer_like_leaderf(),
   })
 end
+
 -- require'utils_general'.fileView()
 
 
@@ -182,12 +208,30 @@ function M.fileView1()
   -- local opts = {}
   local opts = {
     attach_mappings = function(prompt_bufnr, map)
-      local entry = actions_state.get_selected_entry()
-      action_set.select:replace( function()
-        put( entry )
+
+    action_set.select:replace( function()
+        local entry = actions_state.get_selected_entry()
+        -- put( entry )
+        vim.pretty_print( entry )
       end
       )
-      return true
+      -- action_set.select:enhance {
+      --     post = function()
+      --       local selection = action_state.get_selected_entry()
+      --       if not selection then
+      --         return
+      --       end
+      --       put( selection )
+      --       -- vim.api.nvim_win_set_cursor(0, { selection.lnum, 0 })
+      --     end,
+      --   }
+
+        -- replace( function()
+        -- local entry = actions_state.get_selected_entry()
+        -- put( entry.lnum )
+      -- end
+      -- )
+    return true
     end
   }
   require("telescope.builtin").find_files(opts)
@@ -305,7 +349,6 @@ end
 local pickers = require "telescope.pickers"
 local finders = require "telescope.finders"
 local conf = require("telescope.config").values
-local action_state = require "telescope.actions.state"
 
 local previewers = require("telescope.previewers")
 local sorters = require("telescope.sorters")
@@ -841,7 +884,7 @@ local function keymap_select_action( prompt_bufnr )
   return true
 end
 
--- just an example for overriding the select action of a builtin picker. Use Rgx search for keymaps instead.
+-- Nice, using this now.
 function M.examp_keymap_picker( opts )
   opts = opts or {}
   opts.attach_mappings = keymap_select_action
@@ -850,11 +893,74 @@ end
 
 -- require('utils_general').examp_keymap_picker()
 
-
-
-
-
 -- ─^  Keymap picker                                     ▲
+
+
+-- ─   more examples                                     ■
+
+local function examp2( prompt_bufnr )
+  actions.select_default:replace(function()
+    actions.close(prompt_bufnr)
+    local selection = action_state.get_selected_entry()
+    -- for key, value in pairs( selection ) do
+    --   vim.fn.writefile( value, "output.txt" )
+    -- end
+    -- print( vim.inspect( selection ) )
+    -- vim.fn.writefile( {vim.inspect( selection )}, "output2.txt" )
+    -- vim.print( selection )
+    -- vim.notify( vim.inspect( selection ) )
+    putt( selection, 'selection' )
+
+    -- write the contents of the selection table to a file output.txt in the cwd.
+    -- printTable( selection )
+  end)
+  return true
+end
+
+-- require('utils_general').examp2()
+
+function M.examp2( opts )
+  opts = opts or {}
+  opts.attach_mappings = examp2
+  require('telescope.builtin').jumplist( opts )
+end
+
+-- print(vim.inspect(vim.api.nvim_get_mode()))
+-- printTable(_G)
+
+-- require("notify")("My super important message")
+
+
+local Path = require "plenary.path"
+
+function M.get_open_filelist(cwd)
+
+  local bufnrs = vim.tbl_filter(function(b)
+    if 1 ~= vim.fn.buflisted(b) then
+      return false
+    end
+    return true
+  end, vim.api.nvim_list_bufs())
+  if not next(bufnrs) then
+    return
+  end
+
+  local filelist = {}
+  for _, bufnr in ipairs(bufnrs) do
+    local file = vim.api.nvim_buf_get_name(bufnr)
+    table.insert(filelist, Path:new(file):make_relative(cwd))
+  end
+  return filelist
+end
+
+-- require('utils_general').get_open_filelist( vim.loop.cwd() )
+-- putt( require('utils_general').get_open_filelist( vim.loop.cwd() ) )
+
+
+-- ─^  more examples                                     ▲
+
+
+
 
 
 
@@ -896,6 +1002,7 @@ function M.Git_status_picker(opts)
 
   builtin.git_status(opts)
 end
+
 -- require('utils_general').Git_status_picker()
 
 -- ─   Diff to main / master                            ──
@@ -909,16 +1016,16 @@ function M.Git_diff_to_master(opts)
     -- dyn_title = function(_, entry) return entry.value end,
     dyn_title = function(_, entry)
       -- PATTERN: run any synchronous shell command on a line entry.
-      return vim.fn.systemlist( 'git diff ..master --stat ' .. entry.path )[1]
+      return vim.fn.systemlist( 'git diff ..main --stat ' .. entry.path )[1]
       -- return entry.status
     end,
     get_command = function(entry)
       if entry.status == "D " then
-        return { "git", "show", "master:" .. entry.value }
+        return { "git", "show", "main:" .. entry.value }
       elseif entry.status == "??" then
         return { "bat", "--style=plain", entry.value }
       end
-      return { "git", "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "..master", entry.path }
+      return { "git", "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "..main", entry.path }
     end,
   })
 
@@ -935,9 +1042,8 @@ function M.Git_diff_to_master(opts)
 
   builtin.git_files(opts)
 end
--- require('utils_general').Git_status_picker()
 
-
+-- require('utils_general').Git_diff_to_master()
 
 
 

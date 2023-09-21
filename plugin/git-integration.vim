@@ -42,7 +42,7 @@ nnoremap <leader>ogc <cmd>Git commit<cr>
 
 " ease confirming fugitive commit window
 " nnoremap ,,w :w<cr><c-w>c
-nnoremap <expr> ,,w (&ft=='gitcommit') ? ':w<cr><c-w>c' : ':call BufferInnerBracket()<cr>'
+nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr><c-w>c' : ':call BufferInnerBracket()<cr>'
 
 nnoremap <leader>ogg :G<cr>
 

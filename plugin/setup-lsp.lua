@@ -424,8 +424,8 @@ lspconfig.jsonls.setup({
 
 
 local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, "lua/?.lua")
-table.insert(runtime_path, "lua/?/init.lua")
+-- table.insert(runtime_path, "lua/?.lua")
+-- table.insert(runtime_path, "lua/?/init.lua")
 
 lspconfig.lua_ls.setup {
   capabilities = capabilities,
@@ -442,6 +442,9 @@ lspconfig.lua_ls.setup {
         -- Make the server aware of Neovim runtime files
         library = vim.api.nvim_get_runtime_file("", true),
         checkThirdParty = false
+      },
+      window = {
+        progressBar = false
       },
     },
   },

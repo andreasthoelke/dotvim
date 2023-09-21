@@ -19,9 +19,10 @@ let g:python3_host_prog = '/usr/bin/python3'
 
 " avoid |hit enter| prompts
 " set shortmess+="mW"
-set shortmess=aoOtT
+" set shortmess=aoOtT
+set shortmess=sWACF
 " Cut completion messages?
-set shortmess+=c
+" set shortmess+=c
 
 
 " let g:symlink_loaded = 1
@@ -490,7 +491,7 @@ function! s:RemoveLastPathComponent()
   return substitute(getcmdline(), '\%(\\ \|[\\/]\@!\f\)\+[\\/]\=$\|.$', '', '')
 endfunction
 
-set lazyredraw
+" set lazyredraw
 set selection=inclusive
 " this allows to move the cursor where there is no actual chracter
 set virtualedit=all
@@ -584,10 +585,16 @@ func! PasteLastEchoText()
   exec "RedirMessagesBuf" histget("cmd", -1)
 endfunc
 
-nnoremap <leader>Sm :call ShowMessages()<cr>
+" nnoremap <leader>Sm :call ShowMessages()<cr>
+nnoremap <leader>Sm :call ShowMessages_new()<cr>
 command! EchoTextPaste :call PasteLastEchoText()
 command! MessagesShow call ShowMessages()
 command! MessagesClear messages clear
+
+func! ShowMessages_new()
+  exec 'messages'
+  call T_DelayedCmd( "normal! G", 200 )
+endfunc
 
 func! ShowMessages()
   " call FloatWin_ShowLines( RedirMessages( 'messages', '' ) )

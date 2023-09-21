@@ -55,7 +55,11 @@ Plug 'softinio/scaladex.nvim'
 Plug 'LinArcX/telescope-env.nvim'
 Plug 'kelly-lin/telescope-ag'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-telescope/telescope-frecency.nvim'
 
+Plug 'folke/noice.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'rcarriga/nvim-notify'
 
 " Plug 'rmagatti/auto-session'
 " Plug 'rmagatti/session-lens'
@@ -361,6 +365,7 @@ Plug 'chrisbra/csv.vim'
 Plug 'euclio/vim-markdown-composer'
 
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'ellisonleao/glow.nvim'
 
 Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tyru/open-browser.vim'
@@ -479,6 +484,15 @@ Plug 'thalesmello/webcomplete.vim'
 
 call plug#end()
 " ----------------------------------------------------------------------------------
+
+lua << EOF
+
+-- could use this area.
+-- ~/.config/nvim/plugin/setup-general.lua‖:515
+
+EOF
+
+
 
 " This deletes all autocmds that have the 'ag' tag/group so they aren't registered again when the vimrc is re-sourced
 " NOTE: Currently several .vim scripts are referring to the "ag" autogroup

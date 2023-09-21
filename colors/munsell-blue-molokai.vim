@@ -272,8 +272,6 @@ hi! def link @namespace CommentMinus
 " hi! def link TSTag purescriptIdentifier
 hi! def link pythonAttribute purescriptRecordKeys
 
-" hi! def link CopilotSuggestion Function
-
 hi! def link @function.macro @constant.macro
 
 
@@ -563,6 +561,20 @@ hi CommentMinusMinus guifg=#1D2B2F
 hi! ConcealOne  guifg=#2A4651
 
 hi! CopilotSuggestion  guifg=#4A7780
+
+hi! link NotifyERRORTitle CommentMinus
+hi! link NotifyERRORBorder CommentMinusMinus
+hi! link NotifyINFOTitle CommentMinus
+hi! link NotifyINFOBorder CommentMinusMinus
+hi! link NotifyWARNTitle CommentMinus
+hi! link NotifyWARNBorder CommentMinusMinus
+
+hi! link NotifyERRORBody Comment
+hi! link NotifyWARNBody Comment
+hi! link NotifyINFOBody CopilotSuggestion
+hi! link NotifyDEBUGBody Comment
+hi! link NotifyTRACEBody Comment
+
 
 " Conceal: Leaving the default link to Operator currently
 " hi conceal         guifg=#BCBCBC guibg=none

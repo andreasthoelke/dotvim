@@ -299,7 +299,7 @@ funct! RedirMessages2(command, to)
   exec a:command
   redir END
 endfunct
-" call RedirMessages2('ls', '=>g:buffer_list')
+" RedirMessages2('ls', '=>g:buffer_list')
 
 command! -nargs=+ RedirectMessages call call(function('RedirMessages2'), split(<q-args>, '\s\(\S\+\s*$\)\@='))
 " :RedirMessages2 ls @">

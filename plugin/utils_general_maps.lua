@@ -8,6 +8,7 @@ local opts_2 = {
 
 local dir_a_scala3 = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
 local dir_nvim = [[/Users/at/.config/nvim/plugin]]
+local dirs_nvim = { [[/Users/at/.config/nvim/plugin]], [[/Users/at/.config/nvim/lua]]}
 
 local rgx_caps_tag = [[\s[A-Z]{3,}:]]
 local rgx_comment = [[^(\s*)?(//|\*\s)]]
@@ -221,7 +222,7 @@ vim.keymap.set( 'n',
     {},
     rgx_main_symbol_vim,
     {},
-    { dir_nvim }
+    dirs_nvim
     ) end )
 
 
@@ -232,7 +233,7 @@ vim.keymap.set( 'n',
     {},
     rgx_keymap_vim,
     {},
-    { dir_nvim }
+    dirs_nvim
     ) end )
 
 
@@ -243,7 +244,7 @@ vim.keymap.set( 'n',
     {},
     "",
     {},
-    { dir_nvim }
+    dirs_nvim
     ) end )
 
 -- search in entire vim headers:
@@ -253,7 +254,7 @@ vim.keymap.set( 'n',
     {},
     rgx_header,
     {},
-    { dir_nvim }
+    dirs_nvim
     ) end )
 
 
