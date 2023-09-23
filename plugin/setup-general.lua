@@ -81,6 +81,7 @@ local lib = require("nvim-tree.lib")
 function _G.TreeNode()
   vim.pretty_print( require("nvim-tree.lib").get_node_at_cursor().absolute_path )
 end
+-- lua TreeNode()
 
 local tree_setBaseDir = function()
   local api = require("nvim-tree.api")
