@@ -1,7 +1,7 @@
 
 
 
--- Using buffer maps here: ~/.config/nvim/plugin/tools_rescript.vim#/nnoremap%20<silent><buffer>%20ged
+-- Using buffer maps here: ~/.config/nvim/plugin/tools_scala.vim‖/nnoremapˍ<silent><buffer>ˍgedˍ:TroubleToggleˍworkspace_diagnostics<cr>:callˍT_DelayedCmd(ˍ"wincmdˍp",ˍ50ˍ)<cr>
 -- nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
 -- Todo: make these maps general per languge and put them here or
 -- ~/.config/nvim/plugin/setup-lsp.vim#/nnoremap%20<silent><buffer>%20ger
@@ -31,11 +31,11 @@ local trouble = require("trouble").setup {
     jump_close = {"o"}, -- jump to the diagnostic and close the list
     toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
     toggle_preview = "P", -- toggle auto_preview
-    hover = "K", -- opens a small popup with the full multiline message
+    hover = "<leader>K", -- opens a small popup with the full multiline message
     preview = "p", -- preview the diagnostic location
     close_folds = {"zM", "zm"}, -- close all folds
     open_folds = {"zR", "zr"}, -- open all folds
-    toggle_fold = {"zA", "za"}, -- toggle fold of current file
+    toggle_fold = {"zA", "za", "zo"}, -- toggle fold of current file
     previous = "k", -- preview item
     next = "j" -- next item
   },
@@ -56,6 +56,8 @@ local trouble = require("trouble").setup {
   use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
 }
 
+-- require'trouble'.open()
+
 -- https://github.com/nvim-tree/nvim-tree.lua
 -- disable netrw at the very start of your init.lua (strongly advised)
 vim.g.loaded_netrw = 1
@@ -64,6 +66,10 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 -- vim.opt.termguicolors = true
 
+-- call the global vim function NewBuf_fromLine
+
+-- vim.fn.NewBuf_fromLine("right")
+-- .gitignore
 
 -- ─   Nvim Tree                                        ──
 
@@ -476,6 +482,8 @@ local telescLib = require('telescope').load_extension('bookmarks')
 --   )
 
 
+-- ─   noice & notify                                   ──
+
 require("noice").setup({
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -505,6 +513,28 @@ require("noice").setup({
 })
 
 
+
+require("notify").setup(
+{
+    background_colour = "NotifyBackground",
+    fps = 3,
+    icons = {
+      DEBUG = "",
+      ERROR = "",
+      INFO = "",
+      TRACE = "✎",
+      WARN = ""
+    },
+    level = 2,
+    minimum_width = 50,
+    render = "simple",
+    stages = "static",
+    timeout = 200000,
+    top_down = true
+  }
+)
+
+
 -- use :Glow to preview a markdown file. or rather 'glow' in the terminal for a .md file explorer!
 require('glow').setup({
   glow_path = "", -- will be filled automatically with your glow bin in $PATH, if any
@@ -517,30 +547,6 @@ require('glow').setup({
   width_ratio = 0.7, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
   height_ratio = 0.7,
 })
-
-
-
-require("notify").setup(
-{
-    background_colour = "NotifyBackground",
-    fps = 30,
-    icons = {
-      DEBUG = "",
-      ERROR = "",
-      INFO = "",
-      TRACE = "✎",
-      WARN = ""
-    },
-    level = 2,
-    minimum_width = 50,
-    render = "simple",
-    stages = "static",
-    timeout = 40000,
-    top_down = true
-  }
-)
-
-
 
 
 

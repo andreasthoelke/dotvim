@@ -35,7 +35,7 @@ Telesc = require('telescope').setup{
     --         '%.py[co]', '%.sw?', '%~', '%.a', "%.npz", "^.vscode",
             '%.tags', 'tags', '%.gemtags',
             -- '%.csv', '%.tsv', '%.tmp',
-            '%.exe', "%.dat", "^dist",
+            -- '%.exe', "%.dat", "^dist",
     --         '%.old', '%.plist', '%.pdf', '%.log', '%.jpg', '%.jpeg', '%.png', "%.obj", "^release",
     --         '%.tar.gz', '%.tar', '%.zip', '%.class', '%.pdb', '%.dll', '%.bak', "%.lib", "^.idea",
     --         '%.scan', '%.mca', '__pycache__', '^.mozilla/', '^.electron/', '%.bin', "^debug",
@@ -49,8 +49,6 @@ Telesc = require('telescope').setup{
     -- initial_mode = 'normal',
     mappings = {
       i = {
-          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/utils-fileselect-telescope.lua#/["<c-s><c-u>"]%20=%20open_above,
-          -- TODO: might want to make these consistent with: ~/.config/nvim/plugin/file-manage.vim#/Dirvish%20'newWin'%20maps
         ["<c-s><c-u>"] = open_above,
         ["<c-s><c-b>"] = open_below,
         ["<c-o>"] = trouble.open_with_trouble,

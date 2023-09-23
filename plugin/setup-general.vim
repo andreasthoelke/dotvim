@@ -650,8 +650,8 @@ onoremap $ g_
 vnoremap $ g_
 
 " Add line motions to jumplist
-nnoremap ^ m'^
-nnoremap 0 m'0
+" nnoremap <silent> ^ m'^
+nnoremap <silent> 0 m'0
 
 nnoremap zz m'zz
 
@@ -1160,9 +1160,9 @@ nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
 " set the project root from any file in the project.
 " nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
-nnoremap <expr><leader>cdsl ":lcd " . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
-nnoremap <expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
-nnoremap <expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <silent><expr><leader>cdsl ":lcd " . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
+nnoremap <silent><expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <silent><expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 
 func! FindGitRootFolderOfCurrentFile()
   return finddir('.git/..', expand('%:p:h').';')

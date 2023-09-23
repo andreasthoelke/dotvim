@@ -28,9 +28,9 @@ nnoremap <leader>ll :call Location_toggle()<cr>
 " Todo: this get's overwrittern on quickfix refesh:
 " nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
 
-nnoremap <leader>qq :call QuickFix_toggle()<cr>
-nnoremap <leader>qa :call QFListAddCWord()<cr>
-nnoremap <leader>M  :call QFListAddCWord()<cr>
+nnoremap <silent><leader>qq :call QuickFix_toggle()<cr>
+nnoremap <silent><leader>qa :call QFListAddCWord()<cr>
+nnoremap <silent><leader>M  :call QFListAddCWord()<cr>
 
 " Toggle quickfix window
 function! QuickFix_toggle()

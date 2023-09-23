@@ -34,7 +34,7 @@ end
 function _G.putt( table, title )
   vim.notify( vim.inspect( table ), "info", {
     title = title or "lua table",
-    timeout = 40000,
+    timeout = 4000,
     on_open = function(win)
       local buf = vim.api.nvim_win_get_buf(win)
       vim.api.nvim_buf_set_option(buf, "filetype", "lua")
@@ -898,9 +898,19 @@ end
 
 -- ─   more examples                                     ■
 
+
+function M.buffer_dir()
+  return vim.fn.expand "%:p:h"
+end
+
+-- require'utils_general'.buffer_dir()
+-- vim.api.nvim_win_get_cursor( 0 )
+-- vim.api.nvim_win_set_cursor( 0, { 910, 10 } )
+
+
 local function examp2( prompt_bufnr )
   actions.select_default:replace(function()
-    actions.close(prompt_bufnr)
+    -- actions.close(prompt_bufnr)
     local selection = action_state.get_selected_entry()
     -- for key, value in pairs( selection ) do
     --   vim.fn.writefile( value, "output.txt" )
@@ -954,7 +964,20 @@ function M.get_open_filelist(cwd)
 end
 
 -- require('utils_general').get_open_filelist( vim.loop.cwd() )
+
+-- require('utils_general').get_open_filelist()
+
 -- putt( require('utils_general').get_open_filelist( vim.loop.cwd() ) )
+
+-- vim.loop.cwd()
+-- require("telescope.config").values
+
+-- require'trouble'.get_items()
+-- vim.fn.NewBufCmds_templ()
+-- require("telescope.actions.history").get_simple_history()
+-- vim.api.nvim_feedkeys(" .. selection.value .. postfix, "n", true)
+-- PATTERN: i can "preview" a command before running it.
+-- vim.api.nvim_feedkeys( ":echo 'hi'", "n", true)
 
 
 -- ─^  more examples                                     ▲
