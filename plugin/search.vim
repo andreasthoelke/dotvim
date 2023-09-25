@@ -18,13 +18,13 @@ command! GithubSearch call GithubSearch("word")
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
 
-nnoremap <leader>K K
-nnoremap <leader>vh :FzfHelptags<cr>
-nnoremap <leader>vM :FzfMaps<cr>
+nnoremap <silent><leader>K K
+nnoremap <silent><leader>vh :FzfHelptags<cr>
+nnoremap <silent><leader>vM :FzfMaps<cr>
 " now using: ~/.config/nvim/lua/utils_general.lua#/vim.keymap.set.%20'n',
 " nnoremap <leader><leader>vm :Telescope keymaps<cr>
-nnoremap <leader><leader>vm :lua require('utils_general').examp_keymap_picker()<cr>
-nnoremap <leader>vc :Telescope commands<cr>
+nnoremap <silent><leader><leader>vm :lua require('utils_general').examp_keymap_picker()<cr>
+nnoremap <silent><leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()
   exec 'silent !open .'

@@ -348,9 +348,6 @@ nnoremap <localleader><localleader>ss :set syntax=scala<cr>
 nnoremap <localleader><localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
-" nnoremap <leader>sp :set syntax=purescript<cr>:call HaskellSyntaxAdditions()<cr>
-" nnoremap <leader>sP :set syntax=purescript1<cr>:call HaskellSyntaxAdditions()<cr>
-
 
 
 " SOME TOOLS FUNTIONS TIPS: -------------------------------------------------

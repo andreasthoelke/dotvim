@@ -469,6 +469,7 @@ func! VimScriptSyntaxAdditions ()
   syntax match Normal 'func!' conceal cchar=→
   syntax match Normal 'endfunc' conceal cchar=˻
   syntax match Normal 'endif' conceal cchar=˻
+  syntax match Normal '\v\\' conceal cchar=ˍ
   syntax match Normal 'let ' conceal
   syntax match Normal 'call ' conceal
 
@@ -488,22 +489,9 @@ endfunc
 
 
 
-func! VimScriptSyntaxAdditions_() " ■
-  " echoe "why is this called?"
-  call clearmatches()
-  call CodeMarkupSyntaxHighlights()
-  " Hide comment character at beginning of line
-  call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
-  " Hilde \" before comment after code
-  " Issue: this hides the second \" of a string
-  " call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
-  " Conceal "%20" which is used for "h rel.txt" with space
-  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
-  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
-  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
-
-  call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
-
+" Some experiments. delete this ■
+  " TODO: this might be interesting to try in .md file or scala comments
+  " call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
@@ -513,8 +501,6 @@ func! VimScriptSyntaxAdditions_() " ■
   " set foldmarker={{{,}}}
   " set foldmarker=■■,▲▲
   " set foldmarker=\ ■,\ ▲
-endfunc " ▲
-
 " Testing: ■
 " call matchadd('MatchParen', '\v"(\s)@=', -1, -1 ) ▲
 " call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
@@ -531,7 +517,6 @@ endfunc " ▲
 "       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
 "       \     hi! link Conceal Operator                                                                  |
 "       \ endif
-
 " Experiments:{{{
 " let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
@@ -554,4 +539,4 @@ endfunc " ▲
 
 
 
-
+"  ▲

@@ -178,6 +178,8 @@ func! ParentFolder( path )
 endfunc
 " ParentFolder( '/Users/at/.config/nvim/plugin/' )
 " ParentFolder( '/Users/at/.config/nvim/plugin/no-exist.txt' )
+" ParentFolder( expand('%:p') )
+" ParentFolder( expand('%:p:h') )
 
 func! Compare_file_modified(f1, f2)
   if PathInfoSkip( a:f1 ) | return 1 | endif

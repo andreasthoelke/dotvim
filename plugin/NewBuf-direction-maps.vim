@@ -40,19 +40,19 @@ nnoremap <silent> ,,sn      :call NewBuf_rootFolder  ( "down" )<cr>
 " ─   NewBuf from path                                  ──
 
 " LINE-WORD
-nnoremap <silent> <c-w><leader>p  :call NewBuf_fromLineWord( "preview" )<cr>
-nnoremap <silent> <c-w><leader>o  :call NewBuf_fromLineWord( "float" )<cr>
-nnoremap <silent> <c-w><leader>i  :call NewBuf_fromLineWord( "full" )<cr>
-nnoremap <silent> <c-w><leader>t  :call NewBuf_fromLineWord( "tab" )<cr>
-nnoremap <silent> <c-w><leader>T  :call NewBuf_fromLineWord( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader>p  :call NewBuf_fromCursorLinkPath( "preview" )<cr>
+nnoremap <silent> <c-w><leader>o  :call NewBuf_fromCursorLinkPath( "float" )<cr>
+nnoremap <silent> <c-w><leader>i  :call NewBuf_fromCursorLinkPath( "full" )<cr>
+nnoremap <silent> <c-w><leader>t  :call NewBuf_fromCursorLinkPath( "tab" )<cr>
+nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_bg" )<cr>
 " _
-nnoremap <silent> <c-w><leader>v  :call NewBuf_fromLineWord( "right" )<cr>
-nnoremap <silent> <c-w><leader>V  :call NewBuf_fromLineWord( "right_bg" )<cr>
-nnoremap <silent> <c-w><leader>a  :call NewBuf_fromLineWord( "left" )<cr>
-nnoremap <silent> <c-w><leader>u  :call NewBuf_fromLineWord( "up" )<cr>
-nnoremap <silent> <c-w><leader>U  :call NewBuf_fromLineWord( "up_bg" )<cr>
-nnoremap <silent> <c-w><leader>s  :call NewBuf_fromLineWord( "down" )<cr>
-nnoremap <silent> <c-w><leader>S  :call NewBuf_fromLineWord( "down_bg" )<cr>
+nnoremap <silent> <c-w><leader>v  :call NewBuf_fromCursorLinkPath( "right" )<cr>
+nnoremap <silent> <c-w><leader>V  :call NewBuf_fromCursorLinkPath( "right_bg" )<cr>
+nnoremap <silent> <c-w><leader>a  :call NewBuf_fromCursorLinkPath( "left" )<cr>
+nnoremap <silent> <c-w><leader>u  :call NewBuf_fromCursorLinkPath( "up" )<cr>
+nnoremap <silent> <c-w><leader>U  :call NewBuf_fromCursorLinkPath( "up_bg" )<cr>
+nnoremap <silent> <c-w><leader>s  :call NewBuf_fromCursorLinkPath( "down" )<cr>
+nnoremap <silent> <c-w><leader>S  :call NewBuf_fromCursorLinkPath( "down_bg" )<cr>
 
 " CLIP-BOARD
 nnoremap <silent> <c-w>,p  :call NewBuf_fromClipPath( "preview" )<cr>
@@ -74,7 +74,7 @@ nnoremap <silent> <c-w>dd <c-w>o
 
 
 
-" ─   NewBuf direction maps                              ■
+" ─   NewBuf from self/parent/root-folder               ──
 
 func! NewBuf_parentFolder( direction )
   let file = expand('%:p')  " might be a file or dirvish directory
@@ -104,25 +104,46 @@ func! NewBuf_self( direction )
 endfunc
 
 
-" Path at cusor pos or clip-board 
+" ─   NewBuf from path                                  ──
 " Supporting 'LinkPaths', e.i. Might have an appended line link: #:<num> or #/<searchStr>  
 
-" In divish buffers or paths in .md files spin off a new buffer from that path.
-func! NewBuf_fromLine( direction )
-  let [path; maybeLinkExt] = getline('.')->split('‖')
+" Use this function for mappings in 
+" divish, nvim-tree, LinkPaths in .md or source files
+" to spin off a new folder or file buffer.
+func! NewBuf_fromCursorLinkPath( direction )
+  let [path; maybeLinkExt] = 
+     \ &filetype == 'NvimTree' ?
+     \   [ v:lua.Tree_cursorPath() ] :
+     \   GetLongestWord_inLine()->split('‖')
+
   let cmd = NewBufCmds( path )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
-func! NewBuf_fromLineWord( direction )
-  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
-  let cmd = NewBufCmds( path )[ a:direction ] 
-  if IsInFloatWin() | wincmd c | endif
-  exec cmd
-  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
-endfunc
+" In divish, nvim-tree or paths in .md files spin off a new buffer from that path. ■
+" func! NewBuf_fromLine( direction )
+"   let [path; maybeLinkExt] = getline('.')->split('‖')
+"   let cmd = NewBufCmds( path )[ a:direction ] 
+"   if IsInFloatWin() | wincmd c | endif
+"   exec cmd
+"   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+" endfunc
+" func! NewBuf_fromLineWord( direction )
+"   let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
+"   let cmd = NewBufCmds( path )[ a:direction ] 
+"   if IsInFloatWin() | wincmd c | endif
+"   exec cmd
+"   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+" endfunc
+  " if &filetype == 'NvimTree'
+    " let path = Tree_cursorPath()
+    " let maybeLinkExt = []
+  " else
+  "   let [path; maybeLinkExt] = getline('.')->split('‖')
+  " endif
+"  ▲
 
 func! NewBuf_fromClipPath( direction )
   let [path; maybeLinkExt] = @*->split('‖')
@@ -130,6 +151,15 @@ func! NewBuf_fromClipPath( direction )
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+endfunc
+
+" Focus the "path" (dir or file) at cursor in tree-view. Mostly launched from dirvish(?)
+" The tree-view is launched in the same window. To launch the tree-view in a new window, use the "parent" maps first (e.g. ,v) then this map.
+" The 'tree_root_level' can be the 'parent' folder of the path (a file or folder), the 'parent_parent' or the 'cwd'.
+func! Tree_fromLinePath()
+  let [path; _maybeLinkExt] = getline('.')->split('‖') " link extensions are ignored
+  let parentDir = expand('%:p')  " parent dir to path (usually dirvish folder)
+  call v:lua.Tree_focusPathInRootPath( path, parentDir )
 endfunc
 
 
@@ -174,7 +204,6 @@ func! Exec( cmd )
 endfunc
 
 
-" ─^  NewBuf direction maps                              ▲
 
 
 

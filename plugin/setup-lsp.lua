@@ -448,6 +448,8 @@ lspconfig.lua_ls.setup {
       },
     },
   },
+}
+
   -- settings = {
   --   Lua = {
   --     runtime = {
@@ -466,7 +468,6 @@ lspconfig.lua_ls.setup {
   --     },
   --   },
   -- },
-}
 
 -- ─   Smithy                                           ──
 
