@@ -63,7 +63,7 @@ let g:mundo_inline_undo = 1
 
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
-nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
+" nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
 
 " Mundo: ----------------------
 
@@ -166,7 +166,7 @@ EOF
 " /Users/at/.local/share/nvim/sessions1/
 
 nnoremap <leader>st :Startify<cr>
-nnoremap <leader>ls :call SessionLoadForCWDStartify()<cr>
+nnoremap <silent><leader>ls :call SessionLoadForCWDStartify()<cr>
 
 
 let g:startify_lists = [
@@ -1546,7 +1546,7 @@ function! ForceGlobalRemovalMarks()
 endfunction
 
 " Markbar: --------------------------------------------------------------------------"
-nnoremap <leader>om :call MarkbarOpen()<cr>
+nnoremap <silent><leader>om :call MarkbarOpen()<cr>
 
 let g:markbar_isopen = v:false
 

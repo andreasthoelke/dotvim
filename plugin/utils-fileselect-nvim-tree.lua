@@ -16,10 +16,7 @@ local function on_attach(bufnr)
   end
 
 
-  -- Default mappings. Feel free to modify or remove as you wish.
-  --
   -- open({ winid = vim.api.nvim_get_current_win() })
-  -- vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node,          opts('CD'))
   -- vim.keymap.set('n', 'i',     api.node.open.replace_tree_buffer,     opts('Open: In Place'))
   -- vim.keymap.set('n', 'i',     tree.open({ winid = vim.api.nvim_get_current_win() }),     opts('Open: In Place'))
   -- vim.keymap.set('n', '<C-k>', api.node.show_info_popup,              opts('Info'))
@@ -35,6 +32,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', '<',     api.node.navigate.sibling.prev,        opts('Previous Sibling'))
   vim.keymap.set('n', '.',     api.node.run.cmd,                      opts('Run Command'))
   vim.keymap.set('n', '-',     tree.change_root_to_parent,        opts('Up'))
+  vim.keymap.set('n', ',i',    tree.change_root_to_parent,        opts('Up'))
   -- vim.keymap.set('n', 'a',     api.fs.create,                         opts('Create'))
   vim.keymap.set('n', 'bmv',   api.marks.bulk.move,                   opts('Move Bookmarked'))
   vim.keymap.set('n', 'B',     api.tree.toggle_no_buffer_filter,      opts('Toggle No Buffer'))
@@ -47,7 +45,8 @@ local function on_attach(bufnr)
   -- vim.keymap.set('n', 'd',     api.fs.remove,                         opts('Delete'))
   -- vim.keymap.set('n', 'D',     api.fs.trash,                          opts('Trash'))
   vim.keymap.set('n', 'zr',    api.tree.expand_all,                   opts('Expand All'))
-  vim.keymap.set('n', 'zc',    api.tree.collapse_all,                 opts('Collapse'))
+  vim.keymap.set('n', 'zC',    api.tree.collapse_all,                 opts('Collapse'))
+  vim.keymap.set('n', 'zc',    function() api.tree.collapse_all(true) end,     opts('Collapse folders with no open buffers'))
   -- vim.keymap.set('n', 'e',     api.fs.rename_basename,                opts('Rename: Basename'))
   vim.keymap.set('n', ']e',    api.node.navigate.diagnostics.next,    opts('Next Diagnostic'))
   vim.keymap.set('n', '[e',    api.node.navigate.diagnostics.prev,    opts('Prev Diagnostic'))
@@ -57,15 +56,20 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'gy',    api.fs.copy.absolute_path,             opts('Copy Absolute Path'))
   vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
   -- vim.keymap.set('n', 'I',     api.tree.toggle_gitignore_filter,      opts('Toggle Git Ignore'))
-  vim.keymap.set('n', 'J',     api.node.navigate.sibling.last,        opts('Last Sibling'))
-  vim.keymap.set('n', 'K',     api.node.navigate.sibling.first,       opts('First Sibling'))
+  -- vim.keymap.set('n', 'J',     api.node.navigate.sibling.last,        opts('Last Sibling'))
+  -- vim.keymap.set('n', 'K',     api.node.navigate.sibling.first,       opts('First Sibling'))
+  vim.keymap.set('n', ',j',    api.node.navigate.opened.next,        opts('Last Sibling'))
+  vim.keymap.set('n', ',k',    api.node.navigate.opened.prev,        opts('First Sibling'))
+
   vim.keymap.set('n', 'm',     api.marks.toggle,                      opts('Toggle Bookmark'))
   -- vim.keymap.set('n', 'o',     api.node.open.edit,                    opts('Open'))
   -- vim.keymap.set('n', 'O',     api.node.open.no_window_picker,        opts('Open: No Window Picker'))
   vim.keymap.set('n', 'zo',    api.node.open.no_window_picker,        opts('Open: No Window Picker'))
   vim.keymap.set('n', '<c-]>', api.node.open.no_window_picker,        opts('Open: No Window Picker'))
+  vim.keymap.set('n', 'I',     api.node.open.no_window_picker,        opts('Open: No Window Picker'))
   -- TODO: is there a Collapse action? restrict to only folder nodes
-  -- vim.keymap.set('n', '<c-[>', api.node.open.no_window_picker,        opts('Open: No Window Picker'))
+  -- vim.keymap.set('n', 'Y',     api.node.open.no_window_picker,        opts('Open: No Window Picker'))
+  vim.keymap.set('n', 'Y',     api.node.navigate.parent_close,        opts('Open: No Window Picker'))
   -- vim.keymap.set('n', 'p',     api.fs.paste,                          opts('Paste'))
   -- vim.keymap.set('n', 'P',     api.node.navigate.parent,              opts('Parent Directory'))
   vim.keymap.set('n', 'q',     api.tree.close,                        opts('Close'))
@@ -75,7 +79,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'S',     api.tree.search_node,                  opts('Search'))
   vim.keymap.set('n', 'U',     api.tree.toggle_custom_filter,         opts('Toggle Hidden'))
   -- vim.keymap.set('n', 'x',     api.fs.cut,                            opts('Cut'))
-  vim.keymap.set('n', 'yy',     api.fs.copy.filename,                  opts('Copy Name'))
+  vim.keymap.set('n', 'yy',    api.fs.copy.filename,                  opts('Copy Name'))
   -- vim.keymap.set('n', 'Y',     api.fs.copy.relative_path,             opts('Copy Relative Path'))
   vim.keymap.set('n', '<2-LeftMouse>',  api.node.open.edit,           opts('Open'))
   vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
@@ -98,7 +102,7 @@ local function on_attach(bufnr)
 
   -- still consistent / useful?
   -- vim.keymap.set('n', 'i', api.node.open.edit, opts('Open'))
-  -- vim.keymap.set('n', 'p', api.node.open.preview, opts('Open Preview'))
+  vim.keymap.set('n', 'p', api.node.open.preview, opts('Open Preview'))
 
   -- consistent with dirvish?
   vim.keymap.set('n', '<leader>dd', api.fs.trash, opts('Trash'))
@@ -107,6 +111,7 @@ local function on_attach(bufnr)
   -- useful filter views!?
   vim.keymap.set('n', '<leader>I', api.tree.toggle_gitignore_filter, opts('Toggle Git Ignore'))
   vim.keymap.set('n', '<leader>G', api.tree.toggle_git_clean_filter, opts('Toggle Git Clean'))
+  vim.keymap.set('n', '<leader>B', api.tree.toggle_no_buffer_filter, opts('Toggle Git Clean'))
 
   -- not working? useful!? vs telescope file browser?
   vim.keymap.set('n', '<leader>/', api.tree.search_node, opts('Search'))
@@ -248,7 +253,7 @@ Nvim_tree = require("nvim-tree").setup({
   hijack_directories = {
     enable = false,
   },
-  hijack_cursor = true,
+  hijack_cursor = false,
   filters = {
     dotfiles = false,
   },
@@ -266,10 +271,14 @@ Nvim_tree = require("nvim-tree").setup({
   actions = {
     change_dir = { enable = false },
     expand_all = {
-      max_folder_discovery = 3,
+      max_folder_discovery = 2,
       exclude = { '.bloop', '.bsp', '.git', '.metals', 'archive', 'dbdumps', 'project', 'r', 'target', 'temp' }
     },
   },
+  notify = {
+    threshold = vim.log.levels.ERROR,
+  },
+
   -- update_focused_file = {
   -- enable = true,
   -- update_root = true,
@@ -311,17 +320,17 @@ function _G.Tree_focusPathInRootPath( focusPath, rootPath )
   tree.find_file({ buf = focusPath })
 end
 
+function _G.Tree_expandFolderInRootPath( focusPath, rootPath )
+  Tree_focusPathInRootPath( focusPath, rootPath )
+  node.open.no_window_picker()
+end
+
 function _G.Tree_setRootToCwd_keepFocuedNode()
   local focusPath = tree.get_node_under_cursor().absolute_path
   tree.change_root( vim.fn.getcwd(-1) )  -- the -1 option retrieves the global cwd while n-tree auto sets a local cwd. 
   tree.find_file({ buf = focusPath })
 end
 
-function _G.Tree_expandFolderInRootPath( focusPath, rootPath )
-  tree.open({ path = rootPath, current_window = true })
-  tree.find_file({ buf = focusPath })
-  node.open.no_window_picker()
-end
 
 function _G.Tree_test()
   local tempFile = vim.fn.tempname()
@@ -330,7 +339,7 @@ function _G.Tree_test()
   require("nvim-tree.view").abandon_current_window()
   tree.close()
   vim.cmd("keepjumps edit " .. vim.fn.fnameescape( tempFile ))
-  end
+end
 
 
 

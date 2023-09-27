@@ -36,6 +36,24 @@ nnoremap <silent> ,,u       :call NewBuf_rootFolder  ( "up" )<cr>
 nnoremap <silent> ,sn       :call NewBuf_parentFolder( "down" )<cr>
 nnoremap <silent> ,,sn      :call NewBuf_rootFolder  ( "down" )<cr>
 
+nnoremap <silent> <leader>,o  :call NewBuf_parentFolder( "float", "tree" )<cr>
+nnoremap <silent> <leader>,,o :call NewBuf_rootFolder  ( "float", "tree" )<cr>
+nnoremap <silent> <leader>,i        :call NewBuf_parentFolder( "full", "tree" )<cr>
+nnoremap <silent> <leader>,,i       :call NewBuf_rootFolder  ( "full", "tree" )<cr>
+" nnoremap <silent> -         :call NewBuf_parentFolder( "full" )<cr>
+" nnoremap <silent> <leader>- :call NewBuf_rootFolder  ( "full" )<cr>
+nnoremap <silent> <leader>,t        :call NewBuf_parentFolder( "tab", "tree" )<cr>
+nnoremap <silent> <leader>,,t       :call NewBuf_rootFolder  ( "tab", "tree" )<cr>
+" _
+nnoremap <silent> <leader>,v        :call NewBuf_parentFolder( "right", "tree" )<cr>
+nnoremap <silent> <leader>,,v       :call NewBuf_rootFolder  ( "right", "tree" )<cr>
+nnoremap <silent> <leader>,an       :call NewBuf_parentFolder( "left", "tree" )<cr>
+nnoremap <silent> <leader>,,an      :call NewBuf_rootFolder  ( "left", "tree" )<cr>
+nnoremap <silent> <leader>,u        :call NewBuf_parentFolder( "up", "tree" )<cr>
+nnoremap <silent> <leader>,,u       :call NewBuf_rootFolder  ( "up", "tree" )<cr>
+nnoremap <silent> <leader>,sn       :call NewBuf_parentFolder( "down", "tree" )<cr>
+nnoremap <silent> <leader>,,sn      :call NewBuf_rootFolder  ( "down", "tree" )<cr>
+
 
 " ─   NewBuf from path                                  ──
 
@@ -76,21 +94,27 @@ nnoremap <silent> <c-w>dd <c-w>o
 
 " ─   NewBuf from self/parent/root-folder               ──
 
-func! NewBuf_parentFolder( direction )
+func! NewBuf_parentFolder( direction, ... )
   let file = expand('%:p')  " might be a file or dirvish directory
   let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
   let cmd = NewBufCmds( parentFolderPath )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   call search('\V\^'.escape(file, '\').'\$', 'cw')
+  if a:1 == 'tree' 
+    call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') ) 
+  endif
 endfunc
 " ParentFolder( expand("%:h") )
 " ParentFolder( expand("%:p") )
 
-func! NewBuf_rootFolder( direction )
+func! NewBuf_rootFolder( direction, ... )
   let cmd = NewBufCmds( getcwd() )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  if a:1 == 'tree' 
+    call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') ) 
+  endif
 endfunc
 
 
@@ -161,6 +185,7 @@ func! Tree_fromLinePath()
   let parentDir = expand('%:p')  " parent dir to path (usually dirvish folder)
   " call v:lua.Tree_focusPathInRootPath( path, parentDir )
   call v:lua.Tree_expandFolderInRootPath( path, parentDir )
+  call v:lua.Tree_expandFolderInRootPath( getline('.'), expand('%:p') )
 endfunc
 
 func! Tree_test()
