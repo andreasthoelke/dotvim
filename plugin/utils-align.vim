@@ -215,9 +215,9 @@ nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><E
 " `leader >>` + motion or vis-sel with "v" indents the lines to the current cursor-horz position
 " nnoremap <silent> <leader>>> :set opfunc=Indent_op<cr>g@
 " nnoremap <silent> <localleader>, :set opfunc=Indent_op<cr>g@
-nnoremap <silent> ,, :set opfunc=Indent_op<cr>g@
+nnoremap <silent> ,,a :set opfunc=Indent_op<cr>g@
 " vnoremap <silent> <leader>>> :<c-u>call Indent_op( visualmode(), 1)<cr>
-vnoremap <silent> ,, :<c-u>call Indent_op( visualmode(), 1)<cr>
+vnoremap <silent> ,,a :<c-u>call Indent_op( visualmode(), 1)<cr>
 " Note: This does not work with "V"/ Visual-Block mode
 
 " TODO: use visual-sel to intent from a specific point of the line string. example

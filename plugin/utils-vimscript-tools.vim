@@ -94,38 +94,39 @@ func! SourceRange() range
 endfunc
 " TIP: Range example function
 
-func! SourceLines( lines )
-  let tmpsofile = tempname()
-  call writefile( a:lines, l:tmpsofile)
-  if &filetype == 'lua'
-    exec "luafile " . l:tmpsofile
-  elseif &filetype == 'vim'
-    exec "source " . l:tmpsofile
-  else
-    exec "luafile " . l:tmpsofile
-    " echoe "File type not supported!"
-  endif
-  call delete(l:tmpsofile)
+func! SourceLines( cmd, lines )
+  let tempSourceFile = tempname()
+  call writefile( a:lines, tempSourceFile)
+  exec a:cmd tempSourceFile
+  call delete( tempSourceFile )
 endfunc
 
 func! SourcePrintCommented()
   if &filetype == 'lua'
     let expr = getline('.')[3:]
     let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
-    " let code = 'vim.pretty_print(' . expr . ')'
-    " let code = 'vim.print(' . expr . ')'
+    let cmd = 'luafile'
   elseif &filetype == 'markdown' || &filetype == 'purescript_scratch' || &filetype == ''
     let expr = getline('.')
     let code = 'print( vim.inspect( ' . expr . ' ) )'
+    let cmd = 'luafile'
   elseif &filetype == 'vim'
-    let expr = getline('.')[1:]
-    let code = 'echo ' . expr
+    " QUICKFIX: when using .lua files with ft=vim
+    if getline('.')[0:1] == "--"
+      let expr = getline('.')[3:]
+      let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
+      let cmd = 'luafile'
+    else
+      let expr = getline('.')[1:]
+      let code = 'echo ' . expr
+      let cmd = 'source'
+    endif
   else
     echoe &ft
     echoe "File type not supported!"
     return
   endif
-  call SourceLines([ code ])
+  call SourceLines( cmd, [ code ] )
 endfunc
 
 " nnoremap <silent> <leader>gei :call SourcePrintCommented()<cr>

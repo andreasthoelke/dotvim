@@ -420,7 +420,10 @@ endfunc
 
 
 func! LuaSyntaxAdditions() " ■
-  call clearmatches()
+  " setlocal filetype=vim
+  " return
+
+  " call clearmatches()
 
   " convertion: only conceal single quotes
   syntax match Normal "'" conceal
@@ -442,7 +445,7 @@ func! LuaSyntaxAdditions() " ■
   syntax match Normal 'require' conceal cchar=⊟
   syntax match Normal 'vim\.' conceal cchar=v
   syntax match Normal 'vim.keymap\.set' conceal cchar=⊂
-  syntax match Normal 'vim.pretty_print' conceal cchar=⌘
+  syntax match Normal 'vim.print' conceal cchar=⌘
 
   " This replaces: call CodeMarkupSyntaxHighlights()
   syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
@@ -459,7 +462,7 @@ func! MarkdownSyntaxAdditions()
 endfunc
 
 func! VimScriptSyntaxAdditions ()
-  call LuaSyntaxAdditions()
+  call clearmatches()
 
   " syntax match Normal '^"\s' conceal
   " This is effective in preventing the conceal unicode in normal comments

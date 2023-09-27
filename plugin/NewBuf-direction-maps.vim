@@ -153,16 +153,23 @@ func! NewBuf_fromClipPath( direction )
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
+
 " Focus the "path" (dir or file) at cursor in tree-view. Mostly launched from dirvish(?)
 " The tree-view is launched in the same window. To launch the tree-view in a new window, use the "parent" maps first (e.g. ,v) then this map.
-" The 'tree_root_level' can be the 'parent' folder of the path (a file or folder), the 'parent_parent' or the 'cwd'.
 func! Tree_fromLinePath()
   let [path; _maybeLinkExt] = getline('.')->split('‖') " link extensions are ignored
   let parentDir = expand('%:p')  " parent dir to path (usually dirvish folder)
-  call v:lua.Tree_focusPathInRootPath( path, parentDir )
+  " call v:lua.Tree_focusPathInRootPath( path, parentDir )
+  call v:lua.Tree_expandFolderInRootPath( path, parentDir )
 endfunc
 
-
+func! Tree_test()
+  let tempFile = tempname()
+  call writefile( 'hi there', tempFile)
+  " call delete( tempFile )
+  call v:lua.open.replace_tree_buffer
+  call v:lua.Tree_expandFolderInRootPath( path, parentDir )
+endfunc
 
 
 " DIRECTION IDS  <==>   BUF-open Commands:

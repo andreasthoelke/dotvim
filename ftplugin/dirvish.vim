@@ -34,6 +34,8 @@ nnoremap <silent><buffer>U :call NewBuf_fromCursorLinkPath("up_bg")<cr>
 nnoremap <silent><buffer>s :call NewBuf_fromCursorLinkPath("down")<cr>
 nnoremap <silent><buffer>S :call NewBuf_fromCursorLinkPath("down_bg")<cr>
 
+nnoremap <silent><buffer><c-]> :call Tree_fromLinePath()<cr>
+
 
 " ─^  NewBuf from path                                   ▲
 

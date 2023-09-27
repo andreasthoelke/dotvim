@@ -70,7 +70,8 @@ func! HeadingBackw()
   " call ScrollUpFromMiddle( 10 )
 endfunc
 
-nnoremap <localleader>q :call GoSectionEndAbort('')<cr>
+" nnoremap <silent><localleader>q :call GoSectionEndAbort('')<cr>
+nnoremap <silent> ,q :call GoSectionEndAbort('')<cr>
 " nnoremap ,œ :call GoSectionEndAbort('')<cr>
 " Go to specific (via name) or current section end
 " func! GoSectionEndAbort( headerText )
@@ -98,12 +99,12 @@ endfunc
 
 " ─   Labels                                             ■
 " 10e
-nnoremap ,q :call LabelForw()<cr>
+nnoremap <silent> <localleader>q :call LabelForw()<cr>
 func! LabelForw()
   call search( g:headingOrLabelPttn, 'W' )
 endfunc
 
-nnoremap ,Q :call LabelBackw()<cr>
+nnoremap <silent>,Q :call LabelBackw()<cr>
 func! LabelBackw()
   call search( g:headingOrLabelPttn, 'bW' )
 endfunc
