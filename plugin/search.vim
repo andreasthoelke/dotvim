@@ -59,7 +59,7 @@ endfunc
 " nnoremap / :set hlsearch<cr>:noh<cr>/\v
 " this seems needed to reactivate hlsearch after nohlsearch
 " also the "\v" flag makes sure that I can type regex consistent with other regex engines
-nnoremap / :set hlsearch<cr>:noh<cr>/\v
+nnoremap <silent>/ :set hlsearch<cr>:noh<cr>/\v
 " vnoremap / /\v
 " nnoremap <M-/> /
 

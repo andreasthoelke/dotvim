@@ -89,20 +89,62 @@ local function on_attach(bufnr)
   vim.keymap.set('n', '<leader>-', Tree_setRootToCwd_keepFocuedNode, opts('Open'))
   vim.keymap.set('n', ',,i',       Tree_setRootToCwd_keepFocuedNode, opts('Open'))
 
+  vim.keymap.set("n", "<leader>fd", find_directory_and_focus, opts('Find directory') )
 
--- v :call NewBuf_fromCursorLinkPath("right")<cr>
--- V :call NewBuf_fromCursorLinkPath("right_bg")<cr>
--- a :call NewBuf_fromCursorLinkPath("left")<cr>
--- u :call NewBuf_fromCursorLinkPath("up")<cr>
--- U :call NewBuf_fromCursorLinkPath("up_bg")<cr>
--- s :call NewBuf_fromCursorLinkPath("down")<cr>
--- S :call NewBuf_fromCursorLinkPath("down_bg")<cr>
+  vim.keymap.set('n', 'p', function() vim.fn.NewBuf_fromCursorLinkPath('preview')  end, opts('preview'))
+  vim.keymap.set('n', 'o', function() vim.fn.NewBuf_fromCursorLinkPath('float')    end, opts('float'))
+  -- vim.keymap.set('n', 'i', function() vim.fn.NewBuf_fromCursorLinkPath('full')     end, opts('full'))
+  vim.keymap.set('n', 't', function() vim.fn.NewBuf_fromCursorLinkPath('tab')      end, opts('tab'))
+  vim.keymap.set('n', 'T', function() vim.fn.NewBuf_fromCursorLinkPath('tab_bg')   end, opts('tab_bg'))
+  -- _                                                                             
+  vim.keymap.set('n', 'v', function() vim.fn.NewBuf_fromCursorLinkPath('right')    end, opts('right'))
+  vim.keymap.set('n', 'V', function() vim.fn.NewBuf_fromCursorLinkPath('right_bg') end, opts('right_bg'))
+  vim.keymap.set('n', 'a', function() vim.fn.NewBuf_fromCursorLinkPath('left')     end, opts('left'))
+  vim.keymap.set('n', 'u', function() vim.fn.NewBuf_fromCursorLinkPath('up')       end, opts('up'))
+  vim.keymap.set('n', 'U', function() vim.fn.NewBuf_fromCursorLinkPath('up_bg')    end, opts('up_bg'))
+  vim.keymap.set('n', 's', function() vim.fn.NewBuf_fromCursorLinkPath('down')     end, opts('down'))
+  vim.keymap.set('n', 'S', function() vim.fn.NewBuf_fromCursorLinkPath('down_bg')  end, opts('down_bg'))
+
+  vim.keymap.set('n', '<c-space>', function()
+    local path = tree.get_node_under_cursor().absolute_path
+    local folder = vim.fn.fnamemodify( path, ':h' )
+    vim.cmd( vim.fn.NewBufCmds( folder )[ 'left' ] )
+    vim.fn.SearchLine( path )
+    vim.cmd 'wincmd p'
+    tree.close()
+  end, opts( 'switch to parent divish - focusing current file' ))
+
+  -- c-space  current folder path in nvt
+
+-- nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview")<cr>
+-- nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
+-- nnoremap <silent><buffer>i :call NewBuf_fromCursorLinkPath("full")<cr>
+-- nnoremap <silent><buffer>t :call NewBuf_fromCursorLinkPath("tab")<cr>
+-- nnoremap <silent><buffer>T :call NewBuf_fromCursorLinkPath("tab_bg")<cr>
+-- " _
+-- nnoremap <silent><buffer>v :call NewBuf_fromCursorLinkPath("right")<cr>
+-- nnoremap <silent><buffer>V :call NewBuf_fromCursorLinkPath("right_bg")<cr>
+-- nnoremap <silent><buffer>a :call NewBuf_fromCursorLinkPath("left")<cr>
+-- nnoremap <silent><buffer>u :call NewBuf_fromCursorLinkPath("up")<cr>
+-- nnoremap <silent><buffer>U :call NewBuf_fromCursorLinkPath("up_bg")<cr>
+-- nnoremap <silent><buffer>s :call NewBuf_fromCursorLinkPath("down")<cr>
+-- nnoremap <silent><buffer>S :call NewBuf_fromCursorLinkPath("down_bg")<cr>
+
+
+
+-- v "right")<cr>
+-- V "right_bg")<cr>
+-- a "left")<cr>
+-- u "up")<cr>
+-- U "up_bg")<cr>
+-- s "down")<cr>
+-- S "down_bg")<cr>
 
   vim.keymap.set('n', 'i',     api.node.open.replace_tree_buffer,     opts('Open: In Place'))
 
   -- still consistent / useful?
   -- vim.keymap.set('n', 'i', api.node.open.edit, opts('Open'))
-  vim.keymap.set('n', 'p', api.node.open.preview, opts('Open Preview'))
+  -- vim.keymap.set('n', 'p', api.node.open.preview, opts('Open Preview'))
 
   -- consistent with dirvish?
   vim.keymap.set('n', '<leader>dd', api.fs.trash, opts('Trash'))
@@ -262,6 +304,10 @@ Nvim_tree = require("nvim-tree").setup({
   --   update_root = true,
   -- },
   sync_root_with_cwd = false,
+  view = {
+    width = function() return 30 end,
+    preserve_window_proportions = false,
+  },
   -- view = {
   --   float = {
   --     enable = true,
@@ -278,7 +324,7 @@ Nvim_tree = require("nvim-tree").setup({
   notify = {
     threshold = vim.log.levels.ERROR,
   },
-
+  select_prompts = true,
   -- update_focused_file = {
   -- enable = true,
   -- update_root = true,
@@ -318,6 +364,9 @@ end
 function _G.Tree_focusPathInRootPath( focusPath, rootPath )
   tree.open({ path = rootPath, current_window = true })
   tree.find_file({ buf = focusPath })
+  -- When opening nvt in the current_window, don't fix the windows size to allow normal vnew / new splits
+  vim.opt.winfixwidth = false
+  vim.opt.winfixheight = false
 end
 
 function _G.Tree_expandFolderInRootPath( focusPath, rootPath )
@@ -341,6 +390,30 @@ function _G.Tree_test()
   vim.cmd("keepjumps edit " .. vim.fn.fnameescape( tempFile ))
 end
 
+-- vim.fn.fnamemodify('~/Documents/eins.txt', ":h")
+
+
+function find_directory_and_focus()
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  local function open_nvim_tree(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      local api = require("nvim-tree.api")
+
+      actions.close(prompt_bufnr)
+      local selection = action_state.get_selected_entry()
+      api.tree.open()
+      api.tree.find_file(selection.cwd .. "/" .. selection.value)
+    end)
+    return true
+  end
+
+  require("telescope.builtin").find_files({
+    find_command = { "fd", "--type", "directory", "--hidden", "--exclude", ".git/*" },
+    attach_mappings = open_nvim_tree,
+  })
+end
 
 
 local tree_setBaseDir = function()
@@ -361,7 +434,7 @@ end
 local tree_viewPathInPrevWin = function()
   -- local api = require("nvim-tree.api")
   local dir = tree_lib.get_node_at_cursor().absolute_path
-  vim.cmd "wincmd p"
+  vim.cmd 'wincmd p'
   vim.cmd.edit( dir )
   vim.cmd "wincmd p"
 end

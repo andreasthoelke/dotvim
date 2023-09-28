@@ -28,7 +28,9 @@ nnoremap <silent> ,t        :call NewBuf_parentFolder( "tab" )<cr>
 nnoremap <silent> ,,t       :call NewBuf_rootFolder  ( "tab" )<cr>
 " _
 nnoremap <silent> ,v        :call NewBuf_parentFolder( "right" )<cr>
+nnoremap <silent> ,V        :call NewBuf_parentFolder( "right_bg" )<cr>
 nnoremap <silent> ,,v       :call NewBuf_rootFolder  ( "right" )<cr>
+nnoremap <silent> ,,V       :call NewBuf_rootFolder  ( "right_bg" )<cr>
 nnoremap <silent> ,an       :call NewBuf_parentFolder( "left" )<cr>
 nnoremap <silent> ,,an      :call NewBuf_rootFolder  ( "left" )<cr>
 nnoremap <silent> ,u        :call NewBuf_parentFolder( "up" )<cr>
@@ -40,8 +42,6 @@ nnoremap <silent> <leader>,o  :call NewBuf_parentFolder( "float", "tree" )<cr>
 nnoremap <silent> <leader>,,o :call NewBuf_rootFolder  ( "float", "tree" )<cr>
 nnoremap <silent> <leader>,i        :call NewBuf_parentFolder( "full", "tree" )<cr>
 nnoremap <silent> <leader>,,i       :call NewBuf_rootFolder  ( "full", "tree" )<cr>
-" nnoremap <silent> -         :call NewBuf_parentFolder( "full" )<cr>
-" nnoremap <silent> <leader>- :call NewBuf_rootFolder  ( "full" )<cr>
 nnoremap <silent> <leader>,t        :call NewBuf_parentFolder( "tab", "tree" )<cr>
 nnoremap <silent> <leader>,,t       :call NewBuf_rootFolder  ( "tab", "tree" )<cr>
 " _
@@ -53,6 +53,7 @@ nnoremap <silent> <leader>,u        :call NewBuf_parentFolder( "up", "tree" )<cr
 nnoremap <silent> <leader>,,u       :call NewBuf_rootFolder  ( "up", "tree" )<cr>
 nnoremap <silent> <leader>,sn       :call NewBuf_parentFolder( "down", "tree" )<cr>
 nnoremap <silent> <leader>,,sn      :call NewBuf_rootFolder  ( "down", "tree" )<cr>
+
 
 
 " ─   NewBuf from path                                  ──
@@ -101,7 +102,7 @@ func! NewBuf_parentFolder( direction, ... )
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   call search('\V\^'.escape(file, '\').'\$', 'cw')
-  if a:1 == 'tree' 
+  if get(a:, 1,  '') == 'tree' 
     call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') ) 
   endif
 endfunc
@@ -112,7 +113,7 @@ func! NewBuf_rootFolder( direction, ... )
   let cmd = NewBufCmds( getcwd() )[ a:direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
-  if a:1 == 'tree' 
+  if get(a:, 1,  '') == 'tree' 
     call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') ) 
   endif
 endfunc
@@ -125,6 +126,10 @@ func! NewBuf_self( direction )
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   call winrestview( winview )
+endfunc
+
+func! SearchLine( str )
+  call search( '\V\^' . escape( a:str, '\' ) . '\$', 'cw' )
 endfunc
 
 
@@ -141,7 +146,11 @@ func! NewBuf_fromCursorLinkPath( direction )
      \   GetLongestWord_inLine()->split('‖')
 
   let cmd = NewBufCmds( path )[ a:direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  if &filetype == 'NvimTree' 
+    " wincmd c
+  elseif IsInFloatWin() 
+    wincmd c 
+  endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
@@ -196,6 +205,7 @@ func! Tree_test()
   call v:lua.Tree_expandFolderInRootPath( path, parentDir )
 endfunc
 
+" 
 
 " DIRECTION IDS  <==>   BUF-open Commands:
 
@@ -211,7 +221,8 @@ func! NewBufCmds_templ()
   let mp['right'] = 'vnew _PATH_'
   let mp['right_bg'] = 'vnew _PATH_ | wincmd p'
   " let mp['left']  = 'leftabove 30vnew _PATH_'
-  let mp['left']  = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_'
+  let mp['left']    = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_'
+  let mp['left_bg'] = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_ | wincmd p'
   " let mp['up']    = 'leftabove 20new _PATH_'
   " let mp['up']    = 'leftabove new _PATH_'
   let mp['up']   = 'leftabove '. winheight(0)/4 . 'new _PATH_'
