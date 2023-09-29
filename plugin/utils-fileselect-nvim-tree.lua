@@ -3,7 +3,7 @@
 local tree = require("nvim-tree.api").tree
 local node = require("nvim-tree.api").node
 local tree_lib = require("nvim-tree.lib")
-
+local utils = require'utils_general'
 
 
 -- ─   NvimTree maps                                     ■
@@ -114,7 +114,17 @@ local function on_attach(bufnr)
     tree.close()
   end, opts( 'switch to parent divish - focusing current file' ))
 
-  -- c-space  current folder path in nvt
+  vim.keymap.set('n', 'gq', function()
+    local path = tree.get_node_under_cursor().absolute_path
+    local folder = vim.fn.fnamemodify( path, ':h' )
+    vim.cmd( vim.fn.NewBufCmds( folder )[ 'left' ] )
+    -- vim.fn.feedkeys( utils.esc( '<Plug>(dirvish_quit)' ) )
+    vim.fn.AlternateFileLoc_restore( 'edit' )
+    vim.cmd 'wincmd p'
+    tree.close()
+  end, opts( 'Quit tree, open g:AlternateFileLoc in the same buffer' ))
+
+
 
 -- nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview")<cr>
 -- nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
@@ -362,6 +372,7 @@ end
 -- TreeOpen()  
 
 function _G.Tree_focusPathInRootPath( focusPath, rootPath )
+  -- vim.fn.AlternateFileLoc_save()
   tree.open({ path = rootPath, current_window = true })
   tree.find_file({ buf = focusPath })
   -- When opening nvt in the current_window, don't fix the windows size to allow normal vnew / new splits

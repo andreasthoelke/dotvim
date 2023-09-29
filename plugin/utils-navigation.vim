@@ -176,8 +176,8 @@ noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>Tabm
 noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
 
 " zoom/duplicate the current buffer in a new tab
-nnoremap <c-w>t :call TabNewFocus()<cr>
-nnoremap <c-w><c-t> :tabe %<cr>
+nnoremap <silent><c-w>t :call TabNewFocus()<cr>
+nnoremap <silent><c-w><c-t> :tabe %<cr>
 
 func! TabNewFocus()
   let [oLine, oCol] = getpos('.')[1:2]
@@ -203,16 +203,16 @@ endfunction
 " This has to be disabled, otherwise <leader>1 .. maps get overwritten.
 let g:airline#extensions#tabline#buffer_idx_mode = 0
 
-nnoremap <leader>1 1gt
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>6 6gt
-nnoremap <leader>7 7gt
-nnoremap <leader>8 8gt
-nnoremap <leader>9 9gt
-nnoremap <Leader>^ :exe "tabn " . g:lasttab<CR>
+nnoremap <silent><leader>1 1gt
+nnoremap <silent><leader>2 2gt
+nnoremap <silent><leader>3 3gt
+nnoremap <silent><leader>4 4gt
+nnoremap <silent><leader>5 5gt
+nnoremap <silent><leader>6 6gt
+nnoremap <silent><leader>7 7gt
+nnoremap <silent><leader>8 8gt
+nnoremap <silent><leader>9 9gt
+nnoremap <silent><Leader>^ :exe "tabn " . g:lasttab<CR>
 
 if !exists('g:lasttab')
   let g:lasttab = 1

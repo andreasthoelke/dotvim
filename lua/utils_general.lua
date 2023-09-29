@@ -18,6 +18,10 @@ function M.makeScratch()
   vim.bo[0].swapfile=false
 end
 
+function M.esc(cmd)
+  return vim.api.nvim_replace_termcodes(cmd, true, false, true)
+end
+-- require'utils_general'.esc( vim.fn.getcwd() )
 
 function _G.put(...)
   local objects = {}

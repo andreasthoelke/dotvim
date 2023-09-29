@@ -9,8 +9,8 @@
 
 nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "shorten" )<cr>
 nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
-nnoremap <silent> <leader>cl  :call ClipBoard_LinkPath_linenum  ( "shorten" )<cr>
-nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linenum  ( "full" )<cr>
+nnoremap <silent> <leader>cl  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
+nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "full" )<cr>
 nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
 nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
 
@@ -36,9 +36,30 @@ func! ClipBoard_LinkPath_plain( shorten )
   call ClipBoard_LinkPath( expand('%:p'), "", a:shorten )
 endfunc
 
-func! ClipBoard_LinkPath_linenum( shorten )
-  call ClipBoard_LinkPath( expand('%:p'), ":" . line('.'), a:shorten )
+func! ClipBoard_LinkPath_linepos( shorten )
+  let linkExtension = ":" . line('.') . ":" . col('.')
+  call ClipBoard_LinkPath( expand('%:p'), linkExtension, a:shorten )
 endfunc
+
+func! LinkPath_linepos()
+  let linkExtension = ":" . line('.') . ":" . col('.')
+  return expand('%:p') . "‖" . linkExtension
+endfunc
+
+
+let g:AlternateFileLoc = ''
+func! AlternateFileLoc_save()
+  let g:AlternateFileLoc = LinkPath_linepos()
+endfunc
+
+func! AlternateFileLoc_restore( cmd )
+  if !len( g:AlternateFileLoc ) | return | endif
+  let [path; maybeLinkExt] = g:AlternateFileLoc->split('‖')
+  exec a:cmd path
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+endfunc
+" AlternateFileLoc_save()
+" AlternateFileLoc_restore('new')
 
 func! ClipBoard_LinkPath_linesearch( shorten )
   let searchStr = getline('.')->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
@@ -61,7 +82,9 @@ func! Link_jumpToLine( linkExtension )
   let linkKey = linkExtension[0]
   let linkVal = linkExtension[1:]
   if linkKey == ":"
-    call setpos( '.', [0, linkVal, 0, 0] )
+    let [lineNum; maybeColumn] = linkVal->split(":")
+    let column = len(maybeColumn) ? maybeColumn[0] : 0
+    call setpos( '.', [0, lineNum, column, 0] )
   elseif linkKey == "/"
     if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
       echo 'Line not found: ' linkVal
@@ -75,6 +98,9 @@ endfunc
 " Link_jumpToLine( ["/func! Link_jumpToLine( linkExtList )"] )
 " Link_jumpToLine( ["/func! Link_jumpToLine( linkExtList )"] )
 " Link_jumpToLine( ["/" . getline(3)[:10] ] )
+" "123:45"->split(":")
+" "123"->split(":")
+
 
 func! LineSearch_makeShortUnique_orWarn( fullString )
   let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]

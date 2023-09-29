@@ -18,41 +18,25 @@ nnoremap <silent> <c-w>s    :call NewBuf_self        ( "down" )<cr>
 nnoremap <silent> <c-w>S    :call NewBuf_self        ( "down_bg" )<cr>
 
 " PARENT & ROOT
-nnoremap <silent> ,o        :call NewBuf_parentFolder( "float" )<cr>
-nnoremap <silent> ,,o       :call NewBuf_rootFolder  ( "float" )<cr>
-nnoremap <silent> ,i        :call NewBuf_parentFolder( "full" )<cr>
-nnoremap <silent> ,,i       :call NewBuf_rootFolder  ( "full" )<cr>
-nnoremap <silent> -         :call NewBuf_parentFolder( "full" )<cr>
-nnoremap <silent> <leader>- :call NewBuf_rootFolder  ( "full" )<cr>
-nnoremap <silent> ,t        :call NewBuf_parentFolder( "tab" )<cr>
-nnoremap <silent> ,,t       :call NewBuf_rootFolder  ( "tab" )<cr>
+nnoremap <silent> ,o        :call Browse_parent( "float" )<cr>
+nnoremap <silent> ,,o       :call Browse_cwd  ( "float" )<cr>
+nnoremap <silent> ,i        :call Browse_parent( "full" )<cr>
+nnoremap <silent> ,,i       :call Browse_cwd  ( "full" )<cr>
+nnoremap <silent> -         :call Browse_parent( "full" )<cr>
+nnoremap <silent> <leader>- :call Browse_cwd  ( "full" )<cr>
+nnoremap <silent> ,t        :call Browse_parent( "tab" )<cr>
+nnoremap <silent> ,,t       :call Browse_cwd  ( "tab" )<cr>
 " _
-nnoremap <silent> ,v        :call NewBuf_parentFolder( "right" )<cr>
-nnoremap <silent> ,V        :call NewBuf_parentFolder( "right_bg" )<cr>
-nnoremap <silent> ,,v       :call NewBuf_rootFolder  ( "right" )<cr>
-nnoremap <silent> ,,V       :call NewBuf_rootFolder  ( "right_bg" )<cr>
-nnoremap <silent> ,an       :call NewBuf_parentFolder( "left" )<cr>
-nnoremap <silent> ,,an      :call NewBuf_rootFolder  ( "left" )<cr>
-nnoremap <silent> ,u        :call NewBuf_parentFolder( "up" )<cr>
-nnoremap <silent> ,,u       :call NewBuf_rootFolder  ( "up" )<cr>
-nnoremap <silent> ,sn       :call NewBuf_parentFolder( "down" )<cr>
-nnoremap <silent> ,,sn      :call NewBuf_rootFolder  ( "down" )<cr>
-
-nnoremap <silent> <leader>,o  :call NewBuf_parentFolder( "float", "tree" )<cr>
-nnoremap <silent> <leader>,,o :call NewBuf_rootFolder  ( "float", "tree" )<cr>
-nnoremap <silent> <leader>,i        :call NewBuf_parentFolder( "full", "tree" )<cr>
-nnoremap <silent> <leader>,,i       :call NewBuf_rootFolder  ( "full", "tree" )<cr>
-nnoremap <silent> <leader>,t        :call NewBuf_parentFolder( "tab", "tree" )<cr>
-nnoremap <silent> <leader>,,t       :call NewBuf_rootFolder  ( "tab", "tree" )<cr>
-" _
-nnoremap <silent> <leader>,v        :call NewBuf_parentFolder( "right", "tree" )<cr>
-nnoremap <silent> <leader>,,v       :call NewBuf_rootFolder  ( "right", "tree" )<cr>
-nnoremap <silent> <leader>,an       :call NewBuf_parentFolder( "left", "tree" )<cr>
-nnoremap <silent> <leader>,,an      :call NewBuf_rootFolder  ( "left", "tree" )<cr>
-nnoremap <silent> <leader>,u        :call NewBuf_parentFolder( "up", "tree" )<cr>
-nnoremap <silent> <leader>,,u       :call NewBuf_rootFolder  ( "up", "tree" )<cr>
-nnoremap <silent> <leader>,sn       :call NewBuf_parentFolder( "down", "tree" )<cr>
-nnoremap <silent> <leader>,,sn      :call NewBuf_rootFolder  ( "down", "tree" )<cr>
+nnoremap <silent> ,v        :call Browse_parent( "right" )<cr>
+nnoremap <silent> ,V        :call Browse_parent( "right_bg" )<cr>
+nnoremap <silent> ,,v       :call Browse_cwd  ( "right" )<cr>
+nnoremap <silent> ,,V       :call Browse_cwd  ( "right_bg" )<cr>
+nnoremap <silent> ,an       :call Browse_parent( "left" )<cr>
+nnoremap <silent> ,,an      :call Browse_cwd  ( "left" )<cr>
+nnoremap <silent> ,u        :call Browse_parent( "up" )<cr>
+nnoremap <silent> ,,u       :call Browse_cwd  ( "up" )<cr>
+nnoremap <silent> ,sn       :call Browse_parent( "down" )<cr>
+nnoremap <silent> ,,sn      :call Browse_cwd  ( "down" )<cr>
 
 
 
@@ -92,6 +76,29 @@ nnoremap <c-w>o :echo "not active"<cr>
 nnoremap <silent> <c-w>dd <c-w>o
 
 
+" ─   Browse folder with nvt                            ──
+
+func! Browse_parent( direction )
+  call AlternateFileLoc_save()
+  let file = expand('%:p')  " might be a file or dirvish directory
+  let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
+  let cmd = NewBufCmds( parentFolderPath )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  call v:lua.Tree_focusPathInRootPath( file, parentFolderPath ) 
+endfunc
+
+func! Browse_cwd( direction )
+  call AlternateFileLoc_save()
+  let file = expand('%:p')  " might be a file or dirvish directory
+  let cwd = getcwd()
+  let cmd = NewBufCmds( cwd )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  call v:lua.Tree_focusPathInRootPath( file, cwd ) 
+endfunc
+
+
 
 " ─   NewBuf from self/parent/root-folder               ──
 
@@ -117,7 +124,6 @@ func! NewBuf_rootFolder( direction, ... )
     call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') ) 
   endif
 endfunc
-
 
 func! NewBuf_self( direction )
   let winview = winsaveview()

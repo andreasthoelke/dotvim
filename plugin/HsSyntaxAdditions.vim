@@ -11,7 +11,9 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 
-au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
+" BufWinEnter is needed to refresh the comment conceals when that buffer was hidden, e.g. using gq in dirvish/nvt
+au ag BufWinEnter *.sc,*.scala call ScalaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sc,*.scala call tools_scala#bufferMaps()
 au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
 
@@ -33,13 +35,16 @@ au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 " ~/.vim/ftdetect/purescript.vim#/au%20BufNewFile,BufRead%20*.purs
 au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 
-au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
+au ag BufWinEnter *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
-au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
-au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
+au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──
@@ -420,10 +425,7 @@ endfunc
 
 
 func! LuaSyntaxAdditions() " ■
-  " setlocal filetype=vim
-  " return
-
-  " call clearmatches()
+  call clearmatches()
 
   " convertion: only conceal single quotes
   syntax match Normal "'" conceal
