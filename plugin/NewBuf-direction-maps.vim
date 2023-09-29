@@ -33,6 +33,8 @@ nnoremap <silent> ,,v       :call Browse_cwd  ( "right" )<cr>
 nnoremap <silent> ,,V       :call Browse_cwd  ( "right_bg" )<cr>
 nnoremap <silent> ,an       :call Browse_parent( "left" )<cr>
 nnoremap <silent> ,,an      :call Browse_cwd  ( "left" )<cr>
+nnoremap <silent> ,An       :call Browse_parent( "left_bg" )<cr>
+nnoremap <silent> ,,An      :call Browse_cwd  ( "left_bg" )<cr>
 nnoremap <silent> ,u        :call Browse_parent( "up" )<cr>
 nnoremap <silent> ,,u       :call Browse_cwd  ( "up" )<cr>
 nnoremap <silent> ,sn       :call Browse_parent( "down" )<cr>
@@ -79,6 +81,7 @@ nnoremap <silent> <c-w>dd <c-w>o
 " ─   Browse folder with nvt                            ──
 
 func! Browse_parent( direction )
+  let [direction; maybeBg ] = a:direction->split('_')
   call AlternateFileLoc_save()
   let file = expand('%:p')  " might be a file or dirvish directory
   let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
@@ -86,16 +89,19 @@ func! Browse_parent( direction )
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   call v:lua.Tree_focusPathInRootPath( file, parentFolderPath ) 
+  if len( maybeBg ) | wincmd p | end
 endfunc
 
 func! Browse_cwd( direction )
+  let [direction; maybeBg ] = a:direction->split('_')
   call AlternateFileLoc_save()
   let file = expand('%:p')  " might be a file or dirvish directory
   let cwd = getcwd()
-  let cmd = NewBufCmds( cwd )[ a:direction ] 
+  let cmd = NewBufCmds( cwd )[ direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   call v:lua.Tree_focusPathInRootPath( file, cwd ) 
+  if len( maybeBg ) | wincmd p | end
 endfunc
 
 

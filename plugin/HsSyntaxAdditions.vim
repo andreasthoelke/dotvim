@@ -472,6 +472,7 @@ func! VimScriptSyntaxAdditions ()
   syntax match Comment '\v^\s\s\zs"\s\zs.*'
 
   syntax match Normal 'func!' conceal cchar=→
+  syntax match Normal 'return' conceal cchar=←
   syntax match Normal 'endfunc' conceal cchar=˻
   syntax match Normal 'endif' conceal cchar=˻
   syntax match Normal '\v\\' conceal cchar=ˍ
