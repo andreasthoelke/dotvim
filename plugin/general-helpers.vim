@@ -146,7 +146,12 @@ endfunc
 " ─^  Link files to Bookmark folder & search             ▲
 
 
+nnoremap ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call DirvishSortByModified()<cr>
+" Path_Float( '/Users/at/Documents/Notes' )
+
+nnoremap ,cS :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
 nnoremap <silent><leader>os :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
+
 
 nnoremap <silent><leader>ob :Telescope vim_bookmarks all<cr>
 

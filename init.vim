@@ -15,6 +15,12 @@ Plug 'github/copilot.vim'
 
 " File Selectors Browsers: ------------------------------------------
 Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-tree/nvim-web-devicons'
+
+Plug 'nvim-neo-tree/neo-tree.nvim'
+Plug 'mrbjarksen/neo-tree-diagnostics.nvim'
+Plug 'miversen33/netman.nvim'
+Plug 's1n7ax/nvim-window-picker'
 
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
@@ -195,7 +201,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'gcavallanti/vim-noscrollbar'
 " Plug 'drzel/vim-line-no-indicator'
 
-Plug 'kyazdani42/nvim-web-devicons'
 
 " Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"

@@ -396,6 +396,63 @@ hi! def link NvimTreeBookmark Comment
 hi! def link NvimTreeGitStaged purescriptIdentifier
 hi! def link NvimTreeGitNew purescriptIdentifier
 
+
+" neo-tree
+" NeoTreeBufferNumber       The buffer number shown in the buffers source.
+hi! def link NeoTreeBufferNumber CommentMinusMinus
+" NeoTreeCursorLine         |hl-CursorLine| override in Neo-tree window.
+" NeoTreeDimText            Greyed out text used in various places.
+" NeoTreeDirectoryIcon      Directory icon.
+" NeoTreeDirectoryName      Directory name.
+hi! def link NeoTreeDirectoryName Comment
+" NeoTreeDotfile            Used for icons and names when dotfiles are filtered.
+hi! def link NeoTreeDotfile CommentMinus
+" NeoTreeFileIcon           File icon, when not overridden by devicons.
+hi! def link NeoTreeFileName CommentMinus
+" NeoTreeFileName           File name, when not overwritten by another status.
+hi! def link NeoTreeFileName Comment
+" NeoTreeFileNameOpened     File name when the file is open. Not used yet.
+" NeoTreeFilterTerm         The filter term, as displayed in the root node.
+" NeoTreeFloatBorder        The border for pop-up windows.
+" NeoTreeFloatTitle         Used for the title text of pop-ups when the border-style
+"                           is set to another style than "NC". This is derived
+"                           from NeoTreeFloatBorder.
+" NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
+"                           is set to "NC". This is derived from NeoTreeFloatBorder.
+" NeoTreeGitAdded           File name when the git status is added.
+" NeoTreeGitConflict        File name when the git status is conflict.
+" NeoTreeGitDeleted         File name when the git status is deleted.
+" NeoTreeGitIgnored         File name when the git status is ignored.
+hi! def link NeoTreeGitIgnored CommentMinus
+" NeoTreeGitModified        File name when the git status is modified.
+" NeoTreeGitUnstaged        Used for git unstaged symbol.
+" NeoTreeGitUntracked       File name when the git status is untracked.
+" NeoTreeGitStaged          Used for git staged symbol.
+" NeoTreeHiddenByName       Used for icons and names when `hide_by_name` is used.
+hi! def link NeoTreeGitUnstaged purescriptRecordKeys
+hi! def link NeoTreeGitModified purescriptRecordKeys
+hi! def link NeoTreeGitUntracked purescriptRecordKeys
+" NeoTreeIndentMarker       The style of indentation markers (guides). By default,
+"                           the "Normal" highlight is used.
+" NeoTreeExpander           Used for collapsed/expanded icons.
+" NeoTreeNormal             |hl-Normal| override in Neo-tree window.
+" NeoTreeNormalNC           |hl-NormalNC| override in Neo-tree window.
+" NeoTreeSignColumn         |hl-SignColumn| override in Neo-tree window.
+" NeoTreeStats              Used for "stat" columns like size, last modified, etc.
+" NeoTreeStatsHeader        Used for the header (top line) of the above columns.
+" NeoTreeStatusLine         |hl-StatusLine| override in Neo-tree window.
+" NeoTreeStatusLineNC       |hl-StatusLineNC| override in Neo-tree window.
+" NeoTreeVertSplit          |hl-VertSplit| override in Neo-tree window.
+" NeoTreeWinSeparator       |hl-WinSeparator| override in Neo-tree window.
+" NeoTreeEndOfBuffer        |hl-EndOfBuffer| override in Neo-tree window.
+" NeoTreeRootName           The name of the root node.
+hi! def link NeoTreeRootName CommentSection
+" NeoTreeSymbolicLinkTarget Symbolic link target.
+" NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
+"                           is set to "NC". This is derived from NeoTreeFloatBorder.
+" NeoTreeWindowsHidden      Used for icons and names that are hidden on Windows.
+
+
 " Startify
 hi! def link StartifyPath CommentMinus
 hi! def link StartifyBracket CommentMinus

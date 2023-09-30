@@ -332,6 +332,12 @@ nnoremap <leader><leader>sw :StripWhitespace<cr>
 nnoremap yoW :ToggleWhitespace<cr>
 nnoremap <silent><leader>tw :ToggleWhitespace<cr>
 
+" ─   Unimpaired overwrites                             ──
+" simple options toggling can be implemented just like this:
+
+nnoremap <silent>yow :setlocal wrap!<cr>
+
+
 
 noremap <leader><leader>ytw :call ToggleOption('wrap')<cr>
 function! ToggleOption(option_name, ...)
