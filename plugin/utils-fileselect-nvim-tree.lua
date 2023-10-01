@@ -5,6 +5,18 @@ local node = require("nvim-tree.api").node
 local tree_lib = require("nvim-tree.lib")
 local utils = require'utils_general'
 
+local function tree_root_folder_label(path)
+  -- return ".../" .. vim.fn.fnamemodify(path, ":t")
+  local lpath = vim.split( path, [[/]] )
+  local dir = lpath[ #lpath ]
+  local parentDir = lpath[ #lpath -1 ]
+  -- local parentStr = vim.fn.strpart( parentDir, 0, 4 )
+  -- return parentStr .. " /" .. dir
+  -- return dir .. " (" .. parentStr .. ")"
+  return dir .. " |" .. parentDir
+end
+
+
 
 -- ─   NvimTree maps                                     ■
 
@@ -40,11 +52,12 @@ local function on_attach(bufnr)
   -- vim.keymap.set('n', 'C',     api.tree.toggle_git_clean_filter,      opts('Toggle Git Clean'))
   -- see the custom maps for these: <leader>G in this case
   -- these seem quite useful
-  vim.keymap.set('n', '[c',    api.node.navigate.git.prev,            opts('Prev Git'))
-  vim.keymap.set('n', ']c',    api.node.navigate.git.next,            opts('Next Git'))
+  vim.keymap.set('n', '[g',    api.node.navigate.git.prev,            opts('Prev Git'))
+  vim.keymap.set('n', ']g',    api.node.navigate.git.next,            opts('Next Git'))
   -- vim.keymap.set('n', 'd',     api.fs.remove,                         opts('Delete'))
   -- vim.keymap.set('n', 'D',     api.fs.trash,                          opts('Trash'))
   vim.keymap.set('n', 'zr',    api.tree.expand_all,                   opts('Expand All'))
+  vim.keymap.set('n', 'zR',    function() api.tree.collapse_all(true) end,     opts('Expand folders with open buffers'))
   vim.keymap.set('n', 'zC',    api.tree.collapse_all,                 opts('Collapse'))
   vim.keymap.set('n', 'zc',    function() api.tree.collapse_all(true) end,     opts('Collapse folders with no open buffers'))
   -- vim.keymap.set('n', 'e',     api.fs.rename_basename,                opts('Rename: Basename'))
@@ -54,7 +67,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'f',     api.live_filter.start,                 opts('Filter'))
   vim.keymap.set('n', 'g?',    api.tree.toggle_help,                  opts('Help'))
   vim.keymap.set('n', 'gy',    api.fs.copy.absolute_path,             opts('Copy Absolute Path'))
-  vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
+  -- vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
   -- vim.keymap.set('n', 'I',     api.tree.toggle_gitignore_filter,      opts('Toggle Git Ignore'))
   -- vim.keymap.set('n', 'J',     api.node.navigate.sibling.last,        opts('Last Sibling'))
   -- vim.keymap.set('n', 'K',     api.node.navigate.sibling.first,       opts('First Sibling'))
@@ -77,7 +90,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'R',     api.tree.reload,                       opts('Refresh'))
   vim.keymap.set('n', 's',     api.node.run.system,                   opts('Run System'))
   vim.keymap.set('n', 'S',     api.tree.search_node,                  opts('Search'))
-  vim.keymap.set('n', 'U',     api.tree.toggle_custom_filter,         opts('Toggle Hidden'))
+  -- vim.keymap.set('n', 'U',     api.tree.toggle_custom_filter,         opts('Toggle Hidden'))
   -- vim.keymap.set('n', 'x',     api.fs.cut,                            opts('Cut'))
   vim.keymap.set('n', 'yy',    api.fs.copy.filename,                  opts('Copy Name'))
   -- vim.keymap.set('n', 'Y',     api.fs.copy.relative_path,             opts('Copy Relative Path'))
@@ -163,7 +176,8 @@ local function on_attach(bufnr)
   -- useful filter views!?
   vim.keymap.set('n', '<leader>I', api.tree.toggle_gitignore_filter, opts('Toggle Git Ignore'))
   vim.keymap.set('n', '<leader>G', api.tree.toggle_git_clean_filter, opts('Toggle Git Clean'))
-  vim.keymap.set('n', '<leader>B', api.tree.toggle_no_buffer_filter, opts('Toggle Git Clean'))
+  vim.keymap.set('n', '<leader>B', api.tree.toggle_no_buffer_filter, opts('Toggle no buffer'))
+  vim.keymap.set('n', '<leader>C', api.tree.toggle_custom_filter, opts('Toggle custom filter'))
 
   -- not working? useful!? vs telescope file browser?
   vim.keymap.set('n', '<leader>/', api.tree.search_node, opts('Search'))
@@ -250,100 +264,6 @@ vim.keymap.set("n", "<leader>ms", require("nvim-tree.api").marks.navigate.select
 -- local aa = require("nvim-tree.api").fs.copy.
 
 
--- ─   NvimTree config                                   ■
-
-Nvim_tree = require("nvim-tree").setup({
-  -- sort_by = "case_sensitive",
-  hijack_netrw = false,
-  git = {
-    enable = true,
-  },
-  on_attach = on_attach,
-  renderer = {
-    group_empty = true,
-    highlight_git = true,
-    highlight_opened_files = "name",
-    -- highlight_modified = "name",
-    indent_width = 2,
-    root_folder_label = tree_root_folder_label,
-    icons = {
-      show = {
-        file = true,
-        folder = false,
-        folder_arrow = false,
-      },
-      glyphs = {
-        bookmark = "⠰",
-        git = {
-          unstaged = "₊",
-          staged = "ˆ",
-          unmerged = "",
-          renamed = "➜",
-          untracked = "★",
-          deleted = "",
-          ignored = "◌",
-        },
-      },
-    }
-  },
-  diagnostics = {
-    enable = false,
-    -- show_on_dirs = true,
-    -- show_on_open_dirs = true,
-    debounce_delay = 50,
-    severity = {
-      min = vim.diagnostic.severity.HINT,
-      max = vim.diagnostic.severity.ERROR,
-    },
-    icons = {
-      hint = "",
-      info = "",
-      warning = "",
-      error = "",
-    },
-  },
-  hijack_directories = {
-    enable = false,
-  },
-  hijack_cursor = false,
-  filters = {
-    dotfiles = false,
-  },
-  -- update_focused_file = { -- ok this "follows" the current buffer! only want this per keystore/on demand
-  --   enable = true,
-  --   update_root = true,
-  -- },
-  sync_root_with_cwd = false,
-  view = {
-    width = function() return 30 end,
-    preserve_window_proportions = false,
-  },
-  -- view = {
-  --   float = {
-  --     enable = true,
-  --     quit_on_focus_loss = false,
-  --   }
-  -- },
-  actions = {
-    change_dir = { enable = false },
-    expand_all = {
-      max_folder_discovery = 2,
-      exclude = { '.bloop', '.bsp', '.git', '.metals', 'archive', 'dbdumps', 'project', 'r', 'target', 'temp' }
-    },
-  },
-  notify = {
-    threshold = vim.log.levels.ERROR,
-  },
-  select_prompts = true,
-  -- update_focused_file = {
-  -- enable = true,
-  -- update_root = true,
-  -- ignore_list = {},
-  -- },
-})
-
-
--- ─^  NvimTree config                                   ▲
 
 -- source
 -- /Users/at/.config/nvim/plugged/nvim-tree.lua/
@@ -354,7 +274,7 @@ Nvim_tree = require("nvim-tree").setup({
 
 
 
--- ─   Nvim tree helper functions                       ──
+-- ─   Nvim tree helper functions                        ■
 
 -- maps: ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20<leader>nf
 -- highlights: ~/.config/nvim/colors/munsell-blue-molokai.vim#/Nvim%20Tree
@@ -456,24 +376,6 @@ local tree_NewBuf_fromNode = function( direction )
   vim.cmd "wincmd p"
 end
 
-
-  -- let cmd = NewBufCmds( path )[ a:direction ] 
-
-
-local tree_root_folder_label = function(path)
-  -- return ".../" .. vim.fn.fnamemodify(path, ":t")
-  local lpath = vim.split( path, [[/]] )
-  local dir = lpath[ #lpath ]
-  local parentDir = lpath[ #lpath -1 ]
-  local parentStr = vim.fn.strpart( parentDir, 0, 4 )
-  -- return parentStr .. " /" .. dir
-  -- return dir .. " (" .. parentStr .. ")"
-  return dir .. " |" .. parentDir
-end
--- vim.split( "/User/at/Docs/eins", [[/]] )[2]
--- vim.fn.strpart("einszwei", 1, 2)
-
-
 local function open_nvim_tree()
   -- open the tree
   require("nvim-tree.api").tree.open()
@@ -490,6 +392,111 @@ end
 
 -- command! -nargs=1 DirvishFloat1 call Dirvish_Float( <args> )
 vim.cmd("command! -nargs=1 NvimTreeRevealFile lua NvimTree_find_file( <args> )")
+
+
+
+-- ─^  Nvim tree helper functions                        ▲
+
+
+
+-- ─   NvimTree config                                   ■
+
+Nvim_tree = require("nvim-tree").setup({
+  -- sort_by = "case_sensitive",
+  hijack_netrw = false,
+  git = {
+    enable = true,
+  },
+  on_attach = on_attach,
+  renderer = {
+    group_empty = true,
+    highlight_git = true,
+    highlight_opened_files = "name",
+    -- highlight_modified = "name",
+    indent_width = 2,
+    root_folder_label = tree_root_folder_label,
+    icons = {
+      padding = " ",
+      show = {
+        file = true,
+        git = true,
+        folder = false,
+        folder_arrow = false,
+      },
+      glyphs = {
+        bookmark = "⠰",
+        git = {
+          unstaged = "₊",
+          -- unstaged = "",
+          staged = "ˆ",
+          unmerged = "",
+          renamed = "➜",
+          untracked = "★",
+          deleted = "",
+          ignored = "◌",
+        },
+      },
+    }
+  },
+  diagnostics = {
+    enable = false,
+    -- show_on_dirs = true,
+    -- show_on_open_dirs = true,
+    debounce_delay = 300,
+    severity = {
+      min = vim.diagnostic.severity.HINT,
+      max = vim.diagnostic.severity.ERROR,
+    },
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    },
+  },
+  hijack_directories = {
+    enable = false,
+  },
+  hijack_cursor = false,
+  filters = {
+    dotfiles = false,
+  },
+  -- update_focused_file = { -- ok this "follows" the current buffer! only want this per keystore/on demand
+  --   enable = true,
+  --   update_root = true,
+  -- },
+  sync_root_with_cwd = false,
+  view = {
+    width = function() return 30 end,
+    preserve_window_proportions = false,
+  },
+  -- view = {
+  --   float = {
+  --     enable = true,
+  --     quit_on_focus_loss = false,
+  --   }
+  -- },
+  actions = {
+    change_dir = { enable = false },
+    expand_all = {
+      max_folder_discovery = 5,
+      exclude = { '.bloop', '.bsp', '.git', '.metals', 'archive', 'dbdumps', 'project', 'r', 'target', 'temp' }
+    },
+  },
+  notify = {
+    threshold = vim.log.levels.ERROR,
+  },
+  select_prompts = true,
+  -- update_focused_file = {
+  -- enable = true,
+  -- update_root = true,
+  -- ignore_list = {},
+  -- },
+})
+
+
+-- ─^  NvimTree config                                   ▲
+
 
 
 

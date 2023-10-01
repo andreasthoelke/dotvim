@@ -8,7 +8,8 @@ Plug 'junegunn/vim-plug'
 
 " Keeps window layout when closing buffer.
 " Plug 'moll/vim-bbye' " optional dependency
-Plug 'aymericbeaumet/vim-symlink'
+" This was causing the BufRead autocommand invalid bufferid errors!
+" Plug 'aymericbeaumet/vim-symlink'
 
 
 Plug 'github/copilot.vim'

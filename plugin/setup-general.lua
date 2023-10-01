@@ -75,9 +75,12 @@ vim.g.loaded_netrwPlugin = 1
 -- This function toggles between Lua and Vim filetypes
 function ToggleFileType()
   if vim.bo.filetype == 'lua' then
-    vim.bo.filetype = 'vim'
-    vim.fn.VimScriptSyntaxAdditions()
-    print 'ft: vim'
+    -- vim.bo.filetype = 'vim'
+    vim.bo.filetype = 'purescript_scratch'
+    vim.bo.syntax = 'purescript1'
+    -- vim.fn.VimScriptSyntaxAdditions()
+    -- print 'ft: vim'
+    print 'ft: scratch'
   else
     vim.bo.filetype = 'lua'
     vim.fn.LuaSyntaxAdditions()
@@ -85,9 +88,12 @@ function ToggleFileType()
   end
   vim.fn.VScriptToolsBufferMaps()
 end
+-- set filetype=purescript_scratch
+-- set syntax=purescript1
 
--- Map the function to a key, for example <F5>
 vim.api.nvim_set_keymap('n', '<localleader><localleader>sf', ':lua ToggleFileType()<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<localleader><localleader>sc', ':set filetype=purescript_scratch<cr>:set syntax=purescript1<cr>', { noremap = true, silent = true })
 
 
 
@@ -164,7 +170,7 @@ require("notify").setup(
     minimum_width = 50,
     render = "simple",
     stages = "static",
-    timeout = 60000,
+    timeout = 4000,
     top_down = true,
   }
 )

@@ -1,33 +1,35 @@
 
 
--- DEFAULTS: ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua‖
+-- DEFAULTS: use c-w lv ; \\sc 
+-- /Users/at/.vim/scratch/neo-tree-defaults.sct
+-- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
+
 
 require("neo-tree").setup({
 
-  hide_root_node = false, -- Hide the root node.
+  hide_root_node = true, -- Hide the root node.
 
   default_component_configs = {
 
-
     indent = {
       padding = 0,
-      -- with_markers = true,
-      indent_marker = " ",
-      last_indent_marker = " ",
-      indent_size = 3,
+      with_markers = false,
+      indent_marker = "",
+      last_indent_marker = "",
+      indent_size = 2,
 
-      -- with_expanders = true,
-      expander_collapsed = "",
-      expander_expanded = "",
+      with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
+      expander_collapsed = "",
+      expander_expanded = "",
       expander_highlight = "NeoTreeExpander",
 
     },
 
     icon = {
-      folder_closed = "",
-      folder_open = "",
-      folder_empty = "",
-      folder_empty_open = "",
+      folder_closed = " ",
+      folder_open = "",
+      folder_empty = "",
+      folder_empty_open = "",
       default = "",
       highlight = "NeoTreeFileIcon"
       -- folder_closed = "",
@@ -108,7 +110,7 @@ require("neo-tree").setup({
         ["zc"] = "close_all_nodes",
         --["Z"] = "expand_all_nodes",
         ["R"] = "refresh",
-        ["<leader>to"] = {
+        ["<space>to"] = {
           "add",
           -- some commands may take optional config options, see `:h neo-tree-mappings` for details
           config = {
@@ -123,14 +125,6 @@ require("neo-tree").setup({
         ["x"] = "noop",
         ["p"] = "noop",
 
-        ["<leader>mk"] = "add_directory", -- also accepts the config.show_path and config.insert_as options.
-        ["<leader>dd"] = "delete",
-        ["<leader>ree"] = "rename",
-        ["<leader>yy"] = "copy_to_clipboard",
-        ["<leader>xx"] = "cut_to_clipboard",
-        ["<leader>pp"] = "paste_from_clipboard",
-        ["<leader>yd"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
-        ["<leader>mv"] = "move", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
         ["=="] = "toggle_auto_expand_width",
         ["q"] = "close_window",
         ["g?"] = "show_help",
@@ -165,6 +159,8 @@ require("neo-tree").setup({
 
   filesystem = {
 
+    group_empty_dirs = true, -- when true, empty directories will be grouped together
+
     window = {
       mappings = {
         ["H"] = "toggle_hidden",
@@ -181,6 +177,16 @@ require("neo-tree").setup({
         ["<space>b"] = "set_root",
         ["[g"] = "prev_git_modified",
         ["]g"] = "next_git_modified",
+
+        ["<space>mk"] = "add_directory", -- also accepts the config.show_path and config.insert_as options.
+        ["<space>dd"] = "delete",
+        ["<space>ree"] = "rename",
+        ["<space>yy"] = "copy_to_clipboard",
+        ["<space>xx"] = "cut_to_clipboard",
+        ["<space>pp"] = "paste_from_clipboard",
+        ["<space>yd"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
+        ["<space>mv"] = "move", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
+
         ["<space>K"] = "show_file_details",
         ["<space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
         ["<space>oc"] = { "order_by_created", nowait = false },

@@ -29,6 +29,9 @@ au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxA
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 
+" au ag BufNewFile,BufRead,WinNew *.sct set filetype=purescript_scratch | set syntax=purescript1
+au ag BufWinEnter *.sct set filetype=purescript_scratch | set syntax=lua | call LuaSyntaxAdditions()
+
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed

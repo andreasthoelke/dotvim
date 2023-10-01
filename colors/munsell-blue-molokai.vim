@@ -387,12 +387,18 @@ hi! def link diffSubname Comment
 " ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/Default%20linked%20group
 " hi! def link NvimTreeOpenedFile Operator
 hi! def link NvimTreeOpenedFile purescriptRecordKeys
+" hi! def link NvimTreeOpenedFile Function
 " hi! def link NvimTreeOpenedFile CommentSection
 hi! def link NvimTreeFolderName CommentMinus
 hi! def link NvimTreeOpenedFolderName Comment
 hi! def link NvimTreeNormal CommentMinus
 hi! def link NvimTreeRootFolder CommentSection
 hi! def link NvimTreeBookmark Comment
+hi! def link NvimTreeExecFile CommentMinus
+hi! def link NvimTreeSpecialFile Comment
+hi! def link NvimTreeEmptyFolderName Comment
+hi! def link NvimTreeImageFile Comment
+" hi! def link NvimTreeGitDirty Function
 hi! def link NvimTreeGitStaged purescriptIdentifier
 hi! def link NvimTreeGitNew purescriptIdentifier
 
@@ -404,10 +410,12 @@ hi! def link NeoTreeBufferNumber CommentMinusMinus
 " NeoTreeDimText            Greyed out text used in various places.
 " NeoTreeDirectoryIcon      Directory icon.
 " NeoTreeDirectoryName      Directory name.
-hi! def link NeoTreeDirectoryName Comment
+hi! def link NeoTreeDirectoryIcon CommentMinusMinus
+hi! def link NeoTreeDirectoryName CommentMinus
 " NeoTreeDotfile            Used for icons and names when dotfiles are filtered.
 hi! def link NeoTreeDotfile CommentMinus
 " NeoTreeFileIcon           File icon, when not overridden by devicons.
+hi! def link NeoTreeFileIcon CommentMinus
 hi! def link NeoTreeFileName CommentMinus
 " NeoTreeFileName           File name, when not overwritten by another status.
 hi! def link NeoTreeFileName Comment

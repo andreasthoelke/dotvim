@@ -114,16 +114,17 @@ endfunc
 
 
 " ─   Textobjs for inside name and inside content        ■
-onoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>
-vnoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
-onoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>
-vnoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
-" Tests: sel this ..
+" see maps below
+" onoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>
+" vnoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
+" onoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>
+" vnoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
+" " Tests: sel this ..
 
 func! LabelAndHeading_VisSel_Name()
   " Move back slightly so the current label/heading is found
   normal! m'll
-  call search( g:headingOrLabelPttn, 'cbW' )
+  call search( g:headingPttn, 'cbW' )
   normal! ^
   if MatchesInLine( line('.'), '─' )
     normal! ww
@@ -144,7 +145,7 @@ endfunc
 
 func! LabelAndHeading_VisSel_Content()
   normal! m'll
-  call search( g:headingOrLabelPttn, 'cbW' )
+  call search( g:headingPttn, 'cbW' )
   normal! ^
   if MatchesInLine( line('.'), '─' )
     normal! j
@@ -166,17 +167,40 @@ func! LabelAndHeading_VisSel_Content()
   normal! gv
 endfunc
 
-" Address the heading specifically as there may be labels in the way
-onoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>
-vnoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>o
-onoremap <silent> ihc :<c-u>call Heading_VisSel_Content()<cr>
-vnoremap <silent> ihc :<c-u>call Heading_VisSel_Content()<cr>o
-func! Heading_VisSel_Name()
+func! Heading_VisSel_AroundContent()
+  normal! m'll
   call search( g:headingPttn, 'cbW' )
+  normal! ^
+  if MatchesInLine( line('.'), '─' )
+    " normal! j
+    let [sLine, sCol] = getpos('.')[1:2]
+    if !GoSectionEndAbort('') " Go to end of a section or next heading
+      call HeadingForw()
+    endif
+    normal! $
+    let [eLine, eCol] = getpos('.')[1:2]
+  endif
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal! gv
+endfunc
+
+" Address the heading specifically as there may be labels in the way
+" onoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>
+" vnoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>o
+onoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>
+vnoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>o
+
+onoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>
+vnoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>o
+
+
+func! Heading_VisSel_Name()
+  " call search( g:headingPttn, 'cbW' )
   call LabelAndHeading_VisSel_Name()
 endfunc
 func! Heading_VisSel_Content()
-  call search( g:headingPttn, 'cbW' )
+  " call search( g:headingPttn, 'cbW' )
   call LabelAndHeading_VisSel_Content()
 endfunc
 
