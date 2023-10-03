@@ -101,7 +101,7 @@ func! SourceLines( cmd, lines )
 endfunc
 
 func! SourcePrintCommented()
-  if &filetype == 'lua'
+  if &filetype == 'lua' || &filetype == 'purescript_scratch'
     let expr = getline('.')[3:]
     let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
     let cmd = 'luafile'
@@ -143,7 +143,7 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Vim_MainStartPattern = '\v^(\#|func\!|function|local)'
+let g:Vim_MainStartPattern = '\v^(\#|func\!|\i.*function|local)'
 
 
 func! Vim_MainStartBindingForw()

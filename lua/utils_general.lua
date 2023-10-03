@@ -38,7 +38,7 @@ end
 function _G.putt( table, title )
   vim.notify( vim.inspect( table ), "info", {
     title = title or "lua table",
-    timeout = 4000,
+    timeout = 400000,
     on_open = function(win)
       local buf = vim.api.nvim_win_get_buf(win)
       vim.api.nvim_buf_set_option(buf, "filetype", "lua")

@@ -429,7 +429,7 @@ endfunc
 
 func! LuaSyntaxAdditions() " ■
   call clearmatches()
-
+  set filetype=purescript_scratch
   " convertion: only conceal single quotes
   syntax match Normal "'" conceal
   syntax match Normal '\[\[' conceal cchar=❞

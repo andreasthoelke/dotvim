@@ -65,6 +65,21 @@ endfunc
 let g:lightline.active = {}
 let g:lightline.inactive = {}
 
+
+func! StatusLine_default()
+  let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
+  let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr', 'scalaMetalsStatus'] ]
+  call lightline#init()
+  call lightline#update()
+endfunc
+
+func! StatusLine_neotree()
+  let g:lightline.active.left   = [ ['winnr', 'line'] ]
+  let g:lightline.active.right = []
+  call lightline#init()
+  call lightline#update()
+endfunc
+
 " Left side:
 let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
 let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepathOfWin'] ]

@@ -4,21 +4,119 @@
 -- /Users/at/.vim/scratch/neo-tree-defaults.sct
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
 
+local manager = require("neo-tree.sources.manager")
+
+function _G.Ntree_current( winid )
+  local winid = winid or vim.api.nvim_get_current_win()
+  local state = manager.get_state_for_window( winid )
+  return {
+    root = state.path,
+    node = state.position.node_id
+  }
+end
+-- lua put( Ntree_current() )
+-- vim.api.nvim_buf_get_var( 44, "neo_tree_source" )
+-- vim.api.nvim_buf_get_var( 44, "neo_tree_winid" )
+-- vim.api.nvim_buf_get_var( 1537, "neo_tree_winid" )
+-- vim.api.nvim_buf_get_var( 44, "neo_tree_position" )
+-- vim.fn.winnr()
+-- vim.fn.bufnr()
+-- require("neo-tree.sources.manager").get_state_for_window( 1012 ).position
+-- Ntree_current(2507)
+-- Ntree_current(1012)
+
 
 require("neo-tree").setup({
 
   hide_root_node = true, -- Hide the root node.
 
+  event_handlers = {
+    {
+      event = "neo_tree_buffer_enter",
+      handler = function() vim.fn.StatusLine_neotree() end,
+    },
+    {
+      event = "neo_tree_buffer_leave",
+      handler = function() vim.fn.StatusLine_default() end,
+    },
+  },
+
+  renderers = {
+    -- This overwrite the "directory" renderer. This is actually the default copied from ~/.config/nvim/scratch/neo-tree-defaults.sct‖:260:5
+    -- The only difference is that the "icon" component is not in the returned list of textproducing functions / component names.
+    directory = {
+      -- { "indent" },
+      -- { "icon" },
+      { "current_filter" },
+      {
+        "container",
+        content = {
+          { "name", zindex = 10 },
+          {
+            "symlink_target",
+            zindex = 10,
+            highlight = "NeoTreeSymbolicLinkTarget",
+          },
+          { "clipboard", zindex = 10 },
+          { "diagnostics", errors_only = true, zindex = 20, align = "right", hide_when_expanded = true },
+          { "git_status", zindex = 10, align = "right", hide_when_expanded = true },
+          { "file_size", zindex = 10, align = "right" },
+          { "type", zindex = 10, align = "right" },
+          { "last_modified", zindex = 10, align = "right" },
+          { "created", zindex = 10, align = "right" },
+        },
+      },
+    },
+
+    file = {
+      -- { "indent" },
+      { "icon" },
+      {
+        "container",
+        content = {
+          {
+            "name",
+            zindex = 10
+          },
+          {
+            "symlink_target",
+            zindex = 10,
+            highlight = "NeoTreeSymbolicLinkTarget",
+          },
+          { "clipboard", zindex = 10 },
+          { "bufnr", zindex = 10 },
+          { "modified", zindex = 20, align = "right" },
+          { "diagnostics",  zindex = 20, align = "right" },
+          { "git_status", zindex = 10, align = "right" },
+          { "file_size", zindex = 10, align = "right" },
+          { "type", zindex = 10, align = "right" },
+          { "last_modified", zindex = 10, align = "right" },
+          { "created", zindex = 10, align = "right" },
+        },
+      },
+    },
+
+
+    -- root = {
+    --   -- {"indent"},
+    --   {"icon", default="C" },
+    --   {"name", zindex = 10},
+    -- },
+
+
+  },
+
+
   default_component_configs = {
 
     indent = {
-      padding = 0,
-      with_markers = false,
-      indent_marker = "",
-      last_indent_marker = "",
-      indent_size = 2,
+        padding = 0,
+        with_markers = false,
+        indent_marker = "",
+        last_indent_marker = "",
+        indent_size = 3,
 
-      with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
+        with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
       expander_collapsed = "",
       expander_expanded = "",
       expander_highlight = "NeoTreeExpander",
@@ -26,10 +124,10 @@ require("neo-tree").setup({
     },
 
     icon = {
-      folder_closed = " ",
-      folder_open = "",
-      folder_empty = "",
-      folder_empty_open = "",
+      folder_closed = "",
+      folder_open = "",
+      folder_empty = "",
+      folder_empty_open = "",
       default = "",
       highlight = "NeoTreeFileIcon"
       -- folder_closed = "",
@@ -77,7 +175,6 @@ require("neo-tree").setup({
     -- NeoTreeGitIgnored
     -- NeoTreeGitModified
     -- NeoTreeGitUntracked
-  
   },
 
     window = {
@@ -158,6 +255,21 @@ require("neo-tree").setup({
   },
 
   filesystem = {
+
+    left_padding = 0,
+
+    components = {
+
+      -- name = function(config, node)
+      --   return {
+      --     text = node.name .. " hi",
+      --     highlight = "NeoTreeFileName"
+      --   }
+      -- end,
+
+      icon = icon,
+
+    },
 
     group_empty_dirs = true, -- when true, empty directories will be grouped together
 
@@ -275,8 +387,76 @@ require("neo-tree").setup({
 })
 
 
+-- ─   Helpers                                           ■ ■
+
+local highlights = require("neo-tree.ui.highlights")
+
+local filtered_by = function(config, node, state)
+  local result = {}
+  if type(node.filtered_by) == "table" then
+    local fby = node.filtered_by
+    if fby.name then
+      result = {
+        text = "(hide by name)",
+        highlight = highlights.HIDDEN_BY_NAME,
+      }
+    elseif fby.pattern then
+      result = {
+        text = "(hide by pattern)",
+        highlight = highlights.HIDDEN_BY_NAME,
+      }
+    elseif fby.gitignored then
+      result = {
+        text = "(gitignored)",
+        highlight = highlights.GIT_IGNORED,
+      }
+    elseif fby.dotfiles then
+      result = {
+        text = "(dotfile)",
+        highlight = highlights.DOTFILE,
+      }
+    elseif fby.hidden then
+      result = {
+        text = "(hidden)",
+        highlight = highlights.WINDOWS_HIDDEN,
+      }
+    end
+    fby = nil
+  end
+  return result
+end
 
 
+local icon = function(config, node, state)
+  local icon = config.default or " "
+  local highlight = config.highlight or highlights.FILE_ICON
+  if node.type == "directory" then
+    highlight = highlights.DIRECTORY_ICON
+    if node.loaded and not node:has_children() then
+      icon = not node.empty_expanded and config.folder_empty or config.folder_empty_open
+    elseif node:is_expanded() then
+      icon = config.folder_open or "-"
+    else
+      icon = config.folder_closed or "+"
+    end
+  elseif node.type == "file" or node.type == "terminal" then
+    local success, web_devicons = pcall(require, "nvim-web-devicons")
+    local name = node.type == "terminal" and "terminal" or node.name
+    if success then
+      local devicon, hl = web_devicons.get_icon(name)
+      icon = devicon or icon
+      highlight = hl or highlight
+    end
+  end
+  local filtered = filtered_by(config, node, state)
+  return {
+    text = icon .. " ",
+    highlight = filtered.highlight or highlight,
+  }
+end
+
+
+-- ─^  Helpers                                           ▲ ▲
 
 
 
