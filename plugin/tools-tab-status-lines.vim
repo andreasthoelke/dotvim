@@ -157,19 +157,19 @@ func! RootPathInfo_RenderCaseAndSegments( cwd, tree_root )
   let cwd_changed   = a:cwd > cwd_minus_troot
   " return [ troot_changed, troot_minus_cwd, cwd_changed, cwd_minus_troot ]
 
-  let troot_minus_cwd_L = split( BasePath_shorten( troot_minus_cwd ), '/')
-  let cwd_minus_troot_L = split( BasePath_shorten( cwd_minus_troot ), '/')
+  let troot_minus_cwd_L = split( troot_minus_cwd, '/')
+  let cwd_minus_troot_L = split( cwd_minus_troot, '/')
   let cwd_L             = split( BasePath_shorten( a:cwd ), '/')
   let tree_root_L       = split( BasePath_shorten( a:tree_root ), '/')
 
-  if     troot_changed && cwd_changed
+  if     troot_changed && !cwd_changed
+    return [ 'troot_in_cwd', cwd_L[:-2], '‖', troot_minus_cwd_L[:-2], troot_minus_cwd_L[-1] ] " H Documents Proj _repos ‖ src main |scala|
+  elseif troot_changed && cwd_changed
     return [ 'troot_is_cwd', cwd_L[:-2], '‖' ] " H Documents Proj _repos |‖|
-  elseif !troot_changed && !cwd_changed
-    return [ 'troot_out_cwd__cwd_out_troot', tree_root_L[:-2], tree_root_L[-1] ] " H Documents |Proj|
-  elseif troot_changed && !cwd_changed
-    return [ 'troot_in_cwd', cwd_L[:-2], '‖', troot_minus_cwd_L[:-2], troot_minus_cwd_L[-1] ] " H Documents Proj _repos ‖ src |main|
   elseif !troot_changed && cwd_changed
-    return [ 'troot_out_cwd__cwd_in_troot', tree_root_L[:-2], tree_root_L[-1], cwd_minus_troot_L[:-2], '‖' ] " H Documents Proj _repos ‖ src |main|
+    return [ 'troot_out_cwd__cwd_in_troot', tree_root_L[:-2], tree_root_L[-1], cwd_minus_troot_L[:-2], '‖' ] " P _repos ‖ 
+  elseif !troot_changed && !cwd_changed
+    return [ 'troot_out_cwd__cwd_out_troot', tree_root_L[:-2], tree_root_L[-1] ] " P _repos 11_spoti_gql_muse src |test|
   else
     echoe "unmatched case in RootPathInfo_RenderCaseAndSegments"
   endif
