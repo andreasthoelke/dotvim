@@ -208,6 +208,7 @@ endfunc
 " see /Users/at/.config/nvim/ftplugin/dirvish.vim|14
 " nnoremap <leader><leader>im :call DirvishSortByModified()<cr>
 " nnoremap ,,im :lua DirvishShowModified()<cr>
+nnoremap <leader><leader>dM :call DirvishSortByModified()<cr>
 func! DirvishSortByModified()
   let lines = getline(1, line('$'))
   eval lines->sort( 'Compare_file_modified' )

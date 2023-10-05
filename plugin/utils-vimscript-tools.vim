@@ -1,6 +1,4 @@
 
-" NOTE: the new 'gei' = SourcePrintCommented!
-
 " Documentation:
 " https://vim-jp.org/vimdoc-en/index.html
 " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
@@ -104,20 +102,25 @@ func! SourcePrintCommented()
   if &filetype == 'lua' || &filetype == 'purescript_scratch'
     let expr = getline('.')[3:]
     let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
+    " let code = 'vim.fn.FloatingSmallNew( ' . expr . ' )'
     let cmd = 'luafile'
   elseif &filetype == 'markdown' || &filetype == 'purescript_scratch' || &filetype == ''
     let expr = getline('.')
     let code = 'print( vim.inspect( ' . expr . ' ) )'
+    " let code = 'vim.fn.FloatingSmallNew( ' . expr . ' )'
     let cmd = 'luafile'
   elseif &filetype == 'vim'
     " QUICKFIX: when using .lua files with ft=vim
     if getline('.')[0:1] == "--"
       let expr = getline('.')[3:]
       let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
+      " let code = 'vim.fn.FloatingSmallNew( ' . expr . ' )'
       let cmd = 'luafile'
     else
       let expr = getline('.')[1:]
-      let code = 'echo ' . expr
+      " let code = 'echo ' . expr
+      let code = 'call v:lua.putt( ' . expr . ' )'
+      " let code = 'call FloatingSmallNew( ' . expr . ' )'
       let cmd = 'source'
     endif
   else
@@ -128,9 +131,6 @@ func! SourcePrintCommented()
   call SourceLines( cmd, [ code ] )
 endfunc
 
-" nnoremap <silent> <leader>gei :call SourcePrintCommented()<cr>
-" nnoremap <silent> gei :call SourcePrintCommented()<cr>
-" [9, 8] + [1, 2]
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
@@ -141,9 +141,10 @@ func! VScriptToolsBufferMaps()
   nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
   call tools_scala#bufferMaps_shared()
 endfunc
+" [9, 8] + [1, 2]
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Vim_MainStartPattern = '\v^(\#|func\!|\i.*function|local)'
+let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local)'
 
 
 func! Vim_MainStartBindingForw()

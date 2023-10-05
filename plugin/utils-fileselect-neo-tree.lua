@@ -6,14 +6,38 @@
 
 local manager = require("neo-tree.sources.manager")
 
-function _G.Ntree_current( winid )
-  local winid = winid or vim.api.nvim_get_current_win()
-  local state = manager.get_state_for_window( winid )
+function _G.Ntree_current()
+  local state = manager.get_state_for_window()
   return {
-    root = state.path,
-    node = state.position.node_id
+    rootpath = state.path,
+    linepath = state.position.node_id
   }
 end
+
+function _G.TreeRoot_infoStr( rootPath )
+  local lpath = vim.split( rootPath, [[/]] )
+  local dir = lpath[ #lpath ]
+  local parentDir = lpath[ #lpath -1 ]
+  return dir ,parentDir
+end
+-- vim.fn.RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )
+
+
+-- normal buffer
+-- cwd | relfilepath
+--    treeroot | parent
+--    parent | treeroot | 
+
+
+-- function _G.Ntree_current( winid ) ■
+--   local winid = winid or vim.api.nvim_get_current_win()
+--   local state = manager.get_state_for_window( winid )
+--   return {
+--     root = state.path,
+--     node = state.position.node_id
+--   }
+-- end
+-- _ ■
 -- lua put( Ntree_current() )
 -- vim.api.nvim_buf_get_var( 44, "neo_tree_source" )
 -- vim.api.nvim_buf_get_var( 44, "neo_tree_winid" )
@@ -24,6 +48,7 @@ end
 -- require("neo-tree.sources.manager").get_state_for_window( 1012 ).position
 -- Ntree_current(2507)
 -- Ntree_current(1012)
+-- _ ▲ ▲
 
 
 require("neo-tree").setup({

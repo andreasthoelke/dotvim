@@ -43,7 +43,7 @@ let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': 
 
 " let s:p.normal.left = [ [ s:searchFg, s:searchBg ], [ s:foldFg, s:foldBg ] ]
 " Inverting the foreground and background colors to highlight the current window
-let s:p.normal.left = [ [ s:searchBg, s:searchFg ], [ s:foldFg, s:foldBg ] ]
+let s:p.normal.left = [ [ s:foldFg, s:foldBg ], [ s:searchBg, s:searchFg ], [ s:foldFg, s:foldBg ] ]
 " let s:p.normal.left = [ [ s:foldBg, s:foldFg ], [ s:foldFg, s:foldBg ] ]
 let s:p.normal.right = [ [ s:hiFg, s:foldBg, 'bold' ], [ s:foldFg, s:foldBg ] ]
 

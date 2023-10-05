@@ -67,21 +67,170 @@ let g:lightline.inactive = {}
 
 
 func! StatusLine_default()
-  let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
+  let g:lightline.active.left   = [ [], ['projectRootFolderName'], ['relativepath_fresh'] ]
   let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr', 'scalaMetalsStatus'] ]
   call lightline#init()
   call lightline#update()
 endfunc
 
 func! StatusLine_neotree()
-  let g:lightline.active.left   = [ ['winnr', 'line'] ]
+  let g:lightline.active.left   = [ ['ntree_rootdirrel'], ['cwdinfo'] ]
   let g:lightline.active.right = []
   call lightline#init()
   call lightline#update()
 endfunc
+"   ~/.config/nvim/notes/minor
+"   ~/.config | nvim | notes/minor
+"   ~/Documents/Proj/_repos/6_smithy-jobby/modules/backend/src/main/scala/
+"   ~/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala/com/softwaremill/realworld/articles/comments/api
+"   P _repos || src/main/scala/com/softwaremill/realworld/articles/comments/api
+
+
+"   H Documents Proj _repos ╎ src/main/scala/com/softwaremill/realworld/articles/comments/api
+
+"   H Documents Proj _repos ∥ src/main/scala/com/softwaremill/realworld/articles/comments/api
+
+"   H Documents Proj _repos ‖ src/main/scala/com/softwaremill/realworld/articles/comments/api
+
+"   H Documents Proj _repos ‖ src main scala com softwaremill realworld articles comments
+
+"   ‖ src main scala com softwaremill realworld articles comments
+
+"   P _repos ‖ src main
+
+"   H Documents |Proj| _repos ‖
+
+"   H Documents Proj |_repos| ‖
+
+"   H Documents Proj |d_diff_proj|
+"
+"   just replace the cdw with || (highlighted?)
+"   highlight the tail / tree root?
+"   replace the base
+"   use space when joining
+"
+"   two abs paths
+"   tree-root, cwd
+
+"   inner tree root = subtract cwd from treeroot
+"   when inner-tree-root == tree-root => tree-root outside cwd
+"   else                              => tree-root inside cwd
+
+"   inner cwd = subtract treeroot from cwd
+"   when inner-cwd == cwd => cwd outside tree-root
+"   else                  => cwd inside tree-root
+
+" ─   tree-root  <>  cwd   4 relationship cases         ──
+
+" 1 troot_in_cwd
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala" )
+"   H Documents Proj _repos ‖ src main scala com softwaremill realworld articles |comments|
+"   H Documents Proj _repos ‖ src |main|
+  " -> 3 path segments
+
+" 2 troot_is_cwd
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3
+"   H Documents Proj _repos |‖|
+  " -> 1 path segment
+
+" 3 troot_out_cwd__cwd_in_troot
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3
+"   /Users/at/Documents/Proj
+"   H Documents |Proj| _repos ‖
+"   -> 3 path segments
+
+" 4 troot_out_cwd__cwd_out_troot
+"   /Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3
+"   /Users/at/Downloads/temp
+"   /Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test
+"   H Documents |Proj|
+"   -> 1 path segment
+
+
+func! RootPathInfo_RenderCaseAndSegments( cwd, tree_root )
+  let troot_minus_cwd = a:tree_root->substitute( a:cwd, '', '' )
+  let cwd_minus_troot = a:cwd->substitute( a:tree_root, '', '' )
+  let troot_changed = a:tree_root > troot_minus_cwd
+  let cwd_changed   = a:cwd > cwd_minus_troot
+  " return [ troot_changed, troot_minus_cwd, cwd_changed, cwd_minus_troot ]
+
+  let troot_minus_cwd_L = split( BasePath_shorten( troot_minus_cwd ), '/')
+  let cwd_minus_troot_L = split( BasePath_shorten( cwd_minus_troot ), '/')
+  let cwd_L             = split( BasePath_shorten( a:cwd ), '/')
+  let tree_root_L       = split( BasePath_shorten( a:tree_root ), '/')
+
+  if     troot_changed && cwd_changed
+    return [ 'troot_is_cwd', cwd_L[:-2], '‖' ] " H Documents Proj _repos |‖|
+  elseif !troot_changed && !cwd_changed
+    return [ 'troot_out_cwd__cwd_out_troot', tree_root_L[:-2], tree_root_L[-1] ] " H Documents |Proj|
+  elseif troot_changed && !cwd_changed
+    return [ 'troot_in_cwd', cwd_L[:-2], '‖', troot_minus_cwd_L[:-2], troot_minus_cwd_L[-1] ] " H Documents Proj _repos ‖ src |main|
+  elseif !troot_changed && cwd_changed
+    return [ 'troot_out_cwd__cwd_in_troot', tree_root_L[:-2], tree_root_L[-1], cwd_minus_troot_L[:-2], '‖' ] " H Documents Proj _repos ‖ src |main|
+  else
+    echoe "unmatched case in RootPathInfo_RenderCaseAndSegments"
+  endif
+endfunc
+
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala" )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3" )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test" )
+
+func! BasePath_shorten( absPath )
+  let p = a:absPath->substitute( '/Users/at/Documents/Proj', 'P', '' )
+  let d = a:absPath->substitute( '/Users/at/Documents', 'D', '' )
+  let c = a:absPath->substitute( '/Users/at/.config', 'C', '' )
+  let h = a:absPath->substitute( '/Users/at', 'H', '' )
+  if p[0] != '/' | return p | endif
+  if d[0] != '/' | return d | endif
+  if c[0] != '/' | return c | endif
+  if h[0] != '/' | return h | endif
+endfunc
+" BasePath_shorten("/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3")
+" BasePath_shorten("/Users/at/Documents/another/innerfolder")
+" BasePath_shorten("/Users/at/.config/nvim/plugin")
+" BasePath_shorten("/Users/at/Downloads/temp")
+
+func! Ntree_rootDir()
+  let pathList = split( v:lua.Ntree_current().rootpath, '/' )
+  return pathList[ len( pathList ) - 1 ]
+endfunc
+
+func! Ntree_rootDirRel()
+  let path = v:lua.Ntree_current().rootpath 
+  let cwd = getcwd()
+  let cwdList = split( cwd, '/' )
+  let relPath = substitute( path, cwd, '', '' )
+  let relPath = substitute( relPath[1:], 'Users/at/', '~/', 'g' )
+  " return len( relPath ) ? relPath : cwdList[ len(cwdList) - 1 ]
+  return len( relPath ) ? relPath : "|"
+endfunc
+
+
+
+func! Ntree_parentDir()
+  let pathList = split( v:lua.Ntree_current().rootpath, '/' )
+  return "|" . pathList[ len( pathList ) - 2 ]
+endfunc
+
+func! Ntree_linepath()
+  return v:lua.Ntree_current().linepath
+endfunc
+
+func! CwdInfo()
+  let cwd = getcwd()
+  let cwdList = split( cwd, '/' )
+  return "ˍ" . cwdList[ len( cwdList ) - 1 ] . "ˍ"
+endfunc
+
+
 
 " Left side:
-let g:lightline.active.left   = [ ['projectRootFolderName'], ['relativepath_fresh'] ]
+let g:lightline.active.left   = [ [], ['projectRootFolderName'], ['relativepath_fresh'] ]
 let g:lightline.inactive.left   = [ ['projectRootFolderNameOfWin'], ['relativepathOfWin'] ]
 " Right side:
 let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr', 'scalaMetalsStatus'] ]
@@ -110,6 +259,10 @@ let g:lightline.component.projectRootFolderName = '%{ProjectRootFolderName()}'
 let g:lightline.component.relativepath_fresh = '%{CurrentRelativeFilePath()}'
 
 let g:lightline.component_function = {}
+let g:lightline.component_function.cwdinfo = 'CwdInfo'
+let g:lightline.component_function.ntree_rootdir = 'Ntree_rootDir'
+let g:lightline.component_function.ntree_parentdir = 'Ntree_parentDir'
+let g:lightline.component_function.ntree_rootdirrel = 'Ntree_rootDirRel'
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
 let g:lightline.component_function.db = "DBUIInfos"

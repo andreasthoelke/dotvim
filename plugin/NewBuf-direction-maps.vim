@@ -166,7 +166,7 @@ func! NewBuf_fromCursorLinkPath( direction )
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
-
+" v:lua.Tree_cursorPath() 
 " In divish, nvim-tree or paths in .md files spin off a new buffer from that path. ■
 " func! NewBuf_fromLine( direction )
 "   let [path; maybeLinkExt] = getline('.')->split('‖')

@@ -298,7 +298,7 @@ func! CurrentRelativeFilePath ()
   let relPath = substitute( path, cwd, '', '' )
   return relPath
 endfunc
-" echo CurrentRelativeFilePath()
+" CurrentRelativeFilePath()
 
 func! CurrentRelativeFilePathOfWin ()
   let path = expand('%:p')
@@ -331,8 +331,8 @@ func! FilenameOrFolderStrOfCurrentBuffer (tab_count)
   let winnr = tabpagewinnr(a:tab_count)
   let path = expand('#' . buflist[winnr - 1])
   return GetFilenameOrFolderStrFromPath( path )
-endfunction
-" echo FilenameOrFolderStrOfCurrentBuffer( tabpagenr() )
+endfunc
+" FilenameOrFolderStrOfCurrentBuffer( tabpagenr() )
 " From ~/.vim/plugged/lightline.vim/autoload/lightline/tab.vim#/function.%20lightline#tab#filename.n.%20abort
 
 
