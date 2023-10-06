@@ -62,9 +62,17 @@ endfunc
 " AlternateFileLoc_restore('new')
 
 func! ClipBoard_LinkPath_linesearch( shorten )
-  let searchStr = getline('.')->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
-  call ClipBoard_LinkPath( expand('%:p'), "/" . searchStr, a:shorten )
+  let filePath = expand('%:p')
+  let lineStr = getline('.')
+  if lineStr =~ '─'
+    let searchStr = GetHeadingTextFromHeadingLine( line('.') )
+    call ClipBoard_LinkPath( filePath, "*" . searchStr, a:shorten )
+  else
+    let searchStr = ->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
+    call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )
+  endif
 endfunc
+" ClipBoard_LinkPath_linesearch( 'shorten' )
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
@@ -76,6 +84,7 @@ func! ClipBoard_LinkPath( path, linkExtension, shorten )
   echom 'path:' path
   if len( linkExtension ) | echom 'ext:' linkExtension | endif
 endfunc
+" ClipBoard_LinkPath( getcwd(), '" ─   Link paths                                        ──', 'shorten')
 
 func! Link_jumpToLine( linkExtension )
   let linkExtension = substitute( a:linkExtension, "ˍ", " ", "g" )
@@ -85,7 +94,7 @@ func! Link_jumpToLine( linkExtension )
     let [lineNum; maybeColumn] = linkVal->split(":")
     let column = len(maybeColumn) ? maybeColumn[0] : 0
     call setpos( '.', [0, lineNum, column, 0] )
-  elseif linkKey == "/"
+  elseif linkKey == "/" || linkKey == "*"
     if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
       echo 'Line not found: ' linkVal
     endif
@@ -94,20 +103,20 @@ func! Link_jumpToLine( linkExtension )
     echoe 'unsupported linkKey: ' . linkKey
   endif
 endfunc
-" Link_jumpToLine( [":44"] )
-" Link_jumpToLine( ["/func! Link_jumpToLine( linkExtList )"] )
-" Link_jumpToLine( ["/func! Link_jumpToLine( linkExtList )"] )
-" Link_jumpToLine( ["/" . getline(3)[:10] ] )
+" Link_jumpToLine( ":44" )
+" Link_jumpToLine( "/func! Link_jumpToLine( linkExtList )" )
+" Link_jumpToLine( "/--ˍ─ˍaifb" )
+" Link_jumpToLine( "/" . getline(3)[:10]  )
 " "123:45"->split(":")
 " "123"->split(":")
-
+" ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
+" ~/.config/nvim/plugin/NewBuf-LinkPaths.vim‖*Linkˍpaths
 
 func! LineSearch_makeShortUnique_orWarn( fullString )
   let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]
   let idx = attempts->functional#findP({ str -> LineSearch_isUniqueInBuf( str ) })
   if idx == -1 | echo "The current line is not unique in this buffer." | endif
-  return  idx 
-  " return attempts[ idx ]
+  return attempts[ idx ]
 endfunc
 " LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 " LineSearch_makeShortUnique_orWarn('LineSearch_akeSortUnique_orWarn( fulltring )' )
@@ -119,7 +128,8 @@ func! LineSearch_isUniqueInBuf( searchChars )
   " return search( '\V\' . escape(a:searchChars, '\'), 'nbw' ) == line('.')
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, oLine, 0, 0] )
-  let lineNum = search( '\V\' . '^' . escape(a:searchChars, '\'), 'nbw' )
+  " let lineNum = search( '\V\' . '^' . escape(a:searchChars, '\'), 'nbw' )
+  let lineNum = search( '\V\' . escape(a:searchChars, '\'), 'nbw' )
   call setpos('.', [0, oLine, oCol, 0] )
   return lineNum == 0 || lineNum == line('.')
 endfunc
@@ -131,15 +141,24 @@ let g:LineSearch_VimSkipWords = ['let', 'if', 'func', 'func!']
 let g:LineSearch_SkipWords_ptn = '\v(' . g:LineSearch_VimSkipWords->join('|') . '|' . g:LineSearch_ScalaSkipWords . ')'
 
 func! LineSearchStr_skipLeadingKeywords( sourceStr )
-  let words = split( a:sourceStr )
+  " strip leading whitespace to save space in link text. (therefore searching for this key can not start at the beginning of the line.
+  let sourceStr = a:sourceStr->substitute('\v^\s*', '', '')
+  " prevent double whitespaces (after the first word) to get lost when using split into words
+  let sourceStr =   sourceStr->substitute( "  ", " ", "g" )
+  let words = split( sourceStr )
   let firstUsefulWordIdx = functional#findP( words, {x-> x !~# g:LineSearch_SkipWords_ptn} )
-  return words[firstUsefulWordIdx:]->join()
+  let sourceStr = substitute( a:sourceStr, "  ", " ", "g" )
+  let keywordsSkippedText = words[firstUsefulWordIdx:]->join( " " )
+  let final = keywordsSkippedText->substitute( "", " ", "g" )
+  return final
 endfunc
 " functional#findP( ['let', 'func!', 'inline', 'def', 'de', 'ee'], {x-> x !~# g:LineSearch_SkipWords_ptn} )
 " ['let', 'func!', 'inline', 'def', 'de', 'ee']->functional#findP( {x-> x !~# g:LineSearch_SkipWords_ptn} )
+" LineSearchStr_skipLeadingKeywords( getline( 3 ) )
 " LineSearchStr_skipLeadingKeywords( getline( 47 ) )
 " LineSearchStr_skipLeadingKeywords( getline( 29 ) )
 " -1 ? 'y' : 'n'
+" "   abc"->substitute('\v^\s*', '', '')
 
 
 

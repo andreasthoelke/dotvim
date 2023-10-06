@@ -297,11 +297,13 @@ endfunc
 
 " Extract headline text from section header line
 func! GetHeadingTextFromHeadingLine( lineNum )
-  return matchstr( getline(a:lineNum), '\v^("|--|\/\/)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
-  " return matchstr( getline(a:lineNum), '\v^("|--|\/\/)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(─)')
+  " return matchstr( getline(a:lineNum), '\v^("|--|\/\/)?\s─(\^|\s)\s{2}\zs\S.*\S\ze\s*(▲|■|──)')
+  return matchstr( getline(a:lineNum), '\v─\s{3}\zs.{-}\ze\s{2}')
 endfunc
-" echo GetHeadingTextFromHeadingLine( line('.') +1 )
-" // ─    Set: seek pos when audio is playing              ──
+" matchstr( getline( line('.') +3 ), '\v─\s{2}\zs.*\ze\s\s' )
+" GetHeadingTextFromHeadingLine( line('.') +5 )
+" ─   Some # ^ tx                                       ──
+" // ─   Set: seek pos when audio is playing              ──
 " ─   Some Headline Text                                 ■
 " // ─   Some Headline Text                                 ■
 " -- ─   Some Headline Text                                 ■
