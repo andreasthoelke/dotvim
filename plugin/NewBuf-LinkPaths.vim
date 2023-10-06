@@ -106,17 +106,25 @@ func! LineSearch_makeShortUnique_orWarn( fullString )
   let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]
   let idx = attempts->functional#findP({ str -> LineSearch_isUniqueInBuf( str ) })
   if idx == -1 | echo "The current line is not unique in this buffer." | endif
-  return attempts[ idx ]
+  return  idx 
+  " return attempts[ idx ]
 endfunc
-" LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc Xabbcc 5abbcc 6abbcc 7abbcc' )
+" LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 " LineSearch_makeShortUnique_orWarn('LineSearch_akeSortUnique_orWarn( fulltring )' )
+" LineSearch_makeShortUnique_orWarn('-- ─       aifbbs t this other' )
 " abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
 
 func! LineSearch_isUniqueInBuf( searchChars )
   " return search( escape(a:searchChars, '\'), 'nbw' ) == line('.')
-  return search( '\V\' . escape(a:searchChars, '\'), 'nbw' ) == line('.')
+  " return search( '\V\' . escape(a:searchChars, '\'), 'nbw' ) == line('.')
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, oLine, 0, 0] )
+  let lineNum = search( '\V\' . '^' . escape(a:searchChars, '\'), 'nbw' )
+  call setpos('.', [0, oLine, oCol, 0] )
+  return lineNum == 0 || lineNum == line('.')
 endfunc
 " LineSearch_isUniqueInBuf( 'abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
+" abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
 
 let g:LineSearch_ScalaSkipWords = "sealed|inline|private|given|final|trait|override|def|abstract|type|val|lazy|case|enum|final|object|class"
 let g:LineSearch_VimSkipWords = ['let', 'if', 'func', 'func!']

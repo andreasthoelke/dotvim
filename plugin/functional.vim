@@ -85,6 +85,7 @@ func! functional#findP(list, fnPred)
   return -1
 endfunc
 " functional#findP( ['aa', 'bb', 'aea', 'dd', 'de'], {x-> x =~ 'e'} )
+" functional#findP( ['aa', 'bb', 'aea', 'dd', 'de'], {x-> x =~ 'Y'} )
 " functional#findP( ['aea', 'bbe', 'aea', 'dd', 'de'], {x-> x !~# 'e'} )
 " functional#findP( ['aa', 'bb', 'aa', 'dd', 'de', 'ee'], {x-> x !~# '\v(a|b|d)'} )
 
