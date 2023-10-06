@@ -74,51 +74,15 @@ func! StatusLine_default()
 endfunc
 
 func! StatusLine_neotree()
-  let g:lightline.active.left   = [ ['ntree_rootdirrel'], ['cwdinfo'] ]
+  " The 6 highlight slots are fixed to 6 functions (outputting path segments) below.
+  " this is needed bc/ in the troot_out_cwd__cwd_in_troot case the cwd is inside/to the right of the tree-root path.
+  " This case will not use the normal1 and cwd1 highlight segments. Only normal3 and cwd2 follow-up to the troot highlight.
+  let g:lightline.active.left   = [ ['Rpi_normal1'], ['Rpi_cwd1'], ['Rpi_normal2'], ['Rpi_troot'], ['Rpi_normal3'], ['Rpi_cwd2'] ]
   let g:lightline.active.right = []
   call lightline#init()
   call lightline#update()
 endfunc
-"   ~/.config/nvim/notes/minor
-"   ~/.config | nvim | notes/minor
-"   ~/Documents/Proj/_repos/6_smithy-jobby/modules/backend/src/main/scala/
-"   ~/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala/com/softwaremill/realworld/articles/comments/api
-"   P _repos || src/main/scala/com/softwaremill/realworld/articles/comments/api
 
-
-"   H Documents Proj _repos ╎ src/main/scala/com/softwaremill/realworld/articles/comments/api
-
-"   H Documents Proj _repos ∥ src/main/scala/com/softwaremill/realworld/articles/comments/api
-
-"   H Documents Proj _repos ‖ src/main/scala/com/softwaremill/realworld/articles/comments/api
-
-"   H Documents Proj _repos ‖ src main scala com softwaremill realworld articles comments
-
-"   ‖ src main scala com softwaremill realworld articles comments
-
-"   P _repos ‖ src main
-
-"   H Documents |Proj| _repos ‖
-
-"   H Documents Proj |_repos| ‖
-
-"   H Documents Proj |d_diff_proj|
-"
-"   just replace the cdw with || (highlighted?)
-"   highlight the tail / tree root?
-"   replace the base
-"   use space when joining
-"
-"   two abs paths
-"   tree-root, cwd
-
-"   inner tree root = subtract cwd from treeroot
-"   when inner-tree-root == tree-root => tree-root outside cwd
-"   else                              => tree-root inside cwd
-
-"   inner cwd = subtract treeroot from cwd
-"   when inner-cwd == cwd => cwd outside tree-root
-"   else                  => cwd inside tree-root
 
 " ─   tree-root  <>  cwd   4 relationship cases         ──
 
@@ -163,13 +127,13 @@ func! RootPathInfo_RenderCaseAndSegments( cwd, tree_root )
   let tree_root_L       = split( BasePath_shorten( a:tree_root ), '/')
 
   if     troot_changed && !cwd_changed
-    return [ 'troot_in_cwd', cwd_L[:-2], '‖', troot_minus_cwd_L[:-2], troot_minus_cwd_L[-1] ] " H Documents Proj _repos ‖ src main |scala|
+    return [ 'troot_in_cwd', cwd_L[:-2], ['‖'], troot_minus_cwd_L[:-2], [troot_minus_cwd_L[-1]] ] " H Documents Proj _repos ‖ src main |scala|
   elseif troot_changed && cwd_changed
-    return [ 'troot_is_cwd', cwd_L[:-2], '‖' ] " H Documents Proj _repos |‖|
+    return [ 'troot_is_cwd', cwd_L[:-2], ['‖'] ] " H Documents Proj _repos |‖|
   elseif !troot_changed && cwd_changed
-    return [ 'troot_out_cwd__cwd_in_troot', tree_root_L[:-2], tree_root_L[-1], cwd_minus_troot_L[:-2], '‖' ] " P _repos ‖ 
+    return [ 'troot_out_cwd__cwd_in_troot', tree_root_L[:-2], [tree_root_L[-1]], cwd_minus_troot_L[:-2], ['‖'] ] " P _repos ‖ 
   elseif !troot_changed && !cwd_changed
-    return [ 'troot_out_cwd__cwd_out_troot', tree_root_L[:-2], tree_root_L[-1] ] " P _repos 11_spoti_gql_muse src |test|
+    return [ 'troot_out_cwd__cwd_out_troot', tree_root_L[:-2], [tree_root_L[-1]] ] " P _repos 11_spoti_gql_muse src |test|
   else
     echoe "unmatched case in RootPathInfo_RenderCaseAndSegments"
   endif
@@ -179,6 +143,80 @@ endfunc
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3" )
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test" )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/ab/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/ab" )
+
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala" )[1:]->map( { _, v -> v->join(" ") } )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3" )[1:]->map( { _, v -> v->join(" ") } )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )[1:]->map( { _, v -> v->join(" ") } )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test" )[1:]->map( { _, v -> v->join(" ") } )
+" RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/ab/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/ab" )[1:]->map( { _, v -> v->join(" ") } )
+
+func! Rpi_data()
+  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  return [ cid, infoL->map( { _, v -> v->join(" ") } ) ]
+endfunc
+
+" [ h_normal, h_cwd, h_normal, h_troot, h_normal, h_cwd ]
+
+func! Rpi_normal1()
+  let [cid, segs] = Rpi_data()
+  return (cid == 'troot_in_cwd') || (cid == 'troot_is_cwd') ? segs[0] : ""
+endfunc
+
+func! Rpi_cwd1()
+  let [cid, segs] = Rpi_data()
+  return (cid == 'troot_in_cwd') || (cid == 'troot_is_cwd') ? segs[1] : ""
+endfunc
+
+func! Rpi_normal2()
+  let [cid, segs] = Rpi_data()
+  return    (cid == 'troot_in_cwd')                ? segs[2] :
+     \ (cid == 'troot_out_cwd__cwd_in_troot') || (cid == 'troot_out_cwd__cwd_out_troot')  ? segs[0] : ""
+endfunc
+
+" The tree-root folder is not highlighted in the troot_is_cwd case.
+" In the troot_in_cwd the tree_root folder name is at pos 3 of the segs array.
+" In the other cases it is at pos 1.
+func! Rpi_troot()
+  let [cid, segs] = Rpi_data()
+  return    (cid == 'troot_in_cwd')                ? segs[3] :
+     \ (cid == 'troot_out_cwd__cwd_in_troot') || (cid == 'troot_out_cwd__cwd_out_troot') ? segs[1] : ""
+endfunc
+" echo Rpi_troot()
+
+" In the troot_out_cwd__cwd_in_troot case the cwd is inside/to the right of the tree-root path.
+" This case will not use the normal1 and cwd1 highlight segments. Only normal3 and cwd2 follow-up to the troot highlight.
+func! Rpi_normal3()
+  let [cid, segs] = Rpi_data()
+  return (cid == 'troot_out_cwd__cwd_in_troot') ? segs[2] : ""
+endfunc
+
+func! Rpi_cwd2()
+  let [cid, segs] = Rpi_data()
+  return (cid == 'troot_out_cwd__cwd_in_troot') ? segs[3] : ""
+endfunc
+
+
+
+func! RootPathInfo1()
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
+  return infoLf[1]
+endfunc
+
+func! RootPathInfo2()
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
+  return infoLf[2]
+endfunc
+
+func! RootPathInfo3()
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
+  return infoLf[3]
+endfunc
+
+
 
 func! BasePath_shorten( absPath )
   let p = a:absPath->substitute( '/Users/at/Documents/Proj', 'P', '' )
@@ -222,6 +260,7 @@ func! Ntree_linepath()
 endfunc
 
 func! CwdInfo()
+  return 'ein'
   let cwd = getcwd()
   let cwdList = split( cwd, '/' )
   return "ˍ" . cwdList[ len( cwdList ) - 1 ] . "ˍ"
@@ -253,6 +292,7 @@ let g:lightline.subseparator = { 'left': '', 'right': '|' }
 " {noscrollbar#statusline(30,'\ ','■')}
 
 let g:lightline.component = {}
+let g:lightline.component.eins = 'hi there!'
 let g:lightline.component.helloworld = 'hi there!'
 let g:lightline.component.fpathBNum = '%f%n'
 let g:lightline.component.projectRootFolderName = '%{ProjectRootFolderName()}'
@@ -260,6 +300,14 @@ let g:lightline.component.relativepath_fresh = '%{CurrentRelativeFilePath()}'
 
 let g:lightline.component_function = {}
 let g:lightline.component_function.cwdinfo = 'CwdInfo'
+
+let g:lightline.component_function.Rpi_normal1 = 'Rpi_normal1'
+let g:lightline.component_function.Rpi_cwd1    = 'Rpi_cwd1'
+let g:lightline.component_function.Rpi_normal2 = 'Rpi_normal2'
+let g:lightline.component_function.Rpi_troot   = 'Rpi_troot'
+let g:lightline.component_function.Rpi_normal3 = 'Rpi_normal3'
+let g:lightline.component_function.Rpi_cwd2    = 'Rpi_cwd2'
+
 let g:lightline.component_function.ntree_rootdir = 'Ntree_rootDir'
 let g:lightline.component_function.ntree_parentdir = 'Ntree_parentDir'
 let g:lightline.component_function.ntree_rootdirrel = 'Ntree_rootDirRel'

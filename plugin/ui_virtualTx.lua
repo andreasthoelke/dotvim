@@ -14,7 +14,8 @@ _G.VirtualTxShow_test = function( dispTxt, hlgroup )
   local opts = {
     -- end_line = 10,
     id = 1,
-    virt_text = { padding1, icon, padding2, message },
+    -- virt_text = { padding1, icon, padding2, message },
+    virt_text = { message },
     -- virt_text_pos = 'overlay',
     -- virt_text_pos = 'right_align',
     virt_text_pos = 'eol',
@@ -26,7 +27,8 @@ _G.VirtualTxShow_test = function( dispTxt, hlgroup )
   return vim.api.nvim_buf_set_extmark(bnr, vim.g.nsid_def, linenr, col_num, opts)
 end
 
--- VirtualTxShow( "[22, 33]" )
+-- VirtualTxShow_test( "[22, 33]" )
+-- VirtualTxShow_test( "some text", "Comment" )
 
 
 _G.VirtualTxClear = function()

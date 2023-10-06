@@ -41,9 +41,14 @@ let s:cyan = s:blue
 let s:green = [ '#95e454', 119 ]
 let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
+let h_normal = [ s:foldFg, s:foldBg ]
+let h_cwd    = [ s:searchBg, s:searchFg ]
+let h_troot  = [ s:searchFg, s:searchBg ]
+
 " let s:p.normal.left = [ [ s:searchFg, s:searchBg ], [ s:foldFg, s:foldBg ] ]
 " Inverting the foreground and background colors to highlight the current window
-let s:p.normal.left = [ [ s:foldFg, s:foldBg ], [ s:searchBg, s:searchFg ], [ s:foldFg, s:foldBg ] ]
+" let s:p.normal.left = [ [ s:foldFg, s:foldBg ], [ s:searchBg, s:searchFg ], [ s:foldFg, s:foldBg ] ]
+let s:p.normal.left = [ h_normal, h_cwd, h_normal, h_troot, h_normal, h_cwd ]
 " let s:p.normal.left = [ [ s:foldBg, s:foldFg ], [ s:foldFg, s:foldBg ] ]
 let s:p.normal.right = [ [ s:hiFg, s:foldBg, 'bold' ], [ s:foldFg, s:foldBg ] ]
 
