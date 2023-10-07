@@ -199,6 +199,7 @@ endfunc
 
 
 let g:RootPathInfo_string = ""
+let g:RootPathInfo_trootStr = ""
 
 func! Rpi_captureString()
   let outl = [ Rpi_normal1(), " " . Rpi_cwd1() . " ", Rpi_normal2(), " " . Rpi_troot() . " ", Rpi_normal3(), " " . Rpi_cwd2() . " " ]
@@ -217,6 +218,7 @@ func! Rpi_captureDummy()
     let filtStr = newStr->matchstr( '\v\zs\i.*' )
     let filtStr = filtStr->substitute( "   ", " ", "g" )
     let g:RootPathInfo_string = filtStr
+    let g:RootPathInfo_trootStr = Rpi_troot()->len() ? Rpi_troot() : '‖'
     " lua vim.opt.winbar = vim.g.RootPathInfo_string
     let &l:winbar = filtStr
   endif
@@ -310,8 +312,8 @@ let g:lightline.tabline.left  = [ [ 'tabs' ] ]
 let g:lightline.tabline.right = []
 
 let g:lightline.tab = {
-      \ 'active':   [ 'tabnum', 'fnameOrFolder', 'modified' ],
-      \ 'inactive': [ 'tabnum', 'fnameOrFolder', 'modified' ] }
+      \ 'active':   [ 'tabnum', 'InfoStr_ActiveBufferInTab' ],
+      \ 'inactive': [ 'tabnum', 'InfoStr_ActiveBufferInTab' ] }
 
       " \ 'active':   [ 'tabnum', 'filename', 'modified' ],
       " \ 'inactive': [ 'tabnum', 'filename', 'modified' ] }
@@ -350,11 +352,11 @@ let g:lightline.component_function.pyVirtEnvStr = 'PyVirtEnvStr'
 let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
 let g:lightline.component_function.relativepathOfWin = 'LightlineRelativeFilePathOfWin'
 let g:lightline.component_function.hithere = 'Testthere'
-let g:lightline.component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+let g:lightline.component_function.InfoStr_ActiveBufferInTab = 'InfoStr_ActiveBufferInTab'
 let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
 
 let g:lightline.tab_component_function = {}
-let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+let g:lightline.tab_component_function.InfoStr_ActiveBufferInTab = 'InfoStr_ActiveBufferInTab'
 
 
 " ─^  Lightline setup                                    ▲
@@ -378,8 +380,25 @@ func! LightlineLocalRootFolder()
 endfunc
 
 func! LightlineRelativeFilePathOfWin()
-  return &filetype !~# '\v(neo-tree|help|gitcommit)' ? CurrentRelativeFilePathOfWin() : g:RootPathInfo_string
+  return &filetype !~# '\v(neo-tree)' ? CurrentRelativeFilePathOfWin() : g:RootPathInfo_string
 endfunc
+
+
+func! InfoStr_ActiveBufferInTab (tab_count)
+  let buflist = tabpagebuflist(a:tab_count)
+  let winnr = tabpagewinnr(a:tab_count)
+  let bufNum = buflist[winnr-1]
+  let bufFt = getbufvar(bufNum, '&filetype')
+  if bufFt == 'neo-tree'
+    return g:RootPathInfo_trootStr
+  else
+    let path = expand('#' . bufNum)
+    return GetFilenameOrFolderStrFromPath( path )
+  endif
+endfunc
+" InfoStr_ActiveBufferInTab( tabpagenr() )
+" From ~/.vim/plugged/lightline.vim/autoload/lightline/tab.vim#/function.%20lightline#tab#filename.n.%20abort
+" getbufvar(6, '&filetype')
 
 
 func! Testthere()
