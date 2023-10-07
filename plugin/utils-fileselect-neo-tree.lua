@@ -42,6 +42,20 @@ end
 -- _ ▲ ▲
 
 
+function _G.Stline()
+  -- Hide statusline by setting laststatus and cmdheight to 0.
+  vim.o.ls = 0
+  vim.o.ch = 0
+  -- Set the winbar to the statusline.
+  vim.o.wbr = vim.o.stl
+  -- With vertical splits, the statusline would still show up at the
+  -- bottom of the split. A quick fix is to just set the statusline
+  -- to empty whitespace (it can't be an empty string because then
+  -- it'll get replaced by the default stline).
+  vim.o.stl = " "
+end
+
+
 -- ─^  Helpers                                           ▲
 
 

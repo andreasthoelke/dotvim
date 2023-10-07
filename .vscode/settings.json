@@ -1,7 +1,0 @@
-{
-  "vim.vimrc.enable": true,
-  "vim.vimrc.path": "$HOME/.ideavimrc",
-  "vim.leader": "<space>",
-  "vim.neovimUseConfigFile": true,
-  "vim.enableNeovim": true
-}

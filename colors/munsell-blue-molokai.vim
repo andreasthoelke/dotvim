@@ -403,6 +403,10 @@ hi! def link NvimTreeGitStaged purescriptIdentifier
 hi! def link NvimTreeGitNew purescriptIdentifier
 
 
+hi! def link WinBar CommentSection
+hi! def link WinBarNC Comment
+
+
 " neo-tree
 " NeoTreeBufferNumber       The buffer number shown in the buffers source.
 hi! def link NeoTreeBufferNumber CommentMinusMinus

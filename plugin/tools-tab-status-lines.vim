@@ -214,7 +214,11 @@ func! Rpi_captureDummy()
   " this captureDummy function. However it apparently captures "nil"? values on leave.
   " The below if skips the "nil" updates.
   if newStr[0] != "0"
-    let g:RootPathInfo_string = newStr->matchstr( '\v\zs\i.*' )
+    let filtStr = newStr->matchstr( '\v\zs\i.*' )
+    let filtStr = filtStr->substitute( "   ", " ", "g" )
+    let g:RootPathInfo_string = filtStr
+    " lua vim.opt.winbar = vim.g.RootPathInfo_string
+    let &l:winbar = filtStr
   endif
   return ""
 endfunc
