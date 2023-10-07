@@ -421,6 +421,7 @@ hi! def link NeoTreeFileName CommentMinus
 hi! def link NeoTreeFileName Comment
 " NeoTreeFileNameOpened     File name when the file is open. Not used yet.
 " NeoTreeFilterTerm         The filter term, as displayed in the root node.
+hi! def link NeoTreeFilterTerm Comment
 " NeoTreeFloatBorder        The border for pop-up windows.
 " NeoTreeFloatTitle         Used for the title text of pop-ups when the border-style
 "                           is set to another style than "NC". This is derived

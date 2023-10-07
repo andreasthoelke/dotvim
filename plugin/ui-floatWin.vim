@@ -114,11 +114,15 @@ endfunc
 
 lua << EOF
 function FloatWin_close ()
+  require("neo-tree.sources.common.preview").hide()
+
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= "" then
-      vim.api.nvim_win_close(win, false)
-      -- print('Closing window', win)
+    if vim.api.nvim_win_is_valid(win) then
+      local config = vim.api.nvim_win_get_config(win)
+      if config.relative ~= "" then
+        vim.api.nvim_win_close(win, false)
+        -- print('Closing window', win)
+      end
     end
   end
 end

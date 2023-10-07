@@ -68,7 +68,7 @@ func! ClipBoard_LinkPath_linesearch( shorten )
     let searchStr = GetHeadingTextFromHeadingLine( line('.') )
     call ClipBoard_LinkPath( filePath, "*" . searchStr, a:shorten )
   else
-    let searchStr = ->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
+    let searchStr = lineStr->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
     call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )
   endif
 endfunc

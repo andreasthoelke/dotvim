@@ -1,10 +1,17 @@
 
 
--- DEFAULTS: use c-w lv ; \\sc 
+vim.g.neo_tree_remove_legacy_commands = 1
+
+
+-- All config default values: 
 -- /Users/at/.vim/scratch/neo-tree-defaults.sct
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
 
 local manager = require("neo-tree.sources.manager")
+-- local commands = require 'nvim-tree.commands'
+-- local Preview = require("neo-tree.sources.common.preview")
+
+-- ─   Helpers                                           ■
 
 function _G.Ntree_current()
   local state = manager.get_state_for_window()
@@ -21,22 +28,6 @@ function _G.TreeRoot_infoStr( rootPath )
   return dir ,parentDir
 end
 -- vim.fn.RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )
-
-
--- normal buffer
--- cwd | relfilepath
---    treeroot | parent
---    parent | treeroot | 
-
-
--- function _G.Ntree_current( winid ) ■
---   local winid = winid or vim.api.nvim_get_current_win()
---   local state = manager.get_state_for_window( winid )
---   return {
---     root = state.path,
---     node = state.position.node_id
---   }
--- end
 -- _ ■
 -- lua put( Ntree_current() )
 -- vim.api.nvim_buf_get_var( 44, "neo_tree_source" )
@@ -50,6 +41,11 @@ end
 -- Ntree_current(1012)
 -- _ ▲ ▲
 
+
+-- ─^  Helpers                                           ▲
+
+
+-- ─   Config                                            ■
 
 require("neo-tree").setup({
 
@@ -67,7 +63,7 @@ require("neo-tree").setup({
   },
 
   renderers = {
-    -- This overwrite the "directory" renderer. This is actually the default copied from ~/.config/nvim/scratch/neo-tree-defaults.sct‖:260:5
+    -- This overwrites the "directory" renderer. This is actually the default copied from ~/.config/nvim/scratch/neo-tree-defaults.sct‖:260:5
     -- The only difference is that the "icon" component is not in the returned list of textproducing functions / component names.
     directory = {
       -- { "indent" },
@@ -135,11 +131,11 @@ require("neo-tree").setup({
   default_component_configs = {
 
     indent = {
-        padding = 0,
+        -- padding = 0,
         with_markers = false,
         indent_marker = "",
         last_indent_marker = "",
-        indent_size = 3,
+        indent_size = 2,
 
         with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
       expander_collapsed = "",
@@ -214,29 +210,34 @@ require("neo-tree").setup({
         ["<2-LeftMouse>"] = "open",
         ["<cr>"] = "open",
         -- ["<esc>"] = "cancel", -- close preview or floating neo-tree window
-        ["<esc>"] = "noop", -- close preview or floating neo-tree window
+        ["<esc>"] = "noop", -- TODO close preview ..
         ["P"] = { "toggle_preview", config = { use_float = true } },
-        ["l"] = "focus_preview",
-        ["S"] = "open_split",
+        ["<space>P"] = { "toggle_preview", config = { use_float = false } },
+        -- ["l"] = "focus_preview",
+        ["l"] = "noop",  -- use c-w i
+        ["s"] = "open_split",
         -- ["S"] = "split_with_window_picker",
-        ["s"] = "open_vsplit",
+        ["v"] = "open_vsplit",
         -- ["s"] = "vsplit_with_window_picker",
         ["t"] = "open_tabnew",
         -- ["<cr>"] = "open_drop",
         -- ["t"] = "open_tab_drop",
         ["i"] = "open",
         ["I"] = "open",
+        ["zo"] = "open",
         ["Y"] = "close_node",
+        ["zc"] = "close_node",
+        ["zC"] = "close_all_nodes",
         ["w"] = "noop",
         ["C"] = "close_node",
-        ["zc"] = "close_all_nodes",
+        ["z"] = "noop",
         --["Z"] = "expand_all_nodes",
         ["R"] = "refresh",
         ["<space>to"] = {
           "add",
           -- some commands may take optional config options, see `:h neo-tree-mappings` for details
           config = {
-            show_path = "none", -- "none", "relative", "absolute"
+            show_path = "relative", -- "none", "relative", "absolute"
           }
         },
 
@@ -246,10 +247,12 @@ require("neo-tree").setup({
         ["y"] = "noop",
         ["x"] = "noop",
         ["p"] = "noop",
+        ["m"] = "noop",
 
         ["=="] = "toggle_auto_expand_width",
         ["q"] = "close_window",
         ["g?"] = "show_help",
+        ["?"] = "noop",
         ["<"] = "prev_source",
         [">"] = "next_source",
 
@@ -281,7 +284,6 @@ require("neo-tree").setup({
 
   filesystem = {
 
-    left_padding = 0,
 
     components = {
 
@@ -292,21 +294,23 @@ require("neo-tree").setup({
       --   }
       -- end,
 
-      icon = icon,
+      -- icon = icon,
 
     },
 
     group_empty_dirs = true, -- when true, empty directories will be grouped together
+    find_by_full_path_words = true,  -- if true use space as implicit .*  e.g. "fil init" for filesystem/init
 
     window = {
       mappings = {
-        ["H"] = "toggle_hidden",
-        ["/"] = "fuzzy_finder",
+        ["<space>/"] = "fuzzy_finder",
+        ["<space><space>/"] = "filter_as_you_type",
+        ["/"] = "noop",
         ["D"] = "fuzzy_finder_directory",
-        --["/"] = "filter_as_you_type", -- this was the default until v1.28
         ["#"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
         -- ["D"] = "fuzzy_sorter_directory",
-        ["f"] = "filter_on_submit",
+        ["<space>f"] = "filter_on_submit",
+        ["f"] = "noop",
         ["<C-x>"] = "clear_filter",
         ["<bs>"] = "navigate_up",
         ["-"] = "navigate_up",
@@ -317,13 +321,15 @@ require("neo-tree").setup({
 
         ["<space>mk"] = "add_directory", -- also accepts the config.show_path and config.insert_as options.
         ["<space>dd"] = "delete",
-        ["<space>ree"] = "rename",
+        ["<space>lr"] = "rename",  -- as "l re" is used for rcmd / rlist maps. "l lr" should be consistent with lsp rename
         ["<space>yy"] = "copy_to_clipboard",
         ["<space>xx"] = "cut_to_clipboard",
         ["<space>pp"] = "paste_from_clipboard",
         ["<space>yd"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
         ["<space>mv"] = "move", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
 
+        ["<space>H"] = "toggle_hidden",
+        ["H"] = "noop",
         ["<space>K"] = "show_file_details",
         ["<space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
         ["<space>oc"] = { "order_by_created", nowait = false },
@@ -408,8 +414,11 @@ require("neo-tree").setup({
   },
 
 
-
 })
+
+
+-- ─^  Config                                            ▲
+
 
 
 -- ─   Helpers                                           ■ ■
