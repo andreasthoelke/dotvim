@@ -20,31 +20,31 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 
 " git status:
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
-nnoremap <leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
-nnoremap <leader><leader>gS :call ShellReturn( 'git status' )<cr>
-nnoremap <leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
+nnoremap <silent><leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
+nnoremap <silent><leader><leader>gS :call ShellReturn( 'git status' )<cr>
+nnoremap <silent><leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
 " nnoremap <leader>oga :call System_Float( 'git add -A -v' )<cr>
-nnoremap <leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
+nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:
-nnoremap <leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
+nnoremap <silent><leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
-nnoremap <leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
-nnoremap <leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 " Issue: this does not show the confirmation message in the float window:
-xnoremap <leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
+xnoremap <silent><leader><leader>gC :<c-u>call ShellReturn( GitCommitCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 " git push:
 " nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
-nnoremap <leader><leader>gP :call System_Float( 'git push' )<cr>
+nnoremap <silent><leader><leader>gP :call System_Float( 'git push' )<cr>
 " View in Github desktop:
-nnoremap <leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
+nnoremap <silent><leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 
-nnoremap <leader>ogc <cmd>Git commit<cr>
+nnoremap <silent><leader>ogc <cmd>Git commit<cr>
 
 " ease confirming fugitive commit window
 " nnoremap ,,w :w<cr><c-w>c
 nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr><c-w>c' : ':call BufferInnerBracket()<cr>'
 
-nnoremap <leader>ogg :G<cr>
+nnoremap <silent><leader>ogg :G<cr>
 
 nnoremap <silent> <leader><leader>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
 nnoremap <silent> <leader><leader>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>

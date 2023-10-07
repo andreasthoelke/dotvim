@@ -78,7 +78,7 @@ func! StatusLine_neotree()
   " this is needed bc/ in the troot_out_cwd__cwd_in_troot case the cwd is inside/to the right of the tree-root path.
   " This case will not use the normal1 and cwd1 highlight segments. Only normal3 and cwd2 follow-up to the troot highlight.
   let g:lightline.active.left   = [ ['Rpi_normal1'], ['Rpi_cwd1'], ['Rpi_normal2'], ['Rpi_troot'], ['Rpi_normal3'], ['Rpi_cwd2'] ]
-  let g:lightline.active.right = []
+  let g:lightline.active.right =  [ ['Rpi_captureDummy'] ]
   call lightline#init()
   call lightline#update()
 endfunc
@@ -151,6 +151,7 @@ endfunc
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test" )[1:]->map( { _, v -> v->join(" ") } )
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/ab/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/ab" )[1:]->map( { _, v -> v->join(" ") } )
 
+
 func! Rpi_data()
   let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
   return [ cid, infoL->map( { _, v -> v->join(" ") } ) ]
@@ -195,6 +196,29 @@ func! Rpi_cwd2()
   let [cid, segs] = Rpi_data()
   return (cid == 'troot_out_cwd__cwd_in_troot') ? segs[3] : ""
 endfunc
+
+
+let g:RootPathInfo_string = ""
+
+func! Rpi_captureString()
+  let outl = [ Rpi_normal1(), " " . Rpi_cwd1() . " ", Rpi_normal2(), " " . Rpi_troot() . " ", Rpi_normal3(), " " . Rpi_cwd2() . " " ]
+  " let outl = [ Rpi_normal1(), Rpi_cwd1(), Rpi_normal2(), Rpi_troot(), Rpi_normal3(), Rpi_cwd2() ]
+  return outl->join(" ")
+endfunc
+
+func! Rpi_captureDummy()
+  let newStr = Rpi_captureString()
+  " call writefile([newStr], "event.log", "a")
+  " The reason for this hack is: I wanted to use a cached version of the rendered string while neo-tree is not active,
+  " not to waste performance. However I could find a "before leave" event that would update this string. So I'm using
+  " this captureDummy function. However it apparently captures "nil"? values on leave.
+  " The below if skips the "nil" updates.
+  if newStr[0] != "0"
+    let g:RootPathInfo_string = newStr->matchstr( '\v\zs\i.*' )
+  endif
+  return ""
+endfunc
+
 
 
 
@@ -267,6 +291,7 @@ func! CwdInfo()
 endfunc
 
 
+" ─   Lightline setup                                    ■
 
 " Left side:
 let g:lightline.active.left   = [ [], ['projectRootFolderName'], ['relativepath_fresh'] ]
@@ -307,6 +332,7 @@ let g:lightline.component_function.Rpi_normal2 = 'Rpi_normal2'
 let g:lightline.component_function.Rpi_troot   = 'Rpi_troot'
 let g:lightline.component_function.Rpi_normal3 = 'Rpi_normal3'
 let g:lightline.component_function.Rpi_cwd2    = 'Rpi_cwd2'
+let g:lightline.component_function.Rpi_captureDummy = 'Rpi_captureDummy'
 
 let g:lightline.component_function.ntree_rootdir = 'Ntree_rootDir'
 let g:lightline.component_function.ntree_parentdir = 'Ntree_parentDir'
@@ -318,13 +344,16 @@ let g:lightline.component_function.scalaMetalsStatus = "ScalaMetalsStatus"
 let g:lightline.component_function.tagbar = 'LightlineTagbar'
 let g:lightline.component_function.pyVirtEnvStr = 'PyVirtEnvStr'
 let g:lightline.component_function.projectRootFolderNameOfWin = 'LightlineLocalRootFolder'
-let g:lightline.component_function.relativepathOfWin = 'CurrentRelativeFilePathOfWin'
+let g:lightline.component_function.relativepathOfWin = 'LightlineRelativeFilePathOfWin'
 let g:lightline.component_function.hithere = 'Testthere'
 let g:lightline.component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
 let g:lightline.component_function.relativepath_fresh1 = 'CurrentFilePath1'
 
 let g:lightline.tab_component_function = {}
 let g:lightline.tab_component_function.fnameOrFolder = 'FilenameOrFolderStrOfCurrentBuffer'
+
+
+" ─^  Lightline setup                                    ▲
 
 
 func! ScalaMetalsStatus()
@@ -341,8 +370,13 @@ func! DBUIInfos ()
 endfunc
 
 func! LightlineLocalRootFolder()
-  return ProjectRootFolderNameOfWin( winnr() )
+  return &filetype !~# '\v(neo-tree|help|gitcommit)' ? ProjectRootFolderNameOfWin( winnr() ) : ''
 endfunc
+
+func! LightlineRelativeFilePathOfWin()
+  return &filetype !~# '\v(neo-tree|help|gitcommit)' ? CurrentRelativeFilePathOfWin() : g:RootPathInfo_string
+endfunc
+
 
 func! Testthere()
   return col('.')
