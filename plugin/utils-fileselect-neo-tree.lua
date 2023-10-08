@@ -7,7 +7,8 @@ vim.g.neo_tree_remove_legacy_commands = 1
 -- /Users/at/.vim/scratch/neo-tree-defaults.sct
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
 
-local manager = require("neo-tree.sources.manager")
+local tree_exec = require 'neo-tree.command'.execute
+local manager = require 'neo-tree.sources.manager'
 -- local commands = require 'nvim-tree.commands'
 -- local Preview = require("neo-tree.sources.common.preview")
 
@@ -39,6 +40,8 @@ end
 -- require("neo-tree.sources.manager").get_state_for_window( 1012 ).position
 -- Ntree_current(2507)
 -- Ntree_current(1012)
+-- nil and "yes" or "no"
+-- 0 and "yes" or "no"
 -- _ ▲ ▲
 
 
@@ -369,11 +372,11 @@ require("neo-tree").setup({
         --"*/src/*/tsconfig.json",
       },
       always_show = { -- remains visible even if other settings would normally hide it
-        --".gitignored",
+        ".gitignored",
       },
       never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
-        --".DS_Store",
-        --"thumbs.db",
+        ".DS_Store",
+        "thumbs.db",
       },
       never_show_by_pattern = { -- uses glob style patterns
         --".null-ls_*",
@@ -420,6 +423,18 @@ require("neo-tree").setup({
 
 -- ─^  Config                                            ▲
 
+
+local function open_normal()
+  tree_exec({
+    action = "show",
+    position = "left",
+  })
+end
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_normal })
+
+-- require("neo-tree.command").execute({ action = "show", position = "right" })
+-- require("neo-tree.command").execute({ action = "close", position = "right" })
 
 
 -- ─   Helpers                                           ■ ■

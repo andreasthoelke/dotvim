@@ -98,7 +98,7 @@ func! SourceLines( cmd, lines )
   call delete( tempSourceFile )
 endfunc
 
-func! SourcePrintCommented()
+func! SourcePrintCommented() " ■
   if &filetype == 'lua' || &filetype == 'purescript_scratch'
     let expr = getline('.')[3:]
     let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
@@ -106,7 +106,8 @@ func! SourcePrintCommented()
     let cmd = 'luafile'
   elseif &filetype == 'markdown' || &filetype == 'purescript_scratch' || &filetype == ''
     let expr = getline('.')
-    let code = 'print( vim.inspect( ' . expr . ' ) )'
+    let code = 'vim.print( vim.inspect( ' . expr . ' ) )'
+    let code = expr
     " let code = 'vim.fn.FloatingSmallNew( ' . expr . ' )'
     let cmd = 'luafile'
   elseif &filetype == 'vim'
@@ -129,8 +130,31 @@ func! SourcePrintCommented()
     return
   endif
   call SourceLines( cmd, [ code ] )
-endfunc
+endfunc " ▲
 
+func! PrintVimOrLuaLine()
+  let line = getline('.')
+
+  if &filetype == 'vim'
+    let expr = line[1:]
+    let code = [ 'call v:lua.putt( ' . expr . ' )' ]
+    call SourceLines( 'source', code )
+    return
+  endif
+
+  let expr = line[0:1] == "--" ? 
+    \ line[3:] : line
+
+  let code = [0,0,0]
+  let code[0] = 'local ret = ' . expr
+  let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
+  let code[2] = 'vim.print( printVal )'
+
+  call SourceLines( 'luafile', code )
+endfunc
+" NOTE how to use vim dictionary to pass a lua table from vim
+" v:lua.require("neo-tree.command").execute({ 'action': "show", 'position': "right" })
+" v:lua.require("neo-tree.command").execute({ 'action': "close" })
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
@@ -138,7 +162,8 @@ func! VScriptToolsBufferMaps()
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
-  nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
+  " nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
+  nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
   call tools_scala#bufferMaps_shared()
 endfunc
 " [9, 8] + [1, 2]
