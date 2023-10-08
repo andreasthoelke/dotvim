@@ -29,9 +29,11 @@ nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 nnoremap <silent><leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
 nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
+" git undo commit
+nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
 nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 " Issue: this does not show the confirmation message in the float window:
-xnoremap <silent><leader><leader>gC :<c-u>call ShellReturn( GitCommitAllCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
+vnoremap <leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
 " git push:
 " nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 nnoremap <silent><leader><leader>gP :call System_Float( 'git push' )<cr>
