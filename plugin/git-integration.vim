@@ -10,6 +10,14 @@ let g:accountsGithub = readfile( expand( '~/.accounts/github' ) )[0:0][0]
 " git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 " 
 
+xnoremap <silent><leader><leader>bb :<c-u>call TestVisSel()<cr>
+func! TestVisSel()
+  let ret = GetVisSel()
+  " note that ShellReturn doesn't work with visual selection, c-u seems to esc/close the float win
+  echo systemlist( "echo " . ret )[0]
+endfunc
+" Somet()
+" GetVisSel()
 
 " ─   Git                                                ■
 
@@ -28,12 +36,15 @@ nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:
 nnoremap <silent><leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
-nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
 " git undo commit
 nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
+" TODO do i use this map?
 nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
-" Issue: this does not show the confirmation message in the float window:
-vnoremap <leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
+
+" COMMIT ALL maps:
+nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
+xnoremap <silent><leader><leader>gC :<c-u>echo system( GitCommitAllCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
+
 " git push:
 " nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
 nnoremap <silent><leader><leader>gP :call System_Float( 'git push' )<cr>

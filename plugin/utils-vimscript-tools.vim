@@ -138,7 +138,11 @@ func! PrintVimOrLuaLine()
 
   if &filetype == 'vim'
     let expr = line[1:]
-    let code = [ 'call v:lua.putt( ' . expr . ' )' ]
+
+    let code = [0,0]
+    let code[0] = 'let ret = ' . expr
+    let code[1] = 'if ret | call v:lua.putt(ret) | endif'
+
     call SourceLines( 'source', code )
     return
   endif
