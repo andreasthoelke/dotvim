@@ -54,9 +54,9 @@ nnoremap <silent> <leader>se :call SourceRange()<cr>
 
 " Reload a lua module:
 nnoremap <silent> <leader>sR :lua put( package.loaded[vim.fn.expand('%:t:r')] )<cr>
-nnoremap <silent> <leader><leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>:luafile %<cr>:echo 'reloaded!'<cr>
+nnoremap <silent> <leader>sr :lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r'))<cr>:luafile %<cr>:echo 'reloaded!'<cr>
 " nnoremap <silent> <leader><leader>sr :lua require( vim.fn.expand('%:t:r') )<cr>
-nnoremap <silent> <leader>sr :echo "use l so"<cr>
+" nnoremap <silent> <leader>sr :echo "use l so"<cr>
 
 command! -nargs=+ Rld lua require'plenary'.reload.reload_module(<q-args>)
 " Rld utils_general
@@ -163,15 +163,26 @@ endfunc
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md call VScriptToolsBufferMaps()
 
+
+let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#).*'
+
 func! VScriptToolsBufferMaps()
+
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
-  " nnoremap <silent><buffer> gei :call SourcePrintCommented()<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.require( 'utils_general' ).RgxSelect_Picker([], g:rgx_main_symbol_vimLua, ["-g", ".vim", ".lua"], [expand('%:p')] )<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.require('utils_general').RgxSelect_Picker([], "[A-Z]{3,}", ["-g", ".txt", ".vim", ".lua"], [expand('%:p')] )<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.require( 'utils_general' ).RgxSelect_Picker( [], g:rgx_main_symbol_vimLua, [], [ "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/lua"] )<cr>
+
+  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p") )<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( expand("%:p:h") )<cr>
+  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:rgx_main_symbol_vimLua )<cr>
+
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
   call tools_scala#bufferMaps_shared()
 endfunc
-" [9, 8] + [1, 2]
+
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local)'

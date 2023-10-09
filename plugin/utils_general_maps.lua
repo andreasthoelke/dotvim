@@ -13,7 +13,7 @@ local dirs_nvim = { [[/Users/at/.config/nvim/plugin]], [[/Users/at/.config/nvim/
 local rgx_caps_tag = [[\s[A-Z]{3,}:]]
 local rgx_comment = [[^(\s*)?(//|\*\s)]]
 local rgx_main_symbol = [[(def\s|case\sclass|enum\s|val\s[^e])]]
-local rgx_main_symbol_vim = [[^(func!\s|function|command!)]]
+local rgx_main_symbol_vimLua = [[^(func|local\sfunction|command!)]]
 -- local rgx_keymap_vimlua = [[keymap.*\n.*\n]]
 local rgx_keymap_vim = [[((noremap\s|map\s)|keymap.*\n.*\n)]]
 local rgx_header = [[─.*]]
@@ -72,7 +72,7 @@ local paths_patterns1 = {
 --     ) end )
 
 -- search in scala [S]ymbols:
--- (also not gel for the lsp symbols in the current file)
+-- (also note gel for the lsp symbols in the current file)
 vim.keymap.set( 'n',
   ',ss', function() require( 'utils_general' )
   .RgxSelect_Picker( {},
@@ -220,7 +220,7 @@ vim.keymap.set( 'n',
   ',svs', function() require( 'utils_general' )
   .RgxSelect_Picker(
     {},
-    rgx_main_symbol_vim,
+    rgx_main_symbol_vimLua,
     {},
     dirs_nvim
     ) end )
@@ -327,12 +327,6 @@ vim.keymap.set( 'n',
   '<leader>ca', function()
     vim.lsp.buf.code_action()
   end )
-
-
-
-
-
-
 
 
 

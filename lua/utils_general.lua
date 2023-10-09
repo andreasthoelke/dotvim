@@ -345,6 +345,27 @@ function M.Search_gs()
   } )
 end
 
+function _G.Search_mainPatterns( path, pattern )
+  if not pattern then
+    if vim.fn.expand("%:e") == "lua" then
+      pattern = [[^(fun|local\sfun|-- ─ ).*]]
+    elseif vim.fn.expand("%:e") == "vim" then
+      pattern = [[^(func|comma|" ─ ).*]]
+    else
+      pattern = [[(^#|\*).*]]
+    end
+  end
+  require('telescope.builtin').live_grep({
+    default_text = pattern,
+    search_dirs = { path },
+  })
+end
+
+
+
+
+
+
 
 -- First picker: https://github.com/nvim-telescope/telescope.nvim/blob/master/developers.md
 

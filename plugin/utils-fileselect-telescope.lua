@@ -23,6 +23,8 @@ local entry_display = require "telescope.pickers.entry_display"
 -- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
 
 
+-- ─   Config                                            ■
+
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 Telesc = require('telescope').setup{
   defaults = {
@@ -98,8 +100,8 @@ Telesc = require('telescope').setup{
     -- default_selection_index = 3,
     layout_config = {
       horizontal = {
-        width = 0.92,
-        height = 0.92,
+        width = 0.72,
+        height = 0.72,
         anchor = 'NW',
         prompt_position = 'top',
         sorting_strategy = 'ascending',
@@ -107,8 +109,9 @@ Telesc = require('telescope').setup{
         preview_height = 0.5,
       },
       vertical = {
-        width = 0.92,
-        height = 0.92,
+        width = 0.47,
+        height = 0.68,
+        anchor = 'E',
         dynamic_preview_title = true,
         prompt_position = 'top',
         sorting_strategy = 'ascending',
@@ -198,6 +201,12 @@ Telesc = require('telescope').setup{
   -- }
 }
 
+
+-- ─^  Config                                            ▲
+
+
+-- ─   Telescope extensions                              ■
+
 require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
 require('telescope').load_extension('file_browser')
@@ -284,6 +293,8 @@ easypick.setup({
 -- lua put( require'utils_general'.abc() )
 -- nnoremap ,ss <cmd>lua require('utils_general').Rg_RegexSelect_Picker({}, [[\s[A-Z]{3,}:]], {"-g", "**/AZioHttp/*.md", "-g", "**/BZioHttp/*.scala"})<cr>
 
+
+-- ─^  Telescope extensions                              ▲
 
 
 return M

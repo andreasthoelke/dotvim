@@ -2,7 +2,7 @@
 
 
 
-" ─   Windows                                            ■
+" ─   Windows                                           ──
 
 
 set splitbelow
@@ -10,34 +10,17 @@ set splitright
 " Windows will always have status bar
 set laststatus=2
 
-" camspiers/lens.vim setup:
-let g:lens#disabled = 1
-let g:lens#disabled_filetypes = ['explorer', 'fzf']
-let g:lens#height_resize_min = 5
-let g:lens#height_resize_max = 12
-let g:lens#width_resize_min = 30
-let g:lens#width_resize_max = 100
-
-nnoremap <c-w>, :call lens#run()<cr>
-nnoremap ,<c-w>k <c-w>k:call lens#run()<cr>
-nnoremap ,<c-w>j <c-w>j:call lens#run()<cr>
-nnoremap ,<c-w>h <c-w>h:call lens#run()<cr>
-nnoremap ,<c-w>l <c-w>l:call lens#run()<cr>
-
-" call lens#toggle()
-" call lens#get_rows()
-" call lens#get_cols()
 
 " close win above, below, left, right
-nnoremap <c-w>dk <c-w>k<c-w>c
-nnoremap <c-w>dj <c-w>j<c-w>c
-nnoremap <c-w>dh <c-w>h<c-w>c<c-w>p
-nnoremap <c-w>dl <c-w>l<c-w>c
+nnoremap <silent><c-w>dk <c-w>k<c-w>c
+nnoremap <silent><c-w>dj <c-w>j<c-w>c
+nnoremap <silent><c-w>dh <c-w>h<c-w>c<c-w>p
+nnoremap <silent><c-w>dl <c-w>l<c-w>c
 
-nnoremap <c-w>Sk :call WinShift('k')<cr>
-nnoremap <c-w>Sj :call WinShift('j')<cr>
-nnoremap <c-w>Sh :call WinShift('h')<cr>
-nnoremap <c-w>Sl :call WinShift('l')<cr>
+nnoremap <silent><c-w>Sk :call WinShift('k')<cr>
+nnoremap <silent><c-w>Sj :call WinShift('j')<cr>
+nnoremap <silent><c-w>Sh :call WinShift('h')<cr>
+nnoremap <silent><c-w>Sl :call WinShift('l')<cr>
 
 func! WinShift(dir)
   let filename = expand('%:p')
@@ -45,10 +28,10 @@ func! WinShift(dir)
   exec 'edit' filename
 endfunc
 
-nnoremap <c-w>xk :call WinSwap('k')<cr>
-nnoremap <c-w>xj :call WinSwap('j')<cr>
-nnoremap <c-w>xh :call WinSwap('h')<cr>
-nnoremap <c-w>xl :call WinSwap('l')<cr>
+nnoremap <silent><c-w>xk :call WinSwap('k')<cr>
+nnoremap <silent><c-w>xj :call WinSwap('j')<cr>
+nnoremap <silent><c-w>xh :call WinSwap('h')<cr>
+nnoremap <silent><c-w>xl :call WinSwap('l')<cr>
 
 func! WinSwap(dir)
   let filename1 = expand('%:p')
@@ -152,7 +135,6 @@ function! ThirdSplit()
   exec winheight(0)/3 . "split"
 endfunction
 
-" ─^  Windows                                            ▲
 
 
 " ─   Tabs                                               ■

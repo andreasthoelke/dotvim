@@ -874,7 +874,7 @@ func! Scala_showInFloat( data )
 endfun
 
 
-" ─   " PreviewServer                                   ──
+" ─   PreviewServer                                     ──
 " async running process scala-cli . --main-class PreviewServer
 " can be started in term (to debug) or as job (invisible)
 " no need for callback handlers
