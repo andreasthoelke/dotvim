@@ -9,7 +9,6 @@ vim.g.neo_tree_remove_legacy_commands = 1
 
 local tree_exec = require 'neo-tree.command'.execute
 local manager = require 'neo-tree.sources.manager'
--- local commands = require 'nvim-tree.commands'
 -- local Preview = require("neo-tree.sources.common.preview")
 
 -- ─   Helpers                                           ■
@@ -43,6 +42,10 @@ end
 -- nil and "yes" or "no"
 -- 0 and "yes" or "no"
 -- _ ▲ ▲
+
+
+  -- reveal_file = string The specific file to reveal.
+  -- dir = string      The root directory to set.
 
 
 

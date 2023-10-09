@@ -30,7 +30,6 @@ func! tools_scala#bufferMaps()
 
   nnoremap <silent><buffer>        gsh :call Scala_ServerClientRequest_x()<cr>
 
-
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
   nnoremap <silent><buffer> <leader>ey :call CreateInlineTestDec_indent_scala()<cr>
@@ -45,6 +44,23 @@ func! tools_scala#bufferMaps()
   " this works super nice. there's another (default?) mapping for leader ?
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
   nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+
+
+" ─   Regex search maps                                  ■
+
+" let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)\zs'
+" let g:Scala_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)\s\zs'
+
+" To be tested!
+  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p"), g:Scala_MainStartPattern )<cr>
+  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:Scala_TopLevPattern )<cr>
+
+  nnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel() )<cr>
+
+
+" ─^  Regex search maps                                  ▲
+
 
   call tools_scala#bufferMaps_shared()
 

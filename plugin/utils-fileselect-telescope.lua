@@ -53,6 +53,7 @@ Telesc = require('telescope').setup{
       i = {
         ["<c-s><c-u>"] = open_above,
         ["<c-s><c-b>"] = open_below,
+        ["<c-j>"] = function() vim.fn.feedkeys( ".*" ) end,
         ["<c-o>"] = trouble.open_with_trouble,
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,

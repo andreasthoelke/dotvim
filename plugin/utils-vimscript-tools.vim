@@ -179,6 +179,9 @@ func! VScriptToolsBufferMaps()
   " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( expand("%:p:h") )<cr>
   nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:rgx_main_symbol_vimLua )<cr>
 
+  nnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel() )<cr>
+
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
   call tools_scala#bufferMaps_shared()
 endfunc
