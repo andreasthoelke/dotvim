@@ -345,7 +345,7 @@ function M.Search_gs()
   } )
 end
 
-function _G.Search_mainPatterns( path, pattern )
+function _G.Search_mainPatterns( path, pattern, mode )
   if not pattern then
     if vim.fn.expand("%:e") == "lua" then
       pattern = [[^(fun|local\sfun|-- ─ ).*]]
@@ -356,6 +356,7 @@ function _G.Search_mainPatterns( path, pattern )
     end
   end
   require('telescope.builtin').live_grep({
+    initial_mode = mode or "insert",
     default_text = pattern,
     search_dirs = { path },
   })

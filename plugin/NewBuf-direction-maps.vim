@@ -51,7 +51,7 @@ nnoremap <silent> <c-w><leader>p  :call NewBuf_fromCursorLinkPath( "preview_back
 nnoremap <silent> <c-w><leader>o  :call NewBuf_fromCursorLinkPath( "float" )<cr>
 nnoremap <silent> <c-w><leader>i  :call NewBuf_fromCursorLinkPath( "full" )<cr>
 nnoremap <silent> <c-w><leader>t  :call NewBuf_fromCursorLinkPath( "tab" )<cr>
-nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_back" )<cr>
+nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_bg" )<cr>
 " _
 nnoremap <silent> <c-w><leader>v  :call NewBuf_fromCursorLinkPath( "right" )<cr>
 nnoremap <silent> <c-w><leader>V  :call NewBuf_fromCursorLinkPath( "right_back" )<cr>
@@ -66,7 +66,7 @@ nnoremap <silent> <c-w>,p  :call NewBuf_fromClipPath( "preview" )<cr>
 nnoremap <silent> <c-w>,o  :call NewBuf_fromClipPath( "float" )<cr>
 nnoremap <silent> <c-w>,i  :call NewBuf_fromClipPath( "full" )<cr>
 nnoremap <silent> <c-w>,t  :call NewBuf_fromClipPath( "tab" )<cr>
-nnoremap <silent> <c-w>,T  :call NewBuf_fromClipPath( "tab_back" )<cr>
+nnoremap <silent> <c-w>,T  :call NewBuf_fromClipPath( "tab_bg" )<cr>
 " _                     
 nnoremap <silent> <c-w>,v  :call NewBuf_fromClipPath( "right" )<cr>
 nnoremap <silent> <c-w>,V  :call NewBuf_fromClipPath( "right_back" )<cr>
@@ -141,14 +141,26 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
      \   GetLongestWord_inLine()->split('‖')
 
   if &filetype == 'NvimTree' || &filetype == 'neo-tree'
-    let [direction; maybeBg ] = a:direction->split('_')
+    let [direction; maybe_back ] = a:direction->split('_')
+    " do not run any post actions like wincmd p or tabprevious
     let cmd = NewBufCmds( path )[ direction ] 
     exec cmd
-    if len( maybeBg ) | call T_DelayedCmd('wincmd p') | end
-    " call Delay( 10, { _, a -> call v:lua.Ntree_launch( path ) } )
+    " TREE POST ACTION PHASE: 
+    if     a:direction == 'tab_bg' 
+      " delay the tabprevious call
+      call T_DelayedCmd('tabprevious', 50)
+    elseif a:direction == 'preview_back' 
+      " preview jump back can actually be instant/ without flicker
+      wincmd p 
+    else
+      " delay all other _back jumps (as neo-tree seems to need this)
+      if len( maybe_back ) | call T_DelayedCmd('wincmd p') | endif
+    endif
   else
+    " will run post actions like wincmd p or tabprevious rith away.
     let cmd = NewBufCmds( path )[ a:direction ] 
     exec cmd
+    " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
     if IsInFloatWin() | wincmd c | endif
   endif
@@ -170,12 +182,13 @@ endfunc
 
 func! NewBufCmds_templ()
   let mp = {}
+  let mp['preview'] = 'wincmd p | edit _PATH_'
   let mp['preview_back'] = 'wincmd p | edit _PATH_ | wincmd p'
   let mp['float'] = 'call Path_Float( "_PATH_" )'
   let mp['float_spinoff'] = 'wincmd c | call Path_Float( "_PATH_" )'
   let mp['full']  = 'edit _PATH_'
   let mp['tab']   = 'tabedit _PATH_'
-  let mp['tab_back'] = 'tabedit _PATH_ | tabprevious'
+  let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious'
   let mp['tab_spinoff'] = 'wincmd c | tabedit _PATH_'
   let mp['right'] = 'vnew _PATH_'
   let mp['right_back'] = 'vnew _PATH_ | wincmd p'
@@ -196,7 +209,7 @@ func! NewBufCmds( path )
   return NewBufCmds_templ()->map( {_idx, cmdTmp -> substitute( cmdTmp, '_PATH_', a:path, "" )} )
 endfunc
 " NewBufCmds( "src" )
-" Exec( NewBufCmds( ".gitignore" )["tab_back"] )
+" Exec( NewBufCmds( ".gitignore" )["tab_bg"] )
 " Exec( NewBufCmds( ".gitignore" )["float"] )
 " Exec( NewBufCmds( "src" )["float"] )
 " Exec( NewBufCmds( "src" )["down"] )

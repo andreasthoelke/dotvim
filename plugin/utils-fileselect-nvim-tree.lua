@@ -104,11 +104,11 @@ local function on_attach(bufnr)
 
   vim.keymap.set("n", "<leader>fd", find_directory_and_focus, opts('Find directory') )
 
-  vim.keymap.set('n', 'p', function() vim.fn.NewBuf_fromCursorLinkPath('preview_back')  end, opts('preview'))
+  vim.keymap.set('n', 'p', function() vim.fn.NewBuf_fromCursorLinkPath('preview')  end, opts('preview'))
   vim.keymap.set('n', 'o', function() vim.fn.NewBuf_fromCursorLinkPath('float')    end, opts('float'))
   -- vim.keymap.set('n', 'i', function() vim.fn.NewBuf_fromCursorLinkPath('full')     end, opts('full'))
   vim.keymap.set('n', 't', function() vim.fn.NewBuf_fromCursorLinkPath('tab')      end, opts('tab'))
-  vim.keymap.set('n', 'T', function() vim.fn.NewBuf_fromCursorLinkPath('tab_back')   end, opts('tab_back'))
+  vim.keymap.set('n', 'T', function() vim.fn.NewBuf_fromCursorLinkPath('tab_bg')   end, opts('tab_bg'))
   -- _                                                                             
   vim.keymap.set('n', 'v', function() vim.fn.NewBuf_fromCursorLinkPath('right')    end, opts('right'))
   vim.keymap.set('n', 'V', function() vim.fn.NewBuf_fromCursorLinkPath('right_back') end, opts('right_back'))

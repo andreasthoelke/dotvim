@@ -9,6 +9,7 @@ vim.g.neo_tree_remove_legacy_commands = 1
 
 local tree_exec = require 'neo-tree.command'.execute
 local manager = require 'neo-tree.sources.manager'
+local fs = require("neo-tree.sources.filesystem")
 -- local Preview = require("neo-tree.sources.common.preview")
 
 -- ─   Helpers                                           ■
@@ -45,14 +46,12 @@ end
 
 
 function _G.Ntree_launch( reveal_path, root_dir)
-
   tree_exec({
     position = "current",
-    reveal_file = reveal_path,
     dir = root_dir,
+    reveal_file = reveal_path,
     reveal_force_cwd = true,
   })
-
 end
 
 
@@ -214,9 +213,10 @@ require("neo-tree").setup({
 
     window = {
 
+      width = 33, -- applies to left and right positions
+
       mappings = {
 
-        ["o"] = "noop",
         ["<space>"] = {
           "toggle_node",
           nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
@@ -229,10 +229,10 @@ require("neo-tree").setup({
         ["<space>P"] = { "toggle_preview", config = { use_float = false } },
         -- ["l"] = "focus_preview",
         ["l"] = "noop",  -- use c-w i
-        ["s"] = "open_split",
+        -- ["s"] = "open_split",
         -- ["S"] = "split_with_window_picker",
         -- ["s"] = "vsplit_with_window_picker",
-        ["t"] = "open_tabnew",
+        -- ["t"] = "open_tabnew",
         -- ["<cr>"] = "open_drop",
         -- ["t"] = "open_tab_drop",
         ["i"] = "open",
@@ -259,8 +259,17 @@ require("neo-tree").setup({
         ["r"] = "noop",
         ["y"] = "noop",
         ["x"] = "noop",
-        ["p"] = "noop",
         ["m"] = "noop",
+        ["A"] = "noop",
+        ["go"] = "noop",
+
+        ["oc"] = "noop",
+        ["od"] = "noop",
+        ["og"] = "noop",
+        ["om"] = "noop",
+        ["on"] = "noop",
+        ["os"] = "noop",
+        ["ot"] = "noop",
 
         ["=="] = "toggle_auto_expand_width",
         ["q"] = "close_window",
@@ -270,9 +279,45 @@ require("neo-tree").setup({
         [">"] = "next_source",
 
 
-        -- ["v"] = "open_vsplit",
+        -- TODO: does this work with other sources than filesystem?
+        ["<leader>-"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          fs.navigate(state, vim.fn.getcwd(), current_path, nil, false)
+        end,
+        [",,i"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          fs.navigate(state, vim.fn.getcwd(), current_path, nil, false)
+        end,
+
+        ["p"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'preview_back', s.tree:get_node().path ) end,
+        ["o"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'float', s.tree:get_node().path ) end,
+        ["t"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
+        ["T"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
+        -- _
         ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
         ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
+        ["a"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'left', s.tree:get_node().path ) end,
+        ["u"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up', s.tree:get_node().path ) end,
+        ["U"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up_back', s.tree:get_node().path ) end,
+        ["s"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down', s.tree:get_node().path ) end,
+        ["S"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down_back', s.tree:get_node().path ) end,
+
+
+        ["<c-space>"] = function(state)
+            local path = state.tree:get_node().path
+            local folder = vim.fn.fnamemodify( path, ":h" )
+            vim.cmd( "edit " .. folder )
+            vim.fn.SearchLine( path )
+            tree_exec({ action = "close" })
+          end,
+
+        ["gq"] = function()
+            vim.fn.AlternateFileLoc_restore( 'edit' )
+            tree_exec({ action = "close" })
+          end,
+
 
       },
 
