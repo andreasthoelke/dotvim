@@ -17,7 +17,7 @@ func! tools_scala#bufferMaps()
   " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
 
   nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
-  nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>
+  nnoremap <silent><buffer>         ,gsr :call Scala_ServerRestart()<cr>
   nnoremap <silent><buffer>         ,,gsr :call Scala_ServerRestartTerm()<cr>
   nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
@@ -55,8 +55,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p"), g:Scala_MainStartPattern )<cr>
   nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:Scala_TopLevPattern )<cr>
 
-  nnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>') )<cr>
-  xnoremap <silent><buffer> gsd  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel() )<cr>
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel() )<cr>
 
 
 " ─^  Regex search maps                                  ▲

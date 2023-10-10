@@ -153,7 +153,7 @@ endfunc
 
 
 func! Rpi_data()
-  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_currentNode().rootpath)
   return [ cid, infoL->map( { _, v -> v->join(" ") } ) ]
 endfunc
 
@@ -229,19 +229,19 @@ endfunc
 
 
 func! RootPathInfo1()
-  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_currentNode().rootpath)
   let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
   return infoLf[1]
 endfunc
 
 func! RootPathInfo2()
-  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_currentNode().rootpath)
   let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
   return infoLf[2]
 endfunc
 
 func! RootPathInfo3()
-  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_current().rootpath)
+  let infoL = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_currentNode().rootpath)
   let infoLf = infoL[1:]->map( { _, v -> v->join(" ") } )
   return infoLf[3]
 endfunc
@@ -264,12 +264,12 @@ endfunc
 " BasePath_shorten("/Users/at/Downloads/temp")
 
 func! Ntree_rootDir()
-  let pathList = split( v:lua.Ntree_current().rootpath, '/' )
+  let pathList = split( v:lua.Ntree_currentNode().rootpath, '/' )
   return pathList[ len( pathList ) - 1 ]
 endfunc
 
 func! Ntree_rootDirRel()
-  let path = v:lua.Ntree_current().rootpath 
+  let path = v:lua.Ntree_currentNode().rootpath 
   let cwd = getcwd()
   let cwdList = split( cwd, '/' )
   let relPath = substitute( path, cwd, '', '' )
@@ -281,12 +281,12 @@ endfunc
 
 
 func! Ntree_parentDir()
-  let pathList = split( v:lua.Ntree_current().rootpath, '/' )
+  let pathList = split( v:lua.Ntree_currentNode().rootpath, '/' )
   return "|" . pathList[ len( pathList ) - 2 ]
 endfunc
 
 func! Ntree_linepath()
-  return v:lua.Ntree_current().linepath
+  return v:lua.Ntree_currentNode().linepath
 endfunc
 
 func! CwdInfo()

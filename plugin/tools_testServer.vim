@@ -78,11 +78,12 @@ func! TestServerCmd ( chosenObj )
   endif
 endfunc
 
-" A general sleep, pause, delay, timeout function!
-func! T_DelayedCmd( cmd, time )
-   call timer_start( a:time, { tid -> execute( a:cmd, "" )})
+" A general sleep, pause, delay, timeout function! Default delay = 5ms
+func! T_DelayedCmd( cmd, ... )
+   call timer_start( a:0 ? a:1 : 5, { tid -> execute( a:cmd, "" )})
 endfunc
 " T_DelayedCmd( "echo 'hi there'", 1000 )
+" T_DelayedCmd( "echo 'hi there'" )
 
 func! T_echo( str )
   call T_DelayedCmd( 'echom "' . a:str . '"', 500 )

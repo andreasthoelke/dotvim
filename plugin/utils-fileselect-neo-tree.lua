@@ -13,7 +13,7 @@ local manager = require 'neo-tree.sources.manager'
 
 -- ─   Helpers                                           ■
 
-function _G.Ntree_current()
+function _G.Ntree_currentNode()
   local state = manager.get_state_for_window()
   return {
     rootpath = state.path,
@@ -44,9 +44,16 @@ end
 -- _ ▲ ▲
 
 
-  -- reveal_file = string The specific file to reveal.
-  -- dir = string      The root directory to set.
+function _G.Ntree_launch( reveal_path, root_dir)
 
+  tree_exec({
+    position = "current",
+    reveal_file = reveal_path,
+    dir = root_dir,
+    reveal_force_cwd = true,
+  })
+
+end
 
 
 -- ─^  Helpers                                           ▲
@@ -224,7 +231,6 @@ require("neo-tree").setup({
         ["l"] = "noop",  -- use c-w i
         ["s"] = "open_split",
         -- ["S"] = "split_with_window_picker",
-        ["v"] = "open_vsplit",
         -- ["s"] = "vsplit_with_window_picker",
         ["t"] = "open_tabnew",
         -- ["<cr>"] = "open_drop",
@@ -262,6 +268,11 @@ require("neo-tree").setup({
         ["?"] = "noop",
         ["<"] = "prev_source",
         [">"] = "next_source",
+
+
+        -- ["v"] = "open_vsplit",
+        ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
+        ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
 
       },
 
@@ -338,6 +349,10 @@ require("neo-tree").setup({
         ["<space>H"] = "toggle_hidden",
         ["H"] = "noop",
         ["<space>K"] = "show_file_details",
+        ["<space><space>K"] = function(state)
+            local node = state.tree:get_node()
+            vim.print(node.path)
+          end,
         ["<space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
         ["<space>oc"] = { "order_by_created", nowait = false },
         ["<space>od"] = { "order_by_diagnostics", nowait = false },

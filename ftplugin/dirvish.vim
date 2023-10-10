@@ -20,22 +20,23 @@ nnoremap <buffer> ,,is :lua DirvishShowSize()<cr>
 " ─   NewBuf from path                                   ■
 " In dirvish i can use these standardized direction maps without prefix
 
-nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview")<cr>
+nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview_back")<cr>
 nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
 nnoremap <silent><buffer>i :call NewBuf_fromCursorLinkPath("full")<cr>
 nnoremap <silent><buffer>t :call NewBuf_fromCursorLinkPath("tab")<cr>
-nnoremap <silent><buffer>T :call NewBuf_fromCursorLinkPath("tab_bg")<cr>
+nnoremap <silent><buffer>T :call NewBuf_fromCursorLinkPath("tab_back")<cr>
 " _
 nnoremap <silent><buffer>v :call NewBuf_fromCursorLinkPath("right")<cr>
-nnoremap <silent><buffer>V :call NewBuf_fromCursorLinkPath("right_bg")<cr>
+nnoremap <silent><buffer>V :call NewBuf_fromCursorLinkPath("right_back")<cr>
 nnoremap <silent><buffer>a :call NewBuf_fromCursorLinkPath("left")<cr>
 nnoremap <silent><buffer>u :call NewBuf_fromCursorLinkPath("up")<cr>
-nnoremap <silent><buffer>U :call NewBuf_fromCursorLinkPath("up_bg")<cr>
+nnoremap <silent><buffer>U :call NewBuf_fromCursorLinkPath("up_back")<cr>
 nnoremap <silent><buffer>s :call NewBuf_fromCursorLinkPath("down")<cr>
-nnoremap <silent><buffer>S :call NewBuf_fromCursorLinkPath("down_bg")<cr>
+nnoremap <silent><buffer>S :call NewBuf_fromCursorLinkPath("down_back")<cr>
 
-nnoremap <silent><buffer><c-]>     :call v:lua.Tree_expandFolderInRootPath( getline('.'), expand('%:p') )<cr>
-nnoremap <silent><buffer><c-space> :call v:lua.Tree_focusPathInRootPath( getline('.'), expand('%:p') )<cr>
+" nnoremap <silent><buffer><c-]>     :call v:lua.Tree_expandFolderInRootPath( getline('.'), expand('%:p') )<cr>
+nnoremap <silent><buffer><c-]>     :call v:lua.Ntree_launch( getline('.'), expand('%:p') )<cr>
+nnoremap <silent><buffer><c-space> :call v:lua.Ntree_launch( getline('.'), expand('%:p') )<cr>
 
 
 " ─^  NewBuf from path                                   ▲
