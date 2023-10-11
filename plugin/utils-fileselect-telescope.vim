@@ -71,8 +71,10 @@ nnoremap ,sch <cmd>lua require('utils_general').Search_collection_md_headers()<c
 
 " ─   File openers                                      ──
 
-nnoremap <silent> gP         <cmd>Telescope oldfiles<cr>
-nnoremap <silent> gp         <cmd>Telescope frecency<cr>
+nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
+nnoremap <silent> gP         <cmd>Telescope frecency<cr>
+nnoremap <silent> g,p        <cmd>Telescope frecency workspace=CWD<cr>
+nnoremap <silent> g,P        <cmd>Telescope frecency workspace=LSP<cr>
 
 nnoremap <silent> go  <cmd>Telescope find_files hidden=true<cr>
 nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>

@@ -144,9 +144,26 @@ Telesc = require('telescope').setup{
   -- },
 
   extensions = {
-      bookmarks = {
-        selected_browser = 'chrome',
-      },
+    bookmarks = {
+      selected_browser = 'chrome',
+    },
+
+    frecency = {
+      -- db_root = "/home/my_username/path/to/db_root",
+      show_scores = false,
+      show_unindexed = true,
+      ignore_patterns = { "*.git/*", "*/tmp/*" },
+      disable_devicons = false,
+      db_safe_mode = false,
+      auto_validate = true,
+      workspaces = {
+        ["conf"]    = "/Users/at/.config",
+        -- ["data"]    = "/home/my_username/.local/share",
+        ["proj"] = "/Users/at/Documents/Proj",
+        -- ["wiki"]    = "/home/my_username/wiki"
+      }
+    }
+
     -- ['ui-select'] = {
     --   -- require('telescope.themes').get_dropdown {
     --   --   layout_config = {
