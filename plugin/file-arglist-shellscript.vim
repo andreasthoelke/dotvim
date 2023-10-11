@@ -296,6 +296,7 @@ func! CurrentRelativeFilePath ()
   let path = expand('%:p')
   let cwd = getcwd()
   let relPath = substitute( path, cwd, '', '' )
+  let relPath = substitute( relPath[1:], "/", ' ', 'g' )
   return relPath
 endfunc
 " CurrentRelativeFilePath()
@@ -304,6 +305,7 @@ func! CurrentRelativeFilePathOfWin()
   let path = expand('%:p')
   let cwd = getcwd( winnr() )
   let relPath = substitute( path, cwd, '', '' )
+  let relPath = substitute( relPath[1:], "/", ' ', 'g' )
   return relPath
 endfunc
 

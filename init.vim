@@ -157,12 +157,13 @@ Plug 'nanotee/sqls.nvim'
 " Plug 'neo4j-contrib/cypher-vim-syntax'
 Plug 'edgedb/edgedb-vim'
 
-" Git: --------------------------------------------------
+
+" ─   Git related plugins                               ──
 Plug 'tpope/vim-fugitive'
 " Plug 'jreybert/vimagit'
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 
-" Lua version of gitgutter?
+" Lua version of gitgutter!
 Plug 'lewis6991/gitsigns.nvim'
 
 " No longer supported
@@ -177,10 +178,10 @@ Plug 'mhinz/vim-grepper'
 " Plug 'rking/ag.vim'
 
 " Tabline Statusline: -----------------------------------------------------------
-" Faster than airline and cleaner config?
 Plug 'itchyny/lightline.vim'
-" Lightline compliant buffer/tabline
-" Plug 'mengelbrecht/lightline-bufferline'
+
+Plug 'nvim-lualine/lualine.nvim'
+
 
 " May activate this at times to create styled promptline
 " Plug 'vim-airline/vim-airline'

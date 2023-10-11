@@ -183,7 +183,7 @@ nnoremap <leader>,ga :CocCommand fzf-preview.GitActions<cr>
 " nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
 nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
 
-nnoremap <leader><leader>gq :GitGutterQuickFix<cr>:copen<cr>
+" nnoremap <leader><leader>gq :GitGutterQuickFix<cr>:copen<cr>
 
 let g:Gitv_CustomMappings = {
       \'update': 'r',
@@ -234,8 +234,8 @@ let g:gitgutter_signs = 0
 " TODO test. This may be useful as a diff?
 " let g:gitgutter_diff_base = '<some commit SHA>'
 
-nnoremap ]c :GitGutterNextHunk<cr>
-nnoremap [c :GitGutterPrevHunk<cr>
+nnoremap <silenet>]c :GitGutterNextHunk<cr>
+nnoremap <silenet>[c :GitGutterPrevHunk<cr>
 
 " nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 " nmap <silent> [c :call PrevHunkAllBuffers()<CR>

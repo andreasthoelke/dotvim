@@ -66,6 +66,23 @@ let g:lightline.active = {}
 let g:lightline.inactive = {}
 
 
+" augroup lightline_statusline
+"   autocmd!
+"   autocmd FileType * call LightlineFiletype()
+" augroup END
+
+" func! LightlineFiletype()
+"   " let ext = expand('%:e')
+"   " if &filetype == 'neo-tree'
+"   if &filetype == 'TelescopePrompt'
+"     call StatusLine_default()
+"     " call StatusLine_neotree()
+"   else
+"   endif
+" endfunc
+
+" lightline#highlight
+
 func! StatusLine_default()
   let g:lightline.active.left   = [ [], ['projectRootFolderName'], ['relativepath_fresh'] ]
   let g:lightline.active.right = [ ['scrollbar'], ['line'], ['db', 'pyVirtEnvStr', 'scalaMetalsStatus'] ]
@@ -74,6 +91,8 @@ func! StatusLine_default()
 endfunc
 
 func! StatusLine_neotree()
+  " seems needed bc/ telescope prompts don't seem to fire the neo-tree leave event / enter events properly
+  if &filetype != 'neo-tree' | echoe "status event shouldn't happen" | return | endif
   " The 6 highlight slots are fixed to 6 functions (outputting path segments) below.
   " this is needed bc/ in the troot_out_cwd__cwd_in_troot case the cwd is inside/to the right of the tree-root path.
   " This case will not use the normal1 and cwd1 highlight segments. Only normal3 and cwd2 follow-up to the troot highlight.

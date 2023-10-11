@@ -73,6 +73,10 @@ require("neo-tree").setup({
       event = "neo_tree_buffer_leave",
       handler = function() vim.fn.StatusLine_default() end,
     },
+    {
+      event = "neo_tree_popup_buffer_enter",
+      handler = function() vim.fn.StatusLine_default() end,
+    },
   },
 
   renderers = {
@@ -261,7 +265,7 @@ require("neo-tree").setup({
         ["x"] = "noop",
         ["m"] = "noop",
         ["A"] = "noop",
-        ["go"] = "noop",
+        -- ["go"] = "noop",
 
         ["oc"] = "noop",
         ["od"] = "noop",
@@ -306,17 +310,28 @@ require("neo-tree").setup({
 
 
         ["<c-space>"] = function(state)
-            local path = state.tree:get_node().path
-            local folder = vim.fn.fnamemodify( path, ":h" )
-            vim.cmd( "edit " .. folder )
-            vim.fn.SearchLine( path )
-            tree_exec({ action = "close" })
-          end,
+          local path = state.tree:get_node().path
+          local folder = vim.fn.fnamemodify( path, ":h" )
+          vim.cmd( "edit " .. folder )
+          vim.fn.SearchLine( path )
+          tree_exec({ action = "close" })
+        end,
 
         ["gq"] = function()
-            vim.fn.AlternateFileLoc_restore( 'edit' )
-            tree_exec({ action = "close" })
-          end,
+          vim.fn.AlternateFileLoc_restore( 'edit' )
+          tree_exec({ action = "close" })
+        end,
+
+
+        -- ["go"] = function()
+        --   vim.cmd( 'wincmd p' )
+        --   vim.cmd( 'Telescope find_files hidden=true' )
+        -- end,
+
+        -- ["go"] = function()
+        --   vim.fn.StatusLine_default()
+        --   -- vim.fn.T_DelayedCmd( "Telescope find_files hidden=true", 1000 )
+        -- end,
 
 
       },
