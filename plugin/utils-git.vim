@@ -21,6 +21,8 @@ endfunc
 
 " ─   Git                                                ■
 
+" Gitsigns maps: ~/.config/nvim/plugin/utils-gitsigns.lua‖*Config
+
 command!          Gitpush   call ShellReturn( 'git push' )
 command!          Gitstatus call ShellReturn( 'git status' )
 command!          Gitstatus call ShellReturn( 'git status' )
@@ -209,7 +211,7 @@ let g:gitgutter_map_keys = 0
 " nnoremap <leader><leader>gg :GitGutterSignsToggle<cr>
 " nnoremap <leader>gg :GitGutterSignsToggle<cr>
 
-" Note: Gutter updates on save!
+nnoremap <silent><leader>gg :Gitsigns toggle_signs<cr>
 
 " nnoremap ]c <Plug>(GitGutterNextHunk)
 " nnoremap [c <Plug>(GitGutterPrevHunk)

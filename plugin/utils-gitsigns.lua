@@ -1,4 +1,13 @@
 
+-- Other git maps: ~/.config/nvim/plugin/utils-git.vim‖*Git
+
+-- ─   Helpers                                          ──
+
+
+
+
+
+-- ─   Config                                           ──
 
 require('gitsigns').setup {
   signs = {
@@ -9,7 +18,7 @@ require('gitsigns').setup {
     changedelete = { text = '~' },
     untracked    = { text = '┆' },
   },
-  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  signcolumn = false,  -- Toggle with `:Gitsigns toggle_signs`
   numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
   linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
   word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
@@ -60,7 +69,7 @@ require('gitsigns').setup {
       return '<Ignore>'
     end, {expr=true})
 
-    -- Staging & unstaging hunks
+-- ─   Staging git hunks                                ──
     map('n', '<leader>hs', gs.stage_hunk)
     map('n', '<leader>hr', gs.reset_hunk)
     map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
