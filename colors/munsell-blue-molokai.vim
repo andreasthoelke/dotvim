@@ -465,6 +465,12 @@ hi! def link NeoTreeRootName CommentSection
 "                           is set to "NC". This is derived from NeoTreeFloatBorder.
 " NeoTreeWindowsHidden      Used for icons and names that are hidden on Windows.
 
+hi! def link GitSignsAdd CommentMinusMinus
+hi! def link GitSignsChange CommentMinusMinus
+hi! def link GitSignsDelete CommentMinusMinus
+
+
+
 
 " Startify
 hi! def link StartifyPath CommentMinus

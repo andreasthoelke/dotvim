@@ -279,20 +279,20 @@ func! GetAPICmdStr( query, limit, infoFlag )
   return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
-nnoremap <leader>hii :call PsImportIdentifier( expand('<cword>') )<cr>
-nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', expand('<cword>')) )<cr>
-vnoremap <leader>hii :<c-u>call PsImportIdentifier( GetVisSel() )<cr>
-vnoremap <leader>hiI :<c-u>call PsImportIdentifier( input( 'Import identifier: ', GetVisSel()) )<cr>
+" nnoremap <leader>hii :call PsImportIdentifier( expand('<cword>') )<cr>
+" nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', expand('<cword>')) )<cr>
+" vnoremap <leader>hii :<c-u>call PsImportIdentifier( GetVisSel() )<cr>
+" vnoremap <leader>hiI :<c-u>call PsImportIdentifier( input( 'Import identifier: ', GetVisSel()) )<cr>
 
 func! PsImportIdentifier( identifier )
   " echoe a:identifier
   call vimmerps#PaddImport( a:identifier )
 endfunc
 
-nnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('n') )<cr>
-nnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('n', 'Import identifier: ') )<cr>
-vnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('visual') )<cr>
-vnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('visual', 'Import identifier: ') )<cr>
+" nnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('n') )<cr>
+" nnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('n', 'Import identifier: ') )<cr>
+" vnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('visual') )<cr>
+" vnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('visual', 'Import identifier: ') )<cr>
 
 map      <Leader>lhi :call LanguageClient#textDocument_codeAction()<CR>
 
@@ -390,8 +390,8 @@ func! HoogleLineJump() "{{{
   call HoogleInsert( l:module_symbol_str, ' --info' )
 endfunction "}}}
 " To go back to the search results overview, just run the previous search again
-" nnoremap <silent> <buffer> <localleader><c-o> <esc>:call HoogleLookup( g:hoogle_prev_search, '' )<cr>
-" nnoremap <silent> <buffer> <localleader><c-o> :call HoogleGoBack()<cr>
+nnoremap <silent> <buffer> <localleader><c-o> <esc>:call HoogleLookup( g:hoogle_prev_search, '' )<cr>
+nnoremap <silent> <buffer> <localleader><c-o> :call HoogleGoBack()<cr>
 
 
 

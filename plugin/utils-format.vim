@@ -177,7 +177,7 @@ command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:H
 
 " ─   Formatting Haskell Imports                         ■
 let g:stylish_haskell_command = 'stylish-haskell'
-noremap <leader>hfi :call StylishHaskell()<cr>
+" noremap <leader>hfi :call StylishHaskell()<cr>
 command! FormatImports :call StylishHaskell()
 command! Indent :call StylishHaskell()
 

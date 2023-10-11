@@ -158,10 +158,10 @@ endfunc
 
 
 
-nnoremap <silent> <leader>ha :set opfunc=AlignTypeSigs_op<cr>g@
-vnoremap <silent> <leader>ha :<c-u>call AlignTypeSigs_op( visualmode(), 1)<cr>
+" nnoremap <silent> <leader>ha :set opfunc=AlignTypeSigs_op<cr>g@
+" vnoremap <silent> <leader>ha :<c-u>call AlignTypeSigs_op( visualmode(), 1)<cr>
 " Note: This *does* work with "V"/ Visual-Block mode or "v"
-nnoremap <silent> <leader>hA :call HsAlignTypeSigs()<cr>
+" nnoremap <silent> <leader>hA :call HsAlignTypeSigs()<cr>
 " or "viB<space>ha<c-o>"
 
 " Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below

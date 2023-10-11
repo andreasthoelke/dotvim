@@ -206,8 +206,8 @@ let g:gitgutter_map_keys = 0
 
 " nnoremap <leader><leader>gg :GitGutterToggle<cr>
 " nnoremap <leader>gg :GitGutterToggle<cr>
-nnoremap <leader><leader>gg :GitGutterSignsToggle<cr>
-nnoremap <leader>gg :GitGutterSignsToggle<cr>
+" nnoremap <leader><leader>gg :GitGutterSignsToggle<cr>
+" nnoremap <leader>gg :GitGutterSignsToggle<cr>
 
 " Note: Gutter updates on save!
 
