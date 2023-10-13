@@ -64,20 +64,20 @@ require("neo-tree").setup({
 
   hide_root_node = true, -- Hide the root node.
 
-  event_handlers = {
-    {
-      event = "neo_tree_buffer_enter",
-      handler = function() vim.fn.StatusLine_neotree() end,
-    },
-    {
-      event = "neo_tree_buffer_leave",
-      handler = function() vim.fn.StatusLine_default() end,
-    },
-    {
-      event = "neo_tree_popup_buffer_enter",
-      handler = function() vim.fn.StatusLine_default() end,
-    },
-  },
+  -- event_handlers = {
+  --   {
+  --     event = "neo_tree_buffer_enter",
+  --     handler = function() vim.fn.StatusLine_neotree() end,
+  --   },
+  --   {
+  --     event = "neo_tree_buffer_leave",
+  --     handler = function() vim.fn.StatusLine_default() end,
+  --   },
+  --   {
+  --     event = "neo_tree_popup_buffer_enter",
+  --     handler = function() vim.fn.StatusLine_default() end,
+  --   },
+  -- },
 
   renderers = {
     -- This overwrites the "directory" renderer. This is actually the default copied from ~/.config/nvim/scratch/neo-tree-defaults.sct‖:260:5

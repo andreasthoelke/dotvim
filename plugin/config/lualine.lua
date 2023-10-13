@@ -14,7 +14,7 @@ local function git_diff_changeCount()
       -- modified = gitsigns.changed,
       -- removed = gitsigns.removed,
       -- Have only one number to indicate the amount of change in the file.
-      modified = gitsigns.added + gitsigns.changed + gitsigns.removed,
+      added = gitsigns.added + gitsigns.changed + gitsigns.removed,
     }
   end
 end
@@ -31,35 +31,20 @@ local function grbox()
     darkgray     = '#3c3836',
     lightgray    = '#504945',
     inactivegray = '#7c6f64',
+    BlackBGsoft  = '#101010',
   }
   return {
     normal = {
       a = {bg = colors.gray, fg = colors.black, gui = 'bold'},
+      -- a = {bg = colors.gray, fg = colors.black},
       b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.darkgray, fg = colors.gray}
-    },
-    insert = {
-      a = {bg = colors.blue, fg = colors.black, gui = 'bold'},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.lightgray, fg = colors.white}
-    },
-    visual = {
-      a = {bg = colors.yellow, fg = colors.black, gui = 'bold'},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.inactivegray, fg = colors.black}
-    },
-    replace = {
-      a = {bg = colors.red, fg = colors.black, gui = 'bold'},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.black, fg = colors.white}
-    },
-    command = {
-      a = {bg = colors.green, fg = colors.black, gui = 'bold'},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.inactivegray, fg = colors.black}
+      c = {bg = colors.darkgray, fg = colors.gray},
+      x = {bg = colors.gray, fg = colors.white},
+      y = {bg = colors.lightgray, fg = colors.white},
+      z = {bg = colors.gray, fg = colors.black},
     },
     inactive = {
-      a = {bg = colors.darkgray, fg = colors.gray, gui = 'bold'},
+      a = {bg = colors.BlackBGsoft, fg = colors.gray, gui = 'bold'},
       b = {bg = colors.darkgray, fg = colors.gray},
       c = {bg = colors.darkgray, fg = colors.gray}
     }
@@ -70,6 +55,7 @@ end
 -- ─   Config                                           ──
 
 local neo_tree = { sections = { lualine_a = {'mode'} }, filetypes = {'neo-tree'} }
+
 
 require('lualine').setup {
 
@@ -90,7 +76,8 @@ require('lualine').setup {
       tabline = 1000,
       winbar = 1000,
     },
-    -- theme = grbox,
+    theme = grbox,
+    -- theme = 'auto',
   },
 
   sections = {
@@ -98,7 +85,7 @@ require('lualine').setup {
     lualine_b = { 'CurrentRelativeFilePath' },
     lualine_c = {},
     lualine_x = { {'diff', source = git_diff_changeCount} },
-    lualine_y = { '%3p' },
+    lualine_y = { "g:metals_status", 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
@@ -110,16 +97,49 @@ require('lualine').setup {
     lualine_z = {}
   },
 
-  tabline = {},
+  -- tabline = {},
+  tabline = {
+    lualine_a = {
+      {
+        'tabs',
+        mode = 2,
+        max_length = vim.o.columns / 1.2, -- Maximum width of tabs component.
+        tabs_color = {
+          -- Same values as the general color option can be used here.
+          active = 'lualine_a_normal',     -- Color for active tab.
+          inactive = 'lualine_a_inactive', -- Color for inactive tab.
+        },
+      }
+    },
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {}
+  },
 
   winbar = {},
-  inactive_winbar = {},
+  -- winbar = {
+  --   lualine_a = {},
+  --   lualine_b = {},
+  --   lualine_c = {'filename'},
+  --   lualine_x = {},
+  --   lualine_y = {},
+  --   lualine_z = {}
+  -- },
 
-  extensions = { 'quickfix', 'fugitive', 'trouble', neo_tree }
+  inactive_winbar = {},
+  -- inactive_winbar = {
+  --   lualine_a = {},
+  --   lualine_b = {},
+  --   lualine_c = {'filename'},
+  --   lualine_x = {},
+  --   lualine_y = {},
+  --   lualine_z = {}
+  -- },
+
+  -- extensions = { 'quickfix', 'fugitive', 'trouble', neo_tree }
 
 }
-
-
-
 
 

@@ -75,7 +75,7 @@ func! HaskellTools()
 endfunc
 
 
-nnoremap <leader>cm :call clearmatches()<cr>
+nnoremap <silent><leader>cm :call clearmatches()<cr>
 
 
 func! SQLSyntaxAdditions()

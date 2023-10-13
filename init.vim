@@ -67,6 +67,8 @@ Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'folke/noice.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'rcarriga/nvim-notify'
+" this is for lsp loading progress like in lua_ls. 
+" Plug 'j-hui/fidget.nvim'
 
 " Plug 'rmagatti/auto-session'
 " Plug 'rmagatti/session-lens'
@@ -178,7 +180,7 @@ Plug 'mhinz/vim-grepper'
 " Plug 'rking/ag.vim'
 
 " Tabline Statusline: -----------------------------------------------------------
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
 
 Plug 'nvim-lualine/lualine.nvim'
 
@@ -282,7 +284,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/playground'
 
-" LSP Language server / client:
+" ─   LSP                                                ■
 Plug 'neovim/nvim-lspconfig'
 Plug 'jose-elias-alvarez/null-ls.nvim'
 
@@ -293,7 +295,7 @@ Plug 'folke/trouble.nvim'
 " https://github.com/folke/lsp-colors.nvim
 Plug 'folke/lsp-colors.nvim'
 
-
+Plug 'SmiteshP/nvim-navic'
 
 " Completion engine
 " Plug 'hrsh7th/nvim-cmp'
@@ -318,6 +320,8 @@ Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim'
 
 " https://github.com/DNLHC/glance.nvim/blob/master/README.md
 Plug 'dnlhc/glance.nvim'
+
+" ─^  LSP                                                ▲
 
 " couldn't get this to work
 " Plug 'L3MON4D3/LuaSnip'

@@ -193,9 +193,6 @@ let g:startify_session_dir = stdpath('data') . '/sessions'
 " __Users__at__Documents__Architecture__examples__graphql-relay-js
 
 func! SessionLoadForCWDStartify()
-  if &ft == 'NvimTree' 
-    wincmd l 
-  endif
 
   let sessionFile = substitute( getcwd(), '/', '__', 'g' )
   " let sessionPath = g:startify_session_dir . '/' . sessionFile

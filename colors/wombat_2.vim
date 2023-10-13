@@ -88,4 +88,4 @@ let s:p.tabline.right = [ [ s:base2, s:base00 ] ]
 let s:p.normal.error = [ [ s:base03, s:red ] ]
 let s:p.normal.warning = [ [ s:base023, s:yellow ] ]
 
-let g:lightline#colorscheme#wombat_2#palette = lightline#colorscheme#flatten(s:p)
+" let g:lightline#colorscheme#wombat_2#palette = lightline#colorscheme#flatten(s:p)

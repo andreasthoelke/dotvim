@@ -8,7 +8,6 @@
 "
 " Note: Based on the Monokai theme for TextMate
 " by Wimer Hazenberg and its darker variant
-" by Hamish Stuart Macpherson
 
 hi clear
 
@@ -29,17 +28,38 @@ hi Constant        guifg=#AE81FF               gui=bold
 hi Debug           guifg=#BCA3A3               gui=bold
 hi Define          guifg=#66D9EF
 " hi Delimiter       guifg=#8F8F8F
-hi DiffAdd                       guibg=#13354A
-hi DiffChange      guifg=#89807D guibg=#4C4745
-hi DiffDelete      guifg=#960050 guibg=#1E0010
-hi DiffText                      guibg=#4C4745 gui=italic,bold"
+
+" hi DiffAdd                       guibg=#13354A
+" hi DiffChange      guifg=#89807D guibg=#4C4745
+" hi DiffDelete      guifg=#960050 guibg=#1E0010
+" hi DiffText                      guibg=#4C4745 gui=italic,bold"
+
+" hi! DiffAdd         guifg=NONE guibg=#181818
+" hi! DiffAdd         guifg=NONE guibg=#17191C
+" hi! DiffChange      guifg=#89807D guibg=#4C4745
+hi! DiffChange      guifg=NONE guibg=#000000
+" hi! DiffDelete      guifg=NONE guibg=#1E0010
+" hi! DiffDelete      NONE
+" hi! DiffText                      guibg=#4C4745 gui=italic,bold"
+hi! DiffText                      guibg=#282C31
+
+" lua vim.api.nvim_set_hl(0, 'DiffDelete', { link='CommentLabel' })
+" lua vim.api.nvim_set_hl(0, 'DiffAdd', { bg='#121416' })
+lua vim.api.nvim_set_hl(0, 'DiffAdd', { fg='NONE', bg='#17191C' })
+lua vim.api.nvim_set_hl(0, 'DiffDelete', { bg='#0E0E0E' })
+
 
 " hi Directory       guifg=#A6E22E               gui=bold
 hi Directory       guifg=#11C8D7
 
-hi Error           guifg=#960050 guibg=#1E0010
+" hi Error           guifg=#960050 guibg=#1E0010
 " hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
-hi ErrorMsg        guifg=#960050 guibg=#151719
+" hi ErrorMsg        guifg=#960050 guibg=#151719
+
+" doesn't work
+" hi! def link NoiceAttr4 CommentLabel
+" hi! def link DiagnosticVirtualTextError CommentLabel
+" lua vim.api.nvim_set_hl(0, 'NoiceAttr4', { link='CommentLabel' })
 
 hi! def link Error purescriptIdentifier
 hi! def link ErrorMsg purescriptIdentifier
@@ -702,6 +722,7 @@ hi BlackBG guibg=#000000
 hi BlackBGsoft guibg=#101010
 hi GreyBG guibg=#262626
 hi CommentSection guifg=#42606B guibg=#0E0E0E
+hi CommentLabel   guifg=#42606B guibg=#030303
 hi CommentLabel   guifg=#42606B guibg=#030303
 hi CommentMarkup   guifg=#26383D guibg=#0D0F10
 

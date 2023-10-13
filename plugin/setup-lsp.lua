@@ -76,9 +76,17 @@ local on_attach = function(client, bnr)
   -- buf_map(bnr, "n", "ga", ":LspCodeAction<CR>")
   -- buf_map(bnr, "n", "<Leader>a", ":LspDiagLine<CR>")
   -- buf_map(bnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
+
+
   if client.server_capabilities.document_formatting then
       vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
   end
+
+  if client.server_capabilities.documentSymbolProvider then
+    local navic = require "nvim-navic"
+    navic.attach(client, bnr)
+  end
+
 
 end
 
@@ -426,6 +434,7 @@ lspconfig.jsonls.setup({
 -- local runtime_path = vim.split(package.path, ';')
 -- table.insert(runtime_path, "lua/?.lua")
 -- table.insert(runtime_path, "lua/?/init.lua")
+
 
 lspconfig.lua_ls.setup {
   capabilities = capabilities,
@@ -844,6 +853,7 @@ metals_config.settings = {
   superMethodLensesEnabled = true,
   enableSemanticHighlighting = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
+
 }
 
 -- vim.highlight.priorities.semantic_tokens
@@ -869,32 +879,12 @@ metals_config.init_options.statusBarProvider = "on"
 
 metals_config.capabilities = capabilities
 
--- Debug settings if you're using nvim-dap
--- local dap = require("dap")
-
--- dap.configurations.scala = {
---   {
---     type = "scala",
---     request = "launch",
---     name = "RunOrTest",
---     metals = {
---       runType = "runOrTestFile",
---       --args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
---     },
---   },
---   {
---     type = "scala",
---     request = "launch",
---     name = "Test Target",
---     metals = {
---       runType = "testTarget",
---     },
---   },
--- }
-
--- metals_config.on_attach = function(client, bufnr)
---   require("metals").setup_dap()
--- end
+metals_config.on_attach = function(client, bufnr)
+  if client.server_capabilities.documentSymbolProvider then
+    local navic = require "nvim-navic"
+    navic.attach(client, bufnr)
+  end
+end
 
 -- Autocmd that will actually be in charge of starting the whole thing
 local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })

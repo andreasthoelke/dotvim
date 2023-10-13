@@ -44,7 +44,7 @@ require('gitsigns').setup {
     style = 'minimal',
     relative = 'cursor',
     row = 0,
-    col = 0
+    col = 1, -- NOTE: this HAS to be 1 or bigger else the win doesn't show
   },
 
   on_attach = function(bufnr)
@@ -79,6 +79,8 @@ require('gitsigns').setup {
     map('n', '<leader>hR', gs.reset_buffer)
 
     map('n', '<leader>hp', gs.preview_hunk_inline)
+    map('n', '<leader>hP', gs.preview_hunk)
+    map('n', '<leader>dp', gs.preview_hunk_inline)
     map('n', '<leader>hb', gs.toggle_current_line_blame)
     map('n', '<leader>hd', gs.diffthis)
     map('n', '<leader>hD', function() gs.diffthis('~') end)
