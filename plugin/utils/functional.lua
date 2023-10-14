@@ -5,12 +5,14 @@ function _G.Func1()
   local myList = List { 9, 14, 32, 5 }
   return myList:is_list()
 end
+
 -- Func1()
 
 function _G.Func2()
   local hist = List( require( 'notify' ).history() )
   return hist
 end
+
 -- Func2()
 
 
@@ -65,9 +67,18 @@ end
 
 function _G.Func3()
   -- return map ({1,2,3,4,5,6,7,8}, function(x) return x^2 end)
-  return fun.rands(4, 10)
   -- return filter({1,2,3,4,5,6,7,8}, function(x) return x%2==1 end)
+  -- return fun.rands(4, 10)
+  local a = vim.defaulttable()
+  a.b.c = 1
+  -- return a
+  -- local res = vim.endswith( 'abc', 'bc' )
+  local res = vim.gsplit("ab|cd", "|", {plain=true})
+  -- for s in res do put( s ) end
+  -- put( iteratorToSting( res ) )
+  return res
 end
+
 -- Func3()
 
 -- vim table map
@@ -78,6 +89,9 @@ end
 -- ~/.config/nvim/plugged/plenary.nvim/lua/plenary/collections/py_list.lua‖
 -- ~/.config/nvim/plugged/plenary.nvim/tests/plenary/py_list_spec.lua‖
 
+-- vim.print( vim.gsplit(':aa::b:', ':', {plain=true}) )
+
+-- /opt/homebrew/Cellar/neovim/0.9.0/share/nvim/runtime/doc/lua.txt‖/gsplit({s},
 
 
 

@@ -34,10 +34,29 @@ function _G.put(...)
   return ...
 end
 
+function _G.iteratorToSting( it )
+  local st = ""
+  for v in it do
+    st = st .. '\n' .. tostring( v )
+  end
+  return st
+end
 
-function _G.putt( table, title )
-  vim.notify( vim.inspect( table ), "info", {
-    title = title or "lua table",
+
+function _G.printToString( value )
+  local pval
+  if type( value ) == "function" then
+    pval = iteratorToSting( value )
+  else
+    pval = vim.inspect( value )
+  end
+  return pval
+end
+
+function _G.putt( value, title )
+  local pval = printToString( value )
+  vim.notify( pval, "info", {
+    title = title or type( value ),
     timeout = 400000,
     on_open = function(win)
       local buf = vim.api.nvim_win_get_buf(win)

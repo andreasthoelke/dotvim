@@ -152,7 +152,8 @@ func! PrintVimOrLuaLine()
 
   let code = [0,0,0]
   let code[0] = 'local ret = ' . expr
-  let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
+  " let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
+  let code[1] = 'local printVal = ret and printToString(ret) or ""'
   " let code[2] = 'vim.print( printVal )'
   let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
 
@@ -189,7 +190,8 @@ endfunc
 
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local)'
+let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local|.{-}\*\S{-}\*)'
+" the *\S{-}\* patterns is searching vim help headlines
 
 
 func! Vim_MainStartBindingForw()
