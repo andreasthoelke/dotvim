@@ -50,7 +50,7 @@ function _G.Ntree_launch( reveal_path, root_dir)
     position = "current",
     dir = root_dir,
     reveal_file = reveal_path,
-    reveal_force_cwd = true,
+    reveal_force_cwd = false,
   })
 end
 

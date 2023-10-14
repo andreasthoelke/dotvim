@@ -104,6 +104,7 @@ func! Browse_cwd( direction )
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   " call v:lua.Tree_focusPathInRootPath( file, cwd ) 
+  " TODO: if a file is not in the cwd, do not attempt to reveal it
   call v:lua.Ntree_launch( file, cwd ) 
   if len( maybeBg ) | wincmd p | end
 endfunc
