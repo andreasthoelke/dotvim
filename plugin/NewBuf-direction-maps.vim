@@ -159,10 +159,10 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   else
     " will run post actions like wincmd p or tabprevious rith away.
     let cmd = NewBufCmds( path )[ a:direction ] 
+    if IsInFloatWin() | wincmd c | endif
     exec cmd
     " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
-    if IsInFloatWin() | wincmd c | endif
   endif
 endfunc
 
