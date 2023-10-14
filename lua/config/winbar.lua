@@ -43,7 +43,7 @@ end
 
 local function get_location()
   local location = navic.get_location()
-  local loc = vim.fn.split( location, "|" )
+  -- local loc = vim.fn.split( location, "|" )
   if not utils.is_empty(location) then
     return "%#WinBarContext#" .. " " .. icons.ui.ChevronRight .. " " .. location .. "%*"
   end
@@ -70,4 +70,10 @@ function M.get_winbar()
 end
 
 return M
+
+
+
+-- fun = require 'fun'
+-- lua for _k, a in require('luafun_neovim').range(3) do print(a) end
+
 

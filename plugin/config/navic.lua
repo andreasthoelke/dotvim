@@ -39,8 +39,8 @@ navic.setup {
 
   },
   highlight = true,
-  -- separator = " " .. icons.ui.ChevronRight .. " ",
-  separator = "|",
+  separator = " " .. icons.ui.ChevronRight .. " ",
+  -- separator = "|",
   depth_limit = 0,
   depth_limit_indicator = "_",
 }

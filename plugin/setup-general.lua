@@ -99,10 +99,6 @@ vim.api.nvim_set_keymap('n', '<localleader><localleader>sc', ':set filetype=pure
 
 
 
-
-
-
-
 -- https://github.com/dhruvmanila/browser-bookmarks.nvim
 -- local bookmlib = require('browser-bookmarks').setup({
 --   -- override default configuration values
@@ -188,6 +184,36 @@ require('glow').setup({
   width_ratio = 0.7, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
   height_ratio = 0.7,
 })
+
+-- make a map!
+-- require'notify'.history()
+    -- message = { "Failed to modify settings", "", "Please modify following settings manually:", "* `Lua.workspace.checkThirdParty`: set to `false` ;", "" },
+    -- render = <function 2>,
+    -- time = 1697216734,
+    -- title = { "LSP Message (lua_ls)", "19:05:34" }
+
+-- vim.cmd([[command! Notifications :lua require("notify")._print_history( { } )<CR>]])
+
+-- require("notify")._print_history( { } )<CR>]])
+
+
+vim.keymap.set( 'n',
+  '<leader>sm', function()
+    local hist = require( 'notify' ).history()
+    putt( hist )
+  end
+)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

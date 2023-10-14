@@ -16,3 +16,5 @@ tags
 .luarc.json
 .vim_mru_files
 r_buffer_range.sh
+startup.log
+.luacr_bak

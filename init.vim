@@ -11,7 +11,8 @@ Plug 'junegunn/vim-plug'
 " This was causing the BufRead autocommand invalid bufferid errors!
 " Plug 'aymericbeaumet/vim-symlink'
 
-
+" doesn't seem to work, now using plenary.collections.py_list
+" Plug 'derekthecool/luafun_neovim'
 Plug 'github/copilot.vim'
 
 " File Selectors Browsers: ------------------------------------------
@@ -456,7 +457,7 @@ Plug 'andreasthoelke/vim-hoogle'
 " now in vim folder
 " Plug 'andreasthoelke/HsAPIExplore'
 " Add an identifier to the import section of a hasell file
-Plug 'dan-t/vim-hsimport'
+" Plug 'dan-t/vim-hsimport'
 " This does show some nice unicode symbols (see "conceal" screenshots).
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
 " TODO this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
@@ -467,7 +468,7 @@ Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plug 'Shougo/vimproc.vim', {'do': 'make'}
 
-Plug 'itchyny/vim-haskell-indent'
+" Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'
 
 " compliant with brittany

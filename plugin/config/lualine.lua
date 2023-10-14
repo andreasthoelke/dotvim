@@ -8,7 +8,7 @@ end
 
 local function git_diff_changeCount()
   local gitsigns = vim.b.gitsigns_status_dict
-  if gitsigns then
+  if gitsigns and gitsigns.added then
     return {
       -- added = gitsigns.added,
       -- modified = gitsigns.changed,
