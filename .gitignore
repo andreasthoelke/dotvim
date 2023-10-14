@@ -17,4 +17,4 @@ tags
 .vim_mru_files
 r_buffer_range.sh
 startup.log
-.luacr_bak
+.luarc_bak
