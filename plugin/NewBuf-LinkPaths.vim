@@ -94,7 +94,12 @@ func! Link_jumpToLine( linkExtension )
     let [lineNum; maybeColumn] = linkVal->split(":")
     let column = len(maybeColumn) ? maybeColumn[0] : 0
     call setpos( '.', [0, lineNum, column, 0] )
-  elseif linkKey == "/" || linkKey == "*"
+  elseif linkKey == "*"
+    if !search( '\v─\s{-}' . escape(linkVal, '\'), 'cw' ) 
+      echo 'Header not found: ' linkVal
+    endif
+    normal ^
+  elseif linkKey == "/"
     if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
       echo 'Line not found: ' linkVal
     endif
@@ -109,6 +114,8 @@ endfunc
 " Link_jumpToLine( "/" . getline(3)[:10]  )
 " "123:45"->split(":")
 " "123"->split(":")
+" ~/.config/nvim/plugin/utils-navigation.vim‖*someˍotherˍt
+" ~/.config/nvim/plugin/utils-navigation.vim‖*Windows
 " ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
 " ~/.config/nvim/plugin/NewBuf-LinkPaths.vim‖*Linkˍpaths
 

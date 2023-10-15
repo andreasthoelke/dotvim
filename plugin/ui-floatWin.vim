@@ -384,15 +384,28 @@ func! FloatingTerm ()
 endfunc
 
 " FloatingSmallNew(['eins'])
-func! FloatingSmallNew(linesToShow)
+" FloatingSmallNew(['eins'], "cursor")
+func! FloatingSmallNew( linesToShow, ... )
+
   let opts = {}
   let opts.focusable = v:true
-  let opts.width     = 35
-  let opts.height    = 18
+  let opts.width     = 100
+  let opts.height    = 30
   let opts.anchor    = 'NW'
-  let opts.relative  = 'cursor'
-  let opts.col       = 0
-  let opts.row       = 1
+
+  if a:0 && a:1 == 'cursor'
+    let opts.relative  = 'cursor'
+    let opts.col       = 0
+    let opts.row       = 1
+  else
+    let top = ((&lines - opts.height) / 2) - 1
+    let left = (&columns - opts.width) / 2
+    let opts.relative  = 'editor'
+    let opts.col       = left
+    let opts.row       = top
+  endif
+
+  let opts.border       = 'rounded'
 
   let textbuf = nvim_create_buf(v:false, v:true)
   call nvim_buf_set_lines( textbuf, 0, -1, 0, a:linesToShow )
