@@ -21,6 +21,8 @@ endfunc
 
 command! -range=% ShowInFloatWin :<line1>,<line2>call ShowInFloatWin()
 
+
+" use FloatingSmallNew instead
 func! ShowInFloatWin() range
   let lines = getline( a:firstline, a:lastline )
   call FloatWin_ShowLines_old( lines, line('.'), col('.'), 120, 1 )
@@ -97,6 +99,7 @@ let g:floatWin_docked = 0
 let g:floatWin_max_width = 120
 
 
+" use FloatingSmallNew instead
 func! FloatWin_ShowLines ( lines )
   if !len( a:lines )
     echo "executed - no return val"

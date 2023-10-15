@@ -141,7 +141,8 @@ func! PrintVimOrLuaLine()
 
     let code = [0,0]
     let code[0] = 'let ret = ' . expr
-    let code[1] = 'if ret | call v:lua.putt(ret) | endif'
+    " let code[1] = 'if ret | call v:lua.putt(ret) | endif'
+    let code[1] = 'echo ret'
 
     call SourceLines( 'source', code )
     return
@@ -155,7 +156,8 @@ func! PrintVimOrLuaLine()
   " let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
   let code[1] = 'local printVal = ret and printToString(ret) or ""'
   " let code[2] = 'vim.print( printVal )'
-  let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
+  " let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
+  let code[2] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'
 
   call SourceLines( 'luafile', code )
 endfunc

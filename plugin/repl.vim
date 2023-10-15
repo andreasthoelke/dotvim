@@ -25,7 +25,6 @@ func! WebserverRequestResponse( flags )
 
   let l:resultLines = split( system( l:cmd ), '\n' )
   silent let g:floatWin_win = FloatingSmallNew ( l:resultLines[3:] )
-  " call ScalaSyntaxAdditions() 
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc

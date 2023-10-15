@@ -233,7 +233,7 @@ require('telescope').load_extension('glyph')
 require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
-require('telescope').load_extension('ui-select')
+-- require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
 

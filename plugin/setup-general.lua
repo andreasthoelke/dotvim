@@ -197,12 +197,12 @@ require('glow').setup({
 -- require("notify")._print_history( { } )<CR>]])
 
 
-vim.keymap.set( 'n',
-  '<leader>sm', function()
-    local hist = require( 'notify' ).history()
-    putt( hist )
-  end
-)
+-- vim.keymap.set( 'n',
+--   '<leader>sm', function()
+--     local hist = require( 'notify' ).history()
+--     putt( hist )
+--   end
+-- )
 
 
 

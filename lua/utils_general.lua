@@ -23,6 +23,20 @@ function M.esc(cmd)
 end
 -- require'utils_general'.esc( vim.fn.getcwd() )
 
+
+function _G.PrintMessages( cnt )
+  local hist = require 'notify'.history()
+  local recentHist = vim.list_slice( hist, #hist - cnt, #hist )
+  local msgsFlat = vim.tbl_flatten( vim.tbl_map( function(el) return el.message end , recentHist ) )
+  local reversedList = vim.fn.reverse( msgsFlat )
+  local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
+  vim.fn.FloatingSmallNew( seperatedList )
+  vim.fn.FloatWin_FitWidthHeight()
+  vim.cmd( 'wincmd p' )
+end
+-- PrintMessages()
+
+
 function _G.put(...)
   local objects = {}
   for i = 1, select('#', ...) do
@@ -42,11 +56,14 @@ function _G.iteratorToSting( it )
   return st
 end
 
-
 function _G.printToString( value )
   local pval
   if type( value ) == "function" then
     pval = iteratorToSting( value )
+  elseif vim.tbl_get( value, 'param' ) then
+    pval = foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
+  elseif type( value ) == "table" then
+    pval = #value .. '\n' .. vim.inspect( value )
   else
     pval = vim.inspect( value )
   end
