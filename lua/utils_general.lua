@@ -60,6 +60,12 @@ function _G.printToString( value )
   local pval
   if type( value ) == "function" then
     pval = iteratorToSting( value )
+  elseif type( value ) == "number" then
+    pval = tostring( value )
+  elseif type( value ) == "boolean" then
+    pval = tostring( value )
+  elseif tostring( value ) == "<generator>" then
+    pval = printToString( totable( value ) )
   elseif vim.tbl_get( value, 'param' ) then
     pval = foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
   elseif type( value ) == "table" then
@@ -384,7 +390,9 @@ end
 function _G.Search_mainPatterns( path, pattern, mode )
   if not pattern then
     if vim.fn.expand("%:e") == "lua" then
-      pattern = [[^(function|local\s.*function|-- ─ ).*]]
+      -- pattern = [[^(function|local\s.*function|-- ─ ).*]]
+      -- now including all top level local values. As I dont' know how to search *before* the function keyword (and after it).
+      pattern = [[^(function|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(func|comma|" ─ ).*]]
     else

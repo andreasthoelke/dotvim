@@ -135,12 +135,18 @@ local ab = { { -- ■
  -- ▲
 function _G.abb()
   -- return vim.list_slice( ab, 0, 1 )
-  -- return take_while( function( el ) return el.type == "Package" end, iter(ab) )
-  return take_while( function( el ) return true end, enumerate({{a=3}, {a=2}, {a=2}}) )
+  -- return take_while( function( el ) return el.type == "Package" end, ab )
+  return take_while( function( el ) return el.type == "Package" end, ab ):length()
+  -- local idx, els = take_while( function( idx, el ) return el.type == "Package" end, enumerate( ab ) )
+  -- return els
+  -- return take_until( function( el ) return el.a > 2 end, {{a=3}, {a=2}, {a=2}} )
   -- return take_while( function( el ) return true end, range(4) )
 end
 
 -- abb()
+
+-- totable( take_while( function(el) return el.xx ~= 'c' end, { {xx='a'}, {xx='b'}, {xx='c'}, {xx='d'} } ) )
+-- take_while( function(el) return el.xx ~= 'c' end, { {xx='a'}, {xx='b'}, {xx='c'}, {xx='d'} } ) 
 
 
 function _G.Test2()
@@ -154,8 +160,6 @@ end
 -- local a, b, c, d = table.unpack(arr)
 
 -- require("nvim-web-devicons").get_icon_by_filetype( 'scala', {})
-
-
 
 
 

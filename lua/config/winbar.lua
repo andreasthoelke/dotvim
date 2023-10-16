@@ -3,8 +3,9 @@ local M = {}
 
 local colors = require "config.colors"
 local navic = require "nvim-navic"
-local utils = require "utils"
+local utils = require "utils.basic1"
 local icons = require "config.icons"
+local fun = require 'utils.fun'
 
 vim.api.nvim_set_hl(0, "WinBarSeparator", { fg = colors.CommentSection })
 vim.api.nvim_set_hl(0, "WinBarFilename", { fg = colors.Comment, bg = colors.CommentSection })
@@ -33,7 +34,7 @@ local excludes = function()
   return false
 end
 
-local function get_modified()
+local function formattedFileInfo()
   if utils.get_buf_option "mod" then
     local mod = icons.git.Mod
     return "%#WinBarFilename#" .. mod .. " " .. "%t" .. "%*"
@@ -42,21 +43,32 @@ local function get_modified()
   return "%#WinBarFilename#" .. vim.fn.expand('%:t:r') .. "%*"
 end
 
-local function get_location()
-  -- local location = navic.get_location()
-  local depth
+
+function _G.filterLspSymbolsStack( lspSymbolsStack )
+  if lspSymbolsStack == nil then return {} end
+  local lspSymbolsStack_filtered
+
   if vim.bo.filetype == 'scala' then
-    depth = 2
+    local packagesDepth = take_while(
+      function( el ) return el.type == "Package" end,
+      lspSymbolsStack
+    ):length()
+    lspSymbolsStack_filtered = totable( take_n( packagesDepth + 1, lspSymbolsStack ) )
   else
-    depth = 1
+    lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
   end
-  local location = navic.format_data( vim.fn.reverse( vim.list_slice( navic.get_data() or {}, 0, depth ) ) )
-  if not utils.is_empty(location) then
-    -- return "%#WinBarContext#" .. " " .. icons.ui.ChevronRight .. " " .. location .. "%*"
-    return "%#WinBarContext#" .. location .. " " .. icons.ui.ChevronLeft .. " " .. "%*"
-  end
-  return ""
+  return vim.fn.reverse( lspSymbolsStack_filtered )
 end
+
+function _G.formatLspSymbolsStack( lspSymbolsStack )
+  if vim.tbl_isempty( lspSymbolsStack ) then return "" end
+
+  local lspStackFormatted = navic.format_data( lspSymbolsStack )
+  return "%#WinBarContext#" .. lspStackFormatted .. " " .. icons.ui.ChevronLeft .. " " .. "%*"
+end
+
+
+-- vim.tbl_isempty()
 
 function M.get_winbar()
   if excludes() then
@@ -67,16 +79,17 @@ function M.get_winbar()
       .. "%="
       .. ""
       .. "%*"
-      .. get_location()
-      .. get_modified()
+      .. formatLspSymbolsStack( filterLspSymbolsStack( navic.get_data() ) )
+      .. formattedFileInfo()
       .. "%#WinBarSeparator#"
       .. ""
       .. "%*"
   else
-    return "%#WinBarSeparator#" .. "%=" .. "" .. "%*" .. get_modified() .. "%#WinBarSeparator#" .. "" .. "%*"
+    return "%#WinBarSeparator#" .. "%=" .. "" .. "%*" .. formattedFileInfo() .. "%#WinBarSeparator#" .. "" .. "%*"
   end
 end
 -- lua putt( require 'config.winbar'.get_winbar() )
+-- lua putt( formatLspSymbolsStack( filterLspSymbolsStack( require('nvim-navic').get_data() ) ) )
 
 return M
 
