@@ -52,6 +52,113 @@ end
 -- putt( filteredList )
 
 -- ~/.config/nvim/plugged/nvim-navic/lua/nvim-navic/init.lua‖/M.format_data(data,ˍopts)
+-- lua vim.print( require('nvim-navic').get_location() )
+-- lua putt( require('nvim-navic').get_data() )
+
+local ab = { { -- ■
+  icon = " ",
+  kind = 4,
+  name = "tradex.domain",
+  scope = {
+    ["end"] = {
+      character = 5,
+      line = 53
+    },
+    start = {
+      character = 0,
+      line = 1
+    }
+  },
+  type = "Package"
+}, {
+    icon = " ",
+    kind = 4,
+    name = "api",
+    scope = {
+      ["end"] = {
+        character = 5,
+        line = 53
+      },
+      start = {
+        character = 0,
+        line = 2
+      }
+    },
+    type = "Package"
+  }, {
+    icon = " ",
+    kind = 4,
+    name = "common",
+    scope = {
+      ["end"] = {
+        character = 5,
+        line = 53
+      },
+      start = {
+        character = 0,
+        line = 3
+      }
+    },
+    type = "Package"
+  }, {
+    icon = "󰌗 ",
+    kind = 5,
+    name = "CustomDecodeFailureHandler",
+    scope = {
+      ["end"] = {
+        character = 3,
+        line = 44
+      },
+      start = {
+        character = 0,
+        line = 18
+      }
+    },
+    type = "Class"
+  }, {
+    icon = "󰆧 ",
+    kind = 6,
+    name = "apply",
+    scope = {
+      ["end"] = {
+        character = 3,
+        line = 31
+      },
+      start = {
+        character = 2,
+        line = 24
+      }
+    },
+    type = "Method"
+  } }
+
+ -- ▲
+function _G.abb()
+  -- return vim.list_slice( ab, 0, 1 )
+  -- return take_while( function( el ) return el.type == "Package" end, iter(ab) )
+  return take_while( function( el ) return true end, enumerate({{a=3}, {a=2}, {a=2}}) )
+  -- return take_while( function( el ) return true end, range(4) )
+end
+
+-- abb()
+
+
+function _G.Test2()
+  local a, b = table.unpack( vim.fn.split( 'eins.lua', '\\.' ) )
+  return b .. a
+end
+
+-- Test2()
+
+-- local array = {1, 2, 3, 4}
+-- local a, b, c, d = table.unpack(arr)
+
+-- require("nvim-web-devicons").get_icon_by_filetype( 'scala', {})
+
+
+
+
+
 
 -- local function map(sequence, transformation)
 --   local newlist = { }

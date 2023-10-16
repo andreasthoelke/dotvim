@@ -183,8 +183,11 @@ Plug 'mhinz/vim-grepper'
 " Tabline Statusline: -----------------------------------------------------------
 " Plug 'itchyny/lightline.vim'
 
-Plug 'nvim-lualine/lualine.nvim'
+" Plug 'nvim-lualine/lualine.nvim'
+" enables color tab file icons
+Plug 'Slotos/lualine.nvim', { 'branch': 'tabs-highlight-formatting' }
 
+Plug 'WhoIsSethDaniel/lualine-lsp-progress.nvim'
 
 " May activate this at times to create styled promptline
 " Plug 'vim-airline/vim-airline'

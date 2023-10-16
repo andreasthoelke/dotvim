@@ -384,7 +384,7 @@ end
 function _G.Search_mainPatterns( path, pattern, mode )
   if not pattern then
     if vim.fn.expand("%:e") == "lua" then
-      pattern = [[^(fun|local\sfun|-- ─ ).*]]
+      pattern = [[^(function|local\s.*function|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(func|comma|" ─ ).*]]
     else

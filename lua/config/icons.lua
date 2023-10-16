@@ -8,7 +8,7 @@ return {
     Calendar = " ",
     Check = " ",
     ChevronRight = "",
-    -- ChevronRight = ">",
+    ChevronLeft = "",
     Circle = " ",
     Close = " ",
     Code = " ",
