@@ -2,6 +2,9 @@
 
 -- ─   Helpers                                          ──
 
+function hello() 
+  return "some this"
+end
 
 local function git_diff_changeCount()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -236,25 +239,25 @@ local lualine_config = {
     lualine_z = {}
   },
 
-  winbar = {},
-  -- winbar = {
-  --   lualine_a = {},
-  --   lualine_b = {},
-  --   lualine_c = {'filename'},
-  --   lualine_x = {},
-  --   lualine_y = {},
-  --   lualine_z = {}
-  -- },
+  -- winbar = {},
+  winbar = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = { "LspSymbolsStack()" },
+    lualine_z = { 'filename' }
+  },
 
-  inactive_winbar = {},
-  -- inactive_winbar = {
-  --   lualine_a = {},
-  --   lualine_b = {},
-  --   lualine_c = {'filename'},
-  --   lualine_x = {},
-  --   lualine_y = {},
-  --   lualine_z = {}
-  -- },
+  -- inactive_winbar = {},
+  inactive_winbar = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = { "LspSymbolsStack_inactive()" },
+    lualine_z = {'filename'},
+  },
 
   -- extensions = { 'quickfix', 'fugitive', 'trouble', neo_tree }
 
