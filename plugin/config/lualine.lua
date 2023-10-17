@@ -2,9 +2,20 @@
 
 -- ─   Helpers                                          ──
 
-function hello() 
-  return "some this"
+local colors = require 'config.colors'
+
+local function search_result()
+  if vim.v.hlsearch == 0 then
+    return ''
+  end
+  local last_search = vim.fn.getreg('/')
+  if not last_search or last_search == '' then
+    return ''
+  end
+  local searchcount = vim.fn.searchcount { maxcount = 9999 }
+  return last_search .. '(' .. searchcount.current .. '/' .. searchcount.total .. ')'
 end
+
 
 local function git_diff_changeCount()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -50,20 +61,25 @@ function _G.getDevIcon(filename, filetype, extension)
 end
 
 
-local function grbox()
-  local colors = {
-    black        = '#282828',
-    white        = '#ebdbb2',
-    red          = '#fb4934',
-    green        = '#b8bb26',
-    blue         = '#83a598',
-    yellow       = '#fe8019',
-    gray         = '#a89984',
-    darkgray     = '#3c3836',
-    lightgray    = '#504945',
-    inactivegray = '#7c6f64',
-    BlackBGsoft  = '#101010',
+local function grbox2()
+  return {
+
+    normal = {
+      a = {bg = colors.gray, fg = colors.black, gui = 'bold'},
+      b = {bg = colors.lightgray, fg = colors.white},
+      c = {bg = colors.darkgray, fg = colors.gray},
+      x = {bg = colors.gray, fg = colors.white},
+      y = {bg = colors.lightgray, fg = colors.white},
+      z = {bg = colors.gray, fg = colors.black},
+    },
+
+    inactive = {
+    }
   }
+end
+
+
+local function grbox1() -- ■
   return {
     normal = {
       a = {bg = colors.gray, fg = colors.black, gui = 'bold'},
@@ -80,7 +96,7 @@ local function grbox()
       c = {bg = colors.darkgray, fg = colors.gray}
     }
   }
-end
+end -- ▲
 
 
 local lualine_highlight = require'lualine.highlight'
@@ -157,16 +173,20 @@ local lualine_config = {
       tabline = 1000,
       winbar = 1000,
     },
-    theme = grbox,
+    theme = grbox1,
     -- theme = 'auto',
   },
+
+
+-- ─   Sections                                         ──
 
   sections = {
     lualine_a = { 'ProjectRootFolderName' },
     lualine_b = { 'CurrentRelativeFilePath' },
     lualine_c = {},
-    lualine_x = { {'diff', source = git_diff_changeCount} },
-    lualine_y = { "lsp_progress", "g:metals_status", 'vim.fn.line(".")' },
+    lualine_x = { search_result, { 'diff', source = git_diff_changeCount } },
+    -- lualine_y = { "lsp_progress", "g:metals_status", 'vim.fn.line(".")' },
+    lualine_y = { 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
@@ -177,6 +197,10 @@ local lualine_config = {
     lualine_y = {},
     lualine_z = {}
   },
+
+
+
+-- ─   Tabline                                          ──
 
   -- tabline = {},
   tabline = {
@@ -235,9 +259,12 @@ local lualine_config = {
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
-    lualine_y = {},
+    lualine_y = { "lsp_progress", "g:metals_status" },
     lualine_z = {}
   },
+
+
+-- ─   Winbar                                           ──
 
   -- winbar = {},
   winbar = {
@@ -259,7 +286,10 @@ local lualine_config = {
     lualine_z = {'filename'},
   },
 
-  -- extensions = { 'quickfix', 'fugitive', 'trouble', neo_tree }
+
+-- ─   Extensions                                       ──
+
+  extensions = { 'quickfix', 'fugitive', 'trouble', neo_tree }
 
 }
 

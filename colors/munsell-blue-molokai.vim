@@ -718,15 +718,15 @@ hi Visual guibg=#282828 gui=none
 hi! EndOfBuffer guifg=bg
 
 " Comment syntax additions
-hi BlackBG guibg=#000000
-hi BlackBGsoft guibg=#101010
-hi GreyBG guibg=#262626
-hi CommentSection guifg=#42606B guibg=#0E0E0E
-hi CommentLabel   guifg=#42606B guibg=#030303
-hi CommentLabel   guifg=#42606B guibg=#030303
-hi CommentMarkup   guifg=#26383D guibg=#0D0F10
+hi! BlackBG guibg=#000000
+hi! BlackBGsoft guibg=#101010
+hi! GreyBG guibg=#262626
+hi! CommentSection guifg=#42606B guibg=#0E0E0E
+hi! CommentLabel   guifg=#42606B guibg=#030303
+hi! CommentLabel   guifg=#42606B guibg=#030303
+hi! CommentMarkup   guifg=#26383D guibg=#0D0F10
 
-hi htmlLink guifg=#42606B guibg=#030303
+hi! htmlLink guifg=#42606B guibg=#030303
 
 " run: RedirMessagesBuf hi Folded
 " to get:
