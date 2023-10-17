@@ -1441,9 +1441,9 @@ nmap S <Plug>G_SubstituteOverMotionMap
 nmap SS <Plug>SubstituteLine
 
 " Cut Move:
-nmap <leader>d <Plug>MoveMotionPlug
-xmap <leader>dd <Plug>MoveMotionXPlug
-nmap <leader>dd <Plug>MoveMotionLinePlug
+nmap <silent><leader>d <Plug>MoveMotionPlug
+xmap <silent><leader>dd <Plug>MoveMotionXPlug
+nmap <silent><leader>dd <Plug>MoveMotionLinePlug
 
 " Yank Buffer History: Save yank history to file - allows to paste in other vim instance
 let g:EasyClipShareYanks = 1
