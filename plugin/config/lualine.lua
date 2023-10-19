@@ -139,6 +139,7 @@ local lualine_config = {
   options = {
     icons_enabled = true,
     section_separators = "",
+    -- section_separators = { left = '', right = '' },
     component_separators = "",
     disabled_filetypes = {
       -- statusline = {'purescript_scratch'},
@@ -161,7 +162,13 @@ local lualine_config = {
 -- ─   Sections                                         ──
 
   sections = {
-    lualine_a = { 'ProjectRootFolderName' },
+    lualine_a = {
+      {
+        'ProjectRootFolderName',
+        -- separator = { left = '', right = '' },
+        separator = { left = '' },
+      }
+    },
     -- lualine_b = { 'CurrentRelativeFilePath' },
     lualine_b = { 'CurrentRelativeFolderPath_shorten' },
     -- lualine_c = { { 'filetype', icon_only = true, } },
@@ -171,9 +178,22 @@ local lualine_config = {
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
-    lualine_a = { 'LightlineLocalRootFolder' },
+    -- lualine_a = { 'LightlineLocalRootFolder' },
+    lualine_a = {
+      {
+        'LightlineLocalRootFolder',
+        -- separator = { left = '', right = '' },
+        separator = { left = '' },
+      }
+    },
     -- lualine_b = { 'LightlineRelativeFilePathOfWin' },
-    lualine_b = { 'CurrentRelativeFolderPath_shorten', custom_ftype },
+    lualine_b = {
+      'CurrentRelativeFolderPath_shorten',
+      {
+        custom_ftype,
+        separator = { right = '' },
+      }
+    },
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
