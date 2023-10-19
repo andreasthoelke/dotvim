@@ -165,28 +165,22 @@ local lualine_config = {
     lualine_a = {
       {
         'ProjectRootFolderName',
-        -- separator = { left = '', right = '' },
         separator = { left = '' },
       }
     },
-    -- lualine_b = { 'CurrentRelativeFilePath' },
     lualine_b = { 'CurrentRelativeFolderPath_shorten' },
-    -- lualine_c = { { 'filetype', icon_only = true, } },
     lualine_c = { custom_ftype },
     lualine_x = { search_result, { 'diff', source = git_diff_changeCount } },
     lualine_y = { 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
-    -- lualine_a = { 'LightlineLocalRootFolder' },
     lualine_a = {
       {
         'LightlineLocalRootFolder',
-        -- separator = { left = '', right = '' },
         separator = { left = '' },
       }
     },
-    -- lualine_b = { 'LightlineRelativeFilePathOfWin' },
     lualine_b = {
       'CurrentRelativeFolderPath_shorten',
       {

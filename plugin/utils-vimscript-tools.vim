@@ -171,6 +171,12 @@ endfunc
 let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#).*'
 
 func! VScriptToolsBufferMaps()
+  call tools_scala#bufferMaps_shared()
+
+  " the below should overwrite the default/scala maps
+
+  nnoremap <silent><buffer> I :call Vim_ColonForw()<cr>
+  nnoremap <silent><buffer> Y :call Vim_ColonBackw()<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
@@ -187,7 +193,20 @@ func! VScriptToolsBufferMaps()
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel(), "normal" )<cr>
 
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
-  call tools_scala#bufferMaps_shared()
+endfunc
+
+
+let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '--', '=', 'or', 'and', 'return'] )
+
+func! Vim_ColonForw()
+  call SearchSkipSC( g:Vim_colonPttn, 'W' )
+  normal w
+endfunc
+
+func! Vim_ColonBackw()
+  normal bh
+  call SearchSkipSC( g:Vim_colonPttn, 'bW' )
+  normal w
 endfunc
 
 
