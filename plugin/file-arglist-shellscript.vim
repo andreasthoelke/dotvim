@@ -302,6 +302,23 @@ func! CurrentRelativeFilePath ()
 endfunc
 " CurrentRelativeFilePath()
 
+func! CurrentRelativeFolderPath_shorten ()
+  let path = expand('%:p')
+  let cwd = getcwd()
+  let relPath = path->substitute( cwd, '', '' )
+  let relFolderPath = relPath->fnamemodify( ':h' )
+  if relFolderPath[0:4] == "/User"
+    let relFolderPath = '/' . relFolderPath->BasePath_shorten()
+  endif
+  if len( relFolderPath ) > 20
+    let relFolderPath = relFolderPath->pathshorten()
+  endif
+  return relFolderPath[1:]->substitute( "/", ' ', 'g' )
+endfunc
+
+" CurrentRelativeFolderPath_shorten()
+
+
 func! CurrentRelativeFilePathOfWin()
   let path = expand('%:p')
   let cwd = getcwd( winnr() )
@@ -318,7 +335,7 @@ func! CurrentNextFolderPath ()
   let folderpath = substitute( path, filename, '', '' )
   return folderpath
 endfunc
-" echo CurrentNextFolderPath()
+" CurrentNextFolderPath()
 
 func! GetFilenameOrFolderStrFromPath (path)
   let lastSegment = GetLastComponentFromPath( a:path )

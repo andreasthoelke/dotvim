@@ -16,7 +16,7 @@ Plug 'junegunn/vim-plug'
 Plug 'github/copilot.vim'
 
 " File Selectors Browsers: ------------------------------------------
-Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-tree/nvim-web-devicons'
 
 Plug 'nvim-neo-tree/neo-tree.nvim'
@@ -183,11 +183,13 @@ Plug 'mhinz/vim-grepper'
 " Tabline Statusline: -----------------------------------------------------------
 " Plug 'itchyny/lightline.vim'
 
-" Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-lualine/lualine.nvim'
 " enables color tab file icons
-Plug 'Slotos/lualine.nvim', { 'branch': 'tabs-highlight-formatting' }
-
+" Plug 'Slotos/lualine.nvim', { 'branch': 'tabs-highlight-formatting' }
 Plug 'WhoIsSethDaniel/lualine-lsp-progress.nvim'
+
+Plug 'nanozuki/tabby.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
 
 " May activate this at times to create styled promptline
 " Plug 'vim-airline/vim-airline'
@@ -436,7 +438,7 @@ Plug 'purescript-contrib/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
 
 Plug 'rescript-lang/vim-rescript'
-Plug 'nkrkv/nvim-treesitter-rescript'
+" Plug 'nkrkv/nvim-treesitter-rescript'
 
 " ─   Repl IDE features                               ■
 

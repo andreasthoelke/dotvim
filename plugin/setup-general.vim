@@ -135,12 +135,13 @@ let g:session_verbose_messages = 0
 " ─   Session settings                                   ■
 set sessionoptions+=folds
 set sessionoptions+=curdir
-" TODO test this effect?
 set sessionoptions+=tabpages
 set sessionoptions+=winsize
 set sessionoptions+=help
-" Don't save hidden and unloaded buffers
+set sessionoptions+=globals
 set sessionoptions-=buffers
+
+" set sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
@@ -199,9 +200,9 @@ func! SessionLoadForCWDStartify()
   exec 'SLoad ' . sessionFile
 
   " For some reason the cmdheight is set to 1 after loading a session. Setting it back to 3:
-  let currTab=tabpagenr()
-  tabdo set cmdheight=3
-  execute 'tabn ' . currTab
+  " let currTab=tabpagenr()
+  " tabdo set cmdheight=3
+  " execute 'tabn ' . currTab
 endfunc
 
 

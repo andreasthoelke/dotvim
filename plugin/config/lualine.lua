@@ -1,8 +1,16 @@
+vim.o.showtabline = 2
 
 
 -- ─   Helpers                                          ──
 
 local colors = require 'config.colors'
+
+local hello = function() return "hello there!" end
+
+local filename_noExtension = function(filename, _)
+  local name, _ = table.unpack( vim.fn.split( filename, [[\.]] ) )
+  return name
+end
 
 local function search_result()
   if vim.v.hlsearch == 0 then
@@ -21,131 +29,103 @@ local function git_diff_changeCount()
   local gitsigns = vim.b.gitsigns_status_dict
   if gitsigns and gitsigns.added then
     return {
-      -- added = gitsigns.added,
-      -- modified = gitsigns.changed,
-      -- removed = gitsigns.removed,
+      added = 0,
+      removed = 0,
       -- Have only one number to indicate the amount of change in the file.
-      added = gitsigns.added + gitsigns.changed + gitsigns.removed,
+      modified = gitsigns.added + gitsigns.changed + gitsigns.removed,
     }
   end
 end
 
--- note that this path is not relative when in an inactive window.
-function _G.ShortenedFilePath()
-  local fpath = vim.fn.pathshorten( vim.fn.fnamemodify( vim.fn.expand("%"), ":~:."),
-    2
-  )
-  -- return fpath
-  return vim.fn.substitute( fpath, "/", " ", "g" )
+
+-- ─   Custom filetype with icon                        ──
+
+local custom_fname = require('lualine.components.filename'):extend()
+local highlight = require'lualine.highlight'
+local default_status_colors = { saved = '#228B22', modified = '#C70039' }
+
+function custom_fname:init(options)
+  custom_fname.super.init(self, options)
+  self.status_colors = {
+    saved = highlight.create_component_highlight_group(
+      {bg = default_status_colors.saved}, 'filename_status_saved', self.options),
+    modified = highlight.create_component_highlight_group(
+      {bg = default_status_colors.modified}, 'filename_status_modified', self.options),
+  }
+  if self.options.color == nil then self.options.color = '' end
+end
+
+function custom_fname:update_status()
+  local data = custom_fname.super.update_status(self)
+  data = highlight.component_format_highlight(vim.bo.modified
+                                              and self.status_colors.modified
+                                              or self.status_colors.saved) .. data
+  return data
 end
 
 
 
-local devicons = require'nvim-web-devicons'
-function _G.getDevIcon(filename, filetype, extension)
-  local icon, color
-  local devhl = filetype
-  if filetype == 'TelescopePrompt' then
-    icon, color = devicons.get_icon_color('telescope', { default = true })
-  elseif filetype == 'fugitive' then
-    icon, color =  devicons.get_icon_color('git', { default = true })
-  elseif filetype == 'vimwiki' then
-    icon, color =  devicons.get_icon_color('markdown', { default = true })
-  elseif buftype == 'terminal' then
-    icon, color =  devicons.get_icon_color('zsh', { default = true })
+local lualine_require = require('lualine_require')
+local modules = lualine_require.lazy_require {
+  highlight = 'lualine.highlight',
+  utils = 'lualine.utils.utils',
+}
+
+
+local custom_ftype = require('lualine.components.filetype'):extend()
+
+
+function custom_ftype:apply_icon()
+  if not self.options.icons_enabled then
+    return
+  end
+
+  local icon, icon_highlight_group
+  local ok, devicons = pcall(require, 'nvim-web-devicons')
+  if ok then
+    icon, icon_highlight_group = devicons.get_icon(vim.fn.expand('%:t'))
+    if icon == nil then
+      icon, icon_highlight_group = devicons.get_icon_by_filetype(vim.bo.filetype)
+    end
+
+    if icon == nil and icon_highlight_group == nil then
+      icon = ''
+      icon_highlight_group = 'DevIconDefault'
+    end
+    if self.options.colored then
+      local highlight_color = modules.utils.extract_highlight_colors(icon_highlight_group, 'fg')
+      if highlight_color then
+        local default_highlight = self:get_default_hl()
+        local icon_highlight = self.icon_hl_cache[highlight_color]
+        if not icon_highlight or not modules.highlight.highlight_exists(icon_highlight.name .. '_normal') then
+          icon_highlight = self:create_hl({ fg = highlight_color }, icon_highlight_group)
+          self.icon_hl_cache[highlight_color] = icon_highlight
+        end
+
+        icon = self:format_hl(icon_highlight) .. icon .. default_highlight
+      end
+    end
   else
-    icon, color =  devicons.get_icon_color(filename, extension, { default = true })
-    _, devhl =  devicons.get_icon(filename, extension, { default = true })
-  end
-  return icon, color, devhl
-end
-
-
-local function grbox2()
-  return {
-
-    normal = {
-      a = {bg = colors.gray, fg = colors.black, gui = 'bold'},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.darkgray, fg = colors.gray},
-      x = {bg = colors.gray, fg = colors.white},
-      y = {bg = colors.lightgray, fg = colors.white},
-      z = {bg = colors.gray, fg = colors.black},
-    },
-
-    inactive = {
-    }
-  }
-end
-
-
-local function grbox1() -- ■
-  return {
-    normal = {
-      a = {bg = colors.gray, fg = colors.black, gui = 'bold'},
-      -- a = {bg = colors.gray, fg = colors.black},
-      b = {bg = colors.lightgray, fg = colors.white},
-      c = {bg = colors.darkgray, fg = colors.gray},
-      x = {bg = colors.gray, fg = colors.white},
-      y = {bg = colors.lightgray, fg = colors.white},
-      z = {bg = colors.gray, fg = colors.black},
-    },
-    inactive = {
-      a = {bg = colors.BlackBGsoft, fg = colors.gray, gui = 'bold'},
-      b = {bg = colors.darkgray, fg = colors.gray},
-      c = {bg = colors.darkgray, fg = colors.gray}
-    }
-  }
-end -- ▲
-
-
-local lualine_highlight = require'lualine.highlight'
-
--- from: https://github.com/Slotos/vimrc/blob/do-05-upgrade/lua/settings/lualine.lua
-local function tabs_formatting_withIcon( fname, context )
-  local win_handle = vim.api.nvim_tabpage_get_win(context.tabId)
-  local buf_handle = vim.api.nvim_win_get_buf(win_handle)
-
-  -- sequential tab number
-  -- local status = {'' .. context.tabnr .. '.'}
-  local status = {}
-
-  -- devicon (extremely hacky, and definitely slow, but with lualine
-  --          not exposing handy highlight caching functions, I'll need
-  --          to deal with caching myself, but I'm lazy and this too shall pass)
-  local filename = vim.fn.expand('#'..buf_handle..':t')
-  local filetype = vim.api.nvim_buf_get_option(buf_handle, 'filetype')
-  local extension = vim.fn.expand('#'..buf_handle..':e')
-  local devicon, fg, devhl = getDevIcon(filename, filetype, extension)
-  if devicon then
-    local h = require'utils.color_helpers'
-    local tab_hlgroup = lualine_highlight.component_format_highlight(context.highlights[(context.current and 'active' or 'inactive')])
-    local bg = h.extract_highlight_colors(tab_hlgroup:sub(3, -2), 'bg')
-
-    -- can't use this due to a bug - https://github.com/nvim-lualine/lualine.nvim/pull/677
-    -- one day I will figure out why tests fail on master for me locally (probably they load local config, saw that in other places)
-    -- and I will get that code covered and merged; meanwhile, deal with it Gordian knot style
-    -- local highlight = lualine_highlight.create_component_highlight_group({fg = fg, bg = bg}, "", context, false)
-
-    local hl = h.create_component_highlight_group({bg = bg, fg = fg}, "local_" .. devhl .. "_tab_" .. (context.current and 'active' or 'inactive'))
-    table.insert(
-      status,
-      -- '%#' .. hl .. '#' .. devicon .. tab_hlgroup
-      {highlight = "%#" .. hl .. "#", text = devicon .. " "}
-    )
+    ok = vim.fn.exists('*WebDevIconsGetFileTypeSymbol')
+    if ok ~= 0 then
+      icon = vim.fn.WebDevIconsGetFileTypeSymbol()
+    end
   end
 
-  local name, _ = table.unpack( vim.fn.split( fname, [[\.]] ) )
+  if not icon then
+    return
+  end
 
-  -- table.insert(status, {text = context.tabId .. " " .. name})
-  table.insert(status, {text = name})
-
-  -- modified and modifiable symbols
-  -- if vim.api.nvim_buf_get_option(buf_handle, 'modified') then table.insert(status, {text = ' \u{f448} '}) end
-  -- if not vim.api.nvim_buf_get_option(buf_handle, 'modifiable') then table.insert(status, {text = ' \u{e672} '}) end
-
-  return status
+  if self.options.icon_only then
+    self.status = icon
+  elseif type(self.options.icon) == 'table' and self.options.icon.align == 'right' then
+    self.status = self.status .. ' ' .. icon
+  else
+    -- NOTE apply_icon is a literal copy, I only changed the show the filename instead of the extension (which resided in self.status)
+    self.status = icon .. ' ' .. vim.fn.expand('%:t:r')
+  end
 end
+
 
 
 -- ─   Config                                           ──
@@ -173,7 +153,7 @@ local lualine_config = {
       tabline = 1000,
       winbar = 1000,
     },
-    theme = grbox1,
+    theme = Theme_grbox2,
     -- theme = 'auto',
   },
 
@@ -182,16 +162,18 @@ local lualine_config = {
 
   sections = {
     lualine_a = { 'ProjectRootFolderName' },
-    lualine_b = { 'CurrentRelativeFilePath' },
-    lualine_c = {},
+    -- lualine_b = { 'CurrentRelativeFilePath' },
+    lualine_b = { 'CurrentRelativeFolderPath_shorten' },
+    -- lualine_c = { { 'filetype', icon_only = true, } },
+    lualine_c = { custom_ftype },
     lualine_x = { search_result, { 'diff', source = git_diff_changeCount } },
-    -- lualine_y = { "lsp_progress", "g:metals_status", 'vim.fn.line(".")' },
     lualine_y = { 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
     lualine_a = { 'LightlineLocalRootFolder' },
-    lualine_b = { 'LightlineRelativeFilePathOfWin' },
+    -- lualine_b = { 'LightlineRelativeFilePathOfWin' },
+    lualine_b = { 'CurrentRelativeFolderPath_shorten', custom_ftype },
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
@@ -202,66 +184,70 @@ local lualine_config = {
 
 -- ─   Tabline                                          ──
 
-  -- tabline = {},
-  tabline = {
+  tabline = {},
+  -- tabline = {
 
-    lualine_a = {
-      {
-        'tabs',
-        mode = 1,
-        icons_enabled = true, -- Enables the display of icons alongside the component.
-        max_length = vim.o.columns, -- Maximum width of tabs component.
+  --   lualine_a = {
+  --     {
+  --       'tabs',
+  --       mode = 1,
+  --       icons_enabled = true, -- Enables the display of icons alongside the component.
+  --       max_length = vim.o.columns, -- Maximum width of tabs component.
 
-        colored = true,   -- Displays filetype icon in color if set to true
-        icon_only = true, -- Display only an icon for filetype
-        icon = {
-          use_default = true,
-          align = 'right',
-        }, -- Display filetype icon on the right hand side
+  --       colored = true,   -- Displays filetype icon in color if set to true
+  --       icon_only = true, -- Display only an icon for filetype
+  --       icon = {
+  --         use_default = true,
+  --         align = 'right',
+  --       }, -- Display filetype icon on the right hand side
 
-        tabs_color = {
-          -- Same values as the general color option can be used here.
-          active = 'lualine_a_normal',     -- Color for active tab.
-          inactive = 'lualine_a_inactive', -- Color for inactive tab.
-        },
+  --       tabs_color = {
+  --         active   = 'LuLine_Tabs_ac',
+  --         inactive = 'LuLine_Tabs_in',
+  --         -- NOTE i could highlight inactive depending on e.g. their type?
+  --         -- active   = Tabs_active,
+  --         -- inactive = Tabs_inactive,
+  --       },
 
-        -- fmt = function(filename, context)
-        --   -- Show + if buffer is modified in tab
-        --   -- local buflist = vim.fn.tabpagebuflist(context.tabnr)
-        --   -- local winnr = vim.fn.tabpagewinnr(context.tabnr)
-        --   -- local bufnr = buflist[winnr]
-        --   -- local mod = vim.fn.getbufvar(bufnr, '&mod')
-        --   local name, ext = table.unpack( vim.fn.split( filename, [[\.]] ) )
-        --   local icon = require("nvim-web-devicons").get_icon_by_filetype( ext )
-        --   -- return name .. " " .. icon
-        --   return (icon or "") .. " " .. name
-        -- end,
+  --       -- fmt = function(filename, context)
+  --       --   -- Show + if buffer is modified in tab
+  --       --   -- local buflist = vim.fn.tabpagebuflist(context.tabnr)
+  --       --   -- local winnr = vim.fn.tabpagewinnr(context.tabnr)
+  --       --   -- local bufnr = buflist[winnr]
+  --       --   -- local mod = vim.fn.getbufvar(bufnr, '&mod')
+  --       --   local name, ext = table.unpack( vim.fn.split( filename, [[\.]] ) )
+  --       --   local icon = require("nvim-web-devicons").get_icon_by_filetype( ext )
+  --       --   -- return name .. " " .. icon
+  --       --   return (icon or "") .. " " .. name
+  --       -- end,
 
-        fmt = tabs_formatting_withIcon,
+  --       fmt = function (fname, context) return _G.tabs_formatting_withIcon(fname, context) end,
 
-      }
-    },
+  --     }
+  --   },
 
-    -- lualine_a = {
-    --   {
-    --     'tabs',
-    --     max_length = vim.o.columns,
-    --     mode = 2,
-    --     icons_enabled = true,
-    --     modification_icons_enabled = true,
-    --     icon = {
-    --       align = 'right',
-    --       use_default = true
-    --     },
-    --   }
-    -- },
+  --   -- lualine_a = {
+  --   --   {
+  --   --     'tabs',
+  --   --     max_length = vim.o.columns,
+  --   --     mode = 2,
+  --   --     icons_enabled = true,
+  --   --     modification_icons_enabled = true,
+  --   --     icon = {
+  --   --       align = 'right',
+  --   --       use_default = true
+  --   --     },
+  --   --   }
+  --   -- },
 
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = {},
-    lualine_y = { "lsp_progress", "g:metals_status" },
-    lualine_z = {}
-  },
+  --   lualine_c = {},
+  --   lualine_b = {},
+  --   lualine_x = {},
+  --   lualine_y = { "lsp_progress", "g:metals_status" },
+  --   -- lualine_z = { function () return _G.WeatherStatus end },
+  --   lualine_z = {},
+  --   -- lualine_z = {}
+  -- },
 
 
 -- ─   Winbar                                           ──
@@ -272,8 +258,17 @@ local lualine_config = {
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
-    lualine_y = { "LspSymbolsStack()" },
-    lualine_z = { 'filename' }
+    lualine_y = {
+      "LspSymbolsStack()",
+      -- color = 'LuLine_Winbar_y_ac',
+    },
+    lualine_z = {
+      {
+        'filename',
+        color = 'LuLine_Winbar_z_ac',
+        fmt = filename_noExtension,
+      }
+    }
   },
 
   -- inactive_winbar = {},
@@ -282,8 +277,17 @@ local lualine_config = {
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
-    lualine_y = { "LspSymbolsStack_inactive()" },
-    lualine_z = {'filename'},
+    lualine_y = {
+      "LspSymbolsStack_inactive()",
+      -- color = 'LuLine_Winbar_y_in',
+    },
+    lualine_z = {
+      {
+        'filename',
+        color = 'LuLine_Winbar_z_in',
+        fmt = filename_noExtension,
+      }
+    }
   },
 
 

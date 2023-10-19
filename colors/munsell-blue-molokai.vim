@@ -545,7 +545,8 @@ hi! def link TagbarKind Type
 hi! FocusedSymbol guifg=#A2AEB0
 
 " Markdown colors
-hi! Title gui=bold guifg=#0087AF "munsell blue"
+" hi! Title gui=bold guifg=#0087AF "munsell blue"
+hi! Title gui=none guifg=#1A85A5 "munsell blue"
 hi! Highlight1 guifg=#F6DC69
 
 hi! def link mkdHeading SpGreen52
@@ -726,6 +727,53 @@ hi! CommentLabel   guifg=#42606B guibg=#030303
 hi! CommentLabel   guifg=#42606B guibg=#030303
 hi! CommentMarkup   guifg=#26383D guibg=#0D0F10
 
+
+" ─   Lualine                                            ■
+
+" TABS:
+hi! LuLine_Tabs_ac   guifg=#121416 guibg=#becacd gui=bold
+hi! LuLine_Tabs_in   guifg=#3F5C66 guibg=#0E0E0E gui=none
+
+" WINBAR:
+" Winbar y doesn't seem to work. falls back to general segment y
+hi! LuLine_y   guifg=#273A40 guibg=#0C0E10
+hi! LuLine_y_i guifg=#273A40 guibg=#0C0E10
+
+hi! LuLine_Winbar_z_ac guifg=#314950 guibg=#0C0E10 gui=none
+hi! LuLine_Winbar_z_in guifg=#314950 guibg=#0C0E10 gui=none
+
+
+" SEGMENTS LEFT:
+hi! LuLine_a   guifg=#121416 guibg=#becacd gui=bold
+hi! LuLine_a_i guifg=#7B939D guibg=#394046 gui=none
+
+" hi! LuLine_b   guifg=#121416 guibg=#69848F gui=italic
+" hi! LuLine_b   guifg=#121416 guibg=#47555B gui=italic
+hi! LuLine_b   guifg=#5D6F77 guibg=#2D3237 gui=italic
+hi! LuLine_b_i guifg=#3C474C guibg=#1B2023 gui=italic
+
+" C defines general BG
+" this seems fixed to define the tabs and winbar bg
+" (which is supposed to be equal to Normal bg to be invisible)
+hi! LuLine_c   guifg=#314950 guibg=#121416
+hi! LuLine_c_i guifg=#314950 guibg=#121416
+
+" SEGMENTS RIGHT:
+hi! LuLine_x   guifg=#314950 guibg=#121416
+hi! LuLine_x_i guifg=#121722 guibg=#2D154C
+
+" see above
+" hi! LuLine_y   guifg=#273A40 guibg=#121416
+" hi! LuLine_y_i guifg=#273A40 guibg=#121416
+
+hi! LuLine_z   guifg=#47555B guibg=#121416
+hi! LuLine_z_i guifg=#121742 guibg=#47555B
+
+" ─^  Lualine                                            ▲
+
+
+
+
 hi! htmlLink guifg=#42606B guibg=#030303
 
 " run: RedirMessagesBuf hi Folded
@@ -752,14 +800,7 @@ hi link jsonCommentError				Error
 " This removes any highlighs (colors) defined for the syntax group
 " highlight! link vimCommentTitle NONE
 
-" Overwrite the 'Normal' highlight group
-" highlight! Normal guifg=Yellow guibg=Green
-" highlight! Normal guifg=White guibg=Black
-
 highlight! def link vimMapRhs Macro
-
-" highlight! Normal guifg=Yellow guibg=Green
-" Function       xxx ctermfg=10 guifg=#D1FA71
 
 hi link yamlBlockMappingKey Define
 hi link yamlBlockCollectionItemStart Delimiter

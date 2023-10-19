@@ -230,9 +230,9 @@ func! Rpi_captureDummy()
   let newStr = Rpi_captureString()
   " call writefile([newStr], "event.log", "a")
   " The reason for this hack is: I wanted to use a cached version of the rendered string while neo-tree is not active,
-  " not to waste performance. However I could find a "before leave" event that would update this string. So I'm using
+  " not to waste performance. However I couldn't find a "before leave" event that would update this string. So I'm using
   " this captureDummy function. However it apparently captures "nil"? values on leave.
-  " The below if skips the "nil" updates.
+  " The below if-clause skips the "nil" updates.
   if newStr[0] != "0"
     let filtStr = newStr->matchstr( '\v\zs\i.*' )
     let filtStr = filtStr->substitute( "   ", " ", "g" )
@@ -442,7 +442,8 @@ endfunc
 
 func! LightlineScrollbar()
   " return noscrollbar#statusline(20,' ','■')
-  return noscrollbar#statusline(20,' ','▬')
+  " return noscrollbar#statusline(20,' ','▬')
+  return noscrollbar#statusline(20,' ','▆')
   " return noscrollbar#statusline(20,' ','█',['▐'],['▌'])
 endfunc
 " %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
@@ -485,6 +486,18 @@ endfunc
 
 " Lightline Settings: -------------------------------}}}
 
+
+function! T_RenameTab(...)
+  if a:0 == 1
+    let t:tabname = a:1
+  else
+    unlet t:tabname
+  end
+  redrawtabline
+endfunction
+
+" T_RenameTab( "eins" )
+" T_RenameTab()
 
 
 " ─   Promptline                                         ■
