@@ -119,7 +119,12 @@ local tab_name_get = require('tabby.feature.tab_name').get
 
 local hl_tabline_fill = extract( 'lualine_c_normal' )
 local hl_tabline = extract( 'lualine_b_normal' )
+local hl_tabline_b_i = extract( 'lualine_b_inactive' )
+local hl_c1 = extract( 'LuLine_Tabs_in' )
 local hl_tabline_sel = extract( 'lualine_a_normal' )
+
+local Tabby_Tabs_ac = extract( 'Tabby_Tabs_ac' )
+local Tabby_Tabs_in = extract( 'Tabby_Tabs_in' )
 
 local function tab_label(tabid, active)
   -- local icon = active and 'i' or ''
@@ -193,41 +198,73 @@ local render_c1 = function( line )
     local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
 
   return {
-
+    -- { cwd, hl = hl_tabline_sel }
+    { " ", hl = hl_tabline_fill }
+    ,
     line.tabs().foreach(
       function(tab)
-        local hl = tab.is_current() and hl_tabline_sel or hl_tabline
+        -- local hl = tab.is_current() and hl_tabline_sel or hl_c1
+        -- local hl = tab.is_current() and hl_tabline_sel or hl_tabline_fill
+        -- local hl = tab.is_current() and hl_tabline or hl_tabline_fill
+        local hl = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
       return {
-        line.sep('_', hl, theme.fill),
-        tab.is_current() and '' or '󰆣',
-        tab.number(),
+        line.sep('', hl, hl_tabline_fill),
+        -- tab.is_current() and '' or '󰆣',
+        -- tab.number(),
         tab.name(),
-        line.sep('-', hl, theme.fill),
+        line.sep('', hl, hl_tabline_fill),
         hl = hl,
         margin = " ",
       }
     end),
-
-    -- {
-    --   "hi there 2",
-    --   {
-    --     "hi there",
-    --     hl = "Search",
-    --   }
-    -- },
+    line.spacer(),
+    {
+      line.sep('', hl_tabline_fill, hl_tabline_fill),
+      vim.g["metals_status"],
+      hl = hl_tabline_fill,
+    },
+    {
+      line.sep('', hl_tabline_fill, hl_tabline_fill),
+      "hi5",
+      hl = hl_tabline_fill,
+    },
+    { " ", hl = hl_tabline_fill },
 
   }
 end
 
+  --   lualine_y = { "lsp_progress", "g:metals_status" },
+  --   -- lualine_z = { function () return _G.WeatherStatus end },
+
+
 require('tabby.tabline').set( render_c1, {} )
 
 
+local api = require('tabby.module.api')
 
 
+local function load()
+  local ok, names_to_number = pcall(vim.json.decode, vim.g.TabbyTabNames)
+  if not (ok and type(names_to_number) == 'table') then
+    return
+  end
+  for _, tabid in ipairs(api.get_tabs()) do
+    local tab_num = api.get_tab_number(tabid)
+    local name = names_to_number[tostring(tab_num)]
+    if name ~= nil then
+      tab_names[tostring(tabid)] = name
+    end
+  end
+end
 
 
-
-
+-- require('tabby.feature.tab_name').get(1)
+-- require('tabby.feature.tab_name').load()
+-- TabRename aber3
+-- vim.g.TabbyTabNames
+-- vim.json.decode( vim.g.TabbyTabNames )
+-- require('tabby.module.api').get_tabs()
+-- require('tabby.module.api').get_tab_number(2)
 
 
 

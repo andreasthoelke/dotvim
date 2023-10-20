@@ -405,7 +405,7 @@ function _G.Search_mainPatterns( path, pattern, mode )
     search_dirs = { path },
   })
 end
-
+-- TODO: not working on this file: ~/.local/share/nvim/sessions/__Users__at__.config__nvim‖
 
 
 

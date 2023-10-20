@@ -233,6 +233,7 @@ require('telescope').load_extension('glyph')
 require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
+-- This hooks up telescope to be used when noice / nvim-ui ui-select actions are issued.
 -- require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')

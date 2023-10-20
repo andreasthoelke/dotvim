@@ -138,7 +138,7 @@ set sessionoptions+=curdir
 set sessionoptions+=tabpages
 set sessionoptions+=winsize
 set sessionoptions+=help
-set sessionoptions+=globals
+" set sessionoptions+=globals
 set sessionoptions-=buffers
 
 " set sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
@@ -146,6 +146,13 @@ set sessionoptions-=buffers
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
 let g:session_autosave_periodic = 0
+
+" let g:startify_session_savevars = [
+"            \ 'g:TabbyTabNames',
+"            \ 'TabbyTabNames',
+"            \ 'Drei',
+"            \ 'g:Einszwei',
+"            \ ]
 
 " ─   Neovim session manager                            ──
 "  ~/.config/nvim/init.vim#/Plug%20'Shatur/neovim-session-manager'
@@ -187,7 +194,7 @@ let g:startify_change_to_dir = 0
 " Startify is listing the sessions safed by 'session_manager' (see above)
 let g:startify_session_dir = stdpath('data') . '/sessions'
 " echo $XDG_DATA_HOME
-" echo stdpath('data')
+" stdpath('data')
 
 " /Users/at/.local/share/nvim/sessions/
 " /Users/at/.local/share/nvim/sessions1/

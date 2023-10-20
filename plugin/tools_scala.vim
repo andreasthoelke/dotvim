@@ -55,8 +55,8 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p"), g:Scala_MainStartPattern )<cr>
   nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:Scala_TopLevPattern )<cr>
 
-  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>') )<cr>
-  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel() )<cr>
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>'), "normal" )<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel(), "normal" )<cr>
 
 
 " ─^  Regex search maps                                  ▲

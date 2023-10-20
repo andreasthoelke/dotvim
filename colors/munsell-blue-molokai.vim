@@ -731,6 +731,12 @@ hi! CommentMarkup   guifg=#26383D guibg=#0D0F10
 " ─   Lualine                                            ■
 
 " TABS:
+" note, to update tabby's colors it needs a "l so" of this file and then a "l so" of ~/.config/nvim/plugin/config/tabline_tabby.lua‖/localˍhl_c1
+hi! Tabby_Tabs_ac   guifg=#7C939E guibg=#2D3237 gui=none
+hi! Tabby_Tabs_in   guifg=#314950 guibg=#121416
+" hi! Tabby_Tabs_ac   guifg=#121416 guibg=#becacd gui=bold
+" hi! Tabby_Tabs_in   guifg=#3F5C66 guibg=#0E0E0E gui=none
+
 hi! LuLine_Tabs_ac   guifg=#121416 guibg=#becacd gui=bold
 hi! LuLine_Tabs_in   guifg=#3F5C66 guibg=#0E0E0E gui=none
 

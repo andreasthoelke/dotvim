@@ -12,18 +12,6 @@ local filename_noExtension = function(filename, _)
   return name
 end
 
-local function search_result()
-  if vim.v.hlsearch == 0 then
-    return ''
-  end
-  local last_search = vim.fn.getreg('/')
-  if not last_search or last_search == '' then
-    return ''
-  end
-  local searchcount = vim.fn.searchcount { maxcount = 9999 }
-  return last_search .. '(' .. searchcount.current .. '/' .. searchcount.total .. ')'
-end
-
 
 local function git_diff_changeCount()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -170,7 +158,7 @@ local lualine_config = {
     },
     lualine_b = { 'CurrentRelativeFolderPath_shorten' },
     lualine_c = { custom_ftype },
-    lualine_x = { search_result, { 'diff', source = git_diff_changeCount } },
+    lualine_x = { { 'diff', source = git_diff_changeCount } },
     lualine_y = { 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },

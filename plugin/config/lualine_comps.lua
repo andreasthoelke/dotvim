@@ -20,6 +20,19 @@ function _G.getDevIcon(filename, filetype, extension)
 end
 
 
+function _G.Status_search_result()
+  if vim.v.hlsearch == 0 then
+    return ''
+  end
+  local last_search = vim.fn.getreg('/')
+  if not last_search or last_search == '' then
+    return ''
+  end
+  local searchcount = vim.fn.searchcount { maxcount = 9999 }
+  return last_search .. '(' .. searchcount.current .. '/' .. searchcount.total .. ')'
+end
+
+
 -- ─   Tabs custom formatting                           ──
 
 local lualine_highlight = require'lualine.highlight'
@@ -71,20 +84,19 @@ function _G.tabs_formatting_withIcon( fname, context )
 end
 
 
-_G.WeatherStatus = ''
-local function update_weather()
-  _G.WeatherStatus = vim.trim(vim.fn.system([[curl -s wttr.in/Berlin\?format=3]]))
-end
-
-if _G.Update_weather_timer == nil then
-  _G.Update_weather_timer = vim.loop.new_timer()
-else
-  _G.Update_weather_timer:stop()
-end
-
-_G.Update_weather_timer:start(0,             -- never timeout
-                             10*60*1000,          -- repeat every 10 minutes
-                             vim.schedule_wrap(update_weather))
+-- _G.WeatherStatus = ''
+-- -- WeatherStatus
+-- local function update_weather()
+--   _G.WeatherStatus = vim.trim(vim.fn.system([[curl -s wttr.in/Berlin\?format=3]]))
+-- end
+-- if _G.Update_weather_timer == nil then
+--   _G.Update_weather_timer = vim.loop.new_timer()
+-- else
+--   _G.Update_weather_timer:stop()
+-- end
+-- _G.Update_weather_timer:start(0,             -- never timeout
+--                              10*60*1000,          -- repeat every 10 minutes
+--                              vim.schedule_wrap(update_weather))
 
 -- note that this path is not relative when in an inactive window.
 function _G.ShortenedFilePath()

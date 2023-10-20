@@ -58,6 +58,13 @@ func! PreviewFolderDetailedFloatWin( filePath )
   call FloatWin_ShowLines( lines )
 endfunc
 
+func! File_InsertLineBeforePattern( pattern, newLine, filepath )
+  " gsed -i '/doautoall SessionLoadPost/i\new line' ~/.local/share/nvim/sessions/__Users__at__.config__nvim
+  let cmd = "gsed -i '/" . a:pattern . "/i\\" . a:newLine . "' " . a:filepath
+  return system( cmd )
+endfunc
+" File_InsertLineBeforePattern( "doautoall SessionLoadPost", "something", "~/.local/share/nvim/sessions/__Users__at__.config__nvim")
+
 
 " https://stackoverflow.com/questions/1534835/how-do-i-close-all-buffers-that-arent-shown-in-a-window-in-vim
 
