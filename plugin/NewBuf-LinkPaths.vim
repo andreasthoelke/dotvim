@@ -76,13 +76,17 @@ endfunc
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
-  let linkExtension = substitute( a:linkExtension, " ", "ˍ", "g" )
-  let cp = path . "‖" . linkExtension
+  if len( a:linkExtension )
+    let linkExtension = substitute( a:linkExtension, " ", "ˍ", "g" )
+    let cp = path . "‖" . linkExtension
+  else
+    let cp = path
+  endif
   let @+ = cp
   let @* = cp
   let @" = cp
   echom 'path:' path
-  if len( linkExtension ) | echom 'ext:' linkExtension | endif
+  if len( a:linkExtension ) | echom 'ext:' a:linkExtension | endif
 endfunc
 " ClipBoard_LinkPath( getcwd(), '" ─   Link paths                                        ──', 'shorten')
 

@@ -155,20 +155,52 @@ let g:session_autosave_periodic = 0
 "            \ ]
 
 " ─   Neovim session manager                            ──
-"  ~/.config/nvim/init.vim#/Plug%20'Shatur/neovim-session-manager'
+
 lua << EOF
 local Path = require('plenary.path')
 require('session_manager').setup({
   sessions_dir = Path:new(vim.fn.stdpath('data'), 'sessions'), -- The directory where the session files will be saved.
   path_replacer = '__', -- The character to which the path separator will be replaced for session files.
   colon_replacer = '++', -- The character to which the colon symbol will be replaced for session files.
-  autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+  -- autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir,
   autosave_last_session = true, -- Automatically save last session on exit.
   autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
   autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
 })
 -- require('telescope').load_extension('sessions')
 EOF
+
+augroup sessionConfig
+  autocmd!
+  " autocmd User SessionSavePost call SessionSaveSelectedGlobals()
+  autocmd VimLeave * call SessionSaveSelectedGlobals()
+augroup END
+
+
+func! SessionSaveSelectedGlobals()
+  let sessionFilePath = g:startify_session_dir . "/" . substitute( getcwd(), '/', '__', 'g' )
+  let setGlobalSessionLine = VarSetVim_strEscape( 'TabbyTabNames' )
+  " let setGlobalSessionLine = VarSetVim_strEscape( 'SomeGlobal' )
+  " echo setGlobalSessionLine
+  " return
+  call File_InsertLineBeforePattern( "doautoall SessionLoadPost", setGlobalSessionLine, sessionFilePath )
+endfunc
+" SessionSaveSelectedGlobals()
+
+" Produce an escaped string like this:
+" let g:SomeGlobal = '\''{"8":"aber7"}'\'''
+func! VarSetVim_strEscape( varName )
+  let varName = "g:" . a:varName
+  let varVal = g:[ a:varName ]
+  let varValEsc = "'\\''" . varVal . "'\\''"
+  return "let " . varName . " = " . varValEsc
+endfunc
+" VarSetVim_strEscape( 'SomeGlobal' )
+
+" SessionSaveSelectedGlobals()
+" File_InsertLineBeforePattern( "doautoall SessionLoadPost", "something", "~/.local/share/nvim/sessions/__Users__at__.config__nvim")
+
 
 " Sessions are saved here:
 " /Users/at/.local/share/nvim/sessions1/
@@ -195,6 +227,12 @@ let g:startify_change_to_dir = 0
 let g:startify_session_dir = stdpath('data') . '/sessions'
 " echo $XDG_DATA_HOME
 " stdpath('data')
+
+" note there is also:
+" ~/.config/nvim/plugin/setup-general.vim‖/g:session_autolo
+" ~/.config/nvim/plugin/setup-general.vim‖/autoload_mo
+" let g:startify_session_autoload    = 1
+
 
 " /Users/at/.local/share/nvim/sessions/
 " /Users/at/.local/share/nvim/sessions1/

@@ -60,7 +60,12 @@ endfunc
 
 func! File_InsertLineBeforePattern( pattern, newLine, filepath )
   " gsed -i '/doautoall SessionLoadPost/i\new line' ~/.local/share/nvim/sessions/__Users__at__.config__nvim
+  " gsed -i '/doautoall SessionLoadPost/i\let g:SomeGlobal = '\''{"8":"aber7"}'\''' ~/.local/share/nvim/sessions/__Users__at__.config__nvim
   let cmd = "gsed -i '/" . a:pattern . "/i\\" . a:newLine . "' " . a:filepath
+  " let cmd = "gsed -i '/" . a:pattern . "/i\\" . a:newLine . "' " . a:filepath
+  " let cmd = 'gsed -i "/' . a:pattern . '/i\\' . string( a:newLine ) . '" ' . a:filepath
+  " echo cmd
+  " return
   return system( cmd )
 endfunc
 " File_InsertLineBeforePattern( "doautoall SessionLoadPost", "something", "~/.local/share/nvim/sessions/__Users__at__.config__nvim")

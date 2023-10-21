@@ -242,26 +242,66 @@ require('tabby.tabline').set( render_c1, {} )
 
 local api = require('tabby.module.api')
 
+_G.TLtab_names = {}
 
-local function load()
-  local ok, names_to_number = pcall(vim.json.decode, vim.g.TabbyTabNames)
+function _G.TLload()
+  -- local names_to_number = vim.json.decode( vim.g.SomeGlobal )
+  -- if not (type(names_to_number) == 'table') then
+  local ok, names_to_number = pcall(vim.json.decode, vim.g.SomeGlobal)
   if not (ok and type(names_to_number) == 'table') then
     return
+  -- else
+  --   return names_to_number
   end
+  -- return names_to_number
+
   for _, tabid in ipairs(api.get_tabs()) do
     local tab_num = api.get_tab_number(tabid)
     local name = names_to_number[tostring(tab_num)]
     if name ~= nil then
-      tab_names[tostring(tabid)] = name
+      _G.TLtab_names[tostring(tabid)] = name
     end
   end
 end
 
+-- _G.TLload()
+-- _G.TLtab_names
+
+
+function _G.TLsave()
+  local names_to_number = {} ---@type table<string, string>
+  for tabid, name in pairs(_G.TLtab_names) do
+    local ok, tab_num = pcall(api.get_tab_number, tonumber(tabid))
+    if ok then
+      names_to_number[tostring(tab_num)] = name
+    end
+  end
+  vim.g.TabbyTabNames = vim.json.encode(names_to_number)
+end
+
+-- require('tabby.feature.tab_name').get(8)
+-- require('tabby.feature.tab_name').pre_render()
+-- require('tabby.feature.tab_name').get_raw(8)
+-- require('tabby.feature.tab_name').get_raw(3)
+-- require('tabby.feature.tab_name').get_raw()
+
+
+-- table.pack( pcall(vim.json.decode, vim.g.TabbyTabNames) )
+vim.json.encode( vim.g.TabbyTabNames )
+-- vim.g.TabbyTabNames
+-- '{"8":"aber4"}'
+
+-- table.pack( pcall(vim.json.decode, vim.g.TabbyTabNames3) )
+-- vim.g.TabbyTabNames3
+
+-- vim.fn.SessionSaveSelectedGlobals()
+
 
 -- require('tabby.feature.tab_name').get(1)
 -- require('tabby.feature.tab_name').load()
--- TabRename aber3
--- vim.g.TabbyTabNames
+-- vim.cmd "TabRename aber7"
+
+
 -- vim.json.decode( vim.g.TabbyTabNames )
 -- require('tabby.module.api').get_tabs()
 -- require('tabby.module.api').get_tab_number(2)
