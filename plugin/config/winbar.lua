@@ -86,15 +86,16 @@ function _G.formattedFileInfo()
 end
 
 
-function _G.LspMeaningfulSymbol()
-  local symbStack = navic.get_data()
+function _G.LspMeaningfulSymbol( bufnr )
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local symbStack = navic.get_data( bufnr )
 
   local candidateStack
   if vim.bo.filetype == 'scala' then
     candidateStack = fun.filter(
       -- function( el ) return el.type == "Method" or el.type == "Class" end,
       function( el ) return 0 == vim.fn.match( el.type, [[\v(Method|Function|Class|Interface)]] ) end,
-      symbStack
+      vim.fn.reverse(symbStack)
     )
   else
     candidateStack = fun.filter(
@@ -103,14 +104,14 @@ function _G.LspMeaningfulSymbol()
       symbStack
     )
   end
-  local str
+  local icon, name
 
   if candidateStack:length() > 0 then
-    str = fun.head( fun.map( function(el) return el.icon .. " " .. el.name end, candidateStack ) )
+    icon, name = fun.head( fun.map( function(el) return el.icon, el.name end, candidateStack ) )
   else
-    str = ""
+    icon, name = ""
   end
-  return str
+  return icon, name
 end
 
 -- lua putt( LspMeaningfulSymbol() )

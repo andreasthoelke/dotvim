@@ -97,6 +97,35 @@ function _G.Status_icon_with_hl( filename )
 end
 
 
+function _G.FileNamesInTab2( tab_number )
+  local tab_handle = vim.api.nvim_list_tabpages()[ tab_number ]
+  local winids = vim.api.nvim_tabpage_list_wins( tab_handle )
+  winids = vim.tbl_filter( function(winid) return "" == vim.fn.win_gettype(winid) end, winids )
+  return vim.tbl_map( function(winid)
+    return vim.api.nvim_buf_get_name( vim.api.nvim_win_get_buf(winid) )
+  end, winids )
+end
+
+function _G.FileNamesInTab( tab_number )
+  return vim.tbl_filter( function(fname) return "" ~= fname end,
+    vim.tbl_map( function(bufid)
+      return vim.api.nvim_buf_get_name( bufid )
+    end, vim.fn.tabpagebuflist( tab_number ) )
+  )
+end
+
+
+-- FileNamesInTab( 2 )
+-- FileNamesInTab2( 2 )
+-- vim.api.nvim_get_current_tabpage()
+-- vim.fn.tabpagenr()
+-- vim.api.nvim_tabpage_get_number(7)
+-- vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage())
+-- vim.fn.win_gettype(1403)  -- should be empty for normal
+-- vim.api.nvim_list_tabpages()[2]
+
+
+
 -- icon (no color) plus fileName (no extension)
 function _G.Status_fileNameToIconPlusName( bufid )
   local buf_name = vim.fn.fnamemodify( ( vim.api.nvim_buf_get_name( bufid ) ), ':t' )

@@ -1,4 +1,6 @@
 
+local fun = require 'utils.fun'
+local api = require('tabby.module.api')
 
 local theme = {
   fill = 'TabLineFill',
@@ -202,6 +204,11 @@ local sicon = devicons.get_icon( "abc.scala" )
 
 function _G.Tab_render( tab, line )
   local given_name = tab_name_get( tab.id ) --  empty if no name was set
+
+  -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
+  -- local shortLspName = Status_shortenFilename( lspName )
+
+
   -- win.buf_name()
   -- tab.current_win().file_icon(),
   -- lsp common package
@@ -210,12 +217,23 @@ function _G.Tab_render( tab, line )
 
   local Tab_ac_inac = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
 
+  -- local stt =  table.concat( vim.tbl_map( function(w) return w.buf_name() end, tab.wins() ) "_" )
+  -- local sta = tab.is_current() and stt or "-"
+  local abb = ""
+  tab.wins().foreach( function( w ) abb = abb .. w.id .. "_" end )
+
+  -- local abb = fun.map( function(w) return tostring( w ) end, api.get_tab_wins( tab.id ) )
+  -- local abb = table.concat( totable( abb ), "_" )
+
+  abb = tab.is_current() and abb or ""
+
   return {
     line.sep('', Tab_ac_inac, Normal),
 
     -- tab.name(),
     -- { sicon, hl = { fg = Tab_ac_inac.fg, bg = Tab_ac_inac.bg } },
     _G.Status_fileNameToIconPlusName( tab.current_win().buf().id ),
+    abb,
 
     line.sep('', Tab_ac_inac, Normal),
 
@@ -223,6 +241,9 @@ function _G.Tab_render( tab, line )
     margin = " ",
   }
 end
+
+-- vim.api.nvim_tabpage_list_wins(2)
+-- vim.fn.tabpagebuflist()
 
 local render_c1 = function( line )
 
