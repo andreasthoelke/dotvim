@@ -115,12 +115,14 @@ end
 --- https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua
 
 local extract = require('tabby.module.highlight').extract
-local tab_name_get = require('tabby.feature.tab_name').get
+local tab_name_get = require('tabby.feature.tab_name').get_raw
 
 local hl_tabline_fill = extract( 'lualine_c_normal' )
+local Normal = extract( 'Normal' )
 local hl_tabline = extract( 'lualine_b_normal' )
 local hl_tabline_b_i = extract( 'lualine_b_inactive' )
 local hl_c1 = extract( 'LuLine_Tabs_in' )
+-- local hl_sc = extract( 'DevIconScala' )
 local hl_tabline_sel = extract( 'lualine_a_normal' )
 
 local Tabby_Tabs_ac = extract( 'Tabby_Tabs_ac' )
@@ -193,49 +195,55 @@ local tabby = require('tabby')
 
 -- require('tabby').tab_rename( "hi there" )
 
+local devicons = require'nvim-web-devicons'
+
+local sicon = devicons.get_icon( "abc.scala" )
+
+
+function _G.Tab_render( tab, line )
+  local given_name = tab_name_get( tab.id ) --  empty if no name was set
+  -- win.buf_name()
+  -- tab.current_win().file_icon(),
+  -- lsp common package
+  -- a rep icon for the project or a unique filetype open
+  -- no win count, ect
+
+  local Tab_ac_inac = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
+
+  return {
+    line.sep('', Tab_ac_inac, Normal),
+
+    -- tab.name(),
+    -- { sicon, hl = { fg = Tab_ac_inac.fg, bg = Tab_ac_inac.bg } },
+    _G.Status_fileNameToIconPlusName( tab.current_win().buf().id ),
+
+    line.sep('', Tab_ac_inac, Normal),
+
+    hl = Tab_ac_inac,
+    margin = " ",
+  }
+end
 
 local render_c1 = function( line )
+
     local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
 
   return {
-    -- { cwd, hl = hl_tabline_sel }
-    { " ", hl = hl_tabline_fill }
-    ,
-    line.tabs().foreach(
-      function(tab)
-        -- local hl = tab.is_current() and hl_tabline_sel or hl_c1
-        -- local hl = tab.is_current() and hl_tabline_sel or hl_tabline_fill
-        -- local hl = tab.is_current() and hl_tabline or hl_tabline_fill
-        local hl = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
-      return {
-        line.sep('', hl, hl_tabline_fill),
-        -- tab.is_current() and '' or '󰆣',
-        -- tab.number(),
-        tab.name(),
-        line.sep('', hl, hl_tabline_fill),
-        hl = hl,
-        margin = " ",
-      }
-    end),
-    line.spacer(),
-    {
-      line.sep('', hl_tabline_fill, hl_tabline_fill),
-      vim.g["metals_status"],
-      hl = hl_tabline_fill,
-    },
-    {
-      line.sep('', hl_tabline_fill, hl_tabline_fill),
-      "hi5",
-      hl = hl_tabline_fill,
-    },
     { " ", hl = hl_tabline_fill },
 
+    line.tabs().foreach( function(tab) return Tab_render(tab, line) end ),
+
+    line.spacer(),
+
+    { " ", hl = hl_tabline_fill },
   }
 end
 
   --   lualine_y = { "lsp_progress", "g:metals_status" },
   --   -- lualine_z = { function () return _G.WeatherStatus end },
 
+-- vim.fn.split( "eins.ab", [[\.]] )
+-- vim.fn.split( "eins", [[\.]] )
 
 require('tabby.tabline').set( render_c1, {} )
 
@@ -279,10 +287,10 @@ function _G.TLsave()
   vim.g.TabbyTabNames = vim.json.encode(names_to_number)
 end
 
--- require('tabby.feature.tab_name').get(8)
+-- require('tabby.feature.tab_name').get(4)
 -- require('tabby.feature.tab_name').pre_render()
--- require('tabby.feature.tab_name').get_raw(8)
--- require('tabby.feature.tab_name').get_raw(3)
+-- require('tabby.feature.tab_name').get_raw(2)
+-- require('tabby.feature.tab_name').get_raw(4)
 -- require('tabby.feature.tab_name').get_raw()
 
 

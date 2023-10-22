@@ -7,23 +7,6 @@ local colors = require 'config.colors'
 
 local hello = function() return "hello there!" end
 
-local filename_noExtension = function(filename, _)
-  local name, _ = table.unpack( vim.fn.split( filename, [[\.]] ) )
-  return name
-end
-
-
-local function git_diff_changeCount()
-  local gitsigns = vim.b.gitsigns_status_dict
-  if gitsigns and gitsigns.added then
-    return {
-      added = 0,
-      removed = 0,
-      -- Have only one number to indicate the amount of change in the file.
-      modified = gitsigns.added + gitsigns.changed + gitsigns.removed,
-    }
-  end
-end
 
 
 -- ─   Custom filetype with icon                        ──
@@ -158,7 +141,14 @@ local lualine_config = {
     },
     lualine_b = { 'CurrentRelativeFolderPath_shorten' },
     lualine_c = { custom_ftype },
-    lualine_x = { { 'diff', source = git_diff_changeCount } },
+    lualine_x = {
+      {
+        'diff',
+        source = function() return _G.Status_git_diff_changeCount() end,
+      },
+      { "lsp_progress" },
+      { "g:metals_status" },
+    },
     lualine_y = { 'vim.fn.line(".")' },
     lualine_z = { 'LightlineScrollbar' },
   },
@@ -268,7 +258,7 @@ local lualine_config = {
       {
         'filename',
         color = 'LuLine_Winbar_z_ac',
-        fmt = filename_noExtension,
+        fmt = _G.Status_filename_noExtension,
       }
     }
   },
@@ -287,7 +277,7 @@ local lualine_config = {
       {
         'filename',
         color = 'LuLine_Winbar_z_in',
-        fmt = filename_noExtension,
+        fmt = _G.Status_filename_noExtension,
       }
     }
   },

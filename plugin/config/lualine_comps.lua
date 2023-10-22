@@ -33,6 +33,103 @@ function _G.Status_search_result()
 end
 
 
+_G.Status_filename_noExtension = function(filename, _)
+  local name, _ = table.unpack( vim.fn.split( filename, [[\.]] ) )
+  return name
+end
+
+function _G.Status_icon_with_hl( filename )
+end
+
+-- ~/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala/com/softwaremill/realworld/articles/comments/api/CommentCreateRequest.scala
+-- ~/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala/com/softwaremill/realworld/articles/comments/CommentAuthor.scala
+-- ~/Documents/Proj/_repos/2_realworld-tapir-zio3/src/main/scala/com/softwaremill/realworld/articles/core/ArticleAuthor.scala
+
+-- ~/Documents/Proj/_repos/8_zio_skunk_tradeIO/modules/core/src/main/scala/tradex/domain/api/common/ErrorInfo.scala
+-- ~/Documents/Proj/_repos/8_zio_skunk_tradeIO/modules/core/src/main/scala/tradex/domain/api/endpoints/TradingServerEndpoints.scala
+-- ~/Documents/Proj/_repos/8_zio_skunk_tradeIO/modules/core/src/main/scala/tradex/domain/api/common/CustomDecodeFailureHandler.scala
+-- ~/Documents/Proj/_repos/8_zio_skunk_tradeIO/modules/core/src/main/scala/tradex/domain/service/live/FrontOfficeOrderParsingServiceLive.scala
+
+
+-- -- it might be just one file in 2 wins - then show that filename
+
+-- mixed type workspaces
+-- if its an additional .md / sql / vim / docker / sbt file then add an additonal icon
+
+-- Main Filename or lsp / function
+
+function _G.Status_shortenFilename( filename )
+  -- Split the filename into components
+  local components = {}
+  for component in string.gmatch(filename, "([A-Z]?[a-z]+)") do
+    table.insert(components, component)
+  end
+
+  -- Reduce each component to three or four representative characters and capitalize the first letter
+  local shortenedComponents = {}
+  for _, component in ipairs(components) do
+    local shortenedComponent = string.sub(component, 1, 3)
+    shortenedComponent = string.upper(shortenedComponent:sub(1,1)) .. shortenedComponent:sub(2)
+    table.insert(shortenedComponents, shortenedComponent)
+  end
+
+  -- Reassemble the shortened components in CamelCase
+  local shortenedFilename = table.concat(shortenedComponents, "")
+
+  -- If many components are involved, some components can be omitted in the result
+  if #shortenedComponents > 3 then
+    shortenedFilename = shortenedComponents[1] .. shortenedComponents[2] .. shortenedComponents[#shortenedComponents]
+  end
+
+  return shortenedFilename
+end
+
+-- Status_shortenFilename( "NewBuf-direction-maps" )
+-- Status_shortenFilename( "NewBuf-direction" )
+-- Status_shortenFilename( "NewerBufferMapping" )
+-- Status_shortenFilename( "FrontOfficeOrderParsingServiceLive" )
+-- Status_shortenFilename( "CustomDecodeFailureHandler" )
+-- Status_shortenFilename( "vim_works" )
+
+
+function _G.Status_icon_with_hl( filename )
+  -- let icon, color = get_icon_color( filename )
+end
+
+
+-- icon (no color) plus fileName (no extension)
+function _G.Status_fileNameToIconPlusName( bufid )
+  local buf_name = vim.fn.fnamemodify( ( vim.api.nvim_buf_get_name( bufid ) ), ':t' )
+  local name, fext = table.unpack( vim.fn.split( buf_name, [[\.]] ) )
+  if fext == nil then
+    return name
+  else
+    local icon, _ = devicons.get_icon( buf_name )
+    if icon == nil then
+      return buf_name
+    else
+      return icon .. " " .. name
+    end
+  end
+end
+
+-- Status_fileNameToIconPlusName( "abc.de" )
+-- Status_fileNameToIconPlusName( "abc" )
+
+
+function _G.Status_git_diff_changeCount()
+  local gitsigns = vim.b.gitsigns_status_dict
+  if gitsigns and gitsigns.added then
+    return {
+      added = 0,
+      removed = 0,
+      -- Have only one number to indicate the amount of change in the file.
+      modified = gitsigns.added + gitsigns.changed + gitsigns.removed,
+    }
+  end
+end
+
+
 -- ─   Tabs custom formatting                           ──
 
 local lualine_highlight = require'lualine.highlight'
