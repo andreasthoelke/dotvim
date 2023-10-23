@@ -295,9 +295,11 @@ end
 --   :rev()
 --   :totable()
 
-vim.iter({ 2, 2, 4, 4, 5 })
-  :rev()
-  :totable()
+vim.iter({ 2, 2, 4, 4, 5 }) :rev()
+
+getmetatable( vim.iter({ 2, 2, 4, 4, 5 }) )
+vim.iter({ 2, 2, 4, 4, 5 }) 
+vim.tbl_get( vim.iter({ 2, 2, 4, 4, 5 }), '_head' )
 
 
 

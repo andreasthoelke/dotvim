@@ -1,5 +1,5 @@
 
-
+local fun = require 'utils.fun'
 local action_state = require "telescope.actions.state"
 
 
@@ -67,7 +67,9 @@ function _G.printToString( value )
   elseif tostring( value ) == "<generator>" then
     pval = printToString( totable( value ) )
   elseif vim.tbl_get( value, 'param' ) then
-    pval = foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
+    pval = fun.foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
+  elseif vim.tbl_get( value, '_head' ) then
+    pval = printToString( value:totable() )
   elseif type( value ) == "table" then
     pval = #value .. '\n' .. vim.inspect( value )
   else
