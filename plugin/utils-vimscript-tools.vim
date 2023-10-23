@@ -168,6 +168,28 @@ endfunc
 " v:lua.require("neo-tree.command").execute({ 'action': "close" })
 
 
+func! PrintVimOrLuaParag()
+  let [startLine, endLine] = ParagraphStartEndLines()
+  let lines = getline(startLine, endLine)
+  let line = join( lines, " " )
+  let line = line->substitute( "-- ", "", "g" )
+  let line = line->substitute( "  ", " ", "g" )
+
+  let expr = line[0:1] == "--" ? 
+    \ line[3:] : line
+
+  let code = [0,0,0]
+  let code[0] = 'local ret = ' . expr
+  " let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
+  let code[1] = 'local printVal = ret and printToString(ret) or ""'
+  " let code[2] = 'vim.print( printVal )'
+  " let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
+  let code[2] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'
+
+  call SourceLines( 'luafile', code )
+endfunc
+
+
 
 function! RangeAux(lnum1, lnum2) abort
   " echo a:lnum1 . ' - ' . a:lnum2

@@ -114,7 +114,8 @@ function _G.LspMeaningfulSymbol( bufnr )
   return icon, name
 end
 
--- lua putt( LspMeaningfulSymbol() )
+-- lua putt( { LspMeaningfulSymbol( vim.fn.bufnr() ) } )
+-- lua putt( { LspMeaningfulSymbol( 8 ) } )
 -- vim.fn.match( "Function", [[\v(Method|Function|Class|Interface)]] )
 -- vim.fn.match( "abcd", [[(c|f)]] )
 

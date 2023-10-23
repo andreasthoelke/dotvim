@@ -15,6 +15,9 @@ func! VScriptToolsBufferMaps()
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
+  nnoremap <silent><buffer> <leader><c-p> :call Vim_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Vim_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+
   " nnoremap <silent><buffer> ge:  :call v:lua.require( 'utils_general' ).RgxSelect_Picker([], g:rgx_main_symbol_vimLua, ["-g", ".vim", ".lua"], [expand('%:p')] )<cr>
   " nnoremap <silent><buffer> ge:  :call v:lua.require('utils_general').RgxSelect_Picker([], "[A-Z]{3,}", ["-g", ".txt", ".vim", ".lua"], [expand('%:p')] )<cr>
   " nnoremap <silent><buffer> ge:  :call v:lua.require( 'utils_general' ).RgxSelect_Picker( [], g:rgx_main_symbol_vimLua, [], [ "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/lua"] )<cr>
@@ -27,6 +30,7 @@ func! VScriptToolsBufferMaps()
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel(), "normal" )<cr>
 
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
+  nnoremap <silent><buffer> gej :call PrintVimOrLuaParag()<cr>
 endfunc
 
 
@@ -47,22 +51,30 @@ endfunc
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local|.{-}\*\S{-}\*)'
 " the *\S{-}\* patterns is searching vim help headlines
+let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s)'
 
 
 func! Vim_MainStartBindingForw()
-  " normal! }
   normal! jj
   call search( g:Vim_MainStartPattern, 'W' )
 endfunc
 
 func! Vim_MainStartBindingBackw()
-  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Vim_MainStartPattern, 'bW' )
-  " normal! {
   normal! kk
   call search( g:Vim_MainStartPattern, 'W' )
 endfunc
 
+func! Vim_TopLevBindingForw()
+  normal! jj
+  call search( g:Vim_TopLevelPattern, 'W' )
+endfunc
+
+func! Vim_TopLevBindingBackw()
+  call search( g:Vim_TopLevelPattern, 'bW' )
+  normal! kk
+  call search( g:Vim_TopLevelPattern, 'W' )
+endfunc
 
 
 

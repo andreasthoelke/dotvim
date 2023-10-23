@@ -1040,7 +1040,8 @@ hi! ParamDec guifg=#BECACD "white-grey"
 " hi!          @lsp.typemod.parameter.declaration guifg=NONE
 hi! def link @lsp.typemod.parameter.declaration ParamDec
 
-hi! VarDec guifg=#9BA5A8 "white-grey"
+" hi! VarDec guifg=#9BA5A8 "white-grey"
+hi! def link VarDec CommentMinus
 
 " hi!          @lsp.typemod.variable.definition guifg=NONE
 hi! def link @lsp.typemod.variable.definition VarDec

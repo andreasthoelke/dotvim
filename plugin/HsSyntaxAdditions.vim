@@ -452,6 +452,9 @@ func! LuaSyntaxAdditions() " ■
   syntax match Normal 'vim.keymap\.set' conceal cchar=⊂
   syntax match Normal 'vim.print' conceal cchar=⌘
 
+  " syntax match CommentMinus '\:'
+  " note this gets overwritten by sematic lsp setting VarDec. now changed this in colorscheme
+
   " This replaces: call CodeMarkupSyntaxHighlights()
   syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
   set conceallevel=2 " ■

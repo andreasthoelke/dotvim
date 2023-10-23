@@ -208,6 +208,7 @@ function _G.Tab_render( tab, line )
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
   -- local shortLspName = Status_shortenFilename( lspName )
 
+  -- vim.fs.dirname( vim.fn.getcwd() )
 
   -- win.buf_name()
   -- tab.current_win().file_icon(),

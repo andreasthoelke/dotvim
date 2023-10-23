@@ -1,4 +1,5 @@
 
+local fun = require 'utils.fun'
 local devicons = require'nvim-web-devicons'
 
 function _G.getDevIcon(filename, filetype, extension)
@@ -97,16 +98,26 @@ function _G.Status_icon_with_hl( filename )
 end
 
 
-function _G.FileNamesInTab2( tab_number )
-  local tab_handle = vim.api.nvim_list_tabpages()[ tab_number ]
-  local winids = vim.api.nvim_tabpage_list_wins( tab_handle )
-  winids = vim.tbl_filter( function(winid) return "" == vim.fn.win_gettype(winid) end, winids )
-  return vim.tbl_map( function(winid)
-    return vim.api.nvim_buf_get_name( vim.api.nvim_win_get_buf(winid) )
-  end, winids )
+function _G.FileNamesInTabHandle( tab_handle )
+  local win_buf_ids = fun.map( function(winid)
+    return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
+  end, vim.api.nvim_tabpage_list_wins( tab_handle ) )
+
+  win_buf_ids = fun.filter( function(win)
+    return vim.fn.win_gettype(win.wid) == ""
+  end, win_buf_ids )
+
+  local bufnames = fun.map( function(win)
+    return vim.api.nvim_buf_get_name( win.bid )
+  end, win_buf_ids)
+
+  return vim.tbl_keys( fun.totable( bufnames ) )
 end
 
-function _G.FileNamesInTab( tab_number )
+-- FileNamesInTabHandle( vim.api.nvim_get_current_tabpage() )
+-- FileNamesInTabHandle( vim.api.nvim_list_tabpages()[ 2 ] )
+
+function _G.FileNamesInTabNumber( tab_number )
   return vim.tbl_filter( function(fname) return "" ~= fname end,
     vim.tbl_map( function(bufid)
       return vim.api.nvim_buf_get_name( bufid )
@@ -114,17 +125,11 @@ function _G.FileNamesInTab( tab_number )
   )
 end
 
-
--- FileNamesInTab( 2 )
--- FileNamesInTab2( 2 )
--- vim.api.nvim_get_current_tabpage()
--- vim.fn.tabpagenr()
--- vim.api.nvim_tabpage_get_number(7)
--- vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage())
--- vim.fn.win_gettype(1403)  -- should be empty for normal
--- vim.api.nvim_list_tabpages()[2]
-
-
+-- FileNamesInTabNumber( vim.fn.tabpagenr() )
+-- FileNamesInTabNumber( 2 )
+-- FileNamesInTabNumber( vim.api.nvim_tabpage_get_number( vim.api.nvim_get_current_tabpage() ) )
+-- 
+-- vim.bo[0].buftype
 
 -- icon (no color) plus fileName (no extension)
 function _G.Status_fileNameToIconPlusName( bufid )

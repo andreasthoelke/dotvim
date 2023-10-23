@@ -8,7 +8,7 @@ for k, v in pairs(require "utils.fun") do _G[k] = v end -- import fun.*
 -- ─   Documentation luafun, plenary, vim.list/tbl      ──
 
 -- -- luafun:
--- ~/.config/nvim/lua/utils/fun.lua‖
+-- ~/.config/nvim/lua/utils/fun.lua
 -- https://luafun.github.io/
 -- https://github.com/luafun/luafun/tree/master/tests
 
@@ -55,82 +55,82 @@ end
 -- lua vim.print( require('nvim-navic').get_location() )
 -- lua putt( require('nvim-navic').get_data() )
 
-local ab = { { -- ■
-  icon = " ",
-  kind = 4,
-  name = "tradex.domain",
-  scope = {
-    ["end"] = {
-      character = 5,
-      line = 53
-    },
-    start = {
-      character = 0,
-      line = 1
-    }
-  },
-  type = "Package"
-}, {
-    icon = " ",
-    kind = 4,
-    name = "api",
-    scope = {
-      ["end"] = {
-        character = 5,
-        line = 53
-      },
-      start = {
-        character = 0,
-        line = 2
-      }
-    },
-    type = "Package"
-  }, {
-    icon = " ",
-    kind = 4,
-    name = "common",
-    scope = {
-      ["end"] = {
-        character = 5,
-        line = 53
-      },
-      start = {
-        character = 0,
-        line = 3
-      }
-    },
-    type = "Package"
-  }, {
-    icon = "󰌗 ",
-    kind = 5,
-    name = "CustomDecodeFailureHandler",
-    scope = {
-      ["end"] = {
-        character = 3,
-        line = 44
-      },
-      start = {
-        character = 0,
-        line = 18
-      }
-    },
-    type = "Class"
-  }, {
-    icon = "󰆧 ",
-    kind = 6,
-    name = "apply",
-    scope = {
-      ["end"] = {
-        character = 3,
-        line = 31
-      },
-      start = {
-        character = 2,
-        line = 24
-      }
-    },
-    type = "Method"
-  } }
+-- local ab = { { -- ■
+--   icon = " ",
+--   kind = 4,
+--   name = "tradex.domain",
+--   scope = {
+--     ["end"] = {
+--       character = 5,
+--       line = 53
+--     },
+--     start = {
+--       character = 0,
+--       line = 1
+--     }
+--   },
+--   type = "Package"
+-- }, {
+--     icon = " ",
+--     kind = 4,
+--     name = "api",
+--     scope = {
+--       ["end"] = {
+--         character = 5,
+--         line = 53
+--       },
+--       start = {
+--         character = 0,
+--         line = 2
+--       }
+--     },
+--     type = "Package"
+--   }, {
+--     icon = " ",
+--     kind = 4,
+--     name = "common",
+--     scope = {
+--       ["end"] = {
+--         character = 5,
+--         line = 53
+--       },
+--       start = {
+--         character = 0,
+--         line = 3
+--       }
+--     },
+--     type = "Package"
+--   }, {
+--     icon = "󰌗 ",
+--     kind = 5,
+--     name = "CustomDecodeFailureHandler",
+--     scope = {
+--       ["end"] = {
+--         character = 3,
+--         line = 44
+--       },
+--       start = {
+--         character = 0,
+--         line = 18
+--       }
+--     },
+--     type = "Class"
+--   }, {
+--     icon = "󰆧 ",
+--     kind = 6,
+--     name = "apply",
+--     scope = {
+--       ["end"] = {
+--         character = 3,
+--         line = 31
+--       },
+--       start = {
+--         character = 2,
+--         line = 24
+--       }
+--     },
+--     type = "Method"
+--   } }
 
  -- ▲
 function _G.abb()
@@ -268,6 +268,36 @@ end
 
 -- foldl( function( acc, el ) return acc .. el end, "", range(4) )
 
+-- vim.regex('ab'):match_str( 'zxabcd' )
+-- vim.regex('ab'):match_str( 'z_xabcd' )
+
+-- vim.defer_fn( function() vim.print( "hi there" ) end, 2000 )
+
+function _G.Test1()
+  return
+  vim.iter({ 1, 2, 3, 4, 5 })
+    :rev()
+    :totable()
+end
+-- Test1()
+
+function _G.Test3()
+  local aa =
+  vim.iter({ 1, 2, 3, 4, 5 })
+    :rev()
+    :totable()
+  return aa
+end
+-- Test3()
+
+
+-- vim.iter({ 1, 2, 4, 4, 5 })
+--   :rev()
+--   :totable()
+
+vim.iter({ 2, 2, 4, 4, 5 })
+  :rev()
+  :totable()
 
 
 
