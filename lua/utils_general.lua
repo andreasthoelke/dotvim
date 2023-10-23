@@ -70,6 +70,8 @@ function _G.printToString( value )
     pval = fun.foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
   elseif vim.tbl_get( value, '_head' ) then
     pval = printToString( value:totable() )
+  elseif vim.tbl_get( value, 'next' ) then
+    pval = printToString( value:totable() )
   elseif type( value ) == "table" then
     pval = #value .. '\n' .. vim.inspect( value )
   else

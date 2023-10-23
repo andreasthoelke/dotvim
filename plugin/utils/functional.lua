@@ -7,6 +7,9 @@ for k, v in pairs(require "utils.fun") do _G[k] = v end -- import fun.*
 
 -- ─   Documentation luafun, plenary, vim.list/tbl      ──
 
+-- vim.iter:
+-- ~/apps_bin/nvim-macos_v0.10.0/share/nvim/runtime/doc/lua.txt‖/Luaˍmodule:ˍvim.iterˍ
+
 -- -- luafun:
 -- ~/.config/nvim/lua/utils/fun.lua
 -- https://luafun.github.io/
@@ -295,14 +298,28 @@ end
 --   :rev()
 --   :totable()
 
-vim.iter({ 2, 2, 4, 4, 5 }) :rev()
+-- vim.iter({ 2, 2, 4, 4, 5 }) :rev()
+-- getmetatable( vim.iter({ 2, 2, 4, 4, 5 }) )
+-- vim.iter({ 2, 2, 4, 4, 5 }) 
+-- vim.tbl_get( vim.iter({ 2, 2, 4, 4, 5 }), '_head' )
 
-getmetatable( vim.iter({ 2, 2, 4, 4, 5 }) )
-vim.iter({ 2, 2, 4, 4, 5 }) 
-vim.tbl_get( vim.iter({ 2, 2, 4, 4, 5 }), '_head' )
+-- vim.iter(ipairs({ 1, 2, 3, 4, 5 })):map(function(i, v)
+--   if i > 2 then return v end
+-- end)
 
+-- vim.iter(vim.gsplit('1,2,3,44,5', ','))
+--   :map(function(s) return tonumber(s) end)
+--   :enumerate()
+--   :map( function (i, d)
+--     print(string.format("Column %d is %d", i, d))
+--    end)
 
+-- vim.iter({ a = 1, b = 2, c = 3, z = 26 })
+--   :any( function(k, v)
+--     return k == 'z'
+-- end )
 
+-- vim.system({'echo', 'hello'}, { text = true }):wait()
 
 
 

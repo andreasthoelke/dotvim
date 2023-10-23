@@ -98,7 +98,7 @@ function _G.Status_icon_with_hl( filename )
 end
 
 
-function _G.FileNamesInTabHandle( tab_handle )
+function _G.FileNamesInTabHandle_( tab_handle )
   local win_buf_ids = fun.map( function(winid)
     return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
   end, vim.api.nvim_tabpage_list_wins( tab_handle ) )
@@ -114,8 +114,32 @@ function _G.FileNamesInTabHandle( tab_handle )
   return vim.tbl_keys( fun.totable( bufnames ) )
 end
 
+
+local uniqueVals = function( acc, v )
+  return vim.tbl_contains(acc, v)
+    and acc
+    or vim.list_extend(acc, {v})
+end
+
+function _G.FileNamesInTabHandle( tab_handle )
+  return vim.iter( vim.api.nvim_tabpage_list_wins( tab_handle ) )
+    :map( function(winid)
+      return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
+    end)
+    :filter( function(win)
+      return     vim.fn.win_gettype(win.wid) == ""
+        and vim.bo[win.bid].buftype == ""
+        -- Allow only normal windows and normal buftypes.
+    end)
+    :map( function(win)
+      return vim.api.nvim_buf_get_name( win.bid )
+    end)
+    :fold( {}, uniqueVals )
+end
+
 -- FileNamesInTabHandle( vim.api.nvim_get_current_tabpage() )
--- FileNamesInTabHandle( vim.api.nvim_list_tabpages()[ 2 ] )
+
+-- FileNamesInTabHandle( vim.api.nvim_list_tabpages()[ 1 ] )
 
 function _G.FileNamesInTabNumber( tab_number )
   return vim.tbl_filter( function(fname) return "" ~= fname end,
@@ -130,6 +154,7 @@ end
 -- FileNamesInTabNumber( vim.api.nvim_tabpage_get_number( vim.api.nvim_get_current_tabpage() ) )
 -- 
 -- vim.bo[0].buftype
+-- vim.bo[28].buftype
 
 -- icon (no color) plus fileName (no extension)
 function _G.Status_fileNameToIconPlusName( bufid )
