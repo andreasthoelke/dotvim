@@ -20,10 +20,20 @@ endfunc
 " nnoremap <silent> <leader>so :call SourceFile()<cr>:echo 'Sourced ' . expand('%:t') . "!"<cr>
 nnoremap <silent> <leader>so :call SourceFile()<cr>:lua vim.notify( "Sourced!", "info", { timeout = 500 } )<cr>
 
+func! LuaModuleName()
+  let cwd = getcwd()
+  let fp = expand('%:p:r')
+  let rel_folders = fp->substitute( cwd . '/lua/', '', '' )
+  let rel_folders = rel_folders->substitute( cwd . '/', '', '' )
+  let modpath = rel_folders->substitute( '\/', '\.', '' )
+  return modpath
+endfunc
+" LuaModuleName()
+
 func! SourceFile ()
   silent exec "w"
   if &filetype == 'lua'
-    lua require'plenary.reload'.reload_module( vim.fn.expand('%:t:r') )
+    lua require'plenary.reload'.reload_module( LuaModuleName() )
     luafile %
   else
     exec 'source %'
@@ -174,8 +184,9 @@ endfunc
 
 
 func! SourceLinesLua( expr )
-  let code = [0, 1, 2, 3, 4, 5, 6]
+  let code = ['', '', '', '', '', '', '']
   let code[0] = 'local f = require "utils.functional"'
+  let code[1] = 'local fun = require "utils.fun"'
   let code[4] = 'local ret = ' . a:expr
   let code[5] = 'local printVal = ret and printToString(ret) or ""'
   let code[6] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'

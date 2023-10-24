@@ -1,4 +1,6 @@
 
+
+-- local f = require "utils.functional"
 local List = require 'plenary.collections.py_list'
 local fun = require 'utils.fun'
 -- require 'utils.fun'()
@@ -30,14 +32,14 @@ local fun = require 'utils.fun'
 
 
 -- From https://github.com/cviejo/mPD/blob/main/bin/data/app/utils/functional.lua
-local M = {}
+local f = {}
 
-M.noop = function()
+f.noop = function()
 end
 
 -- not pretty, but fast. after receiving the first argument
 -- performance is similar to non-curried form
-M.curry2 = function(fn)
+f.curry2 = function(fn)
   local function handler(a, b)
   if a == nil then
       return handler
@@ -58,7 +60,7 @@ M.curry2 = function(fn)
 end
 
 -- see curry2 comment
-M.curry3 = function(fn)
+f.curry3 = function(fn)
   local function handler(a, b, c)
   if a == nil then -- no args
       return handler
@@ -89,42 +91,44 @@ M.curry3 = function(fn)
   return handler()
 end
 
-M.curry = function(fn)
+f.curry = function(fn)
   local nparams = debug.getinfo(fn).nparams
 
   if nparams == 2 then
-    return M.curry2(fn)
+    return f.curry2(fn)
   else
-    return M.curry3(fn)
+    return f.curry3(fn)
   end
 end
 
-M.negate = function(x)
+f.negate = function(x)
   return not x
 end
 
-M.unapply = function(fn)
+f.unapply = function(fn)
   return function(...)
     return fn({ ... })
   end
 end
 
-M.equals = M.curry2(function(a, b)
+
+f.equals = f.curry2(function(a, b)
   return a == b
 end)
+-- f.equals 'hi' 'hi'
 
-M.isNil = function(x)
+f.isNil = function(x)
   return x == nil
 end
 
-M.unless = M.curry(function(cond, success, x)
+f.unless = f.curry(function(cond, success, x)
   if (not cond(x)) then
     return success(x)
   end
   return x
 end)
 
-M.safe = function(fn)
+f.safe = function(fn)
   return function(x)
   if x == nil then
       return x
@@ -134,7 +138,7 @@ M.safe = function(fn)
   end
 end
 
-M.includes = M.curry(function(x, xs)
+f.includes = f.curry(function(x, xs)
   for i = 1, #xs do
   if xs[i] == x then
       return true
@@ -143,7 +147,7 @@ M.includes = M.curry(function(x, xs)
   return false
 end)
 
-M.intersects = function(a, b)
+f.intersects = function(a, b)
   for ia = 1, #a do
     for ib = 1, #b do
     if a[ia] == b[ib] then
@@ -155,13 +159,13 @@ M.intersects = function(a, b)
   return false
 end
 
-M.prop = M.curry(function(name, x)
+f.prop = f.curry(function(name, x)
 if x then
     return x[name]
   end
 end)
 
-M.map = M.curry(function(fn, xs)
+f.map = f.curry(function(fn, xs)
   local result = {}
   for i = 1, #xs do
     result[#result + 1] = fn(xs[i], i)
@@ -169,13 +173,13 @@ M.map = M.curry(function(fn, xs)
   return result
 end)
 
-M.forEach = M.curry(function(fn, xs)
+f.forEach = f.curry(function(fn, xs)
   for i = 1, #xs do
     fn(xs[i], i)
   end
 end)
 
-M.filter = M.curry(function(fn, xs)
+f.filter = f.curry(function(fn, xs)
   local result = {}
   for i = 1, #xs do
     local x = xs[i]
@@ -185,22 +189,24 @@ M.filter = M.curry(function(fn, xs)
   end
   return result
 end)
+-- f.filter( function(e) return e>3 end, {1, 3} ) 
+-- fun.range(1, 10)
 
-M.reject = M.curry(function(fn, xs)
-  return M.filter(function(x)
+f.reject = f.curry(function(fn, xs)
+  return f.filter(function(x)
     return not fn(x)
   end, xs)
 end)
 
-M.forEachReverse = M.curry(function(fn, xs)
+f.forEachReverse = f.curry(function(fn, xs)
   for i = #xs, 1, -1 do
     fn(xs[i], i)
   end
 end)
 
-M.each = M.forEach
+f.each = f.forEach
 
-M.reduce = M.curry3(function(fn, init, xs)
+f.reduce = f.curry3(function(fn, init, xs)
   local acc = init
   for i = 1, #xs do
     acc = fn(acc, xs[i])
@@ -210,9 +216,9 @@ end)
 
 -- avoid inlining / creating functions dynamically in potentially hot paths
 -- in this case means declaring the reducer only once
-M.pipe = function(...)
+f.pipe = function(...)
   local fns = { ... }
-  local run = M.reduce(function(acc, fn)
+  local run = f.reduce(function(acc, fn)
     return fn(acc)
   end)
   return function(x)
@@ -220,7 +226,7 @@ M.pipe = function(...)
   end
 end
 
-M.tryCatch = M.curry(function(tryer, catcher)
+f.tryCatch = f.curry(function(tryer, catcher)
   print 'tryCatch is expensive, remove for production'
 
   return function(x)
@@ -237,7 +243,7 @@ M.tryCatch = M.curry(function(tryer, catcher)
   end
 end)
 
-M.clamp = M.curry(function(min, max, x)
+f.clamp = f.curry(function(min, max, x)
   if x > max then
     return max
   elseif x < min then
@@ -247,9 +253,9 @@ M.clamp = M.curry(function(min, max, x)
   end
 end)
 
-M.pick = M.curry2(function(fields, obj)
+f.pick = f.curry2(function(fields, obj)
   local result = {}
-  M.forEach(function(field)
+  f.forEach(function(field)
     local value = obj[field]
   if (value) then
       result[field] = value
@@ -258,7 +264,7 @@ M.pick = M.curry2(function(fields, obj)
   return result
 end)
 
-M.keys = function(x)
+f.keys = function(x)
   local result = {}
   for key, _ in pairs(x) do
     result[#result + 1] = key
@@ -267,40 +273,40 @@ M.keys = function(x)
 end
 
 -- not pure, but for convenience let's keep them here
-M.assign = M.curry2(function(target, source)
+f.assign = f.curry2(function(target, source)
   for key, value in pairs(source) do
     target[key] = value
   end
 end)
 
-M.push = function(x, xs)
+f.push = function(x, xs)
   xs[#xs + 1] = x
 end
 -- not pure, but for convenience let's keep them here
 
-M.merge = M.curry2(function(a, b)
+f.merge = f.curry2(function(a, b)
   local result = {}
-  M.assign(result, a)
-  M.assign(result, b)
+  f.assign(result, a)
+  f.assign(result, b)
   return result
 end)
 
-M.complement = function(fn)
+f.complement = function(fn)
   return function(...)
     return not fn(...)
   end
 end
 
-M.times = M.curry2(function(fn, n)
+f.times = f.curry2(function(fn, n)
   local result = {}
   for i = 1, n do
-    M.push(fn(i), result)
+    f.push(fn(i), result)
   end
   return result
 end)
 
 
-M.thunkify = function(fn)
+f.thunkify = function(fn)
   return function(...)
     local args = { ... }
     return function()
@@ -309,15 +315,15 @@ M.thunkify = function(fn)
   end
 end
 
-M.reverse = function(xs)
+f.reverse = function(xs)
   local result = {}
-  M.forEachReverse(function(x)
+  f.forEachReverse(function(x)
     result[#result + 1] = x
   end, xs)
   return result
 end
 
-M.find = M.curry2(function(fn, xs)
+f.find = f.curry2(function(fn, xs)
   for i = 1, #xs do
     local item = xs[i]
   if fn(item) then
@@ -326,31 +332,44 @@ M.find = M.curry2(function(fn, xs)
   end
 end)
 
-M.add = M.curry2(function(a, b)
+f.range = function( start, fin )
+  return fun.range( start, fin ):totable()
+end
+
+-- f.find( function(x) return x>5 end )( {1, 2, 3, 4, 5, 6, 7} )
+-- f.find( function(x) return x>5 end, {1, 2, 3, 4, 5, 6, 7} )
+-- f.find( function(x) return x>5 end, fun.range( 3, 10 ):totable() )
+-- f.find( function(x) return x>5 end, f.range( 3, 10 ) )
+-- f.range( 3, 10 )
+
+f.add = f.curry2(function(a, b)
   return a + b
 end)
--- require 'plugin.utils.functional'.add( 30, 11 )
+-- f.add( 31, 11 )
 
-M.max = M.curry2(function(a, b)
+f.max = f.curry2(function(a, b)
   return a > b and a or b
 end)
+-- f.max( 11 )( 22 )
 
-M.path = M.curry2(function(parts, x)
+
+f.path = f.curry2(function(parts, x)
   local current = x
   for i = 1, #parts do
-    current = current[parts[i]]
+    current = current[ parts[i] ]
     if current == nil then
       return nil
     end
   end
   return current
 end)
+-- f.path({'a', 'b'}, {a = {b = 2}})
 
-M.pathEq = M.curry3(function(parts, value, x)
-  return M.path(parts, x) == value
+f.pathEq = f.curry3(function(parts, value, x)
+  return f.path(parts, x) == value
 end)
 
-M.concat = M.curry2(function(a, b)
+f.concat = f.curry2(function(a, b)
   local result = {}
   for i = 1, #a do
     result[#result + 1] = a[i]
@@ -360,5 +379,11 @@ M.concat = M.curry2(function(a, b)
   end
   return result
 end)
+-- f.concat( {1, 2, 3} )( {10, 11} )
+-- f.concat {1, 2, 3} {10, 11}
 
-return M
+return f
+
+
+
+

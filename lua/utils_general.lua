@@ -36,6 +36,14 @@ function _G.PrintMessages( cnt )
 end
 -- PrintMessages()
 
+function _G.LuaModuleName()
+  -- Get module name from current file path.
+  vim.fs.basename( vim.fn.expand('%:p:t') )
+  vim.fs.dirname( vim.fn.expand('%:p') )
+  vim.iter( vim.fs.parents( vim.fn.expand('%:p') ) )
+  return vim.fn.expand('%:t:r') 
+end
+-- LuaModuleName()
 
 function _G.put(...)
   local objects = {}
@@ -65,7 +73,7 @@ function _G.printToString( value )
   elseif type( value ) == "boolean" then
     pval = tostring( value )
   elseif tostring( value ) == "<generator>" then
-    pval = printToString( totable( value ) )
+    pval = printToString( fun.totable( value ) )
   elseif vim.tbl_get( value, 'param' ) then
     pval = fun.foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
   elseif vim.tbl_get( value, '_head' ) then
@@ -396,7 +404,7 @@ function _G.Search_mainPatterns( path, pattern, mode )
     if vim.fn.expand("%:e") == "lua" then
       -- pattern = [[^(function|local\s.*function|-- ─ ).*]]
       -- now including all top level local values. As I dont' know how to search *before* the function keyword (and after it).
-      pattern = [[^(function|local\s|-- ─ ).*]]
+      pattern = [[^(function|M|f\.|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(func|comma|" ─ ).*]]
     else

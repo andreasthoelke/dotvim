@@ -117,8 +117,7 @@ end
 --- https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua
 
 local extract = require('tabby.module.highlight').extract
-local tab_name_get = require('tabby.feature.tab_name').get_raw
-local tab_name_set = require('tabby.feature.tab_name').set
+local tab_name = require('tabby.feature.tab_name')
 
 local hl_tabline_fill = extract( 'lualine_c_normal' )
 local Normal = extract( 'Normal' )
@@ -136,7 +135,7 @@ local function tab_label(tabid, active)
   local icon = ""
   -- local number = vim.api.nvim_tabpage_get_number(tabid)
   local number = ""
-  local name = tab_name_get(tabid)
+  local name = tab_name.get_raw(tabid)
   -- return string.format(' %s %d: %s ', icon, number, name)
   return name
 end
@@ -204,34 +203,35 @@ local sicon = devicons.get_icon( "abc.scala" )
 
 local function set_label( value )
   if value == nil then return end
-  tab_name_set( 0, value )
+  tab_name.set( 0, value )
 end
 
 function _G.Tab_UserSetName()
   vim.ui.input(
     {
       prompt = "",
+      default = tab_name.get(vim.api.nvim_get_current_tabpage() ),
       completion = "customlist,Tab_complete_label",
     }, set_label )
 end
 
--- vim.cmd 'TabRename aber4'
--- require('tabby.feature.tab_name').set( 0, 'hi' )
--- require('tabby.feature.tab_name').set( 0, '' )
 
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
+-- TODO: show abbreviations of other windows in tab?
 function _G.Tab_complete_label( currentCompl, fullLine, pos )
   return {currentCompl .. '|' .. 'eis', currentCompl .. '|' .. 'zwei'}
 end
 
-
 function _G.Tab_GenLabel( tabid )
+
+-- vim.fn.expand('%:t:r')
+-- vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
 end
 
 function _G.Tab_render( tab, line )
-  local given_name = tab_name_get( tab.id ) --  empty if label was set by user
+  local given_name = tab_name.get_raw(  tab.id  ) --  empty if label was set by user
   local label = not is_empty( given_name ) and given_name or Tab_GenLabel()
 
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )

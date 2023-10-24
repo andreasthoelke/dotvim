@@ -208,6 +208,7 @@ endfunc
 nnoremap <leader>st :Startify<cr>
 nnoremap <silent><leader>ls :call SessionLoadForCWDStartify()<cr>
 
+let g:startify_disable_at_vimenter = v:true
 
 let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
