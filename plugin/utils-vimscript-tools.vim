@@ -153,20 +153,11 @@ func! PrintVimOrLuaLine()
   let expr = line[0:1] == "--" ? 
     \ line[3:] : line
 
-  let code = [0,0,0]
-  let code[0] = 'local ret = ' . expr
-  " let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
-  let code[1] = 'local printVal = ret and printToString(ret) or ""'
-  " let code[2] = 'vim.print( printVal )'
-  " let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
-  let code[2] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'
-
-  call SourceLines( 'luafile', code )
+  call SourceLines( 'luafile', SourceLinesLua( expr ) )
 endfunc
 " NOTE how to use vim dictionary to pass a lua table from vim
 " v:lua.require("neo-tree.command").execute({ 'action': "show", 'position': "right" })
 " v:lua.require("neo-tree.command").execute({ 'action': "close" })
-
 
 func! PrintVimOrLuaParag()
   let [startLine, endLine] = ParagraphStartEndLines()
@@ -178,17 +169,18 @@ func! PrintVimOrLuaParag()
   let expr = line[0:1] == "--" ? 
     \ line[3:] : line
 
-  let code = [0,0,0]
-  let code[0] = 'local ret = ' . expr
-  " let code[1] = 'local printVal = ret and vim.inspect(ret) or ""'
-  let code[1] = 'local printVal = ret and printToString(ret) or ""'
-  " let code[2] = 'vim.print( printVal )'
-  " let code[2] = 'vim.notify( printVal, "info", { title = "' . expr . '", timeout = 40000 } )'
-  let code[2] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'
-
-  call SourceLines( 'luafile', code )
+  call SourceLines( 'luafile', SourceLinesLua( expr ) )
 endfunc
 
+
+func! SourceLinesLua( expr )
+  let code = [0, 1, 2, 3, 4, 5, 6]
+  let code[0] = 'local f = require "utils.functional"'
+  let code[4] = 'local ret = ' . a:expr
+  let code[5] = 'local printVal = ret and printToString(ret) or ""'
+  let code[6] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'
+  return code
+endfunc
 
 
 function! RangeAux(lnum1, lnum2) abort

@@ -121,8 +121,8 @@ local uniqueVals = function( acc, v )
     or vim.list_extend(acc, {v})
 end
 
-function _G.FileNamesInTabHandle( tab_handle )
-  return vim.iter( vim.api.nvim_tabpage_list_wins( tab_handle ) )
+function _G.FileNamesInTabId( tabid )
+  return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
     :map( function(winid)
       return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
     end)
@@ -137,9 +137,8 @@ function _G.FileNamesInTabHandle( tab_handle )
     :fold( {}, uniqueVals )
 end
 
--- FileNamesInTabHandle( vim.api.nvim_get_current_tabpage() )
-
--- FileNamesInTabHandle( vim.api.nvim_list_tabpages()[ 1 ] )
+-- FileNamesInTabId( vim.api.nvim_get_current_tabpage() )
+-- FileNamesInTabId( vim.api.nvim_list_tabpages()[ 1 ] )
 
 function _G.FileNamesInTabNumber( tab_number )
   return vim.tbl_filter( function(fname) return "" ~= fname end,

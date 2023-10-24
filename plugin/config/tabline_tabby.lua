@@ -118,6 +118,7 @@ end
 
 local extract = require('tabby.module.highlight').extract
 local tab_name_get = require('tabby.feature.tab_name').get_raw
+local tab_name_set = require('tabby.feature.tab_name').set
 
 local hl_tabline_fill = extract( 'lualine_c_normal' )
 local Normal = extract( 'Normal' )
@@ -201,9 +202,37 @@ local devicons = require'nvim-web-devicons'
 
 local sicon = devicons.get_icon( "abc.scala" )
 
+local function set_label( value )
+  if value == nil then return end
+  tab_name_set( 0, value )
+end
+
+function _G.Tab_UserSetName()
+  vim.ui.input(
+    {
+      prompt = "",
+      completion = "customlist,Tab_complete_label",
+    }, set_label )
+end
+
+-- vim.cmd 'TabRename aber4'
+-- require('tabby.feature.tab_name').set( 0, 'hi' )
+-- require('tabby.feature.tab_name').set( 0, '' )
+
+vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
+
+-- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
+function _G.Tab_complete_label( currentCompl, fullLine, pos )
+  return {currentCompl .. '|' .. 'eis', currentCompl .. '|' .. 'zwei'}
+end
+
+
+function _G.Tab_GenLabel( tabid )
+end
 
 function _G.Tab_render( tab, line )
-  local given_name = tab_name_get( tab.id ) --  empty if no name was set
+  local given_name = tab_name_get( tab.id ) --  empty if label was set by user
+  local label = not is_empty( given_name ) and given_name or Tab_GenLabel()
 
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
   -- local shortLspName = Status_shortenFilename( lspName )
@@ -218,23 +247,14 @@ function _G.Tab_render( tab, line )
 
   local Tab_ac_inac = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
 
-  -- local stt =  table.concat( vim.tbl_map( function(w) return w.buf_name() end, tab.wins() ) "_" )
-  -- local sta = tab.is_current() and stt or "-"
-  local abb = ""
-  tab.wins().foreach( function( w ) abb = abb .. w.id .. "_" end )
 
-  -- local abb = fun.map( function(w) return tostring( w ) end, api.get_tab_wins( tab.id ) )
-  -- local abb = table.concat( totable( abb ), "_" )
-
-  abb = tab.is_current() and abb or ""
+  label = tab.is_current() and label or _G.Status_fileNameToIconPlusName( tab.current_win().buf().id )
 
   return {
     line.sep('', Tab_ac_inac, Normal),
 
-    -- tab.name(),
     -- { sicon, hl = { fg = Tab_ac_inac.fg, bg = Tab_ac_inac.bg } },
-    _G.Status_fileNameToIconPlusName( tab.current_win().buf().id ),
-    abb,
+    label,
 
     line.sep('', Tab_ac_inac, Normal),
 

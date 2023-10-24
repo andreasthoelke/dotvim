@@ -375,7 +375,7 @@ let g:better_whitespace_enabled = 0
 nnoremap <leader>sw :StripWhitespace<cr>
 nnoremap <leader><leader>sw :StripWhitespace<cr>
 nnoremap yoW :ToggleWhitespace<cr>
-nnoremap <silent><leader>tw :ToggleWhitespace<cr>
+" nnoremap <silent><leader>tw :ToggleWhitespace<cr>
 
 " ─   Unimpaired overwrites                             ──
 " simple options toggling can be implemented just like this:

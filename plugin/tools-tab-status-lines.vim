@@ -31,6 +31,11 @@ func! CursorColumnInStatusline()
   call lightline#update()
 endfunc
 
+func! Tab_complete_label( currentCompl, fullLine, pos )
+  return v:lua.Tab_complete_label( a:currentCompl, a:fullLine, a:pos )
+endfunc
+
+
 command! StatuslineMoreInfos call StatuslineMoreInfos()
 func! StatuslineMoreInfos()
   " Show more on inactive windows

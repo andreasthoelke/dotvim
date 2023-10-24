@@ -26,8 +26,8 @@ nnoremap <silent> -         :call Browse_parent( "full" )<cr>
 nnoremap <silent> <leader>- :call Browse_cwd  ( "full" )<cr>
 nnoremap <silent> <leader><leader>- :Dirvish<cr>
 nnoremap <silent> <leader>od :Dirvish<cr>
-nnoremap <silent> ,t        :call Browse_parent( "tab" )<cr>
-nnoremap <silent> ,,t       :call Browse_cwd  ( "tab" )<cr>
+nnoremap <silent> ,tn        :call Browse_parent( "tab" )<cr>
+nnoremap <silent> ,,tn       :call Browse_cwd  ( "tab" )<cr>
 " _
 nnoremap <silent> ,v        :call Browse_parent( "right" )<cr>
 nnoremap <silent> ,V        :call Browse_parent( "right_back" )<cr>
