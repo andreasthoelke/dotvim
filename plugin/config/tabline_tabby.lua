@@ -1,4 +1,6 @@
 
+local f = require 'utils.functional'
+local s = require 'utils.string'
 local fun = require 'utils.fun'
 local api = require('tabby.module.api')
 
@@ -225,14 +227,18 @@ function _G.Tab_complete_label( currentCompl, fullLine, pos )
 end
 
 function _G.Tab_GenLabel( tabid )
+  local filePaths = FileNamesInTabId( tabid )
 
--- vim.fn.expand('%:t:r')
--- vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
+  -- vim.fn.expand('%:t:r')
+  -- local ab = vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
+  return filePaths[0]
 end
+
+-- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
 
 function _G.Tab_render( tab, line )
   local given_name = tab_name.get_raw(  tab.id  ) --  empty if label was set by user
-  local label = not is_empty( given_name ) and given_name or Tab_GenLabel()
+  local label = not is_empty( given_name ) and given_name or Tab_GenLabel( tab.id )
 
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
   -- local shortLspName = Status_shortenFilename( lspName )

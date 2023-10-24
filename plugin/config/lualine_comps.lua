@@ -1,4 +1,5 @@
 
+local f = require 'utils.functional'
 local fun = require 'utils.fun'
 local devicons = require'nvim-web-devicons'
 
