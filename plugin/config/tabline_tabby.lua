@@ -225,13 +225,17 @@ vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 function _G.Tab_complete_label( currentCompl, fullLine, pos )
   return {currentCompl .. '|' .. 'eis', currentCompl .. '|' .. 'zwei'}
 end
-
+ Search_mainPatterns
 function _G.Tab_GenLabel( tabid )
   local filePaths = FileNamesInTabId( tabid )
+  local currentPath = vim.fn.expand('%:r')
+  if #filePaths == 0 then return currentPath end
+  local mainFile = filePaths[1]
 
-  -- vim.fn.expand('%:t:r')
-  -- local ab = vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
-  return filePaths[0]
+  vim.fn.expand('%:t:r')
+  vim.fn.expand('%:r')
+  vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
+  return filePaths[1]
 end
 
 -- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
@@ -249,7 +253,6 @@ function _G.Tab_render( tab, line )
   -- tab.current_win().file_icon(),
   -- lsp common package
   -- a rep icon for the project or a unique filetype open
-  -- no win count, ect
 
   local Tab_ac_inac = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
 

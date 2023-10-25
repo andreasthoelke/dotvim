@@ -414,7 +414,7 @@ function _G.Search_mainPatterns( path, pattern, mode )
   require('telescope.builtin').live_grep({
     initial_mode = mode or "insert",
     default_text = pattern,
-    search_dirs = { path },
+    search_dirs = { path, "~/Documents/Notes/" },
   })
 end
 -- TODO: not working on this file: ~/.local/share/nvim/sessions/__Users__at__.config__nvim‖

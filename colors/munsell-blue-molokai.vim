@@ -403,6 +403,13 @@ hi! def link diffRemoved Macro
 hi! def link gitHunk Comment
 hi! def link diffSubname Comment
 
+" Telescope
+hi! def link TelescopePreviewLine CursorLine
+" hi! def link TelescopePreviewMatch Search
+hi! def link TelescopeMatching Identifier
+" hi! def link TelescopeSelection Visual
+hi! def link TelescopeSelection CursorLine
+
 " Nvim Tree
 " ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/Default%20linked%20group
 " hi! def link NvimTreeOpenedFile Operator
@@ -684,7 +691,7 @@ hi! link conceal ConcealOne
 " hi! Conceal guibg=#000000
 hi! link Conceal Operator
 
-" Note: Cursor is show with inverted bg-fg colors by alacritty.
+" Note: Cursor is shown with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
 " Not sure when this is unsed
 hi Cursor          guifg=#000000 guibg=#F8F8F0
@@ -698,7 +705,7 @@ hi MsgArea guifg=#558E94
 " Contrast Of CursorLine:
 " hi CursorLine                    guibg=#1C2020
 " Made the cursor line bg darker to increase contrast with commented text
-hi CursorLine                    guibg=#181C1C
+hi! CursorLine                    guibg=#181C1C
 
 hi CursorLineNr    guifg=#FD971F               gui=none
 hi LineNr          guifg=#303030
