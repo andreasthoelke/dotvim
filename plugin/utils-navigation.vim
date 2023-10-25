@@ -153,8 +153,8 @@ nnoremap <silent> <c-d> :tabprevious<cr>
 " Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
 map <localleader>t] <Plug>TabmoveRight
-noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
-noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
+noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>:call v:lua.require('tabby.feature.tab_name').save()<cr>
+noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>:call v:lua.require('tabby.feature.tab_name').save()<cr>
 
 " zoom/duplicate the current buffer in a new tab
 nnoremap <silent><c-w>t :call TabNewFocus()<cr>

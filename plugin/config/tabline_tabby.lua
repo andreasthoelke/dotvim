@@ -206,7 +206,15 @@ local sicon = devicons.get_icon( "abc.scala" )
 local function set_label( value )
   if value == nil then return end
   tab_name.set( 0, value )
+  tab_name.save()
 end
+
+
+-- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( tab_name.load, 2000 ) end })
+vim.api.nvim_create_autocmd({ "SessionLoadPost" }, { callback = tab_name.load })
+vim.api.nvim_create_autocmd({ "TabNew", "TabClosed" }, { callback = tab_name.save })
+-- vim.g.TabbyTabNames
+
 
 function _G.Tab_UserSetName()
   vim.ui.input(
@@ -223,9 +231,9 @@ vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?
 function _G.Tab_complete_label( currentCompl, fullLine, pos )
-  return {currentCompl .. '|' .. 'eis', currentCompl .. '|' .. 'zwei'}
+  return {currentCompl .. '|' .. 'eins', currentCompl .. '|' .. 'zwei'}
 end
- Search_mainPatterns
+
 function _G.Tab_GenLabel( tabid )
   local filePaths = FileNamesInTabId( tabid )
   local currentPath = vim.fn.expand('%:r')
@@ -238,10 +246,16 @@ function _G.Tab_GenLabel( tabid )
   return filePaths[1]
 end
 
+
 -- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
+-- require('tabby.module.api').get_current_tab()
+-- vim.api.nvim_get_current_tabpage()
+-- require('tabby.feature.tab_name').get_raw( vim.api.nvim_get_current_tabpage() )
+-- require('tabby.feature.tab_name').load()
+-- require('tabby.feature.tab_name').save()
 
 function _G.Tab_render( tab, line )
-  local given_name = tab_name.get_raw(  tab.id  ) --  empty if label was set by user
+  local given_name = tab_name.get_raw( tab.id ) --  empty if label was set by user
   local label = not is_empty( given_name ) and given_name or Tab_GenLabel( tab.id )
 
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )

@@ -125,11 +125,11 @@ function _G.filterLspSymbolsStack( lspSymbolsStack )
   local lspSymbolsStack_filtered
 
   if vim.bo.filetype == 'scala' then
-    local packagesDepth = take_while(
+    local packagesDepth = fun.take_while(
       function( el ) return el.type == "Package" end,
       lspSymbolsStack
     ):length()
-    lspSymbolsStack_filtered = totable( take_n( packagesDepth + 1, lspSymbolsStack ) )
+    lspSymbolsStack_filtered = fun.totable( fun.take_n( packagesDepth + 1, lspSymbolsStack ) )
   else
     lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
   end
