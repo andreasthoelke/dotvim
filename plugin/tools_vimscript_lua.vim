@@ -34,10 +34,11 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 
-let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '--', '=', 'or', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '--', '=\s', '\sor', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 
 func! Vim_ColonForw()
-  call SearchSkipSC( g:Vim_colonPttn, 'W' )
+  " call SearchSkipSC( g:Vim_colonPttn, 'W' )
+  call search( g:Vim_colonPttn, 'W' )
   normal w
 endfunc
 

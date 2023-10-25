@@ -26,25 +26,35 @@ local Tabby_Tabs_in = extract( 'Tabby_Tabs_in' )
 vim.api.nvim_create_autocmd({ "SessionLoadPost" }, { callback = tab_name.load })
 vim.api.nvim_create_autocmd({ "TabNew", "TabClosed" }, { callback = tab_name.save })
 -- vim.g.TabbyTabNames
-
+-- NOTES: I had to disable the internal load() and save() call in Tabby: ~/.config/nvim/plugged/tabby.nvim/lua/tabby/feature/tab_name.lua‖/functionˍtab_name.pre
+-- TabId vs. TabNumber: Vim starts-up with TabNumbers and then uses them as TabIDs throughout the session.
+-- As tabs are closed, opened and moved, and TabID are lost when vim closes, the tab names need to be saved buy tab-number.
+-- neovim doesn't jet have a TabModed event so there's a tab_name.save() call in the \t] maps.
 
 -- ─   User set tab label / name                        ──
-local function set_label( value )
+local function label_set( value )
   if value == nil then return end
   tab_name.set( 0, value )
   tab_name.save()
+end
+
+local function label_get( tabid )
+  local given_name = tab_name.get_raw( tabid ) --  empty if label was set by user
+  local label = not is_empty( given_name ) and given_name or Tab_GenLabel( tabid )
+  return label
 end
 
 function _G.Tab_UserSetName()
   vim.ui.input(
     {
       prompt = "",
-      default = tab_name.get(vim.api.nvim_get_current_tabpage() ),
+      default = label_get( vim.api.nvim_get_current_tabpage() ),
       completion = "customlist,Tab_complete_label",
-    }, set_label )
+    }, label_set )
 end
 
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
+vim.keymap.set( 'n', '<leader>tS', function() label_set("") end )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?
@@ -60,11 +70,11 @@ function _G.Tab_GenLabel( tabid )
   local currentPath = vim.fn.expand('%:r')
   if #filePaths == 0 then return currentPath end
   local mainFile = filePaths[1]
+  local icon, color = devicons.get_icon_color( mainFile )
 
-  vim.fn.expand('%:t:r')
-  vim.fn.expand('%:r')
-  vim.fn.fnamemodify( vim.fn.expand('%:p:h' ), ':t' )
-  return filePaths[1]
+  local mainFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( mainFile, ':t:r' ) )
+  local mainFile_folder = vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
+  return icon .. " " .. mainFile_folder .. " " .. mainFile_shortName
 end
 
 -- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
@@ -74,8 +84,7 @@ end
 
 
 function _G.Tab_render( tab, line )
-  local given_name = tab_name.get_raw( tab.id ) --  empty if label was set by user
-  local label = not is_empty( given_name ) and given_name or Tab_GenLabel( tab.id )
+   local label = label_get( tab.id )
 
   -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
   -- local shortLspName = Status_shortenFilename( lspName )
