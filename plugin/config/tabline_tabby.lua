@@ -1,4 +1,6 @@
 
+-- ─   Imports                                          ──
+
 local f = require 'utils.functional'
 local s = require 'utils.string'
 local fun = require 'utils.fun'
@@ -6,6 +8,10 @@ local api = require('tabby.module.api')
 local devicons = require'nvim-web-devicons'
 
 -- https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua
+
+
+-- ─   Colors                                           ──
+-- Note: ~/.config/nvim/colors/munsell-blue-molokai.vim‖*Lualine
 
 local extract = require('tabby.module.highlight').extract
 local tab_name = require('tabby.feature.tab_name')
@@ -17,9 +23,10 @@ local hl_tabline_b_i = extract( 'lualine_b_inactive' )
 local hl_c1 = extract( 'LuLine_Tabs_in' )
 local hl_tabline_sel = extract( 'lualine_a_normal' )
 
-local Tabby_Tabs_ac = extract( 'Tabby_Tabs_ac' )
-local Tabby_Tabs_in = extract( 'Tabby_Tabs_in' )
-
+local Hl_Tabby_Tabs_ac = extract( 'Tabby_Tabs_ac' )
+local Hl_Tabby_Tabs_in = extract( 'Tabby_Tabs_in' )
+local Hl_Tabby_Tabs_icon_ac = extract( 'Tabby_Tabs_icon_ac' )
+local Hl_Tabby_Tabs_icon_in = extract( 'Tabby_Tabs_icon_in' )
 
 
 -- ─   Persist tab names to session                      ■
@@ -32,10 +39,60 @@ vim.api.nvim_create_autocmd({ "TabNew", "TabClosed" }, { callback = tab_name.sav
 -- neovim doesn't jet have a TabModed event so there's a tab_name.save() call in the \t] maps.
 
 -- ─   User set tab label / name                        ──
-local function label_set( value )
-  if value == nil then return end
+
+
+local function persist_set( iconKey, rest )
+  local value = iconKey .. "$" .. rest
   tab_name.set( 0, value )
   tab_name.save()
+end
+
+local function persist_reset()
+  tab_name.set( 0, "" )
+  tab_name.save()
+end
+
+local function persist_get( tabid )
+  local persisted = tab_name.get_raw( tabid )
+  if persisted == "" then
+    return nil, nil
+  else
+    table.unpack( vim.fn.split( persisted, "$" ) )
+  end
+end
+
+-- E.g. Account.scala$config Acco|ErroInfo
+-- TODO: can the users edit-remove the icon?
+local function user_set( fullUserStr )
+  if fullUserStr == "" then
+    persist_reset()
+  else
+    local iconKey, rest = table.unpack( vim.fn.split( fullUserStr, "$" ) )
+    persist_set( iconKey, rest )
+  end
+end
+
+local function user_get()
+  local tabid = vim.api.nvim_get_current_tabpage()
+  local iconKey, rest = persist_get( tabid )
+  local fullUserStr
+  if iconKey ~= nil then
+    fullUserStr = iconKey .. "$" .. rest
+  else
+    local iconKy, folder, fileWins = Tab_GenLabel( tabid )
+    fullUserStr = iconKy .. "$" .. folder .. " " .. fileWins
+  end
+  return fullUserStr
+end
+
+-- Takes a fresh GenLabel, replaces folder with the current lsp symbol. Then makes a persist.
+-- So an lsp-sym header is always loaded from persist. Edits can be made to the persist as usual but updating (calling user_set_lspsym again) will overwrite them.
+local function user_set_lspsym()
+  local iconKey, _folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
+  local lspIcon, lspName = LspMeaningfulSymbol()
+  local lspName_short = Status_shortenFilename( lspName )
+  local rest = lspIcon .. lspName_short .. " " .. fileWins
+  persist_set( iconKey, rest )
 end
 
 local function label_get( tabid )
@@ -48,68 +105,83 @@ function _G.Tab_UserSetName()
   vim.ui.input(
     {
       prompt = "",
-      default = label_get( vim.api.nvim_get_current_tabpage() ),
-      completion = "customlist,Tab_complete_label",
-    }, label_set )
+      default = user_get(),
+      completion = "customlist,Tab_user_completion_fn",
+    }, user_set )
 end
 
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
-vim.keymap.set( 'n', '<leader>tS', function() label_set("") end )
+vim.keymap.set( 'n', '<leader>tS', persist_reset )
+vim.keymap.set( 'n', '<leader>tl', user_set_lspsym )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?
-function _G.Tab_complete_label( currentCompl, fullLine, pos )
+function _G.Tab_user_completion_fn( currentCompl, fullLine, pos )
   return {currentCompl .. '|' .. 'eins', currentCompl .. '|' .. 'zwei'}
 end
 
 
 -- ─   Auto generate label text                         ──
 
+-- Icon , parentFolder/cwd or lsp , fileWins
+-- Return a string with the first and potentially secondary file name with a bar in between.
+-- If the type of the secondary file differs from the first it will be preceded a b/w icon.
 function _G.Tab_GenLabel( tabid )
-  local filePaths = FileNamesInTabId( tabid )
-  local currentPath = vim.fn.expand('%:r')
-  if #filePaths == 0 then return currentPath end
-  local mainFile = filePaths[1]
-  local icon, color = devicons.get_icon_color( mainFile )
+  local tabFiles = FilesInTab( tabid )
+  if #tabFiles == 0 then return vim.fn.expand('%:r') end
+  local mainFile = tabFiles[1].fname
+  local iconKey = vim.fn.fnamemodify( mainFile, ':t' )
+
+  local cwd = Tab_getCwd( tabid )
+  local folder =
+    cwd ~= vim.fn.getcwd(-1)  --  show the cwd if divergent or the parent folder
+    and Status_shortenFilename( vim.fn.fnamemodify( cwd, ':t' ) )
+    or  vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
 
   local mainFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( mainFile, ':t:r' ) )
-  local mainFile_folder = vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
-  return icon .. " " .. mainFile_folder .. " " .. mainFile_shortName
+  local fileWins = mainFile_shortName
+  if #tabFiles > 1 then
+    local secondFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( tabFiles[#tabFiles].fname, ':t:r' ) )
+    fileWins = fileWins .. "▕ " .. secondFile_shortName
+  end
+
+  return iconKey, folder, fileWins
 end
 
+-- local iconKey, folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
 -- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
--- require('tabby.module.api').get_current_tab()
--- vim.api.nvim_get_current_tabpage()
--- require('tabby.feature.tab_name').get_raw( vim.api.nvim_get_current_tabpage() )
 
+
+-- ─   Render                                           ──
 
 function _G.Tab_render( tab, line )
-   local label = label_get( tab.id )
 
-  -- lspIcon, lspName = LspMeaningfulSymbol( bufnr )
-  -- local shortLspName = Status_shortenFilename( lspName )
+  local iconKey, labelRest
+  iconKey, labelRest = persist_get( tab.id )
 
-  -- vim.fs.dirname( vim.fn.getcwd() )
+  if iconKey == nil then
+    local folder, fileWins
+    iconKey, folder, fileWins = Tab_GenLabel( tab.id )
+    labelRest = folder .. " " .. fileWins
+  end
 
-  -- win.buf_name()
-  -- tab.current_win().file_icon(),
-  -- lsp common package
-  -- a rep icon for the project or a unique filetype open
+  local icon, iconColor = devicons.get_icon_color( iconKey )
+  local Hl_Tab_ac_inac = tab.is_current() and Hl_Tabby_Tabs_ac or Hl_Tabby_Tabs_in
+  -- local Hl_Tab_icon_ac_inac = tab.is_current() and Hl_Tabby_Tabs_icon_ac or Hl_Tabby_Tabs_icon_in
+  local Hl_Tab_icon_ac_inac = tab.is_current() and { fg = iconColor, bg = Hl_Tabby_Tabs_icon_ac.bg } or Hl_Tabby_Tabs_icon_in
 
-  local Tab_ac_inac = tab.is_current() and Tabby_Tabs_ac or Tabby_Tabs_in
-
-
-  label = tab.is_current() and label or _G.Status_fileNameToIconPlusName( tab.current_win().buf().id )
+  -- local colorIcon = { icon, hl = { fg = iconColor, bg = Hl_Tab_ac_inac.bg } }
+  local colorIcon = { icon, hl = { fg = Hl_Tab_icon_ac_inac.fg, bg = Hl_Tab_ac_inac.bg } }
 
   return {
-    line.sep('', Tab_ac_inac, Normal),
+    line.sep('', Hl_Tab_ac_inac, Normal),
 
-    -- { sicon, hl = { fg = Tab_ac_inac.fg, bg = Tab_ac_inac.bg } },
-    label,
+    colorIcon,
+    labelRest,
 
-    line.sep('', Tab_ac_inac, Normal),
+    line.sep('', Hl_Tab_ac_inac, Normal),
 
-    hl = Tab_ac_inac,
+    hl = Hl_Tab_ac_inac,
     margin = " ",
   }
 end

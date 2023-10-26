@@ -69,13 +69,15 @@ function _G.Status_shortenFilename( filename )
 
   -- Reduce each component to three or four representative characters and capitalize the first letter
   local shortenedComponents = {}
-  for _, component in ipairs(components) do
-    local shortenedComponent = string.sub(component, 1, 3)
-    shortenedComponent = string.upper(shortenedComponent:sub(1,1)) .. shortenedComponent:sub(2)
+  for idx, component in ipairs(components) do
+    local shortenedComponent = string.sub(component, 1, 4)
+    if idx > 1 then
+      shortenedComponent = string.upper(shortenedComponent:sub(1,1)) .. shortenedComponent:sub(2)
+    end
     table.insert(shortenedComponents, shortenedComponent)
   end
 
-  -- Reassemble the shortened components in CamelCase
+  -- Reassemble the shortened components in camelCase
   local shortenedFilename = table.concat(shortenedComponents, "")
 
   -- If many components are involved, some components can be omitted in the result
@@ -92,6 +94,14 @@ end
 -- Status_shortenFilename( "FrontOfficeOrderParsingServiceLive" )
 -- Status_shortenFilename( "CustomDecodeFailureHandler" )
 -- Status_shortenFilename( "vim_works" )
+
+-- Get the CWD of the first window in a tab
+function _G.Tab_getCwd( tabid )
+  local firstWinId = vim.api.nvim_tabpage_list_wins( tabid )[1]
+  local tabNum = vim.api.nvim_tabpage_get_number( tabid )
+  return vim.fn.getcwd( firstWinId, tabNum )
+end
+-- Tab_getCwd( 3 )
 
 
 function _G.Status_icon_with_hl( filename )
@@ -122,7 +132,7 @@ local uniqueVals = function( acc, v )
     or vim.list_extend(acc, {v})
 end
 
-function _G.FileNamesInTabId( tabid )
+function _G.FilesInTab( tabid )
   return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
     :map( function(winid)
       return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
@@ -133,13 +143,13 @@ function _G.FileNamesInTabId( tabid )
         -- Allow only normal windows and normal buftypes.
     end)
     :map( function(win)
-      return vim.api.nvim_buf_get_name( win.bid )
+      return { fname = vim.api.nvim_buf_get_name( win.bid ), bufid = win.bid }
     end)
     :fold( {}, uniqueVals )
 end
 
--- FileNamesInTabId( vim.api.nvim_get_current_tabpage() )
--- FileNamesInTabId( vim.api.nvim_list_tabpages()[ 1 ] )
+-- FilesInTab( vim.api.nvim_get_current_tabpage() )
+-- FilesInTab( vim.api.nvim_list_tabpages()[ 1 ] )
 
 function _G.FileNamesInTabNumber( tab_number )
   return vim.tbl_filter( function(fname) return "" ~= fname end,
