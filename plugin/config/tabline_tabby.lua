@@ -40,6 +40,8 @@ vim.api.nvim_create_autocmd({ "TabNew", "TabClosed" }, { callback = tab_name.sav
 
 -- require('tabby.feature.tab_name').get_raw( vim.api.nvim_get_current_tabpage() )
 -- require('tabby.feature.tab_name').set( 3, "test" )
+-- vim.api.nvim_tabpage_get_number( vim.api.nvim_get_current_tabpage() )
+-- vim.api.nvim_get_current_tabpage()
 
 -- ─   User set tab label / name                        ──
 
@@ -172,6 +174,8 @@ function _G.Tab_render( tab, line )
     iconKey, folder, fileWins = Tab_GenLabel( tab.id )
     labelRest = folder .. " " .. fileWins
   end
+
+  labelRest = tab.number() >= 6 and tostring( tab.number() ) .. " " .. labelRest or labelRest
 
   local icon, iconColor = devicons.get_icon_color( iconKey )
   local Hl_Tab_ac_inac = tab.is_current() and Hl_Tabby_Tabs_ac or Hl_Tabby_Tabs_in
