@@ -219,6 +219,7 @@ require("neo-tree").setup({
 
       width = 33, -- applies to left and right positions
 
+-- ─   Global mappings                                  ──
       mappings = {
 
         ["<space>"] = {
@@ -308,6 +309,7 @@ require("neo-tree").setup({
         ["s"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down', s.tree:get_node().path ) end,
         ["S"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down_back', s.tree:get_node().path ) end,
 
+        ["<leader>td"] = function(s) Tablabel_set_folder( s.tree:get_node().path ) end,
 
         ["<c-space>"] = function(state)
           local path = state.tree:get_node().path
@@ -379,6 +381,7 @@ require("neo-tree").setup({
     group_empty_dirs = true, -- when true, empty directories will be grouped together
     find_by_full_path_words = true,  -- if true use space as implicit .*  e.g. "fil init" for filesystem/init
 
+-- ─   Filesystem mappings                              ──
     window = {
       mappings = {
         ["<space>/"] = "fuzzy_finder",

@@ -35,7 +35,7 @@ function _G.Status_search_result()
 end
 
 
-_G.Status_filename_noExtension = function(filename, _)
+function _G.Status_filename_noExtension( filename )
   local name, _ = table.unpack( vim.fn.split( filename, [[\.]] ) )
   return name
 end
@@ -61,6 +61,8 @@ end
 -- Main Filename or lsp / function
 
 function _G.Status_shortenFilename( filename )
+  if #filename < 7 then return filename end
+
   -- Split the filename into components
   local components = {}
   for component in string.gmatch(filename, "([A-Z]?[a-z]+)") do
@@ -88,6 +90,8 @@ function _G.Status_shortenFilename( filename )
   return shortenedFilename
 end
 
+-- string.gmatch("README", "([A-Z]?[a-z]*)")
+-- Status_shortenFilename( "README" )
 -- Status_shortenFilename( "NewBuf-direction-maps" )
 -- Status_shortenFilename( "NewBuf-direction" )
 -- Status_shortenFilename( "NewerBufferMapping" )

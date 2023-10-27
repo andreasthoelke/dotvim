@@ -38,6 +38,9 @@ vim.api.nvim_create_autocmd({ "TabNew", "TabClosed" }, { callback = tab_name.sav
 -- As tabs are closed, opened and moved, and TabID are lost when vim closes, the tab names need to be saved buy tab-number.
 -- neovim doesn't jet have a TabModed event so there's a tab_name.save() call in the \t] maps.
 
+-- require('tabby.feature.tab_name').get_raw( vim.api.nvim_get_current_tabpage() )
+-- require('tabby.feature.tab_name').set( 3, "test" )
+
 -- ─   User set tab label / name                        ──
 
 
@@ -57,7 +60,7 @@ local function persist_get( tabid )
   if persisted == "" then
     return nil, nil
   else
-    table.unpack( vim.fn.split( persisted, "$" ) )
+    return table.unpack( vim.fn.split( persisted, [[\$]] ) )
   end
 end
 
@@ -67,10 +70,12 @@ local function user_set( fullUserStr )
   if fullUserStr == "" then
     persist_reset()
   else
-    local iconKey, rest = table.unpack( vim.fn.split( fullUserStr, "$" ) )
+    local iconKey, rest = table.unpack( vim.fn.split( fullUserStr, [[\$]] ) )
     persist_set( iconKey, rest )
   end
 end
+
+-- vim.fn.split( 'eins$zwei', [[\$]] )
 
 local function user_get()
   local tabid = vim.api.nvim_get_current_tabpage()
@@ -90,15 +95,19 @@ end
 local function user_set_lspsym()
   local iconKey, _folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
   local lspIcon, lspName = LspMeaningfulSymbol()
+  if lspIcon == nil then return end
   local lspName_short = Status_shortenFilename( lspName )
-  local rest = lspIcon .. lspName_short .. " " .. fileWins
+  -- local rest = lspIcon .. lspName_short .. " " .. fileWins
+  -- local rest = lspName_short .. lspIcon .. fileWins
+  local rest = lspName_short .. " " .. fileWins
   persist_set( iconKey, rest )
 end
 
-local function label_get( tabid )
-  local given_name = tab_name.get_raw( tabid ) --  empty if label was set by user
-  local label = not is_empty( given_name ) and given_name or Tab_GenLabel( tabid )
-  return label
+function _G.Tablabel_set_folder( folderPath )
+  local iconKey, _folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
+  local folderName = vim.fn.fnamemodify( folderPath, ':t' )
+  local rest = folderName .. " " .. fileWins
+  persist_set( iconKey, rest )
 end
 
 function _G.Tab_UserSetName()
@@ -150,7 +159,6 @@ end
 
 -- local iconKey, folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
 -- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
-
 
 -- ─   Render                                           ──
 

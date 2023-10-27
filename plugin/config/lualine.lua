@@ -7,6 +7,9 @@ local colors = require 'config.colors'
 
 local hello = function() return "hello there!" end
 
+local function fname_noExt()
+  return vim.fn.expand( '%:t:r' )
+end
 
 
 -- ─   Custom filetype with icon                        ──
@@ -256,9 +259,8 @@ local lualine_config = {
     },
     lualine_z = {
       {
-        'filename',
+        fname_noExt,
         color = 'LuLine_Winbar_z_ac',
-        fmt = _G.Status_filename_noExtension,
       }
     }
   },
@@ -275,9 +277,8 @@ local lualine_config = {
     },
     lualine_z = {
       {
-        'filename',
+        fname_noExt,
         color = 'LuLine_Winbar_z_in',
-        fmt = _G.Status_filename_noExtension,
       }
     }
   },
