@@ -80,6 +80,47 @@ nnoremap <c-w>o :echo "not active"<cr>
 nnoremap <silent> <c-w>dd <c-w>o
 
 
+" CURSOR-LSP-REFERENCE
+nnoremap <silent> gdp  :call NewBuf_fromCursorLspRef( "preview_back" )<cr>
+nnoremap <silent> gdo  :call NewBuf_fromCursorLspRef( "float" )<cr>
+nnoremap <silent> gdi  :call NewBuf_fromCursorLspRef( "full" )<cr>
+nnoremap <silent> gdt  :call NewBuf_fromCursorLspRef( "tab" )<cr>
+nnoremap <silent> gdT  :call NewBuf_fromCursorLspRef( "tab_bg" )<cr>
+" _                                        
+nnoremap <silent> gdv  :call NewBuf_fromCursorLspRef( "right" )<cr>
+nnoremap <silent> gdV  :call NewBuf_fromCursorLspRef( "right_back" )<cr>
+nnoremap <silent> gda  :call NewBuf_fromCursorLspRef( "left" )<cr>
+nnoremap <silent> gdu  :call NewBuf_fromCursorLspRef( "up" )<cr>
+nnoremap <silent> gdU  :call NewBuf_fromCursorLspRef( "up_back" )<cr>
+nnoremap <silent> gds  :call NewBuf_fromCursorLspRef( "down" )<cr>
+nnoremap <silent> gdS  :call NewBuf_fromCursorLspRef( "down_back" )<cr>
+
+
+func! NewBuf_fromCursorLspRef( direction )
+  let [direction; maybe_back ] = a:direction->split('_')
+  let winview = winsaveview()
+  let file = expand('%:p')
+  let cmd = NewBufCmds( file )[ direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  call winrestview( winview )
+  lua vim.lsp.buf.definition()
+  call T_DelayedCmd('normal zz', 400)
+
+  " POST ACTION PHASE: 
+  if     a:direction == 'tab_bg' 
+    " delay the tabprevious call
+    call T_DelayedCmd('tabprevious', 1000)
+  " elseif a:direction == 'preview_back' 
+    " preview jump back can actually be instant/ without flicker
+    " wincmd p 
+  else
+    " delay all other _back jumps (as neo-tree seems to need this)
+    if len( maybe_back ) | call T_DelayedCmd('wincmd p', 500) | endif
+  endif
+endfunc
+
+
 " ─   Browse folder with neo-tree                       ──
 
 func! Browse_parent( direction )

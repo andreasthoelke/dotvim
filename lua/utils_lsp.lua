@@ -13,6 +13,17 @@ local utilsg = require'utils_general'
 -- vim.api.nvim_win_get_config(0).relative
 -- lua vim.print(vim.api.nvim_win_get_config(0))
 
+-- require('toggle_lsp_diagnostics').init { underline = false, virtual_text = { prefix = 'XXX', spacing = 5 } }
+-- require'toggle_lsp_diagnostics'.init({ start_on = false }})
+-- require'toggle_lsp_diagnostics'.init()
+
+
+
+vim.keymap.set( 'n', '<leader>lds', function()
+  putt( vim.lsp.diagnostic.get_line_diagnostics() )
+end)
+
+
 local function get_available_client(method)
   for id, client in pairs(vim.lsp.buf_get_clients()) do
     if client['resolved_capabilities'][method] == true then
@@ -123,7 +134,7 @@ end
 function M.diagnosticsShow()
   vim.lsp.util.open_floating_preview( {M.diagnostic_buffer()} )
 end
--- put( require'utils_lsp'.diagnostic_buffer() )
+-- require'utils_lsp'.diagnostic_buffer()
 
 -- require'utils_lsp'.diagnosticsShow()
 
@@ -164,6 +175,7 @@ function PrintDiagnostics(opts, bufnr, line_nr, client_id)
   vim.api.nvim_echo({{diagnostic_message, "Normal"}}, false, {})
 
 end
+
 
 return M
 

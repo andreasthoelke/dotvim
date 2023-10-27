@@ -25,13 +25,6 @@ let g:copilot_filetypes = {
 " nmap <silent> gd :call FloatingBuffer(expand('%'))<CR><Plug>(coc-definition)
 " nmap <silent> gD :split<CR><Plug>(coc-definition)
 
-nnoremap <silent> gek :lua vim.lsp.buf.hover()<cr>
-nnoremap <silent> gdd :lua vim.lsp.buf.definition()<cr>
-nnoremap <silent> gdo :call FloatingBuffer(expand('%'))<CR>:lua vim.lsp.buf.definition()<cr>
-nnoremap <silent> gdv :vsplit<CR>:lua vim.lsp.buf.definition()<cr>
-nnoremap <silent> gds :split<CR>:lua vim.lsp.buf.definition()<cr>
-nnoremap <silent> gdt :call TabNewFocus()<CR>:lua vim.lsp.buf.definition()<cr>
-
 " nnoremap geR :Glance references<CR>
 " nnoremap geD :Glance definitions<CR>
 " nnoremap geY :Glance type_definitions<CR>
@@ -47,7 +40,7 @@ nmap <leader>ltu <Plug>(toggle-lsp-diag-underline)
 nmap <leader>lts <Plug>(toggle-lsp-diag-signs)
 nmap <leader>ltv <Plug>(toggle-lsp-diag-vtext)
 nmap <leader>ltp <Plug>(toggle-lsp-diag-update_in_insert)
-nmap <leader>ltd  <Plug>(toggle-lsp-diag)
+nmap <leader>ltdd  <Plug>(toggle-lsp-diag)
 
 " Issue: ToggleDiagDefault only works via the Command!?
 nmap <leader>ltD  :ToggleDiagDefault<cr>
@@ -66,7 +59,8 @@ let g:coc_config_home = '~/.config/nvim'
 inoremap <silent><expr> <Tab> coc#refresh()
 " nnoremap <Tab> :echo "hi4"<cr>
 
-nnoremap <leader>lds :call DiagnosticsShow()<cr>
+" ~/.config/nvim/lua/utils_lsp.lua‖/vim.keymap.
+" nnoremap <leader>lds :call DiagnosticsShow()<cr>
 " nnoremap <leader>lds :TroubleToggle<cr>
 
 
@@ -78,11 +72,12 @@ nnoremap <leader>lds :call DiagnosticsShow()<cr>
 
 " This might be an interesting tool function. (otherwise i might use :Trouble)
 func! DiagnosticsShow ()
-  let resLines = v:lua.vim.lsp.diagnostic.get(0)
+  let resLines = v:lua.vim.lsp.diagnostic.get_line_diagnostics()
   let resLines = functional#map( 'string', resLines )
   " let resLines = SubstituteInLines( resLines, '\n', '' )
   " call FloatWin_ShowLines( resLines )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  " lua putt( resLines )
 
   " silent call FloatWin_FitWidthHeight()
   " silent wincmd p
