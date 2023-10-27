@@ -95,6 +95,10 @@ nnoremap <silent> gdU  :call NewBuf_fromCursorLspRef( "up_back" )<cr>
 nnoremap <silent> gds  :call NewBuf_fromCursorLspRef( "down" )<cr>
 nnoremap <silent> gdS  :call NewBuf_fromCursorLspRef( "down_back" )<cr>
 
+nnoremap <silent> gdd  :echo 'use gdi'<cr>
+
+
+" ─   NewBuf from lsp ref                               ──
 
 func! NewBuf_fromCursorLspRef( direction )
   let [direction; maybe_back ] = a:direction->split('_')
@@ -105,7 +109,9 @@ func! NewBuf_fromCursorLspRef( direction )
   exec cmd
   call winrestview( winview )
   lua vim.lsp.buf.definition()
-  call T_DelayedCmd('normal zz', 400)
+  if direction != "full"
+    call T_DelayedCmd('normal zz', 300)
+  endif
 
   " POST ACTION PHASE: 
   if     a:direction == 'tab_bg' 
