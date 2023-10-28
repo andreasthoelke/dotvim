@@ -1,21 +1,80 @@
 local M = {}
 
 local actions = require("telescope.actions")
+local resume = require("telescope.builtin").resume
 local action_set = require "telescope.actions.set"
 local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
+local f = require 'utils.functional'
 
 
-local function open_above(promtbufnr)
- return require("telescope.actions.set").edit( promtbufnr, "leftabove 13new" )
+-- ─   Helpers                                          ──
+
+local action_state = require "telescope.actions.state"
+
+local function get_path_link()
+  local entry = action_state.get_selected_entry()
+  -- putt( entry )
+  local path = vim.tbl_get( entry, 'filename' )
+  local link = {
+    lnum = vim.tbl_get( entry, 'lnum' ),
+    col  = vim.tbl_get( entry, 'col' )
+  }
+  return path, link
 end
 
-local function open_below(promtbufnr)
- -- return require("telescope.actions.set").edit( promtbufnr, "20new")
- return require("telescope.actions.set").edit( promtbufnr, "botright 13new" )
+function _G.Defer_cmd( cmd, timeout )
+  vim.defer_fn( vim.cmd( cmd ), timeout )
 end
 
-local entry_display = require "telescope.pickers.entry_display"
+
+        -- ['<c-p>'] = NewBuf 'preview_back',
+        -- ['<c-o>'] = NewBuf 'float',
+        -- ['<c-i>'] = NewBuf 'full',
+        -- ['<c-t>'] = NewBuf 'tab',
+        -- ['<c-T>'] = NewBuf 'tab_bg',
+        -- -- _
+        -- ['<c-v>'] = NewBuf 'right',
+        -- ['<c-V>'] = NewBuf 'right_back',
+        -- ['<c-a>'] = NewBuf 'left',
+        -- ['<c-u>'] = NewBuf 'up',
+        -- ['<c-U>'] = NewBuf 'up_back',
+        -- ['<c-s>'] = NewBuf 'down',
+        -- ['<c-S>'] = NewBuf 'down_back',
+
+
+local NewBuf = f.curry( function( adirection, pbn )
+  local fpath, maybeLink = get_path_link()
+  local direction, maybe_back = table.unpack( vim.fn.split( adirection, [[_]] ) )
+  local cmd = vim.fn.NewBufCmds( fpath, vim.fn.winnr '#' )[ direction ]
+
+  -- putt( adirection )
+  -- putt( cmd )
+  -- putt( maybe_back or "" )
+
+  -- We always temp-close the prompt, then run the NewBuf action and link focus
+  actions.close( pbn )
+  vim.cmd( cmd )
+  if maybeLink.lnum then
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
+    vim.cmd 'normal zz'
+  end
+  if     adirection == 'tab_bg' then     -- opened to the right in the background
+    vim.cmd 'tabprevious'
+  elseif adirection == 'tab_back' then --   open and go to new tab, then jump *back* to prompt
+    -- nothing needed, resume will open in new tab.
+  end
+
+  if maybe_back then
+    resume()
+  end
+
+end)
+
+
+-- local entry_display = require "telescope.pickers.entry_display"
+-- vim.fn.split( 'eins_zwei', '_' )
+-- vim.fn.split( 'einszwei', '_' )
 
 -- NOTE: there's 
 -- lua/utils_general.lua
@@ -49,25 +108,59 @@ Telesc = require('telescope').setup{
     -- selection_caret = "⇾ ",
     selection_caret = "⠰ ",
     -- initial_mode = 'normal',
+
+-- ─   Mappings                                         ──
     mappings = {
       i = {
-        ["<c-s><c-u>"] = open_above,
-        ["<c-s><c-b>"] = open_below,
         ["<c-j>"] = function() vim.fn.feedkeys( ".*" ) end,
-        ["<c-o>"] = trouble.open_with_trouble,
-        -- map actions.which_key to <C-h> (default: <C-/>)
-        -- actions.which_key shows the mappings for your picker,
-        -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-        -- ["<C-h>"] = "which_key"
+
+
+-- ─   NewBuf maps i                                    ──
+        -- NewBuf is consistent with ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/LINE-WORD
+
+        ['<c-w>p'] = NewBuf 'preview_back',
+        ['<c-w>o'] = NewBuf 'float',
+        ['<c-w>i'] = NewBuf 'full',
+        ['<c-w>tn'] = NewBuf 'tab',
+        ['<c-w>tt'] = NewBuf 'tab_back',
+        ['<c-w>T'] = NewBuf 'tab_bg',
+        -- _
+        ['<c-w>v'] = NewBuf 'right',
+        ['<c-w>V'] = NewBuf 'right_back',
+        ['<c-w>a'] = NewBuf 'left',
+        ['<c-w>u'] = NewBuf 'up',
+        ['<c-w>U'] = NewBuf 'up_back',
+        ['<c-w>s'] = NewBuf 'down',
+        ['<c-w>S'] = { NewBuf 'down_back', type = 'action', opts = { nowait = true } },
+
       },
       n = {
-        ["<c-s><c-u>"] = open_above,
-        ["<c-s><c-b>"] = open_below,
-        ["<c-o>"] = trouble.open_with_trouble,
-        ["<c-a>"] = actions.send_selected_to_qflist,
+
+
+-- ─   NewBuf maps n                                    ──
+
+        ['<c-w>p'] = NewBuf 'preview_back',
+        ['<c-w>o'] = NewBuf 'float',
+        ['<c-w>i'] = NewBuf 'full',
+        ['<c-w>tn'] = NewBuf 'tab',
+        ['<c-w>tt'] = NewBuf 'tab_back',
+        ['<c-w>T'] = NewBuf 'tab_bg',
+        -- _
+        ['<c-w>v'] = NewBuf 'right',
+        ['<c-w>V'] = NewBuf 'right_back',
+        ['<c-w>a'] = NewBuf 'left',
+        ['<c-w>u'] = NewBuf 'up',
+        ['<c-w>U'] = NewBuf 'up_back',
+        ['<c-w>s'] = NewBuf 'down',
+        ['<c-w>S'] = { NewBuf 'down_back', type = 'action', opts = { nowait = true } },
+
+
+
+        ["<leader><c-o>"] = trouble.open_with_trouble,
+        ["<c-q>"] = actions.send_selected_to_qflist,
         ["<c-d>"] = actions.delete_buffer,
         ["<C-p>"] = actions.cycle_previewers_next,
-        ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true, silent = true } },
+        ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true } },
         [",m"] = actions.select_all,
         [",M"] = actions.drop_all,
         -- ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },

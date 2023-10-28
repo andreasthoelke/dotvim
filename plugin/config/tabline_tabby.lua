@@ -150,7 +150,7 @@ function _G.Tab_GenLabel( tabid )
     or  vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
 
   local mainFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( mainFile, ':t:r' ) )
-  local fileWins = mainFile_shortName
+  local fileWins = mainFile_shortName or ""
   if #tabFiles > 1 then
     local secondFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( tabFiles[#tabFiles].fname, ':t:r' ) )
     fileWins = fileWins .. "▕ " .. secondFile_shortName
@@ -172,7 +172,8 @@ function _G.Tab_render( tab, line )
   if iconKey == nil then
     local folder, fileWins
     iconKey, folder, fileWins = Tab_GenLabel( tab.id )
-    labelRest = folder .. " " .. fileWins
+    -- TODO this catches the situation when telescope help opens lua.txt in a new tab.
+    labelRest = (folder or "") .. " " .. (fileWins or "")
   end
 
   labelRest = tab.number() >= 6 and tostring( tab.number() ) .. " " .. labelRest or labelRest

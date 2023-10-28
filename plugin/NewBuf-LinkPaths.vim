@@ -97,6 +97,7 @@ func! Link_jumpToLine( linkExtension )
   if linkKey == ":"
     let [lineNum; maybeColumn] = linkVal->split(":")
     let column = len(maybeColumn) ? maybeColumn[0] : 0
+    " vim.api.nvim_win_set_cursor(win, {line, col})
     call setpos( '.', [0, lineNum, column, 0] )
   elseif linkKey == "*"
     if !search( '\v─\s{-}' . escape(linkVal, '\'), 'cw' ) 

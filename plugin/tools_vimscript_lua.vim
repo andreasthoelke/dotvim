@@ -50,9 +50,9 @@ endfunc
 
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Vim_MainStartPattern = '\v^(\#|function|func\!|\i.*function|local|.{-}\*\S{-}\*)'
+let g:Vim_MainStartPattern = '\v^(\#|.*─|function|func\!|\i.*function\(|local\sfunction\s|.{-}\*\S{-}\*)'
 " the *\S{-}\* patterns is searching vim help headlines
-let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s)'
+let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s|.*─)'
 
 
 func! Vim_MainStartBindingForw()

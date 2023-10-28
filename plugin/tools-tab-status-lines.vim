@@ -400,7 +400,7 @@ func! DBUIInfos ()
 endfunc
 
 func! LightlineLocalRootFolder()
-  return &filetype !~# '\v(neo-tree|help|gitcommit)' ? ProjectRootFolderNameOfWin( winnr() ) : ''
+  return (&filetype !~# '\v(neo-tree|help|gitcommit)') && &buflisted ? ProjectRootFolderNameOfWin( winnr() ) : ''
 endfunc
 
 func! LightlineRelativeFilePathOfWin()

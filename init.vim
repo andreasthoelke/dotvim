@@ -245,6 +245,9 @@ Plug 'nvim-telescope/telescope-symbols.nvim'
 " Plug 't9md/vim-quickhl'
 " fullscreen mode
 Plug 'junegunn/goyo.vim'
+" didn't allow window splits
+" Plug 'folke/zen-mode.nvim'
+" Plug 'pocco81/true-zen.nvim'
 " Plug 'junegunn/limelight.vim'
 " Note taking with vim
 " Plug 'fmoralesc/vim-pad', { 'branch': 'devel' }

@@ -61,6 +61,11 @@ nnoremap <silent> <c-w><leader>U  :call NewBuf_fromCursorLinkPath( "up_back" )<c
 nnoremap <silent> <c-w><leader>s  :call NewBuf_fromCursorLinkPath( "down" )<cr>
 nnoremap <silent> <c-w><leader>S  :call NewBuf_fromCursorLinkPath( "down_back" )<cr>
 
+
+" TELESCOPE: 
+" ~/.config/nvim/plugin/utils-fileselect-telescope.lua‖*NewBufˍmapsˍi
+
+
 " CLIP-BOARD
 nnoremap <silent> <c-w>,p  :call NewBuf_fromClipPath( "preview" )<cr>
 nnoremap <silent> <c-w>,o  :call NewBuf_fromClipPath( "float" )<cr>
@@ -96,6 +101,12 @@ nnoremap <silent> gds  :call NewBuf_fromCursorLspRef( "down" )<cr>
 nnoremap <silent> gdS  :call NewBuf_fromCursorLspRef( "down_back" )<cr>
 
 nnoremap <silent> gdd  :echo 'use gdi'<cr>
+
+
+" ─   NewBuf from telescope prompt                      ──
+" ~/.config/nvim/plugin/utils-fileselect-telescope.lua‖/localˍNewBu
+" ~/.config/nvim/plugin/utils-fileselect-telescope.lua‖*NewBufˍmapsˍi
+
 
 
 " ─   NewBuf from lsp ref                               ──
@@ -205,7 +216,7 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
       if len( maybe_back ) | call T_DelayedCmd('wincmd p') | endif
     endif
   else
-    " will run post actions like wincmd p or tabprevious rith away.
+    " will run post actions like wincmd p or tabprevious right away.
     let cmd = NewBufCmds( path )[ a:direction ] 
     if IsInFloatWin() | wincmd c | endif
     exec cmd
@@ -228,7 +239,8 @@ endfunc
 
 " DIRECTION IDS  <==>   BUF-open Commands:
 
-func! NewBufCmds_templ()
+func! NewBufCmds_templ(...)
+  let winnr = a:0 ? a:1 : 0
   let mp = {}
   let mp['preview'] = 'wincmd p | edit _PATH_'
   let mp['preview_back'] = 'wincmd p | edit _PATH_ | wincmd p'
@@ -236,25 +248,27 @@ func! NewBufCmds_templ()
   let mp['float_spinoff'] = 'wincmd c | call Path_Float( "_PATH_" )'
   let mp['full']  = 'edit _PATH_'
   let mp['tab']   = 'tabedit _PATH_'
-  let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious'
-  let mp['tab_spinoff'] = 'wincmd c | tabedit _PATH_'
+  let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious' " opened to the right in the background
+  let mp['tab_back'] = 'tabedit _PATH_ | wincmd p' " open and go to new tab, then jump *back* to prompt
+  let mp['tab_spinoff'] = 'wincmd c | tabedit _PATH_' " close window and open in new tab.
   let mp['right'] = 'vnew _PATH_'
   let mp['right_back'] = 'vnew _PATH_ | wincmd p'
   " let mp['left']  = 'leftabove 30vnew _PATH_'
-  let mp['left']    = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_'
-  let mp['left_back'] = 'leftabove '. winwidth(0)/4 . 'vnew _PATH_ | wincmd p'
+  let mp['left']    = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_'
+  let mp['left_back'] = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_ | wincmd p'
   " let mp['up']    = 'leftabove 20new _PATH_'
   " let mp['up']    = 'leftabove new _PATH_'
-  let mp['up']   = 'leftabove '. winheight(0)/4 . 'new _PATH_'
-  let mp['up_back'] = 'leftabove '. winheight(0)/4 . 'new _PATH_ | wincmd p'
+  let mp['up']   = 'leftabove '. winheight(winnr)/4 . 'new _PATH_'
+  let mp['up_back'] = 'leftabove '. winheight(winnr)/4 . 'new _PATH_ | wincmd p'
   let mp['down']  = 'new _PATH_'
   let mp['down_back'] = 'new _PATH_ | wincmd p'
   return mp
 endfunc
 
 
-func! NewBufCmds( path )
-  return NewBufCmds_templ()->map( {_idx, cmdTmp -> substitute( cmdTmp, '_PATH_', a:path, "" )} )
+func! NewBufCmds( path, ... )
+  let winnr = a:0 ? a:1 : 0
+  return NewBufCmds_templ(winnr)->map( {_idx, cmdTmp -> substitute( cmdTmp, '_PATH_', a:path, "" )} )
 endfunc
 " NewBufCmds( "src" )
 " Exec( NewBufCmds( ".gitignore" )["tab_bg"] )
