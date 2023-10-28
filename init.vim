@@ -536,10 +536,11 @@ endif
 
 nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
-luafile ~/.config/nvim/lua/utils_general.lua
-luafile ~/.config/nvim/plugin/ui_virtualTx.lua
+" this file is odd, it is required as a module, but also has _G functions, which require an initial sourcing here?
+luafile ~/.config/nvim/lua/utils/general.lua
+" luafile ~/.config/nvim/plugin/ui_virtualTx.lua
 " luafile ~/.config/nvim/lua/utils_lsp.lua
-luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
+" luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
 " luafile ~/.config/nvim/plugin/setup-lsp.lua
 
 

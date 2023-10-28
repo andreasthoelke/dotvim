@@ -21,10 +21,10 @@ cnoreabbrev hg HelpGrep
 nnoremap <silent><leader>K K
 nnoremap <silent><leader>vh :FzfHelptags<cr>
 nnoremap <silent><leader>vM :FzfMaps<cr>
-" now using: ~/.config/nvim/lua/utils_general.lua#/vim.keymap.set.%20'n',
+" now using: ~/.config/nvim/lua/utils.general.lua#/vim.keymap.set.%20'n',
 " nnoremap <leader><leader>vm :Telescope keymaps<cr>
-" nnoremap <silent><leader><leader>vm :lua require('utils_general').examp_keymap_picker()<cr>
-nnoremap <silent><leader>vm :lua require('utils_general').examp_keymap_picker()<cr>
+" nnoremap <silent><leader><leader>vm :lua require('utils.general').examp_keymap_picker()<cr>
+nnoremap <silent><leader>vm :lua require('utils.general').examp_keymap_picker()<cr>
 nnoremap <silent><leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()

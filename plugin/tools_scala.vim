@@ -52,11 +52,11 @@ func! tools_scala#bufferMaps()
 " let g:Scala_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)\s\zs'
 
 " To be tested!
-  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p"), g:Scala_MainStartPattern )<cr>
-  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:Scala_TopLevPattern )<cr>
+  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file', g:Scala_MainStartPattern )<cr>
+  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global', g:Scala_TopLevPattern )<cr>
 
-  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>'), "normal" )<cr>
-  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel(), "normal" )<cr>
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
 
 
 " ─^  Regex search maps                                  ▲

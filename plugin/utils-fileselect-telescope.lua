@@ -28,21 +28,6 @@ function _G.Defer_cmd( cmd, timeout )
 end
 
 
-        -- ['<c-p>'] = NewBuf 'preview_back',
-        -- ['<c-o>'] = NewBuf 'float',
-        -- ['<c-i>'] = NewBuf 'full',
-        -- ['<c-t>'] = NewBuf 'tab',
-        -- ['<c-T>'] = NewBuf 'tab_bg',
-        -- -- _
-        -- ['<c-v>'] = NewBuf 'right',
-        -- ['<c-V>'] = NewBuf 'right_back',
-        -- ['<c-a>'] = NewBuf 'left',
-        -- ['<c-u>'] = NewBuf 'up',
-        -- ['<c-U>'] = NewBuf 'up_back',
-        -- ['<c-s>'] = NewBuf 'down',
-        -- ['<c-S>'] = NewBuf 'down_back',
-
-
 local NewBuf = f.curry( function( adirection, pbn )
   local fpath, maybeLink = get_path_link()
   local direction, maybe_back = table.unpack( vim.fn.split( adirection, [[_]] ) )
@@ -121,6 +106,7 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
+        ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
         ['<c-w>T'] = NewBuf 'tab_bg',
@@ -142,6 +128,7 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
+        ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
         ['<c-w>T'] = NewBuf 'tab_bg',

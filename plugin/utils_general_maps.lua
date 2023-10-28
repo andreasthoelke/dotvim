@@ -56,7 +56,7 @@ local paths_patterns1 = {
 -- ~/.config/nvim/plugin/utils-fileselect-telescope.vim#/Find%20files%20using
 -- search in [A]ll scala code:
 -- vim.keymap.set( 'n',
---   ',sa', function() require( 'utils_general' )
+--   ',sa', function() require( 'utils.general' )
 --   .RgxSelect_Picker( {},
 --     "",
 --     {"-g", "*.scala"},
@@ -64,7 +64,7 @@ local paths_patterns1 = {
 --     ) end )
 
 -- vim.keymap.set( 'n',
---   ',sA', function() require( 'utils_general' )
+--   ',sA', function() require( 'utils.general' )
 --   .RgxSelect_Picker( {},
 --     "",
 --     {"-g", "*.scala"},
@@ -74,7 +74,7 @@ local paths_patterns1 = {
 -- search in scala [S]ymbols:
 -- (also note gel for the lsp symbols in the current file)
 vim.keymap.set( 'n',
-  ',ss', function() require( 'utils_general' )
+  ',ss', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_main_symbol,
     {"-g", "*.scala"},
@@ -82,7 +82,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sS', function() require( 'utils_general' )
+  ',sS', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_main_symbol,
     {"-g", "*.scala"},
@@ -91,7 +91,7 @@ vim.keymap.set( 'n',
 
 -- search in [A]ll scala code:
 vim.keymap.set( 'n',
-  'ge;', function() require( 'utils_general' )
+  'ge;', function() require( 'utils.general' )
     .RgxSelect_Picker( {},
       "",
       {"-g", "*.scala"},
@@ -99,7 +99,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  'ge:', function() require( 'utils_general' )
+  'ge:', function() require( 'utils.general' )
     .RgxSelect_Picker( {},
       "",
       {"-g", "*.scala"},
@@ -110,7 +110,7 @@ vim.keymap.set( 'n',
 
 -- search in comment TAGS:
 vim.keymap.set( 'n',
-  ',st', function() require( 'utils_general' )
+  ',st', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_caps_tag,
     {},
@@ -118,7 +118,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sT', function() require( 'utils_general' )
+  ',sT', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_caps_tag,
     glb_projs1,
@@ -127,7 +127,7 @@ vim.keymap.set( 'n',
 
 -- search in COMMENTS:
 -- vim.keymap.set( 'n',
---   ',sc', function() require( 'utils_general' )
+--   ',sc', function() require( 'utils.general' )
 --   .RgxSelect_Picker( {},
 --     rgx_comment,
 --     {},
@@ -135,7 +135,7 @@ vim.keymap.set( 'n',
 --     ) end )
 
 -- vim.keymap.set( 'n',
---   ',sC', function() require( 'utils_general' )
+--   ',sC', function() require( 'utils.general' )
 --   .RgxSelect_Picker( {},
 --     rgx_comment,
 --     glb_projs1,
@@ -144,7 +144,7 @@ vim.keymap.set( 'n',
 
 -- search in HEADERS:
 vim.keymap.set( 'n',
-  ',sh', function() require( 'utils_general' )
+  ',sh', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_header,
     {},
@@ -152,7 +152,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sH', function() require( 'utils_general' )
+  ',sH', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_header,
     glb_projs1,
@@ -161,7 +161,7 @@ vim.keymap.set( 'n',
 
 -- search in SIGNATURES:
 vim.keymap.set( 'n',
-  ',sg', function() require( 'utils_general' )
+  ',sg', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_signature,
     {},
@@ -169,7 +169,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sG', function() require( 'utils_general' )
+  ',sG', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_signature,
     glb_patterns1,
@@ -177,7 +177,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',si', function() require( 'utils_general' )
+  ',si', function() require( 'utils.general' )
   .RgxSelect_Picker( {},
     rgx_signature .. '.*' .. rgx_collection,
     glb_projs1,
@@ -185,7 +185,7 @@ vim.keymap.set( 'n',
     ) end )
 
 vim.keymap.set( 'n',
-  ',sz', function() require( 'utils_general' )
+  ',sz', function() require( 'utils.general' )
   .RgxSelect_Picker( opts_2,
     rgx_signature .. '.*?' .. [[ZIO]],
     glb_projs1,
@@ -195,29 +195,29 @@ vim.keymap.set( 'n',
 -- ─   Git picker maps                                  ──
 
 vim.keymap.set( 'n',
-  '<leader>ogl', function() require( 'utils_general' )
+  '<leader>ogl', function() require( 'utils.general' )
   .Git_commits_picker( opts_1, vim.fn.expand('%') )
   end )
 
 vim.keymap.set( 'n',
-  '<leader>ogL', function() require( 'utils_general' )
+  '<leader>ogL', function() require( 'utils.general' )
   .Git_commits_picker( opts_1 )
   end )
 
 
 vim.keymap.set( 'n',
-  '<leader>ogs', function() require( 'utils_general' )
+  '<leader>ogs', function() require( 'utils.general' )
   .Git_status_picker( opts_1 )
   end )
 
 vim.keymap.set( 'n',
-  '<leader>ogd', function() require( 'utils_general' )
+  '<leader>ogd', function() require( 'utils.general' )
   .Git_diff_to_master( opts_1 )
   end )
 
 -- search in VIM_MAIN_SYMBOLS:
 vim.keymap.set( 'n',
-  ',svs', function() require( 'utils_general' )
+  ',svs', function() require( 'utils.general' )
   .RgxSelect_Picker(
     {},
     rgx_main_symbol_vimLua,
@@ -228,7 +228,7 @@ vim.keymap.set( 'n',
 
 -- search in VIM_KEYMAPS:
 vim.keymap.set( 'n',
-  ',svm', function() require( 'utils_general' )
+  ',svm', function() require( 'utils.general' )
   .RgxSelect_Picker(
     {},
     rgx_keymap_vim,
@@ -239,7 +239,7 @@ vim.keymap.set( 'n',
 
 -- search in entire vim code:
 vim.keymap.set( 'n',
-  ',svv', function() require( 'utils_general' )
+  ',svv', function() require( 'utils.general' )
   .RgxSelect_Picker(
     {},
     "",
@@ -249,7 +249,7 @@ vim.keymap.set( 'n',
 
 -- search in entire vim headers:
 vim.keymap.set( 'n',
-  ',svh', function() require( 'utils_general' )
+  ',svh', function() require( 'utils.general' )
   .RgxSelect_Picker(
     {},
     rgx_header,

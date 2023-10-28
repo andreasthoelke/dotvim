@@ -22,12 +22,11 @@ func! VScriptToolsBufferMaps()
   " nnoremap <silent><buffer> ge:  :call v:lua.require('utils_general').RgxSelect_Picker([], "[A-Z]{3,}", ["-g", ".txt", ".vim", ".lua"], [expand('%:p')] )<cr>
   " nnoremap <silent><buffer> ge:  :call v:lua.require( 'utils_general' ).RgxSelect_Picker( [], g:rgx_main_symbol_vimLua, [], [ "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/lua"] )<cr>
 
-  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( expand("%:p") )<cr>
-  " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( expand("%:p:h") )<cr>
-  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( getcwd(), g:rgx_main_symbol_vimLua )<cr>
+  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file' )<cr>
+  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global' )<cr>
 
-  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), expand('<cword>'), "normal" )<cr>
-  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( getcwd(), GetVisSel(), "normal" )<cr>
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
 
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
   nnoremap <silent><buffer> gej :call PrintVimOrLuaParag()<cr>

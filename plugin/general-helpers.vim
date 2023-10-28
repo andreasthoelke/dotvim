@@ -137,7 +137,7 @@ endfunc
 " Live grep a folder of files (or symlinks). Lines are (optionally) pre-filtered by a regex.
 func! Telescope_folder_rgx( folderPath, rgx )
   " (opts, rgx_query, globs, paths)
-  call v:lua.require'utils_general'.RgxSelect_Picker( {"initial_mode": "insert"}, a:rgx, {}, [a:folderPath])
+  call v:lua.require'utils.general'.RgxSelect_Picker( {"initial_mode": "insert"}, a:rgx, {}, [a:folderPath])
 endfunc
 " Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "^#" )
 " Telescope_folder_rgx( "/Users/at/Documents/Bookmarks/notes_select/", "nvim" )

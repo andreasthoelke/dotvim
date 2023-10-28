@@ -7,7 +7,7 @@ local M = {}
 
 local vim = vim
 local util = require 'vim.lsp.util'
-local utilsg = require'utils_general'
+local utilsg = require 'utils.general'
 
 -- vim.api.nvim_win_get_config(0)
 -- vim.api.nvim_win_get_config(0).relative
