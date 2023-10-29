@@ -944,11 +944,13 @@ function M.IndexOf(array, value)
   return nil
 end
 
-function M.Keymap_props( mode, lhs_map_string )
-  local propsstr = vim.api.nvim_exec( "verbose "..mode.."map "..lhs_map_string, true )
+function _G.Keymap_props( mode, lhs_map_string )
+  local cmd = "verbose " .. mode .. "map " .. lhs_map_string
+  local propsstr = vim.api.nvim_exec( cmd, true )
   local propsstr_clean = propsstr:gsub("\n", " ")
   local propslist = vim.split( propsstr_clean, " " )
-  -- vim.pretty_print( M.IndexOf( propslist, "from" ) )
+  -- vim.print( propsstr )
+  -- vim.print( M.IndexOf( propslist, "from" ) )
   local fni = M.IndexOf( propslist, "from" ) + 1
   local lni = M.IndexOf( propslist, "line" ) + 1
   return {
@@ -958,7 +960,9 @@ function M.Keymap_props( mode, lhs_map_string )
 end
 -- require('utils.general').Keymap_props("n", "<space>vm")
 -- require('utils.general').Keymap_props("n", "gei")
-
+-- vim.api.nvim_exec( "verbose ".."n".."map ".."gei", true )
+-- vim.api.nvim_exec( 'verbose nmap gei', true )
+-- vim.cmd( "verbose ".."n".."map ".."gei", true )
 -- require'telescope.builtin'.live_grep({previewer = require'telescope.previewers'.vim_buffer_vimgrep, highlights = true})
 -- require('telescope.config').values.grep_previewer
 
@@ -967,7 +971,7 @@ local function keymap_select_action( prompt_bufnr )
     actions.close(prompt_bufnr)
     local selection = action_state.get_selected_entry()
     -- vim.pretty_print( selection )
-    local keymap_props = M.Keymap_props( selection.mode, selection.lhs )
+    local keymap_props = Keymap_props( selection.mode, selection.lhs )
     -- vim.pretty_print( keymap_props )
     if keymap_props.filename ~= "lua" then
       vim.cmd( "vnew " .. keymap_props.filename )
@@ -980,7 +984,7 @@ local function keymap_select_action( prompt_bufnr )
   return true
 end
 
--- Nice, using this now.
+-- attach/overwrite an extra picker action map only for this picker/usecase
 function M.examp_keymap_picker( opts )
   opts = opts or {}
   opts.attach_mappings = keymap_select_action
