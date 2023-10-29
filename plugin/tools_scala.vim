@@ -58,6 +58,9 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
 
+  nnoremap <silent><buffer> gst  :call v:lua.Search_ast( expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gst  :call v:lua.Search_ast( GetVisSel() )<cr>
+
 
 " ─^  Regex search maps                                  ▲
 

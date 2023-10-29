@@ -404,7 +404,8 @@ hi! def link gitHunk Comment
 hi! def link diffSubname Comment
 
 " Telescope
-hi! def link TelescopePreviewLine CursorLine
+" hi! def link TelescopePreviewLine CursorLine
+hi! def link TelescopePreviewLine Search
 " hi! def link TelescopePreviewMatch Search
 hi! def link TelescopeMatching Identifier
 " hi! def link TelescopeSelection Visual
@@ -713,9 +714,14 @@ hi NonText         guifg=#465457
 hi SpecialKey      guifg=#465457
 
 " Seach
-hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
-" TODO: i'd like the search highlight to look similar to the Visual (selection), so the foreground syntax-color is still visible
-" hi Search guibg=#282828 gui=none
+" hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
+" i'd like the search highlight to look similar to the Visual (selection), so the foreground syntax-color is still visible
+" hi! Search guifg=none guibg=#282828 gui=italic,underline
+" hi! Search         guifg=NONE guibg=#282E2E gui=italic,underline
+" hi! Search         guifg=NONE guibg=#222F37 gui=italic,underline
+" hi! Search         guifg=NONE guibg=#212626 gui=underline
+" hi! Search         guifg=NONE guibg=#212626 gui=italic,underline
+hi! Search         guifg=NONE guibg=#1A1E1E gui=italic,underline
 
 " Visual selection
 " hi Visual guibg=#2E2E2E gui=none

@@ -14,7 +14,7 @@ local action_state = require "telescope.actions.state"
 
 local function get_path_link()
   local entry = action_state.get_selected_entry()
-  -- putt( entry )
+  putt( entry )
   local path = vim.tbl_get( entry, 'filename' )
   local link = {
     lnum = vim.tbl_get( entry, 'lnum' ),
@@ -242,7 +242,17 @@ Telesc = require('telescope').setup{
         ["proj"] = "/Users/at/Documents/Proj",
         -- ["wiki"]    = "/home/my_username/wiki"
       }
+    },
+
+    ast_grep = {
+      command = {
+        "sg",
+        "--json=stream",
+      }, -- must have --json=stream
+      grep_open_files = false, -- search in opened files
+      lang = nil, -- string value, specify language for ast-grep `nil` for default
     }
+
 
     -- ['ui-select'] = {
     --   -- require('telescope.themes').get_dropdown {
@@ -317,6 +327,9 @@ require('telescope').load_extension('ag')
 -- require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
+require('telescope').load_extension('ast_grep')
+
+
 
 vim.api.nvim_set_keymap('n',
   '<leader>si',
@@ -345,6 +358,7 @@ end
 
 local base_branch = "eins"
 
+-- TODO test with :Easypick
 easypick.setup({
   pickers = {
     -- add your custom pickers here

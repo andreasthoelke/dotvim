@@ -274,41 +274,47 @@ let g:searchSites =  [ {'section':'Docs'} ]
 
 " htq1tps://www.stackage.org/lts-14.1/hoogle?q=Data.Either.fromLeft
 " module_mainTerm should join namespace and mainTerm via a '.' if both are provided
-let g:searchSites += [ {'label':'_Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
-      \, 'module_mainTerm':'hoogle?q='
-      \}]
+" let g:searchSites += [ {'label':'_Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
+"       \, 'module_mainTerm':'hoogle?q='
+"       \}]
 
 " https://hoogle.haskell.org/?hoogle=Data.Either.fromLeft&scope=package%3Aeither
-let g:searchSites += [ {'label':'_Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
-      \, 'module_mainTerm':'?hoogle='
-      \}]
+" let g:searchSites += [ {'label':'_Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
+"       \, 'module_mainTerm':'?hoogle='
+"       \}]
 
 " https://pursuit.purescript.org/search?q=fromLeft
 " Pursuit can only search for a module namespace (Data.Either) *or* an identifier (e.g. fromLeft), not a combination of both
 " So searching for a module has to use the 'mainTerm' field
-let g:searchSites += [ {'label':'_Pursuit',    'baseUrl':'https://pursuit.purescript.org/'
+" let g:searchSites += [ {'label':'_Pursuit',    'baseUrl':'https://pursuit.purescript.org/'
+"       \, 'mainTerm':'search?q='
+"       \}]
+
+" https://www.phind.com/search?q=if%20a%20lua%20function%20returns%20two%20return%20values%20how%20can%20i%20easily%20print%20both%20values%3F&source=searchbox
+let g:searchSites += [ {'label':'_Phind',    'baseUrl':'https://phind.com/'
       \, 'mainTerm':'search?q='
       \}]
 
+
 " https://spacchetti.github.io/starsuit/#search:traverse
 " Starsuit can only search for a module namespace (Data.Either) *or* an identifier (e.g. fromLeft), not a combination of both
-let g:searchSites += [ {'label':'_T Starsuit Pursuit',    'baseUrl':'https://spacchetti.github.io/starsuit/'
-      \, 'mainTerm':'\#search:'
-      \}]
+" let g:searchSites += [ {'label':'_T Starsuit Pursuit',    'baseUrl':'https://spacchetti.github.io/starsuit/'
+"       \, 'mainTerm':'\#search:'
+"       \}]
 
 let g:searchSites += [ {'section':'Web help/ posts'} ]
 
 " https://book.purescript.org/index.html?search=
-let g:searchSites += [ {'label':'_Book Purscript',     'baseUrl':'https://book.purescript.org/index.html'
-      \, 'mainTerm':'?search='
-      \, 'language':'+'
-      \}]
+" let g:searchSites += [ {'label':'_Book Purscript',     'baseUrl':'https://book.purescript.org/index.html'
+"       \, 'mainTerm':'?search='
+"       \, 'language':'+'
+"       \}]
 
 " https://jordanmartinez.github.io/purescript-jordans-reference-site/?search=
-let g:searchSites += [ {'label':'_M Jordan Reference',     'baseUrl':'https://jordanmartinez.github.io/purescript-jordans-reference-site/'
-      \, 'mainTerm':'?search='
-      \, 'language':'+'
-      \}]
+" let g:searchSites += [ {'label':'_M Jordan Reference',     'baseUrl':'https://jordanmartinez.github.io/purescript-jordans-reference-site/'
+"       \, 'mainTerm':'?search='
+"       \, 'language':'+'
+"       \}]
 
 " https://www.google.de/search?q=traverse+Haskell
 " This usually features Stackoverflow
@@ -318,7 +324,7 @@ let g:searchSites += [ {'label':'_Google',     'baseUrl':'https://google.de/'
       \}]
 
 " https://www.reddit.com/r/haskell/search/?q=Data.Either.fromLeft&restrict_sr=1
-let g:searchSites += [ {'label':'_Redit Haskell', 'baseUrl':'https://www.reddit.com/r/haskell/'
+let g:searchSites += [ {'label':'_Redit', 'baseUrl':'https://www.reddit.com/'
       \, 'mainTerm':'search/?q='
       \, 'options':'&restrict_sr=1'
       \}]
@@ -349,18 +355,18 @@ let g:searchSites += [ {'label':'Github issues',     'baseUrl':'https://github.c
 
 " https://haskell-code-explorer.mfix.io/search/withAsync
 " https://haskell-code-explorer.mfix.io/package/async-2.2.1/search/withAsync
-let g:searchSites += [ {'label':'Hs Code Explorer (Hackage search + browse)'
-      \, 'baseUrl':'https://haskell-code-explorer.mfix.io/'
-      \, 'package':'package/'
-      \, 'mainTerm':'search/'
-      \}]
+" let g:searchSites += [ {'label':'Hs Code Explorer (Hackage search + browse)'
+"       \, 'baseUrl':'https://haskell-code-explorer.mfix.io/'
+"       \, 'package':'package/'
+"       \, 'mainTerm':'search/'
+"       \}]
 
 " https://codesearch.aelve.com/haskell/search?query=fromLeft&filter=Data.Either
-let g:searchSites += [ {'label':"Run %{expand('%:t')}"
-      \, 'baseUrl':'https://codesearch.aelve.com/haskell/'
-      \, 'mainTerm':'search?query='
-      \, 'module':'&filter='
-      \}]
+" let g:searchSites += [ {'label':"Run %{expand('%:t')}"
+"       \, 'baseUrl':'https://codesearch.aelve.com/haskell/'
+"       \, 'mainTerm':'search?query='
+"       \, 'module':'&filter='
+"       \}]
 
 
 

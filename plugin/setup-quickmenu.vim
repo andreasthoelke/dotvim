@@ -9,7 +9,7 @@ let g:quickmenu_ix_disable_nofile = 0
 
 
 " enable cursorline (L) and cmdline help (H) for left panel, use (T)
-let g:quickmenu_options = 'LH'
+let g:quickmenu_options = 'L'
 let g:quickmenu_special_keys = 0
 let g:quickmenu_padding_left = 0
 let g:quickmenu_padding_right = 1

@@ -1,0 +1,52 @@
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local sorters = require "telescope.sorters"
+local conf = require("telescope.config").values
+local Job = require "plenary.job"
+
+local ripgrep = function(opts)
+  opts = opts or {}
+
+  pickers.new(opts, {
+    prompt_title = "Ripgrep",
+    finder = finders.new_dynamic({
+      fn = function(prompt)
+        local result = Job:new({
+          command = "rg",
+          args = { "--json", "--line-number", "--column", "--no-heading", prompt, "." },
+          cwd = vim.fn.getcwd(),
+          env = vim.fn.environ(),
+        }):sync()
+
+        result = table.concat(result, '')
+
+        local matches = {}
+        if result ~= "" then
+          matches = vim.json.decode(result)
+        end
+
+        return matches
+      end,
+      entry_maker = function(chunk)
+        local hl_range = {
+          lnum = chunk.line + 1,
+          lnend = chunk.line + 1,
+          col = chunk.column + 1,
+          colend = chunk.column + 1,
+        }
+
+        return vim.tbl_deep_extend("force", hl_range, {
+          value = chunk.file .. ":" .. hl_range.lnum,
+          display = chunk.file .. ":" .. hl_range.lnum,
+          path = chunk.file,
+          ordinal = chunk.file,
+        })
+      end,
+    }),
+    previewer = conf.grep_previewer(opts),
+    sorter = sorters.empty(),
+  }):find()
+end
+
+-- ripgrep()
+

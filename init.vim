@@ -65,6 +65,9 @@ Plug 'kelly-lin/telescope-ag'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-frecency.nvim'
 
+Plug 'Marskey/telescope-sg'
+
+
 Plug 'folke/noice.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'rcarriga/nvim-notify'
@@ -279,10 +282,11 @@ Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in 
 Plug '907th/vim-auto-save'
 " Plug 'skywind3000/quickmenu.vim'
 " This fork allows to define letter shortcuts per menu-item
-Plug 'skywind3000/vim-quickui'
 Plug 'CharlesGueunet/quickmenu.vim'
 " a functional duplicate that required a lot of renaming
 " Plug 'andreasthoelke/quickmenu_ix'
+" other classic menu types
+" Plug 'skywind3000/vim-quickui'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
