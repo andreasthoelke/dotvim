@@ -62,7 +62,7 @@ nnoremap <silent> <c-w><leader>s  :call NewBuf_fromCursorLinkPath( "down" )<cr>
 nnoremap <silent> <c-w><leader>S  :call NewBuf_fromCursorLinkPath( "down_back" )<cr>
 
 
-" TELESCOPE: 
+" TELESCOPE 
 " ~/.config/nvim/plugin/utils-fileselect-telescope.lua‖*NewBufˍmapsˍi
 
 

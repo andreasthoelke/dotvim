@@ -121,6 +121,7 @@ function _G.Tab_UserSetName()
     }, user_set )
 end
 
+-- ─   Mappings                                         ──
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 vim.keymap.set( 'n', '<leader>tS', persist_reset )
 vim.keymap.set( 'n', '<leader>tl', user_set_lspsym )

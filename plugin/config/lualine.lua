@@ -1,11 +1,11 @@
+
+
+
 vim.o.showtabline = 2
 
 
 -- ─   Helpers                                          ──
 
-local colors = require 'config.colors'
-
-local hello = function() return "hello there!" end
 
 local function fname_noExt()
   return vim.fn.expand( '%:t:r' )
@@ -13,30 +13,6 @@ end
 
 
 -- ─   Custom filetype with icon                        ──
-
-local custom_fname = require('lualine.components.filename'):extend()
-local highlight = require'lualine.highlight'
-local default_status_colors = { saved = '#228B22', modified = '#C70039' }
-
-function custom_fname:init(options)
-  custom_fname.super.init(self, options)
-  self.status_colors = {
-    saved = highlight.create_component_highlight_group(
-      {bg = default_status_colors.saved}, 'filename_status_saved', self.options),
-    modified = highlight.create_component_highlight_group(
-      {bg = default_status_colors.modified}, 'filename_status_modified', self.options),
-  }
-  if self.options.color == nil then self.options.color = '' end
-end
-
-function custom_fname:update_status()
-  local data = custom_fname.super.update_status(self)
-  data = highlight.component_format_highlight(vim.bo.modified
-                                              and self.status_colors.modified
-                                              or self.status_colors.saved) .. data
-  return data
-end
-
 
 
 local lualine_require = require('lualine_require')
@@ -95,7 +71,7 @@ function custom_ftype:apply_icon()
   elseif type(self.options.icon) == 'table' and self.options.icon.align == 'right' then
     self.status = self.status .. ' ' .. icon
   else
-    -- NOTE apply_icon is a literal copy, I only changed the show the filename instead of the extension (which resided in self.status)
+    -- NOTE apply_icon is a literal copy, I only changed to show the filename instead of the extension (which resided in self.status)
     self.status = icon .. ' ' .. vim.fn.expand('%:t:r')
   end
 end
@@ -177,7 +153,7 @@ local lualine_config = {
 
 
 
--- ─   Tabline                                          ──
+-- ─   Tabline                                           ■
 
   tabline = {},
   -- tabline = {
@@ -245,42 +221,50 @@ local lualine_config = {
   -- },
 
 
+-- ─^  Tabline                                           ▲
+
+
 -- ─   Winbar                                           ──
 
   -- winbar = {},
   winbar = {
-    lualine_a = {},
-    lualine_b = {},
+    lualine_a = { custom_ftype },
+    lualine_b = { 'LspSymbolsStack()' },
     lualine_c = {},
     lualine_x = {},
-    lualine_y = {
-      "LspSymbolsStack()",
-      -- color = 'LuLine_Winbar_y_ac',
-    },
-    lualine_z = {
-      {
-        fname_noExt,
-        color = 'LuLine_Winbar_z_ac',
-      }
-    }
+    lualine_y = {},
+    -- lualine_y = {
+    --   "LspSymbolsStack()",
+    --   -- color = 'LuLine_Winbar_y_ac',
+    -- },
+    lualine_z = {},
+    -- lualine_z = {
+    --   {
+    --     fname_noExt,
+    --     color = 'LuLine_Winbar_z_ac',
+    --   }
+    -- }
   },
 
   -- inactive_winbar = {},
   inactive_winbar = {
-    lualine_a = {},
-    lualine_b = {},
+    lualine_a = { custom_ftype },
+    -- lualine_b = {},
+    lualine_b = { 'LspSymbolsStack_inactive()' },
     lualine_c = {},
     lualine_x = {},
-    lualine_y = {
-      "LspSymbolsStack_inactive()",
-      -- color = 'LuLine_Winbar_y_in',
-    },
-    lualine_z = {
-      {
-        fname_noExt,
-        color = 'LuLine_Winbar_z_in',
-      }
-    }
+    lualine_y = {},
+    -- lualine_y = {
+    --   "LspSymbolsStack_inactive()",
+    --   -- color = 'LuLine_Winbar_y_in',
+    -- },
+    lualine_z = {},
+    -- lualine_z = {
+    --   {
+    --     fname_noExt,
+    --     color = 'LuLine_Winbar_z_in',
+    --   }
+    -- }
   },
 
 

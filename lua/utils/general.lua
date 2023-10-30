@@ -411,7 +411,8 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
     if vim.fn.expand("%:e") == "lua" then
       -- pattern = [[^(function|local\s.*function|-- ─ ).*]]
       -- now including all top level local values. As I dont' know how to search *before* the function keyword (and after it).
-      pattern = [[^(#|.*\*|function|M|f\.|local\s|-- ─ ).*]]
+      -- NOTE: i should use lowercase version of capital chars like M and _G, else the typed regex would not be case insensitive
+      pattern = [[^(#|.*\*|function|m|f\.|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(#|.*\*|func|comma|" ─ ).*]]
     else

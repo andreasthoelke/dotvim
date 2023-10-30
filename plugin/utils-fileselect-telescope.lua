@@ -19,7 +19,7 @@ local function get_path_link()
   local path, link
 
   -- CASE: Keymaps picker
-  if     vim.tbl_get( selection, 'mode' ) and vim.tbl_get( selection, 'lhs' ) ~= nil then
+  if     vim.tbl_get( selection, 'mode' ) ~= nil and vim.tbl_get( selection, 'lhs' ) ~= nil then
     -- local keymap_props = require 'utils.general'.Keymap_props( selection.mode, selection.lhs )
     local keymap_props = Keymap_props( selection.mode, selection.lhs )
     path = keymap_props.filename
@@ -30,10 +30,16 @@ local function get_path_link()
 
   -- CASE: Filename pickers with optional linenum and cursor column
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
-    path = selection.filename
+    path = vim.tbl_get( selection, 'filename' )
     link = {
-      lnum = vim.tbl_get( entry, 'lnum' ),
-      col  = vim.tbl_get( entry, 'col' )
+      lnum = vim.tbl_get( selection, 'lnum' ),
+      col  = vim.tbl_get( selection, 'col' )
+    }
+  else
+    path = vim.tbl_get( selection, 'value' )
+    link = {
+      lnum = vim.tbl_get( selection, 'lnum' ),
+      col  = vim.tbl_get( selection, 'col' )
     }
   end
   return path, link
@@ -57,8 +63,10 @@ local NewBuf = f.curry( function( adirection, pbn )
   -- putt( cmd )
   -- putt( maybe_back or "" )
 
+  -- Open the new buffer
   vim.cmd( cmd )
-  if maybeLink.lnum then
+
+  if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
     vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
     vim.cmd 'normal zz'
   end

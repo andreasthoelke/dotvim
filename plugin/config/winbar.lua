@@ -49,7 +49,7 @@ end
 vim.api.nvim_exec([[
     augroup NavicState
         autocmd!
-        autocmd WinLeave * lua Winbar_set_last_state(vim.fn.win_getid())
+        autocmd WinLeave * lua Winbar_set_last_state( vim.fn.win_getid() )
     augroup END
 ]], false)
 
@@ -71,7 +71,7 @@ end
 -- This is using the WinLeave lsp cursor state. If I'd just use LspSymbolsStack
 -- the winbar of inactive splits of the same buffer would update in sync with the current window.
 function _G.LspSymbolsStack_inactive()
-  local joinedStrs = Winbar_get_last_state( vim.fn.win_getid() )
+  local joinedStrs = _G.Winbar_get_last_state( vim.fn.win_getid() )
   return joinedStrs
 end
 
@@ -109,7 +109,7 @@ function _G.LspMeaningfulSymbol( bufnr )
   if candidateStack:length() > 0 then
     icon, name = fun.head( fun.map( function(el) return el.icon, el.name end, candidateStack ) )
   else
-    icon, name = ""
+    icon, name = "", ""
   end
   return icon, name
 end
