@@ -638,10 +638,11 @@ func! PasteLastEchoText()
 endfunc
 
 " nnoremap <leader>Sm :call ShowMessages()<cr>
-nnoremap <leader>Sm :call ShowMessages_new()<cr>
+nnoremap <silent><leader>Sm :echo "use l sMM"<cr>
 
 nnoremap <silent><leader>sm :lua PrintMessages( 3 )<cr>
-nnoremap <silent><leader>sM :lua PrintMessages( 30 )<cr>
+nnoremap <silent><leader>sMm :lua PrintMessages( 30 )<cr>
+nnoremap <silent><leader>sMM :call ShowMessages_new()<cr>
 
 command! EchoTextPaste :call PasteLastEchoText()
 command! MessagesShow call ShowMessages()

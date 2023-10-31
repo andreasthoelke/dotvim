@@ -27,12 +27,42 @@ local fun = require 'utils.fun'
 -- /opt/homebrew/Cellar/neovim/0.9.0/share/nvim/runtime/doc/lua.txt‖/Createsˍaˍcopyˍofˍaˍt
 
 
+local f = {}
+
+
+function _G.uniqueVals1( acc, v )
+  return vim.tbl_contains(acc, v)
+    and acc
+    or vim.list_extend(acc, {v})
+end
+
+-- vim.iter { {11}, {22}, {33}, {33}, {44}, {44} }
+--  :fold( {}, uniqueVals1 )
+
+
+-- vim.tbl_isempty( vim.tbl_filter( f.eq({11}), {{11}, {22}} ) )
+-- vim.tbl_isempty( vim.tbl_filter( f.eq({12}), {{11}, {22}} ) )
+
+
+-- vim.deep_equal(
+-- {
+--     bufid = 28,
+--     fname = "/Users/at/.config/nvim/plugin/config/lualine_comps.lua"
+--   },
+-- {
+--     bufid = 28,
+--     fname = "/Users/at/.config/nvim/plugin/config/lualine_comps.lua"
+--   }
+-- )
+
+
+
 -- vim.defer_fn( function() vim.print( "hi there" ) end, 2000 )
 -- vim.system({'echo', 'hello'}, { text = true }):wait()
 
 
 -- From https://github.com/cviejo/mPD/blob/main/bin/data/app/utils/functional.lua
-local f = {}
+-- local f = {}
 
 f.noop = function()
 end
@@ -116,6 +146,26 @@ f.equals = f.curry2(function(a, b)
   return a == b
 end)
 -- f.equals 'hi' 'hi'
+
+f.eq = f.curry2(function(a, b)
+  return vim.deep_equal( a, b )
+end)
+-- f.eq {11} {11}
+-- f.eq {11} {12}
+
+function f.uniqueVals( acc, v )
+  return vim.tbl_isempty( vim.tbl_filter( f.eq(v), acc ) )
+    and vim.list_extend(acc, {v})
+    or acc
+end
+
+-- vim.iter { {11}, {22}, {33}, {33}, {44}, {44} }
+--  :fold( {}, f.uniqueVals )
+
+function f.itToSet( it )
+  return it:fold( {}, f.uniqueVals )
+end
+-- f.itToSet( vim.iter { {11}, {22}, {33}, {33}, {44}, {44} } )
 
 f.isNil = function(x)
   return x == nil

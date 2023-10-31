@@ -30,7 +30,7 @@ function _G.PrintMessages( cnt )
   local msgsFlat = vim.tbl_flatten( vim.tbl_map( function(el) return el.message end , recentHist ) )
   local reversedList = vim.fn.reverse( msgsFlat )
   local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
-  vim.fn.FloatingSmallNew( seperatedList )
+  vim.g['floatWin_win'] = vim.fn.FloatingSmallNew( seperatedList )
   vim.fn.FloatWin_FitWidthHeight()
   vim.cmd( 'wincmd p' )
 end
@@ -411,8 +411,8 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
     if vim.fn.expand("%:e") == "lua" then
       -- pattern = [[^(function|local\s.*function|-- ─ ).*]]
       -- now including all top level local values. As I dont' know how to search *before* the function keyword (and after it).
-      -- NOTE: i should use lowercase version of capital chars like M and _G, else the typed regex would not be case insensitive
-      pattern = [[^(#|.*\*|function|m|f\.|local\s|-- ─ ).*]]
+      -- NOTE: i should use the lowercase version of capital chars like M and _G, else the typed regex would not be case insensitive
+      pattern = [[^(#|function|m|f\.|local\sfunc|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(#|.*\*|func|comma|" ─ ).*]]
     else

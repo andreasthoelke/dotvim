@@ -130,14 +130,8 @@ function _G.FileNamesInTabHandle_( tab_handle )
 end
 
 
-local uniqueVals = function( acc, v )
-  return vim.tbl_contains(acc, v)
-    and acc
-    or vim.list_extend(acc, {v})
-end
-
 function _G.FilesInTab( tabid )
-  return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
+  local fileData = vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
     :map( function(winid)
       return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
     end)
@@ -149,7 +143,7 @@ function _G.FilesInTab( tabid )
     :map( function(win)
       return { fname = vim.api.nvim_buf_get_name( win.bid ), bufid = win.bid }
     end)
-    :fold( {}, uniqueVals )
+    return f.itToSet( fileData )
 end
 
 -- FilesInTab( vim.api.nvim_get_current_tabpage() )
