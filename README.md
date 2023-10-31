@@ -1,10 +1,9 @@
-dotvim files
+neovim config
 
 # Features
-[Todo]
 
 ### Tab- & statusline labels
-![Screenshot Scala syntax](./screenshots/2022-12-10_lualine_tabby.png)
+![Screenshot Scala syntax](./screenshots/tab-labels.png)
 
 ### Scala syntax conceals
 ![Screenshot Scala syntax](./screenshots/2022-12-10_no_conceals_in_comments.png)
