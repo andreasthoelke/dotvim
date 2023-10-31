@@ -760,6 +760,9 @@ hi! LuLine_Tabs_in   guifg=#3F5C66 guibg=#0E0E0E gui=none
 hi! LuLine_y   guifg=#273A40 guibg=#0C0E10
 hi! LuLine_y_i guifg=#273A40 guibg=#0C0E10
 
+hi! LuLine_Winbar_b_ac   guifg=#273A40 guibg=#0C0E10
+hi! LuLine_Winbar_b_in guifg=#273A40 guibg=#0C0E10
+
 hi! LuLine_Winbar_z_ac guifg=#314950 guibg=#0C0E10 gui=none
 hi! LuLine_Winbar_z_in guifg=#314950 guibg=#0C0E10 gui=none
 

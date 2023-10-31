@@ -36,28 +36,28 @@ local colors = {
 
 -- ─   Theme                                            ──
 
-function _G.Theme_grbox2()
-  return {
+-- function _G.Theme_grbox2()
+--   return {
 
-    normal = {
-      a = 'LuLine_a',
-      b = 'LuLine_b',
-      c = 'LuLine_c',
-      x = 'LuLine_x',
-      y = 'LuLine_y',
-      z = 'LuLine_z',
-    },
+--     normal = {
+--       a = 'LuLine_a',
+--       b = 'LuLine_b',
+--       c = 'LuLine_c',
+--       x = 'LuLine_x',
+--       y = 'LuLine_y',
+--       z = 'LuLine_z',
+--     },
 
-    inactive = {
-      a = 'LuLine_a_i',
-      b = 'LuLine_b_i',
-      c = 'LuLine_c_i',
-      x = 'LuLine_x_i',
-      y = 'LuLine_y_i',
-      z = 'LuLine_z_i',
-    }
-  }
-end
+--     inactive = {
+--       a = 'LuLine_a_i',
+--       b = 'LuLine_b_i',
+--       c = 'LuLine_c_i',
+--       x = 'LuLine_x_i',
+--       y = 'LuLine_y_i',
+--       z = 'LuLine_z_i',
+--     }
+--   }
+-- end
 
 
 function _G.Theme_grbox1() -- ■

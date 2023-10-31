@@ -4,6 +4,13 @@
 vim.o.showtabline = 2
 
 
+local function Theme_grbox2()
+  return {
+    normal = { a = 'LuLine_a', b = 'LuLine_b', c = 'LuLine_c', x = 'LuLine_x', y = 'LuLine_y', z = 'LuLine_z', },
+    inactive = { a = 'LuLine_a_i', b = 'LuLine_b_i', c = 'LuLine_c_i', x = 'LuLine_x_i', y = 'LuLine_y_i', z = 'LuLine_z_i', }
+  }
+end
+
 -- ─   Helpers                                          ──
 
 
@@ -12,7 +19,7 @@ local function fname_noExt()
 end
 
 
--- ─   Custom filetype with icon                        ──
+-- ─   Custom filetype with icon                         ■
 
 
 local lualine_require = require('lualine_require')
@@ -75,6 +82,9 @@ function custom_ftype:apply_icon()
     self.status = icon .. ' ' .. vim.fn.expand('%:t:r')
   end
 end
+
+
+-- ─^  Custom filetype with icon                         ▲
 
 
 
@@ -228,8 +238,18 @@ local lualine_config = {
 
   -- winbar = {},
   winbar = {
-    lualine_a = { custom_ftype },
-    lualine_b = { 'LspSymbolsStack()' },
+    lualine_a = {
+      {
+        custom_ftype,
+        separator = { left = '', right = '' },
+      }
+    },
+    lualine_b = {
+      {
+        'LspSymbolsStack()',
+        color = 'LuLine_Winbar_b_in'
+      }
+    },
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
@@ -248,23 +268,22 @@ local lualine_config = {
 
   -- inactive_winbar = {},
   inactive_winbar = {
-    lualine_a = { custom_ftype },
-    -- lualine_b = {},
-    lualine_b = { 'LspSymbolsStack_inactive()' },
+    lualine_a = {
+      {
+        custom_ftype,
+        separator = { left = '', right = '' },
+      }
+    },
+    lualine_b = {
+      {
+        'LspSymbolsStack_inactive()',
+        color = 'LuLine_Winbar_b_in'
+      }
+    },
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    -- lualine_y = {
-    --   "LspSymbolsStack_inactive()",
-    --   -- color = 'LuLine_Winbar_y_in',
-    -- },
     lualine_z = {},
-    -- lualine_z = {
-    --   {
-    --     fname_noExt,
-    --     color = 'LuLine_Winbar_z_in',
-    --   }
-    -- }
   },
 
 

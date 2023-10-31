@@ -63,10 +63,13 @@ vim.api.nvim_exec([[
 function _G.LspSymbolsStack()
   local lspSymbolsStack = filterLspSymbolsStack( navic.get_data() )
   local lspSymbolStrs = vim.tbl_map( function( symb ) return symb.icon .. symb.name end, lspSymbolsStack )
-  local joinedStrs = table.concat( lspSymbolStrs, " " .. icons.ui.ChevronLeft .. " " )
-  return joinedStrs
+  -- local joinedStrs = table.concat( lspSymbolStrs, " " .. icons.ui.ChevronLeft .. " " )
+  local joinedStrs = table.concat( lspSymbolStrs, " " .. icons.ui.ChevronRight .. " " )
+  -- note the <space> ensures that lua winbar uses the new highlight
+  return joinedStrs == "" and " " or joinedStrs
 end
 -- lua vim.print( LspSymbolsStack() )
+-- vim.print( LspSymbolsStack() )
 -- 
 -- This is using the WinLeave lsp cursor state. If I'd just use LspSymbolsStack
 -- the winbar of inactive splits of the same buffer would update in sync with the current window.
@@ -134,7 +137,8 @@ function _G.filterLspSymbolsStack( lspSymbolsStack )
   else
     lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
   end
-  return vim.fn.reverse( lspSymbolsStack_filtered )
+  -- return vim.fn.reverse( lspSymbolsStack_filtered )
+  return lspSymbolsStack_filtered
 end
 
 function _G.formatLspSymbolsStack( lspSymbolsStack )
