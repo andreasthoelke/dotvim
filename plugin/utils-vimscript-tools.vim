@@ -186,7 +186,8 @@ endfunc
 func! SourceLinesLua( expr )
   let code = ['', '', '', '', '', '', '']
   let code[0] = 'local f = require "utils.functional"'
-  let code[1] = 'local fun = require "utils.fun"'
+  let code[1] = 'local s = require "utils.string"'
+  let code[2] = 'local fun = require "utils.fun"'
   let code[4] = 'local ret = ' . a:expr
   let code[5] = 'local printVal = ret and printToString(ret) or ""'
   let code[6] = 'vim.notify( printVal, "info", { title = type(ret), timeout = 40000 } )'

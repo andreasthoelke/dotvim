@@ -6,7 +6,7 @@ local action_set = require "telescope.actions.set"
 local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
 local f = require 'utils.functional'
-
+local s = require 'utils.string'
 
 -- ─   Helpers                                          ──
 
@@ -28,13 +28,22 @@ local function get_path_link()
       col = 1
     }
 
-  -- CASE: Filename pickers with optional linenum and cursor column
+    -- CASE: Vim help tags. This picker provides a search command field(?!) ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/cmdˍ=ˍfield
+    --                      An alternative approach would be to change the NewBuf command to include "help" like here: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/elseifˍcmdˍ
+  elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
+    path = vim.tbl_get( selection, 'filename' )
+    link = {
+      searchTerm = vim.tbl_get( selection, 'cmd' )
+    }
+
+    -- CASE: Filename pickers with optional linenum and cursor column
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
     link = {
       lnum = vim.tbl_get( selection, 'lnum' ),
       col  = vim.tbl_get( selection, 'col' )
     }
+
   else
     path = vim.tbl_get( selection, 'value' )
     link = {
@@ -61,7 +70,7 @@ local NewBuf = f.curry( function( adirection, pbn )
 
   -- putt( adirection )
   -- putt( cmd )
-  -- putt( maybe_back or "" )
+  -- putt( maybeLink )
 
   -- Open the new buffer
   vim.cmd( cmd )
@@ -69,7 +78,10 @@ local NewBuf = f.curry( function( adirection, pbn )
   if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
     vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
     vim.cmd 'normal zz'
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
+    vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
   end
+
   if     adirection == 'tab_bg' then     -- opened to the right in the background
     vim.cmd 'tabprevious'
   elseif adirection == 'tab_back' then --   open and go to new tab, then jump *back* to prompt
@@ -81,6 +93,7 @@ local NewBuf = f.curry( function( adirection, pbn )
   end
 
 end)
+
 
 
 -- local entry_display = require "telescope.pickers.entry_display"

@@ -22,6 +22,7 @@ end
 M.tail = function(x)
   return x:sub(2)
 end
+-- s.tail( "eins" )
 
 M.init = function(x)
   return x:sub(1, -2)
