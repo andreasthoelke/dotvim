@@ -230,6 +230,7 @@ func! Rpi_captureString()
   " let outl = [ Rpi_normal1(), Rpi_cwd1(), Rpi_normal2(), Rpi_troot(), Rpi_normal3(), Rpi_cwd2() ]
   return outl->join(" ")
 endfunc
+" echo Rpi_captureString()
 
 func! Rpi_captureDummy()
   let newStr = Rpi_captureString()

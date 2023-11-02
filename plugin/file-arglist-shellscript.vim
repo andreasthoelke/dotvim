@@ -304,6 +304,11 @@ endfunc
 
 func! CurrentRelativeFolderPath_shorten ()
   let path = expand('%:p')
+  " let path =
+  "    \ &filetype == 'neo-tree' ?
+  "    \   a:0 ? a:1 : v:lua.Ntree_currentNode().linepath  :
+  "    \   expand('%:p')
+
   let cwd = getcwd()
   let relPath = path->substitute( cwd, '', '' )
   let relFolderPath = relPath->fnamemodify( ':h' )

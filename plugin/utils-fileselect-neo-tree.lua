@@ -12,7 +12,12 @@ local manager = require 'neo-tree.sources.manager'
 local fs = require("neo-tree.sources.filesystem")
 -- local Preview = require("neo-tree.sources.common.preview")
 
+-- lua putt( require('neo-tree.sources.manager').get_state_for_window() )
+
+
 -- ─   Helpers                                           ■
+
+-- Note: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
 
 function _G.Ntree_currentNode()
   local state = manager.get_state_for_window()
@@ -26,8 +31,11 @@ function _G.TreeRoot_infoStr( rootPath )
   local lpath = vim.split( rootPath, [[/]] )
   local dir = lpath[ #lpath ]
   local parentDir = lpath[ #lpath -1 ]
-  return dir ,parentDir
+  return dir, parentDir
 end
+
+
+
 -- vim.fn.RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj" )
 -- _ ■
 -- lua put( Ntree_current() )

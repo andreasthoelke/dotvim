@@ -14,6 +14,10 @@ local action_state = require "telescope.actions.state"
 
 local function get_path_link()
   local selection = action_state.get_selected_entry()
+
+  -- local mt = getmetatable(selection)
+  -- local cwdOfFile = vim.tbl_get( mt, 'cwd' ) or ""
+
   -- putt( selection )
 
   local path, link
@@ -40,15 +44,15 @@ local function get_path_link()
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
     link = {
-      lnum = vim.tbl_get( selection, 'lnum' ),
-      col  = vim.tbl_get( selection, 'col' )
+      lnum = vim.tbl_get( selection, 'lnum' ) or 1,
+      col  = vim.tbl_get( selection, 'col' ) or 1
     }
 
   else
     path = vim.tbl_get( selection, 'value' )
     link = {
-      lnum = vim.tbl_get( selection, 'lnum' ),
-      col  = vim.tbl_get( selection, 'col' )
+      lnum = vim.tbl_get( selection, 'lnum' ) or 1,
+      col  = vim.tbl_get( selection, 'col' ) or 1
     }
   end
   return path, link

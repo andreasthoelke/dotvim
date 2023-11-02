@@ -91,7 +91,26 @@ end
 -- ─   Config                                           ──
 
 
-local neo_tree = { sections = { lualine_a = {'mode'} }, filetypes = {'neo-tree'} }
+local neo_tree = {
+  sections = {
+    lualine_a = {
+      {
+        'ProjectRootFolderName',
+        separator = { left = '', right = '' },
+      }
+    },
+    -- lualine_b = { 'Ntree_rootDirRel' },
+  },
+  winbar = {
+    lualine_a = {
+      { 'Rpi_normal1', color = 'LuLine_c' }, { 'Rpi_cwd1' },
+      { 'Rpi_normal2', color = 'LuLine_c' }, { 'Rpi_troot', color = 'LuLine_b' },
+      { 'Rpi_normal3', color = 'LuLine_c' }, { 'Rpi_cwd2' },
+      { function() return " " end, color = 'LuLine_c' }
+    }
+  },
+  filetypes = { 'neo-tree' }
+}
 
 
 local lualine_config = {
