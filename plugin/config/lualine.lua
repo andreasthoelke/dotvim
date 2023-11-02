@@ -88,8 +88,8 @@ end
 
 
 
--- ─   Config                                           ──
 
+-- ─   neo tree extension                               ──
 
 local neo_tree = {
   sections = {
@@ -99,7 +99,7 @@ local neo_tree = {
         separator = { left = '', right = '' },
       }
     },
-    -- lualine_b = { 'Ntree_rootDirRel' },
+    lualine_c = { 'AlternateFileLoc_info' },
   },
   winbar = {
     lualine_a = {
@@ -109,9 +109,11 @@ local neo_tree = {
       { function() return " " end, color = 'LuLine_c' }
     }
   },
-  filetypes = { 'neo-tree' }
+  filetypes = { 'neo-tree', 'dirvish' }
 }
 
+
+-- ─   Config                                           ──
 
 local lualine_config = {
 

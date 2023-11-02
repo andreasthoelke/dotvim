@@ -175,9 +175,12 @@ endfunc
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/_repos/11_spoti_gql_muse/src/test" )[1:]->map( { _, v -> v->join(" ") } )
 " RootPathInfo_RenderCaseAndSegments( "/Users/at/Documents/Proj/ab/_repos/2_realworld-tapir-zio3", "/Users/at/Documents/Proj/ab" )[1:]->map( { _, v -> v->join(" ") } )
 
+func! Rpi_filePath()
+  return &filetype == 'neo-tree' ? v:lua.Ntree_currentNode().rootpath : expand('%')
+endfunc
 
 func! Rpi_data()
-  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), v:lua.Ntree_currentNode().rootpath)
+  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), Rpi_filePath() )
   return [ cid, infoL->map( { _, v -> v->join(" ") } ) ]
 endfunc
 

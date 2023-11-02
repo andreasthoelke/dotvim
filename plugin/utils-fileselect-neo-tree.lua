@@ -58,7 +58,7 @@ function _G.Ntree_launch( reveal_path, root_dir)
     position = "current",
     dir = root_dir,
     reveal_file = reveal_path,
-    reveal_force_cwd = false,
+    reveal_force_cwd = true,
   })
 end
 
@@ -328,8 +328,8 @@ require("neo-tree").setup({
         end,
 
         ["gq"] = function()
-          vim.fn.AlternateFileLoc_restore( 'edit' )
           tree_exec({ action = "close" })
+          vim.fn.AlternateFileLoc_restore( 'edit' )
         end,
 
 
@@ -513,14 +513,14 @@ require("neo-tree").setup({
 -- ─^  Config                                            ▲
 
 
-local function open_normal()
+local function open_startup()
   tree_exec({
     action = "show",
     position = "left",
   })
 end
 
-vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_normal, 10 ) end })
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 
 -- require("neo-tree.command").execute({ action = "show", position = "right" })
 -- require("neo-tree.command").execute({ action = "close", position = "right" })

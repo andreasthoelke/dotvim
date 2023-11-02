@@ -16,6 +16,9 @@ nnoremap <buffer> <leader><leader>is :call DirvishSortBySize()<cr>
 nnoremap <buffer> ,,is :lua DirvishShowSize()<cr>
 
 
+nnoremap <silent><buffer> - <Plug>(dirvish_up)
+
+
 
 " ─   NewBuf from path                                   ■
 " In dirvish i can use these standardized direction maps without prefix

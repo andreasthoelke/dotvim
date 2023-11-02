@@ -61,6 +61,13 @@ endfunc
 " AlternateFileLoc_save()
 " AlternateFileLoc_restore('new')
 
+func! AlternateFileLoc_info()
+  if !len( g:AlternateFileLoc ) | return | endif
+  let [path; maybeLinkExt] = g:AlternateFileLoc->split('‖')
+  return fnamemodify( path, ':t' )
+endfunc
+
+
 func! ClipBoard_LinkPath_linesearch( shorten )
   let filePath = expand('%:p')
   let lineStr = getline('.')
