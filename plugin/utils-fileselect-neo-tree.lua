@@ -520,7 +520,7 @@ local function open_normal()
   })
 end
 
--- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_normal })
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_normal, 10 ) end })
 
 -- require("neo-tree.command").execute({ action = "show", position = "right" })
 -- require("neo-tree.command").execute({ action = "close", position = "right" })
