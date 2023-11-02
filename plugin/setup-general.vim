@@ -252,6 +252,15 @@ func! SessionLoadForCWDStartify()
 endfunc
 
 
+func! MostRecentlyUsedLocalFile()
+  let cwd = getcwd()
+  let lines = readfile( '/Users/at/.config/nvim/.vim_mru_files', "\n" )
+  let idx = functional#findP( lines, {x-> x =~ cwd} )
+  return lines[idx]
+endfunc
+" MostRecentlyUsedLocalFile()
+" /Users/at/.config/nvim/.vim_mru_files
+
 " Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
 " Just activates saving the undo history

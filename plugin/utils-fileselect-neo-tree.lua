@@ -13,6 +13,7 @@ local fs = require("neo-tree.sources.filesystem")
 -- local Preview = require("neo-tree.sources.common.preview")
 
 -- lua putt( require('neo-tree.sources.manager').get_state_for_window() )
+-- lua putt( require('neo-tree.sources.manager').get_state_for_window().position )
 
 
 -- ─   Helpers                                           ■
@@ -26,6 +27,7 @@ function _G.Ntree_currentNode()
     linepath = state.position.node_id
   }
 end
+-- lua putt( Ntree_currentNode() )
 
 function _G.TreeRoot_infoStr( rootPath )
   local lpath = vim.split( rootPath, [[/]] )
@@ -327,7 +329,11 @@ require("neo-tree").setup({
           tree_exec({ action = "close" })
         end,
 
-        ["gq"] = function()
+        ["gq"] = function(s)
+          vim.g['AlternateTreeView'] = {
+            linepath = s.tree:get_node().path,
+            rootpath = manager.get_state_for_window().path
+          }
           tree_exec({ action = "close" })
           vim.fn.AlternateFileLoc_restore( 'edit' )
         end,
@@ -422,7 +428,7 @@ require("neo-tree").setup({
         ["<space>K"] = "show_file_details",
         ["<space><space>K"] = function(state)
             local node = state.tree:get_node()
-            vim.print(node.path)
+            putt(node)
           end,
         ["<space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
         ["<space>oc"] = { "order_by_created", nowait = false },
@@ -517,6 +523,7 @@ local function open_startup()
   tree_exec({
     action = "show",
     position = "left",
+    reveal_file = vim.fn.MostRecentlyUsedLocalFile(),
   })
 end
 
@@ -524,6 +531,20 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn
 
 -- require("neo-tree.command").execute({ action = "show", position = "right" })
 -- require("neo-tree.command").execute({ action = "close", position = "right" })
+
+
+
+function _G.AlternateTreeView_restore()
+  if vim.g['AlternateTreeView'] == nil then
+    vim.fn.Browse_parent( 'full' )
+  else
+    Ntree_launch( vim.g['AlternateTreeView'].linepath, vim.g['AlternateTreeView'].rootpath )
+  end
+end
+
+vim.keymap.set( 'n', 'gq', AlternateTreeView_restore )
+
+
 
 
 -- ─   Helpers                                           ■ ■
