@@ -55,13 +55,34 @@ end
 -- _ ▲ ▲
 
 
+-- to delete
+-- function _G.Ntree_switchToDirvish()
+--   local state = manager.get_state_for_window()
+--   local folder = vim.fn.fnamemodify( path, ":h" )
+--   vim.cmd( "edit " .. folder )
+--   vim.fn.SearchLine( path )
+--   tree_exec({ action = "close" })
+-- end
+
+
+local utils = require("neo-tree.utils")
+-- local parentPath, fname = utils.split_path( reveal_path )
+
+
 function _G.Ntree_launch( reveal_path, root_dir)
-  tree_exec({
-    position = "current",
-    dir = root_dir,
-    reveal_file = reveal_path,
-    reveal_force_cwd = true,
-  })
+  if not utils.is_subpath(root_dir, reveal_path) then
+    tree_exec({
+      position = "current",
+      dir = root_dir,
+    })
+  else
+    tree_exec({
+      position = "current",
+      dir = root_dir,
+      reveal_file = reveal_path,
+      reveal_force_cwd = true,
+    })
+  end
 end
 
 

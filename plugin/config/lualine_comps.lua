@@ -130,7 +130,7 @@ function _G.FileNamesInTabHandle_( tab_handle )
 end
 
 
-function _G.FilesInTab( tabid )
+function _G.FilesInTab_( tabid )
   local fileData = vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
     :map( function(winid)
       return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
@@ -148,6 +148,46 @@ end
 
 -- FilesInTab( vim.api.nvim_get_current_tabpage() )
 -- FilesInTab( vim.api.nvim_list_tabpages()[ 1 ] )
+
+local tree_manager = require 'neo-tree.sources.manager'
+
+
+function _G.FilesInTab( tabid )
+  local fileData = vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
+    :map( function(winid)
+      return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
+    end)
+    :filter( function(win)
+      return     vim.fn.win_gettype(win.wid) == ""
+      -- and vim.bo[win.bid].buftype == ""
+      -- Allow only normal windows and normal buftypes.
+    end)
+    :map( function(win)
+    local filetype = vim.api.nvim_buf_get_option( win.bid, 'filetype' )
+    local fname =
+      filetype == 'neo-tree'
+      and tree_manager.get_state_for_window( win.wid ).path
+      or vim.api.nvim_buf_get_name( win.bid )
+    return { fname = fname, bufid = win.bid }
+  end)
+
+  -- NOTE: sadly these iterators are very mutable/stateful. i could try to refactor to lua.fun?!
+  local fileDataNormal = vim.iter( fileData:totable() ):filter( function(win)
+    local filetype = vim.api.nvim_buf_get_option( win.bufid, 'filetype' )
+    return filetype ~= 'neo-tree'
+  end )
+
+  fileData =
+    #fileDataNormal:totable() > 0
+    and fileDataNormal
+    or fileData
+
+  return f.itToSet( fileData )
+end
+
+-- FilesInTa( vim.api.nvim_get_current_tabpage() )
+
+
 
 function _G.FileNamesInTabNumber( tab_number )
   return vim.tbl_filter( function(fname) return "" ~= fname end,
