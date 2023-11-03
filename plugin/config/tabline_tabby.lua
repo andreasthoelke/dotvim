@@ -135,10 +135,67 @@ end
 
 -- ─   Auto generate label text                         ──
 
+local utils = require("neo-tree.utils")
+
 -- Icon , parentFolder/cwd or lsp , fileWins
 -- Return a string with the first and potentially secondary file name with a bar in between.
 -- If the type of the secondary file differs from the first it will be preceded a b/w icon.
+-- show parent folder if file is in cwd
+-- ↑ show local cwd if window has one
+-- ↗ outer repo: show local repo root folder if file is outside of cwd
+-- ↘ inner repo: show local repo root folder if file is inside of cwd and inside of an inner repo
+
 function _G.Tab_GenLabel( tabid )
+  local tabFiles = FilesInTab( tabid )
+  if #tabFiles == 0 then return vim.fn.expand('%:r') end
+  local mainFile = tabFiles[1].fname
+  local iconKey = vim.fn.fnamemodify( mainFile, ':t' )
+
+  local localCwd = Tab_getCwd( tabid )
+  local hasLocalCwd = localCwd ~= vim.fn.getcwd(-1)
+  local  mainFile_isInCwd = utils.is_subpath( vim.fn.getcwd(-1), mainFile )
+  local  mainFile_projectRoot = vim.fn.FindProjectRootFolder( mainFile )
+
+  local folderStr
+  if hasLocalCwd then
+    folderStr = "↑ " .. Status_shortenFilename( vim.fn.fnamemodify( localCwd, ':t' ) )
+  elseif not mainFile_isInCwd then
+    local _, folderName = utils.split_path( mainFile_projectRoot )
+    folderStr = "↗ " .. Status_shortenFilename( folderName )
+  elseif mainFile_projectRoot ~= vim.fn.getcwd(-1) then
+    local _, folderName = utils.split_path( mainFile_projectRoot )
+    folderStr = "↘ " .. Status_shortenFilename( folderName )
+  else
+    folderStr = vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
+  end
+
+  local mainFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( mainFile, ':t:r' ) )
+  local fileWins = mainFile_shortName or ""
+  if #tabFiles > 1 then
+    local secondFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( tabFiles[#tabFiles].fname, ':t:r' ) )
+    fileWins = fileWins .. "▕ " .. secondFile_shortName
+  end
+
+  return iconKey, folderStr, fileWins, mainFile_projectRoot
+end
+
+-- table.pack( Tab_GenLabel( 1 ) )
+-- table.pack( Tab_GenLabel( vim.api.nvim_get_current_tabpage()  ) )
+-- lua putt( table.pack( Tab_GenLabe( vim.api.nvim_get_current_tabpage()  ) ) )
+
+-- Icon , parentFolder/cwd or lsp , fileWins
+-- Return a string with the first and potentially secondary file name with a bar in between.
+-- If the type of the secondary file differs from the first it will be preceded a b/w icon.
+-- show parent folder if file is in cwd
+-- ∪
+-- show local repo root folder 
+--   if window has a local cwd
+-- ∩
+-- show local repo root folder 
+--   if window has no local cwd
+--   but file is outside of cwd
+
+function _G.Tab_GenLabel_bak( tabid )
   local tabFiles = FilesInTab( tabid )
   if #tabFiles == 0 then return vim.fn.expand('%:r') end
   local mainFile = tabFiles[1].fname
@@ -161,7 +218,7 @@ function _G.Tab_GenLabel( tabid )
 end
 
 -- local iconKey, folder, fileWins = Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
--- Tab_GenLabel( vim.api.nvim_get_current_tabpage()  )
+-- table.pack( Tab_GenLabel( vim.api.nvim_get_current_tabpage()  ) )
 
 -- ─   Render                                           ──
 

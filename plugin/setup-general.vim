@@ -1246,6 +1246,21 @@ func! FindYarnPackageRootFolderOfCurrentBuffer()
   endif
 endfunc
 
+func! FindProjectRootFolder( filePath )
+  let relFilePath = findfile('package.json', fnamemodify( a:filePath, ':h' ).';')
+  let folderPathOfPackageJson = fnamemodify( relFilePath, ":p:h")
+  let gitRootFolder = finddir('.git/..', fnamemodify( a:filePath, ':h' ).';')
+  if len( gitRootFolder ) > len( folderPathOfPackageJson )
+    return gitRootFolder
+  else
+    return folderPathOfPackageJson
+  endif
+endfunc
+
+" FindProjectRootFolder( expand("%:p") )
+" FindProjectRootFolder( "/Users/at/Documents/Notes/vim_works.md" )
+
+
 " not currently using this
 " function! <SID>AutoProjectRootCD()
 "   try
