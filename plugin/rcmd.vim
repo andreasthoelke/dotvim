@@ -30,7 +30,9 @@ endfunc
 func! Rlist_Show()
   call Rlist_Highlight()
   " call Scala_showInFloat( [len(Rlist())] + Rlist() )
-  call FloatingBuffer( Rlist_path() )
+  " call FloatingBuffer( Rlist_path() )
+  call Path_Float( Rlist_path() )
+  " to test!
   echo "Rlist count: " len(Rlist())
 endfunc
 

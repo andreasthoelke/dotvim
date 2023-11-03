@@ -297,6 +297,13 @@ let MRU_Max_Entries = 3000
 
 " ~/.config/nvim/plugin/file-manage.vim#/nnoremap%20<silent>%20gp
 
+func! MRU_show()
+  " call FloatingBuffer( '/Users/at/.config/nvim/.vim_mru_files' )
+  call Path_Float( '/Users/at/.config/nvim/.vim_mru_files' )
+  normal gg^j
+endfunc
+" MRU_show()
+
 " ─   Shada                                             ──
 
 " Shada: (Shared Persistence) ---------
@@ -1221,9 +1228,10 @@ nnoremap <leader>ewd :echo getcwd()<cr>
 " nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
 " Set the root to a specific folder - not necessarily a git root folder.
-nnoremap <leader>cdg :cd %:p:h<cr>:pwd<cr>
-nnoremap <leader>cdl :lcd %:p:h<cr>:pwd<cr>
-nnoremap <leader>cdt :tcd %:p:h<cr>:pwd<cr>
+nnoremap <silent><leader>cdg :cd %:p:h<cr>:pwd<cr>
+nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1)<cr>:pwd<cr>
+nnoremap <silent><leader>cdl :lcd %:p:h<cr>:pwd<cr>
+nnoremap <silent><leader>cdt :tcd %:p:h<cr>:pwd<cr>
 
 " set the project root from any file in the project.
 " nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"

@@ -439,6 +439,26 @@ require("neo-tree").setup({
         ["<space>dd"] = "delete",
         ["<space>lr"] = "rename",  -- as "l re" is used for rcmd / rlist maps. "l lr" should be consistent with lsp rename
         ["<space>yy"] = "copy_to_clipboard",
+
+        ["yy"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.fn.ClipBoard_LinkPath( current_path, "", 'shorten' )
+        end,
+
+        ["<leader>cp"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.fn.ClipBoard_LinkPath( current_path, "", 'shorten' )
+        end,
+
+        ["<leader>cP"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
+        end,
+
+
         ["<space>xx"] = "cut_to_clipboard",
         ["<space>pp"] = "paste_from_clipboard",
         ["<space>yd"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options

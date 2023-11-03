@@ -263,13 +263,15 @@ set scrolloff=8
 
 " Scroll the current cursor line into view with <offset> lines
 func! ScrollOff( offset )
-  if winline() < a:offset
-    return
-  endif
+  " if winline() < a:offset
+  "   return
+  " endif
   let scof = &scrolloff
   exec 'set scrolloff=' . a:offset
   redraw
-  exec 'set scrolloff=' . l:scof
+  normal! kj
+  exec 'set scrolloff=8'
+  " call T_DelayedCmd( 'set scrolloff=' . scof, 400 )
 endfunc
 " call ScrollOff( 20 )
 

@@ -73,19 +73,23 @@ nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<c
 
 nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
 nnoremap <silent> gP         <cmd>Telescope frecency<cr>
-nnoremap <silent> g,p        <cmd>Telescope frecency workspace=CWD<cr>
+" nnoremap <silent> g,p        <cmd>Telescope frecency workspace=CWD<cr>
 nnoremap <silent> g,P        <cmd>Telescope frecency workspace=LSP<cr>
+nnoremap <silent> <leader>gp :call MRU_show()<cr>
 
-nnoremap <silent> go  <cmd>Telescope find_files hidden=true<cr>
-nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>
-
-" nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
-" nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p
-nnoremap <silent> <leader>gs :call v:lua.require("neo-tree.command").execute({ 'action': "show", 'reveal_file': expand('%:p'), 'reveal_force_cwd': v:true })<cr>
-" nnoremap <silent> <leader>go <cmd>Neotree show right toggle .<cr>
+nnoremap <silent> g,p <cmd>Telescope find_files hidden=true<cr>
+nnoremap <silent> go  <cmd>Telescope frecency workspace=CWD<cr>
 nnoremap <silent> <leader>go <cmd>Neotree show left toggle<cr>
 
 nnoremap <silent> gb <cmd>Telescope buffers<cr>
+nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>
+
+nnoremap <silent> <leader>gs :call v:lua.require("neo-tree.command").execute({ 'action': "show", 'reveal_file': expand('%:p'), 'reveal_force_cwd': v:true })<cr>
+
+" nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
+" nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p
+" nnoremap <silent> <leader>go <cmd>Neotree show right toggle .<cr>
+
 
 " nnoremap <silent> ,gs <cmd>NvimTreeFindFile<cr>
 " nnoremap <silent> ,go <cmd>NvimTreeToggle<cr>
