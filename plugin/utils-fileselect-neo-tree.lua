@@ -8,6 +8,7 @@ vim.g.neo_tree_remove_legacy_commands = 1
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
 
 local tree_exec = require 'neo-tree.command'.execute
+local renderer = require("neo-tree.ui.renderer")
 local manager = require 'neo-tree.sources.manager'
 local fs = require("neo-tree.sources.filesystem")
 -- local Preview = require("neo-tree.sources.common.preview")
@@ -347,7 +348,8 @@ require("neo-tree").setup({
           local folder = vim.fn.fnamemodify( path, ":h" )
           vim.cmd( "edit " .. folder )
           vim.fn.SearchLine( path )
-          tree_exec({ action = "close" })
+          -- tree_exec({ action = "close_window" })
+          renderer.close( state, true )
         end,
 
         ["gq"] = function(s)
@@ -355,7 +357,8 @@ require("neo-tree").setup({
             linepath = s.tree:get_node().path,
             rootpath = manager.get_state_for_window().path
           }
-          tree_exec({ action = "close" })
+          -- tree_exec({ action = "close_window" })
+          renderer.close( s, true )
           vim.fn.AlternateFileLoc_restore( 'edit' )
         end,
 
