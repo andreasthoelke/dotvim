@@ -23,10 +23,10 @@ func! tools_scala#bufferMaps()
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
   " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
   " NOTE these are now global as well: /Users/at/.config/nvim/plugin/repl.vim
-  nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
-  nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
-  nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
-  nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
+  " nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
+  " nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
+  " nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
+  " nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
 
   nnoremap <silent><buffer>        gsh :call Scala_ServerClientRequest_x()<cr>
 
@@ -46,14 +46,28 @@ func! tools_scala#bufferMaps()
   nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
 
 
+
+
+  call tools_scala#bufferMaps_shared()
+
+endfunc
+
+func! tools_scala#bufferMaps_shared()
+
 " ─   Regex search maps                                  ■
 
 " let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)\zs'
 " let g:Scala_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)\s\zs'
 
 " To be tested!
-  nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file', g:Scala_MainStartPattern )<cr>
-  nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global', g:Scala_TopLevPattern )<cr>
+  " nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file', g:Scala_MainStartPattern )<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global', g:Scala_TopLevPattern )<cr>
+
+  nnoremap <silent><buffer> gs;  :call v:lua.Search_mainPatterns( 'file' )<cr>
+  nnoremap <silent><buffer> gs:  :call v:lua.Search_mainPatterns( 'global' )<cr>
+
+  nnoremap <silent><buffer> gsf  :Telescope current_buffer_fuzzy_find<cr>
+  nnoremap <silent><buffer> gsg  :Telescope live_grep<cr>
 
   nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
@@ -64,12 +78,6 @@ func! tools_scala#bufferMaps()
 
 " ─^  Regex search maps                                  ▲
 
-
-  call tools_scala#bufferMaps_shared()
-
-endfunc
-
-func! tools_scala#bufferMaps_shared()
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
 

@@ -52,7 +52,7 @@ let g:labelPttn = '\v^\s*("|--|\#)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,50}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
-nnoremap <silent> q :call HeadingForw()<cr>
+nnoremap <silent> q :call HeadingForw()<cr>:call ScrollOff(27)<cr>
 " nnoremap œ :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
@@ -62,7 +62,7 @@ func! HeadingForw()
   " horizontal/ is too narrow.
 endfunc
 
-nnoremap <silent> Q :call HeadingBackw()<cr>
+nnoremap <silent> Q :call HeadingBackw()<cr>:call ScrollOff(10)<cr>
 " nnoremap Œ :call HeadingBackw()<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()

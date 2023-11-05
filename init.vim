@@ -309,6 +309,8 @@ Plug 'folke/trouble.nvim'
 Plug 'folke/lsp-colors.nvim'
 
 Plug 'SmiteshP/nvim-navic'
+Plug 'numToStr/Comment.nvim'
+Plug 'SmiteshP/nvim-navbuddy'
 
 " Completion engine
 " Plug 'hrsh7th/nvim-cmp'

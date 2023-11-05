@@ -12,6 +12,42 @@ local s = require 'utils.string'
 
 local action_state = require "telescope.actions.state"
 
+local function move_selection_next_with_space()
+  return   actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+end
+
+local function selection_center()
+  return   actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+end
+
+local function move_selection_previous_with_space()
+  return   actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_previous
+    + actions.move_selection_next
+    + actions.move_selection_next
+    + actions.move_selection_next
+end
+
+
 local function get_path_link()
   local selection = action_state.get_selected_entry()
 
@@ -99,6 +135,75 @@ local NewBuf = f.curry( function( adirection, pbn )
 end)
 
 
+function _G.ReverseColors(lineNumber, startColumn, endColumn)
+  local buf = vim.api.nvim_get_current_buf()
+  local ns_id = vim.api.nvim_create_namespace('reverseColors')
+  local opts = {
+    end_col = endColumn + 1,
+    hl_group = 'Reverse',
+    priority = 100
+  }
+  vim.api.nvim_buf_set_extmark(buf, ns_id, lineNumber, startColumn, opts)
+  vim.cmd('redraw')
+end
+
+-- ReverseColors( 139, 14, 26 )
+
+function _G.ReverseColors_clear()
+ local buf = vim.api.nvim_get_current_buf()
+ local ns_id = vim.api.nvim_create_namespace('reverseColors')
+ vim.api.nvim_buf_clear_namespace(buf, ns_id, 1, -1)
+end
+
+-- ReverseColors_clear()
+
+
+local preview = f.curry( function( next_previous, mode, pbn )
+  if     next_previous == 'next' then
+    actions.move_selection_next( pbn )
+  elseif next_previous == 'previous' then
+    actions.move_selection_previous( pbn )
+  elseif next_previous == 'current' then
+    -- don't move
+  end
+
+  local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+
+  actions.close( pbn )
+
+  local fpath, maybeLink = get_path_link()
+
+  if vim.fn.expand '%:p' ~= fpath then
+    vim.cmd.edit( fpath )
+  end
+
+  ReverseColors_clear()
+
+  local hl_line, hl_col
+  if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
+
+    local selection = action_state.get_selected_entry()
+    local start_index = vim.fn.match( selection.text, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple search, guessing a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+
+    ReverseColors( maybeLink.lnum -1, start_index, end_index )
+    vim.cmd 'normal zz'
+  end
+
+  resume( { initial_mode = mode } )
+end )
+
+-- vim.api.nvim_win_get_cursor(0)[1]
+-- ("eins"):len()
+
+-- string.find( "  if     lineZio && lineCats", "Zio" )
+-- vim.fn.match( "  if     lineZio && lineCats", "zio" )
 
 -- local entry_display = require "telescope.pickers.entry_display"
 -- vim.fn.split( 'eins_zwei', '_' )
@@ -140,8 +245,18 @@ Telesc = require('telescope').setup{
 -- ─   Mappings                                         ──
     mappings = {
       i = {
-        ["<c-j>"] = function() vim.fn.feedkeys( ".*" ) end,
+        ["<c-l>"] = function() vim.fn.feedkeys( ".*" ) end,
+        ["<c-space>"] = function() vim.fn.feedkeys( "<space>" ) end,
 
+        ["<c-j>"] = move_selection_next_with_space(),
+        ["<c-k>"] = move_selection_previous_with_space(),
+
+        ["<c-n>"] = preview "next" "insert",
+        ["<c-p>"] = preview "previous" "insert",
+        ["<c-i>"] = preview 'current' 'normal',
+
+        ["<c-o>"] = actions.cycle_history_prev,
+        ["<c-m>"] = actions.cycle_history_next,
 
 -- ─   NewBuf maps i                                    ──
         -- NewBuf is consistent with ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/LINE-WORD
@@ -149,6 +264,7 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
+        ['<cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
@@ -184,38 +300,59 @@ Telesc = require('telescope').setup{
         ['<c-w>s'] = NewBuf 'down',
         ['<c-w>S'] = { NewBuf 'down_back', type = 'action', opts = { nowait = true } },
 
+        ['<cr>']   = actions.select_default,
 
+-- ─   Exchange                                         ──
 
+        ["<leader>dd"] = actions.delete_buffer,
         ["<leader><c-o>"] = trouble.open_with_trouble,
+
         ["<c-q>"] = actions.send_selected_to_qflist,
-        ["<c-d>"] = actions.delete_buffer,
-        ["<C-p>"] = actions.cycle_previewers_next,
+
         ["m"] = { actions.toggle_selection, type = "action", opts = { nowait = true } },
         [",m"] = actions.select_all,
         [",M"] = actions.drop_all,
+
         -- ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
 
-        -- ["<esc>"] = actions.close,
-        -- ["<CR>"] = actions.select_default,
-        -- ["s"] = actions.select_horizontal,
-        -- ["v"] = actions.select_vertical,
-        -- ["t"] = actions.select_tab,
+-- ─   View                                             ──
         ["<c-y>"] = actions.preview_scrolling_up,
         ["<c-e>"] = actions.preview_scrolling_down,
-        -- ["n"] = actions.cycle_history_next,
-        -- ["p"] = actions.cycle_history_prev,
-        -- ["j"] = actions.move_selection_next,
-        -- ["k"] = actions.move_selection_previous,
-        -- ["c"] = actions.close,
-        -- ["q"] = actions.send_to_qflist + actions.open_qflist,
-        -- ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
-        -- ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
+
+        ["n"] = preview 'next' 'normal',
+        ["p"] = preview 'previous' 'normal',
+        ["<c-i>"] = preview 'current' 'normal',
+
+        ["<c-o>"] = actions.cycle_history_prev,
+        ["<c-m>"] = actions.cycle_history_next,
+
+        ["j"] = move_selection_next_with_space(),
+        ["k"] = move_selection_previous_with_space(),
+
+        ["zz"] = selection_center(),
+
+        [",,b"] = function(pbn)
+          local out = action_state.get_current_picker( pbn )
+          -- local out = action_state.get_selected_entry( )
+          -- putt(vim.tbl_keys(out))
+
+          local selection = action_state.get_selected_entry()
+
+          local mt = getmetatable(selection)
+          -- putt(out.highlighter)
+          putt(mt)
+        end,
+
 
       },
     },
+
+
+-- ─   Layout                                           ──
+
     layout_strategy = 'vertical',
     sorting_strategy = 'ascending',
-    scroll_strategy = 'limit',
+    scroll_strategy = 'cycle',
     dynamic_preview_title = true,
     scroll_speed = 1,
     -- sort_lastused = true,
@@ -234,13 +371,13 @@ Telesc = require('telescope').setup{
       },
       vertical = {
         width = 0.47,
-        height = 0.68,
+        height = 0.78,
         anchor = 'E',
         dynamic_preview_title = true,
         prompt_position = 'top',
         sorting_strategy = 'ascending',
         scroll_speed = 1,
-        preview_height = 0.5,
+        preview_height = 0.47,
       },
       center = {
         width = 0.92,

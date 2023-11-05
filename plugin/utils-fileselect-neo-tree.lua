@@ -343,6 +343,9 @@ require("neo-tree").setup({
 
         ["<leader>td"] = function(s) Tablabel_set_folder( s.tree:get_node().path ) end,
 
+        ["<localleader>v"] = function() vim.cmd "normal! v" end,
+        ["<localleader><localleader>v"] = function() vim.cmd "normal! V" end,
+
         ["<c-space>"] = function(state)
           local path = state.tree:get_node().path
           local folder = vim.fn.fnamemodify( path, ":h" )
@@ -459,6 +462,18 @@ require("neo-tree").setup({
           local node = state.tree:get_node()
           local current_path = node:get_id()
           vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
+        end,
+
+        ["<leader>Os"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.cmd( "silent !open " .. current_path )
+        end,
+
+        ["<leader>Oc"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.cmd( "silent !code " .. current_path )
         end,
 
 

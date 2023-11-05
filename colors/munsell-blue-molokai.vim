@@ -796,6 +796,25 @@ hi! LuLine_z_i guifg=#121742 guibg=#47555B
 " ─^  Lualine                                            ▲
 
 
+" ─   Navic & Navbuddy                                   ■
+
+	" `NavbuddyName`  - highlight for name in source buffer
+	" `NavbuddyScope` - highlight for scope of context in source buffer
+	" `NavbuddyFloatBorder` - Floatborder highlight
+	" `NavbuddyNormalFloat` - Float normal highlight
+
+hi! link NavbuddyName Search
+" hi! link NavbuddyName CursorLine
+" hi! link NavbuddyName BlackBG
+" hi! link NavbuddyName BlackBGsoft
+" hi! link NavbuddyScope CursorLine
+hi! link NavbuddyScope BlackBGsoft
+hi! NavbuddyCursorLine gui=reverse
+
+
+" ─^  Navic & Navbuddy                                   ▲
+
+hi! Reverse gui=reverse
 
 
 hi! htmlLink guifg=#42606B guibg=#030303

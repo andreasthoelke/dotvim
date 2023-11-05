@@ -399,6 +399,24 @@ function M.Search_gs()
   } )
 end
 
+vim.keymap.set( 'n',
+  '<leader>ga', function() require( 'telescope.builtin' )
+  .current_buffer_fuzzy_find({
+      initial_mode = 'normal',
+      default_text = vim.fn.expand '<cword>'
+    })
+  end )
+
+
+function _G.Search_gs()
+  require('telescope.builtin').live_grep({
+    -- default_text = [[ab]],
+    search = "List",
+    glob_pattern = scala_interest_files,
+    cwd = scala_parent_dir,
+  } )
+end
+
 function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
   local paths =
     searchScope == 'global'
