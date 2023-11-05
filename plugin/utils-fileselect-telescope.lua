@@ -1,6 +1,7 @@
 local M = {}
 
 local actions = require("telescope.actions")
+local action_state = require "telescope.actions.state"
 local resume = require("telescope.builtin").resume
 local action_set = require "telescope.actions.set"
 local trouble = require("trouble.providers.telescope")
@@ -8,9 +9,13 @@ local easypick = require("easypick")
 local f = require 'utils.functional'
 local s = require 'utils.string'
 
+-- -- NOTE: getting some additional state details:
+-- local prompt_title = action_state.get_current_picker( pbn ).prompt_title
+-- { "__cycle_layout_list", "__scrolling_limit", "_selection_row", "_on_lines", "tiebreak", "window", "original_win_id", "get_status_text", "file_ignore_patterns", "prompt_bufnr", "_original_mode", "stats", "_multi", "preview_win", "push_cursor_on_edit", "preview_border", "layout_strategy", "prompt_win", "max_results", "manager", "scroller", "prompt_title", "layout", "_selection_entry", "initial_mode", "highlighter", "get_window_options", "prompt_border", "results_border", "sorting_strategy", "previewer", "push_tagstack_on_edit", "selection_strategy", "cache_picker", "scroll_strategy", "results_win", "results_bufnr", "create_layout", "preview_bufnr", "layout_config", "get_selection_window", "sorter", "results_title", "attach_mappings", "wrap_results", "multi_icon", "prompt_prefix", "_finder_attached", "preview_title", "selection_caret", "_on_input_filter_cb", "entry_prefix", "finder", "all_previewers", "current_previewer_index", "_find_id", "_completion_callbacks", "track" }
+
+
 -- ─   Helpers                                          ──
 
-local action_state = require "telescope.actions.state"
 
 local function move_selection_next_with_space()
   return   actions.move_selection_next
@@ -48,13 +53,13 @@ local function move_selection_previous_with_space()
 end
 
 
-local function get_path_link()
+local function get_path_link( prompt_title, search_term )
   local selection = action_state.get_selected_entry()
 
   -- local mt = getmetatable(selection)
   -- local cwdOfFile = vim.tbl_get( mt, 'cwd' ) or ""
 
-  -- putt( selection )
+  -- putt( prompt_title )
 
   local path, link
 
@@ -74,6 +79,39 @@ local function get_path_link()
     path = vim.tbl_get( selection, 'filename' )
     link = {
       searchTerm = vim.tbl_get( selection, 'cmd' )
+    }
+
+    -- CASE: LIVE GREP
+  elseif prompt_title == "Live Grep" then
+    local start_index = vim.fn.match( selection.text, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+    path = selection.filename
+    link = {
+      lnum = selection.lnum,
+      col  = start_index,
+      col_end = end_index,
+    }
+
+
+    -- CASE: FUZZY BUFFER
+  elseif prompt_title == "Current Buffer Fuzzy" then
+    local start_index = vim.fn.match( selection.text, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+    path = selection.filename
+    link = {
+      lnum = selection.lnum,
+      col  = start_index,
+      col_end = end_index,
     }
 
     -- CASE: Filename pickers with optional linenum and cursor column
@@ -98,25 +136,60 @@ function _G.Defer_cmd( cmd, timeout )
   vim.defer_fn( vim.cmd( cmd ), timeout )
 end
 
+local function closeAndResetPreview( pbn )
+  actions.close( pbn )
+  ReverseColors_clear()
+
+  if not vim.tbl_isempty( _G.TelescPreview_resetPos ) then
+    -- Go gack to original position before using preview
+    vim.cmd.edit( _G.TelescPreview_resetPos.filename )
+    vim.api.nvim_win_set_cursor( 0, {_G.TelescPreview_resetPos.lnum, _G.TelescPreview_resetPos.col -1})
+    _G.TelescPreview_resetPos = {}
+  end
+end
+
+local function closeAndUpdateHighlight( pbn )
+  local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+  local prompt_title = action_state.get_current_picker( pbn ).prompt_title
+
+  actions.close( pbn )
+
+  local _, maybeLink = get_path_link( prompt_title, search_term )
+
+  if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+    local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
+    vim.cmd 'normal zz'
+    ReverseColors_clear()
+    -- HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
+
+    vim.cmd( 'let @/ = "' .. search_term .. '"' )
+    vim.cmd( 'set hlsearch' )
+  end
+end
+
 
 local NewBuf = f.curry( function( adirection, pbn )
+  local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+  local prompt_title = action_state.get_current_picker( pbn ).prompt_title
+
+  -- putt( title )
+
   -- We always temp-close the prompt, then run the NewBuf action and link focus
-  actions.close( pbn )
+  -- actions.close( pbn )
+  closeAndUpdateHighlight( pbn )
   -- Closing the picker before we process the path_link, brings the cursor and focus back to the previous buffer, which allows to e.g. run "verb map" and perhaps access some buffer vars(?)
 
-  local fpath, maybeLink = get_path_link()
+  local fpath, maybeLink = get_path_link( prompt_title, search_term )
   local direction, maybe_back = table.unpack( vim.fn.split( adirection, [[_]] ) )
   local cmd = vim.fn.NewBufCmds( fpath, vim.fn.winnr '#' )[ direction ]
-
-  -- putt( adirection )
-  -- putt( cmd )
-  -- putt( maybeLink )
 
   -- Open the new buffer
   vim.cmd( cmd )
 
   if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
+    local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
     vim.cmd 'normal zz'
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
     vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
@@ -135,12 +208,13 @@ local NewBuf = f.curry( function( adirection, pbn )
 end)
 
 
-function _G.ReverseColors(lineNumber, startColumn, endColumn)
+function _G.HighlightRange(HlGroup, lineNumber, startColumn, endColumn)
   local buf = vim.api.nvim_get_current_buf()
   local ns_id = vim.api.nvim_create_namespace('reverseColors')
   local opts = {
     end_col = endColumn + 1,
-    hl_group = 'Reverse',
+    hl_group = HlGroup,
+    -- hl_group = 'Search',
     priority = 100
   }
   vim.api.nvim_buf_set_extmark(buf, ns_id, lineNumber, startColumn, opts)
@@ -157,8 +231,12 @@ end
 
 -- ReverseColors_clear()
 
+_G.TelescPreview_resetPos = {}
+
 
 local preview = f.curry( function( next_previous, mode, pbn )
+
+  -- 1. MOVE SELECTION (potentially)
   if     next_previous == 'next' then
     actions.move_selection_next( pbn )
   elseif next_previous == 'previous' then
@@ -168,36 +246,41 @@ local preview = f.curry( function( next_previous, mode, pbn )
   end
 
   local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+  local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 
+  -- 2. CLOSE PROMPT (tempoarily)
   actions.close( pbn )
 
-  local fpath, maybeLink = get_path_link()
+  -- 2a. BACKUP ORG POS BEFORE USING PREVIEW
+  if vim.tbl_isempty( _G.TelescPreview_resetPos ) then
+    _G.TelescPreview_resetPos = {
+      filename = vim.fn.expand '%:p',
+      lnum = vim.api.nvim_win_get_cursor(0)[1],
+      col = vim.api.nvim_win_get_cursor(0)[2],
+    }
+  end
 
+  local fpath, maybeLink = get_path_link( prompt_title, search_term )
+
+  -- 3. OPEN NEW BUFFER (if needed)
   if vim.fn.expand '%:p' ~= fpath then
     vim.cmd.edit( fpath )
   end
 
-  ReverseColors_clear()
-
-  local hl_line, hl_col
+  -- 4. FOCUS & HIGHLIGHT LINE & KEYWORD
   if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col -1})
-
-    local selection = action_state.get_selected_entry()
-    local start_index = vim.fn.match( selection.text, search_term )
-    local end_index = start_index + search_term:len() -1
-    if start_index == -1 then
-      -- if the search term can not be found by simple search, guessing a possible fuzzy match by pointing to a match of the first char.
-      start_index = vim.fn.match( selection.text, s.head( search_term ) )
-      end_index = start_index
-    end
-
-    ReverseColors( maybeLink.lnum -1, start_index, end_index )
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 0})
+    -- no need to set the cursor column here, will be set on committing/closing
     vim.cmd 'normal zz'
+
+    ReverseColors_clear()
+    HighlightRange( 'Reverse', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
   end
 
+  -- 5. BRING BACK THE PROMPT
   resume( { initial_mode = mode } )
 end )
+
 
 -- vim.api.nvim_win_get_cursor(0)[1]
 -- ("eins"):len()
@@ -251,12 +334,13 @@ Telesc = require('telescope').setup{
         ["<c-j>"] = move_selection_next_with_space(),
         ["<c-k>"] = move_selection_previous_with_space(),
 
-        ["<c-n>"] = preview "next" "insert",
-        ["<c-p>"] = preview "previous" "insert",
-        ["<c-i>"] = preview 'current' 'normal',
+        ["<c-n>"] = preview 'next' 'insert',
+        ["<c-p>"] = preview 'previous' 'insert',
+        ["<c-i>"] = preview 'current' 'insert',
 
         ["<c-o>"] = actions.cycle_history_prev,
         ["<c-m>"] = actions.cycle_history_next,
+
 
 -- ─   NewBuf maps i                                    ──
         -- NewBuf is consistent with ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/LINE-WORD
@@ -264,7 +348,8 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
-        ['<cr>']   = actions.select_default,
+        ['<cr>']   = NewBuf 'full',
+        -- ['<cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
@@ -287,6 +372,7 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
+        ['<cr>']   = NewBuf 'full',
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
@@ -300,7 +386,9 @@ Telesc = require('telescope').setup{
         ['<c-w>s'] = NewBuf 'down',
         ['<c-w>S'] = { NewBuf 'down_back', type = 'action', opts = { nowait = true } },
 
-        ['<cr>']   = actions.select_default,
+        -- ['<cr>']   = actions.select_default,
+        -- ["<esc>"] = function() vim.print 'hi' end,
+        ["<esc>"] = closeAndResetPreview,
 
 -- ─   Exchange                                         ──
 

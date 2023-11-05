@@ -117,6 +117,7 @@ endfunc
 
 lua << EOF
 function FloatWin_close ()
+  ReverseColors_clear()
   require("neo-tree.sources.common.preview").hide()
 
   for _, win in ipairs(vim.api.nvim_list_wins()) do
