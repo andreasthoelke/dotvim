@@ -24,7 +24,7 @@ Plug 'mrbjarksen/neo-tree-diagnostics.nvim'
 Plug 'miversen33/netman.nvim'
 Plug 's1n7ax/nvim-window-picker'
 
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }

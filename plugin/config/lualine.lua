@@ -178,7 +178,8 @@ local lualine_config = {
     },
     lualine_c = {},
     lualine_x = {},
-    lualine_y = {},
+    lualine_y = { 'vim.fn.line(".")' },
+    -- lualine_y = {},
     lualine_z = {}
   },
 

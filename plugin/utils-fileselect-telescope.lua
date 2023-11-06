@@ -16,6 +16,12 @@ local s = require 'utils.string'
 
 -- ─   Helpers                                          ──
 
+local append_to_history = function(prompt_bufnr)
+  action_state
+    .get_current_history()
+    :append(action_state.get_current_line(), action_state.get_current_picker(prompt_bufnr))
+end
+
 
 local function move_selection_next_with_space()
   return   actions.move_selection_next
@@ -137,6 +143,7 @@ function _G.Defer_cmd( cmd, timeout )
 end
 
 local function closeAndResetPreview( pbn )
+  append_to_history( pbn )
   actions.close( pbn )
   ReverseColors_clear()
 
@@ -157,11 +164,11 @@ local function closeAndUpdateHighlight( pbn )
   local _, maybeLink = get_path_link( prompt_title, search_term )
 
   if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
-    vim.cmd 'normal zz'
+    -- local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
+    -- vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
+    -- vim.cmd 'normal zz'
     ReverseColors_clear()
-    -- HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
+    HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
 
     vim.cmd( 'let @/ = "' .. search_term .. '"' )
     vim.cmd( 'set hlsearch' )
@@ -169,16 +176,28 @@ local function closeAndUpdateHighlight( pbn )
 end
 
 
+
 local NewBuf = f.curry( function( adirection, pbn )
   local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+  search_term = f.last( vim.fn.split( search_term, [[\*]] ) )
+
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 
   -- putt( title )
 
+  if prompt_title == "Spelling Suggestions" then
+    actions.select_default( pbn )
+    return
+  end
+
+  append_to_history( pbn )
+
   -- We always temp-close the prompt, then run the NewBuf action and link focus
-  -- actions.close( pbn )
-  closeAndUpdateHighlight( pbn )
+  actions.close( pbn )
+  -- closeAndUpdateHighlight( pbn )
   -- Closing the picker before we process the path_link, brings the cursor and focus back to the previous buffer, which allows to e.g. run "verb map" and perhaps access some buffer vars(?)
+
+  ReverseColors_clear()
 
   local fpath, maybeLink = get_path_link( prompt_title, search_term )
   local direction, maybe_back = table.unpack( vim.fn.split( adirection, [[_]] ) )
@@ -187,10 +206,16 @@ local NewBuf = f.curry( function( adirection, pbn )
   -- Open the new buffer
   vim.cmd( cmd )
 
-  if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+  if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 1})
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
     local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
     vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
     vim.cmd 'normal zz'
+
+    HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
+    vim.cmd( 'let @/ = "' .. search_term .. '"' )
+    vim.cmd( 'set hlsearch' )
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
     vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
   end
@@ -246,6 +271,7 @@ local preview = f.curry( function( next_previous, mode, pbn )
   end
 
   local search_term = action_state.get_current_picker( pbn ):_get_prompt()
+  search_term = f.last( vim.fn.split( search_term, [[\*]] ) )
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 
   -- 2. CLOSE PROMPT (tempoarily)
@@ -339,7 +365,7 @@ Telesc = require('telescope').setup{
         ["<c-i>"] = preview 'current' 'insert',
 
         ["<c-o>"] = actions.cycle_history_prev,
-        ["<c-m>"] = actions.cycle_history_next,
+        ["µ"]     = actions.cycle_history_next,
 
 
 -- ─   NewBuf maps i                                    ──
@@ -348,7 +374,7 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
-        ['<cr>']   = NewBuf 'full',
+        ["<cr>"] = NewBuf 'full',
         -- ['<cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
@@ -372,7 +398,8 @@ Telesc = require('telescope').setup{
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
-        ['<cr>']   = NewBuf 'full',
+        ["<cr>"] = NewBuf 'full',
+        -- ['<cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
@@ -388,6 +415,7 @@ Telesc = require('telescope').setup{
 
         -- ['<cr>']   = actions.select_default,
         -- ["<esc>"] = function() vim.print 'hi' end,
+        -- ["<cr>"] = function() vim.print 'hi' end,
         ["<esc>"] = closeAndResetPreview,
 
 -- ─   Exchange                                         ──
@@ -412,7 +440,7 @@ Telesc = require('telescope').setup{
         ["<c-i>"] = preview 'current' 'normal',
 
         ["<c-o>"] = actions.cycle_history_prev,
-        ["<c-m>"] = actions.cycle_history_next,
+        ["µ"]     = actions.cycle_history_next,
 
         ["j"] = move_selection_next_with_space(),
         ["k"] = move_selection_previous_with_space(),

@@ -432,6 +432,13 @@ end)
 -- f.concat( {1, 2, 3} )( {10, 11} )
 -- f.concat {1, 2, 3} {10, 11}
 
+
+f.last = function( tbl )
+  return tbl[ #tbl ]
+end
+-- f.last( vim.fn.split( [[^(#|function|m|f\.|local\sfunc|-- ─ |local.*curry).*someStr]], [[\*]] ) )
+
+
 return f
 
 

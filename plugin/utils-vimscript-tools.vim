@@ -33,7 +33,7 @@ endfunc
 func! SourceFile ()
   silent exec "w"
   if &filetype == 'lua'
-    lua require'plenary.reload'.reload_module( LuaModuleName() )
+    lua require'plenary.reload'.reload_module( vim.fn.LuaModuleName() )
     luafile %
   else
     exec 'source %'

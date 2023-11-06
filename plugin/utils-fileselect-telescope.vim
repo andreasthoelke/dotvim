@@ -40,7 +40,7 @@ EOF
 nnoremap <leader>te :Telescope 
 
 nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
-nnoremap <leader>ts <cmd>Telescope sessions<cr>
+" nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 " nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
@@ -55,6 +55,8 @@ nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fF <cmd>Telescope file_browser<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+
+nnoremap gS <cmd>Telescope spell_suggest<cr>
 
 nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
 
