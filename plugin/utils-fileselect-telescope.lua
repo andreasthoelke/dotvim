@@ -72,6 +72,7 @@ local function get_path_link( prompt_title, search_term )
   local path, link
 
   -- CASE: Keymaps picker
+  -- ISSUE: preview only partially works, sometimes gets a folder as filepath?
   if     prompt_title == "Key Maps" then
     local keymap_props = Keymap_props( selection.mode, selection.lhs )
     -- using keymap_props.filename and lnum to get that lineText
@@ -94,14 +95,6 @@ local function get_path_link( prompt_title, search_term )
     -- CASE: Vim help tags. This picker provides a search command field(?!) ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/cmdˍ=ˍfield
     --                      An alternative approach would be to change the NewBuf command to include "help" like here: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/elseifˍcmdˍ
   elseif prompt_title == "Help" then
-  -- elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
-    path = vim.tbl_get( selection, 'filename' )
-    link = {
-      searchTerm = vim.tbl_get( selection, 'cmd' )
-    }
-
-    -- TODO
-  elseif prompt_title == "Registers" then
   -- elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
     link = {
@@ -144,18 +137,11 @@ local function get_path_link( prompt_title, search_term )
 
     -- CASE: AST GREP
   elseif prompt_title == "Ast Grep" then
-    local start_index = vim.fn.match( selection.text, search_term )
-    local end_index = start_index + search_term:len() -1
-    if start_index == -1 then
-      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
-      start_index = vim.fn.match( selection.text, s.head( search_term ) )
-      end_index = start_index
-    end
     path = selection.filename
     link = {
       lnum = selection.lnum,
-      col  = start_index,
-      col_end = end_index,
+      col  = selection.col - 1,
+      col_end = selection.colend - 2
     }
 
 
@@ -188,9 +174,11 @@ local function closeAndResetPreview( pbn )
 
   if not vim.tbl_isempty( _G.TelescPreview_resetPos ) then
     -- Go gack to original position before using preview
-    local col = _G.TelescPreview_resetPos.col == 0 and 0 or _G.TelescPreview_resetPos.col - 1
+    -- local col = _G.TelescPreview_resetPos.col == 0 and 0 or _G.TelescPreview_resetPos.col - 1
+    local col = _G.TelescPreview_resetPos.col
     vim.cmd.edit( _G.TelescPreview_resetPos.filename )
     vim.api.nvim_win_set_cursor( 0, {_G.TelescPreview_resetPos.lnum, col})
+    vim.cmd 'normal zz'
     _G.TelescPreview_resetPos = {}
   end
 end
@@ -227,7 +215,10 @@ local NewBuf = f.curry( function( adirection, pbn )
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
   -- putt( title )
 
-  if prompt_title == "Spelling Suggestions" then
+  if
+    prompt_title == "Spelling Suggestions" or
+    prompt_title == "Registers"
+  then
     actions.select_default( pbn )
     return
   end
