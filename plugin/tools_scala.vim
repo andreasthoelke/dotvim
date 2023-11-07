@@ -66,8 +66,10 @@ func! tools_scala#bufferMaps_shared()
   nnoremap <silent><buffer> gs;  :call v:lua.Search_mainPatterns( 'file' )<cr>
   nnoremap <silent><buffer> gs:  :call v:lua.Search_mainPatterns( 'global' )<cr>
 
-  nnoremap <silent><buffer> gsf  :Telescope current_buffer_fuzzy_find<cr>
-  nnoremap <silent><buffer> gsg  :Telescope live_grep<cr>
+  " nnoremap <silent><buffer> gsf  :Telescope current_buffer_fuzzy_find<cr>
+  " nnoremap <silent><buffer> gsg  :Telescope live_grep<cr>
+  nnoremap <silent><buffer> gsf  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+  nnoremap <silent><buffer> gsg  :call v:lua.Telesc_launch('live_grep')<cr>
 
   nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>

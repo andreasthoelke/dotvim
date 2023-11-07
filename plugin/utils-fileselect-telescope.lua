@@ -66,29 +66,51 @@ local function get_path_link( prompt_title, search_term )
   -- local cwdOfFile = vim.tbl_get( mt, 'cwd' ) or ""
 
   -- putt( prompt_title )
+  -- putt( selection )
+  -- putt( search_term )
 
   local path, link
 
   -- CASE: Keymaps picker
-  if     vim.tbl_get( selection, 'mode' ) ~= nil and vim.tbl_get( selection, 'lhs' ) ~= nil then
-    -- local keymap_props = require 'utils.general'.Keymap_props( selection.mode, selection.lhs )
+  if     prompt_title == "Key Maps" then
     local keymap_props = Keymap_props( selection.mode, selection.lhs )
+    -- using keymap_props.filename and lnum to get that lineText
+    local lineText = vim.fn.readfile( vim.fn.fnamemodify( keymap_props.filename, ':p' ) )[ keymap_props.lnum ]
+    local start_index = vim.fn.match( lineText, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+
     path = keymap_props.filename
     link = {
       lnum = keymap_props.lnum,
-      col = 1
+      col  = start_index,
+      col_end = end_index,
     }
 
     -- CASE: Vim help tags. This picker provides a search command field(?!) ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/cmdˍ=ˍfield
     --                      An alternative approach would be to change the NewBuf command to include "help" like here: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/elseifˍcmdˍ
-  elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
+  elseif prompt_title == "Help" then
+  -- elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
     link = {
       searchTerm = vim.tbl_get( selection, 'cmd' )
     }
 
+    -- TODO
+  elseif prompt_title == "Registers" then
+  -- elseif vim.tbl_get( selection, 'cmd' ) ~= nil then
+    path = vim.tbl_get( selection, 'filename' )
+    link = {
+      searchTerm = vim.tbl_get( selection, 'cmd' )
+    }
+
+
     -- CASE: LIVE GREP
-  elseif prompt_title == "Live Grep" then
+  elseif prompt_title == "Live Grep" or prompt_title == "rx sel" then
     local start_index = vim.fn.match( selection.text, search_term )
     local end_index = start_index + search_term:len() -1
     if start_index == -1 then
@@ -120,6 +142,23 @@ local function get_path_link( prompt_title, search_term )
       col_end = end_index,
     }
 
+    -- CASE: AST GREP
+  elseif prompt_title == "Ast Grep" then
+    local start_index = vim.fn.match( selection.text, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+    path = selection.filename
+    link = {
+      lnum = selection.lnum,
+      col  = start_index,
+      col_end = end_index,
+    }
+
+
     -- CASE: Filename pickers with optional linenum and cursor column
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
@@ -149,11 +188,14 @@ local function closeAndResetPreview( pbn )
 
   if not vim.tbl_isempty( _G.TelescPreview_resetPos ) then
     -- Go gack to original position before using preview
+    local col = _G.TelescPreview_resetPos.col == 0 and 0 or _G.TelescPreview_resetPos.col - 1
     vim.cmd.edit( _G.TelescPreview_resetPos.filename )
-    vim.api.nvim_win_set_cursor( 0, {_G.TelescPreview_resetPos.lnum, _G.TelescPreview_resetPos.col -1})
+    vim.api.nvim_win_set_cursor( 0, {_G.TelescPreview_resetPos.lnum, col})
     _G.TelescPreview_resetPos = {}
   end
 end
+
+-- TelescPreview_resetPos
 
 local function closeAndUpdateHighlight( pbn )
   local search_term = action_state.get_current_picker( pbn ):_get_prompt()
@@ -178,11 +220,11 @@ end
 
 
 local NewBuf = f.curry( function( adirection, pbn )
+
+  -- 1. GET CURRENT PROMPT DATA
   local search_term = action_state.get_current_picker( pbn ):_get_prompt()
   search_term = f.last( vim.fn.split( search_term, [[\*]] ) )
-
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
-
   -- putt( title )
 
   if prompt_title == "Spelling Suggestions" then
@@ -190,7 +232,9 @@ local NewBuf = f.curry( function( adirection, pbn )
     return
   end
 
+  -- 2. DO SOME RESETS / PERSISTS AND CLOSE THE PROMPT
   append_to_history( pbn )
+  _G.TelescPreview_resetPos = {}
 
   -- We always temp-close the prompt, then run the NewBuf action and link focus
   actions.close( pbn )
@@ -199,33 +243,41 @@ local NewBuf = f.curry( function( adirection, pbn )
 
   ReverseColors_clear()
 
+  -- 3. GET LINK DATA
   local fpath, maybeLink = get_path_link( prompt_title, search_term )
   local direction, maybe_back = table.unpack( vim.fn.split( adirection, [[_]] ) )
-  local cmd = vim.fn.NewBufCmds( fpath, vim.fn.winnr '#' )[ direction ]
+  local cmd = vim.fn.NewBufCmds( fpath )[ direction ]
 
-  -- Open the new buffer
-  vim.cmd( cmd )
+  -- 4. OPEN NEW BUFFER (if needed)
+  if vim.fn.expand '%:p' ~= fpath or adirection ~= 'full' then
+    vim.cmd( cmd )
+  end
 
-  if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 1})
-  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
+  -- 5. FOCUS & HIGHLIGHT LINE & KEYWORD
+  if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
     local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
     vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
     vim.cmd 'normal zz'
 
-    HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
+    -- HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
     vim.cmd( 'let @/ = "' .. search_term .. '"' )
     vim.cmd( 'set hlsearch' )
+
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 1})
+
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
     vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
   end
 
+  -- 6. HANDLE TAB BACK
   if     adirection == 'tab_bg' then     -- opened to the right in the background
     vim.cmd 'tabprevious'
   elseif adirection == 'tab_back' then --   open and go to new tab, then jump *back* to prompt
     -- nothing needed, resume will open in new tab.
   end
 
+  -- 7. BRING BACK THE PROMPT
   if maybe_back then
     resume()
   end
@@ -294,20 +346,27 @@ local preview = f.curry( function( next_previous, mode, pbn )
   end
 
   -- 4. FOCUS & HIGHLIGHT LINE & KEYWORD
-  if maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 0})
-    -- no need to set the cursor column here, will be set on committing/closing
+  if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
+    local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
     vim.cmd 'normal zz'
 
     ReverseColors_clear()
     HighlightRange( 'Reverse', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
+
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
+    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 1})
+
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
+    vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
   end
+
 
   -- 5. BRING BACK THE PROMPT
   resume( { initial_mode = mode } )
 end )
 
-
+-- vim.api.nvim_win_get_cursor(0)[2]
 -- vim.api.nvim_win_get_cursor(0)[1]
 -- ("eins"):len()
 
@@ -435,15 +494,19 @@ Telesc = require('telescope').setup{
         ["<c-y>"] = actions.preview_scrolling_up,
         ["<c-e>"] = actions.preview_scrolling_down,
 
-        ["n"] = preview 'next' 'normal',
-        ["p"] = preview 'previous' 'normal',
-        ["<c-i>"] = preview 'current' 'normal',
+        ["n"]     = preview 'next' 'normal',
+        ["p"]     = preview 'previous' 'normal',
+        ["<c-n>"] = preview 'next' 'insert',
+        ["<c-p>"] = preview 'previous' 'insert',
+        ["<c-i>"] = preview 'current' 'insert',
 
         ["<c-o>"] = actions.cycle_history_prev,
         ["µ"]     = actions.cycle_history_next,
 
-        ["j"] = move_selection_next_with_space(),
-        ["k"] = move_selection_previous_with_space(),
+        ["j"]     = move_selection_next_with_space(),
+        ["k"]     = move_selection_previous_with_space(),
+        ["<c-j>"] = move_selection_next_with_space(),
+        ["<c-k>"] = move_selection_previous_with_space(),
 
         ["zz"] = selection_center(),
 
@@ -485,6 +548,7 @@ Telesc = require('telescope').setup{
         scroll_speed = 1,
         preview_height = 0.5,
       },
+
       vertical = {
         width = 0.47,
         height = 0.78,
@@ -495,6 +559,7 @@ Telesc = require('telescope').setup{
         scroll_speed = 1,
         preview_height = 0.47,
       },
+
       center = {
         width = 0.92,
         height = 0.52,
@@ -706,10 +771,54 @@ easypick.setup({
 -- ─^  Telescope extensions                              ▲
 
 
+
+function _G.WinIsLeftSplit()
+  local win_position = vim.api.nvim_win_get_position(0)
+  local screen_width = vim.api.nvim_get_option('columns')
+  return win_position[2] < screen_width / 2
+end
+-- WinIsLeftSplit()
+
+
+function _G.Telesc_dynPosOpts( opts )
+  opts = opts or {}
+  local anchor = WinIsLeftSplit() and 'E' or 'W'
+  local layout_opts = { layout_config = { vertical = { anchor = anchor } } }
+  -- type assert that this will be a table
+  return vim.tbl_extend( 'keep', opts, layout_opts )
+end
+
+
+function _G.Telesc_launch( picker_name, opts )
+  opts = Telesc_dynPosOpts( opts )
+  require('telescope.builtin')[ picker_name ]( opts )
+end
+
+-- Telesc_launch 'live_grep'
+-- Telesc_launch 'current_buffer_fuzzy_find'
+
+vim.keymap.set( 'n',
+  '<leader>ga', function() Telesc_launch( 'current_buffer_fuzzy_find', {
+    initial_mode = 'normal',
+    default_text = vim.fn.expand '<cword>'
+  })
+  end )
+
+
+-- require('telescope.builtin')['find_files'](
+--   {
+--     layout_config = {
+--       vertical = {
+--         anchor = 'W'
+--       }
+--     }
+--   }
+-- )
+
+
+
+
 return M
-
-
-
 
 
 

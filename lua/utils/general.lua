@@ -1,4 +1,5 @@
 
+local f = require 'utils.functional'
 local fun = require 'utils.fun'
 local action_state = require "telescope.actions.state"
 
@@ -399,13 +400,14 @@ function M.Search_gs()
   } )
 end
 
-vim.keymap.set( 'n',
-  '<leader>ga', function() require( 'telescope.builtin' )
-  .current_buffer_fuzzy_find({
-      initial_mode = 'normal',
-      default_text = vim.fn.expand '<cword>'
-    })
-  end )
+-- vim.keymap.set( 'n',
+--   '<leader>ga', function() require( 'telescope.builtin' )
+--   .current_buffer_fuzzy_find({
+--       initial_mode = 'normal',
+--       default_text = vim.fn.expand '<cword>'
+--     })
+--   end )
+
 
 
 function _G.Search_gs()
@@ -432,27 +434,38 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
       -- pattern = [[^(function|local\s.*function|-- ─ ).*]]
       -- now including all top level local values. As I dont' know how to search *before* the function keyword (and after it).
       -- NOTE: i should use the lowercase version of capital chars like M and _G, else the typed regex would not be case insensitive
-      pattern = [[^(#|function|m|f\.|local\sfunc|-- ─ |local.*curry).*]]
+      -- pattern = [[^(#|function|m|f\.|local\sfunc|-- ─ |local.*curry).*]]
+      pattern = [[^(#|function|m|f\.|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(#|.*\*|func|comma|" ─ ).*]]
     else
       pattern = [[(^#|\*).*]]
     end
   end
-  require('telescope.builtin').live_grep({
+
+  Telesc_launch( 'live_grep', {
     initial_mode = initCursorMode or "insert",
     default_text = pattern,
     search_dirs = paths,
-  })
+  } )
+
+  -- require('telescope.builtin').live_grep({
+  --   initial_mode = initCursorMode or "insert",
+  --   default_text = pattern,
+  --   search_dirs = paths,
+  -- })
+
 end
 -- TODO: not working on this file: ~/.local/share/nvim/sessions/__Users__at__.config__nvim‖
 
 function _G.Search_ast( pattern )
-  require 'telescope'.extensions.ast_grep.ast_grep({
+  local anchor = WinIsLeftSplit() and 'E' or 'W'
+  local layout_opts = { layout_config = { vertical = { anchor = anchor } } }
+  require 'telescope'.extensions.ast_grep.ast_grep( f.merge( layout_opts, {
     initial_mode = "normal",
     default_text = pattern,
     -- search_dirs = paths,
-  })
+  }))
 end
 -- Search_ast( 'if $$$ then $$$ return {$$$} end' )
 
@@ -724,6 +737,7 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
     }
   local rg_cmd = M.Concat( M.Concat( rg_baseArgs, globs ), paths )
 
+  opts = Telesc_dynPosOpts( opts )
   pickers.new(opts, {
     prompt_title = 'rx sel',
     finder    = finders.new_oneshot_job( rg_cmd, opts ),

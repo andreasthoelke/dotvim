@@ -18,6 +18,23 @@ local function fname_noExt()
   return vim.fn.expand( '%:t:r' )
 end
 
+-- Return line number only for normal buffer types, else return empty string.
+local function lineNum()
+  local buftype = vim.bo.buftype
+  if buftype == "" then
+    return vim.fn.line('.')
+  end
+  return ''
+end
+
+local function inactiveWinbarColor()
+  local buftype = vim.bo.buftype
+  if buftype == "" then
+    return 'LuLine_Winbar_b_in'
+  end
+  return 'LuLine_c'
+end
+
 
 -- ─   Custom filetype with icon                         ■
 
@@ -159,7 +176,7 @@ local lualine_config = {
       { "lsp_progress" },
       { "g:metals_status" },
     },
-    lualine_y = { 'vim.fn.line(".")' },
+    lualine_y = { lineNum },
     lualine_z = { 'LightlineScrollbar' },
   },
   inactive_sections = {
@@ -178,7 +195,7 @@ local lualine_config = {
     },
     lualine_c = {},
     lualine_x = {},
-    lualine_y = { 'vim.fn.line(".")' },
+    lualine_y = { lineNum },
     -- lualine_y = {},
     lualine_z = {}
   },
@@ -299,7 +316,7 @@ local lualine_config = {
     lualine_b = {
       {
         'LspSymbolsStack_inactive()',
-        color = 'LuLine_Winbar_b_in'
+        color = inactiveWinbarColor
       }
     },
     lualine_c = {},

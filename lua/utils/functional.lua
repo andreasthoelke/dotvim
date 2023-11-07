@@ -334,12 +334,19 @@ f.push = function(x, xs)
 end
 -- not pure, but for convenience let's keep them here
 
+-- f.merge = f.curry2(function(a, b)
+--   local result = {}
+--   f.assign(result, a)
+--   f.assign(result, b)
+--   return result
+-- end)
+
 f.merge = f.curry2(function(a, b)
-  local result = {}
-  f.assign(result, a)
-  f.assign(result, b)
-  return result
+  return vim.tbl_extend( 'keep', a, b )
 end)
+
+-- f.merge( {a=11}, {b=22} )
+
 
 f.complement = function(fn)
   return function(...)

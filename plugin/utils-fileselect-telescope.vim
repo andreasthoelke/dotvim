@@ -42,6 +42,7 @@ nnoremap <leader>te :Telescope
 nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
 " nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
+" nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=horizontal<cr>
 " nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 nnoremap <leader>tp <cmd>Telescope project<cr>
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
@@ -64,12 +65,12 @@ nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
 nnoremap ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
 
-
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 " nnoremap <leader>fb <cmd>Telescope buffers<cr>
 " this is now used for chrome bookmarksearch, use 'go' instead
 
+" Telescope find_files layout_strategy=vertical
 
 " ─   File openers                                      ──
 

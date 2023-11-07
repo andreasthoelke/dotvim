@@ -25,7 +25,8 @@ nnoremap <silent><leader>vM :FzfMaps<cr>
 " nnoremap <leader><leader>vm :Telescope keymaps<cr>
 " nnoremap <silent><leader><leader>vm :lua require('utils.general').examp_keymap_picker()<cr>
 " nnoremap <silent><leader>vm :lua require('utils.general').examp_keymap_picker()<cr>
-nnoremap <silent><leader>vm :lua require('telescope.builtin').keymaps()<cr>
+" nnoremap <silent><leader>vm :lua require('telescope.builtin').keymaps()<cr>
+nnoremap <silent><leader>vm :call v:lua.Telesc_launch('keymaps')<cr>
 nnoremap <silent><leader>vc :Telescope commands<cr>
 
 fun! OpenFinder()

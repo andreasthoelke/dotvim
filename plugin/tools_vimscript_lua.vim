@@ -30,12 +30,14 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 
-let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+" let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 
 func! Vim_ColonForw()
   " call SearchSkipSC( g:Vim_colonPttn, 'W' )
-  call search( g:Vim_colonPttn, 'W' )
-  normal w
+  call search( g:Vim_colonPttn, 'eW' )
+  " 'e' move to the end of the match, making sure the normal w jumps to after the column seperator
+  normal! w
 endfunc
 
 func! Vim_ColonBackw()
