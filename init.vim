@@ -266,7 +266,8 @@ Plug 'mhinz/vim-startify'
 " Session:
 Plug 'xolox/vim-misc'
 " Plug 'xolox/vim-session'
-Plug 'Shatur/neovim-session-manager'
+" Plug 'Shatur/neovim-session-manager'
+Plug 'jedrzejboczar/possession.nvim'
 " Restore folding
 " Plug 'vim-scripts/restore_view.vim'
 " TODO test this

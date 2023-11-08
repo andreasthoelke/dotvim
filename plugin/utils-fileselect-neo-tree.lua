@@ -87,6 +87,18 @@ function _G.Ntree_launch( reveal_path, root_dir)
 end
 
 
+local function open_all_subnodes(state)
+  local node = state.tree:get_node()
+  local filesystem_commands = require("neo-tree.sources.filesystem.commands")
+  filesystem_commands.expand_all_nodes(state, node)
+end
+
+
+-- local fs = require "neo-tree.sources.filesystem"
+-- local node = state.tree:get_node()
+-- fs.toggle_directory(state, node, nil, false, true)
+
+
 -- ─^  Helpers                                           ▲
 
 
@@ -274,9 +286,10 @@ require("neo-tree").setup({
         -- ["t"] = "open_tab_drop",
         ["i"] = "open",
         ["I"] = "open",
-        ["zo"] = "open",
+        ["O"] = open_all_subnodes,
+        ["zo"] = open_all_subnodes,
         ["Y"] = "close_node",
-        ["zc"] = "close_node",
+        ["zc"] = "close_all_subnodes",
         ["zC"] = "close_all_nodes",
         ["w"] = "noop",
         ["C"] = "close_node",
@@ -356,13 +369,13 @@ require("neo-tree").setup({
         end,
 
         ["gq"] = function(s)
-          vim.g['AlternateTreeView'] = {
+          vim.w['AlternateTreeView'] = {
             linepath = s.tree:get_node().path,
             rootpath = manager.get_state_for_window().path
           }
           -- tree_exec({ action = "close_window" })
-          renderer.close( s, true )
           vim.fn.AlternateFileLoc_restore( 'edit' )
+          renderer.close( s, true )
         end,
 
 
@@ -489,14 +502,14 @@ require("neo-tree").setup({
             local node = state.tree:get_node()
             putt(node)
           end,
-        ["<space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
-        ["<space>oc"] = { "order_by_created", nowait = false },
-        ["<space>od"] = { "order_by_diagnostics", nowait = false },
-        ["<space>og"] = { "order_by_git_status", nowait = false },
-        ["<space>om"] = { "order_by_modified", nowait = false },
-        ["<space>on"] = { "order_by_name", nowait = false },
-        ["<space>os"] = { "order_by_size", nowait = false },
-        ["<space>ot"] = { "order_by_type", nowait = false },
+        ["<space><space>o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
+        ["<space><space>oc"] = { "order_by_created", nowait = false },
+        ["<space><space>od"] = { "order_by_diagnostics", nowait = false },
+        ["<space><space>og"] = { "order_by_git_status", nowait = false },
+        ["<space><space>om"] = { "order_by_modified", nowait = false },
+        ["<space><space>on"] = { "order_by_name", nowait = false },
+        ["<space><space>os"] = { "order_by_size", nowait = false },
+        ["<space><space>ot"] = { "order_by_type", nowait = false },
       },
       fuzzy_finder_mappings = { -- define keymaps for filter popup window in fuzzy_finder_mode
         ["<down>"] = "move_cursor_down",
@@ -594,10 +607,10 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn
 
 
 function _G.AlternateTreeView_restore()
-  if vim.g['AlternateTreeView'] == nil then
+  if vim.w['AlternateTreeView'] == nil then
     vim.fn.Browse_parent( 'full' )
   else
-    Ntree_launch( vim.g['AlternateTreeView'].linepath, vim.g['AlternateTreeView'].rootpath )
+    Ntree_launch( vim.w['AlternateTreeView'].linepath, vim.w['AlternateTreeView'].rootpath )
   end
 end
 
@@ -606,76 +619,7 @@ vim.keymap.set( 'n', 'gq', AlternateTreeView_restore )
 
 
 
--- ─   Helpers                                           ■ ■
 
-local highlights = require("neo-tree.ui.highlights")
-
-local filtered_by = function(config, node, state)
-  local result = {}
-  if type(node.filtered_by) == "table" then
-    local fby = node.filtered_by
-    if fby.name then
-      result = {
-        text = "(hide by name)",
-        highlight = highlights.HIDDEN_BY_NAME,
-      }
-    elseif fby.pattern then
-      result = {
-        text = "(hide by pattern)",
-        highlight = highlights.HIDDEN_BY_NAME,
-      }
-    elseif fby.gitignored then
-      result = {
-        text = "(gitignored)",
-        highlight = highlights.GIT_IGNORED,
-      }
-    elseif fby.dotfiles then
-      result = {
-        text = "(dotfile)",
-        highlight = highlights.DOTFILE,
-      }
-    elseif fby.hidden then
-      result = {
-        text = "(hidden)",
-        highlight = highlights.WINDOWS_HIDDEN,
-      }
-    end
-    fby = nil
-  end
-  return result
-end
-
-
-local icon = function(config, node, state)
-  local icon = config.default or " "
-  local highlight = config.highlight or highlights.FILE_ICON
-  if node.type == "directory" then
-    highlight = highlights.DIRECTORY_ICON
-    if node.loaded and not node:has_children() then
-      icon = not node.empty_expanded and config.folder_empty or config.folder_empty_open
-    elseif node:is_expanded() then
-      icon = config.folder_open or "-"
-    else
-      icon = config.folder_closed or "+"
-    end
-  elseif node.type == "file" or node.type == "terminal" then
-    local success, web_devicons = pcall(require, "nvim-web-devicons")
-    local name = node.type == "terminal" and "terminal" or node.name
-    if success then
-      local devicon, hl = web_devicons.get_icon(name)
-      icon = devicon or icon
-      highlight = hl or highlight
-    end
-  end
-  local filtered = filtered_by(config, node, state)
-  return {
-    text = icon .. " ",
-    highlight = filtered.highlight or highlight,
-  }
-end
-
-
--- ─^  Helpers                                           ▲ ▲
 
 
 

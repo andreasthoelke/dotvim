@@ -680,7 +680,7 @@ require('telescope').load_extension('ag')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
 require('telescope').load_extension('ast_grep')
-
+require('telescope').load_extension('possession')
 
 
 vim.api.nvim_set_keymap('n',

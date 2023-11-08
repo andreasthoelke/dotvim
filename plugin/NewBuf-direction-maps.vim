@@ -81,7 +81,7 @@ nnoremap <silent> <c-w>,U  :call NewBuf_fromClipPath( "up_back" )<cr>
 nnoremap <silent> <c-w>,s  :call NewBuf_fromClipPath( "down" )<cr>
 nnoremap <silent> <c-w>,S  :call NewBuf_fromClipPath( "down_back" )<cr>
 
-nnoremap <c-w>o :echo "not active"<cr>
+" nnoremap <c-w>o :echo "not active"<cr>
 nnoremap <silent> <c-w>dd <c-w>o
 
 
@@ -142,12 +142,16 @@ endfunc
 
 func! Browse_parent( direction )
   let [direction; maybeBg ] = a:direction->split('_')
-  call AlternateFileLoc_save()
+  " call AlternateFileLoc_save()
+  " this captures the file-cursor loc the tree was spawned off of ->
+  let captureAltFile = LinkPath_linepos()
   let file = expand('%:p')  " might be a file or dirvish directory
   let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
   let cmd = NewBufCmds( parentFolderPath )[ direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  " .. -> and sets it to a var local to the *new* window!
+  let w:AlternateFileLoc = captureAltFile
   " call v:lua.Tree_focusPathInRootPath( file, parentFolderPath ) 
   call v:lua.Ntree_launch( file, parentFolderPath ) 
   if len( maybeBg ) | wincmd p | end
@@ -155,12 +159,16 @@ endfunc
 
 func! Browse_cwd( direction )
   let [direction; maybeBg ] = a:direction->split('_')
-  call AlternateFileLoc_save()
+  " call AlternateFileLoc_save()
+  " this captures the file-cursor loc the tree was spawned off of ->
+  let captureAltFile = LinkPath_linepos()
   let file = expand('%:p')  " might be a file or dirvish directory
   let cwd = getcwd()
   let cmd = NewBufCmds( cwd )[ direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
+  " .. -> and sets it to a var local to the *new* window!
+  let w:AlternateFileLoc = captureAltFile
   " call v:lua.Tree_focusPathInRootPath( file, cwd ) 
   " TODO: if a file is not in the cwd, do not attempt to reveal it
   call v:lua.Ntree_launch( file, cwd ) 
@@ -202,8 +210,12 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   if &filetype == 'NvimTree' || &filetype == 'neo-tree'
     let [direction; maybe_back ] = a:direction->split('_')
     " do not run any post actions like wincmd p or tabprevious
+    " this captures the file-cursor loc the tree was spawned off of ->
+    let captureAltFile = LinkPath_linepos()
     let cmd = NewBufCmds( path )[ direction ] 
     exec cmd
+    " .. -> and sets it to a var local to the *new* window!
+    let w:AlternateFileLoc = captureAltFile
     " TREE POST ACTION PHASE: 
     if     a:direction == 'tab_bg' 
       " delay the tabprevious call

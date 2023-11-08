@@ -112,7 +112,7 @@ local neo_tree = {
   sections = {
     lualine_a = {
       {
-        'ProjectRootFolderName',
+        'ProjectRootFolderNameOfWin',
         separator = { left = '', right = '' },
       }
     },

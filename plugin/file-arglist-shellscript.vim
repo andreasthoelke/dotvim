@@ -287,8 +287,8 @@ func! ProjectRootFolderName ()
   return GetLastComponentFromPath( getcwd() )
 endfunc
 
-func! ProjectRootFolderNameOfWin (winnr)
-  return GetLastComponentFromPath( getcwd(a:winnr) )
+func! ProjectRootFolderNameOfWin ()
+  return GetLastComponentFromPath( getcwd(winnr()) )
 endfunc
 
 " When opening a file with Dirvish the filepath is not relative. This makes sure it is.
@@ -309,7 +309,7 @@ func! CurrentRelativeFolderPath_shorten ()
   "    \   a:0 ? a:1 : v:lua.Ntree_currentNode().linepath  :
   "    \   expand('%:p')
 
-  let cwd = getcwd()
+  let cwd = getcwd(winnr())
   let relPath = path->substitute( cwd, '', '' )
   let relFolderPath = relPath->fnamemodify( ':h' )
   if relFolderPath[0:4] == "/User"

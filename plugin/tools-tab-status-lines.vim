@@ -180,7 +180,7 @@ func! Rpi_filePath()
 endfunc
 
 func! Rpi_data()
-  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(), Rpi_filePath() )
+  let [cid; infoL] = RootPathInfo_RenderCaseAndSegments( getcwd(winnr()), Rpi_filePath() )
   return [ cid, infoL->map( { _, v -> v->join(" ") } ) ]
 endfunc
 
@@ -404,7 +404,7 @@ func! DBUIInfos ()
 endfunc
 
 func! LightlineLocalRootFolder()
-  return (&filetype !~# '\v(neo-tree|help|gitcommit)') && &buflisted ? ProjectRootFolderNameOfWin( winnr() ) : ''
+  return (&filetype !~# '\v(neo-tree|help|gitcommit)') && &buflisted ? ProjectRootFolderNameOfWin() : ''
 endfunc
 
 func! LightlineRelativeFilePathOfWin()

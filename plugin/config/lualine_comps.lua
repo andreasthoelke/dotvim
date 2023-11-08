@@ -237,6 +237,8 @@ function _G.Status_git_diff_changeCount()
 end
 
 
+
+
 -- ─   Tabs custom formatting                           ──
 
 local lualine_highlight = require'lualine.highlight'

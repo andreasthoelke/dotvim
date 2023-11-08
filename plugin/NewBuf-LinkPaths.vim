@@ -47,14 +47,14 @@ func! LinkPath_linepos()
 endfunc
 
 
-let g:AlternateFileLoc = ''
-func! AlternateFileLoc_save()
-  let g:AlternateFileLoc = LinkPath_linepos()
-endfunc
+" now need to do this in the NewBuf_ functions. see comments
+" func! AlternateFileLoc_save()
+"   let w:AlternateFileLoc = LinkPath_linepos()
+" endfunc
 
 func! AlternateFileLoc_restore( cmd )
-  if !len( g:AlternateFileLoc ) | return | endif
-  let [path; maybeLinkExt] = g:AlternateFileLoc->split('‖')
+  if !(exists( 'w:AlternateFileLoc' )) | return | endif
+  let [path; maybeLinkExt] = w:AlternateFileLoc->split('‖')
   exec a:cmd path
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
@@ -62,8 +62,8 @@ endfunc
 " AlternateFileLoc_restore('new')
 
 func! AlternateFileLoc_info()
-  if !len( g:AlternateFileLoc ) | return | endif
-  let [path; maybeLinkExt] = g:AlternateFileLoc->split('‖')
+  " if !(exists( 'w:AlternateFileLoc' )) | return | endif
+  let [path; maybeLinkExt] = w:AlternateFileLoc->split('‖')
   return fnamemodify( path, ':t' )
 endfunc
 
