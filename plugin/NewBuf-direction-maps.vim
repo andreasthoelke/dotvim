@@ -144,15 +144,14 @@ func! Browse_parent( direction )
   let [direction; maybeBg ] = a:direction->split('_')
   " call AlternateFileLoc_save()
   " this captures the file-cursor loc the tree was spawned off of ->
-  let captureAltFile = LinkPath_linepos()
+  let captureAltFileLoc = LinkPath_linepos()
   let file = expand('%:p')  " might be a file or dirvish directory
   let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
   let cmd = NewBufCmds( parentFolderPath )[ direction ] 
   if IsInFloatWin() | wincmd c | endif
   exec cmd
   " .. -> and sets it to a var local to the *new* window!
-  let w:AlternateFileLoc = captureAltFile
-  " call v:lua.Tree_focusPathInRootPath( file, parentFolderPath ) 
+  let w:AlternateFileLoc = captureAltFileLoc
   call v:lua.Ntree_launch( file, parentFolderPath ) 
   if len( maybeBg ) | wincmd p | end
 endfunc
@@ -169,7 +168,6 @@ func! Browse_cwd( direction )
   exec cmd
   " .. -> and sets it to a var local to the *new* window!
   let w:AlternateFileLoc = captureAltFile
-  " call v:lua.Tree_focusPathInRootPath( file, cwd ) 
   " TODO: if a file is not in the cwd, do not attempt to reveal it
   call v:lua.Ntree_launch( file, cwd ) 
   if len( maybeBg ) | wincmd p | end

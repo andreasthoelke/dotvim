@@ -48,13 +48,18 @@ endfunc
 
 
 " now need to do this in the NewBuf_ functions. see comments
-" func! AlternateFileLoc_save()
-"   let w:AlternateFileLoc = LinkPath_linepos()
-" endfunc
+func! AlternateFileLoc_save()
+  let w:AlternateFileLoc = LinkPath_linepos()
+endfunc
 
+" A neo-tree or dirvish window might (should generally) have an Alternate (origin) file location set.
+" Once _restore is called, this window will show the alternate file.
+" At the same time usually the (corresponding) AlternateTreeView
+" is set: ~/.config/nvim/plugin/config/neo-tree.lua‖/vim.fn.Alte
 func! AlternateFileLoc_restore( cmd )
   if !(exists( 'w:AlternateFileLoc' )) | return | endif
   let [path; maybeLinkExt] = w:AlternateFileLoc->split('‖')
+  let w:AlternateFileLoc = v:null
   exec a:cmd path
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc

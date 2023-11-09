@@ -346,6 +346,8 @@ f.merge = f.curry2(function(a, b)
 end)
 
 -- f.merge( {a=11}, {b=22} )
+-- f.merge( {a=11}, {} )
+-- f.merge( {}, {b=22} )
 
 
 f.complement = function(fn)

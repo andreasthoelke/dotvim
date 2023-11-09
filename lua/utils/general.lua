@@ -29,13 +29,17 @@ function _G.PrintMessages( cnt )
   local hist = require 'notify'.history()
   local recentHist = vim.list_slice( hist, #hist - cnt, #hist )
   local msgsFlat = vim.tbl_flatten( vim.tbl_map( function(el) return el.message end , recentHist ) )
-  local reversedList = vim.fn.reverse( msgsFlat )
-  local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
+  -- local reversedList = vim.fn.reverse( msgsFlat )
+  -- local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
+  local seperatedList = vim.fn.insert( msgsFlat, "_ ", 1 )
   vim.g['floatWin_win'] = vim.fn.FloatingSmallNew( seperatedList )
+  vim.wo.wrap = true
   vim.fn.FloatWin_FitWidthHeight()
   vim.cmd( 'wincmd p' )
 end
 -- PrintMessages()
+
+-- vim.wo.wrap = true
 
 function _G.LuaModuleName()
   -- Get module name from current file path.

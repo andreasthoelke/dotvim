@@ -1,4 +1,5 @@
 
+local f = require 'utils.functional'
 
 vim.g.neo_tree_remove_legacy_commands = 1
 
@@ -11,6 +12,7 @@ local tree_exec = require 'neo-tree.command'.execute
 local renderer = require("neo-tree.ui.renderer")
 local manager = require 'neo-tree.sources.manager'
 local fs = require("neo-tree.sources.filesystem")
+local filesystem_commands = require("neo-tree.sources.filesystem.commands")
 -- local Preview = require("neo-tree.sources.common.preview")
 
 -- lua putt( require('neo-tree.sources.manager').get_state_for_window() )
@@ -21,8 +23,8 @@ local fs = require("neo-tree.sources.filesystem")
 
 -- Note: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
 
-function _G.Ntree_currentNode()
-  local state = manager.get_state_for_window()
+function _G.Ntree_currentNode( state )
+  local state = state ~= nil and state or manager.get_state_for_window()
   return {
     rootpath = state.path,
     linepath = state.position.node_id
@@ -70,26 +72,37 @@ local utils = require("neo-tree.utils")
 -- local parentPath, fname = utils.split_path( reveal_path )
 
 
-function _G.Ntree_launch( reveal_path, root_dir)
-  if not utils.is_subpath(root_dir, reveal_path) then
+-- Opens a new tree.
+function _G.Ntree_launch( focus_path, root_path )
+  if not utils.is_subpath(root_path, focus_path) then
     tree_exec({
       position = "current",
-      dir = root_dir,
+      dir = root_path,
     })
   else
     tree_exec({
       position = "current",
-      dir = root_dir,
-      reveal_file = reveal_path,
+      dir = root_path,
+      reveal_file = focus_path,
       reveal_force_cwd = true,
     })
+  end
+end
+
+function _G.Ntree_launch_withAltView( focus_path, root_path )
+  if vim.fn.exists( 'w:AlternateTreeView' ) == 1 then
+    local newViewFields = { focus_path = focus_path, root_path = root_path }
+    local prevTreeView = Ntree_open_setView( vim.w['AlternateTreeView'] )
+    -- Ntree_open_setView( f.merge( newViewFields, prevTreeView ) )
+    Ntree_open_setView( vim.tbl_extend( 'keep', newViewFields, prevTreeView ) )
+  else
+    Ntree_launch( focus_path, root_path )
   end
 end
 
 
 local function open_all_subnodes(state)
   local node = state.tree:get_node()
-  local filesystem_commands = require("neo-tree.sources.filesystem.commands")
   filesystem_commands.expand_all_nodes(state, node)
 end
 
@@ -97,6 +110,82 @@ end
 -- local fs = require "neo-tree.sources.filesystem"
 -- local node = state.tree:get_node()
 -- fs.toggle_directory(state, node, nil, false, true)
+
+function _G.Ntree_view_get( state )
+  return {
+    focus_path     = state.tree:get_node().path,
+    expanded_paths = renderer.get_expanded_nodes( state.tree ),
+    root_path      = state.path,
+    filter_visible = state.filtered_items.visible,
+  }
+end
+
+function _G.Ntree_view_set( view, state )
+  state = state ~= nil and state or manager.get_state('filesystem')
+  state.force_open_folders = view.expanded_paths
+  state.filtered_items.visible = view.filter_visible
+end
+
+-- lua Ntree_view_set( { expanded_paths = { "/Users/at/.config/nvim", "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/plugin/utils" }, filter_visible = true, } )
+-- lua Ntree_view_set( { "/Users/at/.config/nvim", "/Users/at/.config/nvim/notes", "/Users/at/.config/nvim/notes/minor", "/Users/at/.config/nvim/notes/templates" } )
+
+function _G.Ntree_open_setView( view )
+  Ntree_launch( view.focus_path, view.root_path )
+  Ntree_view_set( view )
+end
+
+-- Perform the normal node "open" action which might expand a directory in the tree
+-- or launch a file buffer in the same window.
+-- Additianally saves the treeView to allow gq to return to the same tree-view.
+-- Note that saving the treeView on directory expansions does nothing useful. (or could the windowVar/treeView
+-- be used after other open commands like "v", "s"?
+function _G.Ntree_open_saveView( state )
+  local treeView = Ntree_view_get( state )
+  filesystem_commands.open( state )
+  vim.w['AlternateTreeView'] = treeView
+end
+
+-- Save tree-view, restore alt file view.
+function _G.Ntree_close_saveView_restoreAltFileLoc( state )
+  local treeView = Ntree_view_get( state )
+  vim.fn.AlternateFileLoc_restore( 'edit' )
+  renderer.close( state, false )
+  vim.w['AlternateTreeView'] = treeView
+end
+-- lua putt( vim.w['AlternateTreeView'] )
+
+-- Save alt file view, restore alt tree view
+function _G.Ntree_launchToAltView_saveAltFileLoc()
+  -- captures the file-cursor loc the tree was spawned off of ->
+  local captureAltFileLoc = vim.fn.LinkPath_linepos()
+  if vim.fn.exists( 'w:AlternateTreeView' ) == 1 then
+    Ntree_open_setView( vim.w['AlternateTreeView'] )
+  else
+    vim.fn.Browse_parent( 'full' )
+  end
+  -- .. -> and sets it to a var local to the *new* window!
+  vim.w['AlternateFileLoc'] = captureAltFileLoc
+end
+
+-- Ntree_launchToAltView_saveAltFileLoc
+-- vim.fn.exists( "w:AlternateTreeView" )
+-- vim.fn.exists( "w:AlternateTreeView" ) and 't' or 'f'
+-- vim.w['AlternateTreeView']
+
+vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
+
+
+
+local function open_startup()
+  tree_exec({
+    action = "show",
+    position = "left",
+    reveal_file = vim.fn.MostRecentlyUsedLocalFile(),
+  })
+end
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
+
 
 
 -- ─^  Helpers                                           ▲
@@ -284,7 +373,7 @@ require("neo-tree").setup({
         -- ["t"] = "open_tabnew",
         -- ["<cr>"] = "open_drop",
         -- ["t"] = "open_tab_drop",
-        ["i"] = "open",
+        ["i"] = Ntree_open_saveView,
         ["I"] = "open",
         ["O"] = open_all_subnodes,
         ["zo"] = open_all_subnodes,
@@ -368,15 +457,7 @@ require("neo-tree").setup({
           renderer.close( state, true )
         end,
 
-        ["gq"] = function(s)
-          vim.w['AlternateTreeView'] = {
-            linepath = s.tree:get_node().path,
-            rootpath = manager.get_state_for_window().path
-          }
-          -- tree_exec({ action = "close_window" })
-          vim.fn.AlternateFileLoc_restore( 'edit' )
-          renderer.close( s, true )
-        end,
+        ["gq"] = Ntree_close_saveView_restoreAltFileLoc,
 
 
         -- ["go"] = function()
@@ -589,33 +670,6 @@ require("neo-tree").setup({
 
 
 -- ─^  Config                                            ▲
-
-
-local function open_startup()
-  tree_exec({
-    action = "show",
-    position = "left",
-    reveal_file = vim.fn.MostRecentlyUsedLocalFile(),
-  })
-end
-
-vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
-
--- require("neo-tree.command").execute({ action = "show", position = "right" })
--- require("neo-tree.command").execute({ action = "close", position = "right" })
-
-
-
-function _G.AlternateTreeView_restore()
-  if vim.w['AlternateTreeView'] == nil then
-    vim.fn.Browse_parent( 'full' )
-  else
-    Ntree_launch( vim.w['AlternateTreeView'].linepath, vim.w['AlternateTreeView'].rootpath )
-  end
-end
-
-vim.keymap.set( 'n', 'gq', AlternateTreeView_restore )
-
 
 
 
