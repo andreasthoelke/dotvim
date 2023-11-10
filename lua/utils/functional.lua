@@ -341,9 +341,13 @@ end
 --   return result
 -- end)
 
-f.merge = f.curry2(function(a, b)
-  return vim.tbl_extend( 'keep', a, b )
-end)
+f.merge = f.curry2(function(base_table, override_table)
+  return vim.tbl_deep_extend("force", base_table, override_table)
+end )
+
+-- f.merge = f.curry2(function(a, b)
+--   return vim.tbl_extend( 'keep', a, b )
+-- end)
 
 -- f.merge( {a=11}, {b=22} )
 -- f.merge( {a=11}, {} )
