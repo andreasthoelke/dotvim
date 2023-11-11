@@ -289,13 +289,66 @@ lspconfig.vimls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
+  init_options = {
+    diagnostic = {
+      enable = true
+    },
+    indexes = {
+      count = 3,
+      gap = 100,
+      projectRootPatterns = { "runtime", "nvim", ".git", "autoload", "plugin" },
+      runtimepath = true
+    },
+    isNeovim = true,
+    iskeyword = "@,48-57,_,192-255,-#",
+    runtimepath = "",
+    suggest = {
+      fromRuntimepath = true,
+      fromVimruntime = true
+    },
+    vimruntime = ""
+  }
 })
+
+
+-- NOTE this doesn't seem to be needed to get vim diagnostic messages. delete this? ■
+-- local diagnosticls = require("diagnosticls-configs")
+-- require'lspconfig'.diagnosticls.setup{
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+--   filetypes = {
+--     "vim",
+--   },
+--   init_options = {
+--     linters = diagnosticls.linters,
+--     filetypes = {
+--       vim = "vint",
+--     },
+--   },
+-- }
+-- lspconfig.diagnosticls.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+--   filetypes = {
+--     "vim",
+--   },
+--   init_options = {
+--     linters = diagnosticls.linters,
+--     filetypes = {
+--       vim = "vint",
+--     },
+--   },
+-- }) ▲
+
 
 -- https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
 lspconfig.graphql.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
+  filetypes = { "vim" },
 })
 
 -- https://github.com/lighttiger2505/sqls
@@ -382,13 +435,38 @@ lspconfig.html.setup({
   flags = flags,
 })
 
+
+local handler_BASH_filterDiagnCodes = {
+    ["textDocument/publishDiagnostics"] = function(_, result, ...)
+          result.diagnostics = vim.tbl_filter( function(t)
+              return
+                     t.code ~= 2154  -- comments are not permitted in JSON
+                 -- and t.code ~= 2307
+          end, result.diagnostics )
+        return vim.lsp.diagnostic.on_publish_diagnostics(_, result, ...)
+    end,
+}
+
+
 -- https://github.com/bash-lsp/bash-language-server
 -- -- TODO: filter all the warnings about double quotes, ect.
+-- this is now done via ~/.shellcheckrc
 -- npm i -g bash-language-server
 lspconfig.bashls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
+  -- no effect?
+  -- handlers = handler_filterDiagnSeverity,
+  -- handlers = handler_BASH_filterDiagnCodes,
+  -- not sure if this has an effect either?
+  handlers = {
+   ["textDocument/publishDiagnostics"] = vim.lsp.with(
+     vim.lsp.diagnostic.on_publish_diagnostics, {
+       severity_sort = true,
+     }
+   ),
+ },
 })
 
 

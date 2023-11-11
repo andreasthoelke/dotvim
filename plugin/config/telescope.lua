@@ -100,9 +100,13 @@ local function get_path_link( prompt_title, search_term )
 
 
     -- CASE: LIVE GREP
-  elseif prompt_title == "Live Grep" or prompt_title == "rx sel" then
+  elseif prompt_title == "Live Grep" then
+    -- putt(selection)
     local mt = getmetatable(selection)
     local cwdOfFile = vim.tbl_get( mt, 'cwd' ) or ""
+    local filePath = selection.filename
+    local isAbsFilePath = filePath ~= nil and filePath:sub(1,1) == '/'
+    filePath = not isAbsFilePath and cwdOfFile .. "/" .. filePath or filePath
     local start_index = vim.fn.match( selection.text, search_term )
     local end_index = start_index + search_term:len() -1
     if start_index == -1 then
@@ -110,7 +114,28 @@ local function get_path_link( prompt_title, search_term )
       start_index = vim.fn.match( selection.text, s.head( search_term ) )
       end_index = start_index
     end
-    path = cwdOfFile .. selection.filename
+    path = filePath
+    link = {
+      lnum = selection.lnum,
+      col  = start_index,
+      col_end = end_index,
+    }
+
+  elseif prompt_title == "rx sel" then
+    -- putt(selection)
+    local mt = getmetatable(selection)
+    local cwdOfFile = vim.tbl_get( mt, 'cwd' ) or ""
+    local filePath = selection.filename
+    local isAbsFilePath = filePath ~= nil and filePath:sub(1,1) == '/'
+    filePath = not isAbsFilePath and cwdOfFile .. "/" .. filePath or filePath
+    local start_index = vim.fn.match( selection.text, search_term )
+    local end_index = start_index + search_term:len() -1
+    if start_index == -1 then
+      -- if the search term can not be found by simple match, guess a possible fuzzy match by pointing to a match of the first char.
+      start_index = vim.fn.match( selection.text, s.head( search_term ) )
+      end_index = start_index
+    end
+    path = filePath
     link = {
       lnum = selection.lnum,
       col  = start_index,

@@ -315,6 +315,9 @@ Plug 'SmiteshP/nvim-navic'
 Plug 'numToStr/Comment.nvim'
 Plug 'SmiteshP/nvim-navbuddy'
 
+" not needed to get vim diagnostic messages?!
+" Plug 'creativenull/diagnosticls-configs-nvim'
+
 " Completion engine
 " Plug 'hrsh7th/nvim-cmp'
 " Plug 'hrsh7th/cmp-nvim-lsp'

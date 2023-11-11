@@ -35,13 +35,13 @@ nnoremap <leader>lgd :Glance definitions<cr>
 nnoremap <leader>lgt :Glance type_definitions<cr>
 nnoremap <leader>lgi :Glance implementations<cr>
 
-
 nmap <leader>ltu <Plug>(toggle-lsp-diag-underline)
 nmap <leader>lts <Plug>(toggle-lsp-diag-signs)
 nmap <leader>ltv <Plug>(toggle-lsp-diag-vtext)
 nmap <leader>ltp <Plug>(toggle-lsp-diag-update_in_insert)
 nmap <leader>ltdd  <Plug>(toggle-lsp-diag)
 
+" Note config: ~/.config/nvim/plugin/config/toggle-lsp.lua‖/require('to
 " Issue: ToggleDiagDefault only works via the Command!?
 nmap <leader>ltD  :ToggleDiagDefault<cr>
 " nmap <leader>ltdd <Plug>(toggle-lsp-diag-default)

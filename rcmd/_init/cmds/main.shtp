@@ -1,4 +1,4 @@
-# this is for testing / debugging
+## shellcheck disable=SC2086,SC2154
 echo $rsour $rdest $ropt $rel
 unzip -l $rsour $rel -d $rdest
 unzip -j $rsour $rel -d $rdest

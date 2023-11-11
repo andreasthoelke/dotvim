@@ -1,8 +1,12 @@
 
+
+-- Note maps: ~/.config/nvim/plugin/completion.vim‖/Issue:ˍTogg
+
  require('toggle_lsp_diagnostics').init {
-   start_on = false,
+   start_on = true,
    underline = false,
-   virtual_text = { prefix = 'd', spacing = 5 } 
+   signs = false,
+   virtual_text = { prefix = 'd', spacing = 5 }
  }
 
 

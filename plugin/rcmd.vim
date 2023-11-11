@@ -72,7 +72,7 @@ func! Rlist_Highlight()
 endfunc
 
 func! Rlist_Clear()
-  let Rlist() = []
+  call Rlist_set( [] )
   call VirtualHighlightMatchedStrings( Rlist() )
   echo "Rlist cleared"
 endfunc
@@ -355,7 +355,7 @@ endfunc
 nnoremap <silent> <leader>rp :call Review_ThenRun_CmdTemplToRlist_args()<cr>
 
 func! Review_ThenRun_CmdTemplToRlist_args()
-  let rlist_quoted = copy( ...Rlist()->map( {_,str -> "'" . str . "'"} )
+  " let rlist_quoted = copy( ...Rlist()->map( {_,str -> "'" . str . "'"} )
   let cmd = InterpolCmdTemplate( g:cmd_template_unzip1, g:R_SOURCE_PATH, g:R_TARGET_PATH, rlist_quoted )
   call Scala_showInFloat( ['Cmd:', cmd, ""] )
 endfunc

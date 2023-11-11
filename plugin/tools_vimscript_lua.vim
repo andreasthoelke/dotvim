@@ -56,25 +56,40 @@ let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s|.*─)'
 func! Vim_MainStartBindingForw()
   normal! jj
   call search( g:Vim_MainStartPattern, 'W' )
+  call Vim_goFistWord()
 endfunc
 
 func! Vim_MainStartBindingBackw()
+  normal! ^
   call search( g:Vim_MainStartPattern, 'bW' )
   normal! kk
   call search( g:Vim_MainStartPattern, 'W' )
+  call Vim_goFistWord()
 endfunc
 
 func! Vim_TopLevBindingForw()
   normal! jj
   call search( g:Vim_TopLevelPattern, 'W' )
+  call Vim_goFistWord()
 endfunc
 
 func! Vim_TopLevBindingBackw()
+  normal! ^
   call search( g:Vim_TopLevelPattern, 'bW' )
   normal! kk
   call search( g:Vim_TopLevelPattern, 'W' )
+  call Vim_goFistWord()
 endfunc
 
+func! Vim_goFistWord()
+  if &ft == 'vim'
+    normal! W
+  elseif &ft == 'lua'
+    normal! ww
+  elseif &ft == 'markdown'
+    normal! w
+  endif
+endfunc
 
 
 
