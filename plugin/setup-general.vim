@@ -903,7 +903,14 @@ func! s:goyo_leave()
   hi VertSplit       guifg=#000000 guibg=#080808
 endfunc
 
+function! s:goyo_enter()
+  " this is to activate comment conceals
+  exec "edit"
+endfunction
+
+
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
 " Issue: Re-applying the colorscheme causes my conceal chars to be highlighted in white - which I could not fix. On
 " the other had the below line does not seem needed except for my "hi VertSplit       guifg=#000000 guibg=#080808"
 " setting
