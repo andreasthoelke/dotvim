@@ -17,9 +17,6 @@ nnoremap <leader>rc :call Rlist_Clear()<cr>
 
 
 
-func! Rlist_get()
-  return readfile( Rlist_path(), '\n' )
-endfunc
 
 func! Rlist_set( list )
   call writefile( a:list, Rlist_path() )
@@ -164,7 +161,7 @@ func! Rsh_preview()
   let cmd = RcmdString_get()
   if cmd =~ '"'
     if cmd =~ "'"
-      echo "Found a literal strings in the command. This isn't compatible with this simple preview feature."
+      echo "Found literal strings in the command. This isn't compatible with this simple preview feature."
       return
     endif
     call RcmdString_set( "echo '" . cmd . "'" )
@@ -367,6 +364,9 @@ endfunc
 " ─^  ApplyCmdTemplate                                   ▲
 
 
+func! Rlist_get()
+  return readfile( Rlist_path(), '\n' )
+endfunc
 
 
 

@@ -35,8 +35,10 @@ func! SourceFile ()
   if &filetype == 'lua'
     lua require'plenary.reload'.reload_module( vim.fn.LuaModuleName() )
     luafile %
-  else
+  elseif &filetype == 'vim'
     exec 'source %'
+  else
+    echo 'no supported'
   endif
 endfunc
 

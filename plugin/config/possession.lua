@@ -99,13 +99,30 @@ function _G.Ntree_set_session_state( sessionTreeViewData )
       if not vim.tbl_isempty( winTreeViewData ) then
         local tabId = vim.api.nvim_list_tabpages()[ tabnr ]
         local winId = vim.api.nvim_tabpage_list_wins( tabId )[ winnr ]
-        Ntree_launch_inWin( winTreeViewData, winId )
+
+        local state = manager.get_state('filesystem', tabId, winId)
+        state.current_position = 'current'
+        state.force_open_folders = winTreeViewData.expanded_paths
+        state.filtered_items.visible = winTreeViewData.filter_visible
+        renderer.acquire_window( state )
+        Ntree_launch_inWin( state, winTreeViewData, winId )
       end
     end )
   end)
 end
 
 -- Ntree_set_session_state( { {}, { {}, { expanded_paths = { "/Users/at/.config/nvim/plugin" }, filter_visible = true, focus_path = "/Users/at/.config/nvim/plugin/config/neo-tree.lua", root_path = "/Users/at/.config/nvim/plugin" } } } )
+
+
+-- vim.api.nvim_buf_set_var(state.bufnr, "neo_tree_source", state.name)
+-- vim.api.nvim_buf_set_var(state.bufnr, "neo_tree_tabnr", state.tabnr)
+-- vim.api.nvim_buf_set_var(state.bufnr, "neo_tree_position", state.current_position)
+-- vim.api.nvim_buf_set_var(state.bufnr, "neo_tree_winid", state.winid)
+
+-- vim.api.nvim_buf_get_var( 218, "neo_tree_source")
+-- vim.api.nvim_buf_get_var( 1, "neo_tree_source")
+-- buffers!
+
 
 -- function _G.Nttest(winTreeViewData) ■
 --   -- local winId = vim.api.nvim_tabpage_list_wins( 1 )[ 1347 ]

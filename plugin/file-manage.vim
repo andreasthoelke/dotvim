@@ -2,8 +2,9 @@
 
 
 
-nnoremap <leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor_dirvish() )<cr>
-xnoremap <leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
+" use c-w l o?!
+nnoremap <silent><leader>P :<c-u>call PreviewPathInFloatWin( GetLineFromCursor_dirvish() )<cr>
+xnoremap <silent><leader>P :<c-u>call PreviewPathInFloatWin_vs()<cr>
 " nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
 " func! PreviewPathInFloatWin( filePath )

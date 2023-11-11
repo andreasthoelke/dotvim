@@ -136,11 +136,7 @@ function _G.Ntree_launch_setView( view )
   Ntree_view_set( view )
 end
 
-function _G.Ntree_launch_inWin( view, winId )
-  local state = manager.get_state('filesystem', nil, winId)
-  state.current_position = 'current'
-  state.force_open_folders = view.expanded_paths
-  state.filtered_items.visible = view.filter_visible
+function _G.Ntree_launch_inWin( state, view, winId )
   fs._navigate_internal(state, view.root_path, view.focus_path, nil, false)
   -- _navigate_internal(state, path, path_to_reveal, callback, async)
 end
@@ -209,6 +205,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn
 require("neo-tree").setup({
 
   hide_root_node = true, -- Hide the root node.
+  -- auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
 
   -- event_handlers = {
   --   {
