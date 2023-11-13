@@ -1,6 +1,8 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 func! tools_python#bufferMaps()
 
+  call tools_scala#bufferMaps_shared()
+
   nnoremap <silent><buffer>         gew :call Py_SetPrinterIdentif( "plain" )<cr>
   nnoremap <silent><buffer>         get :call Py_SetPrinterIdentif( "table" )<cr>
   nnoremap <silent><buffer>         gef :call Py_SetPrinterIdentif( "file1" )<cr>

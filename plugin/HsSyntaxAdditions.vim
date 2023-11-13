@@ -62,7 +62,8 @@ func! ShellSyntaxAdditions()
     return
   endif
   set ft=sh
-  call tools_scala#bufferMaps()
+  " call tools_scala#bufferMaps()
+  call VScriptToolsBufferMaps()
 endfunc
 
 

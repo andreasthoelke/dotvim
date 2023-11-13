@@ -280,7 +280,8 @@ local NewBuf = f.curry( function( adirection, pbn )
 
     -- HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
     if search_term ~= nil then
-      vim.cmd( 'let @/ = "' .. search_term .. '"' )
+      local search_term_with_quotes_removed = search_term:gsub( '"', '' )
+      vim.cmd( 'let @/ = "' .. search_term_with_quotes_removed .. '"' )
       vim.cmd( 'set hlsearch' )
     end
 
@@ -796,15 +797,30 @@ easypick.setup({
 function _G.WinIsLeftSplit()
   local win_position = vim.api.nvim_win_get_position(0)
   local screen_width = vim.api.nvim_get_option('columns')
-  return win_position[2] < screen_width / 2
+  local threshold = screen_width / 2 - 100
+  return win_position[2] < threshold
 end
 -- WinIsLeftSplit()
+-- lua putt( WinIsLeftSplit() )
 
 
 function _G.Telesc_dynPosOpts( opts )
   opts = opts or {}
   local anchor = WinIsLeftSplit() and 'E' or 'W'
-  local layout_opts = { layout_config = { vertical = { anchor = anchor } } }
+  local layout_opts
+  if anchor == 'W' then
+    local win_position = vim.api.nvim_win_get_position(0)[2] - 2
+    layout_opts = {
+      layout_config = {
+        vertical = {
+          anchor = anchor,
+          width = win_position,
+        }
+      },
+    }
+  else
+    layout_opts = { layout_config = { vertical = { anchor = anchor } } }
+  end
   -- type assert that this will be a table
   return vim.tbl_extend( 'keep', opts, layout_opts )
 end

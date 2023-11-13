@@ -16,6 +16,10 @@ nnoremap <silent><c-w>dj <c-w>j<c-w>c
 nnoremap <silent><c-w>dh <c-w>h<c-w>c<c-w>p
 nnoremap <silent><c-w>dl <c-w>l<c-w>c
 
+" close tab to the right
+nnoremap <silent><c-w>dt :tabnext<cr>:call CloseTabGoToPrevious()<cr>
+nnoremap <silent><c-w>dT :tabprev<cr>:tabclose<cr>
+
 nnoremap <silent><c-w>Sk :call WinShift('k')<cr>
 nnoremap <silent><c-w>Sj :call WinShift('j')<cr>
 nnoremap <silent><c-w>Sh :call WinShift('h')<cr>

@@ -212,14 +212,16 @@ end
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 
 
+-- LSP[pyright]: Error ON_ATTACH_ERROR: "/Users/at/.vim/plugged/nvim-navic/lua/nvim-navic/init.lua:311: bad argument #3 to '__index' (string expected, got nil)"
+
 -- python 1
 -- https://github.com/microsoft/pyright
 lspconfig.pyright.setup({
   capabilities = capabilities,
-  on_attach = function(client)
+  on_attach = function(client, bufnr)
     client.server_capabilities.document_formatting = false
     client.server_capabilities.document_range_formatting = false
-    on_attach(client)
+    on_attach(client, bufnr)
   end,
   flags = flags,
   settings = {
@@ -288,6 +290,8 @@ lspconfig.tsserver.setup({
 lspconfig.vimls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
+  -- TODO try out:
+  -- update_in_insert = false,
   flags = flags,
   init_options = {
     diagnostic = {

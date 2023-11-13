@@ -365,6 +365,9 @@ Plug 'mfussenegger/nvim-dap'
 
 " Plug 'jelera/vim-javascript-syntax'
 " Plug 'elzr/vim-json'
+
+Plug 'kyoh86/vim-jsonl'
+
 " Plug 'kevinoid/vim-jsonc'
 " Plug 'leafgarland/typescript-vim'
 " Plug 'peitalin/vim-jsx-typescript'

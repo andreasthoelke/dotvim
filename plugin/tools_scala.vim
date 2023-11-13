@@ -54,6 +54,9 @@ endfunc
 
 func! tools_scala#bufferMaps_shared()
 
+  nnoremap <silent><buffer> µ :call HotspotTSFw()<cr>
+  nnoremap <silent><buffer> <tab> :call HotspotTSBw()<cr>
+
 " ─   Regex search maps                                  ■
 
 " let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)\zs'
@@ -1214,5 +1217,50 @@ endfunc
 
 
 
+" ─   Hotspot motions                                    ■
+
+" Note: <c-m> and <c-i> is now unmappable
+" nnoremap <silent> <c-m> :call FnAreaForw()<cr>
+" nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
+" Instead use option-key / alt-key maps that are sent by karabiner. see /Users/at/Documents/Notes/help.md.md#/###%20Mapping%20Alt
+" nnoremap <silent> µ :call HotspotForw()<cr>
+" nnoremap <silent> <tab> :call HotspotBackw()<cr>
+
+" nnoremap <silent> µ :call HotspotTSFw()<cr>
+" nnoremap <silent> <tab> :call HotspotTSBw()<cr>
+
+func! HotspotTSFw()
+  call search('\v(\.|\|)', 'W')
+  normal! w
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    normal! ll
+  endif
+endfunc
+
+func! HotspotTSBw()
+  normal! h
+  call search('\v(\.|\|)', 'bW')
+  normal! l
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    call HotspotTSBw()
+  endif
+endfunc
+
+func! HotspotForw()
+  call SearchSkipSC( g:lineHotspotsPttn, 'W' )
+  normal w
+endfunc
+
+func! HotspotBackw()
+  normal bh
+  call SearchSkipSC( g:lineHotspotsPttn, 'bW' )
+  normal w
+endfunc
+
+" ─^  Hotspot motions                                    ▲
 
 
