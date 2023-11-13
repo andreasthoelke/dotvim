@@ -186,11 +186,22 @@ vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 
 
 local function open_startup()
-  tree_exec({
-    action = "show",
-    position = "left",
-    reveal_file = vim.fn.MostRecentlyUsedLocalFile(),
-  })
+  local reveal_file = vim.fn.MostRecentlyUsedLocalFile()
+  local cwd = vim.fn.getcwd()
+  if not utils.is_subpath( cwd, reveal_file) then
+    tree_exec({
+      action = "show",
+      position = "left",
+      dir = cwd,
+    })
+  else
+    tree_exec({
+      action = "show",
+      position = "left",
+      dir = cwd,
+      reveal_file = reveal_file,
+    })
+  end
 end
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })

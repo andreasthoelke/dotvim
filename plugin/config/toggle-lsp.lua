@@ -6,7 +6,7 @@
    start_on = true,
    underline = false,
    signs = false,
-   virtual_text = { prefix = 'd', spacing = 5 }
+   virtual_text = { prefix = '', spacing = 4 }
  }
 
 

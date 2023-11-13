@@ -87,8 +87,16 @@ local on_attach = function(client, bnr)
     navic.attach(client, bnr)
   end
 
-
 end
+
+-- setting a global (for all lsp clients) handler. seems to work!
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    update_in_insert = false,
+    -- reportUnusedVariable = false,
+    -- disableSelfClsNotAccessed = true,
+  }
+)
 
 -- vim.cmd [[autocmd ColorScheme * highlight NormalFloat guibg=#1f2335]]
 -- vim.cmd [[autocmd ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
@@ -214,6 +222,7 @@ end
 
 -- LSP[pyright]: Error ON_ATTACH_ERROR: "/Users/at/.vim/plugged/nvim-navic/lua/nvim-navic/init.lua:311: bad argument #3 to '__index' (string expected, got nil)"
 
+
 -- python 1
 -- https://github.com/microsoft/pyright
 lspconfig.pyright.setup({
@@ -227,8 +236,27 @@ lspconfig.pyright.setup({
   settings = {
     disableOrganizeImports = true,
     -- TODO: this seems to have no effect?
-    reportUnusedVariable = false,
+    -- reportUnusedVariable = false,
+    -- disableSelfClsNotAccessed = true,
   },
+
+  -- .venv/bin/python
+  before_init = function(_params, config)
+    local Path = require "plenary.path"
+    local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
+    if venv:joinpath("bin"):is_dir() then
+      config.settings.python.pythonPath = tostring(venv:joinpath("bin", "python"))
+    else
+      putt( "poetry local .venv not found" )
+      config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+    end
+  end,
+  -- from https://www.reddit.com/r/neovim/comments/wls43h/pyright_lsp_configuration_for_python_poetry/
+
+  -- before_init = function(_, config)
+  --   config.settings.python.pythonPath = "/Users/at/.venv/bin/python"
+  -- end,
+
 })
 
 
@@ -290,8 +318,7 @@ lspconfig.tsserver.setup({
 lspconfig.vimls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
-  -- TODO try out:
-  -- update_in_insert = false,
+  update_in_insert = false,
   flags = flags,
   init_options = {
     diagnostic = {
@@ -977,6 +1004,7 @@ api.nvim_create_autocmd("FileType", {
   end,
   group = nvim_metals_group,
 })
+
 
 
 

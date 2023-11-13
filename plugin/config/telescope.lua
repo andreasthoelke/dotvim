@@ -399,7 +399,7 @@ end )
 -- vim.fn.split( 'eins_zwei', '_' )
 -- vim.fn.split( 'einszwei', '_' )
 
--- NOTE: there's 
+-- NOTE: there's
 -- lua/utils_general.lua
 -- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
 -- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
@@ -572,7 +572,7 @@ Telesc = require('telescope').setup{
       },
 
       vertical = {
-        width = 0.47,
+        width = 100,
         height = 0.78,
         anchor = 'E',
         dynamic_preview_title = true,
@@ -757,7 +757,7 @@ easypick.setup({
       previewer = easypick.previewers.default()
     },
 
-    -- diff current branch with base_branch and show files that changed with respective diffs in preview 
+    -- diff current branch with base_branch and show files that changed with respective diffs in preview
     {
       name = "changed_files",
       command = "git diff --name-only $(git merge-base HEAD " .. base_branch .. " )",
@@ -797,7 +797,7 @@ easypick.setup({
 function _G.WinIsLeftSplit()
   local win_position = vim.api.nvim_win_get_position(0)
   local screen_width = vim.api.nvim_get_option('columns')
-  local threshold = screen_width / 2 - 100
+  local threshold = screen_width / 2 - 0
   return win_position[2] < threshold
 end
 -- WinIsLeftSplit()
@@ -806,15 +806,23 @@ end
 
 function _G.Telesc_dynPosOpts( opts )
   opts = opts or {}
+  local tabHasVerticalSplitWindows = vim.fn.tabpagewinnr( vim.fn.tabpagenr(), '$' ) > 1
+  local neovim_full_client_width = vim.api.nvim_get_option('columns')
   local anchor = WinIsLeftSplit() and 'E' or 'W'
   local layout_opts
-  if anchor == 'W' then
-    local win_position = vim.api.nvim_win_get_position(0)[2] - 2
+  -- putt( anchor )
+  -- if anchor == 'W' and not tabHasVerticalSplitWindows then
+  if neovim_full_client_width < 160 then
+    layout_opts = {}
+  elseif anchor == 'W' then
+    local win_width = vim.api.nvim_win_get_position(0)[2] - 2
+    -- win_width = win_width < 60 and 60 or win_width
+    win_width = win_width
     layout_opts = {
       layout_config = {
         vertical = {
           anchor = anchor,
-          width = win_position,
+          width = win_width,
         }
       },
     }
@@ -825,6 +833,7 @@ function _G.Telesc_dynPosOpts( opts )
   return vim.tbl_extend( 'keep', opts, layout_opts )
 end
 
+-- vim.api.nvim_get_option('columns')
 
 function _G.Telesc_launch( picker_name, opts )
   opts = Telesc_dynPosOpts( opts )

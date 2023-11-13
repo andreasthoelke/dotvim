@@ -44,7 +44,7 @@ au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md,*.txt call VScriptToolsBufferMaps()
+au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md,*.txt,.zshrc call VScriptToolsBufferMaps()
 
 " au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()

@@ -284,13 +284,11 @@ endfunc
 
 
 
-" let g:Py_PrinterCmd  = "python printer.py"
-
 func! Py_RunPrinter( termType )
 
-  " let cmd = g:Py_PrinterCmd
   let cmd = "python " . Py_GetPrinterPath()
-  " let cmd = "python app/printer.py"
+  let isPoetryProject = filereadable( getcwd() . '/pyproject.toml' )
+  let cmd = isPoetryProject ? "poetry run " . cmd : cmd
 
   if     a:termType == 'float'
     let resLines = systemlist( cmd )
