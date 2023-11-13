@@ -1,5 +1,6 @@
 
 local lspconfig = require 'lspconfig'
+local Path = require "plenary.path"
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
@@ -242,12 +243,17 @@ lspconfig.pyright.setup({
 
   -- .venv/bin/python
   before_init = function(_params, config)
-    local Path = require "plenary.path"
-    local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
-    if venv:joinpath("bin"):is_dir() then
-      config.settings.python.pythonPath = tostring(venv:joinpath("bin", "python"))
+    local dotvenv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
+    -- local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), "venv")
+    local venv_bin = vim.fn.getcwd() .. "/venv/bin"
+    if dotvenv:joinpath("bin"):is_dir() then
+      -- putt( "pyright using poetry .venv" )
+      config.settings.python.pythonPath = tostring(dotvenv:joinpath("bin", "python"))
+    elseif vim.fn.isdirectory( venv_bin ) then
+      -- putt( "pyright using local venv" )
+      config.settings.python.pythonPath = venv_bin
     else
-      putt( "poetry local .venv not found" )
+      putt( "venv folder not found" )
       config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
     end
   end,
@@ -258,6 +264,12 @@ lspconfig.pyright.setup({
   -- end,
 
 })
+
+-- NOTE these also find this local env paths! but only when source venv/bin/activate was run!?
+-- vim.fn.exepath("python3")
+-- "/Users/at/Documents/Proj/e_ds/py_oai_plg/venv/bin/python3"
+-- vim.fn.exepath("python")
+-- vim.fn.isdirectory("venv" .. "/bin")
 
 
 lspconfig.tsserver.setup({

@@ -245,7 +245,8 @@ local NewBuf = f.curry( function( adirection, pbn )
 
   if
     prompt_title == "Spelling Suggestions" or
-    prompt_title == "Registers"
+    prompt_title == "Registers" or
+    prompt_title == "Symbols"
   then
     actions.select_default( pbn )
     return

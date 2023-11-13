@@ -174,7 +174,6 @@ local actions = require "telescope.actions"
 local vfilter = vim.tbl_filter
 local vmap = vim.tbl_map
 
-
 function my_make_entry.gen_from_buffer_like_leaderf(opts)
   opts = opts or {}
   local default_icons, _ = devicons.get_icon("file", "", {default = true})

@@ -36,6 +36,67 @@ local function inactiveWinbarColor()
 end
 
 
+function _G.get_poetry_venv()
+ local output = vim.fn.system("poetry env info -p 2>/dev/null")
+ return string.gsub(output, "\n$", "")
+end
+
+local virtual_env1 = function()
+ -- only show virtual env for Python
+ if vim.bo.filetype ~= 'python' then
+  return ""
+ end
+ local conda_env = os.getenv('CONDA_DEFAULT_ENV')
+ local venv_path = os.getenv('VIRTUAL_ENV')
+ local poetry_venv_path = get_poetry_venv()
+ if venv_path == nil then
+  if conda_env == nil and poetry_venv_path == "" then
+    return ""
+  elseif conda_env == nil then
+    local venv_name = vim.fn.fnamemodify(poetry_venv_path, ':t')
+    return string.format(" %s (poetry venv)", venv_name)
+  else
+    return string.format(" %s (conda)", conda_env)
+  end
+ else
+  local venv_name = vim.fn.fnamemodify(venv_path, ':t')
+  return string.format(" %s (venv)", venv_name)
+ end
+end
+
+  
+local virtual_env = function()
+  -- only show virtual env for Python
+  if vim.bo.filetype ~= 'python' then
+    return ""
+  end
+  local conda_env = os.getenv('CONDA_DEFAULT_ENV')
+  local venv_path = os.getenv('VIRTUAL_ENV')
+  local poetry_venv_path = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h') .. '/.venv'
+  if venv_path == nil then
+    if conda_env == nil and vim.fn.isdirectory(poetry_venv_path) == 0 then
+      return ""
+    elseif vim.fn.isdirectory(poetry_venv_path) == 1 then
+      local venv_name = vim.fn.fnamemodify(poetry_venv_path, ':t')
+      return string.format("%s ", venv_name)
+    else
+      return string.format("%s co", conda_env)
+    end
+  else
+    local venv_name = vim.fn.fnamemodify(venv_path, ':t')
+    return string.format("%s ", venv_name)
+  end
+end
+
+-- os.getenv('VIRTUAL_ENV')
+-- os.getenv('CONDA_DEFAULT_ENV')
+-- vim.fn.system("poetry env info -p 2>/dev/null")
+-- vim.fn.isdirectory( vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h') .. '/.venv' )
+-- require"nvim-web-devicons".get_icon("file", "", {default = true})
+-- require"nvim-web-devicons".get_icon("scala")
+-- require"nvim-web-devicons".get_icon("toml")
+
+
 -- ─   Custom filetype with icon                         ■
 
 
@@ -175,6 +236,7 @@ local lualine_config = {
       },
       { "lsp_progress" },
       { "g:metals_status" },
+      virtual_env,
     },
     lualine_y = { lineNum },
     lualine_z = { 'LightlineScrollbar' },
