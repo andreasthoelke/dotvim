@@ -121,6 +121,9 @@ function _G.Tab_UserSetName()
     }, user_set )
 end
 
+
+-- ─   Hide Tabs                                         ■
+
 _G.Tabs_hidden = {}
 _G.Tabs_show_hidden = true
 
@@ -192,6 +195,18 @@ end
 
 -- Tab_go_tabnum_consider_hidden( 3 )
 
+-- Returns 0 if not visible
+function _G.Tab_visIdx( tabId )
+  return vim.fn.index( Tabs_visibleIds(), tabId ) + 1
+end
+-- Tab_visIdx( 12 )
+
+function _G.Tab_visIdx_label( tabId )
+  local visIdx = Tab_visIdx( tabId )
+  return visIdx >= 6 and tostring( visIdx ) or ""
+end
+
+
 function _G.Tab_go_offset( offset )
   if #Tabs_visibleIds() <= 1 then return end
   local nextTabIndex = vim.fn.tabpagenr() + offset
@@ -211,6 +226,9 @@ end
 -- Tabs_visibleIds()
 -- vim.api.nvim_get_current_tabpage()
 -- vim.fn.index( vim.api.nvim_list_tabpages(), 1 )
+
+-- ─^  Hide Tabs                                         ▲
+
 
 -- ─   Mappings                                          ■
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
@@ -352,8 +370,7 @@ function _G.Tab_render( tab, line )
     labelRest = (folder or "") .. " " .. (fileWins or "")
   end
 
-  labelRest = tab.number() >= 6 and tostring( tab.number() ) .. " " .. labelRest or labelRest
-  -- labelRest = hiddenPrefix .. labelRest
+  labelRest = Tab_visIdx_label( tab.id ) .. " " .. labelRest or labelRest
   labelRest = labelRest .. hiddenPrefix
 
   local icon, iconColor = devicons.get_icon_color( iconKey )

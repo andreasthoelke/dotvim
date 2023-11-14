@@ -403,7 +403,7 @@ endfunc
 func! GetCharAtCursorAscii()
   return strgetchar( getline('.'), virtcol('.')-1 )
 endfunc
-" echo GetCharAtCursorAscii() " a → ( b → c) [()] ⇒ d "
+" GetCharAtCursorAscii() " a → ( b → c) [()] ⇒ d "
 
 
 func! CursorIsInsideString()

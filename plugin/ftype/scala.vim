@@ -1,5 +1,6 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
-func! tools_scala#bufferMaps()
+
+func! Scala_bufferMaps()
 
 " ─     PrinterZio                                      ──
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
@@ -48,11 +49,11 @@ func! tools_scala#bufferMaps()
 
 
 
-  call tools_scala#bufferMaps_shared()
+  call Scala_bufferMaps_shared()
 
 endfunc
 
-func! tools_scala#bufferMaps_shared()
+func! Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer> µ :call HotspotTSFw()<cr>
   nnoremap <silent><buffer> <tab> :call HotspotTSBw()<cr>
@@ -1199,6 +1200,10 @@ func! MvPrevLineStart()
   normal! m'
   normal! k^
   call SkipScalaSkipWords()
+endfunc
+
+func! MakeOrPttn( listOfPatterns )
+  return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
 let g:Scala_colonPttn = MakeOrPttn( ['\:', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )

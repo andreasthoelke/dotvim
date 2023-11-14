@@ -29,7 +29,6 @@
 
 
 func! SmithySyntaxAdditions ()
-  " call tools_scala#bufferMaps()
   " call clearmatches()
 
   " syntax match Normal '@\i*' conceal cchar=❈
@@ -81,7 +80,7 @@ endfunc
 
 
 func! PythonSyntaxAdditions() " ■
-  call tools_python#bufferMaps()
+  call Py_bufferMaps()
   " nnoremap <silent><buffer> gei :call repl_py#eval_line( line('.') )<cr>
 
   call clearmatches()
@@ -149,7 +148,6 @@ endfunc " ▲
 
 func! ScalaSyntaxAdditions ()
 
-  " call tools_scala#bufferMaps()
   call clearmatches()
   " return
 

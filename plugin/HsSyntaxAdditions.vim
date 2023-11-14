@@ -14,8 +14,8 @@ au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 " BufWinEnter is needed to refresh the comment conceals when that buffer was hidden, e.g. using gq in dirvish/nvt
 au ag BufWinEnter *.sc,*.scala call ScalaSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.sc,*.scala call tools_scala#bufferMaps()
-au ag BufNewFile,BufRead,WinNew build.sbt call tools_scala#bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.sc,*.scala call Scala_bufferMaps()
+au ag BufNewFile,BufRead,WinNew build.sbt call Scala_bufferMaps()
 
 " the filetype .shtp is used in rlist to separate active .sh script from mere command templates.
 au ag BufNewFile,BufRead,WinNew *.sh,*.shtp,r call ShellSyntaxAdditions()

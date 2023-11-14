@@ -1,7 +1,7 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
-func! tools_python#bufferMaps()
+func! Py_bufferMaps()
 
-  call tools_scala#bufferMaps_shared()
+  call Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer>         gew :call Py_SetPrinterIdentif( "plain" )<cr>
   nnoremap <silent><buffer>         get :call Py_SetPrinterIdentif( "table" )<cr>
@@ -439,6 +439,11 @@ func! MvPrevLineStart()
   normal! m'
   normal! k^
   call SkipPySkipWords()
+endfunc
+
+
+func! MakeOrPttn( listOfPatterns )
+  return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
 let g:Py_columnPttn = MakeOrPttn( ['\:\s', '=', '->', '#', 'with', 'as', 'if', 'return'] )

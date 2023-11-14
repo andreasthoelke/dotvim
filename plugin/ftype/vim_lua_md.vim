@@ -5,7 +5,7 @@
 let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#).*'
 
 func! VScriptToolsBufferMaps()
-  call tools_scala#bufferMaps_shared()
+  call Scala_bufferMaps_shared()
 
   " the below should overwrite the default/scala maps
 
@@ -86,6 +86,14 @@ func! Vim_goFistWord()
     normal! W
   elseif &ft == 'lua'
     normal! ww
+    let char = GetCharAtCursor()
+    if char == '.' 
+      normal! l
+    endif
+    if char == '=' 
+      normal! b
+    endif
+
   elseif &ft == 'markdown'
     normal! w
   endif
@@ -103,7 +111,7 @@ func! Vim_ColgoFistWord()
     " cover name=val syntax
   endif
 endfunc
-
+" GetCharAtCursor()
 
 
 
