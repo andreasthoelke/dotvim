@@ -121,16 +121,104 @@ function _G.Tab_UserSetName()
     }, user_set )
 end
 
--- ─   Mappings                                         ──
+_G.Tabs_hidden = {}
+_G.Tabs_show_hidden = false
+
+function _G.Tab_toggle_hide()
+  local tabid = vim.api.nvim_get_current_tabpage()
+  if Tabs_hidden[tabid] then
+    Tabs_hidden[tabid] = false
+  else
+    Tabs_hidden[tabid] = true
+  end
+  require('tabby').update()
+end
+
+
+-- Tab_toggle_hide()
+-- Tabs_hidden
+
+function _G.Tabs_toggle_show_hidden()
+  if Tabs_show_hidden then
+    Tabs_show_hidden = false
+  else
+    Tabs_show_hidden = true
+  end
+  require('tabby').update()
+end
+
+function _G.Tab_go_tabnum( tabnr )
+  local tabId = vim.api.nvim_list_tabpages()[ tabnr ]
+  vim.api.nvim_set_current_tabpage( tabId )
+end
+
+-- Tab_go_tabnum( 3 )
+
+function _G.Tab_go_tabnum_consider_hidden( visibleTabIdx )
+  vim.api.nvim_set_current_tabpage( Tab_getID_fromVisIdx( visibleTabIdx ) )
+end
+
+function _G.Tab_getID_fromVisIdx( visibleTabIdx )
+  local hiddenTabIds = Tabs_show_hidden and {} or vim.tbl_keys( Tabs_hidden )
+  local allTabIds = vim.api.nvim_list_tabpages()
+  local visibleTabIds = vim.tbl_filter( function(tabId)
+    return not vim.tbl_contains( hiddenTabIds, tabId )
+  end, allTabIds )
+  return visibleTabIds[ visibleTabIdx ]
+end
+
+-- Tab_go_tabnum_consider_hidden( 3 )
+
+function _G.Tab_go_offset( offset )
+  local allTabIds = vim.api.nvim_list_tabpages()
+  local hiddenTabIds = Tabs_show_hidden and {} or vim.tbl_keys( Tabs_hidden )
+  local currentTabIndex = vim.fn.index( allTabIds, vim.api.nvim_get_current_tabpage() ) + 1
+  local nextTabIndex = currentTabIndex + offset
+  nextTabIndex = nextTabIndex <= #allTabIds and nextTabIndex or 1
+  nextTabIndex = nextTabIndex < 1           and #allTabIds or nextTabIndex
+  local tabId = vim.api.nvim_list_tabpages()[ nextTabIndex ]
+
+  if vim.tbl_contains( hiddenTabIds, tabId ) then
+    Tab_go_offset( offset + offset )
+  else
+    vim.api.nvim_set_current_tabpage( tabId )
+  end
+end
+
+-- vim.api.nvim_get_current_tabpage()
+-- vim.fn.index( vim.api.nvim_list_tabpages(), 1 )
+
+-- ─   Mappings                                          ■
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 vim.keymap.set( 'n', '<leader>tS', persist_reset )
-vim.keymap.set( 'n', '<leader>tl', user_set_lspsym )
+vim.keymap.set( 'n', '<leader>tu', Tab_toggle_hide )
+vim.keymap.set( 'n', '<leader>tU', Tabs_toggle_show_hidden )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?
 function _G.Tab_user_completion_fn( currentCompl, fullLine, pos )
   return {currentCompl .. '|' .. 'eins', currentCompl .. '|' .. 'zwei'}
 end
+
+local tab_go = function( tabnr )
+  return function() Tab_go_tabnum_consider_hidden( tabnr ) end
+end
+
+vim.keymap.set( 'n', '<c-f>', function() Tab_go_offset(  1 ) end )
+vim.keymap.set( 'n', '<c-d>', function() Tab_go_offset( -1 ) end )
+
+vim.keymap.set( 'n', '<leader>1', tab_go(1) )
+vim.keymap.set( 'n', '<leader>2', tab_go(2) )
+vim.keymap.set( 'n', '<leader>3', tab_go(3) )
+vim.keymap.set( 'n', '<leader>4', tab_go(4) )
+vim.keymap.set( 'n', '<leader>5', tab_go(5) )
+vim.keymap.set( 'n', '<leader>6', tab_go(6) )
+vim.keymap.set( 'n', '<leader>7', tab_go(7) )
+vim.keymap.set( 'n', '<leader>8', tab_go(8) )
+vim.keymap.set( 'n', '<leader>9', tab_go(9) )
+
+
+-- ─^  Mappings                                          ▲
 
 
 -- ─   Auto generate label text                         ──
@@ -188,10 +276,10 @@ end
 -- If the type of the secondary file differs from the first it will be preceded a b/w icon.
 -- show parent folder if file is in cwd
 -- ∪
--- show local repo root folder 
+-- show local repo root folder
 --   if window has a local cwd
 -- ∩
--- show local repo root folder 
+-- show local repo root folder
 --   if window has no local cwd
 --   but file is outside of cwd
 
@@ -223,6 +311,10 @@ end
 -- ─   Render                                           ──
 
 function _G.Tab_render( tab, line )
+
+  if not Tabs_show_hidden then
+    if Tabs_hidden[tab.id] then return end
+  end
 
   local iconKey, labelRest
   iconKey, labelRest = persist_get( tab.id )

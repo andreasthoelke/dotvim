@@ -143,8 +143,8 @@ endfunction
 " ─   Tabs                                               ■
 
 " next - prev tab
-nnoremap <silent> <c-f> :tabnext<cr>
-nnoremap <silent> <c-d> :tabprevious<cr>
+" nnoremap <silent> <c-f> :tabnext<cr>
+" nnoremap <silent> <c-d> :tabprevious<cr>
 
 " prevent the default maps (seems to navigate the buffer)
 " nnoremap <silent> <c-f> :<cr>
@@ -185,18 +185,17 @@ function! CloseTabGoToPrevious()
 endfunction
 
 
-" This has to be disabled, otherwise <leader>1 .. maps get overwritten.
-let g:airline#extensions#tabline#buffer_idx_mode = 0
 
-nnoremap <silent><leader>1 1gt
-nnoremap <silent><leader>2 2gt
-nnoremap <silent><leader>3 3gt
-nnoremap <silent><leader>4 4gt
-nnoremap <silent><leader>5 5gt
-nnoremap <silent><leader>6 6gt
-nnoremap <silent><leader>7 7gt
-nnoremap <silent><leader>8 8gt
-nnoremap <silent><leader>9 9gt
+" nnoremap <silent><leader>1 1gt
+" nnoremap <silent><leader>2 2gt
+" nnoremap <silent><leader>3 3gt
+" nnoremap <silent><leader>4 4gt
+" nnoremap <silent><leader>5 5gt
+" nnoremap <silent><leader>6 6gt
+" nnoremap <silent><leader>7 7gt
+" nnoremap <silent><leader>8 8gt
+" nnoremap <silent><leader>9 9gt
+
 nnoremap <silent><Leader>^ :exe "tabn " . g:lasttab<CR>
 
 if !exists('g:lasttab')
