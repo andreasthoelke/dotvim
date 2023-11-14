@@ -188,7 +188,7 @@ f.safe = function(fn)
   end
 end
 
-f.includes = f.curry(function(x, xs)
+f.contains = f.curry2(function(x, xs)
   for i = 1, #xs do
   if xs[i] == x then
       return true

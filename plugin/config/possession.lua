@@ -211,10 +211,15 @@ require('possession').setup {
 
     before_save = function( _name )
       local res = {}
+
       local neo_state = Ntree_get_session_state()
       if neo_state ~= nil then
         res['neo_tree'] = neo_state
       end
+
+      res['tabs_hidden'] = Tabs_hidden_indexs()
+      res['tabs_show_hidden'] = Tabs_show_hidden
+
       return res
     end,
 
@@ -232,6 +237,12 @@ require('possession').setup {
       if user_data['neo_tree'] ~= nil then
         Ntree_set_session_state(user_data['neo_tree'])
       end
+
+      if user_data['tabs_hidden'] ~= nil then
+        _G.Tabs_hidden      = user_data['tabs_hidden']
+        _G.Tabs_show_hidden = user_data['tabs_show_hidden']
+      end
+
     end,
   },
 

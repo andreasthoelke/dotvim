@@ -122,16 +122,36 @@ function _G.Tab_UserSetName()
 end
 
 _G.Tabs_hidden = {}
-_G.Tabs_show_hidden = false
+_G.Tabs_show_hidden = true
+
+function _G.Tabs_all_toggle_hide()
+  _G.Tabs_show_hidden = true
+
+  if #Tabs_hidden == 0 then
+    _G.Tabs_hidden = vim.api.nvim_list_tabpages()
+    Tab_toggle_hide()
+  else
+    _G.Tabs_hidden = {}
+    require('tabby').update()
+  end
+end
 
 function _G.Tab_toggle_hide()
   local tabid = vim.api.nvim_get_current_tabpage()
-  if Tabs_hidden[tabid] then
-    Tabs_hidden[tabid] = false
+  if f.contains( tabid, Tabs_hidden ) then
+    Tabs_hidden = f.filter( function( id ) return id ~= tabid end, Tabs_hidden )
   else
-    Tabs_hidden[tabid] = true
+    Tabs_hidden = f.concat( Tabs_hidden, { tabid } )
   end
   require('tabby').update()
+end
+-- Note that closed tabs can just stay in the hidden list bc/ tab-ids are unique per vim session
+
+function _G.Tabs_hidden_indexs()
+  return f.map( function( id )
+      local tabIndex = vim.fn.index( vim.api.nvim_list_tabpages(), id ) + 1
+      return tabIndex
+    end, Tabs_hidden )
 end
 
 
@@ -155,36 +175,40 @@ end
 -- Tab_go_tabnum( 3 )
 
 function _G.Tab_go_tabnum_consider_hidden( visibleTabIdx )
-  vim.api.nvim_set_current_tabpage( Tab_getID_fromVisIdx( visibleTabIdx ) )
+  vim.api.nvim_set_current_tabpage( Tab_id_fromVisIdx( visibleTabIdx ) )
 end
 
-function _G.Tab_getID_fromVisIdx( visibleTabIdx )
-  local hiddenTabIds = Tabs_show_hidden and {} or vim.tbl_keys( Tabs_hidden )
+function _G.Tabs_visibleIds()
   local allTabIds = vim.api.nvim_list_tabpages()
-  local visibleTabIds = vim.tbl_filter( function(tabId)
-    return not vim.tbl_contains( hiddenTabIds, tabId )
+  if Tabs_show_hidden then return allTabIds end
+  return f.filter( function(tabId)
+    return not f.contains( tabId, Tabs_hidden )
   end, allTabIds )
-  return visibleTabIds[ visibleTabIdx ]
+end
+
+function _G.Tab_id_fromVisIdx( visibleTabIdx )
+  return Tabs_visibleIds()[ visibleTabIdx ]
 end
 
 -- Tab_go_tabnum_consider_hidden( 3 )
 
 function _G.Tab_go_offset( offset )
-  local allTabIds = vim.api.nvim_list_tabpages()
-  local hiddenTabIds = Tabs_show_hidden and {} or vim.tbl_keys( Tabs_hidden )
-  local currentTabIndex = vim.fn.index( allTabIds, vim.api.nvim_get_current_tabpage() ) + 1
-  local nextTabIndex = currentTabIndex + offset
-  nextTabIndex = nextTabIndex <= #allTabIds and nextTabIndex or 1
-  nextTabIndex = nextTabIndex < 1           and #allTabIds or nextTabIndex
-  local tabId = vim.api.nvim_list_tabpages()[ nextTabIndex ]
+  if #Tabs_visibleIds() <= 1 then return end
+  local nextTabIndex = vim.fn.tabpagenr() + offset
+  nextTabIndex = nextTabIndex <= vim.fn.tabpagenr('$') and nextTabIndex     or 1
+  nextTabIndex = nextTabIndex < 1                 and vim.fn.tabpagenr('$') or nextTabIndex
 
-  if vim.tbl_contains( hiddenTabIds, tabId ) then
+  local proposedNextTabId = vim.api.nvim_list_tabpages()[ nextTabIndex ]
+
+  if not f.contains( proposedNextTabId, Tabs_visibleIds() ) then
     Tab_go_offset( offset + offset )
   else
-    vim.api.nvim_set_current_tabpage( tabId )
+    vim.api.nvim_set_current_tabpage( proposedNextTabId )
   end
 end
 
+-- Tabs_hidden
+-- Tabs_visibleIds()
 -- vim.api.nvim_get_current_tabpage()
 -- vim.fn.index( vim.api.nvim_list_tabpages(), 1 )
 
@@ -192,7 +216,8 @@ end
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 vim.keymap.set( 'n', '<leader>tS', persist_reset )
 vim.keymap.set( 'n', '<leader>tu', Tab_toggle_hide )
-vim.keymap.set( 'n', '<leader>tU', Tabs_toggle_show_hidden )
+vim.keymap.set( 'n', '<leader><leader>tU', Tabs_all_toggle_hide )
+vim.keymap.set( 'n', '<leader><leader>tu', Tabs_toggle_show_hidden )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?
@@ -312,9 +337,10 @@ end
 
 function _G.Tab_render( tab, line )
 
-  if not Tabs_show_hidden then
-    if Tabs_hidden[tab.id] then return end
-  end
+  local isHidden = f.contains( tab.id, Tabs_hidden )
+  if isHidden and not Tabs_show_hidden then return end
+
+  local hiddenPrefix = isHidden and "ˍ" or ""
 
   local iconKey, labelRest
   iconKey, labelRest = persist_get( tab.id )
@@ -327,6 +353,8 @@ function _G.Tab_render( tab, line )
   end
 
   labelRest = tab.number() >= 6 and tostring( tab.number() ) .. " " .. labelRest or labelRest
+  -- labelRest = hiddenPrefix .. labelRest
+  labelRest = labelRest .. hiddenPrefix
 
   local icon, iconColor = devicons.get_icon_color( iconKey )
   local Hl_Tab_ac_inac = tab.is_current() and Hl_Tabby_Tabs_ac or Hl_Tabby_Tabs_in
