@@ -16,6 +16,11 @@ func! tools_python#bufferMaps()
   nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
 
+  nnoremap <silent><buffer>gwj :call Py_RunCli( "showReturn" )<cr>
+  nnoremap <silent><buffer>gwJ :call Py_RunCli( "notShowReturn" )<cr>
+  nnoremap <silent><buffer>,gwj :call Py_RunCli( "termFloat" )<cr>
+  nnoremap <silent><buffer><leader>gwj :call Py_RunCli( "termSplit" )<cr>
+
   nnoremap <silent><buffer> <leader>(     :call Py_MvStartOfBlock()<cr>
   onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
   vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
@@ -283,6 +288,31 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 endfunc
 
 
+func! Py_RunCli( dispType )
+  let filePath = expand('%')
+
+  " # sourceTxt -d destTxt --flagA
+  let argStr = getline('.')[1:]
+
+  let isPoetryProject = filereadable( getcwd() . '/pyproject.toml' )
+  let runner = isPoetryProject ? "poetry run python " : "python "
+  let cmd = runner . filePath . " " . argStr
+
+
+  if     a:dispType == 'notShowReturn'
+    call system( cmd )
+
+  elseif a:dispType == 'showReturn'
+    call System_Float( cmd )
+
+  elseif a:dispType == 'termFloat'
+    call TermOneShotFloat( cmd )
+
+  elseif a:dispType == 'termSplit'
+    call TermOneShot( cmd )
+
+  endif
+endfunc
 
 func! Py_RunPrinter( termType )
 

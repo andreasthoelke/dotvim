@@ -28,10 +28,9 @@ nnoremap <silent> gwt :echo "Running terminal command .."<cr>:call T_DelayedCmd(
 vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
 nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 
-nnoremap gej :call RunTerm_showFloat()<cr>
-nnoremap geJ :call TermOneShot_FloatBuffer( getline('.') )<cr>
-nnoremap ,gej :call TermOneShotFloat( getline('.') )<cr>
-nnoremap <leader>gej :call TermOneShot( getline('.') )<cr>
+nnoremap <silent>gwj :call RunTerm_showFloat()<cr>
+nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
+nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 
 func! RunTerm_showFloat()
  echo "Running terminal command .."
