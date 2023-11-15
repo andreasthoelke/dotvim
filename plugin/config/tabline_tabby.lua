@@ -234,8 +234,8 @@ end
 vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
 vim.keymap.set( 'n', '<leader>tS', persist_reset )
 vim.keymap.set( 'n', '<leader>tu', Tab_toggle_hide )
-vim.keymap.set( 'n', '<leader><leader>tU', Tabs_all_toggle_hide )
-vim.keymap.set( 'n', '<leader><leader>tu', Tabs_toggle_show_hidden )
+vim.keymap.set( 'n', '<leader>tU', Tabs_all_toggle_hide )
+vim.keymap.set( 'n', '<leader>ty', Tabs_toggle_show_hidden )
 
 -- Note i needed a vimscript proxy for this here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/currentCompl,ˍfu
 -- TODO: show abbreviations of other windows in tab?

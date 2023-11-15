@@ -982,18 +982,49 @@ function M.IndexOf(array, value)
   return nil
 end
 
+
+function _G.MapInfo(str)
+  local mapInfo = vim.api.nvim_get_keymap('n')
+  for _, mapping in ipairs(mapInfo) do
+    -- print if it contains a string
+    if mapping.lhs:find(str) then
+      putt(mapping)
+      break
+    end
+  end
+end
+
+-- note this has no definition infos!
+-- MapInfo("tu")
+
 function _G.Keymap_props( mode, lhs_map_string )
   local cmd = "verbose " .. mode .. "map " .. lhs_map_string
   local propsstr = vim.api.nvim_exec( cmd, true )
   local propsstr_clean = propsstr:gsub("\n", " ")
   local propslist = vim.split( propsstr_clean, " " )
-  -- vim.print( propsstr )
+  -- vim.print( propslist )
   -- vim.print( M.IndexOf( propslist, "from" ) )
-  local fni = M.IndexOf( propslist, "from" ) + 1
-  local lni = M.IndexOf( propslist, "line" ) + 1
+
+  -- n  <Space>tu   * <Lua 27185: ~/.config/nvim/plugin/config/tabline_tabby.lua:142>
+  -- { "", "n", "", "<Space>tu", "", "", "*", "<Lua", "27185:", "~/.config/nvim/plugin/config/tabline_tabby.lua:142>", "\tLast", "set", "from", "Lua", "line", "4", "n", "", "<Space>t", "", "", "", "*", ":let", "g:opContFn='HsTabu'<CR>:let", "g:opContArgs=[g:pttnsTypeSigs4]<CR>:set", "opfunc=Gen_opfuncAc<CR>g@", "\tLast", "set", "from", "~/.config/nvim/plugin/utils-align.vim", "line", "21" }
+
+  -- lua print(vim.api.nvim_get_keymap('n', '<Space>tu'))
+
+
+  local fnameVal, lineVal
+  local fromVal = propslist[ M.IndexOf( propslist, "from" ) + 1 ]
+  if fromVal == "Lua" then
+    local luaPath = propslist[ M.IndexOf( propslist, "<Lua" ) + 2 ]
+    fnameVal, lineVal = table.unpack( vim.fn.split( luaPath, ":" ) )
+    lineVal = lineVal:sub( 1, -2 )
+  else
+    fnameVal = fromVal
+    lineVal = propslist[ M.IndexOf( propslist, "line" ) + 1 ]
+  end
+
   return {
-    filename = propslist[fni],
-    lnum = tonumber( propslist[lni] )
+    filename = fnameVal,
+    lnum = tonumber( lineVal )
   }
 end
 -- require('utils.general').Keymap_props("n", "<space>vm")

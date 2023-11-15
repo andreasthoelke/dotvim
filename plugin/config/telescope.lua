@@ -72,6 +72,7 @@ local function get_path_link( prompt_title, search_term )
   -- ISSUE: preview only partially works, sometimes gets a folder as filepath?
   if     prompt_title == "Key Maps" then
     local keymap_props = Keymap_props( selection.mode, selection.lhs )
+    -- putt(selection)
     -- using keymap_props.filename and lnum to get that lineText
     local lineText = vim.fn.readfile( vim.fn.fnamemodify( keymap_props.filename, ':p' ) )[ keymap_props.lnum ]
     local start_index = vim.fn.match( lineText, search_term )
@@ -437,7 +438,14 @@ Telesc = require('telescope').setup{
     mappings = {
       i = {
         ["<c-l>"] = function() vim.fn.feedkeys( ".*" ) end,
-        ["<c-space>"] = function() vim.fn.feedkeys( "<space>" ) end,
+        ["<c-space>"] = function(pbn)
+          local prompt_title = action_state.get_current_picker( pbn ).prompt_title
+          if prompt_title == "Key Maps" then
+            vim.fn.feedkeys( "<space>" )
+          elseif prompt_title == "rx sel" then
+            vim.fn.feedkeys( "<leader>" )
+          end
+        end,
 
         ["<c-j>"] = move_selection_next_with_space(),
         ["<c-k>"] = move_selection_previous_with_space(),
