@@ -518,7 +518,9 @@ func! ScalaSyntaxAdditions ()
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
-  set commentstring=\ \"%s
+  " set commentstring=\ \"%s
+  " set commentstring=\ \/\/%s
+  " Correct setting of the scala and sbt commentstring:
   set commentstring=\ \/\/%s
 
   " setl isk+=<,>,$,#,+,-,*,/,%,&,=,!,:,124,~,?,^
