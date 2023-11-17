@@ -824,51 +824,34 @@ easypick.setup({
 
 
 
-function _G.WinIsLeftSplit()
-  local win_position = vim.api.nvim_win_get_position(0)
+function _G.CursorIsInWinColumn()
+  local curWinH = vim.api.nvim_win_get_position(0)[2]
   local screen_width = vim.api.nvim_get_option('columns')
-  local threshold = screen_width / 2 - 0
-  return win_position[2] < threshold
+  return curWinH < (screen_width / 2 - 30) and "L" or "R"
 end
--- WinIsLeftSplit()
--- lua putt( WinIsLeftSplit() )
-
+-- CursorIsInWinColumn()
+-- vim.api.nvim_win_get_position(0)
 
 function _G.Telesc_dynPosOpts( opts )
   opts = opts or {}
-  local tabHasVerticalSplitWindows = vim.fn.tabpagewinnr( vim.fn.tabpagenr(), '$' ) > 1
+  -- local tabHasVerticalSplitWindows = vim.fn.tabpagewinnr( vim.fn.tabpagenr(), '$' ) > 1
   local neovim_full_client_width = vim.api.nvim_get_option('columns')
-  local anchor = WinIsLeftSplit() and 'E' or 'W'
-  local layout_opts
-  -- putt( anchor )
-  -- if anchor == 'W' and not tabHasVerticalSplitWindows then
-  if neovim_full_client_width < 160 then
-    layout_opts = {}
-  elseif anchor == 'W' then
-    local win_width = vim.api.nvim_win_get_position(0)[2] - 2
-    -- win_width = win_width < 60 and 60 or win_width
-    win_width = win_width
-    layout_opts = {
-      layout_config = {
-        vertical = {
-          anchor = anchor,
-          width = win_width,
-        }
-      },
-    }
-  else
-    layout_opts = { layout_config = { vertical = { anchor = anchor } } }
-  end
-  -- type assert that this will be a table
-  return vim.tbl_extend( 'keep', opts, layout_opts )
+  local otherWinWidth = neovim_full_client_width - vim.api.nvim_win_get_width(0)
+  local cursorWinCol = CursorIsInWinColumn()
+  local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
+  return vim.tbl_extend( 'keep', opts, { anchor = winAnchor, width = otherWinWidth - 2} )
 end
 
 -- vim.api.nvim_get_option('columns')
 
 function _G.Telesc_launch( picker_name, opts )
   opts = Telesc_dynPosOpts( opts )
-  require('telescope.builtin')[ picker_name ]( opts )
+  local layout_opts = { layout_config = { vertical = opts } }
+  require('telescope.builtin')[ picker_name ]( layout_opts )
 end
+-- Show_buffer_in_floating_window( 6, Telesc_dynPosOpts( {} ))
+-- Telesc_dynPosOpts( {} )
+-- vim.api.nvim_win_get_width(0)
 
 -- Telesc_launch 'live_grep'
 -- Telesc_launch 'current_buffer_fuzzy_find'

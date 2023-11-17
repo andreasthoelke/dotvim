@@ -12,23 +12,21 @@ nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
 augroup ScalaRepl
   autocmd!
   autocmd TermOpen * if &buftype == 'terminal' | let g:ScalaReplID = b:terminal_job_id | endif
+  autocmd BufReadPost * if &buftype == 'terminal' | call ReattachScalaReplCallbacks() | endif
+augroup END
 
 
-"    \lt
 func! ScalaReplStart ()
   if exists('g:ScalaReplID')
     echo 'ScalaRepl is already running'
     return
   endif
 
-  " call tools_edgedb#startInstance ()
-
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
   let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
-  " TODO: this throws an error in sbt if there no project "core". but then works with root project for e.g. realworld tapir
-  " call jobsend(g:ScalaReplID, "project printer\n" )
-  silent wincmd p
+
+  silent wincmd c
 endfunc
 
 
@@ -44,6 +42,12 @@ endfunc
 " func! ScalaReplReload ()
 "   call jobsend(g:ScalaReplID, "%run " . expand('%') . "\n")
 " endfunc
+
+" TODO: this throws an error in sbt if there no project "core". but then works with root project for e.g. realworld tapir
+" call jobsend(g:ScalaReplID, "project printer\n" )
+
+
+
 
 let g:ReplReceive_open = v:true
 let g:ReplReceive_additional = []
@@ -182,6 +186,17 @@ let g:ScalaReplCallbacks = {
       \ 'on_stderr': function('ScalaReplErrorCallback'),
       \ 'on_exit': function('ScalaReplExitCallback')
       \ }
+
+function! ReattachScalaReplCallbacks()
+ let bufnr = bufnr('terminal')
+ let job_id = nvim_buf_get_var(bufnr, 'term_job_id')
+ let term_info = nvim_get_chan_info(job_id)
+
+ call g:ScalaReplCallbacks['on_stdout'](term_info)
+ call g:ScalaReplCallbacks['on_stderr'](term_info)
+ call g:ScalaReplCallbacks['on_exit'](term_info)
+endfunction
+
 
 func! ScalaReplRun()
   call jobsend(g:ScalaReplID, "run\n" )

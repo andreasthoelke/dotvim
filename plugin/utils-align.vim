@@ -70,9 +70,11 @@ let g:alignTempl = [
       \, {'label':'_[ bracket',   'pttns': ['/\[/']}
       \, {'label':'_( parenth',   'pttns': ['/(/']}
       \, {'label':'_, comma',   'pttns': ['/\,/']}
+      \, {'label':'_b sbt',   'pttns': ['/ \zs%%\ze /']}
+      \, {'label':'_t sbt',   'pttns': ['/ \zs%\ze /']}
       \, {'label':'_<- bind',   'pttns': ['/<-/']}
       \, {'label':'_> case',   'pttns': ['/->/']}
-      \, {'label':'_type sigs', 'pttns': g:pttnsTypeSigs4}
+      \, {'label':'_ype sigs', 'pttns': g:pttnsTypeSigs4}
       \]
 
 
@@ -91,6 +93,11 @@ func! HsAlign( columnPttns, ... )
     call easy_align#easyAlign( startLine, endLine, pttn)
   endfor
 endfunc
+
+
+" let g:easy_align_delimiters = {
+" \ 'p': { 'pattern': '%%', 'ignore_groups': ['String', 'Comment'] },
+" \ }
 
 
 
