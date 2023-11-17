@@ -6,6 +6,14 @@ nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
 " nnoremap <silent> ,gei      :silent call ScalaReplPost( GetLineFromCursor() )<cr>
 " vnoremap <silent> ,gei :<c-u>call ScalaReplPost( Get_visual_selection() )<cr>
 
+
+" an autogroup for TermOpen to set g:ScalaReplID with a term has opened:
+
+augroup ScalaRepl
+  autocmd!
+  autocmd TermOpen * if &buftype == 'terminal' | let g:ScalaReplID = b:terminal_job_id | endif
+
+
 "    \lt
 func! ScalaReplStart ()
   if exists('g:ScalaReplID')
@@ -46,7 +54,7 @@ func! ReplReceiveOpen_reset()
   let g:ReplReceive_open = v:true
   let g:Repl_waitforanotherlargechunk = v:false
   let g:Repl_wait_receivedsofar = []
-  echo "receive open. unseen info lines: " . len( g:ReplReceive_additional )
+  " echo "receive open. unseen info lines: " . len( g:ReplReceive_additional )
   " echo g:ReplReceive_additional
   let g:ReplReceive_additional = []
 endfunc
@@ -89,7 +97,7 @@ func! ScalaReplMainCallback(job_id, data, event)
 
   if !g:ReplReceive_open 
     let g:ReplReceive_additional += lines
-    echo "add info lines: " . len( g:ReplReceive_additional )
+    " echo "add info lines: " . len( g:ReplReceive_additional )
     return 
   endif
 

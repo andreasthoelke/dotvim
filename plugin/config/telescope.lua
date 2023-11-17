@@ -170,6 +170,14 @@ local function get_path_link( prompt_title, search_term )
     }
 
 
+    -- CASE: Search Chrome Bookmarks ~/.config/nvim/plugin/config/telescope.lua‖/adirectionˍ==ˍ'f
+  elseif prompt_title == "Search Chrome Bookmarks" then
+    path = nil  -- should make sure no file open / cmd is run
+    link = {
+      url = selection.value,
+      info = selection.name,
+    }
+
     -- CASE: Filename pickers with optional linenum and cursor column
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
@@ -270,7 +278,7 @@ local NewBuf = f.curry( function( adirection, pbn )
   local cmd = vim.fn.NewBufCmds( fpath )[ direction ]
 
   -- 4. OPEN NEW BUFFER (if needed)
-  if vim.fn.expand '%:p' ~= fpath or adirection ~= 'full' then
+  if fpath ~= nil and (vim.fn.expand '%:p' ~= fpath or adirection ~= 'full') then
     vim.cmd( cmd )
   end
 
@@ -292,7 +300,19 @@ local NewBuf = f.curry( function( adirection, pbn )
 
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
     vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
+
+    -- CASE: Search Chrome Bookmarks
+    -- ~/.config/nvim/plugin/config/telescope.lua‖/CASE:ˍSearc
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'url' ) then
+    if adirection == 'full' then
+      -- open in Chrome
+      vim.fn.system( 'open -a "Google Chrome" "' .. maybeLink.url .. '"' )
+    else
+      -- open in Chrominum
+      vim.fn.LaunchChromium( maybeLink.url )
+    end
   end
+
 
   -- 6. HANDLE TAB BACK
   if     adirection == 'tab_bg' then     -- opened to the right in the background
@@ -465,6 +485,7 @@ Telesc = require('telescope').setup{
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
         ["<cr>"] = NewBuf 'full',
+        ['<c-w><cr>']   = actions.select_default,
         -- ['<cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
@@ -489,7 +510,7 @@ Telesc = require('telescope').setup{
         ['<c-w>o'] = NewBuf 'float',
         ['<c-w>i'] = NewBuf 'full',
         ["<cr>"] = NewBuf 'full',
-        -- ['<cr>']   = actions.select_default,
+        ['<c-w><cr>']   = actions.select_default,
         ['<c-w>t'] = { '<cmd>echo "use tn, tt or T"<cr>', type = 'command' },
         ['<c-w>tn'] = NewBuf 'tab',
         ['<c-w>tt'] = NewBuf 'tab_back',
@@ -716,7 +737,7 @@ require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
 -- This hooks up telescope to be used when noice / nvim-ui ui-select actions are issued.
--- require('telescope').load_extension('ui-select')
+require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
 require('telescope').load_extension('ast_grep')
