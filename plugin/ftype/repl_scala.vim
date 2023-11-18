@@ -29,6 +29,8 @@ func! ScalaReplStart ()
   silent wincmd c
 endfunc
 
+" g:ScalaReplID
+" g:ScalaRepl_bufnr
 
 func! ScalaReplStop ()
   if !exists('g:ScalaReplID')
@@ -37,6 +39,7 @@ func! ScalaReplStop ()
   endif
   call jobstop( g:ScalaReplID )
   unlet g:ScalaReplID
+  unlet g:ScalaRepl_bufnr
 endfunc
 
 " func! ScalaReplReload ()

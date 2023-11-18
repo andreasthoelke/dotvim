@@ -85,6 +85,9 @@ nnoremap <silent> <c-w>,S  :call NewBuf_fromClipPath( "down_back" )<cr>
 nnoremap <silent> <c-w>dd <c-w>o
 
 
+" TERM-BUFFER
+" c-w t  - TODO: any / glt? terminal buffer?
+
 " REPL-BUFFER
 nnoremap <silent> <c-w>rp  :call NewBuf_fromReplBuffer( "preview" )<cr>
 nnoremap <silent> <c-w>ro  :call NewBuf_fromReplBuffer( "float" )<cr>
@@ -101,6 +104,21 @@ nnoremap <silent> <c-w>rU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
 nnoremap <silent> <c-w>rs  :call NewBuf_fromReplBuffer( "down" )<cr>
 nnoremap <silent> <c-w>rS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
 
+" SCRATCH-BUFFER
+nnoremap <silent> <c-w>gp  :call NewBuf_fromScratchBuffer( "preview" )<cr>
+nnoremap <silent> <c-w>go  :call NewBuf_fromScratchBuffer( "float" )<cr>
+nnoremap <silent> <c-w>gi  :call NewBuf_fromScratchBuffer( "full" )<cr>
+nnoremap <silent> <c-w>gt  :call NewBuf_fromScratchBuffer( "tab" )<cr>
+nnoremap <silent> <c-w>gT  :call NewBuf_fromScratchBuffer( "tab_left" )<cr>
+"                      
+nnoremap <silent> <c-w>gv  :call NewBuf_fromScratchBuffer( "right" )<cr>
+nnoremap <silent> <c-w>gV  :call NewBuf_fromScratchBuffer( "right_back" )<cr>
+nnoremap <silent> <c-w>ga  :call NewBuf_fromScratchBuffer( "left" )<cr>
+nnoremap <silent> <c-w>gA  :call NewBuf_fromScratchBuffer( "left_back" )<cr>
+nnoremap <silent> <c-w>gu  :call NewBuf_fromScratchBuffer( "up" )<cr>
+nnoremap <silent> <c-w>gU  :call NewBuf_fromScratchBuffer( "up_back" )<cr>
+nnoremap <silent> <c-w>gs  :call NewBuf_fromScratchBuffer( "down" )<cr>
+nnoremap <silent> <c-w>gS  :call NewBuf_fromScratchBuffer( "down_back" )<cr>
 
 
 " CURSOR-LSP-REFERENCE
@@ -262,23 +280,38 @@ func! NewBuf_fromClipPath( direction )
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
 
+func! NewBuf_fromScratchBuffer( direction )
+  let path = '~/Documents/Notes/scratch/' . GetRandNumberString()
+  if a:direction == 'float'
+    call v:lua.FloatBuf_inOtherWinColumn( path, v:lua.Telesc_dynPosOpts() )
+  else
+    let cmd = NewBufCmds( path )[ a:direction ]
+    if IsInFloatWin() | wincmd c | endif
+    exec cmd
+  endif
+endfunc
+
+
 
 func! NewBuf_fromReplBuffer( direction )
-  let [direction; maybe_back ] = a:direction->split('_')
+  if exists('g:ScalaRepl_bufnr')
+    echo 'ScalaRepl is not running'
+    return
+  endif
   let bnr = g:ScalaRepl_bufnr
   if a:direction == 'float'
     call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
   else
-    let cmd = a:direction == 'right' ? 'vert sbuffer ' . bnr :
+    let cmd = a:direction == 'right'      ? 'vert sbuffer ' . bnr :
         \ a:direction == 'right_back' ? 'vert sbuffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'up' ? 'leftabove sbuffer ' . bnr :
-        \ a:direction == 'up_back' ? 'leftabove sbuffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'left' ? 'leftabove vert sbuffer ' . bnr :
-        \ a:direction == 'left_back' ? 'leftabove vert sbuffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'full' ? 'buffer ' . bnr :
-        \ a:direction == 'preview' ? 'wincmd p | buffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'tab' ? 'tab sbuffer ' . bnr :
-        \ a:direction == 'tab_left' ? 'tabnew | tabmove -1 | buffer ' . bnr :
+        \ a:direction == 'up'         ? 'leftabove sbuffer ' . bnr :
+        \ a:direction == 'up_back'    ? 'leftabove sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'left'       ? 'leftabove vert sbuffer ' . bnr :
+        \ a:direction == 'left_back'  ? 'leftabove vert sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'full'       ? 'buffer ' . bnr :
+        \ a:direction == 'preview'    ? 'wincmd p | buffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'tab'        ? 'tab sbuffer ' . bnr :
+        \ a:direction == 'tab_left'   ? 'tabnew | tabmove -1 | buffer ' . bnr :
         \ 'sbuffer ' . bnr
     exec cmd
   endif

@@ -51,8 +51,8 @@ endfunc
 " ,a(motion)(sel) - run a multi-col align template on motion or vis sel
 " Tests: - ",aii=" will align to "=" inside indent block
 
-nnoremap ,a      :let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap ,a :<c-u>let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+nnoremap <silent>,a      :let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <silent>,a :<c-u>let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! HsAlignUC( ... )
   let startLine = a:0 ? a:1 : 1
@@ -67,6 +67,7 @@ endfunc
 let g:alignTempl = [
       \  {'label':'_space',     'pttns': ['/ / {"left_margin": 0, "right_margin": 0}']}
       \, {'label':'_= equal',   'pttns': ['=']}
+      \, {'label':'_?',   'pttns': ['/?/']}
       \, {'label':'_[ bracket',   'pttns': ['/\[/']}
       \, {'label':'_( parenth',   'pttns': ['/(/']}
       \, {'label':'_, comma',   'pttns': ['/\,/']}
