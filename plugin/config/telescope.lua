@@ -834,24 +834,32 @@ end
 
 function _G.Telesc_dynPosOpts( opts )
   opts = opts or {}
-  -- local tabHasVerticalSplitWindows = vim.fn.tabpagewinnr( vim.fn.tabpagenr(), '$' ) > 1
   local neovim_full_client_width = vim.api.nvim_get_option('columns')
-  local otherWinWidth = neovim_full_client_width - vim.api.nvim_win_get_width(0)
+  local thisWinWidth = vim.api.nvim_win_get_width(0)
+  local width
+  if thisWinWidth == neovim_full_client_width then
+    width = neovim_full_client_width / 2 - 4
+  else
+    width = neovim_full_client_width - thisWinWidth - 2
+  end
   local cursorWinCol = CursorIsInWinColumn()
   local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
-  return vim.tbl_extend( 'keep', opts, { anchor = winAnchor, width = otherWinWidth - 2} )
+  return vim.tbl_extend( 'keep', opts, { anchor = winAnchor, width = width} )
 end
 
 -- vim.api.nvim_get_option('columns')
 
 function _G.Telesc_launch( picker_name, opts )
-  opts = Telesc_dynPosOpts( opts )
-  local layout_opts = { layout_config = { vertical = opts } }
-  require('telescope.builtin')[ picker_name ]( layout_opts )
+  local posOpts = Telesc_dynPosOpts( {} )
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin')[ picker_name ]( opts )
 end
 -- Show_buffer_in_floating_window( 6, Telesc_dynPosOpts( {} ))
 -- Telesc_dynPosOpts( {} )
 -- vim.api.nvim_win_get_width(0)
+-- vim.fn.tabpagewinnr( vim.fn.tabpagenr(), '$' )
+-- FloatBuf_inOtherWinColumn( 6, Telesc_dynPosOpts( {} ))
 
 -- Telesc_launch 'live_grep'
 -- Telesc_launch 'current_buffer_fuzzy_find'

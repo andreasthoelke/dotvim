@@ -85,6 +85,23 @@ nnoremap <silent> <c-w>,S  :call NewBuf_fromClipPath( "down_back" )<cr>
 nnoremap <silent> <c-w>dd <c-w>o
 
 
+" REPL-BUFFER
+nnoremap <silent> <c-w>rp  :call NewBuf_fromClipPath( "preview" )<cr>
+nnoremap <silent> <c-w>ro  :call NewBuf_fromClipPath( "float" )<cr>
+nnoremap <silent> <c-w>ri  :call NewBuf_fromClipPath( "full" )<cr>
+nnoremap <silent> <c-w>rt  :call NewBuf_fromClipPath( "tab" )<cr>
+nnoremap <silent> <c-w>rT  :call NewBuf_fromClipPath( "tab_bg" )<cr>
+" _                    
+nnoremap <silent> <c-w>rv  :call NewBuf_fromClipPath( "right" )<cr>
+nnoremap <silent> <c-w>rV  :call NewBuf_fromClipPath( "right_back" )<cr>
+nnoremap <silent> <c-w>ra  :call NewBuf_fromClipPath( "left" )<cr>
+nnoremap <silent> <c-w>ru  :call NewBuf_fromClipPath( "up" )<cr>
+nnoremap <silent> <c-w>rU  :call NewBuf_fromClipPath( "up_back" )<cr>
+nnoremap <silent> <c-w>rs  :call NewBuf_fromClipPath( "down" )<cr>
+nnoremap <silent> <c-w>rS  :call NewBuf_fromClipPath( "down_back" )<cr>
+
+
+
 " CURSOR-LSP-REFERENCE
 nnoremap <silent> gdp  :call NewBuf_fromCursorLspRef( "preview_back" )<cr>
 nnoremap <silent> gdo  :call NewBuf_fromCursorLspRef( "float" )<cr>
@@ -245,6 +262,13 @@ func! NewBuf_fromClipPath( direction )
 endfunc
 
 
+func! NewBuf_fromReplBuffer( direction )
+  let [path; maybeLinkExt] = @*->split('‖')
+  let cmd = NewBufCmds( path )[ a:direction ] 
+  if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+endfunc
 
 
 " DIRECTION IDS  <==>   BUF-open Commands:

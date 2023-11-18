@@ -461,6 +461,9 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
 end
 -- TODO: not working on this file: ~/.local/share/nvim/sessions/__Users__at__.config__nvim‖
 
+-- Telesc_launch( 'live_grep', { default_text = 'hi' } )
+
+
 function _G.Search_ast( pattern )
   local anchor = WinIsLeftSplit() and 'E' or 'W'
   local layout_opts = { layout_config = { vertical = { anchor = anchor } } }

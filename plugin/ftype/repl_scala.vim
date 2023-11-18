@@ -9,11 +9,11 @@ nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
 
 " an autogroup for TermOpen to set g:ScalaReplID with a term has opened:
 
-augroup ScalaRepl
-  autocmd!
-  autocmd TermOpen * if &buftype == 'terminal' | let g:ScalaReplID = b:terminal_job_id | endif
-  autocmd BufReadPost * if &buftype == 'terminal' | call ReattachScalaReplCallbacks() | endif
-augroup END
+" augroup ScalaRepl
+"   autocmd!
+"   autocmd TermOpen * if &buftype == 'terminal' | let g:ScalaReplID = b:terminal_job_id | endif
+"   autocmd BufReadPost * if &buftype == 'terminal' | call ReattachScalaReplCallbacks() | endif
+" augroup END
 
 
 func! ScalaReplStart ()
@@ -186,16 +186,6 @@ let g:ScalaReplCallbacks = {
       \ 'on_stderr': function('ScalaReplErrorCallback'),
       \ 'on_exit': function('ScalaReplExitCallback')
       \ }
-
-function! ReattachScalaReplCallbacks()
- let bufnr = bufnr('terminal')
- let job_id = nvim_buf_get_var(bufnr, 'term_job_id')
- let term_info = nvim_get_chan_info(job_id)
-
- call g:ScalaReplCallbacks['on_stdout'](term_info)
- call g:ScalaReplCallbacks['on_stderr'](term_info)
- call g:ScalaReplCallbacks['on_exit'](term_info)
-endfunction
 
 
 func! ScalaReplRun()

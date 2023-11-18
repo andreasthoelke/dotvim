@@ -314,7 +314,8 @@ endfunc
 " call( function('Dirvish_Float'), ['/Users/at/Documents/Bookmarks/'] )
 
 func! Float1Show()
-  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, FloatOpts1())
+  " call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, FloatOpts1())
+  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, v:lua.FloatOpts_inOtherWinColumn())
 endfunc
 " Float1Show()
 

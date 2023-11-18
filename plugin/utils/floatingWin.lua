@@ -1,5 +1,17 @@
 
-function _G.Show_buffer_in_floating_window(bufnr, opts)
+
+function _G.FloatBuf_inOtherWinColumn( bufnr, opts )
+  local config = FloatOpts_inOtherWinColumn( opts )
+
+  -- Create the floating window
+  local floating_win = vim.api.nvim_open_win(bufnr, false, config)
+
+  -- Set the focus to the floating window
+  vim.api.nvim_set_current_win(floating_win)
+end
+
+function _G.FloatOpts_inOtherWinColumn( opts )
+  opts = opts or Telesc_dynPosOpts( {} )
   -- Set default values for opts.width and opts.anchor
   opts.width = opts.width or 80
   opts.anchor = opts.anchor or 'W'
@@ -11,7 +23,7 @@ function _G.Show_buffer_in_floating_window(bufnr, opts)
   -- Set the width and height of the floating window
   local config = {
     relative = 'editor',
-    width = opts.width,
+    width = opts.width - 1,
     height = math.floor(nvim_height / 2),
   }
 
@@ -24,15 +36,14 @@ function _G.Show_buffer_in_floating_window(bufnr, opts)
     config.col = nvim_width - config.width
   end
 
-  -- Create the floating window
-  local floating_win = vim.api.nvim_open_win(bufnr, false, config)
+  -- Set border options
+  config.border = opts.border or 'rounded'
 
-  -- Set the focus to the floating window
-  vim.api.nvim_set_current_win(floating_win)
+  return config
 end
 
 
--- Show_buffer_in_floating_window( 6, Telesc_dynPosOpts( {} ))
+-- FloatBuf_inOtherWinColumn( 6, Telesc_dynPosOpts( {} ))
 -- Telesc_dynPosOpts( {} )
 
 
