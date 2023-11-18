@@ -86,19 +86,20 @@ nnoremap <silent> <c-w>dd <c-w>o
 
 
 " REPL-BUFFER
-nnoremap <silent> <c-w>rp  :call NewBuf_fromClipPath( "preview" )<cr>
-nnoremap <silent> <c-w>ro  :call NewBuf_fromClipPath( "float" )<cr>
-nnoremap <silent> <c-w>ri  :call NewBuf_fromClipPath( "full" )<cr>
-nnoremap <silent> <c-w>rt  :call NewBuf_fromClipPath( "tab" )<cr>
-nnoremap <silent> <c-w>rT  :call NewBuf_fromClipPath( "tab_bg" )<cr>
-" _                    
-nnoremap <silent> <c-w>rv  :call NewBuf_fromClipPath( "right" )<cr>
-nnoremap <silent> <c-w>rV  :call NewBuf_fromClipPath( "right_back" )<cr>
-nnoremap <silent> <c-w>ra  :call NewBuf_fromClipPath( "left" )<cr>
-nnoremap <silent> <c-w>ru  :call NewBuf_fromClipPath( "up" )<cr>
-nnoremap <silent> <c-w>rU  :call NewBuf_fromClipPath( "up_back" )<cr>
-nnoremap <silent> <c-w>rs  :call NewBuf_fromClipPath( "down" )<cr>
-nnoremap <silent> <c-w>rS  :call NewBuf_fromClipPath( "down_back" )<cr>
+nnoremap <silent> <c-w>rp  :call NewBuf_fromReplBuffer( "preview" )<cr>
+nnoremap <silent> <c-w>ro  :call NewBuf_fromReplBuffer( "float" )<cr>
+nnoremap <silent> <c-w>ri  :call NewBuf_fromReplBuffer( "full" )<cr>
+nnoremap <silent> <c-w>rt  :call NewBuf_fromReplBuffer( "tab" )<cr>
+nnoremap <silent> <c-w>rT  :call NewBuf_fromReplBuffer( "tab_left" )<cr>
+"      
+nnoremap <silent> <c-w>rv  :call NewBuf_fromReplBuffer( "right" )<cr>
+nnoremap <silent> <c-w>rV  :call NewBuf_fromReplBuffer( "right_back" )<cr>
+nnoremap <silent> <c-w>ra  :call NewBuf_fromReplBuffer( "left" )<cr>
+nnoremap <silent> <c-w>rA  :call NewBuf_fromReplBuffer( "left_back" )<cr>
+nnoremap <silent> <c-w>ru  :call NewBuf_fromReplBuffer( "up" )<cr>
+nnoremap <silent> <c-w>rU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
+nnoremap <silent> <c-w>rs  :call NewBuf_fromReplBuffer( "down" )<cr>
+nnoremap <silent> <c-w>rS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
 
 
 
@@ -263,11 +264,24 @@ endfunc
 
 
 func! NewBuf_fromReplBuffer( direction )
-  let [path; maybeLinkExt] = @*->split('‖')
-  let cmd = NewBufCmds( path )[ a:direction ] 
-  if IsInFloatWin() | wincmd c | endif
-  exec cmd
-  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+  let [direction; maybe_back ] = a:direction->split('_')
+  let bnr = g:ScalaRepl_bufnr
+  if a:direction == 'float'
+    call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
+  else
+    let cmd = a:direction == 'right' ? 'vert sbuffer ' . bnr :
+        \ a:direction == 'right_back' ? 'vert sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'up' ? 'leftabove sbuffer ' . bnr :
+        \ a:direction == 'up_back' ? 'leftabove sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'left' ? 'leftabove vert sbuffer ' . bnr :
+        \ a:direction == 'left_back' ? 'leftabove vert sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'full' ? 'buffer ' . bnr :
+        \ a:direction == 'preview' ? 'wincmd p | buffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'tab' ? 'tab sbuffer ' . bnr :
+        \ a:direction == 'tab_left' ? 'tabnew | tabmove -1 | buffer ' . bnr :
+        \ 'sbuffer ' . bnr
+    exec cmd
+  endif
 endfunc
 
 
@@ -282,6 +296,7 @@ func! NewBufCmds_templ(...)
   let mp['float_spinoff'] = 'wincmd c | call Path_Float( "_PATH_" )'
   let mp['full']  = 'edit _PATH_'
   let mp['tab']   = 'tabedit _PATH_'
+  let mp['tab_left']   = 'tabedit _PATH_ | tabmove -1'
   let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious' " opened to the right in the background
   let mp['tab_back'] = 'tabedit _PATH_ | wincmd p' " open and go to new tab, then jump *back* to prompt
   let mp['tab_spinoff'] = 'wincmd c | tabedit _PATH_' " close window and open in new tab.

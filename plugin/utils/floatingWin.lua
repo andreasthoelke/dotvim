@@ -1,6 +1,19 @@
 
 
-function _G.FloatBuf_inOtherWinColumn( bufnr, opts )
+function _G.FloatBuf_inOtherWinColumn( bufnrOrPath, opts )
+
+  local bufnr
+  if type( bufnrOrPath ) == 'number' then
+    bufnr = bufnrOrPath
+  else
+    -- find existing buffer with this name
+    bufnr = vim.fn.bufnr( bufnrOrPath )
+    if bufnr == -1 then
+      bufnr = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_name(bufnr, bufnrOrPath)
+    end
+  end
+
   local config = FloatOpts_inOtherWinColumn( opts )
 
   -- Create the floating window
@@ -44,6 +57,8 @@ end
 
 
 -- FloatBuf_inOtherWinColumn( 6, Telesc_dynPosOpts( {} ))
+-- FloatBuf_inOtherWinColumn( vim.g["ScalaRepl_bufnr"], Telesc_dynPosOpts( {} ))
+-- FloatBuf_inOtherWinColumn( "~/Documents/Notes/Fullstack_app.md", Telesc_dynPosOpts( {} ))
 -- Telesc_dynPosOpts( {} )
 
 
