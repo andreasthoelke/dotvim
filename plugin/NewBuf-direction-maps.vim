@@ -294,7 +294,8 @@ endfunc
 
 
 func! NewBuf_fromReplBuffer( direction )
-  if exists('g:ScalaRepl_bufnr')
+  let [direction; maybe_back ] = a:direction->split('_')
+  if !exists('g:ScalaRepl_bufnr')
     echo 'ScalaRepl is not running'
     return
   endif
@@ -303,17 +304,22 @@ func! NewBuf_fromReplBuffer( direction )
     call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
   else
     let cmd = a:direction == 'right'      ? 'vert sbuffer ' . bnr :
-        \ a:direction == 'right_back' ? 'vert sbuffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'up'         ? 'leftabove sbuffer ' . bnr :
-        \ a:direction == 'up_back'    ? 'leftabove sbuffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'left'       ? 'leftabove vert sbuffer ' . bnr :
-        \ a:direction == 'left_back'  ? 'leftabove vert sbuffer ' . bnr . ' | wincmd p' :
+        \ a:direction == 'right_back' ? 'vert sbuffer ' . bnr :
+        \ a:direction == 'up'         ? 'leftabove sbuffer ' . bnr . ' | resize 7 | normal! G' :
+        \ a:direction == 'up_back'    ? 'leftabove sbuffer ' . bnr . ' | resize 7 | normal! G' :
+        \ a:direction == 'down'       ? 'sbuffer ' . bnr . ' | resize 10 | normal! G' :
+        \ a:direction == 'down_back'  ? 'sbuffer ' . bnr . ' | resize 10 | normal! G' :
+        \ a:direction == 'left'       ? 'leftabove vert sbuffer ' . bnr . ' | vertical resize 40 | normal! G' :
+        \ a:direction == 'left_back'  ? 'leftabove vert sbuffer ' . bnr . ' | vertical resize 40 | normal! G' :
         \ a:direction == 'full'       ? 'buffer ' . bnr :
         \ a:direction == 'preview'    ? 'wincmd p | buffer ' . bnr . ' | wincmd p' :
         \ a:direction == 'tab'        ? 'tab sbuffer ' . bnr :
         \ a:direction == 'tab_left'   ? 'tabnew | tabmove -1 | buffer ' . bnr :
         \ 'sbuffer ' . bnr
     exec cmd
+    if len( maybe_back ) && maybe_back[0] == 'back'
+      call T_DelayedCmd('wincmd p') 
+    endif
   endif
 endfunc
 
