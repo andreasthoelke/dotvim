@@ -26,8 +26,10 @@ nnoremap <silent><buffer> - <Plug>(dirvish_up)
 nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview_back")<cr>
 nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
 nnoremap <silent><buffer>i :call NewBuf_fromCursorLinkPath("full")<cr>
-nnoremap <silent><buffer>t :call NewBuf_fromCursorLinkPath("tab")<cr>
-nnoremap <silent><buffer>T :call NewBuf_fromCursorLinkPath("tab_bg")<cr>
+nnoremap <silent><buffer>tn :call NewBuf_fromCursorLinkPath("tab")<cr>
+nnoremap <silent><buffer>tt :call NewBuf_fromCursorLinkPath("tab_bg")<cr>
+nnoremap <silent><buffer>Tn :call NewBuf_fromCursorLinkPath("tab_left")<cr>
+nnoremap <silent><buffer>Tt :call NewBuf_fromCursorLinkPath("tab_left_bg")<cr>
 " _
 nnoremap <silent><buffer>v :call NewBuf_fromCursorLinkPath("right")<cr>
 nnoremap <silent><buffer>V :call NewBuf_fromCursorLinkPath("right_back")<cr>

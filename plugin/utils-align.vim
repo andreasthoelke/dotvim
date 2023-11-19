@@ -70,6 +70,7 @@ let g:alignTempl = [
       \, {'label':'_?',   'pttns': ['/?/']}
       \, {'label':'_[ bracket',   'pttns': ['/\[/']}
       \, {'label':'_( parenth',   'pttns': ['/(/']}
+      \, {'label':'_) parenth',   'pttns': ['/)/']}
       \, {'label':'_, comma',   'pttns': ['/\,/']}
       \, {'label':'_b sbt',   'pttns': ['/ \zs%%\ze /']}
       \, {'label':'_t sbt',   'pttns': ['/ \zs%\ze /']}

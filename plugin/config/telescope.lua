@@ -108,6 +108,7 @@ local function get_path_link( prompt_title, search_term )
     local filePath = selection.filename
     local isAbsFilePath = filePath ~= nil and filePath:sub(1,1) == '/'
     filePath = not isAbsFilePath and cwdOfFile .. "/" .. filePath or filePath
+    search_term = vim.fn.substitute( search_term, [[\\(]], "(", "" )
     local start_index = vim.fn.match( selection.text, search_term )
     local end_index = start_index + search_term:len() -1
     if start_index == -1 then
@@ -195,6 +196,14 @@ local function get_path_link( prompt_title, search_term )
   end
   return path, link
 end
+
+
+-- vim.fn.match( "ein[s", [[n\[]] )
+-- vim.fn.match( "ein[s", [[n\(]] )
+-- vim.fn.match( "ein[s", vim.pesc( [[n[]] ) )
+-- vim.fn.substitute( [[n\(]], "n", "x", "" )
+-- vim.fn.substitute( [[n\(]], [[\\(]], "(", "" )
+
 
 function _G.Defer_cmd( cmd, timeout )
   vim.defer_fn( vim.cmd( cmd ), timeout )
@@ -548,9 +557,9 @@ Telesc = require('telescope').setup{
 
         ["n"]     = preview 'next' 'normal',
         ["p"]     = preview 'previous' 'normal',
-        ["<c-n>"] = preview 'next' 'insert',
-        ["<c-p>"] = preview 'previous' 'insert',
-        ["<c-i>"] = preview 'current' 'insert',
+        ["<c-n>"] = preview 'next' 'normal',
+        ["<c-p>"] = preview 'previous' 'normal',
+        ["<c-i>"] = preview 'current' 'normal',
 
         ["<c-o>"] = actions.cycle_history_prev,
         ["µ"]     = actions.cycle_history_next,
@@ -847,6 +856,14 @@ function _G.Telesc_dynPosOpts( opts )
   return vim.tbl_extend( 'keep', opts, { anchor = winAnchor, width = width} )
 end
 
+function _G.Telesc_dynPosOpts_ext( opts )
+  local posOpts = Telesc_dynPosOpts()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  return vim.tbl_extend( 'keep', opts or {}, layout_opts )
+end
+
+-- Telesc_dynPosOpts( { eins = 1 } )
+-- Telesc_dynPosOpts_ext( { eins = 1 } )
 -- vim.api.nvim_get_option('columns')
 
 function _G.Telesc_launch( picker_name, opts )

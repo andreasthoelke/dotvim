@@ -207,25 +207,42 @@ function _G.Tab_visIdx_label( tabId )
 end
 
 
+-- function _G.Tab_go_offset( offset )
+--   if #Tabs_visibleIds() <= 1 then return end
+--   local nextTabIndex = vim.fn.tabpagenr() + offset
+--   nextTabIndex = nextTabIndex <= vim.fn.tabpagenr('$') and nextTabIndex     or 1
+--   nextTabIndex = nextTabIndex < 1                 and vim.fn.tabpagenr('$') or nextTabIndex
+
+--   local proposedNextTabId = vim.api.nvim_list_tabpages()[ nextTabIndex ]
+
+--   if not f.contains( proposedNextTabId, Tabs_visibleIds() ) then
+--     Tab_go_offset( offset + offset )
+--   else
+--     vim.api.nvim_set_current_tabpage( proposedNextTabId )
+--   end
+-- end
+
 function _G.Tab_go_offset( offset )
-  if #Tabs_visibleIds() <= 1 then return end
-  local nextTabIndex = vim.fn.tabpagenr() + offset
-  nextTabIndex = nextTabIndex <= vim.fn.tabpagenr('$') and nextTabIndex     or 1
-  nextTabIndex = nextTabIndex < 1                 and vim.fn.tabpagenr('$') or nextTabIndex
+  local visTabsCnt = #Tabs_visibleIds()
+  if visTabsCnt <= 1 then return end
 
-  local proposedNextTabId = vim.api.nvim_list_tabpages()[ nextTabIndex ]
+  local curVisTabIdx = Tab_visIdx( vim.api.nvim_get_current_tabpage() )
 
-  if not f.contains( proposedNextTabId, Tabs_visibleIds() ) then
-    Tab_go_offset( offset + offset )
-  else
-    vim.api.nvim_set_current_tabpage( proposedNextTabId )
-  end
+  local nextTabIndex = curVisTabIdx + offset
+  nextTabIndex = nextTabIndex <= visTabsCnt and nextTabIndex     or 1
+  nextTabIndex = nextTabIndex < 1           and visTabsCnt or nextTabIndex
+
+  local nextId = Tabs_visibleIds()[ nextTabIndex ]
+  vim.api.nvim_set_current_tabpage( nextId )
 end
 
+-- vim.fn.tabpagenr()
+-- vim.fn.tabpagenr()
 -- Tabs_hidden
 -- Tabs_visibleIds()
 -- vim.api.nvim_get_current_tabpage()
 -- vim.fn.index( vim.api.nvim_list_tabpages(), 1 )
+
 
 -- ─^  Hide Tabs                                         ▲
 

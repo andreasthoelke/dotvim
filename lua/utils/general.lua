@@ -743,7 +743,7 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
     }
   local rg_cmd = M.Concat( M.Concat( rg_baseArgs, globs ), paths )
 
-  opts = Telesc_dynPosOpts( opts )
+  opts = Telesc_dynPosOpts_ext( opts )
   pickers.new(opts, {
     prompt_title = 'rx sel',
     finder    = finders.new_oneshot_job( rg_cmd, opts ),

@@ -252,10 +252,10 @@ endfun
 " 3. type '2 ' to align to the second space!!
 
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <leader>al <Plug>(EasyAlign)
+vmap <silent><leader>al <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. <leader>eaip)
-nmap <leader>al <Plug>(EasyAlign)
+nmap <silent><leader>al <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String']
 

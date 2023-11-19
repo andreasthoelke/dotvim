@@ -41,12 +41,12 @@ local glb_vim = {
 }
 
 local paths_projs1 = {
-  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/', 
+  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/',
   '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/',
 }
 
 local paths_patterns1 = {
-  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/', 
+  '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/',
 }
 
 
@@ -70,6 +70,16 @@ local paths_patterns1 = {
 --     {"-g", "*.scala"},
 --     {'/Users/at/Documents/Proj/b_expl_stack/'}
 --     ) end )
+
+vim.keymap.set( 'n',
+  ',sA', function() Telesc_launch( 'live_grep', {
+    initial_mode = 'insert',
+    -- default_text = pattern,
+    search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
+  } )
+  end )
+
+
 
 -- search in scala [S]ymbols:
 -- (also note gel for the lsp symbols in the current file)

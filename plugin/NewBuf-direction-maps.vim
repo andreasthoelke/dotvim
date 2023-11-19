@@ -50,8 +50,9 @@ nnoremap <silent> ,,sn      :call Browse_cwd  ( "down" )<cr>
 nnoremap <silent> <c-w><leader>p  :call NewBuf_fromCursorLinkPath( "preview_back" )<cr>
 nnoremap <silent> <c-w><leader>o  :call NewBuf_fromCursorLinkPath( "float" )<cr>
 nnoremap <silent> <c-w><leader>i  :call NewBuf_fromCursorLinkPath( "full" )<cr>
-nnoremap <silent> <c-w><leader>t  :call NewBuf_fromCursorLinkPath( "tab" )<cr>
-nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader>tn :call NewBuf_fromCursorLinkPath( "tab" )<cr>
+nnoremap <silent> <c-w><leader>tt :call NewBuf_fromCursorLinkPath( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_left" )<cr>
 " _
 nnoremap <silent> <c-w><leader>v  :call NewBuf_fromCursorLinkPath( "right" )<cr>
 nnoremap <silent> <c-w><leader>V  :call NewBuf_fromCursorLinkPath( "right_back" )<cr>
@@ -63,7 +64,7 @@ nnoremap <silent> <c-w><leader>S  :call NewBuf_fromCursorLinkPath( "down_back" )
 
 
 " TELESCOPE 
-" ~/.config/nvim/plugin/utils-fileselect-telescope.lua‖*NewBufˍmapsˍi
+" ~/.config/nvim/plugin/config/telescope.lua‖*NewBufˍmapsˍi
 
 
 " CLIP-BOARD
@@ -152,7 +153,7 @@ func! NewBuf_fromCursorLspRef( direction )
   let winview = winsaveview()
   let file = expand('%:p')
   let cmd = NewBufCmds( file )[ direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  " if IsInFloatWin() | wincmd c | endif
   exec cmd
   call winrestview( winview )
   lua vim.lsp.buf.definition()
@@ -184,7 +185,7 @@ func! Browse_parent( direction )
   let file = expand('%:p')  " might be a file or dirvish directory
   let parentFolderPath = ParentFolder( file )  " if a directory this will get the parent folder of the directory!
   let cmd = NewBufCmds( parentFolderPath )[ direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  " if IsInFloatWin() | wincmd c | endif
   exec cmd
   " .. -> and sets it to a var local to the *new* window!
   let w:AlternateFileLoc = captureAltFileLoc
@@ -200,7 +201,7 @@ func! Browse_cwd( direction )
   let file = expand('%:p')  " might be a file or dirvish directory
   let cwd = getcwd()
   let cmd = NewBufCmds( cwd )[ direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  " if IsInFloatWin() | wincmd c | endif
   exec cmd
   " .. -> and sets it to a var local to the *new* window!
   let w:AlternateFileLoc = captureAltFile
@@ -217,7 +218,7 @@ func! NewBuf_self( direction )
   let winview = winsaveview()
   let file = expand('%:p')  " might be a file or dirvish directory
   let cmd = NewBufCmds( file )[ a:direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  " if IsInFloatWin() | wincmd c | endif
   exec cmd
   call winrestview( winview )
 endfunc
@@ -264,7 +265,7 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   else
     " will run post actions like wincmd p or tabprevious right away.
     let cmd = NewBufCmds( path )[ a:direction ] 
-    if IsInFloatWin() | wincmd c | endif
+    " if IsInFloatWin() | wincmd c | endif
     exec cmd
     " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
@@ -275,7 +276,7 @@ endfunc
 func! NewBuf_fromClipPath( direction )
   let [path; maybeLinkExt] = @*->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
-  if IsInFloatWin() | wincmd c | endif
+  " if IsInFloatWin() | wincmd c | endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
@@ -286,7 +287,7 @@ func! NewBuf_fromScratchBuffer( direction )
     call v:lua.FloatBuf_inOtherWinColumn( path, v:lua.Telesc_dynPosOpts() )
   else
     let cmd = NewBufCmds( path )[ a:direction ]
-    if IsInFloatWin() | wincmd c | endif
+    " if IsInFloatWin() | wincmd c | endif
     exec cmd
   endif
 endfunc
@@ -329,27 +330,28 @@ endfunc
 func! NewBufCmds_templ(...)
   let winnr = a:0 ? a:1 : 0
   let mp = {}
-  let mp['preview'] = 'wincmd p | edit _PATH_'
-  let mp['preview_back'] = 'wincmd p | edit _PATH_ | wincmd p'
-  let mp['float'] = 'call Path_Float( "_PATH_" )'
+  let mp['preview']       = 'wincmd p | edit _PATH_'
+  let mp['preview_back']  = 'wincmd p | edit _PATH_ | wincmd p'
+  let mp['float']         = 'call Path_Float( "_PATH_" )'
   let mp['float_spinoff'] = 'wincmd c | call Path_Float( "_PATH_" )'
-  let mp['full']  = 'edit _PATH_'
-  let mp['tab']   = 'tabedit _PATH_'
-  let mp['tab_left']   = 'tabedit _PATH_ | tabmove -1'
-  let mp['tab_bg'] = 'tabedit _PATH_ | tabprevious' " opened to the right in the background
-  let mp['tab_back'] = 'tabedit _PATH_ | wincmd p' " open and go to new tab, then jump *back* to prompt
-  let mp['tab_spinoff'] = 'wincmd c | tabedit _PATH_' " close window and open in new tab.
-  let mp['right'] = 'vnew _PATH_'
-  let mp['right_back'] = 'vnew _PATH_ | wincmd p'
-  " let mp['left']  = 'leftabove 30vnew _PATH_'
-  let mp['left']    = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_'
-  let mp['left_back'] = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_ | wincmd p'
-  " let mp['up']    = 'leftabove 20new _PATH_'
-  " let mp['up']    = 'leftabove new _PATH_'
-  let mp['up']   = 'leftabove '. winheight(winnr)/4 . 'new _PATH_'
-  let mp['up_back'] = 'leftabove '. winheight(winnr)/4 . 'new _PATH_ | wincmd p'
-  let mp['down']  = 'new _PATH_'
-  let mp['down_back'] = 'new _PATH_ | wincmd p'
+  let mp['full']          = 'edit _PATH_'
+  let mp['tab']           = 'tabedit _PATH_'
+  let mp['tab_bg']        = 'tabedit _PATH_ | tabprevious' " opened to the right in the background
+  let mp['tab_left']      = 'tabedit _PATH_ | tabmove -1'
+  let mp['tab_left_bg']   = 'tabedit _PATH_ | tabmove -1 | tabnext'
+  let mp['tab_back']      = 'tabedit _PATH_ | wincmd p' " open and go to new tab, then jump *back* to prompt
+  let mp['tab_spinoff']   = 'wincmd c | tabedit _PATH_' " close window and open in new tab.
+  let mp['right']         = 'vnew _PATH_'
+  let mp['right_back']    = 'vnew _PATH_ | wincmd p'
+  " let mp['left']        = 'leftabove 30vnew _PATH_'
+  let mp['left']          = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_'
+  let mp['left_back']     = 'leftabove '. winwidth(winnr)/4 . 'vnew _PATH_ | wincmd p'
+  " let mp['up']          = 'leftabove 20new _PATH_'
+  " let mp['up']          = 'leftabove new _PATH_'
+  let mp['up']            = 'leftabove '. winheight(winnr)/4 . 'new _PATH_'
+  let mp['up_back']       = 'leftabove '. winheight(winnr)/4 . 'new _PATH_ | wincmd p'
+  let mp['down']          = 'new _PATH_'
+  let mp['down_back']     = 'new _PATH_ | wincmd p'
   return mp
 endfunc
 
