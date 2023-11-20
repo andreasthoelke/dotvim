@@ -2,56 +2,38 @@
 
 func! Scala_bufferMaps()
 
-" ─     PrinterZio                                      ──
-  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
-  nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
-  nnoremap <silent><buffer>         gef :call Scala_SetPrinterIdentif( "file1" )<cr>
-  nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "plain json" )<cr>
-  nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "effect" )<cr>
-  nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
-  nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
-  nnoremap <silent><buffer> <leader>es  :call Scala_AddSignature()<cr>
+" ─   Printer                                            ■
+  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
+  nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "server" )<cr>
+
+  " TODO: to be tested again
+  " nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
+  " nnoremap <silent><buffer>         gef :call Scala_SetPrinterIdentif( "file1" )<cr>
+  " " nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "plain json" )<cr>
+  " nnoremap <silent><buffer>         gee :call Scala_SetPrinterIdentif( "effect" )<cr>
+  " nnoremap <silent><buffer>         gegj :call Scala_SetPrinterIdentif( "gallia" )<cr>
+  " nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
   nnoremap <silent><buffer>         gei :call Scala_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer>         geI :call Scala_RunPrinter( "server" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinter( "term"  )<cr>
-  " nnoremap <silent><buffer>         gep :call Scala_RunPrinter()<cr>:call T_DelayedCmd( "call Scala_SyntaxInFloatWin()", 4000 )<cr>
+" ─^  Printer                                            ▲
 
-  nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
-  nnoremap <silent><buffer>         ,gsr :call Scala_ServerRestart()<cr>
-  nnoremap <silent><buffer>         ,,gsr :call Scala_ServerRestartTerm()<cr>
-  nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
-  " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call Scala_ServerClientRequest_rerun()<cr>
-  " nnoremap <silent><buffer>         gsr :call Scala_ServerRestart()<cr>:call T_DelayedCmd( "call Scala_ServerClientRequest_rerun()", 4000 )<cr>
-  " NOTE these are now global as well: /Users/at/.config/nvim/plugin/repl.vim
-  " nnoremap <silent><buffer>         gsf :call Scala_ServerClientRequest('', 'float')<cr>
-  " nnoremap <silent><buffer>        ,gsf :call Scala_ServerClientRequest( 'POST', 'float' )<cr>
-  " nnoremap <silent><buffer>         gsF :call Scala_ServerClientRequest('', 'term')<cr>
-  " nnoremap <silent><buffer>        ,gsF :call Scala_ServerClientRequest( 'POST', 'term' )<cr>
-
-  nnoremap <silent><buffer>        gsh :call Scala_ServerClientRequest_x()<cr>
-
-  " Stubs and inline tests
+  " STUBS
+  nnoremap <silent><buffer> <leader>es  :call Scala_AddSignature()<cr>
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_scala()<cr>
   nnoremap <silent><buffer> <leader>ey :call CreateInlineTestDec_indent_scala()<cr>
 
-  " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
-
+  " MOTIONS (see general motions in shared maps)
   nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
-  " this works super nice. there's another (default?) mapping for leader ?
-  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
-
-
-
-
   call Scala_bufferMaps_shared()
-
 endfunc
+
 
 func! Scala_bufferMaps_shared()
 
@@ -110,9 +92,14 @@ func! Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
-" ─     Lsp maps                                        ──
+
+" ─   Lsp                                                ■
 " -- also at:
 " ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Lsp%20maps
+
+
+  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
 
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
@@ -163,6 +150,12 @@ func! Scala_LspTopLevelHover()
   call setpos('.', [0, oLine, oCol, 0] )
 endfunc
 
+
+" ─^  Lsp                                                ▲
+
+
+" ─   Helpers                                            ■
+
 func! Scala_BufferCatsOrZio()
   let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
   let lineCats = searchpos( '\v^import\scats\.', 'cnbW' )[0]
@@ -193,147 +186,6 @@ func! Scala_RepoBuildTool()
   endif
 endfunc
 
-
-func! Scala_SetPrinterIdentif( mode )
-  let effType  = Scala_BufferCatsOrZio()
-  let repoType = Scala_RepoBuildTool()
-  " echo effType repoType
-  if     repoType == 'scala-cli' && effType == 'zio'
-    let fntag = 'ScalaCliZIO'
-  elseif repoType == 'scala-cli' && effType == 'cats'
-    let fntag = 'ScalaCliCats'
-  elseif repoType == 'scala-cli' && effType == 'none'
-    let fntag = 'ScalaCliCats'
-  elseif repoType == 'scala-cli' && effType == 'both'
-    let fntag = 'ScalaCliCats'
-  elseif repoType == 'sbt' && effType == 'none'
-    let fntag = 'ScalaCliZIO'
-  elseif repoType == 'sbt' && effType == 'cats'
-    let fntag = 'ScalaCliCats'
-    " setting vars in printer.scala should not depend on sbt vs scala-cli?
-  elseif repoType == 'sbt' && (effType == 'both' || effType == 'zio')
-    " let fntag = 'SBT'
-    " let fntag = 'ScalaCliCats'
-    let fntag = 'ScalaCliZIO'
-  else
-    echoe "not supported"
-    return
-  endif
-  " echo fntag
-  call call( 'Scala_SetPrinterIdentif_' . fntag, [a:mode] )
-endfunc
-
-func! Scala_SetPrinterIdentif_SBT( mode )
-
-  " /Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/Printer.scala
-  let printerFilePath = 'src/main/scala/Printer.scala'
-
-  " let packageName = split( getline(1), ' ' )[1]
-  let packageName = Scala_GetPackageName()
-
-  " let hostLn = searchpos( '\v(lazy\s)?val\s', 'cnbW' )[0]
-
-  normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?val\s\zs.', 'cnbW' )
-  normal! bb
-
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-
-  let l:typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
-  if l:typeStr == "timeout"
-    echo "Lsp timeout .. try again"
-    return
-  endif
-  " echo l:typeStr
-  " return
-
-  let hostLnObj = searchpos( '\v^object\s', 'cnbW' )[0]
-  let objName = matchstr( getline( hostLnObj ), '\vobject\s\zs\i*\ze\W' )
-
-  if len( objName )
-    let identif = packageName . "." . objName . "." . identif
-  endif
-
-  " // this just needs a place to evaluate
-  " val dirPath = s"${System.getProperty("user.dir")}/data/printer/"  
-  " // 8) set the ".tsv" file extension to create a table/column view. or "" for RESULT_ prints
-  " val filePath = dirPath + "view.tsv"
-  " // 10) use "writeFileContent" to simple (non Gallia) values. empty this line to not write a file.
-  " val doVal = tutorial.A.ds3.write( filePath )
-  " // 12) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
-  " val replTag = "RESULT_"
-  " // 14) info can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
-  " val info = readme.A.e10_sql.forceSize.toString + "\n"
-  " // 16) define the formatting for the RESULT_ val. Use "" with FILEVIEW.
-  " val printVal = readme.A.e10_sql.formatTable
-
-  let force_mode = a:mode
-  let mode = a:mode
-
-  " for specific lsp types the rendering mode is set here
-  if     l:typeStr == "HeadU"
-    let mode = "gallia"
-  elseif l:typeStr == "HeadZ"
-    let mode = "gallias"
-  elseif l:typeStr =~ "Self"
-    let mode = "gallias"
-  endif
-
-
-
-  if    force_mode == "table"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT_"'
-    let _info     = identif . '.forceSize.toString + "\n"'
-    let _printVal = identif . '.formatPrettyTable'
-    let mode = force_mode " just for the virtual label
-
-  elseif force_mode == "file1"
-    let _filePath = 'dirPath + "view.tsv"'
-    let _doVal    = identif . ".write(filePath)"
-    let _replTag  = '"FILEVIEW"'
-    let _info     = '""'
-    let _printVal = '"↧"'
-    let mode = force_mode " just for the virtual label
-
-  elseif mode == "gallia"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT_"'
-    let _info     = '""'
-    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Json" : "PrettyJson")
-
-  elseif mode == "gallias"
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT_"'
-    let _info     = identif . '.forceSize.toString + "\n"'
-    let _printVal = identif . '.format' . (force_mode == "plain json" ? "Jsonl" : "PrettyJsons")
-
-  else
-    let _filePath = '""'
-    let _doVal    = '""'
-    let _replTag  = '"RESULT_"'
-    let _info     = '""'
-    let _printVal = identif
-
-  endif
-
-  let formatter = matchstr( _printVal, '\vformat\zs.*' )
-  echo "Printer: " . identif . " - " . l:typeStr . " - " . mode . " " . formatter
-  call VirtualRadioLabel_lineNum( "« " . l:typeStr . " " . mode . " " . formatter, hostLn )
-
-  let plns = readfile( printerFilePath, '\n' )
-
-  let plns[7]  = "  val filePath = " . _filePath
-  let plns[9]  = "  val doVal    = " . _doVal
-  let plns[11] = "  val replTag  = " . _replTag
-  let plns[13] = "  val info     = " . _info
-  let plns[15] = "  val printVal = " . _printVal
-
-  call writefile( plns, printerFilePath )
-endfunc
 
 func! Scala_GetPackageName()
   let hostLn = searchpos( '\v^package\s', 'cnbW' )[0]
@@ -371,35 +223,6 @@ func! Sc_PackagePrefix()
   return len(name) ? name . "." : ""
 endfunc
 
-func! Scala_GetObjectName_bak( identifLine )
-  " NOTE: supports only one level of objects
-  let [oLine, oCol] = getpos('.')[1:2]
-  let hostLnObj      = searchpos( '\v^(object|case\sclass)\s', 'cnbW' )[0]
-  call setpos('.', [0, hostLnObj, 0, 0] )
-  let hostLnObjClose = searchpos( '\v^\}', 'cnW' )[0]
-  call setpos('.', [0, oLine, oCol, 0] )
-  " echo a:identifLine hostLnObj hostLnObjClose
-  " return
-
-  let scala33colonnotation = getline(hostLnObj) =~ ":"
-  let identifIndented = getline(a:identifLine)[1] == " "
-  if scala33colonnotation && !identifIndented
-    return ""
-  endif
-
-  if scala33colonnotation && identifIndented
-    let objName = matchstr( getline( hostLnObj ), '\v(object|case\sclass)\s\zs\i*' )
-    return objName
-  endif
-
-  if a:identifLine > hostLnObj && a:identifLine < hostLnObjClose
-    let objName = matchstr( getline( hostLnObj ), '\v(object|case\sclass)\s\zs\i*\ze\W' )
-    return objName
-  else
-    return ""
-  endif
-endfunc
-
 
 func! Scala_GetObjectName( identifLine )
   " NOTE: supports only one level of objects
@@ -428,8 +251,11 @@ endfunc
 " Scala_GetObjectName(line('.'))
 
 
-func! Scala_AddSignature()
+" ─^  Helpers                                            ▲
 
+
+
+func! Scala_AddSignature()
   let cw = expand('<cword>')
   if cw == "lazy"
     normal! ww
@@ -472,131 +298,16 @@ func! Scala_AddSignature()
 endfunc
 
 
-func! Scala_SetPrinterIdentif_ScalaCliCats( keyCmdMode )
 
-  normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
-  normal! bb
+" ─   Set printer identifier                             ■
 
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-
-  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
-  if typeStr == "timeout"
-    echo "Lsp timeout .. try again"
-    return
-  endif
-  " echo typeStr
-  " echo hostLn identifCol
-  " return
-
-  " Support nesting in objects
-  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
-
-  if      typeStr =~ "IO\[" && typeStr =~ "List"
-    let typeMode = "cats_collection"
-  elseif  typeStr =~ "IO\["
-    let typeMode = "cats"
-  elseif  typeStr =~ "IO\[" && typeStr =~ "List"
-    let typeMode = "cats_collection"
-  elseif  typeStr =~ "\(List"
-    let typeMode = "tupled-collection"
-  elseif  typeStr =~ "^\("
-    let typeMode = "tupled-collection"
-  elseif  typeStr =~ "List"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Iterable"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Set"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Vector"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Seq"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Map"
-    let typeMode = "collection"
-  elseif  typeStr =~ "Array" 
-    let typeMode = "array"
-  elseif  typeStr =~ "\(Iterator"
-    let typeMode = "tupled-iterator"
-  elseif  typeStr =~ "Iterator"
-    let typeMode = "iterator"
-  " elseif  typeStr =~ "CompletionStage"
-  "   let typeMode = "compl stg"
-  else
-    let typeMode = "plain"
-  endif
-
-  echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
-  call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
-
-  " Default values
-  let _replTag    = '"RESULT_"'
-  let _info       = '""'
-  let _infoEf     = 'IO( "" )'
-  let _printVal   = '""'
-  let _printValEf = 'IO( "" )'
-
-  if     a:keyCmdMode == 'effect' || typeMode == 'cats'
-    let _printValEf = identif          " already an effect
-
-  elseif typeMode == 'collectionIO'
-    let _infoEf     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
-    let _printValEf = "IO( " . identif . " )"                  " an effect now
-
-  elseif typeMode == 'array'
-    let _infoEf     = "IO( " . identif . ".size.toString + '\n' )"    " an effect returning a string
-    let _printValEf = "IO( " . identif . ".toList )"                  " an effect now
-
-  elseif typeMode == 'collection'
-    let _info     = identif . ".size.toString + '\n'"
-    let _printVal = identif . '.mkString("\n")'                 
-
-  elseif typeMode == 'iterator'
-    let _info     = "printVal.size.toString + '\n'"
-    let _printVal = identif . ".toList"                 
-
-  elseif typeMode == 'tupled-iterator'
-    let _printVal = identif . "._1.toList.toString + '\n' + " . identif . "._2.toList.toString"                
-
-  elseif typeMode == 'tupled-collection'
-    let _printVal = identif . "._1.toString + '\n' + " . identif . "._2.toString"                
-
-  elseif typeMode == 'cats_collection'
-    " NOTE: the following line works, but:
-    " it runs the program (identif) twice, issuing side-effect twice (e.g. printing).
-    " NEW ATTEMPT: .. still to be tested
-    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.toString ) )' 
-    " let _printVal = identif                                 " already an effect
-
-  elseif typeMode == 'plain'
-    let _printVal = identif
-  endif
-
-  let printerFilePath = getcwd() . '/PrinterCats.scala'
-  let plns = readfile( printerFilePath, '\n' )
-
-  " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{
-  " 9) ScalaReplMainCallback will parse "RESULT_" or "FILEVIEW"
-  let plns[9]  = "  val replTag  = " . _replTag
-  " 11) the effect (or wrapped simple value) to be printed including packageName and object namespace
-  let plns[11] = "  val printVal   = " . _printVal
-  let plns[12] = "  val printValEf = " . _printValEf
-  " 14) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
-  let plns[14] = "  val info     = " . _info
-  let plns[15] = "  val infoEf   = " . _infoEf
-
-  call writefile( plns, printerFilePath )
+func! Scala_SetPrinterIdentif( mode )
+  let effType  = Scala_BufferCatsOrZio()
+  let repoType = Scala_RepoBuildTool()
+  let fntag = 'ScalaCliZIO'
+  call call( 'Scala_SetPrinterIdentif_' . fntag, [a:mode] )
 endfunc
 
-" val app =
-"   for
-"     in <- P.infoEf
-"     pv <- P.printValEf
-"     _ <- IO.println( P.replTag + P.info + in + P.printVal + pv )
-"   yield ()
-
-" @main
-" def runCatsApp() = app.unsafeRunSync()
 
 func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
@@ -742,8 +453,12 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let _printVal = 'pprint.apply(' . identif . ', width=3 )'
   endif
 
-  " let printerFilePath = getcwd() . '/PrinterZio.scala'
-  let printerFilePath = getcwd() . '/src/main/scala/PrinterZio.scala'
+  if a:keyCmdMode == 'server'
+    let printerFilePath = getcwd() . '/src/main/scala/PrinterZioServer.scala'
+  else
+    let printerFilePath = getcwd() . '/src/main/scala/PrinterZio.scala'
+  endif
+
   if !filereadable(printerFilePath)
     let printerFilePath = getcwd() . '/modules/core/PrinterZio.scala'
   endif
@@ -767,39 +482,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   call writefile( plns, printerFilePath )
 endfunc
 
-
-func! Scala_SetPrinterIdentif_ScalaCliZio_( mode )
-  let printerFilePath = getcwd() . '/PrinterZio.scala'
-
-  let hostLn = searchpos( '\v^(lazy\s)?val\s', 'cnbW' )[0]
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
-
-  call VirtualRadioLabel_lineNum( '«', hostLn )
-
-  " Support nesting in objects
-  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
-
-  if a:mode == "effect"
-    let bindingLine = "val printVal = " . identif
-  else
-    let bindingLine = "val printVal = ZIO.succeed( " . identif . " )"
-  endif
-
-  let printerLines = readfile( printerFilePath, '\n' )
-  let printerLines[1] = bindingLine
-
-  call writefile( printerLines, printerFilePath )
-endfunc
+" ─^  Set printer identifier                             ▲
 
 
-" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.PrinterZio --class-path resources -nowarn -Ymacro-annotations"
-" let g:Scala_PrinterCatsCmd = "scala-cli . --main-class printcat.Printer --class-path resources -nowarn -Ymacro-annotations"
-let g:Scala_PrinterCatsCmd = "scala-cli . --py --main-class printcat.runCatsApp --class-path resources -nowarn -Ymacro-annotations"
-" let g:Scala_PrinterCatsCmd = "bloop run root --main printcat.runCatsApp"
-" let g:Scala_PrinterZioCmd  = 'scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --repository "https://maven-central.storage-download.googleapis.com/maven2"'
-let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations"
-" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --extra-jar '/Users/at/Documents/Proj/g_edgedb/edgedb-java-repo/build/libs/edgedb-java-0.1.1-SNAPSHOT-sources.jar'"
-" let g:Scala_PrinterZioCmd  = "scala-cli . --py --main-class printzio.runZioApp  --class-path resources -nowarn -Ymacro-annotations --extra-jar '/Users/at/Documents/Proj/g_edgedb/edgedb-java-repo/examples/scala-examples/lib/com.edgedb.driver-0.1.1-SNAPSHOT.jar'"
+
+" ─   Run Printer                                        ■
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
@@ -828,7 +515,11 @@ func! Scala_RunPrinter( termType )
 
     " TODO: just temp for a prim zio sbt repo
     if effType == 'both'  || effType == 'zio' || effType == 'none'
-      call ScalaSbtSession_RunMain( "printzio.runZioApp" )
+      if a:termType == 'server'
+        call ScalaSbtSession_RunMain( g:ScalaServerReplID, "printzioserver.runZioApp" )
+      else
+        call ScalaSbtSession_RunMain( g:ScalaReplID, "printzio.runZioApp" )
+      endif
     else
       call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
     endif
@@ -845,6 +536,8 @@ endfunc
 " Scala CLI (v. 1.0.0-RC1) cannot post process TASTY files from Scala 3.3.0-RC4.
 "  since post processing only cleans up source paths in TASTY file and it should not affect your application.
 " To get rid of this message, please update Scala CLI version.
+
+
 
 
 func! Scala_filterCliLine( line, accum )
@@ -887,6 +580,12 @@ func! Scala_showInFloat( data )
 endfun
 
 
+" ─^  Run Printer                                        ▲
+
+
+
+
+" ─   Motions                                            ■
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)\zs'
@@ -1012,6 +711,7 @@ func! Scala_ColonBackw()
   normal w
 endfunc
 
+" ─^  Motions                                            ▲
 
 
 " ─   Hotspot motions                                    ■

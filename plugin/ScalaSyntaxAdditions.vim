@@ -526,7 +526,8 @@ func! ScalaSyntaxAdditions ()
   " setl isk+=<,>,$,#,+,-,*,/,%,&,=,!,:,124,~,?,^
   setl isk+=?
 
-  " setlocal foldmarker=\ ■,\ ▲
+  " this is also set as global
+  setlocal foldmarker=\ ■,\ ▲
   set foldmethod=marker
 
 endfunc
