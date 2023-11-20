@@ -105,6 +105,23 @@ nnoremap <silent> <c-w>rU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
 nnoremap <silent> <c-w>rs  :call NewBuf_fromReplBuffer( "down" )<cr>
 nnoremap <silent> <c-w>rS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
 
+" SERVER-REPL-BUFFER
+nnoremap <silent> <c-w>Rp  :call NewBuf_fromReplBuffer( "preview", "server" )<cr>
+nnoremap <silent> <c-w>Ro  :call NewBuf_fromReplBuffer( "float", "server" )<cr>
+nnoremap <silent> <c-w>Ri  :call NewBuf_fromReplBuffer( "full", "server" )<cr>
+nnoremap <silent> <c-w>Rt  :call NewBuf_fromReplBuffer( "tab", "server" )<cr>
+nnoremap <silent> <c-w>RT  :call NewBuf_fromReplBuffer( "tab_left", "server" )<cr>
+"                      
+nnoremap <silent> <c-w>Rv  :call NewBuf_fromReplBuffer( "right" )<cr>
+nnoremap <silent> <c-w>RV  :call NewBuf_fromReplBuffer( "right_back" )<cr>
+nnoremap <silent> <c-w>Ra  :call NewBuf_fromReplBuffer( "left" )<cr>
+nnoremap <silent> <c-w>RA  :call NewBuf_fromReplBuffer( "left_back" )<cr>
+nnoremap <silent> <c-w>Ru  :call NewBuf_fromReplBuffer( "up" )<cr>
+nnoremap <silent> <c-w>RU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
+nnoremap <silent> <c-w>Rs  :call NewBuf_fromReplBuffer( "down" )<cr>
+nnoremap <silent> <c-w>RS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
+
+
 " SCRATCH-BUFFER
 nnoremap <silent> <c-w>gp  :call NewBuf_fromScratchBuffer( "preview" )<cr>
 nnoremap <silent> <c-w>go  :call NewBuf_fromScratchBuffer( "float" )<cr>
@@ -294,13 +311,13 @@ endfunc
 
 
 
-func! NewBuf_fromReplBuffer( direction )
+func! NewBuf_fromReplBuffer( direction, ... )
   let [direction; maybe_back ] = a:direction->split('_')
-  if !exists('g:ScalaRepl_bufnr')
-    echo 'ScalaRepl is not running'
-    return
-  endif
-  let bnr = g:ScalaRepl_bufnr
+
+  let replVarName = a:0 ? 'g:ScalaRepl_bufnr' : 'g:ScalaServerRepl_bufnr'
+  if !exists('g:ScalaRepl_bufnr') | echo 'ScalaRepl is not running' | return | endif
+
+  let bnr = a:0 ? g:ScalaRepl_bufnr : g:ScalaServerRepl_bufnr
   if a:direction == 'float'
     call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
   else
