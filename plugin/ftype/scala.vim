@@ -523,10 +523,15 @@ func! Scala_RunPrinter( termType )
     " TODO: just temp for a prim zio sbt repo
     if effType == 'both'  || effType == 'zio' || effType == 'none'
       if a:termType == 'server'
-        " NOTE: the initial \n as a convention to end the previous process using zio.Console.read
-        let cmd = "\nrunMain " . "printzioserver.runZioApp" . "\n"
+        if !exists('g:ScalaServerReplID') | echo 'ScalaServerRepl is not running' | return | endif
+        " Old version: NOTE: the initial \n as a convention to end the previous process using zio.Console.read
+        " let cmd = "\nrunMain " . "printzioserver.runZioServerApp" . "\n"
+        " New version: killJVMProcess should block so the new/restarted process should not be affected
+        let cmd = "bgRunMain " . "printzioserver.runZioServerApp" . "\n"
+        call ScalaServerRepl_killJVMProcess( 'runZioServerApp' )
         call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
+        if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif
         let cmd = "runMain " . "printzio.runZioApp" . "\n"
         call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
       endif

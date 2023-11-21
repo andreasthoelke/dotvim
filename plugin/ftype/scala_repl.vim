@@ -13,7 +13,7 @@ func! ScalaReplStart ()
   endif
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
-  let g:ScalaReplID = termopen('sbt client', g:ScalaReplCallbacks)
+  let g:ScalaReplID = termopen('sbt --client', g:ScalaReplCallbacks)
   silent wincmd c
 endfunc
 
@@ -49,7 +49,7 @@ func! ScalaServerReplStart ()
   endif
   exec "new"
   let g:ScalaServerRepl_bufnr = bufnr()
-  let g:ScalaServerReplID = termopen('sbt server', g:ScalaReplCallbacks)
+  let g:ScalaServerReplID = termopen('sbt --client', g:ScalaReplCallbacks)
   silent wincmd c
 endfunc
 
@@ -73,7 +73,7 @@ func! ScalaServerRepl_killJVMProcess( processName )
   let jvmProcesses = functional#filter( {line -> line[1] =~ a:processName }, jvmProcesses )
   " return jvmProcesses
   if !len( jvmProcesses )
-    echoe "JVM process not found: " . a:processName
+    " echoe "JVM process not found: " . a:processName
     return
   endif
   let processId = jvmProcesses[0][0]
