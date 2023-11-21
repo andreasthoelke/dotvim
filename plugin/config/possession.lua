@@ -252,7 +252,12 @@ require('possession').setup {
 
       if user_data['server_repl_is_running'] ~= nil and user_data['server_repl_is_running'] == true then
         -- Start a repl in the background, setting g:ScalaServerReplID.
-        vim.fn.ScalaServerReplStart()
+        -- vim.fn.ScalaServerReplStart()
+        -- the delay to avoid an sbt error: 
+        -- this error occurs when i start two sbt shells in the same project using "sbt --client" in each terminal:
+        -- (still both sbt shell work as expected) 
+        -- java.io.IOException: org.scalasbt.ipcsocket.NativeErrorException: [48] Address already in use
+        vim.defer_fn( vim.fn.ScalaServerReplStart, 3000 )
       end
 
     end,

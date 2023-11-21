@@ -13,7 +13,7 @@ func! ScalaReplStart ()
   endif
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
-  let g:ScalaReplID = termopen('sbt --client', g:ScalaReplCallbacks)
+  let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
   silent wincmd c
 endfunc
 
@@ -186,6 +186,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
       " just save, don't show
     else
 
+      " this seems to allow to filter any line?!
+      let foundList1 = functional#filter( {line -> !(line =~ 'sbt\:')}, foundList1 )
       let resultVal = foundList1
 
       let g:ReplReceive_open = v:false
