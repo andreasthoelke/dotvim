@@ -41,12 +41,23 @@ nnoremap <leader>te :Telescope
 
 nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
 " nnoremap <leader>ts <cmd>Telescope sessions<cr>
-nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
+nnoremap <silent><leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 " nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=horizontal<cr>
 " nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 
 " nnoremap <leader>tp <cmd>Telescope project initial_mode=normal<cr>
-nnoremap <silent><leader>tp :call v:lua.Telesc_launch('project')<cr>
+" nnoremap <silent><leader>tP <cmd>Telescope repo list layout_strategy=vertical<cr>
+nnoremap <silent><leader>tp :echo 'use gsp'<cr>
+nnoremap <silent><leader>tP :echo 'use gsP'<cr>
+" nnoremap <silent><leader>tp :call v:lua.Telesc_launch('project')<cr>
+" nnoremap <silent><leader>tP :call v:lua.Telesc_launch('repo')<cr>
+nnoremap <silent>gsp :call v:lua.Telesc_launch('project')<cr>
+nnoremap <silent>gsP :call v:lua.Telesc_launch('repo')<cr>
+
+" note the other "gs.." maps: ~/.config/nvim/plugin/ftype/scala.vim‖:57:3
+nnoremap <silent>gsb :call v:lua.Telesc_launch('vim_bookmarks')<cr>
+nnoremap <silent>gsc :call v:lua.Telesc_launch('bookmarks')<cr>
+nnoremap <silent>gssi :call v:lua.Telesc_launch('scaladex')<cr>
 
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
 nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>

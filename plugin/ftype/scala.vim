@@ -63,6 +63,8 @@ func! Scala_bufferMaps_shared()
   nnoremap <silent><buffer> gst  :call v:lua.Search_ast( expand('<cword>') )<cr>
   xnoremap <silent><buffer> gst  :call v:lua.Search_ast( GetVisSel() )<cr>
 
+  " note the other "gs.." maps: ~/.config/nvim/plugin/config/telescope.vim‖/noteˍtheˍot
+
 
 " ─^  Regex search maps                                  ▲
 

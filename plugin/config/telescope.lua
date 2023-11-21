@@ -179,11 +179,11 @@ local function get_path_link( prompt_title, search_term )
       info = selection.name,
     }
 
-  elseif prompt_title == "Select a project" then
+  elseif prompt_title == "Select a project" or prompt_title == "Git repositories (built on the fly)" then
     path = selection.path  -- NOTE: this prevents the default open cmd
     link = {
       path = selection.path,
-      title = selection.title,  -- NOTE: projects can have a custom / renamable / searchable "title" string.
+      -- title = selection.title,  -- NOTE: projects can have a custom / renamable / searchable "title" string.
     }
 
     -- CASE: Filename pickers with optional linenum and cursor column
@@ -271,7 +271,8 @@ local NewBuf = f.curry( function( adirection, pbn )
   local selection = action_state.get_selected_entry()
 
   -- if
-  --   prompt_title == "Select a project"
+  --   -- prompt_title == "Select a project"
+  --   prompt_title == "Git repositories (built on the fly)"
   -- then
   --   putt( selection )
   --   return
@@ -280,6 +281,7 @@ local NewBuf = f.curry( function( adirection, pbn )
   if
     prompt_title == "Spelling Suggestions" or
     prompt_title == "Registers" or
+    prompt_title == "scaladex search" or
     prompt_title == "Symbols"
   then
     actions.select_default( pbn )
@@ -337,7 +339,7 @@ local NewBuf = f.curry( function( adirection, pbn )
       vim.fn.LaunchChromium( maybeLink.url )
     end
 
-  elseif prompt_title == "Select a project" then
+  elseif prompt_title == "Select a project" or prompt_title == "Git repositories (built on the fly)" then
     -- set the window local cwd to maybeLink.path
     vim.cmd( 'lcd ' .. maybeLink.path )
 
@@ -762,6 +764,7 @@ require'telescope'.load_extension('project')
 require('telescope').load_extension('vim_bookmarks')
 require('telescope').load_extension('file_browser')
 require('telescope').load_extension('heading')
+require('telescope').load_extension('repo')
 require('telescope').load_extension('glyph')
 require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
@@ -896,14 +899,47 @@ function _G.Telesc_launch( picker_name, opts )
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
   -- putt(opts)
+
   if     picker_name == 'project' then
     opts = f.merge( opts, {initial_mode='normal'} )
     extensions.project.project( opts )
+
+  elseif picker_name == 'repo' then
+    opts = f.merge( opts, {default_text = 'Proj/'} )
+    extensions.repo.list( opts )
+
   elseif picker_name == 'bookmarks' then
-    extensions.bookmarks.bookmarks()
+    opts = f.merge( opts, {initial_mode='normal'} )
+    extensions.bookmarks.bookmarks( opts )
+
   elseif picker_name == 'vim_bookmarks' then
-  elseif picker_name == 'vim_bookmarks' then
+    vim.fn.BookmarkLoad( "/Users/at/.vim-bookmarks", 0, 1 )
+    opts = f.merge( opts, {
+      -- width_line=0,
+      -- width_text=40,
+      -- shorten_path=true,
+      attach_mappings = function(_, map)
+        map('i', '<C-x>', bookmark_actions.delete_selected_or_at_cursor)
+        map('n', 'dd', bookmark_actions.delete_selected_or_at_cursor)
+        return true
+      end
+    } )
+    extensions.vim_bookmarks.all( opts )
+
   elseif picker_name == 'scaladex' then
+    opts = f.merge( {}, {
+      attach_mappings = function(_, map)
+        map('i', '<cr>', actions.select_default)
+        map('n', '<cr>', actions.select_default)
+        return true
+      end
+    } )
+    extensions.scaladex.scaladex.search(opts)
+
+    -- TOBE continued with other extensions
+  -- elseif picker_name == 'scaladex' then
+
+
   else
     require('telescope.builtin')[ picker_name ]( opts )
   end
