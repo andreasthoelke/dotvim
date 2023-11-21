@@ -179,6 +179,13 @@ local function get_path_link( prompt_title, search_term )
       info = selection.name,
     }
 
+  elseif prompt_title == "Select a project" then
+    path = selection.path  -- NOTE: this prevents the default open cmd
+    link = {
+      path = selection.path,
+      title = selection.title,  -- NOTE: projects can have a custom / renamable / searchable "title" string.
+    }
+
     -- CASE: Filename pickers with optional linenum and cursor column
   elseif vim.tbl_get( selection, 'filename' ) ~= nil then
     path = vim.tbl_get( selection, 'filename' )
@@ -261,6 +268,15 @@ local NewBuf = f.curry( function( adirection, pbn )
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
   -- putt( title )
 
+  local selection = action_state.get_selected_entry()
+
+  -- if
+  --   prompt_title == "Select a project"
+  -- then
+  --   putt( selection )
+  --   return
+  -- end
+
   if
     prompt_title == "Spelling Suggestions" or
     prompt_title == "Registers" or
@@ -320,6 +336,10 @@ local NewBuf = f.curry( function( adirection, pbn )
       -- open in Chrominum
       vim.fn.LaunchChromium( maybeLink.url )
     end
+
+  -- elseif prompt_title == "Select a project" then
+  --   vim.cmd( cmd )
+
   end
 
 
@@ -836,9 +856,11 @@ easypick.setup({
 function _G.CursorIsInWinColumn()
   local curWinH = vim.api.nvim_win_get_position(0)[2]
   local screen_width = vim.api.nvim_get_option('columns')
-  return curWinH < (screen_width / 2 - 30) and "L" or "R"
+  return curWinH < (screen_width / 2 - 60) and "L" or "R"
+  -- this approach is still a guess that seems to work with two and tree columns
 end
 -- CursorIsInWinColumn()
+-- echo v:lua.CursorIsInWinColumn()
 -- vim.api.nvim_win_get_position(0)
 
 function _G.Telesc_dynPosOpts( opts )
@@ -870,7 +892,15 @@ function _G.Telesc_launch( picker_name, opts )
   local posOpts = Telesc_dynPosOpts( {} )
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
-  require('telescope.builtin')[ picker_name ]( opts )
+  -- putt(opts)
+  if     picker_name == 'project' then
+  elseif picker_name == 'bookmarks' then
+  elseif picker_name == 'vim_bookmarks' then
+  elseif picker_name == 'vim_bookmarks' then
+  elseif picker_name == 'scaladex' then
+  else
+    require('telescope.builtin')[ picker_name ]( opts )
+  end
 end
 -- Show_buffer_in_floating_window( 6, Telesc_dynPosOpts( {} ))
 -- Telesc_dynPosOpts( {} )
