@@ -31,6 +31,11 @@ func! DirvishSetup2()
   exec 'silent keeppatterns g/\.metals\|\.scala-build\|\.bsp\|\.vscode\|scala-doc/d _'
 endfunc
 
+augroup dirvishBuffer
+  autocmd!
+  autocmd FileType dirvish call UpdateSort()
+augroup END
+
 
 " NOTE: Dirvish buffer maps can also be put here:
 " ~/.config/nvim/ftplugin/dirvish.vim#/Maps
@@ -215,6 +220,7 @@ func! DirvishSortByModified()
   call setline(1, lines)
   lua DirvishShowModified()
   call timer_start(1, {-> execute( 'setlocal conceallevel=3' )})
+  let b:sortedBy = 'modified'
 endfunc
 
 " nnoremap <leader><leader>is :call DirvishSortBySize()<cr>
@@ -225,6 +231,7 @@ func! DirvishSortBySize()
   call setline(1, lines)
   lua DirvishShowSize()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
+  let b:sortedBy = 'size'
 endfunc
 
 nnoremap <leader><leader>dS :call DirvishSortByLineCount()<cr>
@@ -234,7 +241,21 @@ func! DirvishSortByLineCount()
   call setline(1, lines)
   lua DirvishShowSize()
   call timer_start(1, {-> execute('setlocal conceallevel=3')})
+  let b:sortedBy = 'linecount'
 endfunc
+
+func! UpdateSort()
+  if exists('b:sortedBy')
+    if b:sortedBy == 'size'
+      call DirvishSortBySize()
+    elseif b:sortedBy == 'linecount'
+      call DirvishSortByLineCount()
+    elseif b:sortedBy == 'modified'
+      call DirvishSortByModified()
+    endif
+  endif
+endfunc
+
 
 func! PathInfoSkip( filePath )
   let fname = split( a:filePath, '/' )[-1]

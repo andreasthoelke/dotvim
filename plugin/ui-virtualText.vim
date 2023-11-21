@@ -38,9 +38,13 @@ func! VirtualRadioLabel( label )
   call nvim_buf_set_virtual_text( bn, ns, line('.') -1, [[a:label, 'CommentSection']], {})
 endfunc
 
-func! VirtualRadioLabel_lineNum( label, lineNum )
+func! VirtualRadioLabel_lineNum( label, lineNum, ... )
   " let ns = nvim_create_namespace( a:label )
-  let ns = nvim_create_namespace( "PrinterLabels" )
+  if a:0
+    let ns = nvim_create_namespace( "PrinterServerLabels" )
+  else
+    let ns = nvim_create_namespace( "PrinterLabels" )
+  endif
   let bn = bufnr('')
 
   " Clear all virtual text of this label

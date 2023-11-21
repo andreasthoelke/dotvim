@@ -465,9 +465,7 @@ end
 
 
 function _G.Search_ast( pattern )
-  local anchor = WinIsLeftSplit() and 'E' or 'W'
-  local layout_opts = { layout_config = { vertical = { anchor = anchor } } }
-  require 'telescope'.extensions.ast_grep.ast_grep( f.merge( layout_opts, {
+  require 'telescope'.extensions.ast_grep.ast_grep( Telesc_dynPosOpts_ext( {
     initial_mode = "normal",
     default_text = pattern,
     -- search_dirs = paths,

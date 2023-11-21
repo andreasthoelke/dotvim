@@ -378,8 +378,13 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "plain"
   endif
 
-  echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
-  call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
+  if a:keyCmdMode == 'server'
+    echo "ServerProcess: " . identif . " - " . typeStr . " - " . typeMode
+    call VirtualRadioLabel_lineNum( "≀ " . typeStr . " " . typeMode, hostLn, "server" )
+  else
+    echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
+    call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
+  endif
 
   " Default values
   let _replTag    = '"RESULT_"'
@@ -495,7 +500,7 @@ func! Scala_RunPrinter( termType )
   " return
 
   if     effType == 'zio' || effType == 'none'
-    let cmd = g:Scala_PrinterZioCmd
+    " let cmd = g:Scala_PrinterZioCmd
   elseif effType == 'cats' || effType == 'both' || effType == 'none'
     let cmd = g:Scala_PrinterCatsCmd
   else
@@ -516,12 +521,16 @@ func! Scala_RunPrinter( termType )
     " TODO: just temp for a prim zio sbt repo
     if effType == 'both'  || effType == 'zio' || effType == 'none'
       if a:termType == 'server'
-        call ScalaSbtSession_RunMain( g:ScalaServerReplID, "printzioserver.runZioApp" )
+        " NOTE: the initial \n as a convention to end the previous process using zio.Console.read
+        let cmd = "\nrunMain " . "printzioserver.runZioApp" . "\n"
+        call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
-        call ScalaSbtSession_RunMain( g:ScalaReplID, "printzio.runZioApp" )
+        let cmd = "runMain " . "printzio.runZioApp" . "\n"
+        call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
       endif
     else
-      call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
+      echoe "not active"
+      " call ScalaSbtSession_RunMain( "printcat.runCatsApp" )
     endif
 
   else

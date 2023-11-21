@@ -220,6 +220,7 @@ require('possession').setup {
       res['tabs_hidden'] = Tabs_hidden_indexs()
       res['tabs_show_hidden'] = Tabs_show_hidden
       res['repl_is_running'] = type( vim.g["ScalaReplID"] ) == 'number' and true or false
+      res['server_repl_is_running'] = type( vim.g["ScalaServerReplID"] ) == 'number' and true or false
 
       return res
     end,
@@ -247,6 +248,11 @@ require('possession').setup {
       if user_data['repl_is_running'] ~= nil and user_data['repl_is_running'] == true then
         -- Start a repl in the background, setting g:ScalaReplID.
         vim.fn.ScalaReplStart()
+      end
+
+      if user_data['server_repl_is_running'] ~= nil and user_data['server_repl_is_running'] == true then
+        -- Start a repl in the background, setting g:ScalaServerReplID.
+        vim.fn.ScalaServerReplStart()
       end
 
     end,

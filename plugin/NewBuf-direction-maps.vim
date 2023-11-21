@@ -112,14 +112,14 @@ nnoremap <silent> <c-w>Ri  :call NewBuf_fromReplBuffer( "full", "server" )<cr>
 nnoremap <silent> <c-w>Rt  :call NewBuf_fromReplBuffer( "tab", "server" )<cr>
 nnoremap <silent> <c-w>RT  :call NewBuf_fromReplBuffer( "tab_left", "server" )<cr>
 "                      
-nnoremap <silent> <c-w>Rv  :call NewBuf_fromReplBuffer( "right" )<cr>
-nnoremap <silent> <c-w>RV  :call NewBuf_fromReplBuffer( "right_back" )<cr>
-nnoremap <silent> <c-w>Ra  :call NewBuf_fromReplBuffer( "left" )<cr>
-nnoremap <silent> <c-w>RA  :call NewBuf_fromReplBuffer( "left_back" )<cr>
-nnoremap <silent> <c-w>Ru  :call NewBuf_fromReplBuffer( "up" )<cr>
-nnoremap <silent> <c-w>RU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
-nnoremap <silent> <c-w>Rs  :call NewBuf_fromReplBuffer( "down" )<cr>
-nnoremap <silent> <c-w>RS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
+nnoremap <silent> <c-w>Rv  :call NewBuf_fromReplBuffer( "right", "server" )<cr>
+nnoremap <silent> <c-w>RV  :call NewBuf_fromReplBuffer( "right_back", "server" )<cr>
+nnoremap <silent> <c-w>Ra  :call NewBuf_fromReplBuffer( "left", "server" )<cr>
+nnoremap <silent> <c-w>RA  :call NewBuf_fromReplBuffer( "left_back", "server" )<cr>
+nnoremap <silent> <c-w>Ru  :call NewBuf_fromReplBuffer( "up", "server" )<cr>
+nnoremap <silent> <c-w>RU  :call NewBuf_fromReplBuffer( "up_back", "server" )<cr>
+nnoremap <silent> <c-w>Rs  :call NewBuf_fromReplBuffer( "down", "server" )<cr>
+nnoremap <silent> <c-w>RS  :call NewBuf_fromReplBuffer( "down_back", "server" )<cr>
 
 
 " SCRATCH-BUFFER
@@ -314,10 +314,10 @@ endfunc
 func! NewBuf_fromReplBuffer( direction, ... )
   let [direction; maybe_back ] = a:direction->split('_')
 
-  let replVarName = a:0 ? 'g:ScalaRepl_bufnr' : 'g:ScalaServerRepl_bufnr'
-  if !exists('g:ScalaRepl_bufnr') | echo 'ScalaRepl is not running' | return | endif
+  let replVarName = a:0 == 0 ? 'g:ScalaRepl_bufnr' : 'g:ScalaServerRepl_bufnr'
+  if !exists( replVarName ) | echo (replVarName . ' is not running') | return | endif
 
-  let bnr = a:0 ? g:ScalaRepl_bufnr : g:ScalaServerRepl_bufnr
+  let bnr = a:0 == 0 ? g:ScalaRepl_bufnr : g:ScalaServerRepl_bufnr
   if a:direction == 'float'
     call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
   else
@@ -341,6 +341,8 @@ func! NewBuf_fromReplBuffer( direction, ... )
   endif
 endfunc
 
+" echo g:ScalaServerRepl_bufnr
+" echo g:ScalaRepl_bufnr
 
 " DIRECTION IDS  <==>   BUF-open Commands:
 
@@ -352,6 +354,7 @@ func! NewBufCmds_templ(...)
   let mp['float']         = 'call Path_Float( "_PATH_" )'
   let mp['float_spinoff'] = 'wincmd c | call Path_Float( "_PATH_" )'
   let mp['full']          = 'edit _PATH_'
+  let mp['full_bg']       = 'wincmd p | edit _PATH_'  " some as preview. but means: while in float open full in bg/previous win
   let mp['tab']           = 'tabedit _PATH_'
   let mp['tab_bg']        = 'tabedit _PATH_ | tabprevious' " opened to the right in the background
   let mp['tab_left']      = 'tabedit _PATH_ | tabmove -1'

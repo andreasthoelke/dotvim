@@ -13,7 +13,7 @@ func! ScalaReplStart ()
   endif
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
-  let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
+  let g:ScalaReplID = termopen('sbt client', g:ScalaReplCallbacks)
   silent wincmd c
 endfunc
 
@@ -49,7 +49,7 @@ func! ScalaServerReplStart ()
   endif
   exec "new"
   let g:ScalaServerRepl_bufnr = bufnr()
-  let g:ScalaServerReplID = termopen('sbt', g:ScalaReplCallbacks)
+  let g:ScalaServerReplID = termopen('sbt server', g:ScalaReplCallbacks)
   silent wincmd c
 endfunc
 
@@ -71,6 +71,7 @@ endfunc
 
 
 
+" let g:ReplReceive_open
 let g:ReplReceive_open = v:true
 let g:ReplReceive_additional = []
 let g:Repl_waitforanotherlargechunk = v:false
@@ -85,7 +86,7 @@ func! ReplReceiveOpen_reset()
   let g:ReplReceive_additional = []
 endfunc
 
-func! ScalaReplMainCallback(job_id, data, event)
+func! ScalaReplMainCallback(_job_id, data, _event)
   let lines = RemoveTermCodes( a:data )
   if !len( lines ) | return | endif
 
@@ -117,7 +118,6 @@ func! ScalaReplMainCallback(job_id, data, event)
 
       return
     endif
-
   endif
 
 
@@ -222,9 +222,8 @@ func! ScalaReplRun()
   " normal G
 endfunc
 
-func! ScalaSbtSession_RunMain( sessionId, main_path )
-  let cmd = "\nrunMain " . a:main_path . "\n"
-  call jobsend( a:sessionId, cmd )
+func! ScalaSbtSession_RunMain( terminalId, cmd )
+  call jobsend( a:terminalId, a:cmd )
 endfunc
 
 
@@ -237,57 +236,9 @@ func! ScalaReplPost( message )
   normal G
 endfunc
 
-" Separates 3 output types:
-" - Forwards multi-line repl-outputs
-" - Splits a list of strings into lines
-" - Forwards other values
-" NOTE: not used!?
-func! ScalaReplSimpleResponseHandler( lines )
-  " echo a:lines
-  " return
-  let l:lines = a:lines
-  let l:lines = RemoveTermCodes( l:lines )
-  let g:floatWin_win = FloatingSmallNew ( l:lines )
 
-  call FloatWin_FitWidthHeight()
-  echoe 'done'
-  return
 
-  " Not sure why there is sometimes an additional one line return value.
-  " if len( a:lines ) == 1 | return | endif
-  " echom len(a:lines)
-  " if (type(a:lines) != type(v:t_list))
-  "   echom a:lines
-  "   " call FloatWin_ShowLines( [a:lines] )
-  "   return
-  " endif
-  " let l:lines = RemoveTermCodes( l:lines )
 
-  if len( l:lines ) == 3
-    " ScalaRepl returned the typlical one value
-    " call VirtualtextShowMessage( l:lines[0], 'CommentSection' )
-    let hsReturnVal = l:lines[0]
-    if hsReturnVal[0:1] == '["'
-      " Detected list of strings: To split the list into lines, convert to vim list of line-strings!
-      " call FloatWin_ShowLines( eval ( hsReturnVal ) )
-      let g:floatWin_win = FloatingSmallNew ( [hsReturnVal] )
-    else
-      " call FloatWin_ShowLines( [hsReturnVal] )
-      let g:floatWin_win = FloatingSmallNew ( [hsReturnVal] )
-    endif
-  elseif len( l:lines ) == 0
-    echo "ScalaRepl returned 0 lines"
-  " elseif len( l:lines ) > 15
-  "   call PsShowLinesInBuffer( l:lines )
-  else
-    " call FloatWin_ShowLines( l:lines )
-    let g:floatWin_win = FloatingSmallNew ( l:lines )
-    " call VirtualtextShowMessage( join(l:lines[:1]), 'CommentSection' )
-  endif
-
-  call FloatWin_FitWidthHeight()
-endfunc
-" call ScalaReplSimpleResponseHandler (["eins", "zwei"])
 
 
 
