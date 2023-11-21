@@ -34,6 +34,7 @@ endfunc
 augroup dirvishBuffer
   autocmd!
   autocmd FileType dirvish call UpdateSort()
+  autocmd FileType dirvish call VScriptToolsBufferMaps()
 augroup END
 
 

@@ -668,9 +668,23 @@ Telesc = require('telescope').setup{
   --   -- }
   -- },
 
+-- ─   Extensions config                                ──
+
   extensions = {
     bookmarks = {
       selected_browser = 'chrome',
+    },
+
+    -- See: https://github.com/cljoly/telescope-repo.nvim
+    repo = {
+      list = {
+        -- fd_opts = {
+        --   "--no-ignore-vcs",
+        -- },
+        search_dirs = {
+          "~/Documents/Proj",
+        },
+      },
     },
 
     frecency = {
@@ -905,7 +919,13 @@ function _G.Telesc_launch( picker_name, opts )
     extensions.project.project( opts )
 
   elseif picker_name == 'repo' then
-    opts = f.merge( opts, {default_text = 'Proj/'} )
+    -- opts = f.merge( opts, {default_text = 'Proj/'} )
+    opts = f.merge( opts, {
+      -- NOTE this can override setting from here: ~/.config/nvim/plugin/config/telescope.lua‖*Extensionsˍconfig
+      -- See: https://github.com/cljoly/telescope-repo.nvim
+      -- search_dirs = { "/Users/at/Documents/Proj/" },
+      -- search_dirs = { "/Users/at/Documents/" },
+    } )
     extensions.repo.list( opts )
 
   elseif picker_name == 'bookmarks' then

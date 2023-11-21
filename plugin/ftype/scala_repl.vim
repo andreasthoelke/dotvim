@@ -67,6 +67,22 @@ func! ScalaServerReplStop ()
 endfunc
 
 
+func! ScalaServerRepl_killJVMProcess( processName )
+  let jvmProcesses = systemlist( 'jps' )
+  let jvmProcesses = functional#map( {line -> split( line, " " ) }, jvmProcesses )
+  let jvmProcesses = functional#filter( {line -> line[1] =~ a:processName }, jvmProcesses )
+  " return jvmProcesses
+  if !len( jvmProcesses )
+    echoe "JVM process not found: " . a:processName
+    return
+  endif
+  let processId = jvmProcesses[0][0]
+  call system( 'kill ' . processId )
+endfunc
+
+" ScalaServerRepl_killJVMProcess( 'runZioServerApp' )
+
+
 " ─^  SBT Server Process                                 ▲
 
 
