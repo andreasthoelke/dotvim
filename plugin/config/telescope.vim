@@ -46,7 +46,7 @@ nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 " nnoremap <leader>tb <cmd>Telescope bookmarks selected_browser=chrome<cr>
 
 " nnoremap <leader>tp <cmd>Telescope project initial_mode=normal<cr>
-nnoremap <silent><leader>tp :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+nnoremap <silent><leader>tp :call v:lua.Telesc_launch('project')<cr>
 
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
 nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>

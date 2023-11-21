@@ -337,8 +337,9 @@ local NewBuf = f.curry( function( adirection, pbn )
       vim.fn.LaunchChromium( maybeLink.url )
     end
 
-  -- elseif prompt_title == "Select a project" then
-  --   vim.cmd( cmd )
+  elseif prompt_title == "Select a project" then
+    -- set the window local cwd to maybeLink.path
+    vim.cmd( 'lcd ' .. maybeLink.path )
 
   end
 
@@ -888,13 +889,18 @@ end
 -- Telesc_dynPosOpts_ext( { eins = 1 } )
 -- vim.api.nvim_get_option('columns')
 
+local extensions = require('telescope').extensions
+
 function _G.Telesc_launch( picker_name, opts )
   local posOpts = Telesc_dynPosOpts( {} )
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
   -- putt(opts)
   if     picker_name == 'project' then
+    opts = f.merge( opts, {initial_mode='normal'} )
+    extensions.project.project( opts )
   elseif picker_name == 'bookmarks' then
+    extensions.bookmarks.bookmarks()
   elseif picker_name == 'vim_bookmarks' then
   elseif picker_name == 'vim_bookmarks' then
   elseif picker_name == 'scaladex' then

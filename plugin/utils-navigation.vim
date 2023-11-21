@@ -160,9 +160,10 @@ map <localleader>t] <Plug>TabmoveRight
 noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>:call v:lua.require('tabby.feature.tab_name').save()<cr>
 noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>:call v:lua.require('tabby.feature.tab_name').save()<cr>
 
+" See BufNew_mapps
 " zoom/duplicate the current buffer in a new tab
-nnoremap <silent><c-w>t :call TabNewFocus()<cr>
-nnoremap <silent><c-w><c-t> :tabe %<cr>
+" nnoremap <silent><c-w>t :call TabNewFocus()<cr>
+" nnoremap <silent><c-w><c-t> :tabe %<cr>
 
 func! TabNewFocus()
   let [oLine, oCol] = getpos('.')[1:2]

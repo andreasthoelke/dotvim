@@ -8,8 +8,12 @@
 
 " SELF
 nnoremap <silent> <c-w>o    :call NewBuf_self        ( "float" )<cr>
-nnoremap <silent> <c-w>t    :call NewBuf_self        ( "tab" )<cr>
-nnoremap <silent> <c-w>T    :call NewBuf_self        ( "tab_spinoff" )<cr>
+nnoremap <silent> <c-w>tn   :call NewBuf_self        ( "tab" )<cr>
+nnoremap <silent> <c-w>tt   :call NewBuf_self        ( "tab_tb" )<cr>
+" technically all new tab maps could also close the origin win.
+nnoremap <silent> <c-w>Tn   :call NewBuf_self        ( "tab_left" )<cr>
+" nnoremap <silent> <c-w>T    :call NewBuf_self        ( "tab_spinoff" )<cr>
+nnoremap <silent> <c-w>TT   :call NewBuf_self        ( "tab_spinoff" )<cr>
 nnoremap <silent> <c-w>v    :call NewBuf_self        ( "right" )<cr>
 nnoremap <silent> <c-w>V    :call NewBuf_self        ( "right_back" )<cr>
 nnoremap <silent> <c-w>a    :call NewBuf_self        ( "left" )<cr>
