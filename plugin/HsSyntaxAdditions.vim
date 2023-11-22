@@ -25,6 +25,7 @@ au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call TsSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json call JS_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 
@@ -43,7 +44,7 @@ au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md,*.txt,.zshrc call VScriptToolsBufferMaps()
+au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
 " au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()

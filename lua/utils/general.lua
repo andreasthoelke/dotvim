@@ -35,6 +35,7 @@ function _G.PrintMessages( cnt )
   vim.g['floatWin_win'] = vim.fn.FloatingSmallNew( seperatedList )
   vim.wo.wrap = true
   vim.fn.FloatWin_FitWidthHeight()
+  vim.fn.Scala_bufferMaps_shared()
   vim.cmd( 'wincmd p' )
 end
 -- PrintMessages()

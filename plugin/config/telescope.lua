@@ -784,7 +784,7 @@ require('telescope').load_extension('scaladex')
 require('telescope').load_extension('env')
 require('telescope').load_extension('ag')
 -- This hooks up telescope to be used when noice / nvim-ui ui-select actions are issued.
-require('telescope').load_extension('ui-select')
+-- require('telescope').load_extension('ui-select')
 require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
 require('telescope').load_extension('ast_grep')
@@ -881,23 +881,9 @@ end
 -- echo v:lua.CursorIsInWinColumn()
 -- vim.api.nvim_win_get_position(0)
 
-function _G.Telesc_dynPosOpts( opts )
-  opts = opts or {}
-  local neovim_full_client_width = vim.api.nvim_get_option('columns')
-  local thisWinWidth = vim.api.nvim_win_get_width(0)
-  local width
-  if thisWinWidth == neovim_full_client_width then
-    width = neovim_full_client_width / 2 - 4
-  else
-    width = neovim_full_client_width - thisWinWidth - 2
-  end
-  local cursorWinCol = CursorIsInWinColumn()
-  local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
-  return vim.tbl_extend( 'keep', opts, { anchor = winAnchor, width = width} )
-end
 
 function _G.Telesc_dynPosOpts_ext( opts )
-  local posOpts = Telesc_dynPosOpts()
+  local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
   return vim.tbl_extend( 'keep', opts or {}, layout_opts )
 end
@@ -909,7 +895,7 @@ end
 local extensions = require('telescope').extensions
 
 function _G.Telesc_launch( picker_name, opts )
-  local posOpts = Telesc_dynPosOpts( {} )
+  local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
   -- putt(opts)

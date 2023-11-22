@@ -305,7 +305,7 @@ endfunc
 func! NewBuf_fromScratchBuffer( direction )
   let path = '~/Documents/Notes/scratch/' . GetRandNumberString()
   if a:direction == 'float'
-    call v:lua.FloatBuf_inOtherWinColumn( path, v:lua.Telesc_dynPosOpts() )
+    call v:lua.FloatBuf_inOtherWinColumn( path )
   else
     let cmd = NewBufCmds( path )[ a:direction ]
     " if IsInFloatWin() | wincmd c | endif

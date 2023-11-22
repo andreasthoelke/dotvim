@@ -1,6 +1,6 @@
 
 
-function _G.FloatBuf_inOtherWinColumn( bufnrOrPath, opts )
+function _G.FloatBuf_inOtherWinColumn( bufnrOrPath )
 
   local bufnr
   if type( bufnrOrPath ) == 'number' then
@@ -14,7 +14,7 @@ function _G.FloatBuf_inOtherWinColumn( bufnrOrPath, opts )
     end
   end
 
-  local config = FloatOpts_inOtherWinColumn( opts )
+  local config = FloatOpts_inOtherWinColumn()
 
   -- Create the floating window
   local floating_win = vim.api.nvim_open_win(bufnr, false, config)
@@ -23,42 +23,65 @@ function _G.FloatBuf_inOtherWinColumn( bufnrOrPath, opts )
   vim.api.nvim_set_current_win(floating_win)
 end
 
-function _G.FloatOpts_inOtherWinColumn( opts )
-  opts = opts or Telesc_dynPosOpts( {} )
-  -- Set default values for opts.width and opts.anchor
-  opts.width = opts.width or 80
-  opts.anchor = opts.anchor or 'W'
+-- vim.api.nvim_open_win(0, false, {relative='editor', row=3, col=3, width=12, height=12})
+
+
+function _G.FloatOpts_inOtherWinColumn()
+  local posOpts = Float_dynAnchorWidth()
 
   -- Get the height and width of the Neovim window
   local nvim_height = vim.api.nvim_get_option('lines')
   local nvim_width = vim.api.nvim_get_option('columns')
 
-  -- Set the width and height of the floating window
+  -- Build the float win config map
   local config = {
     relative = 'editor',
-    width = opts.width - 1,
+    -- NOTE: this format doesn't need an anchor
+    -- anchor = 'N' .. posOpts.anchor,
+    width = posOpts.width - 1,
     height = math.floor(nvim_height / 2),
+    border = 'rounded'
   }
 
   -- Calculate the row and col properties of the center of the Neovim window
-  if opts.anchor == 'W' then
+  if posOpts.anchor == 'W' then
     config.row = math.floor(nvim_height / 2) - math.floor(config.height / 2)
     config.col = 0
-  elseif opts.anchor == 'E' then
+  elseif posOpts.anchor == 'E' then
     config.row = math.floor(nvim_height / 2) - math.floor(config.height / 2)
     config.col = nvim_width - config.width
+  else
+    vim.print( posOpts.anchor .. " is not supported" )
   end
-
-  -- Set border options
-  config.border = opts.border or 'rounded'
 
   return config
 end
 
+-- FloatOpts_inOtherWinColumn()
 
--- FloatBuf_inOtherWinColumn( 6, Telesc_dynPosOpts( {} ))
--- FloatBuf_inOtherWinColumn( vim.g["ScalaRepl_bufnr"], Telesc_dynPosOpts( {} ))
--- FloatBuf_inOtherWinColumn( "~/Documents/Notes/Fullstack_app.md", Telesc_dynPosOpts( {} ))
--- Telesc_dynPosOpts( {} )
+function _G.Float_dynAnchorWidth()
+  local neovim_full_client_width = vim.api.nvim_get_option('columns')
+  local widthDefault = neovim_full_client_width / 2 - 4
+  local anchorDefault = 'E'
+  if vim.g['Goyo_active'] == 1 or vim.fn.winwidth(1) < 40 then
+    return { anchor = anchorDefault, width = widthDefault }
+  end
+  local thisWinWidth = vim.api.nvim_win_get_width(0)
+  local width
+  if thisWinWidth == neovim_full_client_width then
+    width = widthDefault
+  else
+    width = neovim_full_client_width - thisWinWidth - 2
+  end
+  local cursorWinCol = CursorIsInWinColumn()
+  local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
+  return { anchor = winAnchor, width = width}
+end
+
+-- vim.api.nvim_win_get_width( vim.api.nvim_tabpage_list_wins()[0] )
+-- FloatBuf_inOtherWinColumn( 6, Float_dynAnchorWidth( {} ))
+-- FloatBuf_inOtherWinColumn( vim.g["ScalaRepl_bufnr"], Float_dynAnchorWidth( {} ))
+-- FloatBuf_inOtherWinColumn( "~/Documents/Notes/Fullstack_app.md", Float_dynAnchorWidth( {} ))
+-- Float_dynAnchorWidth( {} )
 
 

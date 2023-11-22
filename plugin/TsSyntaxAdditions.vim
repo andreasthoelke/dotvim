@@ -1,7 +1,6 @@
 
 func! TsSyntaxAdditions ()
 
-  " call tools_js#bufferMaps()
   call clearmatches()
 
 

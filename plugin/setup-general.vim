@@ -899,11 +899,15 @@ nnoremap <silent> <leader>z :Goyo<cr>
 let g:goyo_width = '80%'
 let g:goyo_height = '80%'
 
+let g:Goyo_active = 0
+
 func! s:goyo_leave()
+  let g:Goyo_active = 0
   hi VertSplit       guifg=#000000 guibg=#080808
 endfunc
 
 function! s:goyo_enter()
+  let g:Goyo_active = 1
   " this is to activate comment conceals
   exec "edit"
 endfunction

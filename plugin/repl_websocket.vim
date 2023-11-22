@@ -62,8 +62,8 @@ let g:WsReplCallbacks = {
       \ }
 
 func! WsReplPost( message )
-  call jobsend(g:WsReplID_C, tools_js#json_stringify( a:message ) )
-  " call jobsend(g:WsReplID_C, tools_js#json_stringify( a:message ) . "\n")
+  call jobsend(g:WsReplID_C, JS_json_stringify( a:message ) )
+  " call jobsend(g:WsReplID_C, JS_json_stringify( a:message ) . "\n")
   " call jobsend(g:WsReplID_C, a:message . "\n")
 endfunc
 
