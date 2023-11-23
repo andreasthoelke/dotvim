@@ -70,7 +70,7 @@ endfunc
 
 
 " temp disabled
-" nnoremap <silent> gs :call UserChoiceAction( 'Test Server Action', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+nnoremap <silent> gs :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
 func! TestServerCmd ( chosenObj )
   exec a:chosenObj.cmd

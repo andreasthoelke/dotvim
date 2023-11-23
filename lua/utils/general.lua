@@ -998,6 +998,7 @@ end
 
 -- note this has no definition infos!
 -- MapInfo("tu")
+-- Keymap_props( 'n', '<Space>st')
 
 function _G.Keymap_props( mode, lhs_map_string )
   local cmd = "verbose " .. mode .. "map " .. lhs_map_string

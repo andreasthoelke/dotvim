@@ -210,9 +210,12 @@ endfunc
 " Sessions are saved here:
 " /Users/at/.local/share/nvim/sessions1/
 
-nnoremap <leader>st :Startify<cr>
-nnoremap <silent><leader>Ls :call SessionLoadForCWDStartify()<cr>
-nnoremap <silent><leader>ls :PossessionLoad<cr>
+nnoremap <silent><leader>st :Startify<cr>
+nnoremap <silent><leader>sT :tabnew<cr>:Startify<cr>
+" nnoremap <silent><leader>Ls :call SessionLoadForCWDStartify()<cr>
+" nnoremap <silent><leader>ls :PossessionLoad<cr>
+nnoremap <silent><leader>ls :call PossessionLoadForCWD()<cr>
+nnoremap <silent><leader>lS :call PossessionSaveForCWD()<cr>
 nnoremap <silent><leader><leader>ls :Telescope possession list initial_mode=normal<cr>
 
 " let g:startify_disable_at_vimenter = v:false
@@ -247,15 +250,23 @@ let g:startify_session_dir = stdpath('data') . '/sessions'
 " __Users__at__Documents__Architecture__examples__graphql-relay-js
 
 func! SessionLoadForCWDStartify()
-
   let sessionFile = substitute( getcwd(), '/', '__', 'g' )
-  " let sessionPath = g:startify_session_dir . '/' . sessionFile
   exec 'SLoad ' . sessionFile
+endfunc
 
-  " For some reason the cmdheight is set to 1 after loading a session. Setting it back to 3:
-  " let currTab=tabpagenr()
-  " tabdo set cmdheight=3
-  " execute 'tabn ' . currTab
+func! PossessionLoadForCWD()
+  let sessionName = fnamemodify( getcwd(), ':t' )
+  exec 'PossessionLoad ' . sessionName
+endfunc
+" fnamemodify( getcwd(), ':t' )
+
+func! PossessionSaveForCWD()
+  let sessionName = fnamemodify( getcwd(), ':t' )
+  let msg = 'Saving possession: ' . sessionName . ' ?'
+  " let dres = confirm( msg, "&Yes\n&Cancel", 2 )
+  if 1
+    exec 'PossessionSave ' . sessionName
+  endif
 endfunc
 
 
