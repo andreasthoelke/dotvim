@@ -7,6 +7,7 @@ local config = {
   keybinds = {
     oh = "split",
     ["or"] = "rifle",
+    ["<esc>"] = "close",
     ot = "tabedit",
     ov = "vsplit"
   },
@@ -24,7 +25,7 @@ ranger_nvim.setup( config )
 
 
 function ranger_launch()
-  local posOpts = Telesc_dynPosOpts()
+  local posOpts = Float_dynAnchorWidth()
   local width = (posOpts.width - 1) / vim.api.nvim_get_option('columns')
   local layout_opts =
     posOpts.anchor == 'E'

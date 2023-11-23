@@ -111,67 +111,6 @@ func! AddLinesToFile ( filePath, newLines, delLineNum )
   call writefile( newLines, a:filePath)
 endfunc
 
-" ─   Javascript Nodejs helper                           ■
-
-command! TypescriptReplsetCommonJS call TypescriptRepl_TSNode_setCommonJS()
-
-func! TypescriptRepl_TSNode_setCommonJS()
-  let newConfigLine1 = ' , "ts-node": { "compilerOptions": { "module": "CommonJS" } }'
-  let newConfigLine2 = '}'
-  let fileName = 'tsconfig.json'
-  call AddLinesToFile( fileName, [newConfigLine1, newConfigLine2], -2 )
-endfunc
-
-" Execute a function in a typescript file. This function should typically console.log() it's result. Example:
-  " let resLines = systemlist( T_TesterTerminalCommand( a:testerName ) )
-  " silent let g:floatWin_win = FloatingSmallNew ( resLines )
-func! T_NodeFunctionCall_TermCmd( filePath, fnName )
-  let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
-  return "npx ts-node -T -e '" . js_code_statement . "'"
-
-  " return "node --loader ts-node/esm -e '" . js_code_statement . "'"
-
-  " return "node -O '{\"module\": \"commonjs\"}' --loader ts-node/esm -e '" . js_code_statement . "'"
-  " node -e 'require("./db").init()'
-  " npx ts-node -T -e 'require("/Users/at/Documents/Architecture/examples/gql1/scratch/.testGqlExec.ts").ShowSchema()'
-endfunc
-
-
-" node -e "import('<path>').then(m => console.log(m.abc1))"
-
-
-func! CurrentRelativeModulePath()
-  let path = expand('%:p:r')
-  let cwd = getcwd()
-  let relPath = substitute( path, cwd, '', '' )
-  return relPath
-endfunc
-" echo CurrentRelativeModulePath()
-
-" CurrentRelativeModulePath() -> /packages/app/src/program
-" import { e1_processCommands as testIdentif } from "@org/app/program"
-
-" echo split( '/packages/app/src/program', '/' )
-" echo substitute( '/packages/app/src/program', '/packages', '@org', '' )
-
-func! ModulePath_MonoRepo()
-  let path = expand('%:p:r')
-  let cwd = getcwd()
-  let orgName = '@' . JsonConfKey( 'package.json', 'name' )
-
-  let relPath    = substitute( path, cwd, '', '' )
-  " let orgPath    = substitute( relPath, '/packages', '@org', '' )
-  let orgPath    = substitute( relPath, '/packages', orgName, '' )
-  let modulePath = substitute( orgPath, '/src', '', '' )
-  let modulePath = substitute( modulePath, '/_src', '', '' )
-
-  let packageName = split( relPath, '/' )[1]
-  return [packageName, modulePath]
-endfunc
-
-
-" ─^  Javascript Nodejs helper                           ▲
-
 
 fun! OpenITerm()
   let path = projectroot#guess()

@@ -1,5 +1,16 @@
 
 
+
+" temp disabled! to use the gs.. maps for local (scala) preview server
+
+  " PERVIEW-SERVER MAPS (see ts_preview_server_client.vim)
+  " nnoremap <silent><buffer>         gss :call Scala_SetServerApp_ScalaCLI()<cr>
+  " nnoremap <silent><buffer>         ,gsr :call Scala_ServerRestart()<cr>
+  " nnoremap <silent><buffer>         ,,gsr :call Scala_ServerRestartTerm()<cr>
+  " nnoremap <silent><buffer>         gsS :call Scala_ServerStop()<cr>
+  " PERVIEW-SERVER MAPS (see ts_preview_server_client.vim)
+
+
 func! Scala_SetServerApp_ScalaCLI()
   let printerFilePath = getcwd() . '/PreviewServer_Ember.scala'
 
