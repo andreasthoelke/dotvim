@@ -101,7 +101,7 @@ nnoremap <silent> <leader>go <cmd>Neotree show left toggle<cr>
 nnoremap <silent> gb <cmd>Telescope buffers<cr>
 nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>
 
-nnoremap <silent> <leader>gs :call v:lua.require("neo-tree.command").execute({ 'action': "show", 'reveal_file': expand('%:p'), 'reveal_force_cwd': v:true })<cr>
+" nnoremap <silent> <leader>gs :call v:lua.require("neo-tree.command").execute({ 'action': "show", 'reveal_file': expand('%:p'), 'reveal_force_cwd': v:true })<cr>
 
 " nnoremap <silent> <leader>gs <cmd>NvimTreeFindFile<cr><c-w>p
 " nnoremap <silent> <leader>go <cmd>NvimTreeToggle<cr><c-w>p

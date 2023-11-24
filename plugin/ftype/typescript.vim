@@ -2,6 +2,15 @@
 func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
+
+  nnoremap <silent><buffer> ge :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+
+
+  " TODO: test this
+  " nnoremap <silent><buffer>         gei :call JS_eval_line( line('.'), v:true, v:false, v:false )<cr>
+  " nnoremap <silent><buffer> <leader>gei :call JS_eval_line( line('.'), v:false, v:false, v:false )<cr>
+  " nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
+
   " JS_eval_line( ln, formatted, edgeql_preview, useTLBindNameAsExpression )
   " nnoremap <silent><buffer> gel :call JS_eval_line( line('.'), v:true, v:false, v:false )<cr>
   " nnoremap <silent><buffer> gei :call JS_eval_line( line('.'), v:true, v:false, v:true )<cr>
@@ -12,17 +21,14 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer> <leader>geL :call JS_eval_line( line('.'), v:false, v:true, v:false )<cr>
   " nnoremap <silent><buffer> <leader>geI :call JS_eval_line( line('.'), v:false, v:true, v:true )<cr>
 
+  " nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
+  " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
+  " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
+  " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
 
-  nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
 
-  nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
-  nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
-  nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
-
-  " nnoremap <silent><buffer>         gei :call JS_eval_line( line('.'), v:true, v:false, v:false )<cr>
-  nnoremap <silent><buffer> <leader>gei :call JS_eval_line( line('.'), v:false, v:false, v:false )<cr>
-
-  nnoremap <silent><buffer>         gel :call JS_ComponentShow()<cr>
+" ─   Motions                                           ──
+" are this consistent with scala?
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -158,8 +164,12 @@ func! JS_NodeCall( identif )
 
   call add( lines, 'printer.execIdentif(modu.' . a:identif . ')' )
 
+
+  " call writefile( lines, 'tempPrinter.js' )
+
   " return "node -e '" . js_code_helperFn . js_code_importCall . "'"
   return "npx ts-node --transpile-only -T  -e '" . join( lines ) . "'"
+  " return "npx ts-node --trace-deprecation --transpile-only -T  -e '" . join( lines ) . "'"
 
   " return "node --loader ts-node/esm -e '" . join( lines ) . "'" 
 
@@ -542,12 +552,16 @@ func! TypescriptRepl_TSNode_setCommonJS()
   call AddLinesToFile( fileName, [newConfigLine1, newConfigLine2], -2 )
 endfunc
 
-" Execute a function in a typescript file. This function should typically console.log() it's result. Example:
+" Execute a function in a typescript file. This function should typically console.log() its result. Example:
   " let resLines = systemlist( T_TesterTerminalCommand( a:testerName ) )
   " silent let g:floatWin_win = FloatingSmallNew ( resLines )
 func! T_NodeFunctionCall_TermCmd( filePath, fnName )
   let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
-  return "npx ts-node -T -e '" . js_code_statement . "'"
+  " call writefile( [js_code_statement], 'tempPrinter.js' )
+
+  " return "npx ts-node -T -e '" . js_code_statement . "'"
+
+  return "NODE_NO_WARNINGS=1 npx ts-node -T -e '" . js_code_statement . "'"
 
   " return "node --loader ts-node/esm -e '" . js_code_statement . "'"
 

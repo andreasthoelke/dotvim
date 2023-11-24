@@ -1,7 +1,6 @@
 
-" These (seem to be) elaborate typescript specific test tools.
-" perhaps the client or just the structure could be reused for scala?
 
+" nnoremap <silent> gj :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md
@@ -69,8 +68,6 @@ func! T_GetSnapshotNameFromFolderPath( path )
 endfunc
 
 
-" temp disabled
-nnoremap <silent> gs :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
 func! TestServerCmd ( chosenObj )
   exec a:chosenObj.cmd
@@ -347,7 +344,7 @@ func! T_TesterTerminalCommand( testCmd )
   return T_NodeFunctionCall_TermCmd( filePath, functionName )
 endfunc
 " echo systemlist( T_TesterTerminalCommand( 'Printer' ) )
-" echo T_TesterTerminalCommand( 'Printer' )
+" T_TesterTerminalCommand( 'Printer' )
 " echo systemlist( T_TesterTerminalCommand( 'Client' ) )
 
 

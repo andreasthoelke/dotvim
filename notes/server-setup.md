@@ -1,5 +1,30 @@
 
-a simple reproduceable setup
+# restart typescript dev
+## copy example projects from 2022 to Proj/
+tldr cp
+cp -Rv ~/Documents/Server-Dev/JS_GQL_notes/examples/gql1 ~/Documents/Proj/g_ts_gql
+
+~/Documents/_archive/c_gql_edb
+
+cp -R ~/Documents/_archive/c_gql_edb ~/Documents/Proj/g_b_ts_gql
+
+cp ~/Documents/_archive/repo_effect-course/src/solutions/day-1/runPrinter.ts ~/Documents/Proj/g_ts_gql/d_typescript_review/src/
+
+cp ~/Documents/_archive/repo_effect-course/src/solutions/day-1/runPrinter.ts ~/Documents/Proj/g_ts_gql/b_pothos/src
+
+~/Documents/Proj/
+~/Documents/Server-Dev/JS_GQL_notes/examples/gql1
+
+
+yarn upgrade
+node --trace-deprecation
+
+yarn add punycode
+
+https://localhost:4040/graphiql
+http://localhost:4040/
+
+
 
 # typescript
 # graphql
@@ -53,14 +78,43 @@ git commit -am "initial commit"
 pnpm add -D esbuild
 
 # a demo main.ts file
-wget -c https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/src/main.ts -O src/main.ts
+wget -c https://raw.githubusercontent.com/metachris/typescript-boilerplate/master/src/main.ts -O src/main1.ts
 
 # basic test call
 call append('.', T_NodeFunctionCall_TermCmd( './src/main.ts', 'delayed' ))
 npx ts-node -T -e 'require("./src/main.ts").delayed()'
 
+func! JS_NodeCall( identif )
+
+call append('.', T_NodeFunctionCall_TermCmd( './src/test1.ts', 'list' ))
+NODE_NO_WARNINGS=1 npx ts-node -T -e 'require("./src/test1.ts").list(9)'
+
+NODE_NO_WARNINGS=1 npx ts-node -T -e 'require("./src/main.ts").e1_delayed'
+
+npx ts-node -T -e 'require("./src/main.ts").delayed()'
+npx ts-node -T -e 'require("./src/main1.ts").foo()'
+
+yarn add yn
+pnpm add yn
+
+yarn
+pnpm i
+
+
+
 # test a rambda list call with arg
 pnpm add -D rambda
+pnpm add -D ramda
+
+
+yarn add ramda
+yarn add rambda
+
+remove rambda
+yarn remove rambda
+
+touch scratch/test1.ts
+
 pnpm add -D lodash @types/lodash
 use leader s} to run these lines to insert the test lines into main.ts
 call T_InsertLineAt( './scratch/test1.ts', '', 0 )
@@ -101,9 +155,16 @@ node --loader ts-node/esm ./scratch/.testPrinter.ts
 
 pnpm --help
 pnpm remove rambda
+npm install rambda
 pnpm add ramda @types/ramda
+yarn add ramda @types/ramda
+
+pnpm i
 
 yarn add ramda @types/ramda
+
+## update pnpm
+npx pnpm i -g pnpm@latest
 
 # Initialize the testServer files
 vim: gs .. then initialize and install packages

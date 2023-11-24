@@ -142,6 +142,22 @@ nnoremap <silent> <c-w>gU  :call NewBuf_fromScratchBuffer( "up_back" )<cr>
 nnoremap <silent> <c-w>gs  :call NewBuf_fromScratchBuffer( "down" )<cr>
 nnoremap <silent> <c-w>gS  :call NewBuf_fromScratchBuffer( "down_back" )<cr>
 
+" STARTIFY-BUFFER
+nnoremap <silent> <c-w>Gp  :call NewBuf_fromStartifyBuffer( "preview" )<cr>
+nnoremap <silent> <c-w>Go  :call NewBuf_fromStartifyBuffer( "float" )<cr>
+nnoremap <silent> <c-w>Gi  :call NewBuf_fromStartifyBuffer( "full" )<cr>
+nnoremap <silent> <c-w>Gt  :call NewBuf_fromStartifyBuffer( "tab" )<cr>
+nnoremap <silent> <c-w>GT  :call NewBuf_fromStartifyBuffer( "tab_left" )<cr>
+"                                           
+nnoremap <silent> <c-w>Gv  :call NewBuf_fromStartifyBuffer( "right" )<cr>
+nnoremap <silent> <c-w>GV  :call NewBuf_fromStartifyBuffer( "right_back" )<cr>
+nnoremap <silent> <c-w>Ga  :call NewBuf_fromStartifyBuffer( "left" )<cr>
+nnoremap <silent> <c-w>GA  :call NewBuf_fromStartifyBuffer( "left_back" )<cr>
+nnoremap <silent> <c-w>Gu  :call NewBuf_fromStartifyBuffer( "up" )<cr>
+nnoremap <silent> <c-w>GU  :call NewBuf_fromStartifyBuffer( "up_back" )<cr>
+nnoremap <silent> <c-w>Gs  :call NewBuf_fromStartifyBuffer( "down" )<cr>
+nnoremap <silent> <c-w>GS  :call NewBuf_fromStartifyBuffer( "down_back" )<cr>
+
 
 " CURSOR-LSP-REFERENCE
 nnoremap <silent> gdp  :call NewBuf_fromCursorLspRef( "preview_back" )<cr>
@@ -312,6 +328,12 @@ func! NewBuf_fromScratchBuffer( direction )
     exec cmd
   endif
 endfunc
+
+func! NewBuf_fromStartifyBuffer( direction )
+  call NewBuf_fromScratchBuffer( a:direction )
+  exec 'Startify'
+endfunc
+
 
 
 

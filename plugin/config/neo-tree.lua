@@ -142,6 +142,20 @@ function _G.Ntree_launch_inWin( state, view, winId )
 end
 
 
+function _G.Ntree_revealFile( filePath )
+  filePath = filePath ~= nil and filePath or vim.fn.expand( "%:p" )
+  local winIds = Ntree_winIds( vim.api.nvim_get_current_tabpage() )
+  if #winIds == 0 then return end
+  -- note we are just using the first win here, could e.g. also use the closest
+  local winId = winIds[1]
+  local state = manager.get_state_for_window( winId )
+  local treeView = Ntree_view_get( state )
+  treeView.focus_path = filePath
+  Ntree_launch_inWin( state, treeView, winId )
+end
+
+vim.keymap.set( 'n', '<leader>gs', Ntree_revealFile )
+
 
 -- Perform the normal node "open" action which might expand a directory in the tree
 -- or launch a file buffer in the same window.
@@ -182,7 +196,6 @@ end
 -- vim.w['AlternateTreeView']
 
 vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
-
 
 
 local function open_startup()
