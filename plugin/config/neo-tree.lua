@@ -4,6 +4,7 @@ local f = require 'utils.functional'
 vim.g.neo_tree_remove_legacy_commands = 1
 
 
+
 -- All config default values: 
 -- /Users/at/.vim/scratch/neo-tree-defaults.sct
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
@@ -13,6 +14,7 @@ local renderer = require("neo-tree.ui.renderer")
 local manager = require 'neo-tree.sources.manager'
 local fs = require("neo-tree.sources.filesystem")
 local filesystem_commands = require("neo-tree.sources.filesystem.commands")
+local common_commands = require("neo-tree.sources.common.commands")
 -- local Preview = require("neo-tree.sources.common.preview")
 
 -- lua putt( require('neo-tree.sources.manager').get_state_for_window() )
@@ -156,6 +158,10 @@ end
 
 vim.keymap.set( 'n', '<leader>gs', Ntree_revealFile )
 
+-- vim.keymap.set( 'n', '<C-v>', function()
+--   putt('hi')
+-- end)
+
 
 -- Perform the normal node "open" action which might expand a directory in the tree
 -- or launch a file buffer in the same window.
@@ -263,6 +269,8 @@ end )
 -- ─   Config                                            ■
 
 require("neo-tree").setup({
+
+  log_level = 'warn',
 
   hide_root_node = true, -- Hide the root node.
   -- auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
@@ -435,6 +443,9 @@ require("neo-tree").setup({
         ["<esc>"] = "noop", -- TODO close preview ..
         ["P"] = { "toggle_preview", config = { use_float = true } },
         ["<space>P"] = { "toggle_preview", config = { use_float = false } },
+
+        ["<C-v>"] = function() vim.cmd("normal V") end,
+
         -- ["l"] = "focus_preview",
         ["l"] = "noop",  -- use c-w i
         -- ["s"] = "open_split",
@@ -506,8 +517,8 @@ require("neo-tree").setup({
         ["t"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
         ["T"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
         -- _
-        ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
-        ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
+        -- ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
+        -- ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
         ["a"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'left', s.tree:get_node().path ) end,
         ["u"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up', s.tree:get_node().path ) end,
         ["U"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up_back', s.tree:get_node().path ) end,
@@ -610,7 +621,6 @@ require("neo-tree").setup({
         ["<space>mk"] = "add_directory", -- also accepts the config.show_path and config.insert_as options.
         ["<space>dd"] = "delete",
         ["<space>lr"] = "rename",  -- as "l re" is used for rcmd / rlist maps. "l lr" should be consistent with lsp rename
-        ["<space>yy"] = "copy_to_clipboard",
 
         ["yy"] = function(state)
           local node = state.tree:get_node()
@@ -642,9 +652,27 @@ require("neo-tree").setup({
           vim.cmd( "silent !code " .. current_path )
         end,
 
+        -- SELECTION COMMANDS
+        -- there are just COPY and CUT selection commands
+        --    quick moves:
+        ["c"] = function( state, callback )
+          common_commands.copy_to_clipboard( state, callback )
+          renderer.focus_node(state, nil, true, 1, 3)
+          renderer.redraw(state)
+        end,
+        ["x"] = "copy_to_clipboard",
 
+        --    Batch marking all of visual selection:
+        ["<space>yy"] = "copy_to_clipboard",
         ["<space>xx"] = "cut_to_clipboard",
+
+        -- EXECUTE SELECTION
+        -- this executes the currently selected nodes (based on their selection type)
+        -- TODO: test with mixed selection types.
         ["<space>pp"] = "paste_from_clipboard",
+
+
+        -- TODO test these
         ["<space>yd"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
         ["<space>mv"] = "move", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
 

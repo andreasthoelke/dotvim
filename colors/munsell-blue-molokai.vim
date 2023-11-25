@@ -726,7 +726,9 @@ hi! Search         guifg=NONE guibg=#1A1E1E gui=italic,underline
 " Visual selection
 " hi Visual guibg=#2E2E2E gui=none
 " Made the visual selection line bg darker to increase contrast with commented text
-hi Visual guibg=#282828 gui=none
+" hi! Visual guibg=#282828 gui=none
+" hi! Visual guibg=#181C1C
+hi! Visual guibg=#1D2222
 
 " Hides the tilde at non-existent lines at the end of the buffer
 hi! EndOfBuffer guifg=bg
