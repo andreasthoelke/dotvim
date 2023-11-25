@@ -36,9 +36,11 @@ nnoremap <silent> ,,tn       :call Browse_cwd  ( "tab" )<cr>
 nnoremap <silent> ,v        :call Browse_parent( "right" )<cr>
 nnoremap <silent> ,V        :call Browse_parent( "right_back" )<cr>
 nnoremap <silent> ,,v       :call Browse_cwd  ( "right" )<cr>
+" nnoremap <silent> ,,v       :call v:lua.Ntree_openRight()<cr>
 nnoremap <silent> ,,V       :call Browse_cwd  ( "right_back" )<cr>
 nnoremap <silent> ,an       :call Browse_parent( "left" )<cr>
 nnoremap <silent> ,,an      :call Browse_cwd  ( "left" )<cr>
+" nnoremap <silent> ,,an      :call v:lua.Ntree_openLeft()<cr>
 nnoremap <silent> ,An       :call Browse_parent( "left_back" )<cr>
 nnoremap <silent> ,,An      :call Browse_cwd  ( "left_back" )<cr>
 nnoremap <silent> ,u        :call Browse_parent( "up" )<cr>

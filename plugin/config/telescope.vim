@@ -96,7 +96,8 @@ nnoremap <silent> <leader>gp :call MRU_show()<cr>
 
 nnoremap <silent> g,p <cmd>Telescope find_files hidden=true<cr>
 nnoremap <silent> go  <cmd>Telescope frecency workspace=CWD<cr>
-nnoremap <silent> <leader>go <cmd>Neotree show left toggle<cr>
+
+" nnoremap <silent> <leader>go <cmd>Neotree show left toggle<cr>
 
 nnoremap <silent> gb <cmd>Telescope buffers<cr>
 nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>

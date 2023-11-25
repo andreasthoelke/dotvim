@@ -25,6 +25,11 @@ local common_commands = require("neo-tree.sources.common.commands")
 
 -- Note: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
 
+local function close_cur_window( state )
+  common_commands.close_window( state )
+  vim.cmd 'wincmd c'
+end
+
 function _G.Ntree_currentNode( state )
   local state = state ~= nil and state or manager.get_state_for_window()
   return {
@@ -158,10 +163,6 @@ end
 
 vim.keymap.set( 'n', '<leader>gs', Ntree_revealFile )
 
--- vim.keymap.set( 'n', '<C-v>', function()
---   putt('hi')
--- end)
-
 
 -- Perform the normal node "open" action which might expand a directory in the tree
 -- or launch a file buffer in the same window.
@@ -218,24 +219,31 @@ vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 -- vim.keymap.set( 'n', '<c-space>', Ntree_launchToAltView_saveAltFileLoc )
 
 
-local function open_startup()
+function _G.Ntree_openLeft()
   local reveal_file = vim.fn.MostRecentlyUsedLocalFile()
-  local cwd = vim.fn.getcwd()
-  if not utils.is_subpath( cwd, reveal_file) then
-    tree_exec({
-      action = "show",
-      position = "left",
-      dir = cwd,
-    })
-  else
-    tree_exec({
-      action = "show",
-      position = "left",
-      dir = cwd,
-      reveal_file = reveal_file,
-    })
-  end
+  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+  vim.cmd( 'wincmd H' )
+  vim.cmd( "leftabove 29vnew" )
+  Ntree_launch( reveal_file, cwd )
 end
+
+function _G.Ntree_openRight()
+  local reveal_file = vim.fn.MostRecentlyUsedLocalFile()
+  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+  vim.cmd( "29vnew" )
+  Ntree_launch( reveal_file, cwd )
+end
+
+local function open_startup()
+  Ntree_openLeft()
+  vim.cmd 'wincmd p'
+end
+
+-- vim.fn.NewBufCmds( "" )[ 'left' ]
+-- vim.cmd( vim.fn.NewBufCmds( "" )[ 'left' ] )
+
+vim.keymap.set( 'n', '<leader>oa', Ntree_openLeft )
+vim.keymap.set( 'n', '<leader>ov', Ntree_openRight )
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 
@@ -493,7 +501,7 @@ require("neo-tree").setup({
         ["ot"] = "noop",
 
         ["=="] = "toggle_auto_expand_width",
-        ["q"] = "close_window",
+        ["q"] = close_cur_window,
         ["g?"] = "show_help",
         ["?"] = "noop",
         ["<"] = "prev_source",
