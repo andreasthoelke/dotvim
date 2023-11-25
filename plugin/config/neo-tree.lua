@@ -517,8 +517,8 @@ require("neo-tree").setup({
         ["t"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
         ["T"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
         -- _
-        -- ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
-        -- ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
+        ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
+        ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
         ["a"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'left', s.tree:get_node().path ) end,
         ["u"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up', s.tree:get_node().path ) end,
         ["U"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up_back', s.tree:get_node().path ) end,
