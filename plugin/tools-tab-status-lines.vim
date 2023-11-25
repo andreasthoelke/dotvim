@@ -394,6 +394,20 @@ func! ScalaMetalsStatus()
   return g:metals_status
 endfunc
 
+func! GetCwdType_info()
+  let en = GetCwdType()
+  return   en == 'local' ? '˼' : 
+    \ en == 'tab'   ? '˺' : ''
+endfunc
+
+func! GetCwdType()
+  let local = haslocaldir( 0, 0 )
+  let tab = haslocaldir( -1, 0 )
+  return local ? 'local' : tab ? 'tab' : 'global'
+endfunc
+
+" GetCwdType()
+
 
 func! DBUIInfos ()
   return db_ui#statusline({
@@ -404,7 +418,9 @@ func! DBUIInfos ()
 endfunc
 
 func! LightlineLocalRootFolder()
-  return (&filetype !~# '\v(neo-tree|help|gitcommit)') && &buflisted ? ProjectRootFolderNameOfWin() : ''
+  let str = ProjectRootFolderNameOfWin() . GetCwdType_info()
+  return str
+  " return (&filetype !~# '\v(help|gitcommit)') && &buflisted ? str : ''
 endfunc
 
 func! LightlineRelativeFilePathOfWin()

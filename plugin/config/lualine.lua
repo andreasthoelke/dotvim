@@ -145,7 +145,7 @@ local neo_tree = {
   sections = {
     lualine_a = {
       {
-        'ProjectRootFolderNameOfWin',
+        'LightlineLocalRootFolder',
         separator = { left = '', right = '' },
       }
     },
@@ -195,7 +195,7 @@ local lualine_config = {
   sections = {
     lualine_a = {
       {
-        'ProjectRootFolderName',
+        'LightlineLocalRootFolder',
         separator = { left = '' },
       }
     },

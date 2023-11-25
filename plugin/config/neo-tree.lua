@@ -177,6 +177,18 @@ function _G.Ntree_close_saveView_restoreAltFileLoc( state )
 end
 -- lua putt( vim.w['AlternateTreeView'] )
 
+
+function _G.Ntree_close_saveView_showFolderInDirvish( state )
+  local treeView = Ntree_view_get( state )
+  local path = state.tree:get_node().path
+  local folder = vim.fn.fnamemodify( path, ":h" )
+  vim.cmd( "edit " .. folder )
+  vim.fn.SearchLine( path )
+  vim.w['AlternateTreeView'] = treeView
+  renderer.close( state, false )
+end
+
+
 -- Save alt file view, restore alt tree view
 function _G.Ntree_launchToAltView_saveAltFileLoc()
   -- captures the file-cursor loc the tree was spawned off of ->
@@ -190,12 +202,14 @@ function _G.Ntree_launchToAltView_saveAltFileLoc()
   vim.w['AlternateFileLoc'] = captureAltFileLoc
 end
 
--- Ntree_launchToAltView_saveAltFileLoc
+-- lua Ntree_launchToAltView_saveAltFileLoc()
 -- vim.fn.exists( "w:AlternateTreeView" )
 -- vim.fn.exists( "w:AlternateTreeView" ) and 't' or 'f'
 -- vim.w['AlternateTreeView']
 
 vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
+-- only set in dirvish maps for now ~/.config/nvim/ftplugin/dirvish.vim‖:47:1
+-- vim.keymap.set( 'n', '<c-space>', Ntree_launchToAltView_saveAltFileLoc )
 
 
 local function open_startup()
@@ -219,6 +233,28 @@ end
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 
+
+_G.Ntree_setCwd = f.curry3( function( source, scope, state )
+  local path
+  if source == 'fromNode' then
+    local node = state.tree:get_node()
+    path = node:get_id()
+  else
+    path = state.path
+  end
+
+  if scope == 'update' then
+    vim.fn.chdir( path )
+  elseif scope == 'local' then
+    vim.cmd ( 'lcd ' .. path )
+  elseif scope == 'tab' then
+    vim.cmd ( 'tcd ' .. path )
+  elseif scope == 'global' then
+    vim.cmd ( 'cd ' .. path )
+  end
+
+
+end )
 
 
 -- ─^  Helpers                                           ▲
@@ -427,6 +463,7 @@ require("neo-tree").setup({
           }
         },
 
+        ["."] = "noop",
         ["e"] = "noop",
         ["d"] = "noop",
         ["r"] = "noop",
@@ -482,17 +519,18 @@ require("neo-tree").setup({
         ["<localleader>v"] = function() vim.cmd "normal! v" end,
         ["<localleader><localleader>v"] = function() vim.cmd "normal! V" end,
 
-        ["<c-space>"] = function(state)
-          local path = state.tree:get_node().path
-          local folder = vim.fn.fnamemodify( path, ":h" )
-          vim.cmd( "edit " .. folder )
-          vim.fn.SearchLine( path )
-          -- tree_exec({ action = "close_window" })
-          renderer.close( state, true )
-        end,
+        ["<c-space>"] = Ntree_close_saveView_showFolderInDirvish,
 
         ["gq"] = Ntree_close_saveView_restoreAltFileLoc,
 
+        ["<leader>cdpl"] = Ntree_setCwd( 'fromTreeRoot', 'local' ),
+        ["<leader>cdpt"] = Ntree_setCwd( 'fromTreeRoot', 'tab' ),
+        ["<leader>cdpg"] = Ntree_setCwd( 'fromTreeRoot', 'global' ),
+        ["<leader>cdpu"] = Ntree_setCwd( 'fromTreeRoot', 'update' ),
+        ["<leader>cdnl"] = Ntree_setCwd( 'fromNode', 'local' ),
+        ["<leader>cdnt"] = Ntree_setCwd( 'fromNode', 'tab' ),
+        ["<leader>cdng"] = Ntree_setCwd( 'fromNode', 'global' ),
+        ["<leader>cdnu"] = Ntree_setCwd( 'fromNode', 'update' ),
 
         -- ["go"] = function()
         --   vim.cmd( 'wincmd p' )

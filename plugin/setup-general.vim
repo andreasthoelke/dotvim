@@ -1257,16 +1257,20 @@ nnoremap <leader>ewd :echo getcwd()<cr>
 " nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
 " Set the root to a specific folder - not necessarily a git root folder.
-nnoremap <silent><leader>cdg :cd %:p:h<cr>:pwd<cr>
-nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1)<cr>:pwd<cr>
-nnoremap <silent><leader>cdl :lcd %:p:h<cr>:pwd<cr>
-nnoremap <silent><leader>cdt :tcd %:p:h<cr>:pwd<cr>
+nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>:echo getcwd(winnr())<cr>
+nnoremap <silent><leader>cdpl :lcd %:p:h<cr>:echo getcwd(winnr())<cr>
+nnoremap <silent><leader>cdpt :tcd %:p:h<cr>:echo getcwd(winnr())<cr>
+nnoremap <silent><leader>cdpg :cd %:p:h<cr>:echo getcwd(winnr())<cr>
+
+" lcd %:p:h
+" echo expand('%:p:h')
+" echo getcwd(winnr())
 
 " set the project root from any file in the project.
 " nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
 nnoremap <silent><expr><leader>cdsl ":lcd " . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
-nnoremap <silent><expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 nnoremap <silent><expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <silent><expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
 
 func! FindGitRootFolderOfCurrentFile()
   return finddir('.git/..', expand('%:p:h').';')

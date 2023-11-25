@@ -100,12 +100,12 @@ end
 -- Status_shortenFilename( "vim_works" )
 
 -- Get the CWD of the first window in a tab
-function _G.Tab_getCwd( tabid )
-  local firstWinId = vim.api.nvim_tabpage_list_wins( tabid )[1]
+function _G.Tab_getCwd( firstMeaningfulWinNum, tabid )
   local tabNum = vim.api.nvim_tabpage_get_number( tabid )
-  return vim.fn.getcwd( firstWinId, tabNum )
+  return vim.fn.getcwd( firstMeaningfulWinNum, tabNum )
 end
--- Tab_getCwd( 3 )
+
+-- Tab_getCwd( 1 )
 
 
 function _G.Status_icon_with_hl( filename )
@@ -129,6 +129,9 @@ function _G.FileNamesInTabHandle_( tab_handle )
   return vim.tbl_keys( fun.totable( bufnames ) )
 end
 
+-- table.pack( Tab_GenLabel( 1 ) )
+-- vim.fn.getcwd( 1, 1 )
+-- Tab_GenLabel_test( 1 )
 
 function _G.FilesInTab_( tabid )
   local fileData = vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
@@ -153,12 +156,12 @@ local tree_manager = require 'neo-tree.sources.manager'
 
 
 function _G.FilesInTab( tabid )
-  local fileData = vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
-    :map( function(winid)
-      return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
+  local fileData = vim.iter( ipairs( vim.api.nvim_tabpage_list_wins( tabid ) ) )
+    :map( function(winnr, winid)
+      return { winnr = winnr, winid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
     end)
     :filter( function(win)
-      return     vim.fn.win_gettype(win.wid) == ""
+      return     vim.fn.win_gettype(win.winid) == ""
       -- and vim.bo[win.bid].buftype == ""
       -- Allow only normal windows and normal buftypes.
     end)
@@ -166,9 +169,9 @@ function _G.FilesInTab( tabid )
     local filetype = vim.api.nvim_buf_get_option( win.bid, 'filetype' )
     local fname =
       filetype == 'neo-tree'
-      and tree_manager.get_state_for_window( win.wid ).path
+      and tree_manager.get_state_for_window( win.winid ).path
       or vim.api.nvim_buf_get_name( win.bid )
-    return { fname = fname, bufid = win.bid }
+    return { fname = fname, bufid = win.bid, winid = win.winid, winnr = win.winnr }
   end)
 
   -- NOTE: sadly these iterators are very mutable/stateful. i could try to refactor to lua.fun?!
@@ -185,8 +188,8 @@ function _G.FilesInTab( tabid )
   return f.itToSet( fileData )
 end
 
--- FilesInTa( vim.api.nvim_get_current_tabpage() )
-
+-- FilesInTab( vim.api.nvim_get_current_tabpage() )
+-- vim.iter( ipairs( vim.api.nvim_tabpage_list_wins( 1 ) ) ):map( function(el1, el2) return {el1, el2} end )
 
 
 function _G.FileNamesInTabNumber( tab_number )

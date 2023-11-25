@@ -296,21 +296,25 @@ local utils = require("neo-tree.utils")
 function _G.Tab_GenLabel( tabid )
   local tabFiles = FilesInTab( tabid )
   if #tabFiles == 0 then return vim.fn.expand('%:r') end
-  local mainFile = tabFiles[1].fname
+  local mainFile  = tabFiles[1].fname
+  local mainWinNum = tabFiles[1].winnr 
   local iconKey = vim.fn.fnamemodify( mainFile, ':t' )
 
-  local localCwd = Tab_getCwd( tabid )
-  local hasLocalCwd = localCwd ~= vim.fn.getcwd(-1)
-  local  mainFile_isInCwd = utils.is_subpath( vim.fn.getcwd(-1), mainFile )
+  local tabNum = vim.api.nvim_tabpage_get_number( tabid )
+  -- local hasLocalCwd = vim.fn.haslocaldir( mainWinNum, tabNum )
+  local tabCwd = vim.fn.getcwd( mainWinNum, tabNum )
+  local globalCwd = vim.fn.getcwd( -1, -1 )
+
+  local  mainFile_isInCwd = utils.is_subpath( globalCwd, mainFile )
   local  mainFile_projectRoot = vim.fn.FindProjectRootFolder( mainFile )
 
   local folderStr
-  if hasLocalCwd then
-    folderStr = "↑ " .. Status_shortenFilename( vim.fn.fnamemodify( localCwd, ':t' ) )
+  if tabCwd ~= globalCwd then
+    folderStr = "↑ " .. Status_shortenFilename( vim.fn.fnamemodify( tabCwd, ':t' ) )
   elseif not mainFile_isInCwd then
     local _, folderName = utils.split_path( mainFile_projectRoot )
     folderStr = "↗ " .. Status_shortenFilename( folderName )
-  elseif mainFile_projectRoot ~= vim.fn.getcwd(-1) then
+  elseif mainFile_projectRoot ~= globalCwd then
     local _, folderName = utils.split_path( mainFile_projectRoot )
     folderStr = "↘ " .. Status_shortenFilename( folderName )
   else
@@ -327,9 +331,11 @@ function _G.Tab_GenLabel( tabid )
   return iconKey, folderStr, fileWins, mainFile_projectRoot
 end
 
+-- vim.api.nvim_tabpage_get_number( 2 )
+-- vim.fn.getcwd( 1, 1 )
 -- table.pack( Tab_GenLabel( 1 ) )
 -- table.pack( Tab_GenLabel( vim.api.nvim_get_current_tabpage()  ) )
--- lua putt( table.pack( Tab_GenLabe( vim.api.nvim_get_current_tabpage()  ) ) )
+-- vim.api.nvim_get_current_tabpage()
 
 -- Icon , parentFolder/cwd or lsp , fileWins
 -- Return a string with the first and potentially secondary file name with a bar in between.
@@ -342,6 +348,23 @@ end
 -- show local repo root folder
 --   if window has no local cwd
 --   but file is outside of cwd
+
+
+-- function _G.Tab_GenLabel_test( tabid )
+--   local tabFiles = FilesInTab( tabid )
+--   if #tabFiles == 0 then return vim.fn.expand('%:r') end
+--   local mainFile  = tabFiles[1].fname
+--   local mainWinNum = tabFiles[1].winnr
+--   local iconKey = vim.fn.fnamemodify( mainFile, ':t' )
+
+--   local tabNum = vim.api.nvim_tabpage_get_number( tabid )
+--   -- local hasLocalCwd = vim.fn.haslocaldir( mainWinNum, tabNum )
+--   local tabCwd = vim.fn.getcwd( mainWinNum, tabNum )
+
+--   return { tabCwd, mainWinNum, tabNum, tabFiles }
+-- end
+
+-- Tab_GenLabel_test( 1 )
 
 function _G.Tab_GenLabel_bak( tabid )
   local tabFiles = FilesInTab( tabid )
