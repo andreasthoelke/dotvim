@@ -284,12 +284,20 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   if &filetype == 'NvimTree' || &filetype == 'neo-tree'
     let [direction; maybe_back ] = a:direction->split('_')
     " do not run any post actions like wincmd p or tabprevious
+
+    " NOTE TO TEST: disabled captureAltFile. if anything we'd have to save the tree view here.
     " this captures the file-cursor loc the tree was spawned off of ->
-    let captureAltFile = LinkPath_linepos()
+    " let captureAltFile = LinkPath_linepos()
+
     let cmd = NewBufCmds( path )[ direction ] 
+
+    if IsInFloatWin() | wincmd p | endif
     exec cmd
-    " .. -> and sets it to a var local to the *new* window!
-    let w:AlternateFileLoc = captureAltFile
+
+    " NOTE .. (see above)
+    " and sets it to a var local to the !new! window!
+    " let w:AlternateFileLoc = captureAltFile
+
     " TREE POST ACTION PHASE: 
     if     a:direction == 'tab_bg' 
       " delay the tabprevious call
@@ -311,6 +319,7 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   endif
 endfunc
 
+" NewBufCmds( 'test' )[ 'right' ]
 
 func! NewBuf_fromClipPath( direction )
   let [path; maybeLinkExt] = @*->split('‖')

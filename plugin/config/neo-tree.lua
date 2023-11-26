@@ -5,7 +5,7 @@ vim.g.neo_tree_remove_legacy_commands = 1
 
 
 
--- All config default values: 
+-- All config default values:
 -- /Users/at/.vim/scratch/neo-tree-defaults.sct
 -- ~/.config/nvim/plugged/neo-tree.nvim/lua/neo-tree/defaults.lua
 
@@ -25,13 +25,18 @@ local common_commands = require("neo-tree.sources.common.commands")
 
 -- Note: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
 
-local function close_cur_window( state )
+local function close_cur_window( state, winid )
+  winid = winid or vim.api.nvim_get_current_win()
+  state = state ~= nil and state or manager.get_state_for_window( winid )
   common_commands.close_window( state )
-  vim.cmd 'wincmd c'
+  -- close nvim window by id
+  vim.api.nvim_win_close( winid, true )
+  if winid == Ntree_leftOpen then Ntree_leftOpen = 0 end
+  if winid == Ntree_rightOpen then Ntree_rightOpen = 0 end
 end
 
 function _G.Ntree_currentNode( state )
-  local state = state ~= nil and state or manager.get_state_for_window()
+  state = state ~= nil and state or manager.get_state_for_window()
   return {
     rootpath = state.path,
     linepath = state.position.node_id
@@ -218,25 +223,67 @@ vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 -- only set in dirvish maps for now ~/.config/nvim/ftplugin/dirvish.vim‖:47:1
 -- vim.keymap.set( 'n', '<c-space>', Ntree_launchToAltView_saveAltFileLoc )
 
+Ntree_leftOpen = {}
+Ntree_rightOpen = {}
 
 function _G.Ntree_openLeft()
-  local reveal_file = vim.fn.MostRecentlyUsedLocalFile()
-  local cwd = vim.fn.getcwd( vim.fn.winnr() )
-  vim.cmd( 'wincmd H' )
-  vim.cmd( "leftabove 29vnew" )
-  Ntree_launch( reveal_file, cwd )
+  local prevWindow = vim.api.nvim_get_current_win()
+  local tabid = vim.api.nvim_get_current_tabpage()
+  if vim.tbl_get( Ntree_leftOpen, tabid ) ~= nil then
+    close_cur_window( nil, Ntree_leftOpen[ tabid ] )
+    Ntree_leftOpen[tabid] = nil
+  else
+    local reveal_file = vim.fn.expand( "%:p" )
+    reveal_file = reveal_file ~= "" and reveal_file or vim.fn.MostRecentlyUsedLocalFile()
+    local cwd = vim.fn.getcwd( vim.fn.winnr() )
+    vim.api.nvim_set_current_win( vim.fn.win_getid( 1 ) )
+    vim.cmd( "leftabove 29vnew" )
+    Ntree_launch( reveal_file, cwd )
+    Ntree_leftOpen[tabid] = vim.api.nvim_get_current_win()
+  end
+  vim.api.nvim_set_current_win( prevWindow )
 end
 
 function _G.Ntree_openRight()
-  local reveal_file = vim.fn.MostRecentlyUsedLocalFile()
-  local cwd = vim.fn.getcwd( vim.fn.winnr() )
-  vim.cmd( "29vnew" )
-  Ntree_launch( reveal_file, cwd )
+  local prevWindow = vim.api.nvim_get_current_win()
+  local tabid = vim.api.nvim_get_current_tabpage()
+  if vim.tbl_get( Ntree_rightOpen, tabid ) ~= nil then
+    close_cur_window( nil, Ntree_rightOpen[ tabid ] )
+    Ntree_rightOpen[tabid] = nil
+  else
+    local reveal_file = vim.fn.expand( "%:p" )
+    local cwd = vim.fn.getcwd( vim.fn.winnr() )
+    vim.cmd( "29vnew" )
+    Ntree_launch( reveal_file, cwd )
+    Ntree_rightOpen[tabid] = vim.api.nvim_get_current_win()
+  end
+  vim.api.nvim_set_current_win( prevWindow )
 end
+
+function _G.Ntree_openFloat()
+  local prevWindow = vim.api.nvim_get_current_win()
+  local posOpts = FloatOpts_inOtherWinColumn()
+  posOpts.width = math.floor( posOpts.width / 2.0 )
+  local bufid = vim.api.nvim_create_buf( false, true )
+
+  local reveal_file = vim.fn.expand( "%:p" )
+  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+
+  local floating_winId = vim.api.nvim_open_win( bufid, false, posOpts )
+  vim.g['floating_win'] = floating_winId
+  vim.api.nvim_set_current_win(floating_winId)
+  Ntree_launch( reveal_file, cwd )
+  vim.api.nvim_set_current_win( prevWindow )
+end
+
+
+-- vim.api.nvim_get_current_win()
+-- vim.api.nvim_set_current_win(1231)
+-- vim.cmd('leftabove vnew')
+
 
 local function open_startup()
   Ntree_openLeft()
-  vim.cmd 'wincmd p'
 end
 
 -- vim.fn.NewBufCmds( "" )[ 'left' ]
@@ -244,6 +291,7 @@ end
 
 vim.keymap.set( 'n', '<leader>oa', Ntree_openLeft )
 vim.keymap.set( 'n', '<leader>ov', Ntree_openRight )
+vim.keymap.set( 'n', '<leader>oo', Ntree_openFloat )
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 
@@ -533,10 +581,23 @@ require("neo-tree").setup({
         ["s"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down', s.tree:get_node().path ) end,
         ["S"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down_back', s.tree:get_node().path ) end,
 
+        ["<localleader>v"] = function(s)
+          local path = s.tree:get_node().path
+          local cmd = vim.fn.NewBufCmds( path )[ 'right' ]
+          vim.cmd 'wincmd p'
+          vim.cmd( cmd )
+        end,
+
+        ["<localleader>s"] = function(s)
+          local path = s.tree:get_node().path
+          local cmd = vim.fn.NewBufCmds( path )[ 'down' ]
+          vim.cmd 'wincmd p'
+          vim.cmd( cmd )
+        end,
+
+
         ["<leader>td"] = function(s) Tablabel_set_folder( s.tree:get_node().path ) end,
 
-        ["<localleader>v"] = function() vim.cmd "normal! v" end,
-        ["<localleader><localleader>v"] = function() vim.cmd "normal! V" end,
 
         ["<c-space>"] = Ntree_close_saveView_showFolderInDirvish,
 

@@ -106,15 +106,19 @@ let g:rel_open = 'vsplit'
 " nnoremap <c-.> :exec "resize +4"<cr>
 nnoremap <silent> ≥ :vertical resize +4<cr>
 nnoremap <silent> ≤ :resize +4<cr>
+nnoremap <silent> <C-w>. :vertical resize -4<cr>
+nnoremap <silent> <C-w>≥ :vertical resize -4<cr>
+nnoremap <silent> <C-w>,, :resize -4<cr>
+nnoremap <silent> <C-w>≤ :resize -4<cr>
 
 " Note: - "<c-s-.>", "<c-s-,>", "<c-.>", "<c-,>" are not possible within Vim, thus remapping these
 " keys to "alt-t",   "alt-s-,", "alt-.", "alt-,". Used "alt-t" instead of "alt-s-." which is a partial character
 
 " Still use the native maps as they allow to 'move back' a step
-nnoremap <c-w>- 4<c-w>-
-nnoremap <c-w>+ 4<c-w>+
-nnoremap <c-w>> 4<c-w>>
-nnoremap <c-w>< 4<c-w><
+" nnoremap <c-w>- 4<c-w>-
+" nnoremap <c-w>+ 4<c-w>+
+" nnoremap <c-w>> 4<c-w>>
+" nnoremap <c-w>< 4<c-w><
 
 " Note: Consider adopting tmux map <prefix>HJKL
 
