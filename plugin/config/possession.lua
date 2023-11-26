@@ -181,7 +181,7 @@ end
 require('possession').setup {
 
   session_dir = (Path:new(vim.fn.stdpath('data')) / 'possession'):absolute(),
-  silent = false,
+  silent = true,
   load_silent = true,
   debug = false,
   logfile = false,
@@ -218,7 +218,9 @@ require('possession').setup {
       end
 
       res['tabs_hidden'] = Tabs_hidden_indexs()
-      res['tabs_show_hidden'] = Tabs_show_hidden
+      res['tabs_show_hidden'] = _G.Tabs_show_hidden
+      res['Ntree_leftOpen'] = Ntree_leftOpen_getPersist()
+      res['Ntree_rightOpen'] = Ntree_rightOpen_getPersist()
       res['repl_is_running'] = type( vim.g["ScalaReplID"] ) == 'number' and true or false
       res['server_repl_is_running'] = type( vim.g["ScalaServerReplID"] ) == 'number' and true or false
 
@@ -243,6 +245,11 @@ require('possession').setup {
       if user_data['tabs_hidden'] ~= nil then
         _G.Tabs_hidden      = user_data['tabs_hidden']
         _G.Tabs_show_hidden = user_data['tabs_show_hidden']
+      end
+
+      if user_data['Ntree_leftOpen'] ~= nil then
+        Ntree_leftOpen_restore( user_data['Ntree_leftOpen'] )
+        Ntree_rightOpen_restore( user_data['Ntree_rightOpen'] )
       end
 
       if user_data['repl_is_running'] ~= nil and user_data['repl_is_running'] == true then

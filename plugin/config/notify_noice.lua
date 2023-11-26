@@ -51,7 +51,7 @@ require("notify").setup(
   }
 )
 
-local banned_messages = { "clipboard" }
+-- local banned_messages = { "clipboard" }
 
 -- vim.notify = function (msg, ...)
 --   for _, banned in ipairs(banned_messages) do

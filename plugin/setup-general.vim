@@ -63,7 +63,8 @@ let g:mundo_inline_undo = 1
 
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
-" nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
+" TODO: currently i should only use this map to open/close mundo, else the autosave state will get out of sync
+nnoremap <silent><leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
 
 " Mundo: ----------------------
 

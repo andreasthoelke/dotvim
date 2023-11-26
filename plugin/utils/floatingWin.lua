@@ -71,6 +71,7 @@ function _G.Float_dynAnchorWidth()
     width = widthDefault
   else
     width = neovim_full_client_width - thisWinWidth - 2
+    width = width > 50 and width or widthDefault
   end
   local cursorWinCol = CursorIsInWinColumn()
   local winAnchor = cursorWinCol == 'L' and 'E' or 'W'

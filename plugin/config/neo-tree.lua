@@ -31,8 +31,9 @@ local function close_cur_window( state, winid )
   common_commands.close_window( state )
   -- close nvim window by id
   vim.api.nvim_win_close( winid, true )
-  if winid == Ntree_leftOpen then Ntree_leftOpen = 0 end
-  if winid == Ntree_rightOpen then Ntree_rightOpen = 0 end
+  local tabid = vim.api.nvim_get_current_tabpage()
+  if winid == Ntree_leftOpen then Ntree_leftOpen[tabid] = nil end
+  if winid == Ntree_rightOpen then Ntree_rightOpen[tabid] = nil end
 end
 
 function _G.Ntree_currentNode( state )
@@ -223,8 +224,46 @@ vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 -- only set in dirvish maps for now ~/.config/nvim/ftplugin/dirvish.vim‖:47:1
 -- vim.keymap.set( 'n', '<c-space>', Ntree_launchToAltView_saveAltFileLoc )
 
-Ntree_leftOpen = {}
-Ntree_rightOpen = {}
+_G.Ntree_leftOpen = {}
+-- Ntree_leftOpen
+function _G.Ntree_leftOpen_getPersist() return Util_TabWinId_to_Indexes( Ntree_leftOpen ) end
+function _G.Ntree_leftOpen_restore( listIndexes ) _G.Ntree_leftOpen = Util_Indexes_to_TabWinId(  listIndexes ) end
+_G.Ntree_rightOpen = {}
+-- Ntree_rightOpen
+function _G.Ntree_rightOpen_getPersist() return Util_TabWinId_to_Indexes( Ntree_rightOpen ) end
+function _G.Ntree_rightOpen_restore( listIndexes ) _G.Ntree_rightOpen = Util_Indexes_to_TabWinId(  listIndexes ) end
+
+function _G.Util_TabWinId_to_Indexes( idTable )
+  local tabIds = vim.tbl_keys( idTable )
+
+  local withTabNums = vim.tbl_map( function( tabId )
+    local tabIndex = vim.fn.index( vim.api.nvim_list_tabpages(), tabId ) + 1
+    return { tabIndex, tabId, idTable[ tabId ] }
+  end, tabIds )
+
+  local withWinNums = vim.tbl_map( function( tab )
+    local tabIndex, tabId, winId = table.unpack( tab )
+    local tabnr, winnr = table.unpack( vim.fn.win_id2tabwin( winId ) )
+    return {tabnr, winnr}
+  end, withTabNums )
+
+  return withWinNums
+end
+
+-- Util_TabWinId_to_Indexes( Ntree_rightOpen )
+-- Ntree_rightOpen
+
+function _G.Util_Indexes_to_TabWinId( listIndexes )
+  local idTable = {}
+  for _, tabWin in ipairs( listIndexes ) do
+    local tabnr, winnr = table.unpack( tabWin )
+    local winId = vim.fn.win_getid( winnr, tabnr )
+    idTable[ tabnr ] = winId
+  end
+  return idTable
+end
+-- Ntree_rightOpen_persist()
+-- Util_Indexes_to_TabWinId( Ntree_rightOpen_persist() )
 
 function _G.Ntree_openLeft()
   local prevWindow = vim.api.nvim_get_current_win()
