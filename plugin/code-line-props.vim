@@ -18,6 +18,7 @@ function! Get_visual_selection()
   return join(lines, "\n")
 endfunction
 
+" deprecated. use: vim.getVisualSelection() ~/.config/nvim/plugin/config/maps.lua‖/functionˍvi
 func! GetVisSel()
   return Get_visual_selection()
 endfunc

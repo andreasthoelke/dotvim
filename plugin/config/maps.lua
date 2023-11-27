@@ -80,6 +80,14 @@ vim.keymap.set( 'n',
   end )
 
 
+vim.keymap.set( 'n',
+  ',sA', function() Telesc_launch( 'live_grep', {
+    initial_mode = 'insert',
+    -- default_text = pattern,
+    search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
+  } )
+  end )
+
 
 -- search in scala [S]ymbols:
 -- (also note gel for the lsp symbols in the current file)
@@ -267,9 +275,33 @@ vim.keymap.set( 'n',
     dirs_nvim
     ) end )
 
+-- search in VIM_HELP:
+vim.keymap.set( 'n',
+  'gsh', function()
+  Telesc_launch( 'help_tags', {
+    default_text = vim.fn.expand '<cword>',
+    initial_mode = 'normal',
+  } ) end )
+
+function vim.getVisualSelection()
+   vim.cmd('noau normal! "vy"')
+   local text = vim.fn.getreg('v')
+   vim.fn.setreg('v', {})
+   text = string.gsub(text, "\n", "")
+   if #text > 0 then
+       return text
+   else
+       return ''
+   end
+end
 
 
-
+vim.keymap.set( 'v',
+  'gsh', function()
+  Telesc_launch( 'help_tags', {
+    default_text = vim.getVisualSelection(),
+    initial_mode = 'normal',
+  } ) end )
 
 
 

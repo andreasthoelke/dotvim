@@ -402,6 +402,17 @@ local preview = f.curry( function( next_previous, mode, pbn )
   search_term = f.last( vim.fn.split( search_term, [[\*]] ) )
   local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 
+  -- SPECIAL_MODE "Find Directory"
+  if     prompt_title == "Find Directory" then
+    local selection = action_state.get_selected_entry()
+    local path = selection.cwd .. "/" .. selection.value
+    path = vim.fn.fnamemodify( path, ":p" )
+    path = path:sub(1, #path - 1)
+    Ntree_revealFile( path )
+    return
+  end
+  -- SPECIAL_MODE "Find Directory"
+
   -- 2. CLOSE PROMPT (tempoarily)
   actions.close( pbn )
 

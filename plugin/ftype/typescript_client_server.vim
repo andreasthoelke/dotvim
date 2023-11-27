@@ -8,9 +8,9 @@
 func! T_MenuCommands()
   let testServerCmds =  [ {'section': 'Set import identifier'} ]
   " nnoremap <silent> gsi :call T_DoSetImport()<cr>
-  let testServerCmds += [ {'label': '_I set import',   'cmd': 'call T_DoSetImport()' } ]
+  let testServerCmds += [ {'label': '_W set import',   'cmd': 'call T_DoSetImport()' } ]
   " nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
-  let testServerCmds += [ {'label': '_W set printer identif',   'cmd':'call T_DoSetPrinterIdentif()' } ]
+  let testServerCmds += [ {'label': '_P set printer identif',   'cmd':'call T_DoSetPrinterIdentif()' } ]
 
   let testServerCmds +=  [ {'section':'Server refresh'} ]
   " nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
@@ -20,13 +20,13 @@ func! T_MenuCommands()
 
   let testServerCmds +=  [ {'section': 'Refetching'} ]
   " nnoremap <silent> ger :call T_Refetch('Client')<cr>
-  let testServerCmds += [ {'label': '_E Client',   'cmd': 'call T_Refetch("Client")' } ]
+  let testServerCmds += [ {'label': '_F Client',   'cmd': 'call T_Refetch("Client")' } ]
   " nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
   let testServerCmds += [ {'label': '_D GQL Exec',   'cmd': 'call T_Refetch("GqlExec")' } ]
   " nnoremap <silent> ,gdr :call T_Refetch('GqlExecWithError')<cr>
   let testServerCmds += [ {'label': 'GQL Exec with error',   'cmd': 'call T_Refetch("GqlExecWithError")' } ]
   " nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
-  let testServerCmds += [ {'label': '_Printer',   'cmd': 'call T_Refetch("Printer")' } ]
+  let testServerCmds += [ {'label': '_I Printer',   'cmd': 'call T_Refetch("Printer")' } ]
   " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
   let testServerCmds += [ {'label': '_Show schema',   'cmd': 'call T_Refetch("ShowSchema")' } ]
 
@@ -39,7 +39,7 @@ func! T_MenuCommands()
   let testServerCmds += [ {'label': '_H Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echom "Server stopped"' } ]
 
   let testServerCmds +=  [ {'section': 'Snapshots'} ]
-  let testServerCmds += [ {'label': '_Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
+  let testServerCmds += [ {'label': '_C Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
   let snapshotName = T_GetSnapshotNameFromDirvishFolder()
   if len( snapshotName )
     let testServerCmds += [ {'label': '_Y Reactivate '. snapshotName ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
@@ -141,8 +141,9 @@ func! T_DoSetImport()
   else
     let persistKey = 'printer'
     call T_SetPrinterIdentif( identif, modulePath )
+    call VirtualRadioLabel( '«' )
   endif
-  echo 'Set: ' . identif
+  " echo 'Set: ' . identif
 
   call T_CurrentIdentif_update( persistKey, identif, modulePath )
 endfunc
@@ -526,7 +527,7 @@ func! T_GetPackageInstallCmdOfCurrentProject()
   return 'npm install --dev'
 endfunc
 
-" Notes: Might stop at or destroy existing files! Copy might fail silently.
+" NOTE: Might stop at or destroy existing files! Copy might fail silently.
 func! T_CopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
   let testFilePath = a:targetFolderPath . '/' . a:listOfFileNames[0]
   if filereadable( testFilePath )

@@ -23,7 +23,33 @@ local common_commands = require("neo-tree.sources.common.commands")
 
 -- ─   Helpers                                           ■
 
--- Note: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
+-- Note the statusline helper functions here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
+
+
+function _G.Ntree_find_directory()
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  local function open_ntree(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      actions.close(prompt_bufnr)
+      local selection = action_state.get_selected_entry()
+      local path = selection.cwd .. "/" .. selection.value
+      path = path:sub(1, #path - 1)
+      path = vim.fn.fnamemodify( path, ":p" )
+      Ntree_revealFile( path )
+    end)
+    return true
+  end
+
+  require("telescope.builtin").find_files({
+    prompt_title = "Find Directory",
+    find_command = { "fd", "--type", "directory", "--hidden", "--exclude", ".git/*" },
+    attach_mappings = open_ntree,
+  })
+end
+
+vim.keymap.set( 'n', '<leader>fd', Ntree_find_directory )
 
 local function close_cur_window( state, winid )
   winid = winid or vim.api.nvim_get_current_win()
@@ -144,6 +170,13 @@ end
 -- lua Ntree_view_set( { expanded_paths = { "/Users/at/.config/nvim", "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/plugin/utils" }, filter_visible = true, } )
 -- lua Ntree_view_set( { "/Users/at/.config/nvim", "/Users/at/.config/nvim/notes", "/Users/at/.config/nvim/notes/minor", "/Users/at/.config/nvim/notes/templates" } )
 
+-- Ntree_launch_setView( {
+--   expanded_paths = { "/Users/at/.config/nvim/plugin", "/Users/at/.config/nvim/plugin/config", "/Users/at/.config/nvim/plugin/utils" },
+--   filter_visible = true,
+--   focus_path = "/Users/at/.config/nvim/plugin/utils",
+--   root_path = "/Users/at/.config/nvim/plugin"
+-- } )
+
 function _G.Ntree_launch_setView( view )
   Ntree_launch( view.focus_path, view.root_path )
   Ntree_view_set( view )
@@ -169,6 +202,8 @@ end
 
 vim.keymap.set( 'n', '<leader>gs', Ntree_revealFile )
 
+-- Ntree_revealFile("/Users/at/.config/nvim/notes/minor/some.txt")
+-- Ntree_revealFile("/Users/at/.config/nvim/notes/minor/some")
 
 -- Perform the normal node "open" action which might expand a directory in the tree
 -- or launch a file buffer in the same window.
@@ -277,6 +312,7 @@ function _G.Ntree_openLeft()
     local cwd = vim.fn.getcwd( vim.fn.winnr() )
     vim.api.nvim_set_current_win( vim.fn.win_getid( 1 ) )
     vim.cmd( "leftabove 29vnew" )
+    vim.cmd "set winfixwidth"
     Ntree_launch( reveal_file, cwd )
     Ntree_leftOpen[tabid] = vim.api.nvim_get_current_win()
   end
@@ -293,6 +329,7 @@ function _G.Ntree_openRight()
     local reveal_file = vim.fn.expand( "%:p" )
     local cwd = vim.fn.getcwd( vim.fn.winnr() )
     vim.cmd( "29vnew" )
+    vim.cmd "set winfixwidth"
     Ntree_launch( reveal_file, cwd )
     Ntree_rightOpen[tabid] = vim.api.nvim_get_current_win()
   end

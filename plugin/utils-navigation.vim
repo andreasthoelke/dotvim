@@ -271,9 +271,9 @@ set scrolloff=8
 
 " Scroll the current cursor line into view with <offset> lines
 func! ScrollOff( offset )
-  " if winline() < a:offset
-  "   return
-  " endif
+  if winline() < a:offset
+    return
+  endif
   let scof = &scrolloff
   exec 'set scrolloff=' . a:offset
   redraw

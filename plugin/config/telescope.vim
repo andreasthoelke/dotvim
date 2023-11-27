@@ -39,7 +39,8 @@ EOF
 
 nnoremap <leader>te :Telescope 
 
-nnoremap <leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
+nnoremap <silent><leader>th <cmd>Telescope help_tags initial_mode=insert<cr>
+
 " nnoremap <leader>ts <cmd>Telescope sessions<cr>
 nnoremap <silent><leader>tr <cmd>Telescope repo list layout_strategy=vertical<cr>
 " nnoremap <leader>tr <cmd>Telescope repo list layout_strategy=horizontal<cr>

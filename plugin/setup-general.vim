@@ -1258,10 +1258,16 @@ nnoremap <leader>ewd :echo getcwd()<cr>
 " nnoremap <leader>dpr :lcd %:p:h<cr>:pwd<cr>
 
 " Set the root to a specific folder - not necessarily a git root folder.
-nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>:echo getcwd(winnr())<cr>
-nnoremap <silent><leader>cdpl :lcd %:p:h<cr>:echo getcwd(winnr())<cr>
-nnoremap <silent><leader>cdpt :tcd %:p:h<cr>:echo getcwd(winnr())<cr>
-nnoremap <silent><leader>cdpg :cd %:p:h<cr>:echo getcwd(winnr())<cr>
+" nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>:echo getcwd(winnr())<cr>
+" nnoremap <silent><leader>cdpl :lcd %:p:h<cr>:echo getcwd(winnr())<cr>
+" nnoremap <silent><leader>cdpt :tcd %:p:h<cr>:echo getcwd(winnr())<cr>
+" nnoremap <silent><leader>cdpg :cd %:p:h<cr>:echo getcwd(winnr())<cr>
+
+nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>
+nnoremap <silent><leader>cdpl :lcd %:p:h<cr>
+nnoremap <silent><leader>cdpt :tcd %:p:h<cr>
+nnoremap <silent><leader>cdpg :cd %:p:h<cr>
+
 
 " lcd %:p:h
 " echo expand('%:p:h')

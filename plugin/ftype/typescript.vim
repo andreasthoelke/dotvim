@@ -5,6 +5,10 @@ func! JS_bufferMaps()
 
   nnoremap <silent><buffer> ge :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
+  nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
+  nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>
+  nnoremap <silent><buffer> gef :call T_Refetch("Client")<cr>
+  nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
 
   " TODO: test this
   " nnoremap <silent><buffer>         gei :call JS_eval_line( line('.'), v:true, v:false, v:false )<cr>
