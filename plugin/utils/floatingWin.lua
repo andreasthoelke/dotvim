@@ -1,5 +1,17 @@
 
 
+function _G.CursorIsInWinColumn()
+  local curWinH = vim.api.nvim_win_get_position(0)[2]
+  local screen_width = vim.api.nvim_get_option('columns')
+  return curWinH < (screen_width / 2 - 60) and "L" or "R"
+  -- this approach is still a guess that seems to work with two and tree columns
+end
+-- CursorIsInWinColumn()
+-- echo v:lua.CursorIsInWinColumn()
+-- vim.api.nvim_win_get_position(0)
+
+
+
 function _G.FloatBuf_inOtherWinColumn( bufnrOrPath )
 
   local bufnr
@@ -62,7 +74,8 @@ function _G.Float_dynAnchorWidth()
   local neovim_full_client_width = vim.api.nvim_get_option('columns')
   local widthDefault = neovim_full_client_width / 2 - 4
   local anchorDefault = 'E'
-  if vim.g['Goyo_active'] == 1 or vim.fn.winwidth(1) < 40 then
+  -- if vim.g['Goyo_active'] == 1 or vim.fn.winwidth(1) < 40 then
+  if vim.g['Goyo_active'] == 1 then
     return { anchor = anchorDefault, width = widthDefault }
   end
   local thisWinWidth = vim.api.nvim_win_get_width(0)
@@ -82,6 +95,6 @@ end
 -- FloatBuf_inOtherWinColumn( 10, Float_dynAnchorWidth( {} ))
 -- FloatBuf_inOtherWinColumn( vim.g["ScalaRepl_bufnr"], Float_dynAnchorWidth( {} ))
 -- FloatBuf_inOtherWinColumn( "~/Documents/Notes/Fullstack_app.md", Float_dynAnchorWidth( {} ))
--- Float_dynAnchorWidth( {} )
+-- Float_dynAnchorWidth()
 
 

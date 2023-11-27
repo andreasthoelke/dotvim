@@ -34,8 +34,19 @@ endfunc
 augroup dirvishBuffer
   autocmd!
   autocmd FileType dirvish call UpdateSort()
-  autocmd FileType dirvish call VScriptToolsBufferMaps()
+  autocmd FileType dirvish call Dirvish_BufferMaps()
 augroup END
+
+func! Dirvish_BufferMaps()
+  call Scala_bufferMaps_shared()
+
+  " NOTE: these might get overwritten by the above buffermaps
+  " ~/.config/nvim/ftplugin/dirvish.vim
+
+  " the below should overwrite the default/scala maps
+  nmap <silent><buffer> <leader>lr <Plug>(dovish_rename)
+
+endfunc
 
 
 " NOTE: Dirvish buffer maps can also be put here:

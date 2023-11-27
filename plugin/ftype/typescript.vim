@@ -33,7 +33,7 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <c-n>         :call JS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call JS_TopLevBindingForw()<cr>:call ScrollOff(25)<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
 

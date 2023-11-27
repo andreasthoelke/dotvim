@@ -871,17 +871,6 @@ easypick.setup({
 
 
 
-function _G.CursorIsInWinColumn()
-  local curWinH = vim.api.nvim_win_get_position(0)[2]
-  local screen_width = vim.api.nvim_get_option('columns')
-  return curWinH < (screen_width / 2 - 60) and "L" or "R"
-  -- this approach is still a guess that seems to work with two and tree columns
-end
--- CursorIsInWinColumn()
--- echo v:lua.CursorIsInWinColumn()
--- vim.api.nvim_win_get_position(0)
-
-
 function _G.Telesc_dynPosOpts_ext( opts )
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }

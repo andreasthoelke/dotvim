@@ -634,6 +634,12 @@ require("neo-tree").setup({
           vim.cmd( cmd )
         end,
 
+        ["<localleader>i"] = function(s)
+          local path = s.tree:get_node().path
+          local cmd = vim.fn.NewBufCmds( path )[ 'full' ]
+          vim.cmd 'wincmd p'
+          vim.cmd( cmd )
+        end,
 
         ["<leader>td"] = function(s) Tablabel_set_folder( s.tree:get_node().path ) end,
 

@@ -467,6 +467,7 @@ endfunc
 
 " Extends the UserChoiceAction menu config with (dummy) sections that show the currently active identifier and module 
 func! T_CurrentIdentif_report( list_menuConf )
+  if !T_IsInitialized() | return a:list_menuConf | endif
   let resConf = a:list_menuConf
   let confObj = T_CurrentIdentif()
   for key in ['schema', 'resolver', 'query', 'variables', 'context']
@@ -483,7 +484,7 @@ func! T_IsInitialized()
   return filereadable( T_TesterFilePath( 'GqlExec' ) )
 endfunc
 
-let g:testServerDefaultFiles = '/Users/at/Documents/Server-Dev/pothos/pothos/scratch/snapshot_sdl1'
+let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
 
 func! T_InitTesterFiles()
   let targetFolder = getcwd() . '/scratch'

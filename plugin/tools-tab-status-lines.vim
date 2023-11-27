@@ -419,8 +419,8 @@ endfunc
 
 func! LightlineLocalRootFolder()
   let str = ProjectRootFolderNameOfWin() . GetCwdType_info()
-  return str
-  " return (&filetype !~# '\v(help|gitcommit)') && &buflisted ? str : ''
+  " return str
+  return (&filetype !~# '\v(help|gitcommit)') && &buflisted ? str : ''
 endfunc
 
 func! LightlineRelativeFilePathOfWin()

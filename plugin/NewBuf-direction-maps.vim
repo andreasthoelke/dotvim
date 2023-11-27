@@ -291,7 +291,9 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
 
     let cmd = NewBufCmds( path )[ direction ] 
 
-    if IsInFloatWin() | wincmd p | endif
+    if     a:direction != 'preview_back' 
+      if IsInFloatWin() | wincmd p | endif
+    endif
     exec cmd
 
     " NOTE .. (see above)

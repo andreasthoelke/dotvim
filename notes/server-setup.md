@@ -25,6 +25,11 @@ https://localhost:4040/graphiql
 http://localhost:4040/
 
 
+/Users/at/Documents/Server-Dev/pothos/pothos/scratch/snapshot_sdl1
+/Users/at/Documents
+/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/
+
+mv 
 
 # typescript
 # graphql
