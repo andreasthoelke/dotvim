@@ -681,6 +681,21 @@ require("neo-tree").setup({
           vim.cmd( cmd )
         end,
 
+        ["<localleader>a"] = function(s)
+          local path = s.tree:get_node().path
+          local cmd = "leftabove vnew " .. path
+          vim.cmd 'wincmd p'
+          vim.cmd( cmd )
+        end,
+
+        ["<localleader>u"] = function(s)
+          local path = s.tree:get_node().path
+          local cmd = "leftabove 20new " .. path
+          vim.cmd 'wincmd p'
+          vim.cmd( cmd )
+        end,
+
+
         ["<localleader>i"] = function(s)
           local path = s.tree:get_node().path
           local cmd = vim.fn.NewBufCmds( path )[ 'full' ]

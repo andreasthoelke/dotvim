@@ -4,6 +4,8 @@
 
 
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md
+" old planning for testserver: ~/Documents/Notes/2022/TestServer-TestClient.md
+
 
 func! T_MenuCommands()
   let testServerCmds =  [ {'section': 'Set import identifier'} ]
