@@ -27,6 +27,7 @@ nnoremap <silent><buffer> - <Plug>(dirvish_up)
 nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview_back")<cr>
 nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
 nnoremap <silent><buffer>i :call NewBuf_fromCursorLinkPath("full")<cr>
+" currently overwritten. see ~/.config/nvim/plugin/file-dirvish.vim‖:48:3
 nnoremap <silent><buffer>I :call NewBuf_fromCursorLinkPath("full_bg")<cr>
 nnoremap <silent><buffer>tn :call NewBuf_fromCursorLinkPath("tab")<cr>
 nnoremap <silent><buffer>tt :call NewBuf_fromCursorLinkPath("tab_bg")<cr>

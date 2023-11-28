@@ -58,8 +58,8 @@ local function close_cur_window( state, winid )
   -- close nvim window by id
   vim.api.nvim_win_close( winid, true )
   local tabid = vim.api.nvim_get_current_tabpage()
-  if winid == Ntree_leftOpen then Ntree_leftOpen[tabid] = nil end
-  if winid == Ntree_rightOpen then Ntree_rightOpen[tabid] = nil end
+  if winid == Ntree_leftOpen[tabid] then Ntree_leftOpen[tabid] = nil end
+  if winid == Ntree_rightOpen[tabid] then Ntree_rightOpen[tabid] = nil end
 end
 
 function _G.Ntree_currentNode( state )
@@ -328,6 +328,8 @@ function _G.Ntree_openRight()
   else
     local reveal_file = vim.fn.expand( "%:p" )
     local cwd = vim.fn.getcwd( vim.fn.winnr() )
+    local winIdsInTab = vim.api.nvim_tabpage_list_wins( tabid )
+    vim.api.nvim_set_current_win( winIdsInTab[# winIdsInTab] )
     vim.cmd( "29vnew" )
     vim.cmd "set winfixwidth"
     Ntree_launch( reveal_file, cwd )
@@ -335,6 +337,9 @@ function _G.Ntree_openRight()
   end
   vim.api.nvim_set_current_win( prevWindow )
 end
+
+-- Ntree_rightOpen
+-- vim.api.nvim_tabpage_list_wins( 2 )
 
 function _G.Ntree_openFloat()
   local prevWindow = vim.api.nvim_get_current_win()

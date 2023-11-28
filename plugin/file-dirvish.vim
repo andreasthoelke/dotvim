@@ -45,7 +45,7 @@ func! Dirvish_BufferMaps()
 
   " the below should overwrite the default/scala maps
   nmap <silent><buffer> <leader>lr <Plug>(dovish_rename)
-
+  nnoremap <silent><buffer>I :call NewBuf_fromCursorLinkPath("full_bg")<cr>
 endfunc
 
 
