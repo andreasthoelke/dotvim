@@ -55,8 +55,13 @@ local function close_cur_window( state, winid )
   winid = winid or vim.api.nvim_get_current_win()
   state = state ~= nil and state or manager.get_state_for_window( winid )
   common_commands.close_window( state )
+  local bufnr = vim.api.nvim_win_get_buf( winid )
   -- close nvim window by id
   vim.api.nvim_win_close( winid, true )
+  -- -- dispose the buffer:
+  -- vim.api.nvim_buf_delete( bufnr, { force = true } )
+  -- -- unlist the buffer:
+  vim.api.nvim_command( "bdelete " .. bufnr )
   local tabid = vim.api.nvim_get_current_tabpage()
   if winid == Ntree_leftOpen[tabid] then Ntree_leftOpen[tabid] = nil end
   if winid == Ntree_rightOpen[tabid] then Ntree_rightOpen[tabid] = nil end
