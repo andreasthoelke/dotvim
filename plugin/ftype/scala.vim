@@ -173,9 +173,9 @@ func! Scala_BufferCatsOrZio()
 endfunc
 
 func! Scala_RepoBuildTool()
-  let millPath  = filereadable( getcwd() . '/build.sc' )
-  let sbtPath   = filereadable( getcwd() . '/build.sbt' )
-  let scliPath  = filereadable( getcwd() . '/build.scala' )
+  let millPath  = filereadable( getcwd(winnr()) . '/build.sc' )
+  let sbtPath   = filereadable( getcwd(winnr()) . '/build.sbt' )
+  let scliPath  = filereadable( getcwd(winnr()) . '/build.scala' )
   if     millPath && !sbtPath
     return 'mill'
   elseif !millPath && sbtPath
@@ -461,16 +461,16 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   if a:keyCmdMode == 'server'
-    let printerFilePath = getcwd() . '/src/main/scala/PrinterZioServer.scala'
+    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterZioServer.scala'
   else
-    let printerFilePath = getcwd() . '/src/main/scala/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterZio.scala'
   endif
 
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd() . '/modules/core/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/modules/core/PrinterZio.scala'
   endif
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd() . '/printer/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/printer/PrinterZio.scala'
   endif
 
   let plns = readfile( printerFilePath, '\n' )

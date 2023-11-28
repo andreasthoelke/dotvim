@@ -34,19 +34,23 @@ nnoremap <silent><leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr
 nnoremap <silent><leader><leader>gS :call ShellReturn( 'git status' )<cr>
 nnoremap <silent><leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
 " nnoremap <leader>oga :call System_Float( 'git add -A -v' )<cr>
-nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
+" nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:
-nnoremap <silent><leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
+" nnoremap <silent><leader><leader>gA :call ShellReturn( 'git add -A -v' )<cr>
 " git commit:
 " git undo commit
-nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
+" nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
 " TODO do i use this map?
 nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+
 
 " COMMIT ALL maps:
 " nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
 nnoremap <silent><leader><leader>gC :call GitCommitAll()<cr>
 xnoremap <silent><leader><leader>gC :<c-u>call GitCommitAll_visSel()<cr>
+
+nnoremap <silent><leader>oga :call GitCommitAll_withDialog()<cr>
+
 
 " git push:
 " nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
@@ -109,8 +113,8 @@ endfunc
 
 
 func! GitCommitAll_visSel()
-  if !v:lua.Util_is_subpath( getcwd(), expand('%:p') ) 
-    echoe "Warn: This file is not in the repo you are committing to!" 
+  if !v:lua.Util_is_subpath( getcwd(winnr()), expand('%:p') ) 
+    echo "Warn: This file is not in the repo you are committing to!" 
   endif
   let msg = input( 'Commit message: ', GetVisSel() ) 
   let cmd = GitCommitAllCmd( msg )
@@ -118,13 +122,27 @@ func! GitCommitAll_visSel()
 endfunc
 
 func! GitCommitAll()
-  if !v:lua.Util_is_subpath( getcwd(), expand('%:p') ) 
-    echoe "Warn: This file is not in the repo you are committing to!" 
+  if !v:lua.Util_is_subpath( getcwd(winnr()), expand('%:p') ) 
+    echo "Warn: This file is not in the repo you are committing to!" 
   endif
   let msg = input( 'Commit message: ' ) 
   let cmd = GitCommitAllCmd( msg )
   echo system( cmd )
 endfunc
+
+
+" ShellReturn('git -C /Users/at/.config/nvim status')
+
+func! GitCommitAll_withDialog()
+  if !v:lua.Util_is_subpath( getcwd(winnr()), expand('%:p') ) 
+    echo "Warn: This file is not in the repo you are committing to!" 
+  endif
+  let cwd = getcwd( winnr() )
+  let cmd = 'git -C ' . cwd . ' add -A -v'
+  echo system( cmd )
+  exec 'Git commit'
+endfunc
+
 
 func! GitCommitAllCmd( commitMessage )
   let cmd = 'git commit -a -m "' . a:commitMessage . '"'
@@ -132,7 +150,8 @@ func! GitCommitAllCmd( commitMessage )
 endfunc
 
 func! GitCommitCmd( commitMessage )
-  let cmd = 'git commit -m "' . a:commitMessage . '"'
+  let cwd = getcwd( winnr() )
+  let cmd = 'git -C ' . cwd . ' commit -m "' . a:commitMessage . '"'
   return cmd
 endfunc
 

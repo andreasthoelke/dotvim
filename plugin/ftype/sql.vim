@@ -1,7 +1,7 @@
 
 " db-ui connections can be defined here: ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
 
-func! tools_db#bufferMaps()
+func! Sql_bufferMaps()
   nnoremap <silent><buffer> gej :call DB_eval_parag_psql()<cr>
   nnoremap <silent><buffer> gel :call DB_eval_parag_sqlite()<cr>
   nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
@@ -93,8 +93,9 @@ endfunc
 
 
 " psql -d zio_skunk_tradeIO -c "select * from accounts"
-" let g:dbname = 'zio_skunk_tradeIO'
-let g:dbname = 'realworld-prod.sqlite'
+let g:dbname = 'zio_skunk_tradeIO'
+" let g:dbname = 'learn_dev'
+" let g:dbname = 'realworld-prod.sqlite'
 let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
 " let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
 
@@ -175,12 +176,12 @@ func! DBRun( ... )
 
   let g:floatWin_win = FloatingSmallNew ( str_resLines )
 
-  call tools_db#alignInFloatWin()
+  call Sql_alignInFloatWin()
 
 endfunc
 " Check: ~/.config/nvim/plugin/tools_edgedb.vim#/func.%20tools_edgedb#runQueryShow%20.
 
-func! tools_db#alignInFloatWin()
+func! Sql_alignInFloatWin()
   call FloatWin_FocusFirst()
   " setlocal modifiable
   " call easy_align#easyAlign( 1, line('$'), ',')

@@ -21,7 +21,7 @@ endfunc
 nnoremap <silent> <leader>so :call SourceFile()<cr>:lua vim.notify( "Sourced!", "info", { timeout = 500 } )<cr>
 
 func! LuaModuleName()
-  let cwd = getcwd()
+  let cwd = getcwd(winnr())
   let fp = expand('%:p:r')
   let rel_folders = fp->substitute( cwd . '/lua/', '', '' )
   let rel_folders = rel_folders->substitute( cwd . '/', '', '' )

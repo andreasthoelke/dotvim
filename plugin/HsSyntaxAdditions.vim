@@ -80,7 +80,7 @@ nnoremap <silent><leader>cm :call clearmatches()<cr>
 
 
 func! SQLSyntaxAdditions()
-  call tools_db#bufferMaps()
+  call Sql_bufferMaps()
   call clearmatches()
 
   set conceallevel=2

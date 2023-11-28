@@ -228,6 +228,15 @@ vim.keymap.set( 'n',
   .Git_status_picker( opts_1 )
   end )
 
+-- no nice styling of diffs
+vim.keymap.set( 'n',
+  '<leader>ogS', function() Telesc_launch( 'git_status', {
+    initial_mode = 'normal',
+    cwd = vim.fn.getcwd( vim.fn.winnr() ),
+  } )
+  end )
+
+
 vim.keymap.set( 'n',
   '<leader>ogd', function() require( 'utils.general' )
   .Git_diff_to_master( opts_1 )

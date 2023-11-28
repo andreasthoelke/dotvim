@@ -426,7 +426,7 @@ end
 function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
   local paths =
     searchScope == 'global'
-      and { vim.fn.getcwd(), "~/Documents/Notes/" }
+      and { vim.fn.getcwd( vim.fn.winnr() ), "~/Documents/Notes/" }
       or searchScope == 'file'
          and { vim.fn.expand('%:p') }
          or  { vim.fn.getcwd() }
@@ -1158,12 +1158,59 @@ end
 -- ─^  more examples                                     ▲
 
 
-
-
-
-
 function M.Git_status_picker(opts)
   opts = opts or {}
+
+  -- NOTE: By by default all commands should use the cwd of the current window!
+  opts.cwd = vim.fn.getcwd( vim.fn.winnr() )
+
+  opts.previewer = previewers.new_termopen_previewer({
+    -- dyn_title = function(_, entry) return entry.value end,
+    dyn_title = function(_, entry)
+      -- PATTERN: run any synchronous shell command on a line entry.
+      return vim.fn.systemlist( "git -C " .. opts.cwd .. " diff HEAD --stat " .. entry.path )[1]
+      -- return entry.status
+    end,
+    get_command = function(entry)
+      if entry.status == "D " then
+        return { "git", "-C", opts.cwd, "show", "HEAD:" .. entry.value }
+      elseif entry.status == "??" then
+        return { "bat", "--style=plain", entry.value }
+      end
+      return { "git", "-C", opts.cwd, "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "HEAD", entry.path }
+      -- return { "bat", entry.path }
+      -- return { "bash", "-c", "ls -ls | bat" }
+      -- return { "bash", "-c", "echo " .. entry.path .. "&& echo hi" }
+      -- return { "bash", "-c", "echo 'hi there' " .. entry.path .. "| bat" }
+      -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path }
+      -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', entry.current_file }
+    end,
+  })
+
+
+  -- Use icons that resemble the `git status` command line.
+  opts.git_icons = {
+    added = "A",
+    changed = "M",
+    copied = "C",
+    deleted = "-",
+    renamed = "R",
+    unmerged = "U",
+    untracked = "?",
+  }
+
+  builtin.git_status(opts)
+end
+
+
+-- vim.fn.getcwd( vim.fn.winnr() )
+
+function M.Git_status_picker_bak(opts)
+  opts = opts or {}
+
+  -- NOTE: By by default all commands should use the cwd of the current window!
+  opts.cwd = vim.fn.getcwd( vim.fn.winnr() )
+
   opts.previewer = previewers.new_termopen_previewer({
     -- dyn_title = function(_, entry) return entry.value end,
     dyn_title = function(_, entry)
@@ -1186,6 +1233,7 @@ function M.Git_status_picker(opts)
       -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', entry.current_file }
     end,
   })
+
 
   -- Use icons that resemble the `git status` command line.
   opts.git_icons = {
