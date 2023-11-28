@@ -419,8 +419,15 @@ endfunc
 
 func! LightlineLocalRootFolder()
   let str = ProjectRootFolderNameOfWin() . GetCwdType_info()
-  " return str
-  return (&filetype !~# '\v(help|gitcommit)') && &buflisted ? str : ''
+  if     &filetype =~# '\v(help|gitcommit)'
+    return str
+  elseif &filetype == 'neo-tree'
+    return str
+  elseif !&buflisted
+    return ''
+  else
+    return str
+  endif
 endfunc
 
 func! LightlineRelativeFilePathOfWin()
