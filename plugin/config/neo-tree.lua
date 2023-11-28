@@ -115,6 +115,9 @@ end
 local utils = require("neo-tree.utils")
 -- local parentPath, fname = utils.split_path( reveal_path )
 
+function _G.Util_is_subpath( parentPath, maybeChildPath )
+  return utils.is_subpath(parentPath, maybeChildPath)
+end
 
 -- Opens a new tree.
 function _G.Ntree_launch( focus_path, root_path )

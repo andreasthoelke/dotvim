@@ -44,8 +44,9 @@ nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 
 nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 
 " COMMIT ALL maps:
-nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
-xnoremap <silent><leader><leader>gC :<c-u>echo system( GitCommitAllCmd( input( 'Commit message: ', GetVisSel() ) ) )<cr>
+" nnoremap <silent><leader><leader>gC :call ShellReturn( GitCommitAllCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <silent><leader><leader>gC :call GitCommitAll()<cr>
+xnoremap <silent><leader><leader>gC :<c-u>call GitCommitAll_visSel()<cr>
 
 " git push:
 " nnoremap <leader><leader>gP :call ShellReturn( 'git push' )<cr>
@@ -104,6 +105,25 @@ func! GitCommitOverload( ... )
     let message = input( 'Commit message: ', visText )
   endif
   call GitCommit( message )
+endfunc
+
+
+func! GitCommitAll_visSel()
+  if !v:lua.Util_is_subpath( getcwd(), expand('%:p') ) 
+    echoe "Warn: This file is not in the repo you are committing to!" 
+  endif
+  let msg = input( 'Commit message: ', GetVisSel() ) 
+  let cmd = GitCommitAllCmd( msg )
+  echo system( cmd )
+endfunc
+
+func! GitCommitAll()
+  if !v:lua.Util_is_subpath( getcwd(), expand('%:p') ) 
+    echoe "Warn: This file is not in the repo you are committing to!" 
+  endif
+  let msg = input( 'Commit message: ' ) 
+  let cmd = GitCommitAllCmd( msg )
+  echo system( cmd )
 endfunc
 
 func! GitCommitAllCmd( commitMessage )
