@@ -18,7 +18,7 @@ nnoremap <silent><c-w>dl <c-w>l<c-w>c
 
 " close tab to the right
 nnoremap <silent><c-w>dt :tabnext<cr>:call CloseTabGoToPrevious()<cr>
-nnoremap <silent><c-w>dT :tabprev<cr>:tabclose<cr>
+nnoremap <silent><c-w>dT :tabprev<cr>:call CloseTab()<cr>
 
 nnoremap <silent><c-w>Sk :call WinShift('k')<cr>
 nnoremap <silent><c-w>Sj :call WinShift('j')<cr>
@@ -187,6 +187,11 @@ func! CloseWin()
     call v:lua.Tab_hide_removeFromHidden()
   endif
   exec( 'wincmd c' )
+endfunc
+
+func! CloseTab()
+  call v:lua.Tab_hide_removeFromHidden()
+  exec( 'tabclose' )
 endfunc
 
 func! CloseTabGoToPrevious()

@@ -26,7 +26,7 @@ func! T_MenuCommands()
   " nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
   let testServerCmds += [ {'label': '_D GQL Exec',   'cmd': 'call T_Refetch("GqlExec")' } ]
   " nnoremap <silent> ,gdr :call T_Refetch('GqlExecWithError')<cr>
-  let testServerCmds += [ {'label': 'GQL Exec with error',   'cmd': 'call T_Refetch("GqlExecWithError")' } ]
+  let testServerCmds += [ {'label': '_E GQL Exec with error',   'cmd': 'call T_Refetch("GqlExecWithError")' } ]
   " nnoremap <silent> gwr :call T_Refetch('Printer')<cr>
   let testServerCmds += [ {'label': '_I Printer',   'cmd': 'call T_Refetch("Printer")' } ]
   " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
@@ -54,7 +54,7 @@ func! T_MenuCommands()
   endif
   let testServerCmds += [ {'label': '_N Install packages',   'cmd': 'call T_InitInstallPackages()' } ]
 
-  let testServerCmds = T_CurrentIdentif_report( testServerCmds )
+  let testServerCmds = T_CurrentIdentif_report_withLinks( testServerCmds )
   return testServerCmds
 endfunc
 
@@ -354,7 +354,8 @@ endfunc
 " The current files' module path
 func! T_AbsModulePath()
   " This is based on the convention of having include: "src" in tsconfig
-  return '..' . CurrentRelativeModulePath()
+  " return '..' . CurrentRelativeModulePath()
+  return CurrentRelativeModulePath()
 endfunc
 
 
@@ -488,19 +489,28 @@ endfunc
 func! T_CurrentIdentif_report_withLinks( list_menuConf )
   if !T_IsInitialized() | return a:list_menuConf | endif
   let resConf = a:list_menuConf
+  let resConf +=  [ {'section': 'Active identifiers'} ]
   let confObj = T_CurrentIdentif()
   for key in ['printer', 'schema', 'resolver', 'query', 'variables', 'context']
     if has_key( confObj, key . '_identif' )
-      " let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
+      let identi  = confObj[ key . '_identif' ]
+      let relPath = confObj[ key . '_module' ][3:] . '.ts'
       let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
       let infoStr = infoStr . ' ' . fnamemodify( confObj[ key . '_module' ], ':h' )
       let infoStr = key[0] . ": " . infoStr
-      let resConf +=  [ {'section': infoStr} ]
+      let cmd = "call T_ShowIdentif( '" . relPath . "', '" . identi . "' )"
+      let resConf +=  [ {'label': infoStr, 'cmd': cmd} ]
     endif
   endfor
   return resConf
 endfunc
 
+
+func! T_ShowIdentif( path, identif )
+  let lineStart = "export const " . a:identif 
+  exec( 'new ' . a:path )
+  call search( lineStart, 'cw' )
+endfunc
 
 
 func! T_IsInitialized()
