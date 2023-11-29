@@ -299,7 +299,7 @@ func! T_ReadTesterFileLines( testerName )
 endfunc
 
 func! T_TesterFilePath( testerName )
-  let TesterPath = getcwd() . '/scratch/.test' . a:testerName . '.ts'
+  let TesterPath = getcwd( winnr() ) . '/scratch/.test' . a:testerName . '.ts'
   " call T_EnsureTesterModuleFile( TesterPath, a:testerName )
   return TesterPath
 endfunc
@@ -450,7 +450,7 @@ endfunc
 " echo eval("{'aa': 11, 'bb': 22}").bb
 
 func! T_CurrentIdentif()
-  let persistPath = getcwd() . '/scratch/.testServer_currentIdentif'
+  let persistPath = getcwd( winnr() ) . '/scratch/.testServer_currentIdentif'
   if filereadable( persistPath )
     let confObj = eval( readfile( persistPath, '\n' )[0] )
   else
@@ -464,7 +464,7 @@ func! T_CurrentIdentif_update( key, identif, module )
   let confObj = T_CurrentIdentif()
   let confObj[ a:key . '_identif' ] = a:identif
   let confObj[ a:key . '_module' ] = a:module
-  let persistPath = getcwd() . '/scratch/.testServer_currentIdentif'
+  let persistPath = getcwd( winnr() ) . '/scratch/.testServer_currentIdentif'
   call writefile( [string( confObj )], persistPath )
 endfunc
 
@@ -473,9 +473,12 @@ func! T_CurrentIdentif_report( list_menuConf )
   if !T_IsInitialized() | return a:list_menuConf | endif
   let resConf = a:list_menuConf
   let confObj = T_CurrentIdentif()
-  for key in ['schema', 'resolver', 'query', 'variables', 'context']
+  for key in ['printer', 'schema', 'resolver', 'query', 'variables', 'context']
     if has_key( confObj, key . '_identif' )
+      " let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
       let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
+      let infoStr = infoStr . ' ' . fnamemodify( confObj[ key . '_module' ], ':h' )
+      let infoStr = key[0] . ": " . infoStr
       let resConf +=  [ {'section': infoStr} ]
     endif
   endfor
@@ -490,7 +493,7 @@ endfunc
 let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
 
 func! T_InitTesterFiles()
-  let targetFolder = getcwd() . '/scratch'
+  let targetFolder = getcwd( winnr() ) . '/scratch'
   if !isdirectory( targetFolder ) | call mkdir( targetFolder, 'p' ) | endif
   call T_CopyFileNamesToFolder( g:TesterFileNamesAll, g:testServerDefaultFiles, targetFolder )
 
@@ -498,7 +501,7 @@ func! T_InitTesterFiles()
 endfunc
 
 func! T_InitEnvFile()
-  let path = getcwd() . '/.env'
+  let path = getcwd( winnr() ) . '/.env'
   call T_AppendEchoLineToFile( 'TESTPORT=4040', path )
   call T_AppendEchoLineToFile( 'TESTSERVERNAME="Apollo"', path )
 endfunc
@@ -509,7 +512,7 @@ func! T_AppendEchoLineToFile( line, path )
 endfunc
 
 func! T_InitInstallPackages()
-  let path = getcwd() . '/scratch/.testServer_packages'
+  let path = getcwd( winnr() ) . '/scratch/.testServer_packages'
   if !filereadable( path ) | echoe 'Missing: ' . path | return | endif
   let packages = readfile( path, '\n' )
   let cmd = T_GetPackageInstallCmdOfCurrentProject() . ' ' . join( packages )
@@ -517,14 +520,14 @@ func! T_InitInstallPackages()
 endfunc
 
 func! T_GetPackageInstallCmdOfCurrentProject()
-  let path = getcwd() . '/pnpm-workspace.yaml'
+  let path = getcwd( winnr() ) . '/pnpm-workspace.yaml'
   let ws = filereadable( path ) ? ' -w' : ''
 
-  let path = getcwd() . '/pnpm-lock.yaml'
+  let path = getcwd( winnr() ) . '/pnpm-lock.yaml'
   if filereadable( path ) | return 'pnpm add -D' . ws | endif
-  let path = getcwd() . '/yarn.lock'
+  let path = getcwd( winnr() ) . '/yarn.lock'
   if filereadable( path ) | return 'yarn add -D' . ws | endif
-  let path = getcwd() . '/package.json'
+  let path = getcwd( winnr() ) . '/package.json'
   if !filereadable( path ) | echoe 'Not an npm project!' | return | endif
   return 'npm install --dev'
 endfunc
@@ -552,7 +555,7 @@ endfunc
 command! -nargs=? TestServerSnapshotTesterFiles call T_SnapshotTesterFiles( <q-args> )
 
 func! T_SnapshotTesterFiles( snapshotName )
-  let sourceFolder = getcwd() . '/scratch'
+  let sourceFolder = getcwd( winnr() ) . '/scratch'
   let snapshotFolder = T_NextSnapshotDirPath( sourceFolder . '/snapshot_' . a:snapshotName )
   call T_CopyFileNamesToFolder( g:TesterFileNamesAll, sourceFolder, snapshotFolder )
 endfunc
@@ -573,7 +576,7 @@ command! TestServerReactivateSnapshot call T_ReactivateSnapshot( getline('.') )
 func! T_ReactivateSnapshot( snapshotFolder )
   " auto backup the current files
   " call T_SnapshotTesterFiles( 'backup' )
-  let targetFolder = getcwd() . '/scratch'
+  let targetFolder = getcwd( winnr() ) . '/scratch'
   " Overwrite the current tester files!
   call T_ForceCopyFileNamesToFolder( g:TesterFileNamesAll, a:snapshotFolder, targetFolder )
 endfunc

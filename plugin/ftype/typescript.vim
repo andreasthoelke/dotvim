@@ -3,7 +3,7 @@ func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
 
-  nnoremap <silent><buffer> ge :call UserChoiceAction( 'TS client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+  nnoremap <silent><buffer> gee :call UserChoiceAction( 'Ts client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
   nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>

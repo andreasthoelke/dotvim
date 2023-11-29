@@ -1,4 +1,5 @@
 
+" source: ~/.config/nvim/plugged/quickmenu.vim/autoload/quickmenu.vim
 
 let g:quickmenu_ix_options = 'LH'
 let g:quickmenu_ix_special_keys = 0
@@ -13,7 +14,8 @@ let g:quickmenu_options = 'L'
 let g:quickmenu_special_keys = 0
 let g:quickmenu_padding_left = 0
 let g:quickmenu_padding_right = 1
-let g:quickmenu_max_width = 100
+" let g:quickmenu_max_width = 100
+let g:quickmenu_max_width = 25
 let g:quickmenu_disable_nofile = 0
 
 " Examples of some commands

@@ -4,7 +4,7 @@
 " that item checked. it now can be un-checked or other items can be added to the selection. 'submit' would need a
 " separate command
 
-
+" quickmenu config: ~/.config/nvim/plugin/setup-quickmenu.vim
 
 " ─   User Choice Menu and Action                        ■
 

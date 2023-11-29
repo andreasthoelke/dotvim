@@ -429,7 +429,7 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
       and { vim.fn.getcwd( vim.fn.winnr() ), "~/Documents/Notes/" }
       or searchScope == 'file'
          and { vim.fn.expand('%:p') }
-         or  { vim.fn.getcwd() }
+         or  { vim.fn.getcwd( vim.fn.winnr() ) }
 
   if not pattern then
     if searchScope == 'global' then
@@ -519,7 +519,7 @@ function M.Git_diff_stat(opts)
       local split = vim.split(entry, [[|]])
       local rel_filepath = split[1]:gsub("%s+", "")
       local gstat = vim.F.if_nil( split[2], "" ):gsub("%s+", "")
-      local abs_filepath = vim.fn.getcwd() .. "/" .. rel_filepath
+      local abs_filepath = vim.fn.getcwd( vim.fn.winnr() ) .. "/" .. rel_filepath
       -- local wordCount = vim.fn.systemlist( 'wc ' .. abs_filepath .. " | awk '{print $1}'")[1]
       local wc_output = vim.fn.systemlist( "wc " .. abs_filepath .. " | awk {'print $1 \":\" $2'}" )[1]
       local wc_list = vim.split( wc_output, ":" )
@@ -570,7 +570,7 @@ function M.Colors(opts)
     entry_maker = function(entry)
       local split = vim.split(entry, ":")
       local rel_filepath = split[1]
-      local abs_filepath = vim.fn.getcwd() .. "/" .. rel_filepath
+      local abs_filepath = vim.fn.getcwd( vim.fn.winnr() ) .. "/" .. rel_filepath
       local line_num = tonumber(split[2])
       return {
         value = 43,
