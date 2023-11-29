@@ -508,8 +508,10 @@ endfunc
 
 func! T_ShowIdentif( path, identif )
   let lineStart = "export const " . a:identif 
-  exec( 'new ' . a:path )
+  exec( 'edit ' . a:path )
   call search( lineStart, 'cw' )
+  normal! zz
+  call UserChoiceAction( 'Ts client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )
 endfunc
 
 
