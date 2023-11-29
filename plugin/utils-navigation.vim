@@ -180,14 +180,29 @@ endfunc
 " new 2023-03
 nnoremap <silent> <c-w>C :call CloseTabGoToPrevious()<cr>
 
-nnoremap <silent><localleader>x :echo "use c-w C"<cr>
-function! CloseTabGoToPrevious()
+nnoremap <silent> <c-w>c :call CloseWin()<cr>
+
+func! CloseWin()
+  if winnr('$') == 1
+    call v:lua.Tab_hide_removeFromHidden()
+  endif
+  exec( 'wincmd c' )
+endfunc
+
+func! CloseTabGoToPrevious()
+  call v:lua.Tab_hide_removeFromHidden()
   if tabpagenr("$") > 1 && tabpagenr() > 1 && tabpagenr() < tabpagenr("$")
     tabclose | tabprev
   else
     tabclose
   endif
-endfunction
+endfunc
+
+" augroup tabclosed
+"   autocmd!
+"   autocmd TabClosed * :call v:lua.Tab_hide_removeFromHidden( expand('<afile>') )
+" augroup END
+
 
 
 

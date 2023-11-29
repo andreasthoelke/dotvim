@@ -150,6 +150,13 @@ function _G.Tab_toggle_hide()
 end
 -- Note that closed tabs can just stay in the hidden list bc/ tab-ids are unique per vim session
 
+function _G.Tab_hide_removeFromHidden()
+  local tabid = vim.api.nvim_get_current_tabpage()
+  if f.contains( tabid, Tabs_hidden ) then
+    Tabs_hidden = f.filter( function( id ) return id ~= tabid end, Tabs_hidden )
+  end
+end
+
 function _G.Tabs_hidden_indexs()
   return f.map( function( id )
       local tabIndex = vim.fn.index( vim.api.nvim_list_tabpages(), id ) + 1
@@ -157,8 +164,8 @@ function _G.Tabs_hidden_indexs()
     end, Tabs_hidden )
 end
 
-
 -- Tab_toggle_hide()
+-- vim.api.nvim_get_current_tabpage()
 -- Tabs_hidden
 
 function _G.Tabs_toggle_show_hidden()

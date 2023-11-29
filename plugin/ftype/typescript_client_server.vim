@@ -485,6 +485,23 @@ func! T_CurrentIdentif_report( list_menuConf )
   return resConf
 endfunc
 
+func! T_CurrentIdentif_report_withLinks( list_menuConf )
+  if !T_IsInitialized() | return a:list_menuConf | endif
+  let resConf = a:list_menuConf
+  let confObj = T_CurrentIdentif()
+  for key in ['printer', 'schema', 'resolver', 'query', 'variables', 'context']
+    if has_key( confObj, key . '_identif' )
+      " let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
+      let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
+      let infoStr = infoStr . ' ' . fnamemodify( confObj[ key . '_module' ], ':h' )
+      let infoStr = key[0] . ": " . infoStr
+      let resConf +=  [ {'section': infoStr} ]
+    endif
+  endfor
+  return resConf
+endfunc
+
+
 
 func! T_IsInitialized()
   return filereadable( T_TesterFilePath( 'GqlExec' ) )
