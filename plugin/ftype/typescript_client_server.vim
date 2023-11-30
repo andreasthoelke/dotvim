@@ -111,39 +111,29 @@ endfunc
 " Set an exported identifier as a specific import variable in the testServer.ts file
 func! T_DoSetImport()
   let [identif, modulePath] = T_ImportInfo()
+  let [persistKey, label] = T_IdentifNameToPeristKey( identif )
+  call VirtualRadioLabel( label )
 
   " 3. Which type of import var do we want to set?
   if     identif =~ 'sch' || identif =~ 'builder'
-    let persistKey = 'schema'
     " call T_SetServerTypeDef( identif, modulePath )
     call T_SetGqlExecTypeDef( identif, modulePath )
-    call VirtualRadioLabel('▵s')
   elseif identif =~ 'resol'
-    let persistKey = 'resolver'
     " call T_SetServerResolver( identif, modulePath )
     call T_SetGqlExecResolver( identif, modulePath )
-    call VirtualRadioLabel('▵r')
   elseif identif =~ 'query'
-    let persistKey = 'query'
     call T_SetClientQuery( identif, modulePath )
     call T_SetGqlExecQuery( identif, modulePath )
-    call VirtualRadioLabel('▵q')
     " call T_Refetch("Client")
     " TODO: set and refetch might be a separate command?
   elseif identif =~ 'varia'
-    let persistKey = 'variables'
     call T_SetClientVariables( identif, modulePath )
     call T_SetGqlExecVariables( identif, modulePath )
-    call VirtualRadioLabel('▵v')
   elseif identif =~ 'contex'
-    let persistKey = 'context'
     " Server context factory function
     call T_SetServerContext( identif, modulePath )
-    call VirtualRadioLabel('▵c')
   else
-    let persistKey = 'printer'
     call T_SetPrinterIdentif( identif, modulePath )
-    call VirtualRadioLabel( '«' )
   endif
   " echo 'Set: ' . identif
 
@@ -162,7 +152,22 @@ func! T_CurrentIdentif_default()
 endfunc
 
 
-
+func! T_IdentifNameToPeristKey( identif )
+  let identif = a:identif
+  if     identif =~ 'sch' || identif =~ 'builder'
+    return ['schema', '▵s']
+  elseif identif =~ 'resol'
+    return ['resolver', '▵r']
+  elseif identif =~ 'query'
+    return ['query', '▵q']
+  elseif identif =~ 'varia'
+    return ['variables', '▵v']
+  elseif identif =~ 'contex'
+    return ['context', '▵c']
+  else
+    return ['printer', '«']
+  endif
+endfunc
 
 func! T_ImportInfo()
   " 1. Get the module path
@@ -354,8 +359,7 @@ endfunc
 " The current files' module path
 func! T_AbsModulePath()
   " This is based on the convention of having include: "src" in tsconfig
-  " return '..' . CurrentRelativeModulePath()
-  return CurrentRelativeModulePath()
+  return '..' . CurrentRelativeModulePath()
 endfunc
 
 
@@ -490,6 +494,9 @@ func! T_CurrentIdentif_report_withLinks( list_menuConf )
   if !T_IsInitialized() | return a:list_menuConf | endif
   let resConf = a:list_menuConf
   let resConf +=  [ {'section': 'Active identifiers'} ]
+  let cmd = "call T_HighlightIdentifs()"
+  let resConf +=  [ {'label': '_L Highlight Identifs', 'cmd': cmd} ]
+
   let confObj = T_CurrentIdentif()
   for key in ['printer', 'schema', 'resolver', 'query', 'variables', 'context']
     if has_key( confObj, key . '_identif' )
@@ -497,7 +504,7 @@ func! T_CurrentIdentif_report_withLinks( list_menuConf )
       let relPath = confObj[ key . '_module' ][3:] . '.ts'
       let infoStr = confObj[ key . '_identif' ] . ' ' . fnamemodify( confObj[ key . '_module' ], ':t:r' )
       let infoStr = infoStr . ' ' . fnamemodify( confObj[ key . '_module' ], ':h' )
-      let infoStr = key[0] . ": " . infoStr
+      " let infoStr = key[0] . ": " . infoStr
       let cmd = "call T_ShowIdentif( '" . relPath . "', '" . identi . "' )"
       let resConf +=  [ {'label': infoStr, 'cmd': cmd} ]
     endif
@@ -511,7 +518,24 @@ func! T_ShowIdentif( path, identif )
   exec( 'edit ' . a:path )
   call search( lineStart, 'cw' )
   normal! zz
+  let [_persistKey, label] = T_IdentifNameToPeristKey( a:identif )
+  call VirtualRadioLabel( label )
   call UserChoiceAction( 'Ts client server', {}, T_MenuCommands(), function('TestServerCmd'), [] )
+endfunc
+
+func! T_HighlightIdentifs()
+  let confObj = T_CurrentIdentif()
+  for key in ['printer', 'schema', 'resolver', 'query', 'variables', 'context']
+    if has_key( confObj, key . '_identif' )
+      let identi  = confObj[ key . '_identif' ]
+      let relPath = confObj[ key . '_module' ][3:] . '.ts'
+      let lineStart = "export const " . identi
+      exec( 'edit ' . relPath )
+      call search( lineStart, 'cw' )
+      let [_persistKey, label] = T_IdentifNameToPeristKey( identi )
+      call VirtualRadioLabel( label )
+    endif
+  endfor
 endfunc
 
 
