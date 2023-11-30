@@ -31,12 +31,14 @@ func! T_MenuCommands()
   let testServerCmds += [ {'label': '_I Printer',   'cmd': 'call T_Refetch("Printer")' } ]
   " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
   let testServerCmds += [ {'label': '_Show schema',   'cmd': 'call T_Refetch("ShowSchema")' } ]
+  let testServerCmds += [ {'label': '_Open Giql',   'cmd': 'call T_Giql_open()' } ]
 
-  let testServerCmds +=  [ {'section': 'Server start/stop'} ]
+  let testServerCmds +=  [ {'section': 'Server [' . (exists('g:T_ServerID') ? 'online]' : 'offline]')} ]
   " nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
   let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echom "Server started"' } ]
   " nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
-  let testServerCmds += [ {'label': '_G Server start in term',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
+  " let testServerCmds += [ {'label': '_G Server start in term',   'cmd': 'call T_ServerStartT()', 'cmd2': 'echo "Server started"' } ]
+  let testServerCmds += [ {'label': '_G Server show term',   'cmd': 'call T_ServerShowTerm()' } ]
   " nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
   let testServerCmds += [ {'label': '_H Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echom "Server stopped"' } ]
 
@@ -336,6 +338,10 @@ func! T_TesterTerminalCommand( testCmd )
     let filePath = T_TesterFilePath( 'Server' )
     let functionName = 'StartServer' . g:T_ServerName
 
+  elseif a:testCmd == 'ServerProps'
+    let filePath = T_TesterFilePath( 'Server' )
+    let functionName = 'ServerProps_show'
+
   elseif a:testCmd == 'Client'
     let filePath = T_TesterFilePath( 'Client' )
     let functionName = 'RunQuery'
@@ -352,6 +358,8 @@ func! T_TesterTerminalCommand( testCmd )
   return T_NodeFunctionCall_TermCmd( filePath, functionName )
 endfunc
 " echo systemlist( T_TesterTerminalCommand( 'Printer' ) )
+" echo systemlist( T_TesterTerminalCommand( 'ServerName' ) )
+"  T_TesterTerminalCommand( 'ServerName' ) 
 " T_TesterTerminalCommand( 'Printer' )
 " echo systemlist( T_TesterTerminalCommand( 'Client' ) )
 
@@ -381,10 +389,44 @@ func! T_ServerRefresh ()
   endif
 endfunc
 
+func! T_ServerProps()
+  return systemlist( T_TesterTerminalCommand( 'ServerProps' ) )
+endfunc
+" echo T_ServerName()
+
+func! T_Giql_open()
+  call LaunchChromium( T_ServerGiql_url() )
+endfunc
+
+func! T_ServerShowTerm()
+  if !exists('g:T_ServerID_bufnr') | call T_echo( 'T_Server is not running' ) | return | endif
+  let cmd = 'sbuffer ' . g:T_ServerID_bufnr . ' | resize 10 | normal! G'
+  exec( cmd )
+endfunc
+
+
+func! T_ServerGiql_url()
+  let [serverName, port] = T_ServerProps()
+  if serverName == 'Express'
+    return 'http://localhost:' . port . '/graphql'
+  elseif serverName == 'Yoga'
+    return 'http://localhost:' . port . '/graphiql'
+  elseif serverName == 'Apollo'
+    return 'http://localhost:' . port . '/graphiql'
+  else
+    echoe "ServerName " . serverName . " not found"
+  endif
+endfunc
+" echo T_ServerGiql_url()
+
 
 func! T_ServerStart ()
   if exists('g:T_ServerID') | call T_echo( 'T_Server is already running' ) | return | endif
-  let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
+  " let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
+  exec "new"
+  let g:T_ServerID_bufnr = bufnr()
+  let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
+  silent wincmd c
 endfunc
 
 func! T_ServerStartT ()
@@ -407,6 +449,7 @@ func! T_ServerStop ()
   if !exists('g:T_ServerID') | call T_echo( 'T_Server is not running' ) | return | endif
   call jobstop( g:T_ServerID )
   unlet g:T_ServerID
+  unlet g:T_ServerID_bufnr
   " echo 'T_Server stopped'
 endfunc
 
