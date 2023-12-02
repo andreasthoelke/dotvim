@@ -230,8 +230,9 @@ local lualine_config = {
     lualine_c = {},
     lualine_x = {},
     lualine_y = { lineNum },
+    lualine_z = { 'LightlineScrollbar' },
     -- lualine_y = {},
-    lualine_z = {}
+    -- lualine_z = {}
   },
 
 

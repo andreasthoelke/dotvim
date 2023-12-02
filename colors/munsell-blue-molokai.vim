@@ -794,7 +794,7 @@ hi! LuLine_x_i guifg=#121722 guibg=#2D154C
 " hi! LuLine_y_i guifg=#273A40 guibg=#121416
 
 hi! LuLine_z   guifg=#47555B guibg=#121416
-hi! LuLine_z_i guifg=#121742 guibg=#47555B
+hi! LuLine_z_i guifg=#47555B guibg=#121416
 
 " ─^  Lualine                                            ▲
 
