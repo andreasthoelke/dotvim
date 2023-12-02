@@ -28,6 +28,9 @@ endfun
 " To remove ^M characters (windows line breaks?) use exec "%s/\r//g"
 
 func! RemoveTermCodes (lines)
+  if type(a:lines) != v:t_list
+    return []
+  endif
   " return systemlist( 'sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"', join( a:lines, "\n" ) )
   " return systemlist( 'strip-ansi', join( a:lines, "\n" ) )
   return systemlist( 'ansifilter', join( a:lines, "\n" ) )

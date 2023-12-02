@@ -45,7 +45,8 @@ nnoremap ,gwt :call TermOneShot_FloatBuffer( GetLineFromCursor() )<cr>
 
 func! TermOneShot( cmd )
   exec "8new"
-  let g:TermID = termopen( a:cmd )
+  let opts = { 'cwd': getcwd( winnr() ) }
+  let g:TermID = termopen( a:cmd, opts )
   normal G
 endfunc
 " The following line works (only) without shellescape()

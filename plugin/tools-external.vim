@@ -5,9 +5,10 @@
 command! Browser :call OpenVisSel()
 vmap glb :call OpenVisSel()<cr>
 nnoremap glb :call HandleURL()<cr>
-nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
-nnoremap <leader>glc :call ShowLocalWebFile( GetLineFromCursor() )<cr>
+nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
+nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
+
 " nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
@@ -269,7 +270,9 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 
 func! ShowLocalWebFile( path )
   " call LaunchChromium( 'file:///private' . a:path )
-  call LaunchChromium( 'file:///' . a:path )
+  " for some reason this doesn't have a small tool window and remembers the previously set size and pos.
+  call LaunchChromium2( 'file:///' . a:path )
+  " call LaunchChromium( 'file:///' . a:path )
 endfunc
 " call ShowLocalWebFile( '/tmp/giphy2.gif' )
 " call ShowLocalWebFile( '/Users/at/Documents/Temp/test6.png' )

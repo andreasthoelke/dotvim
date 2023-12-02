@@ -31,9 +31,10 @@ func! T_MenuCommands()
   let testServerCmds += [ {'label': '_I Printer',   'cmd': 'call T_Refetch("Printer")' } ]
   " nnoremap <silent> ges :call T_Refetch('ShowSchema')<cr>
   let testServerCmds += [ {'label': '_Show schema',   'cmd': 'call T_Refetch("ShowSchema")' } ]
-  let testServerCmds += [ {'label': '_Open Giql',   'cmd': 'call T_Giql_open()' } ]
-
-  let testServerCmds +=  [ {'section': 'Server [' . (exists('g:T_ServerID') ? 'online]' : 'offline]')} ]
+  let testServerCmds += [ {'label': '_Chromium Giql',   'cmd': 'call T_Giql_open()' } ]
+  let testServerCmds += [ {'label': '_Voyager Diagram',   'cmd': 'call T_Voyager_open()' } ]
+                                                 
+  let testServerCmds +=  [ {'section': 'Server [' . (exists('g:T_ServerID') ? '↑]' : '↓]')} ]
   " nnoremap <silent> <leader>gss :call T_ServerStart()<cr>:echo 'Server started'<cr>
   let testServerCmds += [ {'label': '_A Server start',   'cmd': 'call T_ServerStart()', 'cmd2': 'echom "Server started"' } ]
   " nnoremap <silent> ,gss :call T_ServerStartT()<cr>:echo 'Server started'<cr>
@@ -43,13 +44,13 @@ func! T_MenuCommands()
   let testServerCmds += [ {'label': '_H Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echom "Server stopped"' } ]
 
   let testServerCmds +=  [ {'section': 'Snapshots'} ]
-  let testServerCmds += [ {'label': '_C Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
+  let testServerCmds += [ {'label': '_Make / Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
   let snapshotName = T_GetSnapshotNameFromDirvishFolder()
   if len( snapshotName )
     let testServerCmds += [ {'label': '_Y Reactivate '. snapshotName ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
   endif
 
-  let testServerCmds +=  [ {'section': 'Project [' . (T_IsInitialized() ? 'ready]' : 'not yet initialized]')} ]
+  let testServerCmds +=  [ {'section': 'Project [' . (T_IsInitialized() ? '↑]' : '↓]')} ]
   if !T_IsInitialized()
     let snapshotName = T_GetSnapshotNameFromFolderPath( g:testServerDefaultFiles )
     let testServerCmds += [ {'label': '_M Initialize from '. snapshotName ,   'cmd': 'call T_InitTesterFiles()' } ]
@@ -435,16 +436,6 @@ func! T_ServerStartT ()
   let g:T_ServerID = termopen( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
 endfunc
 
-func! T_RunJob( cmd, mode )
-  if a:mode == 'background'
-    let g:T_JobID = jobstart( a:cmd, g:T_ServerCallbacks )
-  elseif a:mode == 'visible'
-    exec "10new"
-    let g:T_JobID = termopen( a:cmd, g:T_ServerCallbacks )
-  endif
-endfunc
-" call T_RunJob( 'ls', 'visible' )
-
 func! T_ServerStop ()
   if !exists('g:T_ServerID') | call T_echo( 'T_Server is not running' ) | return | endif
   call jobstop( g:T_ServerID )
@@ -455,7 +446,10 @@ endfunc
 
 
 func! T_ServerMainCallback (job_id, data, event)
-  echom a:data
+  " Test if a:data is a List
+  let lines = RemoveTermCodes( a:data )
+  if !len( lines ) | return | endif
+  echom lines
 endfunc
 
 func! T_ServerErrorCallback (job_id, data, event)
@@ -467,6 +461,18 @@ let g:T_ServerCallbacks = {
       \ 'on_stderr': function('T_ServerErrorCallback'),
       \ 'on_exit': function('T_ServerMainCallback')
       \ }
+
+
+func! T_RunJob( cmd, mode )
+  if a:mode == 'background'
+    let g:T_JobID = jobstart( a:cmd, g:T_ServerCallbacks )
+  elseif a:mode == 'visible'
+    exec "10new"
+    let g:T_JobID = termopen( a:cmd, g:T_ServerCallbacks )
+  endif
+endfunc
+" call T_RunJob( 'ls', 'visible' )
+
 
 
 " ─^  Manage long running server process                 ▲
@@ -678,6 +684,33 @@ func! T_ReactivateSnapshot( snapshotFolder )
 endfunc
 
 
+func! T_Voyager_open ()
+  call PyServer_stop()
+  call PyServer_start()
+  " if !exists('g:PyServerID') | call PyServer_start() | endif
+  call LaunchChromium( 'http://localhost:8012' )
+endfunc
+
+
+func! PyServer_start ()
+  if exists('g:PyServerID') | call T_echo( 'PyServer is already running' ) | return | endif
+  " exec "new"
+  " let g:PyServerID_bufnr = bufnr()
+  let cmd = "python -m http.server 8012"
+  let dir = getcwd( winnr() ) . "/scratch/schemaView_voyager" 
+  " let g:PyServerID = termopen( cmd, { 'cwd': dir } )
+  let g:PyServerID = jobstart( cmd, { 'cwd': dir } )
+  " silent wincmd c
+endfunc
+
+func! PyServer_stop ()
+  " if !exists('g:PyServerID') | call T_echo( 'PyServer is not running' ) | return | endif
+  if !exists('g:PyServerID') | return | endif
+  call jobstop( g:PyServerID )
+  unlet g:PyServerID
+  " unlet g:PyServerID_bufnr
+  " echo 'PyServerID stopped'
+endfunc
 
 
 

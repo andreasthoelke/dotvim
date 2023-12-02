@@ -613,11 +613,12 @@ hi Folded     guifg=#3D5862 guibg=#121212
 hi SignColumn guifg=#3D5862 guibg=#121212
 
 
-hi link QuickmenuHeader htmlLink
-hi link QuickmenuBracket Comment
-hi link QuickmenuSection Comment
-hi link QuickmenuOption purescriptIdentifier
-hi link QuickmenuNumber hsTypeComment
+hi! link QuickmenuHeader Comment
+hi link QuickmenuBracket CommentMinusMinus
+hi! link QuickmenuSection purescriptRecordKeys
+hi! link QuickmenuOption CommentMinus
+hi! link QuickmenuNumber hsTypeComment
+hi! link QuickmenuNumber CommentMinus
 
 hi link Quickmenu_ixHeader htmlLink
 hi link Quickmenu_ixBracket Comment

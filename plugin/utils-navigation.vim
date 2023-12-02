@@ -54,6 +54,8 @@ nnoremap <leader><c-w>H <c-w>H
 nnoremap <leader><c-w>K <c-w>K<c-w>=
 nnoremap <leader><c-w>J <c-w>J<c-w>=
 
+nnoremap <leader><c-w>R <c-w>R
+
 
 " Jump to rightmost window
 nnoremap <c-w>\ <c-w>4l
