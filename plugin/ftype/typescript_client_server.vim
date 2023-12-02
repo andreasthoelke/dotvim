@@ -430,22 +430,6 @@ func! T_ServerGiql_url()
   return "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
 endfunc
 
-
-func! T_ServerGiql_url_bak()
-  let [serverName, port, inspect_domain, inspect_port, inspect_apipath] = T_ServerProps()
-  if serverName == 'Express'
-    return 'http://localhost:' . port . '/graphql'
-  elseif serverName == 'Yoga'
-    return 'http://localhost:' . port . '/graphiql'
-  elseif serverName == 'Apollo'
-    return 'http://localhost:' . port . '/graphql'
-  else
-    echoe "ServerName " . serverName . " not found"
-  endif
-endfunc
-" echo T_ServerGiql_url()
-
-
 func! T_ServerStart ()
   if exists('g:T_ServerID') | call T_echo( 'T_Server is already running' ) | return | endif
   " let g:T_ServerID = jobstart( T_TesterTerminalCommand('Server'), g:T_ServerCallbacks )
@@ -711,31 +695,35 @@ endfunc
 
 func! T_Voyager_open ()
   call PyServer_stop()
-  call PyServer_start()
+  let pyServerPort = PyServer_start()
   let env = T_EnvProps()
   let apiUrl = "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
-  call LaunchChromium( 'http://localhost:8012?apiUrl=' . apiUrl )
+  call LaunchChromium( 'http://localhost:' . pyServerPort . '?apiUrl=' . apiUrl )
 endfunc
 
+func! T_getFreePort( port )
+  let cmd = 'lsof -i :' . a:port
+  let res = system( cmd )
+  if len( res ) > 0
+    return T_getFreePort( a:port + 1 )
+  else
+    return a:port
+  endif
+endfunc
 
 func! PyServer_start ()
   if exists('g:PyServerID') | call T_echo( 'PyServer is already running' ) | return | endif
-  " exec "new"
-  " let g:PyServerID_bufnr = bufnr()
-  let cmd = "python -m http.server 8012"
+  let port = T_getFreePort( 8012 )
+  let cmd = "python -m http.server " . port
   let dir = getcwd( winnr() ) . "/scratch/schemaView_voyager" 
-  " let g:PyServerID = termopen( cmd, { 'cwd': dir } )
-  let g:PyServerID = jobstart( cmd, { 'cwd': dir } )
-  " silent wincmd c
+  let g:PyServerID = jobstart( cmd, { 'cwd': dir, 'on_stderr': function('T_ServerErrorCallback'), } )
+  return port
 endfunc
 
 func! PyServer_stop ()
-  " if !exists('g:PyServerID') | call T_echo( 'PyServer is not running' ) | return | endif
   if !exists('g:PyServerID') | return | endif
   call jobstop( g:PyServerID )
   unlet g:PyServerID
-  " unlet g:PyServerID_bufnr
-  " echo 'PyServerID stopped'
 endfunc
 
 
