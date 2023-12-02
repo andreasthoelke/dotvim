@@ -393,7 +393,21 @@ endfunc
 func! T_ServerProps()
   return systemlist( T_TesterTerminalCommand( 'ServerProps' ) )
 endfunc
-" echo T_ServerName()
+" echo T_ServerProps()
+
+" This should be faster than the above
+func! T_EnvProps()
+  let fname = getcwd( winnr() ) . "/.env"
+  let envLines = readfile( fname ) 
+  let envLines = functional#map( { line -> split( line, '=' ) }, envLines )
+  let dictionary = {}
+  for line in envLines
+    let dictionary[ line[0] ] = substitute( line[1], '"', '', 'g' )
+  endfor
+  return dictionary
+endfunc
+" echo T_EnvProps()
+" echo T_EnvProps()
 
 func! T_Giql_open()
   call LaunchChromium( T_ServerGiql_url() )
@@ -405,15 +419,26 @@ func! T_ServerShowTerm()
   exec( cmd )
 endfunc
 
+" test_gql_port=4040
+" test_gql_servername="Apollo"
+" test_gql_inspect_domain="localhost"
+" test_gql_inspect_port=4040
+" test_gql_inspect_apipath="graphql"
 
 func! T_ServerGiql_url()
-  let [serverName, port] = T_ServerProps()
+  let env = T_EnvProps()
+  return "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
+endfunc
+
+
+func! T_ServerGiql_url_bak()
+  let [serverName, port, inspect_domain, inspect_port, inspect_apipath] = T_ServerProps()
   if serverName == 'Express'
     return 'http://localhost:' . port . '/graphql'
   elseif serverName == 'Yoga'
     return 'http://localhost:' . port . '/graphiql'
   elseif serverName == 'Apollo'
-    return 'http://localhost:' . port . '/graphiql'
+    return 'http://localhost:' . port . '/graphql'
   else
     echoe "ServerName " . serverName . " not found"
   endif
@@ -687,8 +712,9 @@ endfunc
 func! T_Voyager_open ()
   call PyServer_stop()
   call PyServer_start()
-  " if !exists('g:PyServerID') | call PyServer_start() | endif
-  call LaunchChromium( 'http://localhost:8012' )
+  let env = T_EnvProps()
+  let apiUrl = "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
+  call LaunchChromium( 'http://localhost:8012?apiUrl=' . apiUrl )
 endfunc
 
 
