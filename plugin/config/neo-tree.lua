@@ -67,6 +67,30 @@ local function close_cur_window( state, winid )
   if winid == Ntree_rightOpen[tabid] then Ntree_rightOpen[tabid] = nil end
 end
 
+
+function _G.Ntree_winIds( tabid )
+  return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
+    :map( function(winid)
+      return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
+    end)
+    :filter( function(win)
+      local filetype = vim.api.nvim_buf_get_option( win.bid, 'filetype' )
+      return filetype == 'neo-tree'
+    end)
+    :map( function(win) return win.wid end )
+    :totable()
+end
+
+-- Ntree_winIds( vim.api.nvim_get_current_tabpage() )
+-- vim.fn.win_getid()
+-- vim.fn.winnr()
+-- vim.fn.win_id2tabwin( 1008 )
+
+-- { { "", "tree2", "" }, { "tree1", "" }, { "" } }
+-- { { {}, {}, { 1045 }, {}, {} }, { { 1023 }, {}, {} }, { {} } }
+-- vim.api.nvim_list_tabpages()
+
+
 function _G.Ntree_currentNode( state )
   state = state ~= nil and state or manager.get_state_for_window()
   return {
@@ -75,6 +99,20 @@ function _G.Ntree_currentNode( state )
   }
 end
 -- lua putt( Ntree_currentNode() )
+
+function _G.Ntree_getPathWhenOpen()
+  local winIds = Ntree_winIds( vim.api.nvim_get_current_tabpage() )
+  if #winIds == 0 then return end
+  local winId = winIds[1]
+  local state = manager.get_state_for_window( winId )
+  if state == nil then return end
+  return {
+    rootpath = state.path,
+    linepath = state.position.node_id
+  }
+end
+-- lua putt( Ntree_getPathWhenOpen() )
+
 
 function _G.TreeRoot_infoStr( rootPath )
   local lpath = vim.split( rootPath, [[/]] )
@@ -817,6 +855,11 @@ require("neo-tree").setup({
           local node = state.tree:get_node()
           local current_path = node:get_id()
           vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
+        end,
+
+        ["gee"] = function()
+          vim.cmd 'wincmd p'
+          vim.fn.T_Menu()
         end,
 
         ["<leader>Os"] = function(state)

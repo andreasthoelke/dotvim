@@ -473,12 +473,12 @@ func! PyVimVirtualEnvExt ()
 endfunc
 
 func! LightlineScrollbar()
-  " return noscrollbar#statusline(20,' ','■')
-  " return noscrollbar#statusline(20,' ','▬')
-  return noscrollbar#statusline(20,' ','▆')
-  " return noscrollbar#statusline(20,' ','█',['▐'],['▌'])
+  if     &filetype =~# '\v(quickmenu|gitcommit)'
+    return ""
+  else
+    return noscrollbar#statusline(20,' ','▆')
+  endif
 endfunc
-" %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
 
 func! LightlineTagbar()
   return tagbar#currenttag('%s', '')

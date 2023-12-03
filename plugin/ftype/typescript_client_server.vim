@@ -6,21 +6,27 @@
 " Notes/planning: ~/.config/nvim/notes/TestServer-TestClient.md
 " old planning for testserver: ~/Documents/Notes/2022/TestServer-TestClient.md
 
+" let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
+let g:testServerDefaultFiles = '~/Documents/Proj/g_ts_gql/b_pothos/scratch/snapshot_initial2'
+
+func! T_Menu()
+  call UserChoiceAction( ' ', {}, T_MenuCommands(), function('TestServerCmd'), [] )
+endfunc
 
 func! T_MenuCommands()
-  let testServerCmds =  [ {'section': 'Set import identifier'} ]
+  let testServerCmds =  [ {'section': 'Identifiers'} ]
   " nnoremap <silent> gsi :call T_DoSetImport()<cr>
   let testServerCmds += [ {'label': '_W set import',   'cmd': 'call T_DoSetImport()' } ]
   " nnoremap <silent> gwi :call T_DoSetPrinterIdentif()<cr>
   let testServerCmds += [ {'label': '_P set printer identif',   'cmd':'call T_DoSetPrinterIdentif()' } ]
+  let testServerCmds = T_CurrentIdentif_report_withLinks( testServerCmds )
 
-  let testServerCmds +=  [ {'section':'Server refresh'} ]
+  let testServerCmds +=  [ {'section':'Fetch'} ]
   " nnoremap <silent> gsR :call T_ServerRefresh()<cr>:call T_Refetch('Client')<cr>
   let testServerCmds += [ {'label': '_Refresh + client refetch',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'call T_Refetch("Client")' } ]
   " nnoremap <silent> gsr :call T_ServerRefresh()<cr>:echo 'Refeshed server'<cr>
   let testServerCmds += [ {'label': '_T Just server refresh',   'cmd': 'call T_ServerRefresh()', 'cmd2': 'echo "Refreshed server"' } ]
 
-  let testServerCmds +=  [ {'section': 'Refetching'} ]
   " nnoremap <silent> ger :call T_Refetch('Client')<cr>
   let testServerCmds += [ {'label': '_F Client',   'cmd': 'call T_Refetch("Client")' } ]
   " nnoremap <silent> gdr :call T_Refetch('GqlExec')<cr>
@@ -43,28 +49,30 @@ func! T_MenuCommands()
   " nnoremap <silent> <leader>gsS :call T_ServerStop()<cr>:echo 'Server stopped'<cr>
   let testServerCmds += [ {'label': '_H Server stop',   'cmd': 'call T_ServerStop()', 'cmd2': 'echom "Server stopped"' } ]
 
-  let testServerCmds +=  [ {'section': 'Snapshots'} ]
-  let testServerCmds += [ {'label': '_Make / Create',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
-  let snapshotName = T_GetSnapshotNameFromDirvishFolder()
-  if len( snapshotName )
-    let testServerCmds += [ {'label': '_Y Reactivate '. snapshotName ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
-  endif
 
   let testServerCmds +=  [ {'section': 'Project [' . (T_IsInitialized() ? '↑]' : '↓]')} ]
   if !T_IsInitialized()
     let snapshotName = T_GetSnapshotNameFromFolderPath( g:testServerDefaultFiles )
     let testServerCmds += [ {'label': '_M Initialize from '. snapshotName ,   'cmd': 'call T_InitTesterFiles()' } ]
+  else
+    let testServerCmds += [ {'label': '_N Install packages',   'cmd': 'call T_InitInstallPackages()' } ]
+    let testServerCmds += [ {'label': '_Make snapshot',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
   endif
-  let testServerCmds += [ {'label': '_N Install packages',   'cmd': 'call T_InitInstallPackages()' } ]
+  let snapshotName = T_GetSnapshotNameFromFolder()
+  if len( snapshotName )
+    " let testServerCmds += [ {'label': '_Y Load: ['. snapshotName . ']' ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
+    let testServerCmds += [ {'label': '_Y Load: ['. snapshotName . ']' ,   'cmd': 'call T_ReactivateSnapshot()' } ]
+  endif
 
-  let testServerCmds = T_CurrentIdentif_report_withLinks( testServerCmds )
   return testServerCmds
 endfunc
 
 
-func! T_GetSnapshotNameFromDirvishFolder()
-  if &ft != 'dirvish' | return '' | endif
-  return T_GetSnapshotNameFromFolderPath( getline('.')[:-2] )
+func! T_GetSnapshotNameFromFolder()
+  let treeProps = v:lua.Ntree_getPathWhenOpen()
+  if !type( treeProps ) == type( {} ) | return '' | endif
+  let lastPathComponent = fnamemodify( treeProps.linepath, ':t' )
+  return matchstr( lastPathComponent, 'snapshot_\zs.*' )
 endfunc
 
 func! T_GetSnapshotNameFromFolderPath( path )
@@ -473,11 +481,12 @@ let g:T_ServerCallbacks = {
 
 
 func! T_RunJob( cmd, mode )
+  let dir = getcwd( winnr() ) 
   if a:mode == 'background'
-    let g:T_JobID = jobstart( a:cmd, g:T_ServerCallbacks )
+    let g:T_JobID = jobstart( a:cmd, { 'cwd': dir, 'on_stderr': function('T_ServerErrorCallback'), } )
   elseif a:mode == 'visible'
     exec "10new"
-    let g:T_JobID = termopen( a:cmd, g:T_ServerCallbacks )
+    let g:T_JobID = termopen( a:cmd, { 'cwd': dir, 'on_stderr': function('T_ServerErrorCallback'), } )
   endif
 endfunc
 " call T_RunJob( 'ls', 'visible' )
@@ -551,7 +560,7 @@ endfunc
 func! T_CurrentIdentif_report_withLinks( list_menuConf )
   if !T_IsInitialized() | return a:list_menuConf | endif
   let resConf = a:list_menuConf
-  let resConf +=  [ {'section': 'Active identifiers'} ]
+  " let resConf +=  [ {'section': 'Active identifiers'} ]
   let cmd = "call T_HighlightIdentifs()"
   let resConf +=  [ {'label': '_L Highlight Identifs', 'cmd': cmd} ]
 
@@ -574,6 +583,10 @@ endfunc
 func! T_ShowIdentif( path, identif )
   let lineStart = "export const " . a:identif 
   exec( 'edit ' . a:path )
+  " echom a:path
+  let absPath = fnamemodify( a:path, ':p' )
+  let cmd = "call v:lua.Ntree_revealFile('" . absPath . "')"
+  call T_DelayedCmd( cmd, 400 )
   call search( lineStart, 'cw' )
   normal! zz
   let [_persistKey, label] = T_IdentifNameToPeristKey( a:identif )
@@ -596,25 +609,30 @@ func! T_HighlightIdentifs()
   endfor
 endfunc
 
+" echo fnamemodify( "src/simple-interfaces-example/schema.ts", ':p' )
+" call v:lua.Ntree_revealFile( fnamemodify( "src/simple-interfaces-example/schema.ts" , ':p' ) )
+
+
+" ─   Initialization                                    ──
 
 func! T_IsInitialized()
   return filereadable( T_TesterFilePath( 'GqlExec' ) )
 endfunc
 
-let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
-
 func! T_InitTesterFiles()
   let targetFolder = getcwd( winnr() ) . '/scratch'
   if !isdirectory( targetFolder ) | call mkdir( targetFolder, 'p' ) | endif
-  call T_CopyFileNamesToFolder( g:TesterFileNamesAll, g:testServerDefaultFiles, targetFolder )
-
+  call T_CopyFileNamesToFolder( g:TesterFileNamesAll + ['schemaView_voyager'], g:testServerDefaultFiles, targetFolder )
   call T_InitEnvFile()
 endfunc
 
 func! T_InitEnvFile()
   let path = getcwd( winnr() ) . '/.env'
-  call T_AppendEchoLineToFile( 'TESTPORT=4040', path )
-  call T_AppendEchoLineToFile( 'TESTSERVERNAME="Apollo"', path )
+  call T_AppendEchoLineToFile( 'test_gql_port=4040', path )
+  call T_AppendEchoLineToFile( 'test_gql_servername="Express"', path )
+  call T_AppendEchoLineToFile( 'test_gql_inspect_domain="localhost"', path )
+  call T_AppendEchoLineToFile( 'test_gql_inspect_port=4040', path )
+  call T_AppendEchoLineToFile( 'test_gql_inspect_apipath="graphql"', path )
 endfunc
 
 func! T_AppendEchoLineToFile( line, path )
@@ -640,10 +658,13 @@ func! T_GetPackageInstallCmdOfCurrentProject()
   if filereadable( path ) | return 'yarn add -D' . ws | endif
   let path = getcwd( winnr() ) . '/package.json'
   if !filereadable( path ) | echoe 'Not an npm project!' | return | endif
-  return 'npm install --dev'
+  " return 'npm install --dev'
+  " return 'yarn add -D'
+  return 'pnpm add -D'
 endfunc
 
 " NOTE: Might stop at or destroy existing files! Copy might fail silently.
+" copies files and folder (using cp -r )
 func! T_CopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPath )
   let testFilePath = a:targetFolderPath . '/' . a:listOfFileNames[0]
   if filereadable( testFilePath )
@@ -651,7 +672,7 @@ func! T_CopyFileNamesToFolder( listOfFileNames, sourceFolderPath, targetFolderPa
     return
   endif
   if !isdirectory( a:targetFolderPath ) | call mkdir( a:targetFolderPath, 'p' ) | endif
-  let commands = functional#map( { fname -> 'cp ' . a:sourceFolderPath . '/' . fname . ' ' . a:targetFolderPath . '/' . fname }, a:listOfFileNames )
+  let commands = functional#map( { fname -> 'cp -r ' . a:sourceFolderPath . '/' . fname . ' ' . a:targetFolderPath . '/' . fname }, a:listOfFileNames )
   " echo commands
   call RunListOfCommands( commands )
 endfunc
@@ -684,14 +705,21 @@ endfunc
 
 command! TestServerReactivateSnapshot call T_ReactivateSnapshot( getline('.') )
 
-func! T_ReactivateSnapshot( snapshotFolder )
+func! T_ReactivateSnapshot()
+  let snapshotFolder = v:lua.Ntree_getPathWhenOpen().linepath
+  if !len( snapshotFolder ) || !isdirectory( snapshotFolder )
+    echo "Neo tree is not on a snapshot folder"
+    return
+  endif
   " auto backup the current files
   " call T_SnapshotTesterFiles( 'backup' )
   let targetFolder = getcwd( winnr() ) . '/scratch'
   " Overwrite the current tester files!
-  call T_ForceCopyFileNamesToFolder( g:TesterFileNamesAll, a:snapshotFolder, targetFolder )
+  call T_ForceCopyFileNamesToFolder( g:TesterFileNamesAll, snapshotFolder, targetFolder )
 endfunc
 
+
+" ─   Voyager                                           ──
 
 func! T_Voyager_open ()
   call PyServer_stop()
@@ -716,6 +744,7 @@ func! PyServer_start ()
   let port = T_getFreePort( 8012 )
   let cmd = "python -m http.server " . port
   let dir = getcwd( winnr() ) . "/scratch/schemaView_voyager" 
+  if !isdirectory( dir ) | call echo ("Missing: " . dir) | return | endif
   let g:PyServerID = jobstart( cmd, { 'cwd': dir, 'on_stderr': function('T_ServerErrorCallback'), } )
   return port
 endfunc

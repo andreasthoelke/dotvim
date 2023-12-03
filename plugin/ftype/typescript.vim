@@ -1,9 +1,11 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
+
+" nnoremap <silent> gee :call UserChoiceAction( ' ', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
+nnoremap <silent> gee :call T_Menu()<cr>
+
+
 func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
-
-
-  nnoremap <silent><buffer> gee :call UserChoiceAction( ' ', {}, T_MenuCommands(), function('TestServerCmd'), [] )<cr>
 
   nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>

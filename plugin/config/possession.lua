@@ -22,28 +22,6 @@ local fs = require("neo-tree.sources.filesystem")
 -- ─   Helpers                                           ■
 
 
-function _G.Ntree_winIds( tabid )
-  return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
-    :map( function(winid)
-      return { wid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
-    end)
-    :filter( function(win)
-      local filetype = vim.api.nvim_buf_get_option( win.bid, 'filetype' )
-      return filetype == 'neo-tree'
-    end)
-    :map( function(win) return win.wid end )
-    :totable()
-end
-
--- Ntree_winIds( vim.api.nvim_get_current_tabpage() )
--- vim.fn.win_getid()
--- vim.fn.winnr()
--- vim.fn.win_id2tabwin( 1008 )
-
--- { { "", "tree2", "" }, { "tree1", "" }, { "" } }
--- { { {}, {}, { 1045 }, {}, {} }, { { 1023 }, {}, {} }, { {} } }
--- vim.api.nvim_list_tabpages()
-
 
 function _G.Ntree_get_session_state()
   return vim.iter( vim.api.nvim_list_tabpages() )

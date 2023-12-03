@@ -129,7 +129,12 @@ function custom_ftype:apply_icon()
     self.status = self.status .. ' ' .. icon
   else
     -- NOTE apply_icon is a literal copy, I only changed to show the filename instead of the extension (which resided in self.status)
-    self.status = icon .. ' ' .. vim.fn.expand('%:t:r')
+    local fname = vim.fn.expand('%:t:r')
+    if fname == "[quickmenu]" then
+      self.status = ""
+    else
+      self.status = icon .. ' ' .. fname
+    end
   end
 end
 
@@ -240,69 +245,6 @@ local lualine_config = {
 -- ─   Tabline                                           ■
 
   tabline = {},
-  -- tabline = {
-
-  --   lualine_a = {
-  --     {
-  --       'tabs',
-  --       mode = 1,
-  --       icons_enabled = true, -- Enables the display of icons alongside the component.
-  --       max_length = vim.o.columns, -- Maximum width of tabs component.
-
-  --       colored = true,   -- Displays filetype icon in color if set to true
-  --       icon_only = true, -- Display only an icon for filetype
-  --       icon = {
-  --         use_default = true,
-  --         align = 'right',
-  --       }, -- Display filetype icon on the right hand side
-
-  --       tabs_color = {
-  --         active   = 'LuLine_Tabs_ac',
-  --         inactive = 'LuLine_Tabs_in',
-  --         -- NOTE i could highlight inactive depending on e.g. their type?
-  --         -- active   = Tabs_active,
-  --         -- inactive = Tabs_inactive,
-  --       },
-
-  --       -- fmt = function(filename, context)
-  --       --   -- Show + if buffer is modified in tab
-  --       --   -- local buflist = vim.fn.tabpagebuflist(context.tabnr)
-  --       --   -- local winnr = vim.fn.tabpagewinnr(context.tabnr)
-  --       --   -- local bufnr = buflist[winnr]
-  --       --   -- local mod = vim.fn.getbufvar(bufnr, '&mod')
-  --       --   local name, ext = table.unpack( vim.fn.split( filename, [[\.]] ) )
-  --       --   local icon = require("nvim-web-devicons").get_icon_by_filetype( ext )
-  --       --   -- return name .. " " .. icon
-  --       --   return (icon or "") .. " " .. name
-  --       -- end,
-
-  --       fmt = function (fname, context) return _G.tabs_formatting_withIcon(fname, context) end,
-
-  --     }
-  --   },
-
-  --   -- lualine_a = {
-  --   --   {
-  --   --     'tabs',
-  --   --     max_length = vim.o.columns,
-  --   --     mode = 2,
-  --   --     icons_enabled = true,
-  --   --     modification_icons_enabled = true,
-  --   --     icon = {
-  --   --       align = 'right',
-  --   --       use_default = true
-  --   --     },
-  --   --   }
-  --   -- },
-
-  --   lualine_c = {},
-  --   lualine_b = {},
-  --   lualine_x = {},
-  --   lualine_y = { "lsp_progress", "g:metals_status" },
-  --   -- lualine_z = { function () return _G.WeatherStatus end },
-  --   lualine_z = {},
-  --   -- lualine_z = {}
-  -- },
 
 
 -- ─^  Tabline                                           ▲
