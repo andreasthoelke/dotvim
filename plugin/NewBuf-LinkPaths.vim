@@ -85,6 +85,7 @@ func! ClipBoard_LinkPath_linesearch( shorten )
   endif
 endfunc
 " ClipBoard_LinkPath_linesearch( 'shorten' )
+" echo ClipBoard_LinkPath_linesearch( 'full' )
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
@@ -161,8 +162,9 @@ endfunc
 " abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
 
 let g:LineSearch_ScalaSkipWords = "sealed|inline|private|given|final|trait|override|def|abstract|type|val|lazy|case|enum|final|object|class"
+let g:LineSearch_TsSkipWords = "export|const"
 let g:LineSearch_VimSkipWords = ['let', '\"', '--', 'if', 'func', 'func!']
-let g:LineSearch_SkipWords_ptn = '\v^(' . g:LineSearch_VimSkipWords->join('|') . '|' . g:LineSearch_ScalaSkipWords . ')$'
+let g:LineSearch_SkipWords_ptn = '\v^(' . g:LineSearch_VimSkipWords->join('|') . '|' . g:LineSearch_ScalaSkipWords . '|' . g:LineSearch_TsSkipWords . ')$'
 
 func! LineSearchStr_skipLeadingKeywords( sourceStr )
   " strip leading whitespace to save space in link text. (therefore searching for this key can not start at the beginning of the line.
@@ -182,6 +184,7 @@ endfunc
 " ['let', 'func!', 'inline', 'def', 'de', 'ee']->functional#findP( {x-> x !~# g:LineSearch_SkipWords_ptn} )
 " func! abcompletelabel( currentCompl )
 " LineSearchStr_skipLeadingKeywords( getline( line('.')-1 ) )
+" echo LineSearchStr_skipLeadingKeywords( getline( line('.') ) )
 " LineSearchStr_skipLeadingKeywords( getline( 47 ) )
 " LineSearchStr_skipLeadingKeywords( getline( 29 ) )
 " -1 ? 'y' : 'n'

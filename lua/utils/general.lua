@@ -27,6 +27,10 @@ end
 
 function _G.PrintMessages( cnt )
   local hist = require 'notify'.history()
+  if #hist == 0 then
+    print( "No messages to show!" )
+    return
+  end
   local recentHist = vim.list_slice( hist, #hist - cnt, #hist )
   local msgsFlat = vim.tbl_flatten( vim.tbl_map( function(el) return el.message end , recentHist ) )
   -- local reversedList = vim.fn.reverse( msgsFlat )
@@ -39,7 +43,7 @@ function _G.PrintMessages( cnt )
   vim.cmd( 'wincmd p' )
 end
 -- PrintMessages()
-
+-- require 'notify'.history()
 -- vim.wo.wrap = true
 
 function _G.LuaModuleName()
@@ -450,6 +454,7 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
   Telesc_launch( 'live_grep', {
     initial_mode = initCursorMode or "insert",
     default_text = pattern,
+    -- additional_args = function(_opts) return {"--hidden"} end,
     search_dirs = paths,
   } )
 
@@ -458,12 +463,18 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
   --   default_text = pattern,
   --   search_dirs = paths,
   -- })
-
 end
+
 -- TODO: not working on this file: ~/.local/share/nvim/sessions/__Users__at__.config__nvim‖
 
 -- Telesc_launch( 'live_grep', { default_text = 'hi' } )
 
+function _G.Search_selection()
+  Telesc_launch( 'grep_string', {
+    initial_mode = 'normal',
+    word_match = "-w",
+  } )
+end
 
 function _G.Search_ast( pattern )
   require 'telescope'.extensions.ast_grep.ast_grep( Telesc_dynPosOpts_ext( {

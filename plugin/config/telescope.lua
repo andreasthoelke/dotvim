@@ -480,7 +480,7 @@ Telesc = require('telescope').setup{
     hidden = true,  -- ISSUE: this doesn't have an effect. to show files like .gitignore use nnoremap <silent> go <cmd>Telescope find_files hidden=true<cr>
     file_ignore_patterns = {
             '^.git/', '^node%_modules/', '^.npm/', 'dev.js', '%[Cc]ache/', '%-cache',
-            '^scala-doc/',
+            '^scala-doc/', 'pnpm-lock.yaml',
     --         '%.py[co]', '%.sw?', '%~', '%.a', "%.npz", "^.vscode",
             '%.tags', 'tags', '%.gemtags',
             -- '%.csv', '%.tsv', '%.tmp',

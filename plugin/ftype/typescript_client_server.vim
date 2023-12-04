@@ -7,7 +7,7 @@
 " old planning for testserver: ~/Documents/Notes/2022/TestServer-TestClient.md
 
 " let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
-let g:testServerDefaultFiles = '~/Documents/Proj/g_ts_gql/b_pothos/scratch/snapshot_initial2'
+let g:testServerDefaultFiles = '~/Documents/Proj/_templates/ts_client_server'
 
 func! T_Menu()
   call UserChoiceAction( ' ', {}, T_MenuCommands(), function('TestServerCmd'), [] )
@@ -629,7 +629,7 @@ endfunc
 func! T_InitEnvFile()
   let path = getcwd( winnr() ) . '/.env'
   call T_AppendEchoLineToFile( 'test_gql_port=4040', path )
-  call T_AppendEchoLineToFile( 'test_gql_servername="Express"', path )
+  call T_AppendEchoLineToFile( 'test_gql_servername="Apollo"', path )
   call T_AppendEchoLineToFile( 'test_gql_inspect_domain="localhost"', path )
   call T_AppendEchoLineToFile( 'test_gql_inspect_port=4040', path )
   call T_AppendEchoLineToFile( 'test_gql_inspect_apipath="graphql"', path )
@@ -644,6 +644,11 @@ func! T_InitInstallPackages()
   let path = getcwd( winnr() ) . '/scratch/.testServer_packages'
   if !filereadable( path ) | echoe 'Missing: ' . path | return | endif
   let packages = readfile( path, '\n' )
+  let path = getcwd( winnr() ) . '/package.json'
+  if !filereadable( path ) 
+    echo 'Not an npm project!' 
+    echo system( 'pnpm init' )
+  endif
   let cmd = T_GetPackageInstallCmdOfCurrentProject() . ' ' . join( packages )
   call T_RunJob( cmd, 'visible' )
 endfunc
@@ -656,8 +661,6 @@ func! T_GetPackageInstallCmdOfCurrentProject()
   if filereadable( path ) | return 'pnpm add -D' . ws | endif
   let path = getcwd( winnr() ) . '/yarn.lock'
   if filereadable( path ) | return 'yarn add -D' . ws | endif
-  let path = getcwd( winnr() ) . '/package.json'
-  if !filereadable( path ) | echoe 'Not an npm project!' | return | endif
   " return 'npm install --dev'
   " return 'yarn add -D'
   return 'pnpm add -D'

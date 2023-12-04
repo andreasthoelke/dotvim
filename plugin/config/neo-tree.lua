@@ -159,7 +159,7 @@ end
 
 -- Opens a new tree.
 function _G.Ntree_launch( focus_path, root_path )
-  if not utils.is_subpath(root_path, focus_path) then
+  if (not utils.is_subpath(root_path, focus_path)) or (vim.fn.filereadable(focus_path) == 0) then
     tree_exec({
       position = "current",
       dir = root_path,
@@ -173,6 +173,9 @@ function _G.Ntree_launch( focus_path, root_path )
     })
   end
 end
+
+-- Ntree_launch( "/Users/at/Documents/Proj/g_ts_gql/f_ts_scala/scratch/.testServer.ts", vim.fn.getcwd(-1)  )
+-- vim.fn.filereadable( "/Users/at/Documents/Proj/g_ts_gql/f_ts_scala/scratch/.testServer.ts" )
 
 
 -- to delete ■
@@ -230,7 +233,8 @@ end
 
 function _G.Ntree_launch_inWin( state, view, winId )
   fs._navigate_internal(state, view.root_path, view.focus_path, nil, false)
-  -- _navigate_internal(state, path, path_to_reveal, callback, async)
+  -- set the filetype to neo-tree
+  vim.api.nvim_buf_set_option(state.bufnr, "filetype", "neo-tree")
 end
 
 

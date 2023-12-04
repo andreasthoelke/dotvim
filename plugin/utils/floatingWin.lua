@@ -72,7 +72,8 @@ end
 
 function _G.Float_dynAnchorWidth()
   local neovim_full_client_width = vim.api.nvim_get_option('columns')
-  local widthDefault = neovim_full_client_width / 2 - 4
+  local widthDefault = (neovim_full_client_width / 2) - 4
+  widthDefault = math.floor( widthDefault )
   local anchorDefault = 'E'
   -- if vim.g['Goyo_active'] == 1 or vim.fn.winwidth(1) < 40 then
   if vim.g['Goyo_active'] == 1 then

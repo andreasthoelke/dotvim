@@ -57,7 +57,10 @@ func! Scala_bufferMaps_shared()
   nnoremap <silent><buffer> gsf  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
   nnoremap <silent><buffer> gsg  :call v:lua.Telesc_launch('live_grep')<cr>
 
-  nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
+  " nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
+  " xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
+
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_selection()<cr>
   xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
 
   nnoremap <silent><buffer> gst  :call v:lua.Search_ast( expand('<cword>') )<cr>
