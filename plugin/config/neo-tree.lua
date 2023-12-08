@@ -235,6 +235,11 @@ function _G.Ntree_launch_inWin( state, view, winId )
   fs._navigate_internal(state, view.root_path, view.focus_path, nil, false)
   -- set the filetype to neo-tree
   vim.api.nvim_buf_set_option(state.bufnr, "filetype", "neo-tree")
+  -- sloppy way to recreate winfixedwidth only on ~/.config/nvim/plugin/config/neo-tree.lua‖/functionˍ_G.Ntree_openLeft
+  if vim.api.nvim_win_get_width( winId ) == 29 then
+    -- set winfixwidth
+    vim.api.nvim_win_set_option(winId, "winfixwidth", true)
+  end
 end
 
 

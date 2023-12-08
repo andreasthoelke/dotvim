@@ -1,10 +1,9 @@
 
-
-require("noice").setup({
+local noice_config = {
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
-      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      -- ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       ["vim.lsp.util.stylize_markdown"] = true,
       ["cmp.entry.get_documentation"] = true,
     },
@@ -27,8 +26,17 @@ require("noice").setup({
       opts = { skip = true },
     },
   },
-})
+}
 
+require("noice").setup( noice_config )
+
+function _G.Lsp_MD_docs()
+  vim.lsp.util.convert_input_to_markdown_lines = true
+  vim.lsp.util.stylize_markdown = true
+  cmp.entry.get_documentation = true
+end
+
+-- Lsp_MD_docs()
 
 
 require("notify").setup(

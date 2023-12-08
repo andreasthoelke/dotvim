@@ -308,6 +308,11 @@ func! StopChromium()
 endfunc
 " call StopChromium()
 
+func! LaunchChromium_addWin( url )
+  call jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+endfunc
+
+
 
 command! -nargs=1 C call LaunchChromium2(<q-args>)
 " C 'https://tailwindcss.com/course/setting-up-tailwind-and-postcss'

@@ -340,6 +340,7 @@ func! NewBuf_fromScratchBuffer( direction )
     " if IsInFloatWin() | wincmd c | endif
     exec cmd
   endif
+  exec "set filetype=markdown" 
 endfunc
 
 func! NewBuf_fromStartifyBuffer( direction )

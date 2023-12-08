@@ -7,7 +7,8 @@
 " old planning for testserver: ~/Documents/Notes/2022/TestServer-TestClient.md
 
 " let g:testServerDefaultFiles = '/Users/at/Documents/Proj/g_ts_gql/b_pothos_repo/scratch/snapshot_sdl1/'
-let g:testServerDefaultFiles = '~/Documents/Proj/_templates/ts_client_server'
+" let g:testServerDefaultFiles = '~/Documents/Proj/_templates/ts_client_server'
+let g:testServerDefaultFiles = '~/Documents/Proj/g_edb_gql/scratch'
 
 func! T_Menu()
   call UserChoiceAction( ' ', {}, T_MenuCommands(), function('TestServerCmd'), [] )
@@ -70,7 +71,7 @@ endfunc
 
 func! T_GetSnapshotNameFromFolder()
   let treeProps = v:lua.Ntree_getPathWhenOpen()
-  if !type( treeProps ) == type( {} ) | return '' | endif
+  if !(type( treeProps ) == type( {} )) | return '' | endif
   let lastPathComponent = fnamemodify( treeProps.linepath, ':t' )
   return matchstr( lastPathComponent, 'snapshot_\zs.*' )
 endfunc
@@ -117,7 +118,7 @@ endfunc
 
 
 " ─   Set import variables                               ■
-" Set the imports of scratch/.testServer.ts, testClient.ts and testPrinter.ts
+" Set the imports of scratch/rServer.ts, testClient.ts and testPrinter.ts
 
 " Set an exported identifier as a specific import variable in the testServer.ts file
 func! T_DoSetImport()
@@ -315,17 +316,16 @@ func! T_ReadTesterFileLines( testerName )
 endfunc
 
 func! T_TesterFilePath( testerName )
-  let TesterPath = getcwd( winnr() ) . '/scratch/.test' . a:testerName . '.ts'
-  " call T_EnsureTesterModuleFile( TesterPath, a:testerName )
+  let TesterPath = getcwd( winnr() ) . '/scratch/r' . a:testerName . '.ts'
   return TesterPath
 endfunc
 
 
-let g:TesterFileNamesAll = ['.testClient.ts' , '.testGqlExec.ts' , '.testPrinter.ts' , '.testServer.ts' , '.testsDefault.ts', '.testServer_currentIdentif', '.testServer_packages']
+let g:TesterFileNamesAll = ['rClient.ts' , 'rGqlExec.ts' , 'rPrinter.ts' , 'rServer.ts' , 'rsDefault.ts', 'rServer_currentIdentif', 'rServer_packages']
 let g:TesterNamesAll =          ['Client' , 'GqlExec' , 'Printer' , 'Server' , 'sDefault']
 
 
-" This should generally be empty so just StartServer() is called. Then .testServer.ts uses process.env.SERVERNAME to e.g. call StartServerYoga()
+" This should generally be empty so just StartServer() is called. Then testServer.ts uses process.env.SERVERNAME to e.g. call StartServerYoga()
 let g:T_ServerName = ''
 " let g:T_ServerName = 'Express'
 
@@ -410,6 +410,7 @@ func! T_EnvProps()
   let envLines = functional#map( { line -> split( line, '=' ) }, envLines )
   let dictionary = {}
   for line in envLines
+    if !len(line) || line[0][0] == '#' | continue | endif
     let dictionary[ line[0] ] = substitute( line[1], '"', '', 'g' )
   endfor
   return dictionary
@@ -418,7 +419,7 @@ endfunc
 " echo T_EnvProps()
 
 func! T_Giql_open()
-  call LaunchChromium( T_ServerGiql_url() )
+  call LaunchChromium_addWin( T_ServerGiql_url() )
 endfunc
 
 func! T_ServerShowTerm()
@@ -427,15 +428,11 @@ func! T_ServerShowTerm()
   exec( cmd )
 endfunc
 
-" test_gql_port=4040
-" test_gql_servername="Apollo"
-" test_gql_inspect_domain="localhost"
-" test_gql_inspect_port=4040
-" test_gql_inspect_apipath="graphql"
 
 func! T_ServerGiql_url()
   let env = T_EnvProps()
-  return "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
+  return env.r_inspect_giql
+  " return "http://" . env.r_inspect_domain . ":" . env.r_inspect_port . "/" . env.r_inspect_giqlpath
 endfunc
 
 func! T_ServerStart ()
@@ -504,25 +501,12 @@ func! T_Refetch( testerName )
 endfunc
 
 
-func! T_EnsureTesterModuleFile( TesterPath, testerName )
-  if !filereadable( a:TesterPath )
-    " There's no testServer.ts file yet in this project - copy a template
-    let dirpath = fnamemodify( a:TesterPath, ':p:h')
-    if !isdirectory( dirpath )
-      call mkdir( dirpath, 'p' )
-    endif
-    let templateFile = '~/.config/nvim/notes/templates/.test' . a:testerName . '.ts'
-    let templateFile = fnamemodify( templateFile, ':p')
-    let lines = readfile( templateFile, '\n' )
-    call writefile(lines, a:TesterPath)
-  endif
-endfunc
 
 " echo eval("[4, 5][0]")
 " echo eval("{'aa': 11, 'bb': 22}").bb
 
 func! T_CurrentIdentif()
-  let persistPath = getcwd( winnr() ) . '/scratch/.testServer_currentIdentif'
+  let persistPath = getcwd( winnr() ) . '/scratch/rServer_currentIdentif'
   if filereadable( persistPath )
     let confObj = eval( readfile( persistPath, '\n' )[0] )
   else
@@ -536,7 +520,7 @@ func! T_CurrentIdentif_update( key, identif, module )
   let confObj = T_CurrentIdentif()
   let confObj[ a:key . '_identif' ] = a:identif
   let confObj[ a:key . '_module' ] = a:module
-  let persistPath = getcwd( winnr() ) . '/scratch/.testServer_currentIdentif'
+  let persistPath = getcwd( winnr() ) . '/scratch/rServer_currentIdentif'
   call writefile( [string( confObj )], persistPath )
 endfunc
 
@@ -628,11 +612,17 @@ endfunc
 
 func! T_InitEnvFile()
   let path = getcwd( winnr() ) . '/.env'
-  call T_AppendEchoLineToFile( 'test_gql_port=4040', path )
-  call T_AppendEchoLineToFile( 'test_gql_servername="Apollo"', path )
-  call T_AppendEchoLineToFile( 'test_gql_inspect_domain="localhost"', path )
-  call T_AppendEchoLineToFile( 'test_gql_inspect_port=4040', path )
-  call T_AppendEchoLineToFile( 'test_gql_inspect_apipath="graphql"', path )
+  call T_AppendEchoLineToFile( 'r_port=4040', path )
+  call T_AppendEchoLineToFile( 'r_servername="Apollo"', path )
+
+  call T_AppendEchoLineToFile( 'r_inspect_url="http://localhost:4040/graphql"', path )
+  call T_AppendEchoLineToFile( 'r_inspect_giql="http://localhost:4040/graphiql"', path )
+
+  " call T_AppendEchoLineToFile( 'r_inspect_domain="localhost"', path )
+  " call T_AppendEchoLineToFile( 'r_inspect_port=4040', path )
+  " call T_AppendEchoLineToFile( 'r_inspect_apipath="graphql"', path )
+  " call T_AppendEchoLineToFile( 'r_inspect_giqlpath="graphiql"', path )
+
 endfunc
 
 func! T_AppendEchoLineToFile( line, path )
@@ -641,7 +631,7 @@ func! T_AppendEchoLineToFile( line, path )
 endfunc
 
 func! T_InitInstallPackages()
-  let path = getcwd( winnr() ) . '/scratch/.testServer_packages'
+  let path = getcwd( winnr() ) . '/scratch/rServer_packages'
   if !filereadable( path ) | echoe 'Missing: ' . path | return | endif
   let packages = readfile( path, '\n' )
   let path = getcwd( winnr() ) . '/package.json'
@@ -728,8 +718,8 @@ func! T_Voyager_open ()
   call PyServer_stop()
   let pyServerPort = PyServer_start()
   let env = T_EnvProps()
-  let apiUrl = "http://" . env.test_gql_inspect_domain . ":" . env.test_gql_inspect_port . "/" . env.test_gql_inspect_apipath
-  call LaunchChromium( 'http://localhost:' . pyServerPort . '?apiUrl=' . apiUrl )
+  let apiUrl = env.r_inspect_url
+  call LaunchChromium_addWin( 'http://localhost:' . pyServerPort . '?apiUrl=' . apiUrl )
 endfunc
 
 func! T_getFreePort( port )

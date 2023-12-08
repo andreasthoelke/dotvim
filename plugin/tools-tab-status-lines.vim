@@ -473,10 +473,15 @@ func! PyVimVirtualEnvExt ()
 endfunc
 
 func! LightlineScrollbar()
-  if     &filetype =~# '\v(quickmenu|gitcommit)'
-    return ""
+  let str = noscrollbar#statusline(20,' ','▆')
+  if     &filetype =~# '\v(help|quickmenu|gitcommit)'
+    return str
+  elseif &filetype == 'neo-tree'
+    return str
+  elseif !&buflisted
+    return ''
   else
-    return noscrollbar#statusline(20,' ','▆')
+    return str
   endif
 endfunc
 
