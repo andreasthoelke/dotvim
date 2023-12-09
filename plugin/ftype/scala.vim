@@ -131,9 +131,9 @@ endfunc
 func! Scala_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  let l:typeStr = v:lua.require'utils_lsp'.LspType()
+  let typeStr = v:lua.require('utils_lsp'.LspType())
   call setpos('.', [0, oLine, oCol, 0] )
-  return l:typeStr
+  return typeStr
 endfunc
 " echo Scala_LspTypeAtPos(111, 10)
 " echo Scala_LspTypeAtPos(line('.'), col('.'))
@@ -393,6 +393,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   " Default values
   let _replTag    = '"RESULT_"'
+  let _replEndTag = '""'
   let _info       = '""'
   let _infoEf     = 'ZIO.succeed( "" )'
   let _printVal   = '""'
@@ -441,8 +442,9 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     " this works. and just shows linewise objects
     " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.mkString("\n") ) )' 
     let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + pprint.apply(v, width=3) ) )' 
-
     " let _printVal = identif                                 " already an effect
+    let _replTag    = '"RES_multi_"'
+    let _replEndTag = '"_RES_multi_END"'
 
   elseif typeMode == 'QuillDSLive_coll'
     " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
@@ -461,6 +463,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   elseif typeMode == 'plain'
     " let _printVal = identif
     let _printVal = 'pprint.apply(' . identif . ', width=3 )'
+    let _replTag    = '"RES_multi_"'
+    let _replEndTag = '"_RES_multi_END"'
   endif
 
   if a:keyCmdMode == 'server'
@@ -488,6 +492,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " 21) info effect can the an empty string or any additional string with a \n at the end. note: this prepended line may also show up in a FILEVIEW
   let plns[22] = "  val info     = " . _info
   let plns[23] = "  val infoEf   = " . _infoEf
+  let plns[24] = "  val replEndTag   = " . _replEndTag
 
   call writefile( plns, printerFilePath )
 endfunc

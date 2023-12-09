@@ -143,6 +143,7 @@ func! LineSearch_makeShortUnique_orWarn( fullString )
   if idx == -1 | echo "The current line is not unique in this buffer." | endif
   return attempts[ idx ]
 endfunc
+" echo LineSearch_makeShortUnique_orWarn("elseif typeMode == 'zio_collection'" )
 " LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 " LineSearch_makeShortUnique_orWarn('LineSearch_akeSortUnique_orWarn( fulltring )' )
 " LineSearch_makeShortUnique_orWarn('-- ─       aifbbs t this other' )
@@ -154,12 +155,24 @@ func! LineSearch_isUniqueInBuf( searchChars )
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, oLine, 0, 0] )
   " let lineNum = search( '\V\' . '^' . escape(a:searchChars, '\'), 'nbw' )
-  let lineNum = search( '\V\' . escape(a:searchChars, '\'), 'nbw' )
+  " let lineNum = search( '\V\' . escape(a:searchChars, '\'), 'nbw' )
+  let esc1 = a:searchChars
+  let esc1 = substitute( a:searchChars, '=', '\\=', 'g' )
+  " let esc1 = substitute( esc1, "'", "\'", '' )
+  " let esc2 = escape( esc1, '\' )
+  let lineNum = search( '\v' . esc1, 'nbw' )
   call setpos('.', [0, oLine, oCol, 0] )
   return lineNum == 0 || lineNum == line('.')
 endfunc
+" substitute( "elseif typeMode == 'zio_collection'", '=', '\\=', 'g' )
+" echo LineSearch_isUniqueInBuf( "elseif typeMode == 'zio_collection'" )
+" echo LineSearch_isUniqueInBuf( "elseif type" )
+" echo LineSearch_isUniqueInBuf( "elxseif type" )
 " LineSearch_isUniqueInBuf( 'abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 " abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
+" echo search( '\V\' . escape('elseif typeMode', '\'), 'nbw' )
+" echo search( '\v' . escape('elseif typeMode', '\'), 'nbw' )
+" echo search( '\v' . escape('elseif typeMode \=\=', '\'), 'nbw' )
 
 let g:LineSearch_ScalaSkipWords = "sealed|inline|private|given|final|trait|override|def|abstract|type|val|lazy|case|enum|final|object|class"
 let g:LineSearch_TsSkipWords = "export|const"
