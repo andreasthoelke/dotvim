@@ -8,7 +8,7 @@ func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
-  nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>
+  " nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gef :call T_Refetch("Client")<cr>
   nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
 
@@ -45,8 +45,6 @@ func! JS_bufferMaps()
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
-
-  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>

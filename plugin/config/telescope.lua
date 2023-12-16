@@ -334,6 +334,9 @@ local NewBuf = f.curry( function( adirection, pbn )
     if adirection == 'full' then
       -- open in Chrome
       vim.fn.system( 'open -a "Google Chrome" "' .. maybeLink.url .. '"' )
+    elseif adirection == 'preview_back' then
+      -- Put url into buffer at cursor
+      vim.api.nvim_put( { maybeLink.url }, 'l', false, true )
     else
       -- open in Chrominum
       vim.fn.LaunchChromium( maybeLink.url )

@@ -84,6 +84,7 @@ func! ClipBoard_LinkPath_linesearch( shorten )
     call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )
   endif
 endfunc
+" FOR TESTING GO: ~/.config/nvim/plugin/NewBuf-LinkPaths.vim‖/NOTE:ˍthisˍ
 " ClipBoard_LinkPath_linesearch( 'shorten' )
 " echo ClipBoard_LinkPath_linesearch( 'full' )
 
@@ -157,9 +158,9 @@ func! LineSearch_isUniqueInBuf( searchChars )
   " let lineNum = search( '\V\' . '^' . escape(a:searchChars, '\'), 'nbw' )
   " let lineNum = search( '\V\' . escape(a:searchChars, '\'), 'nbw' )
   let esc1 = a:searchChars
+  " NOTE: this line. there may be other char I would like to escape like this.
   let esc1 = substitute( a:searchChars, '=', '\\=', 'g' )
-  " let esc1 = substitute( esc1, "'", "\'", '' )
-  " let esc2 = escape( esc1, '\' )
+  " let esc1 = escape( esc1, '\' )
   let lineNum = search( '\v' . esc1, 'nbw' )
   call setpos('.', [0, oLine, oCol, 0] )
   return lineNum == 0 || lineNum == line('.')

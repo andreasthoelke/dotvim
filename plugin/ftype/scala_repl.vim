@@ -82,6 +82,18 @@ endfunc
 
 " ScalaServerRepl_killJVMProcess( 'runZioServerApp' )
 
+func! ScalaServerRepl_isRunning()
+  let jvmProcesses = systemlist( 'jps' )
+  let jvmProcesses = functional#map( {line -> split( line, " " ) }, jvmProcesses )
+  let jvmProcesses = functional#filter( {line -> line[1] =~ 'runZioServerApp' }, jvmProcesses )
+  if len( jvmProcesses )
+    return v:true
+  else
+    return v:false
+  endif
+endfunc
+" ScalaServerRepl_isRunning()
+
 
 " ─^  SBT Server Process                                 ▲
 
@@ -119,7 +131,7 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     " { "[info]   value = Character(", '[info]     name = "aa",', "[info]     age = 12", "[info]   )", "[info] )_RES_multi_END", "[success] Total time: 2 s, completed 8 Dec 2023, 21:12:07", "=sbt:edb_gql> " }
     let idx = functional#findP( lines, {x-> x =~ '_RES_multi_END'} )
 
-    let lines = SubstituteInLines( lines, '\[info\]', "" )
+    let lines = SubstituteInLines( lines, '\[info\] ', "" )
     let lines = SubstituteInLines( lines, '_RES_multi_END', "" )
     let g:Repl_wait_multiline_received += lines[:idx]
     let resultVal = g:Repl_wait_multiline_received
@@ -181,7 +193,7 @@ func! ScalaReplMainCallback(_job_id, data, _event)
   " This case is now marked by a new replTab and also a replEndTag when setting the printer val.
   " It seems only the first line of this multi-line output is received in the first repl event.
   " So the code below only activates the Repl_wait_multiline mode, and records the first line.
-  " Btw I can simply add these lines to activate this mode per Lsp Type in the setPrinter map:
+  " Btw I can simply add these lines to activate this mode per Lsp Type in the setPrinter map: ~/.config/nvim/plugin/ftype/scala.vim‖/elseifˍtypeModeˍ==ˍ'z
     " let _replTag    = '"RES_multi_"'
     " let _replEndTag = '"_RES_multi_END"'
 

@@ -144,6 +144,7 @@ nnoremap <silent> ,> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
 " nmap <localleader>> <Plug>PushTextRight
 
 func! InsertStringAtLoc( str, line, col )
+  let [oLine, oCol] = getpos('.')[1:2]
   let lineText = getline( a:line )
   let textBefore = lineText[:a:col]
   let textAfter = lineText[a:col+1:]
@@ -153,11 +154,13 @@ func! InsertStringAtLoc( str, line, col )
   endif
   " echo textBefore
   " echo textAfter
+  call setpos('.', [0, a:line, oCol, 0] )
   normal! "_dd
   call append( a:line-1, textBefore . a:str . textAfter )
-  normal! k
+  call setpos('.', [0, oLine, oCol, 0] )
+  " normal! k
 endfunc
-" echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
+" InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
 " note the map in git integration
 " nnoremap <silent> ,,w :call BufferInnerBracket()<cr>
@@ -173,6 +176,27 @@ func! BufferInnerBracket()
   call setpos('.', [0, oLine, oCol, 0] )
   normal! lh
 endfunc
+
+
+func! BreakLineAtLoc( indentStr, line, col )
+  let [oLine, oCol] = getpos('.')[1:2]
+  let lineText = getline( a:line )
+  let textBefore = lineText[:a:col]
+  let textAfter = lineText[a:col+1:]
+  if a:col == -1
+    " quick fix for cursor position 1
+    let textBefore = ""
+  endif
+  call setpos('.', [0, a:line, oCol, 0] )
+  normal! "_dd
+  call append( a:line-1, textBefore )
+  call append( a:line, a:indentStr . textAfter )
+  call setpos('.', [0, oLine, oCol, 0] )
+  " normal! k
+endfunc
+
+" BreakLineAtLoc( line('.'), col('.')-2 )
+
 
 nnoremap <silent> cis :call SignatureRemovePrep()<cr>hi
 nnoremap <silent> das :call SignatureRemovePrep()<cr>:undojoin<cr>hhh2xl

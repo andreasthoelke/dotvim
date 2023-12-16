@@ -1,5 +1,37 @@
 " Note: Buffer maps init: ~/.config/nvim/plugin/HsSyntaxAdditions.vim#/func.%20JsSyntaxAdditions..
 
+nnoremap <silent> ges :call S_Menu()<cr>
+
+
+func! S_Menu()
+  call UserChoiceAction( ' ', {}, S_MenuCommands(), function('TestServerCmd'), [] )
+endfunc
+
+func! S_MenuCommands()
+  let cmds =  [ {'section': 'Identifiers'} ]
+
+  let cmds +=  [ {'section': 'Project [' . (S_IsInitialized() ? '↑]' : '↓]')} ]
+  if !S_IsInitialized()
+    let cmds += [ {'label': '_M Initialize from ..',   'cmd': 'echo "-"' } ]
+  else
+    let cmds += [ {'label': 'PrinterZio',   'cmd': 'edit src/main/scala/PrinterZio.scala' } ]
+    let cmds += [ {'label': 'PrinterZioServer',   'cmd': 'edit src/main/scala/PrinterZioServer.scala' } ]
+  endif
+
+  let cmds +=  [ {'section': 'Repl [' . (exists('g:ScalaReplID') ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'ServerTerm [' . (exists('g:ScalaServerReplID') ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'Server [' . (ScalaServerRepl_isRunning() ? '↑]' : '↓]')} ]
+
+  return cmds
+endfunc
+
+func! S_IsInitialized()
+  return filereadable( T_TesterFilePath( 'GqlExec' ) )
+endfunc
+
+
+
+
 func! Scala_bufferMaps()
 
 
@@ -131,7 +163,7 @@ endfunc
 func! Scala_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  let typeStr = v:lua.require('utils_lsp'.LspType())
+  let typeStr = v:lua.require('utils_lsp').LspType()
   call setpos('.', [0, oLine, oCol, 0] )
   return typeStr
 endfunc
@@ -316,6 +348,8 @@ endfunc
 
 func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
+  let effType  = Scala_BufferCatsOrZio()
+
   normal! ww
   let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
   normal! bb
@@ -346,8 +380,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "QuillDSLive"
   elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
     let typeMode = "zio_collection"
-  elseif  typeStr =~ "IO\["  || typeStr =~ "UIO\["
+  elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[")
     let typeMode = "zio"
+
+  elseif  effType == 'cats' && typeStr =~ "IO\["
+    let typeMode = "cats"
 
   elseif  typeStr =~ "CompletionStage" && typeStr =~ "List"
     let typeMode = "CompletionStageList"
@@ -384,24 +421,35 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   if a:keyCmdMode == 'server'
-    echo "ServerProcess: " . identif . " - " . typeStr . " - " . typeMode
+    " echo "ServerProcess: " . identif . " - " . typeStr . " - " . typeMode
     call VirtualRadioLabel_lineNum( "≀ " . typeStr . " " . typeMode, hostLn, "server" )
   else
-    echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
+    " echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
     call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
   endif
 
   " Default values
-  let _replTag    = '"RESULT_"'
-  let _replEndTag = '""'
+  " let _replTag    = '"RESULT_"'
+  " let _replEndTag = '""'
+  let _replTag    = '"RES_multi_"'
+  let _replEndTag = '"_RES_multi_END"'
   let _info       = '""'
   let _infoEf     = 'ZIO.succeed( "" )'
   let _printVal   = '""'
   let _printValEf = 'ZIO.succeed( "" )'
+  let _ConsoleLineEf = '  _ <- zio.Console.printLine( str )'
+  " let _ConsoleLineEf = '  _ <- IO.println( str )'
+  let _RunApp = '  val ziores = zio.Unsafe.unsafe { implicit unsafe => zio.Runtime.default.unsafe.run( app ).getOrThrowFiberFailure() }'
 
   if     a:keyCmdMode == 'effect' || typeMode == 'zio'
     let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
     " let _printValEf = identif          " already an effect
+
+  elseif typeMode == 'cats'
+    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
+    let _infoEf       = 'IO( "" )'
+    let _ConsoleLineEf = '  _ <- IO.println( str )'
+    let _RunApp = '   app.unsafeRunSync()'
 
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
@@ -421,6 +469,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   elseif typeMode == 'collection'
     let _info     = identif . ".size.toString + '\n'"
     let _printVal = identif . '.mkString("\n")'                 
+    let _replTag    = '"RES_multi_"'
+    let _replEndTag = '"_RES_multi_END"'
 
   elseif typeMode == 'iterator'
     let _info     = "printVal.size.toString + '\n'"
@@ -494,6 +544,9 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let plns[23] = "  val infoEf   = " . _infoEf
   let plns[24] = "  val replEndTag   = " . _replEndTag
 
+  let plns[32] = _ConsoleLineEf
+  let plns[37] = _RunApp
+
   call writefile( plns, printerFilePath )
 endfunc
 
@@ -505,6 +558,7 @@ endfunc
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
+  let effType  = 'zio'
   let repoType = Scala_RepoBuildTool()
   " echo effType repoType
   " return
@@ -540,7 +594,7 @@ func! Scala_RunPrinter( termType )
         call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
         if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif
-        let cmd = "runMain " . "printzio.runZioApp" . "\n"
+        let cmd = "runMain " . "printzio.runApp" . "\n"
         call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
       endif
     else

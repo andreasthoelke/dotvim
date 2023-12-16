@@ -11,10 +11,10 @@
 " e1_cbwl0 = runReader cbwl0 (i:: Int)
 " "2. new feature: (x -> Bool) should be 'xp'
 
-nnoremap <leader>ejd :call CreateJSDocComment_short()<cr>
-nnoremap <leader>ejD :call CreateJSDocComment_long()<cr>
+nnoremap <silent><leader>ejd :call CreateJSDocComment_short()<cr>
+nnoremap <silent><leader>ejD :call CreateJSDocComment_long()<cr>
 
-nnoremap <leader>ed :call CreateScalaDocComment_long()<cr>
+nnoremap <silent><leader>ed :call CreateScalaDocComment_long()<cr>
 
 func! CreateScalaDocComment_long()
   normal k
@@ -31,6 +31,43 @@ func! CreateScalaDocComment_long()
   call append( '.', lines )
   normal jjlll
 endfunc
+
+
+" trait Node {
+"  def id: String
+" } 
+
+" trait Node:
+"  def id: String
+
+nnoremap <silent><leader>eba :call CreateScala_fewerBrackets_a()<cr>
+
+func! CreateScala_fewerBrackets_a()
+  normal! $
+  let [oLine, oCol] = getpos('.')[1:2]
+  normal! %xx
+  call setpos('.', [0, oLine, oCol, 0] )
+  normal! xhr:
+endfunc
+
+  " ).implements[Node]{ case x: Person => x }
+
+nnoremap <silent><leader>ebb :call CreateScala_fewerBrackets_b()<cr>
+
+func! CreateScala_fewerBrackets_b()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  call search('{')
+  " normal f{
+  let [oLine, oCol] = getpos('.')[1:2]
+  " call feedkeys("r\n", 'n')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal! j$x^x
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  call setpos('.', [0, oLine, oCol, 0] )
+  normal! r:
+endfunc
+         " ab
+" len(matchstr( getline(66), '\s*\ze\S'))
 
 func! CreateJSDocComment_long()
   " let hostLn = searchpos( '^(export\s)?const\s\(e\d_\)\@!', 'cn' )[0]
@@ -266,7 +303,7 @@ endfunc
 " echo GetNextTestDeclIndex()
 
 
-nnoremap <leader>ea :call CreateAssertion()<cr>
+nnoremap <silent> <leader>ea :call CreateAssertion()<cr>
 " Tests: (uncomment)
 " database4 ∷ String → [(String, String, Int)]
 " e1_database4 = database4 (Just "eins") 123
@@ -340,8 +377,8 @@ endfunc
 
 
 " ─   "unique functions"                                 ■
-nnoremap <leader>eu ^icb<esc>:call RandFnName()<cr>A = u<esc>^2w
-nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= u<esc>^2w
+nnoremap <silent> <leader>eu ^icb<esc>:call RandFnName()<cr>A = u<esc>^2w
+nnoremap <silent> <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= u<esc>^2w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
@@ -486,18 +523,18 @@ endfunc
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
 
-nnoremap <leader>uef <leader>us<leader>ef
+nnoremap <silent> <leader>uef <leader>us<leader>ef
 " Test stub:
 " nmap <leader>ts <leader>us<leader>ef
 nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>wdx0rq0
 
 " "index symbol" append postfix index to function name
-nnoremap <leader>eif ea0^jea0^k
-" nnoremap <leader>his ea0^jea0^k
+nnoremap <silent> <leader>eif ea0^jea0^k
+" nnoremap <silent> <leader>his ea0^jea0^k
 
 " Increase/ decrease the index of TypeSig and term level binding together
-nnoremap <leader><c-a> jk^
-nnoremap <leader><c-x> <c-x>j<c-x>k^
+nnoremap <silent> <leader><c-a> jk^
+nnoremap <silent> <leader><c-x> <c-x>j<c-x>k^
 
 
 function! RandFnName()

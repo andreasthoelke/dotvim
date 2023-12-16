@@ -26,7 +26,7 @@ func! VScriptToolsBufferMaps()
   " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global' )<cr>
 
   nnoremap <silent><buffer> gei :call PrintVimOrLuaLine()<cr>
-  nnoremap <silent><buffer> gej :call PrintVimOrLuaParag()<cr>
+  nnoremap <silent><buffer> gew :call PrintVimOrLuaParag()<cr>
 endfunc
 
 
