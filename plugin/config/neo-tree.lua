@@ -629,18 +629,20 @@ require("neo-tree").setup({
 -- ─   Global mappings                                  ──
       mappings = {
 
-        ["<space>"] = {
-          "toggle_node",
-          nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
-        },
+      --   -- What is this?!
+        -- ["<space>"] = {
+        --   "toggle_node",
+        --   nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
+        -- },
+
+        ["<C-v>"] = function() vim.cmd("normal! V") end,
+
         ["<2-LeftMouse>"] = "open",
         ["<cr>"] = "open",
         -- ["<esc>"] = "cancel", -- close preview or floating neo-tree window
         ["<esc>"] = "noop", -- TODO close preview ..
         ["P"] = { "toggle_preview", config = { use_float = true } },
         ["<space>P"] = { "toggle_preview", config = { use_float = false } },
-
-        ["<C-v>"] = function() vim.cmd("normal V") end,
 
         -- ["l"] = "focus_preview",
         ["l"] = "noop",  -- use c-w i
@@ -895,7 +897,11 @@ require("neo-tree").setup({
           renderer.focus_node(state, nil, true, 1, 3)
           renderer.redraw(state)
         end,
-        ["x"] = "copy_to_clipboard",
+        ["x"] = function( state, callback )
+          common_commands.cut_to_clipboard( state, callback )
+          renderer.focus_node(state, nil, true, 1, 3)
+          renderer.redraw(state)
+        end,
 
         --    Batch marking all of visual selection:
         ["<space>yy"] = "copy_to_clipboard",

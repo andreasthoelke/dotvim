@@ -441,6 +441,14 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " let _ConsoleLineEf = '  _ <- IO.println( str )'
   let _RunApp = '  val ziores = zio.Unsafe.unsafe { implicit unsafe => zio.Runtime.default.unsafe.run( app ).getOrThrowFiberFailure() }'
 
+
+  " The different method names are used to I can killJVMProcess and restart a serverProcess. and not potentially a long running "runApp" normal process. (though these are mostly short)
+  if a:keyCmdMode == 'server'
+    let _MainMethodName = 'def runServerApp() ='
+  else
+    let _MainMethodName = 'def runApp() ='
+  endif
+
   if effType == 'cats'
     let _ConsoleLineEf = '  _ <- IO.println( str )'
     let _RunApp = '   app.unsafeRunSync()'
@@ -521,6 +529,9 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   if a:keyCmdMode == 'server'
     let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterServer.scala'
+    if !filereadable(printerFilePath)
+      let printerFilePath = getcwd(winnr()) . '/server/src/main/PrinterServer.scala'
+    endif
   else
     let printerFilePath = getcwd(winnr()) . '/src/main/scala/Printer.scala'
   endif
@@ -529,7 +540,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let printerFilePath = getcwd(winnr()) . '/modules/core/Printer.scala'
   endif
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd(winnr()) . '/printer/Printer.scala'
+    let printerFilePath = getcwd(winnr()) . '/server/src/main/Printer.scala'
   endif
 
   let plns = readfile( printerFilePath, '\n' )
@@ -547,6 +558,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let plns[24] = "  val replEndTag   = " . _replEndTag
 
   let plns[32] = _ConsoleLineEf
+  let plns[36] = _MainMethodName
   let plns[37] = _RunApp
 
   call writefile( plns, printerFilePath )
@@ -591,8 +603,9 @@ func! Scala_RunPrinter( termType )
         " Old version: NOTE: the initial \n as a convention to end the previous process using zio.Console.read
         " let cmd = "\nrunMain " . "printzioserver.runZioServerApp" . "\n"
         " New version: killJVMProcess should block so the new/restarted process should not be affected
-        let cmd = "bgRunMain " . "printzioserver.runZioServerApp" . "\n"
-        call ScalaServerRepl_killJVMProcess( 'runZioServerApp' )
+        let cmd = "bgRunMain " . "printerserver.runServerApp" . "\n"
+        " TODO: technically I could use a unique (def name!) run command to then be able to selectively end/restart a process.
+        call ScalaServerRepl_killJVMProcess( 'runServerApp' )
         call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
         if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif

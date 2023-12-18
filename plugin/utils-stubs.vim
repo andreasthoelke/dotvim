@@ -40,9 +40,9 @@ endfunc
 " trait Node:
 "  def id: String
 
-nnoremap <silent><leader>eba :call CreateScala_fewerBrackets_a()<cr>
+nnoremap <silent><leader>eba :call CreateScala_fewerBraces_a()<cr>
 
-func! CreateScala_fewerBrackets_a()
+func! CreateScala_fewerBraces_a()
   let [oLine1, oCol1] = getpos('.')[1:2]
   normal! $
   let [oLine, oCol] = getpos('.')[1:2]
@@ -76,9 +76,9 @@ endfunc
 
   " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) => fb },
 
-nnoremap <silent><leader>ebb :call CreateScala_fewerBrackets_b()<cr>
+nnoremap <silent><leader>ebb :call CreateScala_fewerBraces_b()<cr>
 
-func! CreateScala_fewerBrackets_b()
+func! CreateScala_fewerBraces_b()
   call CreateScala_moveCommaToNextLine()
   let [oLine1, oCol1] = getpos('.')[1:2]
   let indentStr = matchstr( getline('.'), '\s*\ze\S')
@@ -101,9 +101,9 @@ endfunc
   "   fb
   " }
 
-nnoremap <silent><leader>ebc :call CreateScala_fewerBrackets_c()<cr>
+nnoremap <silent><leader>ebc :call CreateScala_fewerBraces_c()<cr>
 
-func! CreateScala_fewerBrackets_c()
+func! CreateScala_fewerBraces_c()
   let [oLine1, oCol1] = getpos('.')[1:2]
   let indentStr = matchstr( getline('.'), '\s*\ze\S')
   call search('\v(\{|\()', 'c')
@@ -485,16 +485,16 @@ endfunc
 
 func! ArgTypeToSuggArgName( type )
   if a:type =~ '->'
-    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
+    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBraces( a:type ) ) )
     return 'f' . join( listShorts, '_' )
   elseif a:type =~ '[' " note there may be a list within the type
-    " return 'l' . AbbrevSimpleType( RemoveBrackets( a:type ) )
-    return AbbrevSimpleType( RemoveBrackets( a:type ) ) . 's'
+    " return 'l' . AbbrevSimpleType( RemoveBraces( a:type ) )
+    return AbbrevSimpleType( RemoveBraces( a:type ) ) . 's'
   elseif a:type =~ '('
-    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
+    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBraces( a:type ) ) )
     return 't' . join( listShorts, '_' )
   else
-    return AbbrevSimpleType( RemoveBrackets( a:type ) )
+    return AbbrevSimpleType( RemoveBraces( a:type ) )
   endif
 endfunc
 " echo ArgTypeToSuggArgName( '(a -> Ab c -> Maybe Field)' )
@@ -523,12 +523,12 @@ func! AbbrevSymbolName2( str )
   return firstChars . secondCamelCaseWordFirstChars
 endfunc
 
-func! RemoveBrackets( str )
+func! RemoveBraces( str )
   return substitute( a:str, '\v(\(|\)|\[|\])', '', 'g')
 endfunc
-" echo RemoveBrackets('(a -> Maybe cd)')
-" echo RemoveBrackets('[Maybe cd]')
-" echo RemoveBrackets('(Int, a)')
+" echo RemoveBraces('(a -> Maybe cd)')
+" echo RemoveBraces('[Maybe cd]')
+" echo RemoveBraces('(Int, a)')
 
 func! RemoveSpaces( str )
   return substitute( a:str, '\s', '', 'g')
