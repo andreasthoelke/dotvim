@@ -14,8 +14,8 @@ func! S_MenuCommands()
   if !S_IsInitialized()
     let cmds += [ {'label': '_M Initialize from ..',   'cmd': 'echo "-"' } ]
   else
-    let cmds += [ {'label': 'PrinterZio',   'cmd': 'edit src/main/scala/PrinterZio.scala' } ]
-    let cmds += [ {'label': 'PrinterZioServer',   'cmd': 'edit src/main/scala/PrinterZioServer.scala' } ]
+    let cmds += [ {'label': 'Printer',   'cmd': 'edit src/main/scala/Printer.scala' } ]
+    let cmds += [ {'label': 'PrinterServer',   'cmd': 'edit src/main/scala/PrinterServer.scala' } ]
   endif
 
   let cmds +=  [ {'section': 'Repl [' . (exists('g:ScalaReplID') ? '↑]' : '↓]')} ]
@@ -441,15 +441,19 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " let _ConsoleLineEf = '  _ <- IO.println( str )'
   let _RunApp = '  val ziores = zio.Unsafe.unsafe { implicit unsafe => zio.Runtime.default.unsafe.run( app ).getOrThrowFiberFailure() }'
 
+  if effType == 'cats'
+    let _ConsoleLineEf = '  _ <- IO.println( str )'
+    let _RunApp = '   app.unsafeRunSync()'
+    let _infoEf       = 'IO( "" )'
+    let _printValEf   = 'IO( "" )'
+  endif
+
   if     a:keyCmdMode == 'effect' || typeMode == 'zio'
     let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
     " let _printValEf = identif          " already an effect
 
   elseif typeMode == 'cats'
     let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
-    let _infoEf       = 'IO( "" )'
-    let _ConsoleLineEf = '  _ <- IO.println( str )'
-    let _RunApp = '   app.unsafeRunSync()'
 
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
@@ -513,21 +517,19 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   elseif typeMode == 'plain'
     " let _printVal = identif
     let _printVal = 'pprint.apply(' . identif . ', width=3 )'
-    let _replTag    = '"RES_multi_"'
-    let _replEndTag = '"_RES_multi_END"'
   endif
 
   if a:keyCmdMode == 'server'
-    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterZioServer.scala'
+    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterServer.scala'
   else
-    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/src/main/scala/Printer.scala'
   endif
 
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd(winnr()) . '/modules/core/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/modules/core/Printer.scala'
   endif
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd(winnr()) . '/printer/PrinterZio.scala'
+    let printerFilePath = getcwd(winnr()) . '/printer/Printer.scala'
   endif
 
   let plns = readfile( printerFilePath, '\n' )
@@ -564,7 +566,7 @@ func! Scala_RunPrinter( termType )
   " return
 
   if     effType == 'zio' || effType == 'none'
-    " let cmd = g:Scala_PrinterZioCmd
+    " let cmd = g:Scala_PrinterCmd
   elseif effType == 'cats' || effType == 'both' || effType == 'none'
     let cmd = g:Scala_PrinterCatsCmd
   else
@@ -594,7 +596,7 @@ func! Scala_RunPrinter( termType )
         call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
         if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif
-        let cmd = "runMain " . "printzio.runApp" . "\n"
+        let cmd = "runMain " . "printer.runApp" . "\n"
         call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
       endif
     else

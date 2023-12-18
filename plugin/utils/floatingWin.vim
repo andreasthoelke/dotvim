@@ -386,6 +386,7 @@ endfunc
 
 " FloatingSmallNew(['eins'])
 " FloatingSmallNew(['eins'], "cursor")
+" FloatingSmallNew(['eins'], "otherWinColumn")
 func! FloatingSmallNew( linesToShow, ... )
 
   let opts = {}
@@ -398,6 +399,8 @@ func! FloatingSmallNew( linesToShow, ... )
     let opts.relative  = 'cursor'
     let opts.col       = 0
     let opts.row       = 1
+  elseif a:0 && a:1 == 'otherWinColumn'
+    let opts = v:lua.FloatOpts_inOtherWinColumn()
   else
     let top = ((&lines - opts.height) / 2) - 1
     let left = (&columns - opts.width) / 2

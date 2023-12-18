@@ -43,31 +43,86 @@ endfunc
 nnoremap <silent><leader>eba :call CreateScala_fewerBrackets_a()<cr>
 
 func! CreateScala_fewerBrackets_a()
+  let [oLine1, oCol1] = getpos('.')[1:2]
   normal! $
   let [oLine, oCol] = getpos('.')[1:2]
   normal! %xx
   call setpos('.', [0, oLine, oCol, 0] )
-  normal! xhr:
+  if getline('.') =~ ' for '
+    normal! x
+  else
+    normal! xhr:
+  endif
+  call setpos('.', [0, oLine1, oCol1, 0] )
 endfunc
 
   " ).implements[Node]{ case x: Person => x }
 
+
+" Move an "end of the line" comma to indented new/ next line, or do nothing.
+func! CreateScala_moveCommaToNextLine()
+  let [oLine1, oCol1] = getpos('.')[1:2]
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal! $
+  let [cLine, cCol] = searchpos('\v(\,)', 'cb')
+  if cLine == oLine1
+    if cCol + 2 > len( getline('.') ) 
+      call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+    endif
+  endif
+  call setpos('.', [0, oLine1, oCol1, 0] )
+endfunc
+
+
+  " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) => fb },
+
 nnoremap <silent><leader>ebb :call CreateScala_fewerBrackets_b()<cr>
 
 func! CreateScala_fewerBrackets_b()
+  call CreateScala_moveCommaToNextLine()
+  let [oLine1, oCol1] = getpos('.')[1:2]
   let indentStr = matchstr( getline('.'), '\s*\ze\S')
-  call search('{')
+  call search('\v(\{|\()', 'c')
   " normal f{
   let [oLine, oCol] = getpos('.')[1:2]
   " call feedkeys("r\n", 'n')
   call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
   normal! j$x^x
-  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  call InsertStringAtLoc('  ', line('.'), col('.')-2)
   call setpos('.', [0, oLine, oCol, 0] )
   normal! r:
+  call setpos('.', [0, oLine1, oCol1, 0] )
 endfunc
          " ab
 " len(matchstr( getline(66), '\s*\ze\S'))
+
+
+  " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) =>
+  "   fb
+  " }
+
+nnoremap <silent><leader>ebc :call CreateScala_fewerBrackets_c()<cr>
+
+func! CreateScala_fewerBrackets_c()
+  let [oLine1, oCol1] = getpos('.')[1:2]
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  call search('\v(\{|\()', 'c')
+  let [oLine2, oCol2] = getpos('.')[1:2]
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal! j^
+  let [oLine, oCol] = getpos('.')[1:2]
+  normal! %x
+  call setpos('.', [0, oLine, oCol, 0] )
+  normal! x
+  " call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  normal j==
+  call setpos('.', [0, oLine2, oCol2, 0] )
+  normal! r:
+  call setpos('.', [0, oLine1, oCol1, 0] )
+endfunc
+
+
+
 
 func! CreateJSDocComment_long()
   " let hostLn = searchpos( '^(export\s)?const\s\(e\d_\)\@!', 'cn' )[0]

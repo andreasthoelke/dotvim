@@ -51,7 +51,7 @@ end
 
 vim.keymap.set( 'n', '<leader>fd', Ntree_find_directory )
 
-local function close_cur_window( state, winid )
+function _G.Ntree_close( state, winid )
   winid = winid or vim.api.nvim_get_current_win()
   state = state ~= nil and state or manager.get_state_for_window( winid )
   common_commands.close_window( state )
@@ -61,11 +61,15 @@ local function close_cur_window( state, winid )
   -- -- dispose the buffer:
   -- vim.api.nvim_buf_delete( bufnr, { force = true } )
   -- -- unlist the buffer:
-  vim.api.nvim_command( "bdelete " .. bufnr )
+  -- -- ISSUE: when I open an additional split buffer after opening ntree, then closing ntree, the next line closes other buffers.
+  -- vim.api.nvim_command( "bdelete " .. bufnr )
   local tabid = vim.api.nvim_get_current_tabpage()
   if winid == Ntree_leftOpen[tabid] then Ntree_leftOpen[tabid] = nil end
   if winid == Ntree_rightOpen[tabid] then Ntree_rightOpen[tabid] = nil end
 end
+
+-- lua Ntree_close( nil, 1016 )
+-- lua print( vim.api.nvim_get_current_win() )
 
 
 function _G.Ntree_winIds( tabid )
@@ -359,7 +363,7 @@ function _G.Ntree_openLeft()
   local prevWindow = vim.api.nvim_get_current_win()
   local tabid = vim.api.nvim_get_current_tabpage()
   if vim.tbl_get( Ntree_leftOpen, tabid ) ~= nil then
-    close_cur_window( nil, Ntree_leftOpen[ tabid ] )
+    Ntree_close( nil, Ntree_leftOpen[ tabid ] )
     Ntree_leftOpen[tabid] = nil
   else
     local reveal_file = vim.fn.expand( "%:p" )
@@ -378,7 +382,7 @@ function _G.Ntree_openRight()
   local prevWindow = vim.api.nvim_get_current_win()
   local tabid = vim.api.nvim_get_current_tabpage()
   if vim.tbl_get( Ntree_rightOpen, tabid ) ~= nil then
-    close_cur_window( nil, Ntree_rightOpen[ tabid ] )
+    Ntree_close( nil, Ntree_rightOpen[ tabid ] )
     Ntree_rightOpen[tabid] = nil
   else
     local reveal_file = vim.fn.expand( "%:p" )
@@ -685,7 +689,7 @@ require("neo-tree").setup({
         ["ot"] = "noop",
 
         ["=="] = "toggle_auto_expand_width",
-        ["q"] = close_cur_window,
+        ["q"] = Ntree_close,
         ["g?"] = "show_help",
         ["?"] = "noop",
         ["<"] = "prev_source",

@@ -131,7 +131,14 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     " { "[info]   value = Character(", '[info]     name = "aa",', "[info]     age = 12", "[info]   )", "[info] )_RES_multi_END", "[success] Total time: 2 s, completed 8 Dec 2023, 21:12:07", "=sbt:edb_gql> " }
     let idx = functional#findP( lines, {x-> x =~ '_RES_multi_END'} )
 
+    if idx == -1
+      let g:Repl_wait_multiline_received += lines
+      echo "_RES_multi_END not found in chunk"
+      return
+    endif
+
     let lines = SubstituteInLines( lines, '\[info\] ', "" )
+    let lines = SubstituteInLines( lines, '"""', "" )
     let lines = SubstituteInLines( lines, '_RES_multi_END', "" )
     let g:Repl_wait_multiline_received += lines[:idx]
     let resultVal = g:Repl_wait_multiline_received
@@ -139,7 +146,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     let g:ReplReceive_open = v:false
     call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
-    let g:floatWin_win = FloatingSmallNew ( resultVal )
+    " let g:floatWin_win = FloatingSmallNew ( resultVal )
+    let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
     call ScalaSyntaxAdditions() 
     call FloatWin_FitWidthHeight()
     wincmd p
@@ -168,7 +176,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
-      let g:floatWin_win = FloatingSmallNew ( resultVal )
+      " let g:floatWin_win = FloatingSmallNew ( resultVal )
+      let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
       call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()
       wincmd p
@@ -197,13 +206,28 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     " let _replTag    = '"RES_multi_"'
     " let _replEndTag = '"_RES_multi_END"'
 
+
   if searchString1 =~ "RES_multi_"
-    let foundString1 = matchstr( searchString1, '\vRES_multi_\zs.*' )
-    let foundList1 = split( foundString1, "※" )
-    if !(len( foundList1 ) > 0) | return | endif
-    " call v:lua.putt( foundList1 )
-    let g:Repl_wait_multiline = v:true
-    let g:Repl_wait_multiline_received = foundList1
+    " call v:lua.putt( searchString1 )
+
+    let foundString1 = matchstr( searchString1, '\vRES_multi_\zs.*\ze_RES_multi_END' )
+    " call v:lua.putt( foundString1 )
+    if len( foundString1 ) > 0
+      let g:floatWin_win = FloatingSmallNew ( [foundString1], "otherWinColumn" )
+      call ScalaSyntaxAdditions() 
+      call FloatWin_FitWidthHeight()
+      wincmd p
+    else
+
+      let foundString1 = matchstr( searchString1, '\vRES_multi_\zs.*' )
+      let foundList1 = split( foundString1, "※" )
+      let foundList1 = SubstituteInLines( foundList1, '"""', "" )
+      if !(len( foundList1 ) > 0) | return | endif
+      " call v:lua.putt( foundList1 )
+      let g:Repl_wait_multiline = v:true
+      let g:Repl_wait_multiline_received = foundList1
+    endif
+
 
   elseif searchString1 =~ "(error|Exception)"
     let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthead|Exception:\s|ERROR:\s|Err\()\zs.*' )
@@ -228,7 +252,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     let g:ReplReceive_open = v:false
     call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
-    let g:floatWin_win = FloatingSmallNew ( resultVal )
+    " let g:floatWin_win = FloatingSmallNew ( resultVal )
+    let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
     call ScalaSyntaxAdditions() 
     call FloatWin_FitWidthHeight()
     wincmd p
@@ -254,7 +279,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
-      let g:floatWin_win = FloatingSmallNew ( resultVal )
+      " let g:floatWin_win = FloatingSmallNew ( resultVal )
+      let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
       call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()
       wincmd p
