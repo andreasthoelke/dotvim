@@ -354,7 +354,10 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
   normal! bb
 
-  let identif = matchstr( getline(hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  let identif = matchstr( getline( hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  if getline(hostLn ) =~ 'def '
+    let identif = identif . '()'
+  endif
 
   let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
   if typeStr == "timeout"
@@ -530,7 +533,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   if a:keyCmdMode == 'server'
     let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterServer.scala'
     if !filereadable(printerFilePath)
-      let printerFilePath = getcwd(winnr()) . '/server/src/main/PrinterServer.scala'
+      let printerFilePath = getcwd(winnr()) . '/server/src/main/scala/PrinterServer.scala'
     endif
   else
     let printerFilePath = getcwd(winnr()) . '/src/main/scala/Printer.scala'
@@ -540,7 +543,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let printerFilePath = getcwd(winnr()) . '/modules/core/Printer.scala'
   endif
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd(winnr()) . '/server/src/main/Printer.scala'
+    let printerFilePath = getcwd(winnr()) . '/server/src/main/scala/Printer.scala'
   endif
 
   let plns = readfile( printerFilePath, '\n' )
