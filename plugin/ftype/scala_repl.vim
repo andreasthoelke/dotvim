@@ -85,7 +85,7 @@ endfunc
 func! ScalaServerRepl_isRunning()
   let jvmProcesses = systemlist( 'jps' )
   let jvmProcesses = functional#map( {line -> split( line, " " ) }, jvmProcesses )
-  let jvmProcesses = functional#filter( {line -> line[1] =~ 'runZioServerApp' }, jvmProcesses )
+  let jvmProcesses = functional#filter( {line -> line[1] =~ 'runServerApp' }, jvmProcesses )
   if len( jvmProcesses )
     return v:true
   else
