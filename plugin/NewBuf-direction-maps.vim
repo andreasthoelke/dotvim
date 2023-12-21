@@ -315,6 +315,9 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
     " will run post actions like wincmd p or tabprevious right away.
     let cmd = NewBufCmds( path )[ a:direction ] 
     " if IsInFloatWin() | wincmd c | endif
+    " TODO: this is mostly for the ,cm float-dirvish recent notes menu where I want to split out a note from the origin window.
+    " i hardly have the case of a non-float dirvish folder(?)
+    if IsInFloatWin() | wincmd p | endif
     exec cmd
     " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif

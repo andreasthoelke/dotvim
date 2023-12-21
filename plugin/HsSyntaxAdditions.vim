@@ -4,6 +4,8 @@ augroup end
 
 " ─   Filetype Specific Maps Tools Syntax               ──
 
+au ag BufRead,BufNewFile * if expand('%:t') !~ '\.' | set filetype=markdown | endif
+
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call tools_edgedb#bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 

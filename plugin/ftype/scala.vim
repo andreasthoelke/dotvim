@@ -26,7 +26,7 @@ func! S_MenuCommands()
 endfunc
 
 func! S_IsInitialized()
-  return filereadable( T_TesterFilePath( 'GqlExec' ) )
+  return filereadable( "m/_printer/Printer.scala" )
 endfunc
 
 
@@ -531,16 +531,18 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   if a:keyCmdMode == 'server'
-    let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterServer.scala'
+    let printerFilePath = getcwd(winnr()) . '/m/_printer/PrinterServer.scala'
     if !filereadable(printerFilePath)
+      " let printerFilePath = getcwd(winnr()) . '/src/main/scala/PrinterServer.scala'
       let printerFilePath = getcwd(winnr()) . '/server/src/main/scala/PrinterServer.scala'
     endif
   else
-    let printerFilePath = getcwd(winnr()) . '/src/main/scala/Printer.scala'
+    let printerFilePath = getcwd(winnr()) . '/m/_printer/Printer.scala'
   endif
 
   if !filereadable(printerFilePath)
-    let printerFilePath = getcwd(winnr()) . '/modules/core/Printer.scala'
+    let printerFilePath = getcwd(winnr()) . '/src/main/scala/Printer.scala'
+    " let printerFilePath = getcwd(winnr()) . '/modules/core/Printer.scala'
   endif
   if !filereadable(printerFilePath)
     let printerFilePath = getcwd(winnr()) . '/server/src/main/scala/Printer.scala'
@@ -606,13 +608,15 @@ func! Scala_RunPrinter( termType )
         " Old version: NOTE: the initial \n as a convention to end the previous process using zio.Console.read
         " let cmd = "\nrunMain " . "printzioserver.runZioServerApp" . "\n"
         " New version: killJVMProcess should block so the new/restarted process should not be affected
-        let cmd = "bgRunMain " . "printerserver.runServerApp" . "\n"
+        " let cmd = "bgRunMain " . "printerserver.runServerApp" . "\n"
+        let cmd = "printer/bgRunMain " . "printerserver.runServerApp" . "\n"
         " TODO: technically I could use a unique (def name!) run command to then be able to selectively end/restart a process.
         call ScalaServerRepl_killJVMProcess( 'runServerApp' )
         call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
       else
         if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif
-        let cmd = "runMain " . "printer.runApp" . "\n"
+        " let cmd = "runMain " . "printer.runApp" . "\n"
+        let cmd = "printer/runMain " . "printer.runApp" . "\n"
         call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
       endif
     else

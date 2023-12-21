@@ -362,38 +362,54 @@ end
 function _G.Ntree_openLeft()
   local prevWindow = vim.api.nvim_get_current_win()
   local tabid = vim.api.nvim_get_current_tabpage()
+
+  -- TODO: this function should not handle toggle
   if vim.tbl_get( Ntree_leftOpen, tabid ) ~= nil then
-    Ntree_close( nil, Ntree_leftOpen[ tabid ] )
-    Ntree_leftOpen[tabid] = nil
-  else
-    local reveal_file = vim.fn.expand( "%:p" )
-    reveal_file = reveal_file ~= "" and reveal_file or vim.fn.MostRecentlyUsedLocalFile()
-    local cwd = vim.fn.getcwd( vim.fn.winnr() )
-    vim.api.nvim_set_current_win( vim.fn.win_getid( 1 ) )
-    vim.cmd( "leftabove 29vnew" )
-    vim.cmd "set winfixwidth"
-    Ntree_launch( reveal_file, cwd )
-    Ntree_leftOpen[tabid] = vim.api.nvim_get_current_win()
+    local winid = Ntree_leftOpen[ tabid ]
+    -- check if winid is open as it could be closed via c-w dd
+    if vim.fn.index( vim.api.nvim_tabpage_list_wins( tabid ), winid ) ~= -1 then
+      Ntree_close( nil, winid )
+      Ntree_leftOpen[tabid] = nil
+      return
+    end
   end
+
+  local reveal_file = vim.fn.expand( "%:p" )
+  reveal_file = reveal_file ~= "" and reveal_file or vim.fn.MostRecentlyUsedLocalFile()
+  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+  vim.api.nvim_set_current_win( vim.fn.win_getid( 1 ) )
+  vim.cmd( "leftabove 29vnew" )
+  vim.cmd "set winfixwidth"
+  Ntree_launch( reveal_file, cwd )
+  Ntree_leftOpen[tabid] = vim.api.nvim_get_current_win()
+
   vim.api.nvim_set_current_win( prevWindow )
 end
 
 function _G.Ntree_openRight()
   local prevWindow = vim.api.nvim_get_current_win()
   local tabid = vim.api.nvim_get_current_tabpage()
+
+  -- TODO: this function should not handle toggle
   if vim.tbl_get( Ntree_rightOpen, tabid ) ~= nil then
-    Ntree_close( nil, Ntree_rightOpen[ tabid ] )
-    Ntree_rightOpen[tabid] = nil
-  else
-    local reveal_file = vim.fn.expand( "%:p" )
-    local cwd = vim.fn.getcwd( vim.fn.winnr() )
-    local winIdsInTab = vim.api.nvim_tabpage_list_wins( tabid )
-    vim.api.nvim_set_current_win( winIdsInTab[# winIdsInTab] )
-    vim.cmd( "29vnew" )
-    vim.cmd "set winfixwidth"
-    Ntree_launch( reveal_file, cwd )
-    Ntree_rightOpen[tabid] = vim.api.nvim_get_current_win()
+    local winid = Ntree_rightOpen[ tabid ]
+    -- check if winid is open as it could be closed via c-w dd
+    if vim.fn.index( vim.api.nvim_tabpage_list_wins( tabid ), winid ) ~= -1 then
+      Ntree_close( nil, winid )
+      Ntree_rightOpen[tabid] = nil
+      return
+    end
   end
+
+  local reveal_file = vim.fn.expand( "%:p" )
+  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+  local winIdsInTab = vim.api.nvim_tabpage_list_wins( tabid )
+  vim.api.nvim_set_current_win( winIdsInTab[# winIdsInTab] )
+  vim.cmd( "29vnew" )
+  vim.cmd "set winfixwidth"
+  Ntree_launch( reveal_file, cwd )
+  Ntree_rightOpen[tabid] = vim.api.nvim_get_current_win()
+
   vim.api.nvim_set_current_win( prevWindow )
 end
 
@@ -828,7 +844,7 @@ require("neo-tree").setup({
 
     },
 
-    group_empty_dirs = true, -- when true, empty directories will be grouped together
+    group_empty_dirs = false, -- when true, empty directories will be grouped together
     find_by_full_path_words = true,  -- if true use space as implicit .*  e.g. "fil init" for filesystem/init
 
 -- ─   Filesystem mappings                              ──
@@ -995,7 +1011,7 @@ require("neo-tree").setup({
       leave_files_open = false, -- `false` closes auto expanded files, such as with `:Neotree reveal`
     },
     group_dirs_and_files = true, -- when true, empty folders and files will be grouped together
-    group_empty_dirs = true, -- when true, empty directories will be grouped together
+    group_empty_dirs = false, -- when true, empty directories will be grouped together
     show_unloaded = true, -- show diagnostics from unloaded buffers
     refresh = {
       delay = 100, -- Time (in ms) to wait before updating diagnostics. Might resolve some issues with Neovim hanging.

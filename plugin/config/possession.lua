@@ -156,6 +156,9 @@ end
 
 -- ─   Config                                           ──
 
+-- vim.fn.stdpath('data')
+-- /Users/at/.local/share/nvim/possession
+
 require('possession').setup {
 
   session_dir = (Path:new(vim.fn.stdpath('data')) / 'possession'):absolute(),
