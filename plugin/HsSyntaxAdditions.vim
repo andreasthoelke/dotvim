@@ -5,6 +5,7 @@ augroup end
 " ─   Filetype Specific Maps Tools Syntax               ──
 
 au ag BufRead,BufNewFile * if &ft == "" && expand('%:t') !~ '\.' | set filetype=markdown | endif
+au ag BufRead,BufNewFile *.txt set filetype=markdown
 
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call tools_edgedb#bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
@@ -53,6 +54,18 @@ au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──
+
+let g:Winid_previous = 0
+let g:Ntree_prevWinid = 0
+
+augroup track_window
+   autocmd!
+
+   autocmd BufLeave * if &ft !~ "neo-tree" | let g:Winid_previous = win_getid() | endif    
+   autocmd BufEnter * if &ft == "neo-tree" | let g:Ntree_prevWinid = g:Winid_previous | endif
+augroup END
+
+
 
 
 " ─   Syntax Color                                     ──

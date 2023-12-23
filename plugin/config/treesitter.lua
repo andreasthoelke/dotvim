@@ -3,9 +3,23 @@
 -- Treesitter configuration
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
+
+  -- A list of parser names, or "all". These parsers should always be installed.
+  ensure_installed = { "scala", "typescript", "python", "sql", "bash" },
+
+  -- Install parsers synchronously. This is only applied to `ensure_installed`.
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer.
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally.
+  auto_install = true,
+
+  -- List of parsers to ignore installing (or "all").
+  ignore_install = {},
+
   highlight = {
     enable = true, -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of languages that will be disabled
+    -- disable = {"txt"},  -- list of languages that will be disabled
     -- additional_vim_regex_highlighting = true,
 
     custom_captures = {
@@ -13,6 +27,7 @@ require('nvim-treesitter.configs').setup {
     ["foo.bar"] = "Identifier",
     },
     },
+
   playground = {
     enable = true,
     disable = {},

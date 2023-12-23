@@ -71,6 +71,11 @@ end
 -- lua Ntree_close( nil, 1016 )
 -- lua print( vim.api.nvim_get_current_win() )
 
+function _G.Ntree_cmdInOriginWin( cmd )
+  local winid = vim.g['Ntree_prevWinid']
+  vim.api.nvim_set_current_win( winid )
+  vim.cmd( cmd )
+end
 
 function _G.Ntree_winIds( tabid )
   return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
@@ -742,37 +747,32 @@ require("neo-tree").setup({
         ["<localleader>v"] = function(s)
           local path = s.tree:get_node().path
           local cmd = vim.fn.NewBufCmds( path )[ 'right' ]
-          vim.cmd 'wincmd p'
-          vim.cmd( cmd )
+          Ntree_cmdInOriginWin( cmd )
         end,
 
         ["<localleader>s"] = function(s)
           local path = s.tree:get_node().path
           local cmd = vim.fn.NewBufCmds( path )[ 'down' ]
-          vim.cmd 'wincmd p'
-          vim.cmd( cmd )
+          Ntree_cmdInOriginWin( cmd )
         end,
 
         ["<localleader>a"] = function(s)
           local path = s.tree:get_node().path
           local cmd = "leftabove vnew " .. path
-          vim.cmd 'wincmd p'
-          vim.cmd( cmd )
+          Ntree_cmdInOriginWin( cmd )
         end,
 
         ["<localleader>u"] = function(s)
           local path = s.tree:get_node().path
           local cmd = "leftabove 20new " .. path
-          vim.cmd 'wincmd p'
-          vim.cmd( cmd )
+          Ntree_cmdInOriginWin( cmd )
         end,
 
 
         ["<localleader>i"] = function(s)
           local path = s.tree:get_node().path
           local cmd = vim.fn.NewBufCmds( path )[ 'full' ]
-          vim.cmd 'wincmd p'
-          vim.cmd( cmd )
+          Ntree_cmdInOriginWin( cmd )
         end,
 
         ["<leader>td"] = function(s) Tablabel_set_folder( s.tree:get_node().path ) end,

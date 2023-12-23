@@ -173,6 +173,14 @@ func! ScalaReplMainCallback(_job_id, data, _event)
 
       let resultVal = functional#filter( {line -> !(line =~ 'hikari')}, resultVal )
 
+      let resultVal = functional#filter( {line -> !(line =~ 'sbt\:')}, resultVal )
+      let resultVal = functional#filter( {line -> !(line =~ 'sbt\sserver')}, resultVal )
+      let resultVal = functional#filter( {line -> !(line =~ "enter \'cancel")}, resultVal )
+      " Tested with ~/Documents/Proj/g_edb_gql/m/h4s_simple/os_lib/a_oslib.scala‖/e2_vimfˍ=
+
+      let resultVal = SubstituteInLines( resultVal, '\[error\]', "" )
+
+
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
@@ -264,11 +272,19 @@ func! ScalaReplMainCallback(_job_id, data, _event)
 
     " call v:lua.putt( searchString1 )
     let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthread|Exception:\s|ERROR:\s|Err\()\zs.*' )
+    let foundString2 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_)\zs.*' )
     let foundList1 = split( foundString1, "※" )
-    if !(len( foundList1 ) > 0) | return | endif
+    let foundList2 = split( foundString2, "※" )
 
-    " call v:lua.putt( foundList1 )
-    if (len( foundList1 ) > 8) 
+    " if !( len( foundList1 ) > 0 || len( foundList2 ) > 0 ) 
+    if !(len( foundList1 ) > 0)
+      if !(len( foundList2 ) > 0)
+        return 
+      endif
+    endif
+
+    " call v:lua.putt( foundList2 )
+    if 1 " (len( foundList1 ) > 8) 
       let g:Repl_waitforanotherlargechunk = v:true
       let g:Repl_wait_receivedsofar = foundList1
       " just save, don't show
@@ -276,7 +292,12 @@ func! ScalaReplMainCallback(_job_id, data, _event)
 
       " this seems to allow to filter any line?!
       let foundList1 = functional#filter( {line -> !(line =~ 'sbt\:')}, foundList1 )
-      let resultVal = foundList1
+      " let foundList2 = functional#filter( {line -> !(line =~ 'sbt\:')}, foundList2 )
+
+      let foundList2 = SubstituteInLines( foundList2, '\[error\]', "" )
+
+      let resultVal = foundList1 + foundList2
+
 
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
