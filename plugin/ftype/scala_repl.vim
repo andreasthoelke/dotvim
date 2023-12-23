@@ -137,7 +137,7 @@ func! ScalaReplMainCallback(_job_id, data, _event)
       return
     endif
 
-    let lines = SubstituteInLines( lines, '\[info\] ', "" )
+    let lines = SubstituteInLines( lines, '\[info\]', "" )
     let lines = SubstituteInLines( lines, '"""', "" )
     let lines = SubstituteInLines( lines, '_RES_multi_END', "" )
     let g:Repl_wait_multiline_received += lines[:idx]
@@ -222,6 +222,8 @@ func! ScalaReplMainCallback(_job_id, data, _event)
       let foundString1 = matchstr( searchString1, '\vRES_multi_\zs.*' )
       let foundList1 = split( foundString1, "※" )
       let foundList1 = SubstituteInLines( foundList1, '"""', "" )
+      let foundList1 = SubstituteInLines( foundList1, '\[info\]', "" )
+      " let lines = SubstituteInLines( lines, '\[info\] ', "" )
       if !(len( foundList1 ) > 0) | return | endif
       " call v:lua.putt( foundList1 )
       let g:Repl_wait_multiline = v:true

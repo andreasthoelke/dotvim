@@ -119,8 +119,8 @@ func! Scala_bufferMaps_shared()
   nnoremap <silent><buffer> ( :call MvLineStart()<cr>
   nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
 
-  nnoremap <silent><buffer> I :call Scala_ColonForw()<cr>
-  nnoremap <silent><buffer> Y :call Scala_ColonBackw()<cr>
+  nnoremap <silent><buffer> I :call Scala_ColumnForw()<cr>
+  nnoremap <silent><buffer> Y :call Scala_ColumnBackw()<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   " " find a new map if I actually use this:
@@ -460,11 +460,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   endif
 
   if     a:keyCmdMode == 'effect' || typeMode == 'zio'
-    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
+    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3, height=2000)  )' 
     " let _printValEf = identif          " already an effect
 
   elseif typeMode == 'cats'
-    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3)  )' 
+    let _printValEf   = identif . '.map( v => pprint.apply(v, width=3, height=2000)  )' 
 
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
@@ -506,14 +506,14 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.map(i => i.toString + "\n") ) )' 
     " this works. and just shows linewise objects
     " let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + v.mkString("\n") ) )' 
-    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + pprint.apply(v, width=3) ) )' 
+    let _infoEf   = identif . '.map( v => (v.size.toString + "\n" + pprint.apply(v, width=3, height=2000) ) )' 
     " let _printVal = identif                                 " already an effect
     let _replTag    = '"RES_multi_"'
     let _replEndTag = '"_RES_multi_END"'
 
   elseif typeMode == 'QuillDSLive_coll'
     " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
-    let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => (v.size.toString + "\n" + pprint.apply(v, width=3) ) )'
+    let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => (v.size.toString + "\n" + pprint.apply(v, width=3, height=2000) ) )'
 
 
   elseif typeMode == 'QuillDSLive'
@@ -523,11 +523,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " val printValEf   = ZIO.serviceWithZIO[dpostgres.DSLive](_.adf1).map( v => v.size.toString + "\n" + v.mkString("\n") )
   " let _printValEf = "ZIO.serviceWithZIO[" . classObjPath . "](_." . classObjIdentif . ").map( v => v.size.toString + '\n' + pprint.apply(v, width=3) )"
   " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
-  let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => pprint.apply(v, width=3) )'
+  let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => pprint.apply(v, width=3, height=2000) )'
 
   elseif typeMode == 'plain'
     " let _printVal = identif
-    let _printVal = 'pprint.apply(' . identif . ', width=3 )'
+    let _printVal = 'pprint.apply(' . identif . ', width=3, height=2000 )'
   endif
 
   if a:keyCmdMode == 'server'
@@ -797,17 +797,17 @@ func! MakeOrPttn( listOfPatterns )
   return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
-let g:Scala_colonPttn = MakeOrPttn( ['\:', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 
-func! Scala_ColonForw()
-  call SearchSkipSC( g:Scala_colonPttn, 'W' )
+func! Scala_ColumnForw()
+  call SearchSkipSC( g:Scala_columnPttn, 'W' )
   normal w
 endfunc
 
-func! Scala_ColonBackw()
+func! Scala_ColumnBackw()
   normal bh
-  call SearchSkipSC( g:Scala_colonPttn, 'bW' )
+  call SearchSkipSC( g:Scala_columnPttn, 'bW' )
   normal w
 endfunc
 

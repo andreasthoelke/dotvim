@@ -280,9 +280,9 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'children' conceal cchar=ᴟ
 
 
-
   syntax match Normal '@\i*' conceal cchar=❈
   syntax match Normal '@query' conceal cchar=𝑞
+  syntax match Normal 'uri\ze\"' conceal cchar=⁝
 
   syntax match Normal '\vfor\ze(\W|\_$)' conceal cchar=⊃
   syntax match Normal 'yield' conceal cchar=⊂
@@ -424,14 +424,6 @@ func! ScalaSyntaxAdditions ()
 
 
   " display Type variables as small cursive letters
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsA\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑎
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsR\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑟
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsE\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑒
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsB\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑏
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsC\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑐
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsS\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑠
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsT\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑡
-  " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsV\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑣
   " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsU\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑢
   " syntax match Normal '\v(\s|\(|\[|(\+|\-))\zsK\ze(:|,|\]|\)|\_$|\s\=\>|\s*(\>|\<|\=|\/))' conceal cchar=𝑘
 
@@ -440,19 +432,9 @@ func! ScalaSyntaxAdditions ()
 
   " syntax match Normal '\s\zsA\ze\*' conceal cchar=𝑎
   " syntax match Normal '\s\zsR\ze\*' conceal cchar=𝑟
-  " syntax match Normal '\s\zsE\ze\*' conceal cchar=𝑒
-  " syntax match Normal '\s\zsB\ze\*' conceal cchar=𝑏
-  " syntax match Normal '\s\zsC\ze\*' conceal cchar=𝑐
-  " syntax match Normal '\s\zsS\ze\*' conceal cchar=𝑠
-  " syntax match Normal '\s\zsT\ze\*' conceal cchar=𝑡
-  " syntax match Normal '\s\zsV\ze\*' conceal cchar=𝑣
-  " syntax match Normal '\s\zsU\ze\*' conceal cchar=𝑢
-  " syntax match Normal '\s\zsK\ze\*' conceal cchar=𝑘
 
   " TODO: can somehow not match this properly
   " syntax match Normal ': \A$' conceal cchar=𝑎
-  " syntax match Normal ': \zsR$' conceal cchar=𝑟
-  " syntax match Normal ': \zsE$' conceal cchar=𝑒
   " syntax match Normal ': \zsB$' conceal cchar=𝑏
 
 

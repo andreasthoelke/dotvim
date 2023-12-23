@@ -87,7 +87,9 @@ func! CreateScala_fewerBraces_b()
   let [oLine, oCol] = getpos('.')[1:2]
   " call feedkeys("r\n", 'n')
   call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
-  normal! j$x^x
+  normal! ^j
+  call search('\v(\}|\))', 'c')
+  normal! x^x
   call InsertStringAtLoc('  ', line('.'), col('.')-2)
   call setpos('.', [0, oLine, oCol, 0] )
   normal! r:
