@@ -104,6 +104,30 @@ func! ClipBoard_LinkPath( path, linkExtension, shorten )
 endfunc
 " ClipBoard_LinkPath( getcwd(), '" ─   Link paths                                        ──', 'shorten')
 
+
+func! LinkPath_get()
+  let filePath = expand('%:p')
+  let filePath = substitute( filePath, '/Users/at/', '~/', 'g' )
+
+  let lineStr = getline('.')
+  if lineStr =~ '─'
+    let searchStr = GetHeadingTextFromHeadingLine( line('.') )
+    let searchStr = substitute( searchStr, " ", "ˍ", "g" )
+    return filePath . "‖*" . searchStr
+  else
+    let searchStr = LinkPath_getKeyword()
+    let searchStr = substitute( searchStr, " ", "ˍ", "g" )
+    return filePath . "‖/" . searchStr
+  endif
+endfunc
+
+func! LinkPath_getKeyword()
+  let lineStr = getline('.')
+  let searchStr = lineStr->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
+  return searchStr
+endfunc
+
+
 func! Link_jumpToLine( linkExtension )
   let linkExtension = substitute( a:linkExtension, "ˍ", " ", "g" )
   let linkKey = linkExtension[0]

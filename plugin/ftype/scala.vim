@@ -14,8 +14,9 @@ func! S_MenuCommands()
   if !S_IsInitialized()
     let cmds += [ {'label': '_M Initialize from ..',   'cmd': 'echo "-"' } ]
   else
-    let cmds += [ {'label': 'Printer',   'cmd': 'edit src/main/scala/Printer.scala' } ]
-    let cmds += [ {'label': 'PrinterServer',   'cmd': 'edit src/main/scala/PrinterServer.scala' } ]
+    let cmds += [ {'label': 'Printer & Examples',   'cmd': 'new m/_printer' } ]
+    let cmds += [ {'label': 'Examples',   'cmd': 'new ' . g:ExamplesPath } ]
+    let cmds += [ {'label': '_Examples',   'cmd': "call v:lua.FloatBuf_inOtherWinColumn( 'm/_printer/Examples.md' )" } ]
   endif
 
   let cmds +=  [ {'section': 'Repl [' . (exists('g:ScalaReplID') ? '↑]' : '↓]')} ]
@@ -26,7 +27,7 @@ func! S_MenuCommands()
 endfunc
 
 func! S_IsInitialized()
-  return filereadable( "m/_printer/Printer.scala" )
+  return isdirectory( "m/_printer" )
 endfunc
 
 
@@ -333,6 +334,39 @@ func! Scala_AddSignature()
   call search('=')
 
 endfunc
+
+
+" ─   Printer examples                                   ■
+" ~/Documents/Notes/scratch2023.md‖/#ˍPrinterˍ&
+
+nnoremap <silent><leader>ces :call Example_SetStart()<cr>
+nnoremap <silent><leader>cea :call Example_AddIdentif()<cr>
+
+let g:ExamplesPath = "m/_printer/Examples.md"
+
+" filereadable( g:ExamplesPath )
+
+func! Example_SetStart()
+  if !filereadable( g:ExamplesPath )
+    call writefile( [], g:ExamplesPath )
+  endif
+  let headerText = GetHeadingTextFromHeadingLine( line('.') )
+  let linkPath = LinkPath_get()
+  let lines = ["", "# " . headerText, linkPath]
+  call writefile( lines, g:ExamplesPath, "a" )
+endfunc
+
+func! Example_AddIdentif()
+  let hostLn = line('.')
+  let identif = matchstr( getline( hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+
+  let linkPath = LinkPath_get()
+  call writefile( [identif . " " . linkPath], g:ExamplesPath, "a" )
+endfunc
+
+
+" ─^  Printer examples                                   ▲
 
 
 
