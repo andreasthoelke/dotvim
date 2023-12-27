@@ -17,6 +17,7 @@ func! S_MenuCommands()
     let cmds += [ {'label': 'Printer & Examples',   'cmd': 'new m/_printer' } ]
     let cmds += [ {'label': 'Examples',   'cmd': 'new ' . g:ExamplesPath } ]
     let cmds += [ {'label': '_Examples',   'cmd': "call v:lua.FloatBuf_inOtherWinColumn( 'm/_printer/Examples.md' )" } ]
+    let cmds += [ {'label': '_Dependencies',   'cmd': 'new project/Dependencies.scala' } ]
   endif
 
   let cmds +=  [ {'section': 'Repl [' . (exists('g:ScalaReplID') ? '↑]' : '↓]')} ]
@@ -354,6 +355,7 @@ func! Example_SetStart()
   let linkPath = LinkPath_get()
   let lines = ["", "# " . headerText, linkPath]
   call writefile( lines, g:ExamplesPath, "a" )
+  echo 'started ' . headerText
 endfunc
 
 func! Example_AddIdentif()
@@ -363,6 +365,7 @@ func! Example_AddIdentif()
 
   let linkPath = LinkPath_get()
   call writefile( [identif . " " . linkPath], g:ExamplesPath, "a" )
+  echo 'added ' . identif
 endfunc
 
 

@@ -72,12 +72,12 @@ let g:vim_markdown_anchorexpr = "v:anchor"
 let g:vim_markdown_folding_level = 2
 " let g:vim_markdown_folding_disabled = 1
 
-augroup markdown_config
-  autocmd!
+" augroup markdown_config
+"   autocmd!
   " Example: buffer local maps. Note: <Plug> maps don't work with "noremap"!
   " Follow a markdown hyperlink, add position to jumplist to allow "c-o" to jump back
-  autocmd FileType markdown nmap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
-augroup END
+  " autocmd FileType markdown nmap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
+" augroup END
 
 
 " ─^  Other Config                                       ▲

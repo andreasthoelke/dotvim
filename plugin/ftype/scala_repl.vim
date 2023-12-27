@@ -5,6 +5,8 @@
 
 nnoremap <silent> <leader><leader>ro :call ScalaReplStart()<cr>
 nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
+nnoremap <silent> <leader><leader>rr :call ScalaReplReload()<cr>
+nnoremap <silent> <leader><leader>ri :MetalsImportBuild<cr>
 
 func! ScalaReplStart ()
   if exists('g:ScalaReplID')
@@ -15,6 +17,17 @@ func! ScalaReplStart ()
   let g:ScalaRepl_bufnr = bufnr()
   let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
   silent wincmd c
+endfunc
+
+func! ScalaReplReload ()
+  if !exists('g:ScalaReplID')
+    echo 'ScalaRepl is not running'
+    return
+  else
+    echo 'reloading ..'
+  endif
+  let cmd = "reload" . "\n"
+  call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
 endfunc
 
 " g:ScalaReplID

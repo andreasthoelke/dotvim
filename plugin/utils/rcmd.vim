@@ -6,12 +6,12 @@
 " Alerts and filters duplicate strings (maintains a Set of strings). 
 
 " Show Rlist in float-win. Note you can delete items, edit items, write new items and refresh the Rlist highlight in the float-win!.
-nnoremap <silent> <leader>rs :call Rlist_Show()<cr>
-nnoremap <silent> <leader>rr :call Rlist_Highlight()<cr>:echo "Rlist count: " len(Rlist())<cr>
+" nnoremap <silent> <leader>rs :call Rlist_Show()<cr>
+" nnoremap <silent> <leader>rr :call Rlist_Highlight()<cr>:echo "Rlist count: " len(Rlist())<cr>
 
 " Add or delete a range of lines. Will alert & filter for dublicate adds or redundant deletes.
-nnoremap <silent> <leader>ra :set opfunc=Rlist_Add_op<cr>g@
-nnoremap <silent> <leader>rd :set opfunc=Rlist_Delete_op<cr>g@
+" nnoremap <silent> <leader>ra :set opfunc=Rlist_Add_op<cr>g@
+" nnoremap <silent> <leader>rd :set opfunc=Rlist_Delete_op<cr>g@
 
 nnoremap <leader>rc :call Rlist_Clear()<cr>
 
@@ -95,7 +95,7 @@ func! Rcmds_path()
 endfunc
 
 " The files can be initialized with ll ri
-nnoremap <silent> <leader><leader>ri :call R_init()<cr>
+" nnoremap <silent> <leader><leader>ri :call R_init()<cr>
 func! R_init()
   let msg = 'Resetting ' . Rsh_path() . "?"
   let dres = confirm( msg, "&Yes\n&Cancel", 2 )
@@ -122,7 +122,7 @@ endfunc
 let g:Rlist_cwd = 'r/_/'
 
 " But you can initialize a local rlist using ll rI:
-nnoremap <silent> <leader><leader>rI :call R_init()<cr>
+" nnoremap <silent> <leader><leader>rI :call R_init()<cr>
 
 " Or you can l ss on the following line to keep a use case specific script.
 " let g:Rlist_cwd = 'rlist_feature_version/'
@@ -149,14 +149,14 @@ endfunc
 " n-times with each val in: /Users/at/.config/nvim/rlist/r_list
 
 " You can quickly preview (and edit) r.sh using l res
-nnoremap <silent> <leader>rep :call Rsh_show()<cr>
+" nnoremap <silent> <leader>rep :call Rsh_show()<cr>
 func! Rsh_show()
   call FloatingBuffer( Rsh_path() )
 endfunc
 
 " You can also show the list of the actual commands (including the literal (iterated) argument values)
 " that would be executed once you issue l rei
-nnoremap <silent> <leader>reP :call Rsh_preview()<cr>
+" nnoremap <silent> <leader>reP :call Rsh_preview()<cr>
 func! Rsh_preview()
   let cmd = RcmdString_get()
   if cmd =~ '"'
@@ -173,8 +173,8 @@ func! Rsh_preview()
   call RcmdString_set( cmd )
 endfunc
 
-nnoremap <silent> <leader>rei :call Rlist_run()<cr>
-nnoremap <silent> <leader>reI :call Rlist_runTerm()<cr>
+" nnoremap <silent> <leader>rei :call Rlist_run()<cr>
+" nnoremap <silent> <leader>reI :call Rlist_runTerm()<cr>
 
 func! Rlist_run()
   let cmd = Rlist_cmdrunnercode()
@@ -199,7 +199,7 @@ endfunc
 " An example that also uses the static $r_source and $r_dest variables:
 " unzip -j $r_source $r_el -d $r_dest
 
-nnoremap <silent> <leader>rew :call RcmdString_set( getline('.') )<cr>
+" nnoremap <silent> <leader>rew :call RcmdString_set( getline('.') )<cr>
 func! RcmdString_set( cmd )
   let lns = readfile( Rsh_path() )
   let lns[11] = a:cmd
@@ -212,7 +212,7 @@ func! RcmdString_get()
   return lns[11]
 endfunc
 
-nnoremap <silent> <leader>rec :call Rcmds_selection()<cr>
+" nnoremap <silent> <leader>rec :call Rcmds_selection()<cr>
 func! Rcmds_selection()
   call FloatingBuffer( Rcmds_path() )
   call search( '\V\^'.escape( RcmdString_get(), '\').'\$', 'cw' )
@@ -225,7 +225,7 @@ endfunc
 " l rS/D/O allow to set the r_source, r_dest, r_opt static vars from the clipboard
 " The clipboard content will be single-quoted. Thus numbers, arrays might not work.
 
-nnoremap <silent> <leader>rS :call R_source_set( @* )<cr>
+" nnoremap <silent> <leader>rS :call R_source_set( @* )<cr>
 func! R_source_set( val )
   let lns = readfile( Rsh_path() )
   let lns[1] = "r_source='" . a:val . "'"
@@ -233,7 +233,7 @@ func! R_source_set( val )
   echo "Set: " . "r_source=" . a:val . " => " . Rsh_path()
 endfunc
 
-nnoremap <silent> <leader>rD :call R_dest_set( @* )<cr>
+" nnoremap <silent> <leader>rD :call R_dest_set( @* )<cr>
 func! R_dest_set( val )
   let lns = readfile( Rsh_path() )
   let lns[2] = "r_dest='" . a:val . "'"
@@ -241,7 +241,7 @@ func! R_dest_set( val )
   echo "Set: " . "r_dest=" . a:val . " => " . Rsh_path()
 endfunc
 
-nnoremap <silent> <leader>rO :call R_opt_set( @* )<cr>
+" nnoremap <silent> <leader>rO :call R_opt_set( @* )<cr>
 func! R_opt_set( val )
   let lns = readfile( Rsh_path() )
   let lns[3] = "r_opt='" . a:val . "'"
@@ -281,7 +281,7 @@ endfunc
 
 
 
-nnoremap <silent> <leader>re :set opfunc=Rbuffer_exec_op<cr>g@
+" nnoremap <silent> <leader>re :set opfunc=Rbuffer_exec_op<cr>g@
 
 
 func! Rbuffer_exec_op( _ )
@@ -300,14 +300,14 @@ endfunc
 " echo ab
 " echo cd
 
-nnoremap <silent> <leader>ree :call Rbuffer_exec_again()<cr>
+" nnoremap <silent> <leader>ree :call Rbuffer_exec_again()<cr>
 func! Rbuffer_exec_again()
  echo "Running terminal command .."
  call T_DelayedCmd( "echo ''", 2000 )
  call System_Float( g:Rbuffer_path )
 endfunc
 
-nnoremap <silent> <leader>res :call Rsh_show()<cr>
+" nnoremap <silent> <leader>res :call Rsh_show()<cr>
 func! Rsh_show()
   call FloatingBuffer( g:Rbuffer_path )
 endfunc
@@ -352,7 +352,7 @@ endfunc
 " unzip -j temp.zip fp3 -d ab
 
 
-nnoremap <silent> <leader>rp :call Review_ThenRun_CmdTemplToRlist_args()<cr>
+" nnoremap <silent> <leader>rp :call Review_ThenRun_CmdTemplToRlist_args()<cr>
 
 func! Review_ThenRun_CmdTemplToRlist_args()
   " let rlist_quoted = copy( ...Rlist()->map( {_,str -> "'" . str . "'"} )

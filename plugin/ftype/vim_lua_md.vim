@@ -9,6 +9,9 @@ func! VScriptToolsBufferMaps()
 
   " the below should overwrite the default/scala maps
 
+  " Untested
+  " nnoremap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
+
   nnoremap <silent><buffer> I :call Vim_ColonForw()<cr>
   nnoremap <silent><buffer> Y :call Vim_ColonBackw()<cr>
 

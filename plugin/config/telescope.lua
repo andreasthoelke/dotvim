@@ -90,6 +90,8 @@ local function get_path_link( prompt_title, search_term )
       col_end = end_index,
     }
 
+    -- putt(selection)
+    -- putt(keymap_props)
     -- CASE: Vim help tags. This picker provides a search command field(?!) ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/cmdˍ=ˍfield
     --                      An alternative approach would be to change the NewBuf command to include "help" like here: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__internal.lua‖/elseifˍcmdˍ
   elseif prompt_title == "Help" then
@@ -281,7 +283,11 @@ local NewBuf = f.curry( function( adirection, pbn )
   if
     prompt_title == "Spelling Suggestions" or
     prompt_title == "Registers" or
+
+    -- ~/Documents/Notes/scratch2023.md‖/#ˍscaladexˍ
     prompt_title == "scaladex search" or
+    -- prompt_title == "scaladex package selection" or
+    -- prompt_title ~= "scaladex" or
     prompt_title == "Symbols"
   then
     actions.select_default( pbn )
@@ -935,6 +941,7 @@ function _G.Telesc_launch( picker_name, opts )
     } )
     extensions.vim_bookmarks.all( opts )
 
+  -- ~/Documents/Notes/scratch2023.md‖/#ˍscaladexˍ
   elseif picker_name == 'scaladex' then
     opts = f.merge( {}, {
       attach_mappings = function(_, map)

@@ -290,6 +290,11 @@ let g:searchSites =  [ {'section':'Docs'} ]
 "       \, 'mainTerm':'search?q='
 "       \}]
 
+" https://index.scala-lang.org/search?q=zio+interop+cats
+let g:searchSites += [ {'label':'_Scaladex',    'baseUrl':'https://index.scala-lang.org/'
+      \, 'mainTerm':'search?q='
+      \}]
+
 " https://www.phind.com/search?q=if%20a%20lua%20function%20returns%20two%20return%20values%20how%20can%20i%20easily%20print%20both%20values%3F&source=searchbox
 let g:searchSites += [ {'label':'_Phind',    'baseUrl':'https://phind.com/'
       \, 'mainTerm':'search?q='

@@ -52,8 +52,8 @@ nnoremap geF :call ShellReturn( 'python ' . expand('%') )<cr>
 " the vimrc
 nnoremap <silent><leader><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
-nnoremap <leader>s} "ty}:@t<cr>
-nnoremap <leader>sip m'"tyip:@t<cr>``
+nnoremap <silent><leader>s} "ty}:@t<cr>
+" nnoremap <leader>sip m'"tyip:@t<cr>``
 " Uses "h textobj-function"
 " nmap     <leader>saf m'"tyaf:@t<cr>``
 " nnoremap <silent> <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>

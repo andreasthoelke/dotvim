@@ -976,8 +976,10 @@ local metals_config = require("metals").bare_config()
 
 -- Example of settings
 metals_config.settings = {
-  showImplicitArguments = true,
-  showImplicitConversionsAndClasses = true,
+  -- TODO 12-23: test these
+  showImplicitArguments = false,
+  showImplicitConversionsAndClasses = false,
+
   showInferredType = true,
   superMethodLensesEnabled = true,
   enableSemanticHighlighting = true,
