@@ -24,6 +24,7 @@ nnoremap <silent><buffer> - <Plug>(dirvish_up)
 
 nnoremap <silent><buffer>p :call NewBuf_fromCursorLinkPath("preview_back")<cr>
 nnoremap <silent><buffer>o :call NewBuf_fromCursorLinkPath("float")<cr>
+" then this is in a float the default is to jump to the origin win. so this is kind of a hack. see the comment in NewBuf_fromCursorLinkPath.
 nnoremap <silent><buffer>i :call NewBuf_fromCursorLinkPath("full")<cr>
 " currently overwritten. see ~/.config/nvim/plugin/config/dirvish.vim‖:48:3
 nnoremap <silent><buffer>I :call NewBuf_fromCursorLinkPath("full_bg")<cr>
@@ -51,6 +52,7 @@ nnoremap <silent><buffer><c-space> :call v:lua.Ntree_launchToAltView_saveAltFile
 
 
 " In a divish buffer I rarely use visual selection. but i'd want to use 'v' for splits
+" .. i don't understand these maps or comment.
 nnoremap <silent><buffer> <localleader>v v
 nnoremap <silent><buffer> <localleader>V V
 nnoremap <silent><buffer> <localleader><c-V> <c-V>

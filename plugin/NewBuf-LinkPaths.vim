@@ -119,10 +119,9 @@ func! Link_jumpToLine( linkExtension )
     endif
     normal ^
   elseif linkKey == "/"
-    if !search( '\V\' . escape(linkVal, '\'), 'cw' ) 
-      echo 'Line not found: ' linkVal
+    if !search( '\v' . escape(linkVal, '\'), 'cw' ) 
+      echo 'Keyword not found: ' linkVal
     endif
-    normal ^
   else
     echoe 'unsupported linkKey: ' . linkKey
   endif

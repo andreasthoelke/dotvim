@@ -131,14 +131,15 @@ func! ScalaReplMainCallback(_job_id, data, _event)
     " { "[info]   value = Character(", '[info]     name = "aa",', "[info]     age = 12", "[info]   )", "[info] )_RES_multi_END", "[success] Total time: 2 s, completed 8 Dec 2023, 21:12:07", "=sbt:edb_gql> " }
     let idx = functional#findP( lines, {x-> x =~ '_RES_multi_END'} )
 
+    let lines = SubstituteInLines( lines, '\[info\] ', "" )
+    let lines = SubstituteInLines( lines, '"""', "" )
+
     if idx == -1
       let g:Repl_wait_multiline_received += lines
-      echo "_RES_multi_END not found in chunk"
+      " echoe "_RES_multi_END not found in chunk"
       return
     endif
 
-    let lines = SubstituteInLines( lines, '\[info\]', "" )
-    let lines = SubstituteInLines( lines, '"""', "" )
     let lines = SubstituteInLines( lines, '_RES_multi_END', "" )
     let g:Repl_wait_multiline_received += lines[:idx]
     let resultVal = g:Repl_wait_multiline_received

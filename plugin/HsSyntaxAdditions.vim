@@ -63,6 +63,7 @@ augroup track_window
 
    autocmd BufLeave * if &ft !~ "neo-tree" | let g:Winid_previous = win_getid() | endif    
    autocmd BufEnter * if &ft == "neo-tree" | let g:Ntree_prevWinid = g:Winid_previous | endif
+   autocmd BufEnter * if &ft == "dirvish" | let g:Ntree_prevWinid = g:Winid_previous | endif
 augroup END
 
 

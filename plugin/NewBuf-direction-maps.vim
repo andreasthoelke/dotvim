@@ -53,20 +53,20 @@ nnoremap <silent> ,,sn      :call Browse_cwd  ( "down" )<cr>
 " ─   NewBuf from path                                  ──
 
 " LINE-WORD
-nnoremap <silent> <c-w><leader>p  :call NewBuf_fromCursorLinkPath( "preview_back" )<cr>
-nnoremap <silent> <c-w><leader>o  :call NewBuf_fromCursorLinkPath( "float" )<cr>
-nnoremap <silent> <c-w><leader>i  :call NewBuf_fromCursorLinkPath( "full" )<cr>
-nnoremap <silent> <c-w><leader>tn :call NewBuf_fromCursorLinkPath( "tab" )<cr>
-nnoremap <silent> <c-w><leader>tt :call NewBuf_fromCursorLinkPath( "tab_bg" )<cr>
-nnoremap <silent> <c-w><leader>T  :call NewBuf_fromCursorLinkPath( "tab_left" )<cr>
+nnoremap <silent> <c-w><leader>p  :call NewBuf_fromLinePath( "preview_back" )<cr>
+nnoremap <silent> <c-w><leader>o  :call NewBuf_fromLinePath( "float" )<cr>
+nnoremap <silent> <c-w><leader>i  :call NewBuf_fromLinePath( "full" )<cr>
+nnoremap <silent> <c-w><leader>tn :call NewBuf_fromLinePath( "tab" )<cr>
+nnoremap <silent> <c-w><leader>tt :call NewBuf_fromLinePath( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader>T  :call NewBuf_fromLinePath( "tab_left" )<cr>
 " _
-nnoremap <silent> <c-w><leader>v  :call NewBuf_fromCursorLinkPath( "right" )<cr>
-nnoremap <silent> <c-w><leader>V  :call NewBuf_fromCursorLinkPath( "right_back" )<cr>
-nnoremap <silent> <c-w><leader>a  :call NewBuf_fromCursorLinkPath( "left" )<cr>
-nnoremap <silent> <c-w><leader>u  :call NewBuf_fromCursorLinkPath( "up" )<cr>
-nnoremap <silent> <c-w><leader>U  :call NewBuf_fromCursorLinkPath( "up_back" )<cr>
-nnoremap <silent> <c-w><leader>s  :call NewBuf_fromCursorLinkPath( "down" )<cr>
-nnoremap <silent> <c-w><leader>S  :call NewBuf_fromCursorLinkPath( "down_back" )<cr>
+nnoremap <silent> <c-w><leader>v  :call NewBuf_fromLinePath( "right" )<cr>
+nnoremap <silent> <c-w><leader>V  :call NewBuf_fromLinePath( "right_back" )<cr>
+nnoremap <silent> <c-w><leader>a  :call NewBuf_fromLinePath( "left" )<cr>
+nnoremap <silent> <c-w><leader>u  :call NewBuf_fromLinePath( "up" )<cr>
+nnoremap <silent> <c-w><leader>U  :call NewBuf_fromLinePath( "up_back" )<cr>
+nnoremap <silent> <c-w><leader>s  :call NewBuf_fromLinePath( "down" )<cr>
+nnoremap <silent> <c-w><leader>S  :call NewBuf_fromLinePath( "down_back" )<cr>
 
 
 " TELESCOPE 
@@ -317,14 +317,17 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
     " if IsInFloatWin() | wincmd c | endif
     " TODO: this is mostly for the ,cm float-dirvish recent notes menu where I want to split out a note from the origin window.
     " i hardly have the case of a non-float dirvish folder(?)
-    if IsInFloatWin() | wincmd p | endif
-    exec cmd
+    " if IsInFloatWin() | wincmd p | endif
+    " exec cmd
+    call v:lua.Ntree_cmdInOriginWin( cmd )
     " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
   endif
 endfunc
 
 " NewBufCmds( 'test' )[ 'right' ]
+" NewBufCmds( 'test' )[ 'full' ]
+" NewBufCmds( 'test' )[ 'full_bg' ]
 
 func! NewBuf_fromClipPath( direction )
   let [path; maybeLinkExt] = @*->split('‖')
@@ -333,6 +336,16 @@ func! NewBuf_fromClipPath( direction )
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
 endfunc
+
+func! NewBuf_fromLinePath( direction )
+  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
+  let cmd = NewBufCmds( path )[ a:direction ] 
+  " if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+endfunc
+
+
 
 func! NewBuf_fromScratchBuffer( direction )
   let path = '~/Documents/Notes/scratch/' . GetRandNumberString()
