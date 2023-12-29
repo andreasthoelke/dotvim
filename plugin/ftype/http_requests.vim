@@ -25,6 +25,10 @@ func! Httpx_parse( source, result )
   return [rest, a:result . " " . val]
 endfunc
 
+
+" ISSUE: can't fetch this simple route:
+" ~/Documents/Proj/h_frontend/b_lamin_fullstack/server/src/main/scala/com/raquo/server/Server.scala‖/GETˍ->ˍRoot
+
 func! Scala_ServerClientRequest_x()
   let sourceLineItems = split( matchstr( getline("."), '\v(//\s)?\zs.*' ), " " )
 

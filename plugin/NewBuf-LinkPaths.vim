@@ -89,6 +89,7 @@ endfunc
 " echo ClipBoard_LinkPath_linesearch( 'full' )
 
 func! ClipBoard_LinkPath( path, linkExtension, shorten )
+  set clipboard=unnamedplus
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
   if len( a:linkExtension )
     let linkExtension = substitute( a:linkExtension, " ", "ˍ", "g" )
@@ -138,7 +139,8 @@ func! Link_jumpToLine( linkExtension )
     " vim.api.nvim_win_set_cursor(win, {line, col})
     call setpos( '.', [0, lineNum, column, 0] )
   elseif linkKey == "*"
-    if !search( '\v─\s{-}' . escape(linkVal, '\'), 'cw' ) 
+    " if !search( '\v─\s{-}' . escape(linkVal, '\'), 'cw' ) 
+    if !search( '\v' . escape(linkVal, '\'), 'cw' ) 
       echo 'Header not found: ' linkVal
     endif
     normal ^

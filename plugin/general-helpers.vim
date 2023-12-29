@@ -374,7 +374,6 @@ inoremap \fp <C-R>=getcwd()<CR>
 " Normal mode: "%p
 " Insert mode: i<c-r>%
 
-set clipboard=unnamedplus
 
 
 

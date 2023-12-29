@@ -15,6 +15,9 @@ Plug 'junegunn/vim-plug'
 " Plug 'derekthecool/luafun_neovim'
 Plug 'github/copilot.vim'
 
+" https://github.com/piersolenski/wtf.nvim
+Plug 'piersolenski/wtf.nvim'
+
 " File Selectors Browsers: ------------------------------------------
 " Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-tree/nvim-web-devicons'

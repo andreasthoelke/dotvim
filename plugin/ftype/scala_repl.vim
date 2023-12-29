@@ -15,7 +15,10 @@ func! ScalaReplStart ()
   endif
   exec "new"
   let g:ScalaRepl_bufnr = bufnr()
-  let g:ScalaReplID = termopen('sbt', g:ScalaReplCallbacks)
+
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:ScalaReplCallbacks )
+  let g:ScalaReplID = termopen('sbt', opts)
   silent wincmd c
 endfunc
 
@@ -62,7 +65,12 @@ func! ScalaServerReplStart ()
   endif
   exec "new"
   let g:ScalaServerRepl_bufnr = bufnr()
-  let g:ScalaServerReplID = termopen('sbt --client', g:ScalaReplCallbacks)
+
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:ScalaReplCallbacks )
+
+  " TODO: try ~server/reStart
+  let g:ScalaServerReplID = termopen('sbt --client', opts)
   silent wincmd c
 endfunc
 

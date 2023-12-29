@@ -53,7 +53,8 @@ nnoremap <silent> ,,sn      :call Browse_cwd  ( "down" )<cr>
 " ─   NewBuf from path                                  ──
 
 " LINE-WORD
-nnoremap <silent> <c-w><leader>p  :call NewBuf_fromLinePath( "preview_back" )<cr>
+nnoremap <silent> <c-w><leader>p  :call NewBuf_fromLinePath( "preview" )<cr>
+nnoremap <silent> <c-w><leader>P  :call NewBuf_fromLinePath( "preview_back" )<cr>
 nnoremap <silent> <c-w><leader>o  :call NewBuf_fromLinePath( "float" )<cr>
 nnoremap <silent> <c-w><leader>i  :call NewBuf_fromLinePath( "full" )<cr>
 nnoremap <silent> <c-w><leader>tn :call NewBuf_fromLinePath( "tab" )<cr>
@@ -318,8 +319,11 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
     " TODO: this is mostly for the ,cm float-dirvish recent notes menu where I want to split out a note from the origin window.
     " i hardly have the case of a non-float dirvish folder(?)
     " if IsInFloatWin() | wincmd p | endif
-    " exec cmd
-    call v:lua.Ntree_cmdInOriginWin( cmd )
+    if &filetype == 'markdown'
+      exec cmd
+    else
+      call v:lua.Ntree_cmdInOriginWin( cmd )
+    endif
     " Search for any file focus. Filesystem trees or dirvish don't provide links, but diagnostics, gitinfo and telescope will (TODO)
     if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
   endif
@@ -340,9 +344,16 @@ endfunc
 func! NewBuf_fromLinePath( direction )
   let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
+
   " if IsInFloatWin() | wincmd c | endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif
+
+  if a:direction == 'preview' 
+    " if IsInFloatWin() 
+      wincmd p 
+    " endif
+  endif
 endfunc
 
 

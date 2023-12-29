@@ -142,15 +142,26 @@ _G.vimrc.cmp.lsp = function()
   })
 end
 
-_G.vimrc.cmp.snippet = function()
-  cmp.complete({
-    config = {
-      sources = {
-        { name = 'vsnip' }
-      }
-    }
-  })
-end
+
+-- _G.vimrc.cmp.snippet = function()
+--   cmp.complete({}, {
+--     config = {
+--       sources = {
+--         { name = 'vsnip' }
+--       }
+--     }
+--   })
+-- end
+
+-- _G.vimrc.cmp.snippet = function()
+--   cmp.complete({
+--     config = {
+--       sources = {
+--         { name = 'vsnip' }
+--       }
+--     }
+--   })
+-- end
 
 -- inoremap <C-i> <Cmd>lua vimrc.cmp.lsp()<CR>
 

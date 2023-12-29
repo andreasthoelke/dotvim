@@ -558,28 +558,29 @@ lspconfig.jsonls.setup({
 -- table.insert(runtime_path, "lua/?/init.lua")
 
 
-lspconfig.lua_ls.setup {
-  capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-  end,
-  settings = {
-    Lua = {
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file("", true),
-        checkThirdParty = true,
-      },
-      window = {
-        progressBar = false
-      },
-    },
-  },
-}
+-- TODO: lua_ls works nicely as is. however there are a lot of warnings in my config which spam the trouble list which i don't know how to filter.
+-- lspconfig.lua_ls.setup {
+--   capabilities = capabilities,
+--   on_attach = function(client, bufnr)
+--     on_attach(client, bufnr)
+--   end,
+--   settings = {
+--     Lua = {
+--       diagnostics = {
+--         -- Get the language server to recognize the `vim` global
+--         globals = { 'vim' },
+--       },
+--       workspace = {
+--         -- Make the server aware of Neovim runtime files
+--         library = vim.api.nvim_get_runtime_file("", true),
+--         checkThirdParty = true,
+--       },
+--       window = {
+--         progressBar = false
+--       },
+--     },
+--   },
+-- }
 
   -- settings = {
   --   Lua = {
@@ -986,6 +987,9 @@ metals_config.settings = {
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 
 }
+
+-- this doesn't exist, delete
+vim.g['metals_autoImport'] = false
 
 -- vim.highlight.priorities.semantic_tokens
 vim.highlight.priorities.semantic_tokens = 125
