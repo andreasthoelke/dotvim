@@ -20,9 +20,11 @@ func! S_MenuCommands()
     let cmds += [ {'label': '_Dependencies',   'cmd': 'new project/Dependencies.scala' } ]
   endif
 
-  let cmds +=  [ {'section': 'Repl [' . (exists('g:ScalaReplID') ? '↑]' : '↓]')} ]
-  let cmds +=  [ {'section': 'ServerTerm [' . (exists('g:ScalaServerReplID') ? '↑]' : '↓]')} ]
-  let cmds +=  [ {'section': 'Server [' . (ScalaServerRepl_isRunning() ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'Sbt printer [' . (exists('g:SbtPrinterID') ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'Sbt long-run [' . (exists('g:SbtLongrunID') ? '↑]' : '↓]')} ]
+  " let cmds +=  [ {'section': 'Sbt long-run up [' . (ScalaServerRepl_isRunning() ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'Sbt reloader [' . (exists('g:SbtReloaderID') ? '↑]' : '↓]')} ]
+  let cmds +=  [ {'section': 'Sbt Js [' . (exists('g:SbtJsID') ? '↑]' : '↓]')} ]
 
   return cmds
 endfunc
@@ -52,6 +54,7 @@ func! Scala_bufferMaps()
   nnoremap <silent><buffer>         gei :call Scala_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer>         geI :call Scala_RunPrinter( "server" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinter( "term"  )<cr>
+  nnoremap <silent><buffer>         gej :call SbtJs_compile()<cr>
 " ─^  Printer                                            ▲
 
   " STUBS
@@ -142,7 +145,7 @@ func! Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
-  nnoremap <silent><buffer>         gej :lua vim.lsp.buf.signature_help()<cr>
+  nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
   nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
@@ -641,7 +644,7 @@ func! Scala_RunPrinter( termType )
     " TODO: just temp for a prim zio sbt repo
     if effType == 'both'  || effType == 'zio' || effType == 'none'
       if a:termType == 'server'
-        if !exists('g:ScalaServerReplID') | echo 'ScalaServerRepl is not running' | return | endif
+        if !exists('g:SbtLongrunID') | echo 'SbtLongrun is not running' | return | endif
         " Old version: NOTE: the initial \n as a convention to end the previous process using zio.Console.read
         " let cmd = "\nrunMain " . "printzioserver.runZioServerApp" . "\n"
         " New version: killJVMProcess should block so the new/restarted process should not be affected
@@ -649,12 +652,12 @@ func! Scala_RunPrinter( termType )
         let cmd = "printer/bgRunMain " . "printerserver.runServerApp" . "\n"
         " TODO: technically I could use a unique (def name!) run command to then be able to selectively end/restart a process.
         call ScalaServerRepl_killJVMProcess( 'runServerApp' )
-        call ScalaSbtSession_RunMain( g:ScalaServerReplID, cmd )
+        call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
       else
-        if !exists('g:ScalaReplID') | echo 'ScalaRepl is not running' | return | endif
+        if !exists('g:SbtPrinterID') | echo 'SbtPrinter is not running' | return | endif
         " let cmd = "runMain " . "printer.runApp" . "\n"
         let cmd = "printer/runMain " . "printer.runApp" . "\n"
-        call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
+        call ScalaSbtSession_RunMain( g:SbtPrinterID, cmd )
       endif
     else
       echoe "not active"
@@ -834,7 +837,7 @@ func! MakeOrPttn( listOfPatterns )
   return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
-let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 
 func! Scala_ColumnForw()

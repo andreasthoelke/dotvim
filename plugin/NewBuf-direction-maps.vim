@@ -96,37 +96,12 @@ nnoremap <silent> <c-w>dd <c-w>o
 " TERM-BUFFER
 " c-w t  - TODO: any / glt? terminal buffer?
 
-" REPL-BUFFER
-nnoremap <silent> <c-w>rp  :call NewBuf_fromReplBuffer( "preview" )<cr>
-nnoremap <silent> <c-w>ro  :call NewBuf_fromReplBuffer( "float" )<cr>
-nnoremap <silent> <c-w>ri  :call NewBuf_fromReplBuffer( "full" )<cr>
-nnoremap <silent> <c-w>rt  :call NewBuf_fromReplBuffer( "tab" )<cr>
-nnoremap <silent> <c-w>rT  :call NewBuf_fromReplBuffer( "tab_left" )<cr>
-"      
-nnoremap <silent> <c-w>rv  :call NewBuf_fromReplBuffer( "right" )<cr>
-nnoremap <silent> <c-w>rV  :call NewBuf_fromReplBuffer( "right_back" )<cr>
-nnoremap <silent> <c-w>ra  :call NewBuf_fromReplBuffer( "left" )<cr>
-nnoremap <silent> <c-w>rA  :call NewBuf_fromReplBuffer( "left_back" )<cr>
-nnoremap <silent> <c-w>ru  :call NewBuf_fromReplBuffer( "up" )<cr>
-nnoremap <silent> <c-w>rU  :call NewBuf_fromReplBuffer( "up_back" )<cr>
-nnoremap <silent> <c-w>rs  :call NewBuf_fromReplBuffer( "down" )<cr>
-nnoremap <silent> <c-w>rS  :call NewBuf_fromReplBuffer( "down_back" )<cr>
-
-" SERVER-REPL-BUFFER
-nnoremap <silent> <c-w>Rp  :call NewBuf_fromReplBuffer( "preview", "server" )<cr>
-nnoremap <silent> <c-w>Ro  :call NewBuf_fromReplBuffer( "float", "server" )<cr>
-nnoremap <silent> <c-w>Ri  :call NewBuf_fromReplBuffer( "full", "server" )<cr>
-nnoremap <silent> <c-w>Rt  :call NewBuf_fromReplBuffer( "tab", "server" )<cr>
-nnoremap <silent> <c-w>RT  :call NewBuf_fromReplBuffer( "tab_left", "server" )<cr>
-"                      
-nnoremap <silent> <c-w>Rv  :call NewBuf_fromReplBuffer( "right", "server" )<cr>
-nnoremap <silent> <c-w>RV  :call NewBuf_fromReplBuffer( "right_back", "server" )<cr>
-nnoremap <silent> <c-w>Ra  :call NewBuf_fromReplBuffer( "left", "server" )<cr>
-nnoremap <silent> <c-w>RA  :call NewBuf_fromReplBuffer( "left_back", "server" )<cr>
-nnoremap <silent> <c-w>Ru  :call NewBuf_fromReplBuffer( "up", "server" )<cr>
-nnoremap <silent> <c-w>RU  :call NewBuf_fromReplBuffer( "up_back", "server" )<cr>
-nnoremap <silent> <c-w>Rs  :call NewBuf_fromReplBuffer( "down", "server" )<cr>
-nnoremap <silent> <c-w>RS  :call NewBuf_fromReplBuffer( "down_back", "server" )<cr>
+" Sbt terminals
+nnoremap <silent> <leader><leader><c-w>sp  :call NewBuf_fromBufNr( g:SbtPrinter_bufnr, "down" )<cr>
+nnoremap <silent> <leader><leader><c-w>sl  :call NewBuf_fromBufNr( g:SbtLongrun_bufnr, "down" )<cr>
+nnoremap <silent> <leader><leader><c-w>sr  :call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )<cr>
+nnoremap <silent> <leader><leader><c-w>sj  :call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )<cr>
+nnoremap <silent> <leader><leader><c-w>sv  :call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )<cr>
 
 
 " SCRATCH-BUFFER
@@ -319,7 +294,7 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
     " TODO: this is mostly for the ,cm float-dirvish recent notes menu where I want to split out a note from the origin window.
     " i hardly have the case of a non-float dirvish folder(?)
     " if IsInFloatWin() | wincmd p | endif
-    if &filetype == 'markdown'
+    if &filetype == 'markdown' || &filetype == 'dirvish'
       exec cmd
     else
       call v:lua.Ntree_cmdInOriginWin( cmd )
@@ -378,33 +353,25 @@ endfunc
 
 
 
-func! NewBuf_fromReplBuffer( direction, ... )
-  let [direction; maybe_back ] = a:direction->split('_')
+func! NewBuf_fromBufNr( bufnr, direction )
 
-  let replVarName = a:0 == 0 ? 'g:ScalaRepl_bufnr' : 'g:ScalaServerRepl_bufnr'
-  if !exists( replVarName ) | echo (replVarName . ' is not running') | return | endif
-
-  let bnr = a:0 == 0 ? g:ScalaRepl_bufnr : g:ScalaServerRepl_bufnr
   if a:direction == 'float'
-    call v:lua.FloatBuf_inOtherWinColumn( bnr, v:lua.Telesc_dynPosOpts() )
+    call v:lua.FloatBuf_inOtherWinColumn( a:bufnr, v:lua.Telesc_dynPosOpts() )
   else
-    let cmd = a:direction == 'right'      ? 'vert sbuffer ' . bnr :
-        \ a:direction == 'right_back' ? 'vert sbuffer ' . bnr :
-        \ a:direction == 'up'         ? 'leftabove sbuffer ' . bnr . ' | resize 7 | normal! G' :
-        \ a:direction == 'up_back'    ? 'leftabove sbuffer ' . bnr . ' | resize 7 | normal! G' :
-        \ a:direction == 'down'       ? 'sbuffer ' . bnr . ' | resize 10 | normal! G' :
-        \ a:direction == 'down_back'  ? 'sbuffer ' . bnr . ' | resize 10 | normal! G' :
-        \ a:direction == 'left'       ? 'leftabove vert sbuffer ' . bnr . ' | vertical resize 40 | normal! G' :
-        \ a:direction == 'left_back'  ? 'leftabove vert sbuffer ' . bnr . ' | vertical resize 40 | normal! G' :
-        \ a:direction == 'full'       ? 'buffer ' . bnr :
-        \ a:direction == 'preview'    ? 'wincmd p | buffer ' . bnr . ' | wincmd p' :
-        \ a:direction == 'tab'        ? 'tab sbuffer ' . bnr :
-        \ a:direction == 'tab_left'   ? 'tabnew | tabmove -1 | buffer ' . bnr :
-        \ 'sbuffer ' . bnr
+    let cmd = a:direction == 'right'      ? 'vert sbuffer ' . a:bufnr :
+        \ a:direction == 'right_back' ? 'vert sbuffer ' . a:bufnr :
+        \ a:direction == 'up'         ? 'leftabove sbuffer ' . a:bufnr . ' | resize 7 | normal! G' :
+        \ a:direction == 'up_back'    ? 'leftabove sbuffer ' . a:bufnr . ' | resize 7 | normal! G' :
+        \ a:direction == 'down'       ? 'sbuffer ' . a:bufnr . ' | resize 10 | normal! G' :
+        \ a:direction == 'down_back'  ? 'sbuffer ' . a:bufnr . ' | resize 10 | normal! G' :
+        \ a:direction == 'left'       ? 'leftabove vert sbuffer ' . a:bufnr . ' | vertical resize 40 | normal! G' :
+        \ a:direction == 'left_back'  ? 'leftabove vert sbuffer ' . a:bufnr . ' | vertical resize 40 | normal! G' :
+        \ a:direction == 'full'       ? 'buffer ' . a:bufnr :
+        \ a:direction == 'preview'    ? 'wincmd p | buffer ' . a:bufnr . ' | wincmd p' :
+        \ a:direction == 'tab'        ? 'tab sbuffer ' . a:bufnr :
+        \ a:direction == 'tab_left'   ? 'tabnew | tabmove -1 | buffer ' . a:bufnr :
+        \ 'sbuffer ' . a:bufnr
     exec cmd
-    if len( maybe_back ) && maybe_back[0] == 'back'
-      call T_DelayedCmd('wincmd p') 
-    endif
   endif
 endfunc
 

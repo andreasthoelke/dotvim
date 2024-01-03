@@ -1,109 +1,121 @@
 
 
 
-" ─   SBT Repl                                           ■
+" ─   SBT Printer                                        ■
 
-nnoremap <silent> <leader><leader>ro :call ScalaReplStart()<cr>
-nnoremap <silent> <leader><leader>rq :call ScalaReplStop()<cr>
-nnoremap <silent> <leader><leader>rr :call ScalaReplReload()<cr>
-nnoremap <silent> <leader><leader>ri :MetalsImportBuild<cr>
+nnoremap <silent> <leader><leader>sp :call SbtPrinterStart()<cr>
+nnoremap <silent> <leader><leader>sP :call SbtPrinterStop()<cr>
+nnoremap <silent> <leader><leader>sb :call SbtPrinterReload()<cr>
+nnoremap <silent> <leader><leader>si :MetalsImportBuild<cr>
 
-func! ScalaReplStart ()
-  if exists('g:ScalaReplID')
-    echo 'ScalaRepl is already running'
+" ex g:ScalaReplID
+
+
+func! SbtPrinterStart ()
+  if exists('g:SbtPrinterID')
+    echo 'SbtPrinter is already running'
     return
   endif
   exec "new"
-  let g:ScalaRepl_bufnr = bufnr()
+  let g:SbtPrinter_bufnr = bufnr()
 
   let opts = { 'cwd': getcwd( -1, -1 ) }
-  let opts = extend( opts, g:ScalaReplCallbacks )
-  let g:ScalaReplID = termopen('sbt', opts)
+  let opts = extend( opts, g:SbtPrinterCallbacks )
+  let g:SbtPrinterID = termopen('sbt', opts)
   silent wincmd c
 endfunc
 
-func! ScalaReplReload ()
-  if !exists('g:ScalaReplID')
-    echo 'ScalaRepl is not running'
+func! SbtPrinterReload ()
+  if !exists('g:SbtPrinterID')
+    echo 'SbtPrinter is not running'
     return
   else
     echo 'reloading ..'
   endif
   let cmd = "reload" . "\n"
-  call ScalaSbtSession_RunMain( g:ScalaReplID, cmd )
+  call ScalaSbtSession_RunMain( g:SbtPrinterID, cmd )
+
+  " .. perhaps not needed(?)
+  if !exists('g:SbtLongrunID')
+    call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
+  endif
 endfunc
 
-" g:ScalaReplID
-" g:ScalaRepl_bufnr
+" g:SbtPrinterID
+" g:SbtPrinter_bufnr
 
-func! ScalaReplStop ()
-  if !exists('g:ScalaReplID')
-    echo 'ScalaRepl is not running'
+func! SbtPrinterStop ()
+  if !exists('g:SbtPrinterID')
+    echo 'SbtPrinter is not running'
     return
   endif
-  call jobstop( g:ScalaReplID )
-  unlet g:ScalaReplID
-  unlet g:ScalaRepl_bufnr
+  call jobstop( g:SbtPrinterID )
+  unlet g:SbtPrinterID
+  unlet g:SbtPrinter_bufnr
 endfunc
 
 
-" ─^  SBT Repl                                           ▲
+
+" ─^  SBT Printer                                        ▲
 
 
 
-" ─   SBT Server Process                                 ■
+" ─   SBT long-running                                   ■
 " This allows to lauch a second sbt process. This might be a long running
 " server app while the first sbt process above can be used for short calls and requests.
 
-nnoremap <silent> <leader><leader>rO :call ScalaServerReplStart()<cr>
-nnoremap <silent> <leader><leader>rQ :call ScalaServerReplStop()<cr>
+" ex g:ScalaServerReplID
 
-func! ScalaServerReplStart ()
-  if exists('g:ScalaServerReplID')
-    echo 'ScalaServerRepl is already running'
+nnoremap <silent> <leader><leader>sl :call SbtLongrunStart()<cr>
+nnoremap <silent> <leader><leader>sL :call SbtLongrunStop()<cr>
+
+func! SbtLongrunStart ()
+  if exists('g:SbtLongrunID')
+    echo 'SbtLongrun is already running'
     return
   endif
   exec "new"
-  let g:ScalaServerRepl_bufnr = bufnr()
+  let g:SbtLongrun_bufnr = bufnr()
 
   let opts = { 'cwd': getcwd( -1, -1 ) }
-  let opts = extend( opts, g:ScalaReplCallbacks )
+  let opts = extend( opts, g:SbtPrinterCallbacks )
 
-  " TODO: try ~server/reStart
-  let g:ScalaServerReplID = termopen('sbt --client', opts)
+  let g:SbtLongrunID = termopen('sbt --client', opts)
   silent wincmd c
 endfunc
 
-" g:ScalaServerReplID
-" g:ScalaServerRepl_bufnr
+" g:SbtLongrunID
+" g:SbtLongrun_bufnr
 
-func! ScalaServerReplStop ()
-  if !exists('g:ScalaServerReplID')
-    echo 'ScalaServerRepl is not running'
+func! SbtLongrunStop ()
+  if !exists('g:SbtLongrunID')
+    echo 'SbtLongrun is not running'
     return
   endif
-  call jobstop( g:ScalaServerReplID )
-  unlet g:ScalaServerReplID
-  unlet g:ScalaServerRepl_bufnr
+  call jobstop( g:SbtLongrunID )
+  unlet g:SbtLongrunID
+  unlet g:SbtLongrun_bufnr
 endfunc
 
 
-func! ScalaServerRepl_killJVMProcess( processName )
+func! SbtLongrun_killJVMProcess( processName )
   let jvmProcesses = systemlist( 'jps' )
   let jvmProcesses = functional#map( {line -> split( line, " " ) }, jvmProcesses )
   let jvmProcesses = functional#filter( {line -> line[1] =~ a:processName }, jvmProcesses )
   " return jvmProcesses
   if !len( jvmProcesses )
-    " echoe "JVM process not found: " . a:processName
+    echo "JVM process not found: " . a:processName
     return
   endif
   let processId = jvmProcesses[0][0]
   call system( 'kill ' . processId )
 endfunc
 
-" ScalaServerRepl_killJVMProcess( 'runZioServerApp' )
+" systemlist( 'jps' )
+" SbtLongrun_killJVMProcess( 'runZioServerApp' )
+" SbtLongrun_killJVMProcess( 'Server' )
 
-func! ScalaServerRepl_isRunning()
+func! SbtLongrun_isRunning()
   let jvmProcesses = systemlist( 'jps' )
   let jvmProcesses = functional#map( {line -> split( line, " " ) }, jvmProcesses )
   let jvmProcesses = functional#filter( {line -> line[1] =~ 'runServerApp' }, jvmProcesses )
@@ -113,10 +125,108 @@ func! ScalaServerRepl_isRunning()
     return v:false
   endif
 endfunc
-" ScalaServerRepl_isRunning()
+" SbtLongrun_isRunning()
 
 
-" ─^  SBT Server Process                                 ▲
+" ─^  SBT long-running                                   ▲
+
+
+
+" ─   SBT Reloader                                       ■
+
+nnoremap <silent> <leader><leader>sr :call SbtReloaderStart()<cr>
+nnoremap <silent> <leader><leader>sR :call SbtReloaderStop()<cr>
+
+" ex g:SbtReloaderID
+
+
+
+func! SbtReloaderStart ()
+  if exists('g:SbtReloaderID')
+    echo 'SbtReloader is already running'
+    return
+  endif
+  exec "new"
+  let g:SbtReloader_bufnr = bufnr()
+
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:SbtPrinterCallbacks )
+
+  let g:SbtReloaderID = termopen('sbt --client', opts)
+  silent wincmd c
+
+
+  let cmd = "~printer/reStart" . "\n"
+  call ScalaSbtSession_RunMain( g:SbtReloaderID, cmd )
+endfunc
+
+" g:SbtReloaderID
+" g:SbtReloader_bufnr
+
+func! SbtReloaderStop ()
+  if !exists('g:SbtReloaderID')
+    echo 'SbtReloader is not running'
+    return
+  endif
+  call jobstop( g:SbtReloaderID )
+  unlet g:SbtReloaderID
+  unlet g:SbtReloader_bufnr
+endfunc
+
+
+" ─^  SBT Reloader                                       ▲
+
+
+" ─   SBT JS terms                                       ■
+
+nnoremap <silent> <leader><leader>sj :call SbtJsStart()<cr>
+nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
+
+
+
+func! SbtJsStart ()
+  if exists('g:SbtJsID')
+    echo 'SbtJs is already running'
+    return
+  endif
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:SbtPrinterCallbacks )
+
+  exec "new"
+  let g:SbtJs_bufnr = bufnr()
+  let g:SbtJsID = termopen('sbt --client', opts)
+  silent wincmd c
+
+  exec "new"
+  let g:SbtJsVite_bufnr = bufnr()
+  let g:SbtJsViteID = termopen('cd client && npm run dev', opts)
+  silent wincmd c
+
+endfunc
+
+" g:SbtJsID
+" g:SbtJs_bufnr
+
+func! SbtJsStop ()
+  if !exists('g:SbtJsID')
+    echo 'SbtJs is not running'
+    return
+  endif
+  call jobstop( g:SbtJsID )
+  unlet g:SbtJsID
+  unlet g:SbtJs_bufnr
+  call jobstop( g:SbtJsViteID )
+  unlet g:SbtJsViteID
+  unlet g:SbtJsVite_bufnr
+endfunc
+
+func! SbtJs_compile ()
+  let cmd = "client/fastLinkJS" . "\n"
+  call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
+endfunc
+
+
+" ─^  SBT JS terms                                       ▲
 
 
 
@@ -139,7 +249,7 @@ func! ReplReceiveOpen_reset()
   let g:ReplReceive_additional = []
 endfunc
 
-func! ScalaReplMainCallback(_job_id, data, _event)
+func! SbtTerms_MainCallback(_job_id, data, _event)
   let lines = RemoveTermCodes( a:data )
   if !len( lines ) | return | endif
 
@@ -340,31 +450,31 @@ endfunc
 " ~/Documents/Server-Dev/effect-ts_zio/a_scala3/DDaSci_ex/src/main/scala/galliamedium/initech/A_Basics.scala#/lazy%20val%20e3_count
 " there are two print events returned from the sbt-repl.
 
-func! ScalaReplErrorCallback(job_id, data, event)
+func! SbtTerms_ErrorCallback(job_id, data, event)
   echom a:data
 endfunc
 
-func! ScalaReplExitCallback(job_id, data, event)
+func! SbtTerms_ExitCallback(job_id, data, event)
   echom a:data
 endfunc
 
 func! ScalaReplPlain( message )
-  call jobsend(g:ScalaReplID, a:message . "\n" )
+  call jobsend(g:SbtPrinterID, a:message . "\n" )
 endfunc
 
-" call jobsend(g:ScalaReplID, "\n" )
+" call jobsend(g:SbtPrinterID, "\n" )
 
 
-let g:ScalaReplCallbacks = {
-      \ 'on_stdout': function('ScalaReplMainCallback'),
-      \ 'on_stderr': function('ScalaReplErrorCallback'),
-      \ 'on_exit': function('ScalaReplExitCallback')
+let g:SbtPrinterCallbacks = {
+      \ 'on_stdout': function('SbtTerms_MainCallback'),
+      \ 'on_stderr': function('SbtTerms_ErrorCallback'),
+      \ 'on_exit': function('SbtTerms_ExitCallback')
       \ }
 
 
 func! ScalaReplRun()
-  call jobsend(g:ScalaReplID, "run\n" )
-  " call jobsend(g:ScalaReplID, "runMain Printer\n" )
+  call jobsend(g:SbtPrinterID, "run\n" )
+  " call jobsend(g:SbtPrinterID, "runMain Printer\n" )
   " let g:floatWin_win = FloatingSmallNew([])
   " exec 'buffer' g:ScalaRepl_bufnr
   " call FloatWin_FitWidthHeight()
@@ -378,7 +488,7 @@ endfunc
 
 
 func! ScalaReplPost( message )
-  call jobsend(g:ScalaReplID, a:message . "\n" )
+  call jobsend(g:SbtPrinterID, a:message . "\n" )
   let g:floatWin_win = FloatingSmallNew([])
   exec 'buffer' g:ScalaRepl_bufnr
   " call FloatWin_FitWidthHeight()

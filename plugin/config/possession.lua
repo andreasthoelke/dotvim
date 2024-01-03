@@ -202,8 +202,10 @@ require('possession').setup {
       res['tabs_show_hidden'] = _G.Tabs_show_hidden
       res['Ntree_leftOpen'] = Ntree_leftOpen_getPersist()
       res['Ntree_rightOpen'] = Ntree_rightOpen_getPersist()
-      res['repl_is_running'] = type( vim.g["ScalaReplID"] ) == 'number' and true or false
-      res['server_repl_is_running'] = type( vim.g["ScalaServerReplID"] ) == 'number' and true or false
+      res['sbt_printer'] = type( vim.g["SbtPrinterID"] ) == 'number' and true or false
+      res['sbt_longrun'] = type( vim.g["SbtLongrunID"] ) == 'number' and true or false
+      res['sbt_reloader'] = type( vim.g["SbtReloaderID"] ) == 'number' and true or false
+      res['sbt_js'] = type( vim.g["SbtJsID"] ) == 'number' and true or false
 
       return res
     end,
@@ -233,19 +235,27 @@ require('possession').setup {
         Ntree_rightOpen_restore( user_data['Ntree_rightOpen'] )
       end
 
-      if user_data['repl_is_running'] ~= nil and user_data['repl_is_running'] == true then
-        -- Start a repl in the background, setting g:ScalaReplID.
-        vim.fn.ScalaReplStart()
+      if user_data['sbt_printer'] ~= nil and user_data['sbt_printer'] == true then
+        -- Start a sbt terminal in the background, setting g:SbtPrinterID.
+        vim.fn.SbtPrinterStart()
       end
 
-      if user_data['server_repl_is_running'] ~= nil and user_data['server_repl_is_running'] == true then
-        -- Start a repl in the background, setting g:ScalaServerReplID.
+      if user_data['sbt_longrun'] ~= nil and user_data['sbt_longrun'] == true then
+        -- Start a repl in the background, setting g:SbtLongrunID.
         -- vim.fn.ScalaServerReplStart()
         -- the delay to avoid an sbt error: 
         -- this error occurs when i start two sbt shells in the same project using "sbt --client" in each terminal:
         -- (still both sbt shell work as expected) 
         -- java.io.IOException: org.scalasbt.ipcsocket.NativeErrorException: [48] Address already in use
-        vim.defer_fn( vim.fn.ScalaServerReplStart, 3000 )
+        vim.defer_fn( vim.fn.SbtLongrunStart, 3000 )
+      end
+
+      if user_data['sbt_reloader'] ~= nil and user_data['sbt_reloader'] == true then
+        vim.defer_fn( vim.fn.SbtReloaderStart, 3000 )
+      end
+
+      if user_data['sbt_js'] ~= nil and user_data['sbt_js'] == true then
+        vim.defer_fn( vim.fn.SbtJsStart, 3000 )
       end
 
     end,

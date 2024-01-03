@@ -670,7 +670,7 @@ require("neo-tree").setup({
         -- ["s"] = "open_split",
         -- ["S"] = "split_with_window_picker",
         -- ["s"] = "vsplit_with_window_picker",
-        -- ["t"] = "open_tabnew",
+        ["t"] = "noop",
         -- ["<cr>"] = "open_drop",
         -- ["t"] = "open_tab_drop",
         ["i"] = Ntree_expandFile_saveView,
@@ -733,8 +733,8 @@ require("neo-tree").setup({
 
         ["p"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'preview_back', s.tree:get_node().path ) end,
         ["o"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'float', s.tree:get_node().path ) end,
-        ["t"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
-        ["T"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
+        ["tn"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
+        ["Tn"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
         -- _
         ["v"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right', s.tree:get_node().path ) end,
         ["V"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'right_back', s.tree:get_node().path ) end,
