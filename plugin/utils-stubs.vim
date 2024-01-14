@@ -40,6 +40,10 @@ endfunc
 " trait Node:
 "  def id: String
 
+" div (
+"   children <-- userElementsStream
+" )
+
 nnoremap <silent><leader>eba :call CreateScala_fewerBraces_a()<cr>
 
 func! CreateScala_fewerBraces_a()
@@ -48,10 +52,19 @@ func! CreateScala_fewerBraces_a()
   let [oLine, oCol] = getpos('.')[1:2]
   normal! %xx
   call setpos('.', [0, oLine, oCol, 0] )
-  if getline('.') =~ ' for '
+  let line = getline('.')
+  if line =~ ' for '
+    normal! x
+  elseif line =~ ' = '
+    normal! x
+  elseif line =~ ' match '
+    normal! x
+  elseif line =~ ' yield '
+    normal! x
+  elseif line =~ ' => '
     normal! x
   else
-    normal! xhr:
+    normal x$lr:
   endif
   call setpos('.', [0, oLine1, oCol1, 0] )
 endfunc
@@ -75,6 +88,7 @@ endfunc
 
 
   " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) => fb },
+  " <-- tickStream.mapTo(scala.util.Random.nextInt() % 100)
 
 nnoremap <silent><leader>ebb :call CreateScala_fewerBraces_b()<cr>
 
@@ -86,10 +100,12 @@ func! CreateScala_fewerBraces_b()
   " normal f{
   let [oLine, oCol] = getpos('.')[1:2]
   " call feedkeys("r\n", 'n')
+  normal %x
+  call setpos('.', [0, oLine, oCol, 0] )
   call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
   normal! ^j
-  call search('\v(\}|\))', 'c')
-  normal! x^x
+  " call search('\v(\}|\))', 'c')
+  normal! ^x
   call InsertStringAtLoc('  ', line('.'), col('.')-2)
   call setpos('.', [0, oLine, oCol, 0] )
   normal! r:

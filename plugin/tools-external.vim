@@ -12,7 +12,8 @@ nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 " nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
-nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
+" nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
+nnoremap <silent><leader>glc :call LaunchChromium2_fromUrl()<cr>
 nnoremap <leader>glC :call LaunchChromium( 'http://localhost:4040/graphql' )<cr>
 nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>
 nnoremap glC :call StopChromium()<cr>
@@ -36,6 +37,17 @@ func! LaunchChromium_withDefURL()
  call T_DelayedCmd( "echo ''", 2000 )
 endfunc
 
+func! LaunchChromium2_fromUrl()
+ let url = GetUrlFromLine( line('.') )
+
+ if url =~ "http"
+   call LaunchChromium2( url )
+ else
+   echo "needs a url"
+   return
+ endif
+ echo "Launching Chromium .."
+endfunc
 
 command! Finder :call OpenFinder()
 nnoremap glf :call OpenFinder()<cr>
@@ -286,10 +298,10 @@ let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 
 func! LaunchChromium( url ) abort
-  if exists('g:launchChromium_job_id')
-    call jobstop( g:launchChromium_job_id )
-    unlet g:launchChromium_job_id
-  endif
+  " if exists('g:launchChromium_job_id')
+  "   call jobstop( g:launchChromium_job_id )
+  "   unlet g:launchChromium_job_id
+  " endif
   let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunc
 " call LaunchChromium( 'http://purescript.org' )
@@ -322,8 +334,8 @@ func! LaunchChromium2( url ) abort
   "   call jobstop( g:launchChromium_job_id2 )
   "   unlet g:launchChromium_job_id2
   " endif
-  " let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
-  let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' ' . shellescape( a:url ))
+  let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+  " let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath . ' ' . shellescape( a:url ))
 endfunc
 
 

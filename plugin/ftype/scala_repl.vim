@@ -36,7 +36,7 @@ func! SbtPrinterReload ()
   call ScalaSbtSession_RunMain( g:SbtPrinterID, cmd )
 
   " .. perhaps not needed(?)
-  if !exists('g:SbtLongrunID')
+  if exists('g:SbtLongrunID')
     call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
   endif
 endfunc
@@ -97,6 +97,9 @@ func! SbtLongrunStop ()
   unlet g:SbtLongrun_bufnr
 endfunc
 
+" This approach of manually killing the JVM process is now no longer used. I'm moving to using Sbt-revolver.
+" Note the needed sbt setup below.
+" Also note the reStart command without the ~ tilde here: ~/.config/nvim/plugin/ftype/scala.vim‖/cmdˍ=ˍ"printer/reStar
 
 func! SbtLongrun_killJVMProcess( processName )
   let jvmProcesses = systemlist( 'jps' )
@@ -137,8 +140,21 @@ endfunc
 nnoremap <silent> <leader><leader>sr :call SbtReloaderStart()<cr>
 nnoremap <silent> <leader><leader>sR :call SbtReloaderStop()<cr>
 
-" ex g:SbtReloaderID
+" ### sbt revolver reStart
+" in project/plugins.sbt add this line:
+" addSbtPlugin("io.spray"                    % "sbt-revolver"             % "0.10.0")
 
+" note this line in the printer project:
+"       reStart / mainClass := Some("printerserver.runServerApp"),
+
+" lazy val printer = project
+"   .in( file( "m/_printer" ) )
+"   .dependsOn( h4s_simple )
+"   .settings(
+"       commonSettings,
+"       reStart / mainClass := Some("printerserver.runServerApp"),
+"       libraryDependencies ++= L.zio ++ L.cats ++ L.pprint,
+"    )
 
 
 func! SbtReloaderStart ()

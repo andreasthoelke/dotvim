@@ -924,7 +924,7 @@ function _G.Telesc_launch( picker_name, opts )
     extensions.repo.list( opts )
 
   elseif picker_name == 'bookmarks' then
-    opts = f.merge( opts, {initial_mode='normal'} )
+    opts = f.merge( opts, {initial_mode='insert'} )
     extensions.bookmarks.bookmarks( opts )
 
   elseif picker_name == 'vim_bookmarks' then

@@ -163,6 +163,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\vInt\ze(\W|\_$)' conceal cchar=I
   " syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=s
   " syntax match Normal 'String\.' conceal cchar=s
+  syntax match Normal 'String' conceal cchar=s
   syntax match Normal '\W\zsString' conceal cchar=s
   syntax match Normal '\v\W\zsInt\ze(\W|\_$)' conceal cchar=ɪ
   " syntax match Normal 'Int\.' conceal cchar=ɪ
@@ -243,7 +244,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
   syntax match Normal '::' conceal cchar=∷
   " syntax match Normal ':=' conceal cchar=⠃
-  syntax match Normal ':=' conceal
+  syntax match Normal ':=\s' conceal
   syntax match Normal ':::' conceal cchar=☷
 
   syntax match Normal "^val\s" conceal
@@ -324,7 +325,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'new\ze\s' conceal cchar=⬿
   syntax match Normal 'Var' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
-  syntax match Normal 'Signal' conceal cchar=~
+  syntax match Normal '\vSignal(:)?' conceal cchar=~
   syntax match Normal '\vLive(:)?' conceal cchar=≈
   syntax match Normal 'ZLayer' conceal cchar=⊟
   syntax match Normal 'ULayer' conceal cchar=⊟
@@ -364,9 +365,12 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vmatch\ze(\W|\_$)' conceal cchar=⌋
 
   syntax match Normal '\.\zsmap' conceal cchar=➚
+  syntax match Normal 'mapTo\:' conceal cchar=↓
+  syntax match Normal 'mapTo' conceal cchar=↓
+  syntax match Normal 'mapToValue' conceal cchar=↓
   syntax match Normal 'map\:' conceal cchar=➚
   " syntax match Normal '\(\#.*\)\@<!filter' conceal cchar=⇡
-  syntax match Normal 'filter' conceal cchar=⇡
+  syntax match Normal '\vfilter\ze\W' conceal cchar=⇡
   syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
   " Refs

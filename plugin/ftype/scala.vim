@@ -21,10 +21,15 @@ func! S_MenuCommands()
   endif
 
   let cmds +=  [ {'section': 'Sbt printer [' . (exists('g:SbtPrinterID') ? '↑]' : '↓]')} ]
+  let cmds += [ {'label': '_Printer term',   'cmd': 'call NewBuf_fromBufNr( g:SbtPrinter_bufnr, "down" )' } ]
   let cmds +=  [ {'section': 'Sbt long-run [' . (exists('g:SbtLongrunID') ? '↑]' : '↓]')} ]
+  let cmds += [ {'label': '_Longrun term',   'cmd': 'call NewBuf_fromBufNr( g:SbtLongrun_bufnr, "down" )' } ]
   " let cmds +=  [ {'section': 'Sbt long-run up [' . (ScalaServerRepl_isRunning() ? '↑]' : '↓]')} ]
   let cmds +=  [ {'section': 'Sbt reloader [' . (exists('g:SbtReloaderID') ? '↑]' : '↓]')} ]
+  let cmds += [ {'label': '_Reloader term',   'cmd': 'call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )' } ]
   let cmds +=  [ {'section': 'Sbt Js [' . (exists('g:SbtJsID') ? '↑]' : '↓]')} ]
+  let cmds += [ {'label': '_Js term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )' } ]
+  let cmds += [ {'label': '_Vite term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )' } ]
 
   return cmds
 endfunc
@@ -34,6 +39,13 @@ func! S_IsInitialized()
 endfunc
 
 
+" Sbt terminals                           |
+"                                         v
+" nnoremap <silent> <leader><leader><c-w>sp  :call NewBuf_fromBufNr( g:SbtPrinter_bufnr, "down" )<cr>
+" nnoremap <silent> <leader><leader><c-w>sl  :call NewBuf_fromBufNr( g:SbtLongrun_bufnr, "down" )<cr>
+" nnoremap <silent> <leader><leader><c-w>sr  :call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )<cr>
+" nnoremap <silent> <leader><leader><c-w>sj  :call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )<cr>
+" nnoremap <silent> <leader><leader><c-w>sv  :call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )<cr>
 
 
 func! Scala_bufferMaps()
@@ -649,9 +661,14 @@ func! Scala_RunPrinter( termType )
         " let cmd = "\nrunMain " . "printzioserver.runZioServerApp" . "\n"
         " New version: killJVMProcess should block so the new/restarted process should not be affected
         " let cmd = "bgRunMain " . "printerserver.runServerApp" . "\n"
-        let cmd = "printer/bgRunMain " . "printerserver.runServerApp" . "\n"
+        " Earlier Non-Sbt-revolver version:
+        " let cmd = "printer/bgRunMain " . "printerserver.runServerApp" . "\n"
+        " ISSUE: this could also kill a "runServerApp" in a different vim instance
         " TODO: technically I could use a unique (def name!) run command to then be able to selectively end/restart a process.
-        call ScalaServerRepl_killJVMProcess( 'runServerApp' )
+        " call SbtLongrun_killJVMProcess( 'runServerApp' )
+
+        " Note the command does not auto-reload via "~printer/reStart" - (see func! SbtReloaderStart() for this)
+        let cmd = "printer/reStart" . "\n"
         call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
       else
         if !exists('g:SbtPrinterID') | echo 'SbtPrinter is not running' | return | endif
@@ -837,7 +854,7 @@ func! MakeOrPttn( listOfPatterns )
   return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
-let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 
 func! Scala_ColumnForw()
