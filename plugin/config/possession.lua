@@ -207,6 +207,11 @@ require('possession').setup {
       res['sbt_reloader'] = type( vim.g["SbtReloaderID"] ) == 'number' and true or false
       res['sbt_js'] = type( vim.g["SbtJsID"] ) == 'number' and true or false
 
+      res['SbtJs_projectName'] = vim.g["SbtJs_projectName"]
+      res['SbtJsVite_cmd']     = vim.g["SbtJsVite_cmd"]
+
+      res['httpx_request_port']     = vim.g["httpx_request_port"]
+
       return res
     end,
 
@@ -255,8 +260,12 @@ require('possession').setup {
       end
 
       if user_data['sbt_js'] ~= nil and user_data['sbt_js'] == true then
+        vim.g["SbtJs_projectName"] = user_data["SbtJs_projectName"]
+        vim.g["SbtJsVite_cmd"]     = user_data["SbtJsVite_cmd"]
         vim.defer_fn( vim.fn.SbtJsStart, 3000 )
       end
+
+      vim.g["httpx_request_port"] = user_data["httpx_request_port"]
 
     end,
   },

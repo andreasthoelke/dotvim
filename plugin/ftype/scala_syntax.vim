@@ -2,7 +2,7 @@
 "                   ﰟ   ⁜ ⁘ ⁗   ⁞ ⁑
 " ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩ → ⍊  ⌄
 " ɪ и ᵓᵔ ᵛ     ->    ⃣     ›
-" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
+" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗  ➚ ⇗ ➚  ➶  ➹  ⤢ ⇗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " ⇤  ⇠  ⇜  ⇐  ↙  ↢  ↤  ⇠  ⇽
 " ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻◻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
 "  ᶩ 𝑡 𝑙 ˍ  ▴ ˼ ▾ ˷ ⌄ ᐪ  ˹ ˼ ˺
@@ -17,7 +17,7 @@
 " ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
 " ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  < ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
 " ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩ ∪      𝑟S  ʀS
-" ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ↘  ⇓ ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
+" ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ◥ ↘  ⇓ ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
 " ➳  ➽  ⟀  ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
 " ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
@@ -26,6 +26,7 @@
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↑ ↓ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
 " 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
 " ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
+"   ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪
 " v:lua.putt( v:lua.require("nvim-web-devicons").get_icon("toml") )
 
 
@@ -220,6 +221,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal "def\ze\s" conceal cchar=→
   syntax match Normal "def\s" conceal
   syntax match Normal 'unit' conceal cchar=✴
+  syntax match Normal 'void' conceal cchar=✴
   syntax match Normal 'Unit' conceal cchar=✴
 
   syntax match Normal "<-" conceal cchar=←
@@ -300,6 +302,8 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'RIO' conceal cchar=♽
   syntax match Normal 'UIO\ze\[' conceal cchar=♽
   syntax match Normal 'IO\ze\[' conceal cchar=♽
+  syntax match Normal 'IO\ze\]' conceal cchar=♽
+  syntax match Normal '\[\zsIO' conceal cchar=♽
   " syntax match Normal 'ZIO\.' conceal cchar=⁝
   " syntax match Normal 'ZIO\.\$\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
@@ -326,8 +330,10 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Var' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
   syntax match Normal '\vSignal(:)?' conceal cchar=~
+  syntax match Normal 'SignallingRef' conceal cchar=≈
   syntax match Normal '\vLive(:)?' conceal cchar=≈
   syntax match Normal 'ZLayer' conceal cchar=⊟
+  syntax match Normal 'Resource' conceal cchar=⊟
   syntax match Normal 'ULayer' conceal cchar=⊟
   syntax match Normal 'Layer' conceal cchar=⊟
   syntax match Normal 'fromFunction' conceal cchar=˽
@@ -373,6 +379,9 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vfilter\ze\W' conceal cchar=⇡
   syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
+  syntax match Normal 'for\zee' conceal cchar=↗
+  syntax match Normal 'each' conceal cchar=✴
+
   " Refs
   " syntax match Normal 'getAndUpdate' conceal cchar=➚
   syntax match Normal 'getAn' conceal cchar=‹
@@ -385,6 +394,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\vget\ze(\W|\_$)' conceal cchar=⟡
 
   syntax match Normal 'self' conceal cchar=∝
+  syntax match Normal 'withSelf\:' conceal cchar=⊃
   syntax match Normal 'this' conceal cchar=∝
   syntax match Normal 'override' conceal cchar=⟑
   syntax match Normal 'lazy' conceal cchar=~

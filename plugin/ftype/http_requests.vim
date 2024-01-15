@@ -3,8 +3,8 @@
 nnoremap <silent> geh :call Scala_ServerClientRequest_x()<cr>
 
 
-let g:httpport = 8080
-" let g:httpport = 5000
+let g:httpx_request_port = 8080
+" let g:httpx_request_port = 5000
 " let g:httpdomain = '127.0.0.1'
 let g:httpdomain = 'localhost'
 
@@ -46,7 +46,7 @@ func! Scala_ServerClientRequest_x()
   " echo extension
   " return
 
-  let url = "http://" . g:httpdomain . ":" . g:httpport . "/" . url
+  let url = "http://" . g:httpdomain . ":" . g:httpx_request_port . "/" . url
 
   let g:scala_serverRequestCmd = "httpx " . url . extension
   " call append(line('.'), g:scala_serverRequestCmd)
@@ -79,8 +79,8 @@ endfunc
 func! Scala_ServerClientRequest( args, mode )
   let urlEx = matchstr( getline("."), '\v(//\s)?\zs.*' )
 
-  " let g:scala_serverRequestCmd = "http " . a:args . " :" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
-  let g:scala_serverRequestCmd = "http " . a:args . " " . g:httpdomain . ":" . g:httpport . "/" . urlEx . " --ignore-stdin --stream"
+  " let g:scala_serverRequestCmd = "http " . a:args . " :" . g:httpx_request_port . "/" . urlEx . " --ignore-stdin --stream"
+  let g:scala_serverRequestCmd = "http " . a:args . " " . g:httpdomain . ":" . g:httpx_request_port . "/" . urlEx . " --ignore-stdin --stream"
   " call append(line('.'), g:scala_serverRequestCmd)
   " return
   if a:mode == 'term'

@@ -119,6 +119,8 @@ endfunc
   "   fb
   " }
 
+  " input.withSelf { self =>
+
 nnoremap <silent><leader>ebc :call CreateScala_fewerBraces_c()<cr>
 
 func! CreateScala_fewerBraces_c()
@@ -132,10 +134,10 @@ func! CreateScala_fewerBraces_c()
   normal! %x
   call setpos('.', [0, oLine, oCol, 0] )
   normal! x
-  " call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
   normal j==
   call setpos('.', [0, oLine2, oCol2, 0] )
-  normal! r:
+  normal $lr:
   call setpos('.', [0, oLine1, oCol1, 0] )
 endfunc
 

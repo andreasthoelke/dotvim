@@ -198,6 +198,11 @@ endfunc
 nnoremap <silent> <leader><leader>sj :call SbtJsStart()<cr>
 nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 
+let g:SbtJs_projectName = "js_simple"
+" " for Laminar-fullstack example, set to:
+" let g:SbtJs_projectName = "client"
+
+let g:SbtJsVite_cmd = "cd m/js_vite && npm run dev"
 
 
 func! SbtJsStart ()
@@ -215,7 +220,7 @@ func! SbtJsStart ()
 
   exec "new"
   let g:SbtJsVite_bufnr = bufnr()
-  let g:SbtJsViteID = termopen('cd client && npm run dev', opts)
+  let g:SbtJsViteID = termopen( g:SbtJsVite_cmd, opts)
   silent wincmd c
 
 endfunc
@@ -237,7 +242,8 @@ func! SbtJsStop ()
 endfunc
 
 func! SbtJs_compile ()
-  let cmd = "client/fastLinkJS" . "\n"
+  " let cmd = "client/fastLinkJS" . "\n"
+  let cmd = g:SbtJs_projectName . "/fastLinkJS" . "\n"
   call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
 endfunc
 

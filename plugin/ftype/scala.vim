@@ -25,8 +25,8 @@ func! S_MenuCommands()
   let cmds +=  [ {'section': 'Sbt long-run [' . (exists('g:SbtLongrunID') ? '↑]' : '↓]')} ]
   let cmds += [ {'label': '_Longrun term',   'cmd': 'call NewBuf_fromBufNr( g:SbtLongrun_bufnr, "down" )' } ]
   " let cmds +=  [ {'section': 'Sbt long-run up [' . (ScalaServerRepl_isRunning() ? '↑]' : '↓]')} ]
-  let cmds +=  [ {'section': 'Sbt reloader [' . (exists('g:SbtReloaderID') ? '↑]' : '↓]')} ]
-  let cmds += [ {'label': '_Reloader term',   'cmd': 'call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )' } ]
+  " let cmds +=  [ {'section': 'Sbt reloader [' . (exists('g:SbtReloaderID') ? '↑]' : '↓]')} ]
+  " let cmds += [ {'label': '_Reloader term',   'cmd': 'call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )' } ]
   let cmds +=  [ {'section': 'Sbt Js [' . (exists('g:SbtJsID') ? '↑]' : '↓]')} ]
   let cmds += [ {'label': '_Js term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )' } ]
   let cmds += [ {'label': '_Vite term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )' } ]
@@ -391,12 +391,36 @@ endfunc
 " ─   Set printer identifier                             ■
 
 func! Scala_SetPrinterIdentif( mode )
-  let effType  = Scala_BufferCatsOrZio()
-  let repoType = Scala_RepoBuildTool()
+  " let effType  = Scala_BufferCatsOrZio()
+  " let repoType = Scala_RepoBuildTool()
   let fntag = 'ScalaCliZIO'
   call call( 'Scala_SetPrinterIdentif_' . fntag, [a:mode] )
 endfunc
 
+
+func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
+
+  call VirtualRadioLabel_lineNum( "« " . a:typeStr, a:hostLn )
+
+  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
+  if !filereadable(printerFilePath)
+    echo printerFilePath . " not found!"
+    return
+  endif
+
+  let plns = readfile( printerFilePath, '\n' )
+
+" @main 
+" def runA =
+"   Window[IO].document.getElementById("app")
+"   .map(_.get).flatMap:
+"     //  <<== this needs to be line 16!
+  let plns[16] = "    " . a:identif
+"     .renderInto(_).useForever
+"   .unsafeRunAndForget()
+
+  call writefile( plns, printerFilePath )
+endfunc
 
 func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
@@ -428,6 +452,10 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " echo identif
   " return
 
+  if typeStr =~ "HtmlElement" || typeStr =~ "HtmlDivElement"
+    call Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
+    return
+  endif
 
   if      typeStr =~ "ZIO\[" && typeStr =~ "DataSource_off" && typeStr =~ "\]\]"
     let typeMode = "QuillDSLive_coll"
