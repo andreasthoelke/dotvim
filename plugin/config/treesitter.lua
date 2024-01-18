@@ -7,6 +7,7 @@ require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all". These parsers should always be installed.
   ensure_installed = { "scala", "typescript", "python", "sql", "bash" },
 
+
   -- Install parsers synchronously. This is only applied to `ensure_installed`.
   sync_install = false,
 
@@ -21,12 +22,13 @@ require('nvim-treesitter.configs').setup {
     enable = true, -- false will disable the whole extension
     -- disable = {"txt"},  -- list of languages that will be disabled
     -- additional_vim_regex_highlighting = true,
-
+    -- below doesn't work! .. so i currently use ~/.config/nvim/plugin/HsSyntaxAdditions.vim‖/autocmdˍFil
+    -- disable = { "less", "clojure" },
     custom_captures = {
       -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
     ["foo.bar"] = "Identifier",
     },
-    },
+  },
 
   playground = {
     enable = true,

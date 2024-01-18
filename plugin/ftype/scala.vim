@@ -211,9 +211,12 @@ endfunc
 " ─   Helpers                                            ■
 
 func! Scala_BufferCatsOrZio()
+  let lineJs  = searchpos( '\v^import.*(html|dom|calico|laminar)', 'cnbW' )[0]
   let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
   let lineCats = searchpos( '\v^import\scats\.', 'cnbW' )[0]
-  if     lineZio && lineCats
+  if lineJs
+    return 'js'
+  elseif     lineZio && lineCats
     return 'both'
   elseif lineZio && !lineCats
     return 'zio'
@@ -387,6 +390,53 @@ endfunc
 " ─^  Printer examples                                   ▲
 
 
+" ─   Sbt split js modules                              ──
+
+let g:SbtSmallModulesPackage = "printerjs"
+
+func! Sbt_setSmallModulesPackage()
+  let packageName = Scala_GetPackageName()
+  if !(exists('g:SbtSmallModulesPackage') && g:SbtSmallModulesPackage != packageName)
+    echo packageName . " was already set"
+    return
+  endif
+  call Scala_setPrinterPackageName( packageName )
+  let lineStr = '        .withModuleSplitStyle( ModuleSplitStyle.SmallModulesFor(List("' . packageName . '")) )'
+  call File_searchReplaceLine( "build.sbt", "withModuleSplitStyle", lineStr )
+  call SbtPrinterReload ()
+endfunc
+
+func! Scala_setPrinterPackageName( packageName )
+  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
+  let lineStr = "package " . a:packageName
+  call File_replaceLine( printerFilePath, 0, lineStr )
+endfunc
+
+func! File_replaceLine( path, lineNum, lineStr )
+  if !filereadable(a:path)
+    echo a:path . " not found!"
+    return
+  endif
+  let plns = readfile( a:path, '\n' )
+  let plns[a:lineNum] = a:lineStr
+  call writefile( plns, a:path )
+endfunc
+
+func! File_findLineNum( path, searchStr )
+  let lines = readfile( a:path, "\n" )
+  let idx = functional#findP( lines, {x-> x =~ a:searchStr} )
+  return idx
+endfunc
+" echo File_findLineNum( 'build.sbt', 'withModuleSplitStyle' )
+
+func! File_searchReplaceLine( path, searchStr, lineStr )
+  let lines = readfile( a:path, "\n" )
+  let idx = functional#findP( lines, {x-> x =~ a:searchStr} )
+  let lines[idx] = a:lineStr
+  call writefile( lines, a:path )
+endfunc
+
+
 
 " ─   Set printer identifier                             ■
 
@@ -410,14 +460,16 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
 
   let plns = readfile( printerFilePath, '\n' )
 
-" @main 
-" def runA =
-"   Window[IO].document.getElementById("app")
-"   .map(_.get).flatMap:
-"     //  <<== this needs to be line 16!
-  let plns[16] = "    " . a:identif
-"     .renderInto(_).useForever
-"   .unsafeRunAndForget()
+  let plns[17] = "  val appElement = " . a:identif
+
+  " echo a:typeStr
+  if     a:typeStr =~ "L\.HtmlElement" || a:typeStr =~ "L\.Div" || a:typeStr =~ "ReactiveHtmlElement"
+    let plns[18] = '  renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement)'
+  elseif a:typeStr =~ "Resource"
+    let plns[18] = '  Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()'
+  else
+    echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
+  endif
 
   call writefile( plns, printerFilePath )
 endfunc
@@ -452,7 +504,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " echo identif
   " return
 
-  if typeStr =~ "HtmlElement" || typeStr =~ "HtmlDivElement"
+  if typeStr =~ "Element" || typeStr =~ "ReactiveHtmlElement" || typeStr =~ "L\.Div"
     call Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     return
   endif
@@ -657,6 +709,11 @@ endfunc
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
+  if effType == 'js'
+    call SbtJs_compile ()
+    return
+  endif
+
   let effType  = 'zio'
   let repoType = Scala_RepoBuildTool()
   " echo effType repoType

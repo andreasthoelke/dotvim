@@ -6,6 +6,7 @@
 nnoremap <silent> <leader><leader>sp :call SbtPrinterStart()<cr>
 nnoremap <silent> <leader><leader>sP :call SbtPrinterStop()<cr>
 nnoremap <silent> <leader><leader>sb :call SbtPrinterReload()<cr>
+nnoremap <silent> <leader><leader>sm :call Sbt_setSmallModulesPackage()<cr>
 nnoremap <silent> <leader><leader>si :MetalsImportBuild<cr>
 
 " ex g:ScalaReplID
@@ -36,9 +37,9 @@ func! SbtPrinterReload ()
   call ScalaSbtSession_RunMain( g:SbtPrinterID, cmd )
 
   " .. perhaps not needed(?)
-  if exists('g:SbtLongrunID')
-    call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
-  endif
+  " if exists('g:SbtLongrunID')
+  "   call ScalaSbtSession_RunMain( g:SbtLongrunID, cmd )
+  " endif
 endfunc
 
 " g:SbtPrinterID

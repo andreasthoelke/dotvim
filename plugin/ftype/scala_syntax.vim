@@ -361,7 +361,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'apply' conceal cchar=∝
 
   syntax match Normal 'if\ze\W' conceal cchar=˻
-  syntax match Normal 'else' conceal cchar=˼
+  syntax match Normal 'else' conceal cchar=˺
   syntax match Normal 'else\sif' conceal cchar=˼
   " syntax match Normal 'then\ze(\W|\_$)' conceal cchar=˹
   syntax match Normal '\v\s\zsthen\ze(\s|\_$)' conceal cchar=˹
