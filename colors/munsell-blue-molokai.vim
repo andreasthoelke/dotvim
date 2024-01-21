@@ -970,6 +970,13 @@ hi! def link typescriptBraces Comment
 hi! def link tsxTag Comment
 hi! def link tsxCloseTag Comment
 
+" hi! def link scalaSignal Class
+" hi! scalaSignal guibg=#131419 guifg=#363B34 gui=italic
+hi! scalaSignal guifg=#363B35 gui=italic
+hi! scalaVar guifg=#3A353B gui=italic
+" hi! scalaSignal guifg=#3D463A
+" hi! scalaSignal guibg=#1C1F23 guifg=#635C3C gui=italic
+
 hi! def link foldBraces purescriptIdentifier
 
 

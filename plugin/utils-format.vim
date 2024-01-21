@@ -88,8 +88,8 @@ endfunc
 
 " ─   Haskell unicode conversion                         ■
 
-nnoremap <leader><leader>sm :exec 'SplitModulesInLines'<cr>
-nnoremap <leader><leader>jm :exec 'JoinModulesFromLines'<cr>
+" nnoremap <leader><leader>sm :exec 'SplitModulesInLines'<cr>
+" nnoremap <leader><leader>jm :exec 'JoinModulesFromLines'<cr>
 
 nnoremap <leader><leader>ht :exec 'HsTabu'<cr>
 nnoremap <leader><leader>hT :exec 'StripAligningSpaces'<cr>

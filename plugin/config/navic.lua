@@ -54,13 +54,27 @@ local actions = require("nvim-navbuddy.actions")
 
 -- require("nvim-navbuddy").open()
 
+-- require("nvim-navbuddy").setup { window = { position = { row = "50%", col = "100%" } } }
+-- require("nvim-navbuddy").setup { window = { position = { row = "50%", col = "0%" } } }
+
+vim.keymap.set( 'n', '<leader>on', function()
+  local cursorWinCol = CursorIsInWinColumn()
+  if cursorWinCol == "L" then
+    require("nvim-navbuddy").setup { window = { position = { row = "50%", col = "100%" } } }
+  else
+    require("nvim-navbuddy").setup { window = { position = { row = "50%", col = "0%" } } }
+  end
+  require("nvim-navbuddy").open()
+end)
+
+
 navbuddy.setup {
     window = {
         border = "rounded",  -- "rounded", "double", "solid", "none"
                             -- or an array with eight chars building up the border in a clockwise fashion
                             -- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
         size = { height = "50%", width = "50%"},       -- Or table format example: { height = "40%", width = "100%"}
-        position = { row = "35%", col = "100%"},   -- Or table format example: { row = "100%", col = "0%"}
+        position = { row = "35%", col = "0%"},   -- Or table format example: { row = "100%", col = "0%"}
         scrolloff = nil,    -- scrolloff value within navbuddy window
         sections = {
             left = {

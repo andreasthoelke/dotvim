@@ -133,7 +133,8 @@ function _G.filterLspSymbolsStack( lspSymbolsStack )
       function( el ) return el.type == "Package" end,
       lspSymbolsStack
     ):length()
-    lspSymbolsStack_filtered = fun.totable( fun.take_n( packagesDepth + 1, lspSymbolsStack ) )
+    -- NOTE: I'm still experimenting with this: packagesDepth + 2 shows the typical Object - def methodname() lsp-path
+    lspSymbolsStack_filtered = fun.totable( fun.take_n( packagesDepth + 2, lspSymbolsStack ) )
   else
     lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
   end

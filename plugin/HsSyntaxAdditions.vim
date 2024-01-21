@@ -28,7 +28,7 @@ au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html call TsSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.css,*.less,*.scss call JS_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.css,*.less,*.scss,*.sass call JS_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 
@@ -67,6 +67,8 @@ augroup track_window
    autocmd BufEnter * if &ft == "dirvish" | let g:Ntree_prevWinid = g:Winid_previous | endif
 
    autocmd FileType less set filetype=css
+   autocmd FileType sass set filetype=css | set syntax=sass
+   " autocmd FileType scss set filetype=css
 augroup END
 
 

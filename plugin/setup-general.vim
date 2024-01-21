@@ -1001,8 +1001,7 @@ nnoremap D "_d
 " Replacing: ---------------------------------------------
 
 
-
-" Folding Folds: ------------------------------------------------
+" ─   Folding code                                       ■
 
 set foldenable
 set foldmethod=marker
@@ -1060,7 +1059,10 @@ exec "set fillchars=fold:\\ "
 " exec .. is to allow a <Space> at the end of an expression
 " Note that the \ to escape the ' ' also needs to be escaped, hence the \\
 
-" Folding: ------------------------------------------------
+" These are new and to be tested 2024-01
+" only for set foldmethod=expr
+" set foldexpr = "v:lua.vim.treesitter.foldexpr()"
+" set foldtext = "v:lua.vim.treesitter.foldtext()"
 
 
 " Comments: --------------------------
@@ -1073,6 +1075,9 @@ nnoremap <silent> gcc :TComment<cr>lh
 let g:tcomment_textobject_inlinecomment = ''
 
 " Comments: --------------------------
+
+
+" ─^  Folding code                                       ▲
 
 
 
@@ -1498,7 +1503,7 @@ endfunction
 " nnoremap to :TagbarOpen j<cr>
 " nnoremap <leader>ot :Vista nvim_lsp<cr>
 " nnoremap <leader>ot :Vista<cr>
-nnoremap <silent><leader>on :Navbuddy<cr>
+" nnoremap <silent><leader>on :Navbuddy<cr>
 nnoremap <silent><leader>ot :Vista<cr>
 " nnoremap <leader>ot :TagbarToggle<cr>
 " nnoremap <leader>oT :SymbolsOutline<cr>
