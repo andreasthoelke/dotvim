@@ -466,11 +466,11 @@ lspconfig.eslint.setup({
 })
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
--- lspconfig.cssls.setup({
---   capabilities = capabilities,
---   on_attach = on_attach,
---   flags = flags,
--- })
+lspconfig.cssls.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+})
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.html.setup({
@@ -623,18 +623,18 @@ lspconfig.smithy_ls.setup ({
 -- ─   null-ls                                          ──
 
 -- vim.g.null_ls_disable = true
-local null_ls = require("null-ls")
+-- local null_ls = require("null-ls")
 
 
 -- https://github.com/jose-elias-alvarez/null-ls.nvim
 -- local diagnostics_format = "[#{c}] #{m} (#{s})"
-local f = null_ls.builtins.formatting
-local d = null_ls.builtins.diagnostics
-null_ls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-  sources = {
+-- local f = null_ls.builtins.formatting
+-- local d = null_ls.builtins.diagnostics
+-- null_ls.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+--   sources = {
 --     -- codepell
 --     d.codespell.with({
 --       -- handlers = handlers,
@@ -695,24 +695,24 @@ null_ls.setup({
 --       diagnostics_format = diagnostics_format,
 --     }),
 --     -- css/scss/sass/less
-    f.stylelint.with({
-      diagnostics_format = diagnostics_format,
-    }),
-  },
-})
+--     f.stylelint.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--   },
+-- })
 
 
 
-null_ls.setup({
-  sources = {
-    -- null_ls.builtins.diagnostics.eslint_d,
-    -- null_ls.builtins.code_actions.eslint_d,
-    -- null_ls.builtins.formatting.prettier,
-    null_ls.builtins.completion.spell,
-    -- null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
-  },
-  on_attach = on_attach
-})
+-- null_ls.setup({
+--   sources = {
+--     null_ls.builtins.diagnostics.eslint_d,
+--     null_ls.builtins.code_actions.eslint_d,
+--     null_ls.builtins.formatting.prettier,
+--     null_ls.builtins.completion.spell,
+--     null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+--   },
+--   on_attach = on_attach
+-- })
 
 
 -- ─   nvim-cmp setup                                    ■

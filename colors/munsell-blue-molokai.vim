@@ -567,18 +567,24 @@ hi! def link mkdListItem Type
 " hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
 " hi! Underlined2 guifg=#BECACD guibg=#0C0C0C gui=italic
 hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
+
+
 hi! def link mkdInlineURL Underlined2
 hi! def link mkdLink Underlined2
+hi! def link @string.special.url.comment Operator
+hi! def link mkdInlineURL Operator
 " hi! def link htmlBold htmlBold
 " hi! def link htmlItalic htmlItalic
 
-" hi! def link htmlH1 Typedef
-" hi! def link htmlH2 Typedef
-" hi! def link htmlH3 Typedef
+hi! def link mkdHeading CommentMinusMinus
+hi! def link htmlH1 Function
+hi! def link htmlH2 Function
+hi! def link htmlH3 Function
+hi! def link htmlH4 Function
 
-hi! def link htmlH1 SpGreen51
-hi! def link htmlH2 SpGreen51
-hi! def link htmlH3 SpGreen51
+" hi! def link htmlH1 SpGreen51
+" hi! def link htmlH2 SpGreen51
+" hi! def link htmlH3 SpGreen51
 
 hi! SpGreen1 guifg=#1BB994
 hi! SpGreen2 guifg=#B4FFF4

@@ -68,7 +68,7 @@ augroup track_window
 
    autocmd FileType less set filetype=css
    autocmd FileType sass set filetype=css | set syntax=sass
-   " autocmd FileType scss set filetype=css
+   " autocmd FileType scss set filetype=css | set syntax=scss
 augroup END
 
 
@@ -485,6 +485,7 @@ func! LuaSyntaxAdditions() " ■
 endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
+  set syntax=markdown
   call clearmatches()
   call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
