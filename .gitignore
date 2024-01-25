@@ -18,3 +18,6 @@ tags
 r_buffer_range.sh
 startup.log
 .luarc_bak
+openai_key.txt
+
+

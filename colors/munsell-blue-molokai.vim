@@ -497,7 +497,7 @@ hi! def link GitSignsAdd CommentMinusMinus
 hi! def link GitSignsChange CommentMinusMinus
 hi! def link GitSignsDelete CommentMinusMinus
 
-
+hi! def link @string.special.url.gitcommit Operator
 
 
 " Startify
@@ -552,6 +552,9 @@ hi! def link TagbarKind Type
 " hi! def link FocusedSymbol purescriptIdentifierDot1
 hi! FocusedSymbol guifg=#A2AEB0
 
+" CSS SASS LESS
+hi! def link @character.special.scss CommentMinusMinus
+
 " Markdown colors
 " hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! Title gui=none guifg=#1A85A5 "munsell blue"
@@ -567,7 +570,6 @@ hi! def link mkdListItem Type
 " hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
 " hi! Underlined2 guifg=#BECACD guibg=#0C0C0C gui=italic
 hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
-
 
 hi! def link mkdInlineURL Underlined2
 hi! def link mkdLink Underlined2
@@ -979,7 +981,9 @@ hi! def link tsxCloseTag Comment
 " hi! def link scalaSignal Class
 " hi! scalaSignal guibg=#131419 guifg=#363B34 gui=italic
 hi! scalaSignal guifg=#363B35 gui=italic
-hi! scalaVar guifg=#3A353B gui=italic
+hi! scalaVar guifg=#39303B gui=italic
+" hi! scalaChannelBus guifg=#2C4128 gui=italic
+hi! scalaChannelBus guibg=none guifg=#1F3F27 gui=italic
 " hi! scalaSignal guifg=#3D463A
 " hi! scalaSignal guibg=#1C1F23 guifg=#635C3C gui=italic
 

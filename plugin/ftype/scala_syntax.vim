@@ -486,8 +486,10 @@ func! ScalaSyntaxAdditions ()
 
   " syntax match scalaSignal '\v\s\zs\w{-}S\ze(\W|\_s|:)'
   " call matchadd('scalaSignal', '\v\s\zs\w{-}S\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaVar',    '\v(\(|\s)\zs\w{-}V\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaSignal', '\v(\(|\s)\zs\w{-}S\ze(\W|\_s)', 12, -1)
+  " Note the \U non uppercase char to exclude all caps var names. w{1,} mandates at least 1 word character
+  call matchadd('scalaVar',    '\v(\(|\s)\zs\w{1,}\UV\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaSignal', '\v(\(|\s)\zs\w{1,}\US\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaChannelBus', '\v(\(|\s)\zs\w{1,}\U(C|B)\ze(\W|\_s)', 12, -1)
 
   " This uses the same approach for the Java-Doc comments:
   " this line overwrites the unicode conceals

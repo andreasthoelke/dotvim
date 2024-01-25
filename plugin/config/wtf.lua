@@ -4,8 +4,7 @@ local config = {
       -- Default AI popup type
       -- popup_type = "popup" | "horizontal" | "vertical",
       popup_type = "horizontal",
-      -- An alternative way to set your API key
-      openai_api_key = "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",
+      openai_api_key = vim.fn.readfile("/Users/at/.config/nvim/openai_key.txt")[1],
       -- ChatGPT Model
       -- openai_model_id = "gpt-3.5-turbo",
       openai_model_id = "gpt-4",
@@ -30,7 +29,7 @@ local config = {
 
 require('wtf').setup( config )
 
-
+-- vim.fn.readfile("/Users/at/.config/nvim/openai_key.txt")[1]
 
 
 

@@ -368,6 +368,7 @@ let g:ExamplesPath = "m/_printer/Examples.md"
 func! Example_SetStart()
   if !filereadable( g:ExamplesPath )
     call writefile( [], g:ExamplesPath )
+    echo "Initialized Examples.md"
   endif
   let headerText = GetHeadingTextFromHeadingLine( line('.') )
   let linkPath = LinkPath_get()
@@ -375,6 +376,9 @@ func! Example_SetStart()
   call writefile( lines, g:ExamplesPath, "a" )
   echo 'started ' . headerText
 endfunc
+
+" call writefile( ["hi"], g:ExamplesPath, "a" )
+" readfile( g:ExamplesPath, '\n' )
 
 func! Example_AddIdentif()
   let hostLn = line('.')
@@ -533,6 +537,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "tupled-collection"
   elseif  typeStr =~ "^\("
     let typeMode = "tupled-collection"
+  elseif  typeStr =~ "SelectionBuilder"
+    let typeMode = "plain"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
