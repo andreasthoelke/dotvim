@@ -519,6 +519,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "QuillDSLive"
   elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
     let typeMode = "zio_collection"
+  elseif  typeStr =~ "Either\[" && typeStr =~ "List"
+    let typeMode = "either_collection"
   elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[")
     let typeMode = "zio"
 
@@ -538,6 +540,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   elseif  typeStr =~ "^\("
     let typeMode = "tupled-collection"
   elseif  typeStr =~ "SelectionBuilder"
+    let typeMode = "plain"
+  elseif  typeStr =~ "Request" || typeStr =~ "Response"
     let typeMode = "plain"
   elseif  typeStr =~ "List"
     let typeMode = "collection"
@@ -648,6 +652,12 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     " let _printVal = identif                                 " already an effect
     let _replTag    = '"RES_multi_"'
     let _replEndTag = '"_RES_multi_END"'
+
+  elseif typeMode == 'either_collection'
+    let _infoEf   = 'ZIO.fromEither( ' . identif . ' ).map( v => (v.size.toString + "\n" + pprint.apply(v, width=3, height=2000) ) )' 
+    let _replTag    = '"RES_multi_"'
+    let _replEndTag = '"_RES_multi_END"'
+
 
   elseif typeMode == 'QuillDSLive_coll'
     " let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => v.size.toString + "\n" + v.mkString("\n") )'
