@@ -5,8 +5,12 @@
 " ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↗  ➚ ⇗ ➚  ➶  ➹  ⤢ ⇗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " ⇤  ⇠  ⇜  ⇐  ↙  ↢  ↤  ⇠  ⇽
 " ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻◻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
+" ∿ ∾  ≀ ≁ ➳  ➺  ➽ ↷ ⇛  ⭄   ⇨ ⇵ ➢ ⥈ ⇒ ⇛ ⊢ ⟹  ⟾   ⧐  ⤇  ⥸  ⭃
+" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↑ ↓ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
+" ➳  ➽  ⟀  ⊃ ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
+" ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 "  ᶩ 𝑡 𝑙 ˍ  ▴ ˼ ▾ ˷ ⌄ ᐪ  ˹ ˼ ˺
-" ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ ∿ ∾  ≀ ≁ ➳  ➺  ➽
+" ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ 
 " ⊟  ⊡ | ⊖  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
 " ”  ⍘ ’ ⍞  ⍣ ⍤⍦⍪⍳ ⍽ ⍿ ⎅ ⎇  ⎎ ⎚
 " ➔  ⇾  →  ⬿ ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
@@ -18,13 +22,11 @@
 " ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  < ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
 " ⋋  ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩ ∪      𝑟S  ʀS
 " ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ◥ ↘  ⇓ ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲ 
-" ➳  ➽  ⟀  ⊃ ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
-" ⑂ ⑃ ⑄ ⫙ ⫗ ⫕ ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
 " ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 " ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
-" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↑ ↓ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
 " 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
+"  索  󰑫  直  直  󰖩 ⋺  ⋻
 " ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
 "   ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪
 "  ❖  ❃  ❇  ❉  ❋  ◈ ⟐  ⟡ ⬖ ⬙  ⬥  ⬧  ◆
@@ -252,6 +254,7 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal ':=' conceal cchar=⠃
   syntax match Normal ':=\s' conceal
   syntax match Normal ':::' conceal cchar=☷
+  syntax match Normal '=>>' conceal cchar=⋗
 
   syntax match Normal "^val\s" conceal
   syntax match Normal "\s\zsval\s" conceal
@@ -331,10 +334,12 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'live:' conceal cchar=⬿
   " syntax match Normal 'new\ze\s' conceal cchar=⬿
 
-  syntax match Normal 'Var' conceal cchar=≀
+  syntax match Normal 'Var\ze\W' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
   syntax match Normal '\vSignal(:)?' conceal cchar=~
   syntax match Normal 'SignallingRef' conceal cchar=≈
+  syntax match Normal '\W\zs\Stream' conceal cchar=⋻
+  syntax match Normal 'through' conceal cchar=↷
   syntax match Normal 'combineWithFn' conceal cchar=◇
 
   syntax match Normal '\vLive(:)?' conceal cchar=≈
@@ -388,6 +393,9 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
   syntax match Normal 'for\zee' conceal cchar=↗
   syntax match Normal 'each' conceal cchar=✴
+  syntax match Normal 'lMap' conceal cchar=∘
+  syntax match Normal 'eva\zelM' conceal cchar=↗
+
 
   " Refs
   " syntax match Normal 'getAndUpdate' conceal cchar=➚
@@ -413,6 +421,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'infix' conceal cchar=𝑖
   syntax match Normal 'implicitly' conceal cchar=𝑖
   syntax match Normal 'using' conceal cchar=⊨
+  syntax match Normal 'given' conceal cchar=∘
   syntax match Normal 'extension' conceal cchar=𝑒
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class\ze\s' conceal cchar=□
@@ -487,9 +496,9 @@ func! ScalaSyntaxAdditions ()
   " syntax match scalaSignal '\v\s\zs\w{-}S\ze(\W|\_s|:)'
   " call matchadd('scalaSignal', '\v\s\zs\w{-}S\ze(\W|\_s)', 12, -1)
   " Note the \U non uppercase char to exclude all caps var names. w{1,} mandates at least 1 word character
-  call matchadd('scalaVar',    '\v(\(|\s)\zs\w{1,}\UV\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaSignal', '\v(\(|\s)\zs\w{1,}\US\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaChannelBus', '\v(\(|\s)\zs\w{1,}\U(C|B)\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaVar',    '\v(\(|\s)\zs\l{1,}V\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaSignal', '\v(\(|\s)\zs\l{1,}S\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaChannelBus', '\v(\(|\s)\zs\l{1,}(C|B)\ze(\W|\_s)', 12, -1)
 
   " This uses the same approach for the Java-Doc comments:
   " this line overwrites the unicode conceals

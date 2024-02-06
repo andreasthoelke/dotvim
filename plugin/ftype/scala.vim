@@ -16,7 +16,8 @@ func! S_MenuCommands()
   else
     let cmds += [ {'label': 'Printer & Examples',   'cmd': 'new m/_printer' } ]
     let cmds += [ {'label': 'Examples',   'cmd': 'new ' . g:ExamplesPath } ]
-    let cmds += [ {'label': '_Examples',   'cmd': "call v:lua.FloatBuf_inOtherWinColumn( 'm/_printer/Examples.md' )" } ]
+    " let cmds += [ {'label': '_Examples',   'cmd': "call v:lua.FloatBuf_inOtherWinColumn( 'm/_printer/ExampleLog.md' )" } ]
+    let cmds += [ {'label': '_Examples',   'cmd': "new m/_printer/ExampleLog.md" } ]
     let cmds += [ {'label': '_Dependencies',   'cmd': 'new project/Dependencies.scala' } ]
   endif
 
@@ -361,14 +362,15 @@ endfunc
 nnoremap <silent><leader>ces :call Example_SetStart()<cr>
 nnoremap <silent><leader>cea :call Example_AddIdentif()<cr>
 
-let g:ExamplesPath = "m/_printer/Examples.md"
+let g:ExamplesPath = "m/_printer/ExampleLog.md"
 
 " filereadable( g:ExamplesPath )
 
 func! Example_SetStart()
   if !filereadable( g:ExamplesPath )
-    call writefile( [], g:ExamplesPath )
-    echo "Initialized Examples.md"
+    " call writefile( [], g:ExamplesPath )
+    echo "missing ExampleLog.md"
+    return
   endif
   let headerText = GetHeadingTextFromHeadingLine( line('.') )
   let linkPath = LinkPath_get()
@@ -385,8 +387,14 @@ func! Example_AddIdentif()
   let identif = matchstr( getline( hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
+  let comment = matchstr( getline( hostLn -1 ), '\v\/\/\s\zs.*' )
+
   let linkPath = LinkPath_get()
-  call writefile( [identif . " " . linkPath], g:ExamplesPath, "a" )
+  if len(comment)
+    call writefile( [comment, identif . " " . linkPath], g:ExamplesPath, "a" )
+  else
+    call writefile( [identif . " " . linkPath], g:ExamplesPath, "a" )
+  endif
   echo 'added ' . identif
 endfunc
 
@@ -519,7 +527,7 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "QuillDSLive"
   elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
     let typeMode = "zio_collection"
-  elseif  typeStr =~ "Either\[" && typeStr =~ "List"
+  elseif  typeStr =~ "Either\[" && typeStr =~ '\(Option\|List\)'
     let typeMode = "either_collection"
   elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[")
     let typeMode = "zio"
@@ -537,8 +545,8 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   "   let typeMode = "zio_collection"
   elseif  typeStr =~ "\(List"
     let typeMode = "tupled-collection"
-  elseif  typeStr =~ "^\("
-    let typeMode = "tupled-collection"
+  " elseif  typeStr =~ "^\("
+  "   let typeMode = "tupled-collection"
   elseif  typeStr =~ "SelectionBuilder"
     let typeMode = "plain"
   elseif  typeStr =~ "Request" || typeStr =~ "Response"
@@ -547,14 +555,14 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "collection"
   elseif  typeStr =~ "Iterable"
     let typeMode = "collection"
-  elseif  typeStr =~ "Set"
-    let typeMode = "collection"
+  " elseif  typeStr =~ "Set"
+  "   let typeMode = "collection"
   elseif  typeStr =~ "Vector"
     let typeMode = "collection"
   elseif  typeStr =~ "Seq"
     let typeMode = "collection"
-  elseif  typeStr =~ "Map"
-    let typeMode = "collection"
+  " elseif  typeStr =~ "Map"
+  "   let typeMode = "collection"
   elseif  typeStr =~ "Array" 
     let typeMode = "array"
   elseif  typeStr =~ "\(Iterator"

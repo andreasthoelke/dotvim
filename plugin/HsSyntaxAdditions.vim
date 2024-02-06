@@ -7,7 +7,7 @@ augroup end
 au ag BufRead,BufNewFile * if &ft == "" && expand('%:t') !~ '\.' | set filetype=markdown | endif
 au ag BufRead,BufNewFile *.txt set filetype=markdown
 
-au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call tools_edgedb#bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call Edb_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
@@ -69,6 +69,9 @@ augroup track_window
    autocmd FileType less set filetype=css
    autocmd FileType sass set filetype=css | set syntax=sass
    " autocmd FileType scss set filetype=css | set syntax=scss
+
+   autocmd FileType edgeql,esdl set filetype=sql
+
 augroup END
 
 

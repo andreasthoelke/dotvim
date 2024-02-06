@@ -476,7 +476,9 @@ command! -complete=help -nargs=? Help call FloatingWindowHelp(<q-args>)
 
 func! GetFileTypeFromBufText ( lines )
   let text = join( a:lines )
-  if     text =~ 'Query' && text =~ 'type'
+  if     text =~ 'xception'
+    return 'md'
+  elseif text =~ 'Query' && text =~ 'type'
     return 'graphql'
   elseif text =~ 'select'
     return 'edgeql'

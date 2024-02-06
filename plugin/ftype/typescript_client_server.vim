@@ -71,6 +71,7 @@ endfunc
 
 func! T_GetSnapshotNameFromFolder()
   let treeProps = v:lua.Ntree_getPathWhenOpen()
+  if treeProps == v:null | return | endif
   if !(type( treeProps ) == type( {} )) | return '' | endif
   let lastPathComponent = fnamemodify( treeProps.linepath, ':t' )
   return matchstr( lastPathComponent, 'snapshot_\zs.*' )

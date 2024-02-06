@@ -30,7 +30,7 @@ endfunc
 " ~/Documents/Proj/h_frontend/b_lamin_fullstack/server/src/main/scala/com/raquo/server/Server.scala‖/GETˍ->ˍRoot
 
 func! Scala_ServerClientRequest_x()
-  let sourceLineItems = split( matchstr( getline("."), '\v(//\s)?\zs.*' ), " " )
+  let sourceLineItems = split( matchstr( getline("."), '\v^(\s*)?(\/\/\s)?\zs\S*' ), " " )
 
   let url = sourceLineItems[0]
   let sourceLineItems = sourceLineItems[1:]

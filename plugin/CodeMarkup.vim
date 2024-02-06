@@ -48,7 +48,7 @@ let g:headingPttn = '\v^("|--|#|//)?\s─\s'
 " It prevents haskell type colons e.g. :: to match:
 " class Functor f => Align (f :: * -> *) where
 
-let g:labelPttn = '\v^\s*("|--|\#)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
+let g:labelPttn = '\v^\s*("|--|#|//)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,50}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
@@ -71,7 +71,7 @@ func! HeadingBackw()
 endfunc
 
 " nnoremap <silent><localleader>q :call GoSectionEndAbort('')<cr>
-nnoremap <silent> ,q :call GoSectionEndAbort('')<cr>
+nnoremap <silent> ,q :call GoSectionEndAbort()<cr>
 " nnoremap ,œ :call GoSectionEndAbort('')<cr>
 " Go to specific (via name) or current section end
 " func! GoSectionEndAbort( headerText )
@@ -82,9 +82,9 @@ func! GoSectionEndAbort( ... )
   " Go to either next start or end marker
   if a:0
     let headerText = (a:1 != '') ? a:1 : GetHeadingTextFromHeadingLine( line('.') )
-    call search('\v^("|--)\s─(\^|\s)\s{2}' . headerText, 'W')
+    call search('\v^("|--|#|//)\s─(\^|\s)\s{2}' . headerText, 'W')
   else
-    call search('\v^("|--)\s─(\^|\s)', 'W')
+    call search('\v^("|--|#|//)\s─(\^|\s)', 'W')
   endif
   let isEndMarker = MatchesInLine(line('.'), '\^')
   if isEndMarker " Confirm we have moved to matching end marker

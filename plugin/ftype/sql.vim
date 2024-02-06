@@ -96,8 +96,10 @@ endfunc
 let g:dbname = 'zio_skunk_tradeIO'
 " let g:dbname = 'learn_dev'
 " let g:dbname = 'realworld-prod.sqlite'
-let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
+" let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
+" let g:dbconn = 'postgresql://jimmy:banana@0.0.0.0:5432/world'
 " let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
+let g:dbconn = ''
 
 func! DB_eval_parag_psql()
   let [startLine, endLine] = ParagraphStartEndLines()
@@ -114,7 +116,11 @@ func! DB_eval_parag_psql()
     " let cmd = 'sqlite3 ' . g:dbname . ' "' . sqlStr . '"' . ' .mode -column'
     let cmd = 'sqlite3 ' . g:dbname . ' "' . sqlStr . '"' . ' -column'
   else
-    let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+    if len( g:dbconn )
+      let cmd = 'psql ' . g:dbconn . ' -c "' . sqlStr . '"'
+    else
+      let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
+    endif
   endif
 
   call System_Float( cmd )

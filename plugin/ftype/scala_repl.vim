@@ -331,9 +331,15 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       let resultVal = functional#filter( {line -> !(line =~ 'sbt\:')}, resultVal )
       let resultVal = functional#filter( {line -> !(line =~ 'sbt\sserver')}, resultVal )
       let resultVal = functional#filter( {line -> !(line =~ "enter \'cancel")}, resultVal )
+
+      " this should generaly filter lines that show the code location where the error occured, e.g.:
+      " '   at skunk.exception.ColumnAlignmentException$.apply(ColumnAlignmentException.scala:16)'
+      let resultVal = functional#filter( {line -> !(line =~ '\sat\s')}, resultVal )
       " Tested with ~/Documents/Proj/g_edb_gql/m/h4s_simple/os_lib/a_oslib.scala‖/e2_vimfˍ=
 
       let resultVal = SubstituteInLines( resultVal, '\[error\]', "" )
+      let resultVal = SubstituteInLines( resultVal, '🔥', "" )
+      " let resultVal = StripLeadingSpaces( resultVal )
 
 
       let g:ReplReceive_open = v:false
@@ -341,7 +347,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
 
       " let g:floatWin_win = FloatingSmallNew ( resultVal )
       let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
-      call ScalaSyntaxAdditions() 
+      " call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()
       wincmd p
 
