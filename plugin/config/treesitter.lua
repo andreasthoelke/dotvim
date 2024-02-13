@@ -7,6 +7,12 @@ require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all". These parsers should always be installed.
   ensure_installed = { "scala", "typescript", "python", "sql", "bash" },
 
+  -- queries = {
+  --   scala = {
+  --     -- Path to your query file relative to the Neovim config directory
+  --     sql_in_triple_quotes = "queries/scala.scm"
+  --   }
+  -- },
 
   -- Install parsers synchronously. This is only applied to `ensure_installed`.
   sync_install = false,

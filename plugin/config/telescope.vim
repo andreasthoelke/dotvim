@@ -57,7 +57,11 @@ nnoremap <silent>gsP :call v:lua.Telesc_launch('repo')<cr>
 
 " note the other "gs.." maps: ~/.config/nvim/plugin/ftype/scala.vim‖:57:3
 nnoremap <silent>gsb :call v:lua.Telesc_launch('vim_bookmarks')<cr>
+
+" Would like to have the full width just in this case to be able to read longer URLs
+" nnoremap <silent>gsc <cmd>Telescope bookmarks layout_strategy=horizontal<cr>
 nnoremap <silent>gsc :call v:lua.Telesc_launch('bookmarks')<cr>
+
 nnoremap <silent>gssi :call v:lua.Telesc_launch('scaladex')<cr>
 
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
@@ -132,6 +136,11 @@ nnoremap <silent> ,gb <cmd>Telescope file_browser<cr>
 " nnoremap <silent> <leader>no <cmd>NvimTreeToggle<cr>
 " nnoremap <silent> ,tt <cmd>lua require('utils_general').fileView()<cr>
 
+
+" A command that calls Telesc_launch('bookmarks', { default_text = <the arg to the command> }) 
+" command! -nargs=1 BMs lua Telesc_launch('bookmarks', { default_text = <args> })
+
+command! -nargs=* BMs lua Telesc_launch('bookmarks', { default_text = <q-args> })
 
 " Using Lua functions
 nnoremap <leader>tt <cmd>lua require('telescope.builtin').resume()<cr>

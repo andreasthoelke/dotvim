@@ -666,7 +666,8 @@ endfunc
 let g:edgedb_query_cmd = "edgedb query --output-format json-pretty --file temp/lastQuery.edgeql --database " . g:edgedb_db
 
 func! Edb_runQuery( query_lines )
-  " echoe a:query_lines
+  " echo a:query_lines
+  " return
   " let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
   let filenameSource = 'temp/lastQuery.edgeql'
   call writefile( a:query_lines, filenameSource )

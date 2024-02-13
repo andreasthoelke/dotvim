@@ -16,14 +16,16 @@ au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 " BufWinEnter is needed to refresh the comment conceals when that buffer was hidden, e.g. using gq in dirvish/nvt
-au ag BufWinEnter *.sc,*.scala,*.sbt call ScalaSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.sc,*.scala,*.sbt call Scala_bufferMaps()
+au ag BufWinEnter *.sc,*.scala,*.java,*.sbt call ScalaSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.sc,*.scala,*.java,*.sbt call Scala_bufferMaps()
 
 " the filetype .shtp is used in rlist to separate active .sh script from mere command templates.
 au ag BufNewFile,BufRead,WinNew *.sh,*.shtp,r call ShellSyntaxAdditions()
 
-au ag BufRead,BufNewFile *.smithy		setfiletype smithy
+" au ag BufRead,BufNewFile *.smithy		setfiletype smithy
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.smithy  call SmithyBufferMaps()
+au ag FileType smithy setlocal commentstring=//%s
 
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
@@ -31,6 +33,7 @@ au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html call Ts
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.css,*.less,*.scss,*.sass call JS_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.sql call Sql_bufferMaps()
 
 " au ag BufNewFile,BufRead,WinNew *.sct set filetype=purescript_scratch | set syntax=purescript1
 au ag BufWinEnter *.sct set filetype=purescript_scratch | set syntax=lua | call LuaSyntaxAdditions()
@@ -47,10 +50,10 @@ au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.md,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
+au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
-" au ag BufNewFile,BufRead,WinNew *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
+au ag BufWinEnter *.md          call MarkdownBufferMaps()
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──
@@ -104,7 +107,7 @@ nnoremap <silent><leader>cm :call clearmatches()<cr>
 
 
 func! SQLSyntaxAdditions()
-  call Sql_bufferMaps()
+  " call Sql_bufferMaps()
   call clearmatches()
 
   set conceallevel=2
@@ -490,8 +493,11 @@ endfunc " ▲
 func! MarkdownSyntaxAdditions()
   set syntax=markdown
   call clearmatches()
-  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
-  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  " syntax match Normal '\`\`\`' conceal cchar=⊃
+  " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
+  call matchadd('Conceal', '^\`\`\`\i\i', 12, -1, {'conceal': '˻'})
+
   set foldmethod=marker
 endfunc
 

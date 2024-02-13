@@ -612,13 +612,18 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#smithy_ls
 
 lspconfig.smithy_ls.setup ({
-  cmd = { 'cs', 'launch', 'com.disneystreaming.smithy:smithy-language-server:latest.release', '--', '0' },
+  -- cmd = { 'cs', 'launch', 'com.disneystreaming.smithy:smithy-language-server:latest.release', '--', '0' },
+  cmd = { "cs", "launch", "com.disneystreaming.smithy:smithy-language-server:0.0.21", "--", "0" },
   capabilities = capabilities,
   on_attach = on_attach,
   flags = flags,
 })
 
-
+-- require'lspconfig'.smithy_ls.setup{
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
+-- }
 
 -- ─   null-ls                                          ──
 

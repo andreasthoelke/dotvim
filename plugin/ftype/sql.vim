@@ -2,6 +2,9 @@
 " db-ui connections can be defined here: ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
 
 func! Sql_bufferMaps()
+
+  call Scala_bufferMaps_shared()
+
   nnoremap <silent><buffer> gej :call DB_eval_parag_psql()<cr>
   nnoremap <silent><buffer> gel :call DB_eval_parag_sqlite()<cr>
   nnoremap <silent><buffer> gei :call DB_eval_parag()<cr>
@@ -20,8 +23,8 @@ func! Sql_bufferMaps()
   nnoremap <silent><buffer>       geh :silent call RescriptTypeHint()<cr>
   nnoremap <silent><buffer>            gdd :call RS_OpenDefinition(':e')<cr>
 
-  nnoremap <silent><buffer> <c-n> :call RS_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  " nnoremap <silent><buffer> <c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  " nnoremap <silent><buffer> <c-p> :call RS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
 
 endfunc
 

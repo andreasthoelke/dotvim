@@ -33,8 +33,8 @@ nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 
 func! RunTerm_showFloat()
- echo "Running terminal command .."
- call T_DelayedCmd( "echo ''", 2000 )
+ " echo "Running terminal command .."
+ " call T_DelayedCmd( "echo ''", 2000 )
  call System_Float( getline('.') )
 endfunc
 
@@ -81,8 +81,8 @@ let g:TermOneShotCBs = {
       \ }
 
 func! TermOneShot_FloatBuffer( cmd )
-  echo "Running terminal command .."
-  call T_DelayedCmd( "echo ''", 2000 )
+  " echo "Running terminal command .."
+  " call T_DelayedCmd( "echo ''", 2000 )
   " silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
   silent let g:floatWin_win = FloatingSmallNew ( [] )
   silent call FloatWin_FitWidthHeight()

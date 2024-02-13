@@ -7,6 +7,7 @@ let g:httpx_request_port = 8080
 " let g:httpx_request_port = 5000
 " let g:httpdomain = '127.0.0.1'
 let g:httpdomain = 'localhost'
+let g:httpprotocol = 'http'
 
 func! Httpx_parse( source, result )
   if     a:source[0][0] == "-"
@@ -14,7 +15,7 @@ func! Httpx_parse( source, result )
     let rest = []
 
   " elseif a:source[0] == "-j"
-  elseif a:source[0] =~ '\v(POST|PUT|DELETE|UPDATE)'
+  elseif a:source[0] =~ '\v(post|put|delete|update)'
     let val = "-m " . a:source[0]
     let rest = a:source[1:]
   else
@@ -29,8 +30,16 @@ endfunc
 " ISSUE: can't fetch this simple route:
 " ~/Documents/Proj/h_frontend/b_lamin_fullstack/server/src/main/scala/com/raquo/server/Server.scala‖/GETˍ->ˍRoot
 
+" E.g. this: (use geh on the following line)
+" Andreas post -p town 'Berlin'
+" will be turned into (use gwj on the following line)
+" httpx http://localhost:9001/thisstr -m post -p town 'Berlin'
+
 func! Scala_ServerClientRequest_x()
-  let sourceLineItems = split( matchstr( getline("."), '\v^(\s*)?(\/\/\s)?\zs\S*' ), " " )
+  let sourceLineItems = split( matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s)?\zs\S.*' ), " " )
+
+  " call append(line('.'), sourceLineItems)
+  " return
 
   let url = sourceLineItems[0]
   let sourceLineItems = sourceLineItems[1:]
@@ -41,12 +50,15 @@ func! Scala_ServerClientRequest_x()
 
   while len( sourceLineItems )
     let [sourceLineItems, extension] = Httpx_parse( sourceLineItems, extension )
+
+
   endwhile
 
   " echo extension
   " return
 
-  let url = "http://" . g:httpdomain . ":" . g:httpx_request_port . "/" . url
+  let port = g:httpx_request_port == "" ? "" : ":" . g:httpx_request_port
+  let url = g:httpprotocol . "://" . g:httpdomain . port . "/" . url
 
   let g:scala_serverRequestCmd = "httpx " . url . extension
   " call append(line('.'), g:scala_serverRequestCmd)

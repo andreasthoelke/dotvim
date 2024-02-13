@@ -173,7 +173,9 @@ endfunc
 " LineSearch_makeShortUnique_orWarn('abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
 " LineSearch_makeShortUnique_orWarn('LineSearch_akeSortUnique_orWarn( fulltring )' )
 " LineSearch_makeShortUnique_orWarn('-- ─       aifbbs t this other' )
+" LineSearch_makeShortUnique_orWarn("CityId( '123' )" )
 " abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
+
 
 func! LineSearch_isUniqueInBuf( searchChars )
   " return search( escape(a:searchChars, '\'), 'nbw' ) == line('.')
@@ -185,6 +187,10 @@ func! LineSearch_isUniqueInBuf( searchChars )
   let esc1 = a:searchChars
   " NOTE: this line. there may be other char I would like to escape like this.
   let esc1 = substitute( a:searchChars, '=', '\\=', 'g' )
+  let esc1 = substitute( esc1, '(', '\\(', 'g' )
+  let esc1 = substitute( esc1, ')', '\\)', 'g' )
+  let esc1 = substitute( esc1, '{', '\\{', 'g' )
+  let esc1 = substitute( esc1, '}', '\\}', 'g' )
   " let esc1 = escape( esc1, '\' )
   let lineNum = search( '\v' . esc1, 'nbw' )
   call setpos('.', [0, oLine, oCol, 0] )
@@ -195,6 +201,7 @@ endfunc
 " echo LineSearch_isUniqueInBuf( "elseif type" )
 " echo LineSearch_isUniqueInBuf( "elxseif type" )
 " LineSearch_isUniqueInBuf( 'abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc' )
+" LineSearch_isUniqueInBuf("CityId( '123' )" )
 " abbcc 2abbcc 3abbcc 4abbcc 5abbcc 6abbcc 7abbcc
 " echo search( '\V\' . escape('elseif typeMode', '\'), 'nbw' )
 " echo search( '\v' . escape('elseif typeMode', '\'), 'nbw' )

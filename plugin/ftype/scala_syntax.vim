@@ -35,7 +35,7 @@
 
 
 func! SmithySyntaxAdditions ()
-  " call clearmatches()
+  call clearmatches()
 
   " syntax match Normal '@\i*' conceal cchar=❈
 
@@ -80,8 +80,13 @@ func! SmithySyntaxAdditions ()
 
   syntax match Normal '@required' conceal cchar=.
 
+  syntax match BlackBG '\v─(\^|\s)\s{2}\S.*'
+
   set conceallevel=2
   set concealcursor=ni
+
+  " setlocal commentstring=\ \/\/%s
+  " setlocal commentstring=//\ %s
 endfunc
 
 
@@ -393,7 +398,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
   syntax match Normal 'for\zee' conceal cchar=↗
   syntax match Normal 'each' conceal cchar=✴
-  syntax match Normal 'lMap' conceal cchar=∘
+  syntax match Normal '\vlMap(\:)?' conceal cchar=∘
   syntax match Normal 'eva\zelM' conceal cchar=↗
 
 
@@ -481,8 +486,9 @@ func! ScalaSyntaxAdditions ()
   " syntax match BlackBG '\v\/\/\s\zsi{-}'
 
   " This is effective in preventing the conceal unicode in normal comments
+  " TODO: BUT .. it also breaks match pairs! here: .query(varchar * int2)
   syntax match Comment '\v\/\/\s\zs.*'
-  syntax match Comment '\v\s\*\zs\zs.*'
+  syntax match Comment '\v^\s\*\s\zs\zs.*'
 
   " TODO: this case doesn't 'unmatch' the conceals in the comment. seems minor.
   " /** Decomposes the `NonEmptyList` into an element and a (possibly empty) `List` */
@@ -517,6 +523,7 @@ func! ScalaSyntaxAdditions ()
   call matchadd('Conceal', '\v\s\zs\s\*\s', 12, -1, {'conceal': ''})
   syntax match Normal '\v\s\*\/' conceal
 
+  " syntax region InnerSql matchgroup=InnerSqlGr start='sql"""' end='"""' contains=String
 
   " call matchadd('BlackBG', '\v\*.*', 12, -1 )
 
@@ -533,6 +540,7 @@ func! ScalaSyntaxAdditions ()
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   " call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
   " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+
 
   set conceallevel=2 " ■
   set concealcursor=ni " ▲

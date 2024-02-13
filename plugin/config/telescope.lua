@@ -924,7 +924,7 @@ function _G.Telesc_launch( picker_name, opts )
     extensions.repo.list( opts )
 
   elseif picker_name == 'bookmarks' then
-    opts = f.merge( opts, {initial_mode='insert'} )
+    opts = f.merge( opts, {initial_mode='insert', layout_strategy='horizontal', layout_config = {width=0.96} } )
     extensions.bookmarks.bookmarks( opts )
 
   elseif picker_name == 'vim_bookmarks' then
@@ -968,6 +968,8 @@ end
 
 -- Telesc_launch 'live_grep'
 -- Telesc_launch 'current_buffer_fuzzy_find'
+-- Telesc_launch('bookmarks', { default_text = 'Smithy' })
+
 
 vim.keymap.set( 'n',
   '<leader>ga', function() Telesc_launch( 'current_buffer_fuzzy_find', {

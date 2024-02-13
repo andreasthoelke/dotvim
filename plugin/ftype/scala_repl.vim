@@ -312,7 +312,8 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
 
   if g:Repl_waitforanotherlargechunk
 
-    if (len( lines ) > 8) 
+    " not clear what this is for, but when set to 8 the error messages are often cut off
+    if (len( lines ) > 1) 
       let g:Repl_waitforanotherlargechunk = v:true
       let g:Repl_wait_receivedsofar[-1] = g:Repl_wait_receivedsofar[-1] . lines[0]
       let g:Repl_wait_receivedsofar += lines[2:]

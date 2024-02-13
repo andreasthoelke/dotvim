@@ -18,6 +18,7 @@ func! S_MenuCommands()
     let cmds += [ {'label': 'Examples',   'cmd': 'new ' . g:ExamplesPath } ]
     " let cmds += [ {'label': '_Examples',   'cmd': "call v:lua.FloatBuf_inOtherWinColumn( 'm/_printer/ExampleLog.md' )" } ]
     let cmds += [ {'label': '_Examples',   'cmd': "new m/_printer/ExampleLog.md" } ]
+    let cmds += [ {'label': '_Build',   'cmd': 'new build.sbt' } ]
     let cmds += [ {'label': '_Dependencies',   'cmd': 'new project/Dependencies.scala' } ]
   endif
 
@@ -381,6 +382,7 @@ endfunc
 
 " call writefile( ["hi"], g:ExamplesPath, "a" )
 " readfile( g:ExamplesPath, '\n' )
+            " CityId( "123" )    
 
 func! Example_AddIdentif()
   let hostLn = line('.')

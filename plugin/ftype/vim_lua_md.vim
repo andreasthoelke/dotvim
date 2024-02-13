@@ -4,6 +4,21 @@
 
 let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#).*'
 
+
+func! MarkdownBufferMaps()
+  call VScriptToolsBufferMaps()
+
+  nnoremap <silent><buffer><leader>ot :Vista<cr>
+endfunc
+
+
+func! SmithyBufferMaps()
+  call Scala_bufferMaps_shared()
+
+  " nnoremap <silent><buffer><leader>ot :Vista<cr>
+endfunc
+
+
 func! VScriptToolsBufferMaps()
   call Scala_bufferMaps_shared()
 

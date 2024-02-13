@@ -989,6 +989,8 @@ hi! scalaChannelBus guibg=none guifg=#1F3F27 gui=italic
 
 hi! def link foldBraces purescriptIdentifier
 
+" highlight InnerSql gui=italic guifg=#FFA07A
+" hi! def link InnerSql Comment
 
 
 " ─   Lsp semantic hightlights                          ──
