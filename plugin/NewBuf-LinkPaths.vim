@@ -145,13 +145,21 @@ func! Link_jumpToLine( linkExtension )
     endif
     normal ^
   elseif linkKey == "/"
-    if !search( '\v' . escape(linkVal, '\'), 'cw' ) 
+    " Improvement 2024-02:
+    " - proper(?) escaping of special chars in search code
+    " - use highlight search to find alt search match (as a fallback)
+    let escaped = EscapeSpecialChars( linkVal )
+    if !search( '\v' . escaped, 'cw' ) 
       echo 'Keyword not found: ' linkVal
+    else
+      exec 'let @/ = "' .. escaped .. '"' 
+      set hlsearch
     endif
   else
     echoe 'unsupported linkKey: ' . linkKey
   endif
 endfunc
+
 " Link_jumpToLine( ":44" )
 " Link_jumpToLine( "/func! Link_jumpToLine( linkExtList )" )
 " Link_jumpToLine( "/--ˍ─ˍaifb" )

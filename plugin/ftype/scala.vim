@@ -165,7 +165,8 @@ func! Scala_bufferMaps_shared()
   nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
-  nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>
   " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
   nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
   " " this is small and local
@@ -386,10 +387,11 @@ endfunc
 
 func! Example_AddIdentif()
   let hostLn = line('.')
-  let identif = matchstr( getline( hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  " '\v^(\s*)?(\/\/\s|\"\s)?\zs\S.*' ), " " )
+  let identif = matchstr( getline( hostLn ), '\v(\s*)?(val|def)?\s\zs\i*\ze\W' )
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
-  let comment = matchstr( getline( hostLn -1 ), '\v\/\/\s\zs.*' )
+  let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
 
   let linkPath = LinkPath_get()
   if len(comment)

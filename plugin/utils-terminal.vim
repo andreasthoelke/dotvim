@@ -35,7 +35,10 @@ nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 func! RunTerm_showFloat()
  " echo "Running terminal command .."
  " call T_DelayedCmd( "echo ''", 2000 )
- call System_Float( getline('.') )
+ let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
+ " echo line
+ " return
+ call System_Float( line )
 endfunc
 
 " ─   One shot async Terminal                            ■

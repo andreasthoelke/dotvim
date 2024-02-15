@@ -87,6 +87,18 @@ func! CreateScala_moveCommaToNextLine()
 endfunc
 
 
+    " findAllActors.transact(xa)
+
+nnoremap <silent><leader>em :call CreateScala_moveDotToNextLine()<cr>
+
+func! CreateScala_moveDotToNextLine()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  call search('\v\.\i', 'cW')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal ^j
+endfunc
+
+
   " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) => fb },
   " <-- tickStream.mapTo(scala.util.Random.nextInt() % 100)
 
@@ -110,6 +122,8 @@ func! CreateScala_fewerBraces_b()
   call setpos('.', [0, oLine, oCol, 0] )
   normal! r:
   call setpos('.', [0, oLine1, oCol1, 0] )
+  " this is to avoid a jump in column when immediately going up or down.
+  normal lh
 endfunc
          " ab
 " len(matchstr( getline(66), '\s*\ze\S'))

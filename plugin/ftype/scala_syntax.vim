@@ -381,7 +381,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'else' conceal cchar=˺
   syntax match Normal 'else\sif' conceal cchar=˼
   " syntax match Normal 'then\ze(\W|\_$)' conceal cchar=˹
-  syntax match Normal '\v\s\zsthen\ze(\s|\_$)' conceal cchar=˹
+  syntax match Normal '\v(\s|^)\zsthen\ze(\s|\_$)' conceal cchar=˹
   " syntax match Normal 'when' conceal cchar=?
 
   syntax match Normal 'case' conceal cchar=˰
@@ -396,8 +396,8 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vfilter\ze\W' conceal cchar=⇡
   syntax match Normal 'contramap' conceal cchar=↖
   syntax match Normal '\.\zsas\ze(' conceal cchar=ꜜ
+  syntax match Normal '\veach(\:)?' conceal cchar=✴
   syntax match Normal 'for\zee' conceal cchar=↗
-  syntax match Normal 'each' conceal cchar=✴
   syntax match Normal '\vlMap(\:)?' conceal cchar=∘
   syntax match Normal 'eva\zelM' conceal cchar=↗
 
