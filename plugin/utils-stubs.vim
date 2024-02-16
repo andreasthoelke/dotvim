@@ -93,10 +93,26 @@ nnoremap <silent><leader>em :call CreateScala_moveDotToNextLine()<cr>
 
 func! CreateScala_moveDotToNextLine()
   let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal l
   call search('\v\.\i', 'cW')
   call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
   normal ^j
 endfunc
+
+
+" def findActorsByName(initialLetter: String): IO[List[Actor]] = {
+
+nnoremap <silent><leader>e( :call CreateScala_moveSingleMethodParamToNextLine()<cr>
+
+func! CreateScala_moveSingleMethodParamToNextLine()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal l
+  call search('\v\(', 'cW')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal ^j
+  call InsertStringAtLoc('  ', line('.'), col('.')-2)
+endfunc
+
 
 
   " builder[IO, Int]{ (fb: FieldBuilder[IO, Int]) => fb },
