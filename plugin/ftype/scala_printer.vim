@@ -279,6 +279,10 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
   call writefile( plns, printerFilePath )
 endfunc
 
+
+
+" ─   Set Printer Identif                               ──
+
 func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   let effType  = Scala_BufferCatsOrZio()
@@ -324,6 +328,10 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "either_collection"
   elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[")
     let typeMode = "zio"
+
+
+  elseif  typeStr =~ "ConnectionIO\["
+    let typeMode = "doobie"
 
   elseif  effType == 'cats' && typeStr =~ "IO\["
     let typeMode = "cats"
@@ -408,6 +416,14 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   elseif typeMode == 'cats'
     let _printValEf   = identif . '.map( v => pprint.apply(v, width=3, height=2000)  )' 
+
+  " // val printValEf = e_doobie_docs.e2_program1.map( v => pprint.apply(v, width=3, height=2000)  )
+  " val printValEf =  e_doobie_docs.program2.transact(e_doobie_docs.transConn).map( v => pprint.apply(v, width=3, height=2000)  )
+
+  elseif typeMode == 'doobie'
+    " NOTE: it's required to have a Transactor[IO] value named transConn in the same namespace.
+    let transConnection = Sc_PackagePrefix() . "transConn" 
+    let _printValEf   = identif . '.transact(' . transConnection . ').map( v => pprint.apply(v, width=3, height=2000)  )' 
 
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
@@ -497,7 +513,13 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let printerFilePath = getcwd(winnr()) . '/server/src/main/scala/Printer.scala'
   endif
 
-  let plns = readfile( printerFilePath, '\n' )
+  if filereadable(printerFilePath)
+    let plns = readfile( printerFilePath, '\n' )
+  else
+    echo "Printer not found!"
+    echo printerFilePath
+    return
+  endif
 
   " object P { // <<== this needs to be line 16!
   " NOTE: the line numbers here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/PrinterCats.scala#/object%20P%20{

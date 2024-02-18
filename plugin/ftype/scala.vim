@@ -218,7 +218,7 @@ endfunc
 " ─   Motions                                            ■
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)\zs'
+let g:Scala_MainStartPattern = '\v^((\s*)?\zs(sealed|val|operation|service|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|case\sobject|enum|final|object|class|def)\s|val)\zs'
 let g:Scala_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)\s\zs'
 
 func! Scala_TopLevBindingForw()

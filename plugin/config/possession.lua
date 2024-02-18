@@ -210,7 +210,10 @@ require('possession').setup {
       res['SbtJs_projectName'] = vim.g["SbtJs_projectName"]
       res['SbtJsVite_cmd']     = vim.g["SbtJsVite_cmd"]
 
+      -- NOTE: could add more global vars here and below
       res['httpx_request_port']     = vim.g["httpx_request_port"]
+      res['dbname']                 = vim.g["dbname"]
+      res['dbconn']                 = vim.g["dbconn"]
 
       return res
     end,
@@ -265,7 +268,10 @@ require('possession').setup {
         vim.defer_fn( vim.fn.SbtJsStart, 3000 )
       end
 
+      -- NOTE: could add more global vars here and above
       vim.g["httpx_request_port"] = user_data["httpx_request_port"]
+      vim.g["dbname"] = user_data["dbname"]
+      vim.g["dbconn"] = user_data["dbconn"]
 
     end,
   },

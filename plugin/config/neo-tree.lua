@@ -718,6 +718,10 @@ require("neo-tree").setup({
         ["<"] = "prev_source",
         [">"] = "next_source",
 
+-- ─   Motions                                          ──
+        [")"] = function() vim.cmd("normal! j^") end,
+        ["*"] = function() vim.cmd("normal! k^") end,
+
 
         -- TODO: does this work with other sources than filesystem?
         ["<leader>-"] = function(state)

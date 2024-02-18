@@ -53,11 +53,18 @@ func! SmithySyntaxAdditions ()
 
   syntax match Normal '^service' conceal cchar=≡
   syntax match Normal '^structure' conceal cchar=˽
-  syntax match Normal '^operation' conceal cchar=⊃
+  syntax match Normal '^operation' conceal cchar=→
+   " ⟄
 
-  syntax match Normal 'input:\s' conceal
+  " syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃
+  " syntax match Normal '\s\zsas\ze\s' conceal cchar=⊂
+
+  syntax match Normal 'input:' conceal cchar=⊃
   syntax match Normal 'output:' conceal cchar=⊂
   syntax match Normal 'errors:' conceal cchar=⊖
+
+  syntax match Normal 'input :=' conceal cchar=⊃
+  syntax match Normal 'output :=' conceal cchar=⊂
 
   syntax match Normal '@error' conceal cchar=⊖
   syntax match Normal 'Error' conceal cchar=⊖
@@ -67,14 +74,18 @@ func! SmithySyntaxAdditions ()
   syntax match Normal 'string' conceal cchar=s
   syntax match Normal 'String' conceal cchar=s
   syntax match Normal 'Integer' conceal cchar=ɪ
+  syntax match Normal 'integer' conceal cchar=ɪ
+  syntax match Normal '^list' conceal cchar=⟦
   syntax match Normal 'Boolean' conceal cchar=ʙ
 
   syntax match Normal '@idempotent' conceal cchar=𝑖
+  syntax match Normal '@readonly' conceal cchar=𝑟
   syntax match Normal '@http' conceal cchar=ʜ
   syntax match Normal '@httpHeader' conceal cchar=^
   syntax match Normal '@httpQuery' conceal cchar=𝑞
   syntax match Normal '@simpleRestJson' conceal cchar=
   syntax match Normal 'method:\s' conceal
+  syntax match Normal 'member:\s' conceal
   syntax match Normal 'uri:\s' conceal
   syntax match Normal 'code:\s' conceal
 
@@ -443,6 +454,8 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'make' conceal cchar=˖
   syntax match Normal 'unbounded' conceal cchar=˖
   syntax match Normal 'succeed' conceal cchar=ꜜ
+
+  syntax match Normal 'spec' conceal cchar=
 
   syntax match Normal '\s\zs\.' conceal cchar=ˍ
   " syntax match Normal '\S\zs\.\ze\S' conceal cchar=ˍ

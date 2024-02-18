@@ -15,6 +15,11 @@ endfunc
 func! SmithyBufferMaps()
   call Scala_bufferMaps_shared()
 
+  nnoremap <silent><buffer> <leader><c-p> :call Scala_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <c-p>         :call Scala_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Scala_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Scala_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+
   " nnoremap <silent><buffer><leader>ot :Vista<cr>
 endfunc
 
