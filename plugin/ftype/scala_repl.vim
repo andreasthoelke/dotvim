@@ -278,8 +278,8 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
 
 
   " RES_multi_ case part 2: 
-  " This code run when the Repl_wait_multiline mode was activated (see below)
-  " Currently is only runs once on the second multiline repl event. (there may be more for longer multiline values)
+  " This code runs when the Repl_wait_multiline mode was activated (see below)
+  " Currently it only runs once on the second multiline repl event. (there may be more for longer multiline values)
   if g:Repl_wait_multiline
     "
     " { "[info]   value = Character(", '[info]     name = "aa",', "[info]     age = 12", "[info]   )", "[info] )_RES_multi_END", "[success] Total time: 2 s, completed 8 Dec 2023, 21:12:07", "=sbt:edb_gql> " }
@@ -327,11 +327,21 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
 
       let resultVal = g:Repl_wait_receivedsofar
 
+      " echo resultVal
+      " return
+
       let resultVal = functional#filter( {line -> !(line =~ 'hikari')}, resultVal )
 
       let resultVal = functional#filter( {line -> !(line =~ 'sbt\:')}, resultVal )
       let resultVal = functional#filter( {line -> !(line =~ 'sbt\sserver')}, resultVal )
       let resultVal = functional#filter( {line -> !(line =~ "enter \'cancel")}, resultVal )
+
+      " NOTE this alert shows up at a later/second terminal event!
+      " echo 'hi'
+
+      " FILTER ERROR messages. This is now 2024-03 tested and works
+      let resultVal = functional#filter( {line -> !(line =~ 'Total\stime')}, resultVal )
+      let resultVal = functional#filter( {line -> !(line =~ 'stack\strace')}, resultVal )
 
       " this should generaly filter lines that show the code location where the error occured, e.g.:
       " '   at skunk.exception.ColumnAlignmentException$.apply(ColumnAlignmentException.scala:16)'
@@ -342,6 +352,10 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       let resultVal = SubstituteInLines( resultVal, '🔥', "" )
       " let resultVal = StripLeadingSpaces( resultVal )
 
+      " NOTE 2024-03 this works only after other lines have been filtered before
+      if len( resultVal )
+        let resultVal[0] = matchstr( resultVal[0], '\v(error:\s|Err|Exception)\zs.*' )
+      endif
 
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
@@ -383,7 +397,9 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     let foundString1 = matchstr( searchString1, '\vRES_multi_\zs.*\ze_RES_multi_END' )
     " call v:lua.putt( foundString1 )
     if len( foundString1 ) > 0
-      let g:floatWin_win = FloatingSmallNew ( [foundString1], "otherWinColumn" )
+      " In this case the full enclosed result value was found within one line.
+      let foundList1 = split( foundString1, "※" )
+      let g:floatWin_win = FloatingSmallNew ( foundList1, "otherWinColumn" )
       call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()
       wincmd p
@@ -401,20 +417,24 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     endif
 
 
-  elseif searchString1 =~ "(error|Exception)"
+  " Error don't seem to arrive here (see "else" block instead)
+  elseif searchString1 =~ "\v(error|Exception)"
+
+    " echo "hi1"
     let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthead|Exception:\s|ERROR:\s|Err\()\zs.*' )
     let foundList1 = split( foundString1, "※" )
     if !(len( foundList1 ) > 0) | return | endif
 
-    let foundList1[0] = matchstr( foundList1[0], '\v(error:\s|Err)\zs.*' )
+    let foundList1[0] = matchstr( foundList1[0], '\v(error:\s|Err|Exception)\zs.*' )
 
-    let foundList1 = SubstituteInLines( foundList1, '\[error\]', "" )
+    let foundList1 = SubstituteInLines( foundList1, '\[error\]\s', "" )
     let foundList1 = StripLeadingSpaces( foundList1 )
     " "at " indicates WHERE the error occured. -> skip these lines
-    let foundList1 = functional#filter( {line -> !(line =~ '^at\s')}, foundList1 )
-    let foundList1 = functional#filter( {line -> !(line =~ '^stack\s')}, foundList1 )
+    " let foundList1 = functional#filter( {line -> !(line =~ '^at\s')}, foundList1 )
+    " let foundList1 = functional#filter( {line -> !(line =~ 'Total')}, foundList1 )
+    " let foundList1 = functional#filter( {line -> !(line =~ 'stack')}, foundList1 )
 
-    " it seems errors are sent twice by the repl. and only the second one occurences
+    " it seems errors are sent twice by the repl. and only the second one 
     " has the Details: line in the same batch of lines.
     if !(len( foundList1 ) > 1) | return | endif
 
@@ -432,6 +452,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
 
   else
 
+    " echo "hi2"
     " call v:lua.putt( searchString1 )
     let foundString1 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_|Error:\s|Exception\sin\sthread|Exception:\s|ERROR:\s|Err\()\zs.*' )
     let foundString2 = matchstr( searchString1, '\v(Caused\sby:\s|RESULT_)\zs.*' )
@@ -451,6 +472,8 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       let g:Repl_wait_receivedsofar = foundList1
       " just save, don't show
     else
+
+      " NOTE: currently disabled!
 
       " this seems to allow to filter any line?!
       let foundList1 = functional#filter( {line -> !(line =~ 'sbt\:')}, foundList1 )

@@ -26,6 +26,7 @@ au ag BufNewFile,BufRead,WinNew *.sh,*.shtp,r call ShellSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithySyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.smithy  call SmithyBufferMaps()
 au ag FileType smithy setlocal commentstring=//%s
+au ag FileType smithy setlocal commentstring=//%s
 
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
@@ -73,7 +74,14 @@ augroup track_window
    autocmd FileType sass set filetype=css | set syntax=sass
    " autocmd FileType scss set filetype=css | set syntax=scss
 
-   autocmd FileType edgeql,esdl set filetype=sql
+   " This is needed because of a treesitter "no parser for 'edgeql' language, see :help treesitter-parsers" error.
+   autocmd FileType edgeql,esdl set filetype=graphql
+   " NOTE: this treesitter setting actually works! but the parser still needs to be installed
+   " so I could just use some other language i dont use. use it's filetype but deactivate it in treesitter.
+   " disable = {"graphql"},
+
+   " autocmd FileType edgeql lua require'nvim-treesitter.configs'.setup { highlight = { enable = false, }, }
+
 
 augroup END
 
@@ -497,6 +505,7 @@ func! MarkdownSyntaxAdditions()
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
   call matchadd('Conceal', '^\`\`\`\i\i', 12, -1, {'conceal': '˻'})
+  call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
   set foldmethod=marker
 endfunc

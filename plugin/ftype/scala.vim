@@ -327,7 +327,7 @@ func! MakeOrPttn( listOfPatterns )
   return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
-let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '&', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 
 func! Scala_ColumnForw()

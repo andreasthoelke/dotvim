@@ -100,6 +100,37 @@ func! CreateScala_moveDotToNextLine()
 endfunc
 
 
+  " val countAspect: Aspect[Database, Int, IOs] = 
+  " def example(db: Database): Int < IOs =
+
+
+nnoremap <silent><leader>eI :call CreateScala_moveSignatureToNextLine()<cr>
+
+func! CreateScala_moveSignatureToNextLine()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal $
+  call search('\v\:\zs\s', 'cb')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal ^j
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+endfunc
+
+
+  " val stringToTE1Layer = Aborts[String].layer(str => Aborts[TestError1].fail(TestError1(str)))
+
+nnoremap <silent><leader>e= :call CreateScala_moveTermToNextLine()<cr>
+
+func! CreateScala_moveTermToNextLine()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal l
+  call search('\v\=(\>)?\zs\s', 'cW')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal ^j
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+endfunc
+
+
+
 " def findActorsByName(initialLetter: String): IO[List[Actor]] = {
 
 nnoremap <silent><leader>e( :call CreateScala_moveSingleMethodParamToNextLine()<cr>
@@ -351,7 +382,7 @@ func! CreateInlineTestDec_scala1()
 endfunc
 
 func! CreateInlineTestDec_scala()
-  let hostLn = searchpos( '\v^(inline|val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
+  let hostLn = searchpos( '\v^(inline|val|lazy val|def|object|trait|enum|case\sclass)', 'cnbW' )[0]
 
   let hostDecName = matchstr( getline( hostLn ), '\v(val|def|object|trait|enum|case\sclass)\s\zs\i*' )
   let lineText = hostDecName
@@ -408,7 +439,7 @@ endfunc
 " echo GetNextTestDeclIndex()
 
 
-nnoremap <silent> <leader>ea :call CreateAssertion()<cr>
+" nnoremap <silent> <leader>ea :call CreateAssertion()<cr>
 " Tests: (uncomment)
 " database4 ∷ String → [(String, String, Int)]
 " e1_database4 = database4 (Just "eins") 123
@@ -634,7 +665,7 @@ nnoremap <silent> <leader>uef <leader>us<leader>ef
 nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>wdx0rq0
 
 " "index symbol" append postfix index to function name
-nnoremap <silent> <leader>eif ea0^jea0^k
+nnoremap <silent> <leader>eai ea0^jea0^k
 " nnoremap <silent> <leader>his ea0^jea0^k
 
 " Increase/ decrease the index of TypeSig and term level binding together

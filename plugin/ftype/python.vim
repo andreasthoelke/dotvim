@@ -16,6 +16,9 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
 
+  nnoremap <silent><buffer>         gej :call Py_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer> <leader>gej :call Py_RunPrinter( "term"  )<cr>
+
   nnoremap <silent><buffer>gwj :call Py_RunCli( "showReturn" )<cr>
   nnoremap <silent><buffer>gwJ :call Py_RunCli( "notShowReturn" )<cr>
   nnoremap <silent><buffer>,gwj :call Py_RunCli( "termFloat" )<cr>
@@ -50,7 +53,7 @@ func! Py_bufferMaps()
 
   nnoremap <silent><buffer> <leader>gek :call Py_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
-  nnoremap <silent><buffer>         gej :lua vim.lsp.buf.signature_help()<cr>
+  nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
   " this works super nice. there's another (default?) mapping for leader ?
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
   nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
@@ -132,6 +135,13 @@ func! Py_LspTopLevelHover()
 endfunc
 
 func! Py_GetPrinterPath()
+
+  let printerPath = "m/_printer/printer.py"
+
+  if filereadable( printerPath )
+    return printerPath
+  endif
+
   let parentFolderPath = expand('%:h')
   let printerPath = parentFolderPath . "/printer.py"
 
@@ -231,7 +241,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
     let typeMode = "plain"
   endif
 
-  echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
+  " echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
   call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
 
   " from t2 import fruits as symToEval
@@ -318,7 +328,7 @@ func! Py_RunPrinter( termType )
 
   let cmd = "python " . Py_GetPrinterPath()
   let isPoetryProject = filereadable( getcwd() . '/pyproject.toml' )
-  let cmd = isPoetryProject ? "poetry run " . cmd : cmd
+  " let cmd = isPoetryProject ? "poetry run " . cmd : cmd
 
   if     a:termType == 'float'
     let resLines = systemlist( cmd )

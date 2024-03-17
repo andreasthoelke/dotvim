@@ -290,11 +290,11 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
   else
     " will run post actions like wincmd p or tabprevious right away.
     let cmd = NewBufCmds( path )[ a:direction ] 
-    " if IsInFloatWin() | wincmd c | endif
     " TODO: this is mostly for the ,cm float-dirvish recent notes menu where I want to split out a note from the origin window.
     " i hardly have the case of a non-float dirvish folder(?)
     " if IsInFloatWin() | wincmd p | endif
     if &filetype == 'markdown' || &filetype == 'dirvish'
+      if IsInFloatWin() | wincmd c | endif
       exec cmd
     else
       call v:lua.Ntree_cmdInOriginWin( cmd )

@@ -10,6 +10,7 @@ let g:edgedb_instance = '_1playground_2'
 
 
 func! Edb_bufferMaps()
+  call Scala_bufferMaps_shared()
 
   nnoremap <silent><buffer> <leader>es :call EdgeQLSyntaxAdditions()<cr>
 
@@ -39,7 +40,7 @@ func! Edb_bufferMaps()
   " nnoremap <silent><buffer> gsf :call Edb_queryAllObjectFieldsTablePermMulti( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> gsF :let g:withId=0<cr>:call Edb_queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> gsf :let g:withId=0<cr>:call Edb_queryAllObjectFields( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> <leader>gsf :let g:withId=0<cr>:call Edb_queryAllObjectFields( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> ,gsF :let g:withId=1<cr>:call Edb_queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call Edb_queryAllObjectFields( expand('<cWORD>') )<cr>
 

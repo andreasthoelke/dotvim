@@ -987,6 +987,12 @@ hi! scalaChannelBus guibg=none guifg=#1F3F27 gui=italic
 " hi! scalaSignal guifg=#3D463A
 " hi! scalaSignal guibg=#1C1F23 guifg=#635C3C gui=italic
 
+
+" hi! edgeqlVar   guifg=#667A82 guibg=#1A1D20  gui=none
+hi! edgeqlVar   guifg=#667A82 guibg=none  gui=italic
+
+" hi! def link edgeqlVar Tabby_Tabs_icon_ac
+
 hi! def link foldBraces purescriptIdentifier
 
 " highlight InnerSql gui=italic guifg=#FFA07A

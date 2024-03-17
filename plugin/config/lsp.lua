@@ -747,6 +747,53 @@ cmp.setup {
   --     side_padding = 0,
   --   },
   -- },
+
+  view = {
+    selection_order = 'bottom_up', -- This will start the completion menu from the bottom
+  },
+
+  sorting = {
+     comparators = {
+      -- cmp.config.compare.order, -- This will sort by the order in which they were added
+      cmp.config.compare.score, -- This will sort by the match score
+      -- cmp.config.compare.kind, -- This will sort by the kind of the completion item
+      -- cmp.config.compare.sort_text, -- This will sort by the sort text provided by the LSP
+      -- cmp.config.compare.length, -- This will sort by the length of the completion item
+      -- cmp.config.compare.offset, -- This will sort by the offset of the completion item
+    
+      -- -- cmp.config.compare.offset,
+      -- -- cmp.config.compare.exact,
+      -- -- cmp.config.compare.score,
+      -- -- cmp.config.compare.kind,
+      -- -- -- cmp.config.compare.sort_text, -- Commented out to disable LSP's sort_text sorting
+      -- -- cmp.config.compare.length,
+      -- -- cmp.config.compare.order,
+
+     }
+   },
+
+  formatting = {
+    format = function(entry, vim_item)
+      -- if vim.tbl_contains({ 'path' }, entry.source.name) then
+      --   local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+      --   if icon then
+      --     vim_item.kind = icon
+      --     vim_item.kind_hl_group = hl_group
+      --     return vim_item
+      --   end
+      -- end
+      return require('lspkind').cmp_format({ 
+        with_text = false,
+        -- mode = "symbol_text",
+        menu = ({
+          buffer = "B",
+          -- nvim_lsp = "[LSP]",
+          luasnip = "snip",
+        })
+      })(entry, vim_item)
+    end
+  },
+
   -- formatting = {
   --   fields = { "kind", "abbr", "menu" },
   --   format = function(entry, vim_item)

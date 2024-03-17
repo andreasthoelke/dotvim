@@ -13,6 +13,11 @@
 " ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ 
 " ⊟  ⊡ | ⊖  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
 " ”  ⍘ ’ ⍞  ⍣ ⍤⍦⍪⍳ ⍽ ⍿ ⎅ ⎇  ⎎ ⎚
+
+" ⇛  ⎇ ⎇  ⊩  ◫  ⫗  𝍉  ⋘  ⋙  ⋞ ⋟ ⋉ ⊻ ⋲ ⋺ ⋻ ⋿ ⌲ ⍦ ⎅
+" ▣  ▯  ▭ ◌ ☍ ☌  ☳ ☶ ♁ ⚎ ≣
+" ∧ ⧺
+
 " ➔  ⇾  →  ⬿ ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
 " « » « ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ 
 "  ⋮  ┆  ⫾ ‖  󰇙  ║ | ╵ ┆┇╷│ ╹ ╻ ╽ ▏ ░ ▒ ▓  ▕
@@ -26,7 +31,7 @@
 " ◌  ●  ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖  ☉  •⋆• ▪
 " ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷✴  ⌘ ✱ ❂ ❈  ♽
 " 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
-"  索  󰑫  直  直  󰖩 ⋺  ⋻
+"  索  󰑫  直  直  󰖩 ⋺  ⋻  Ѱ ѱ
 " ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
 "   ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪
 "  ❖  ❃  ❇  ❉  ❋  ◈ ⟐  ⟡ ⬖ ⬙  ⬥  ⬧  ◆
@@ -198,11 +203,6 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vList\ze(\W|\_$)' conceal cchar=˄
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=˅
   syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵘ
-  syntax match Normal 'Nil' conceal cchar=◻
-  syntax match Normal 'None' conceal cchar=≢
-  syntax match Normal 'Some' conceal cchar=≡
-  syntax match Normal 'Option' conceal cchar=≟
-  syntax match Normal 'Either' conceal cchar=∥
   syntax match Normal 'NonEmptyList' conceal cchar=ᴻ
 
   " syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⠃
@@ -313,7 +313,10 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'yield' conceal cchar=⊂
   syntax match Normal '>>=' conceal cchar=⫦
   " andThen
-  syntax match Normal 'andThen' conceal cchar=↣
+  syntax match Normal 'chain' conceal cchar=⋊
+  syntax match Normal 'andThen' conceal cchar=⫕
+  " syntax match Normal 'Then' conceal cchar=˃
+  " syntax match Normal 'and\zeT' conceal cchar=∧
   syntax match Normal '>>>' conceal cchar=↣
   " compose
   syntax match Normal '<<<' conceal cchar=∘
@@ -338,17 +341,13 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'collect' conceal cchar=ꜛ
   syntax match Normal 'Any' conceal cchar=װ
   syntax match Normal 'Nothing' conceal cchar=╌
-  syntax match Normal 'Error' conceal cchar=⊖
-  syntax match Normal 'Throwable' conceal cchar=⊖
+  syntax match Normal '\vError(:)?' conceal cchar=⊖
+  syntax match Normal 'Throwable' conceal cchar=⊡
   syntax match Normal 'fail\ze\W' conceal cchar=⊖
   syntax match Normal 'Http' conceal cchar=ʜ
-  syntax match Normal 'App\ze\W' conceal cchar=≡
+  " syntax match Normal '\vApp(:)?' conceal cchar=≡
   syntax match Normal 'ZIO.service' conceal cchar=≡
   syntax match Normal 'package\ze\s' conceal cchar=⊟
-  syntax match Normal 'live\ze\s' conceal cchar=≈
-  syntax match Normal 'live' conceal cchar=≈
-  syntax match Normal 'live:' conceal cchar=⬿
-  " syntax match Normal 'new\ze\s' conceal cchar=⬿
 
   syntax match Normal 'Var\ze\W' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
@@ -358,11 +357,40 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'through' conceal cchar=↷
   syntax match Normal 'combineWithFn' conceal cchar=◇
 
+  " Kyo direct style
+  syntax match Normal "defer\ze\:" conceal cchar=•
+  syntax match Normal "await\ze\:" conceal cchar=≀
+
+
+  syntax match Normal 'IOs' conceal cchar=♽
   syntax match Normal '\vLive(:)?' conceal cchar=≈
   syntax match Normal 'ZLayer' conceal cchar=⊟
+  syntax match Normal 'Envs' conceal cchar=≣
+  syntax match Normal '\vLayer\ze\F' conceal cchar=⋞
+  " syntax match Normal '\vFinal\ze\[' conceal cchar=⋮
+  syntax match Normal '\vFinal\[' conceal cchar=|
+  syntax match Normal '\vFinal\:' conceal cchar=|
+  syntax match Normal '\vFinal\ze\.' conceal cchar=|
+  syntax match Normal '\vFinal\ze(\s|\_$)' conceal cchar=|
+  " syntax match Normal '\vLayerFinal\ze\[' conceal cchar=⋞
+  " syntax match Normal '\v\]\.\zslayer\:' conceal cchar=⋞
+  syntax match Normal '\vlayer\:' conceal cchar=⋞
+  syntax match Normal '\vlayer\ze(\s|\_$)' conceal cchar=⋲
+  syntax match Normal '\vval layer\:' conceal cchar=⋲
+  syntax match Normal '\vlayer\zeF' conceal cchar=⋲
+  syntax match Normal '\v\i\zslayer' conceal cchar=⋲
+  syntax match Normal '\v\i\zsLayer' conceal cchar=⋲
+  syntax match Normal '\v\s\zsLayer\ze\[' conceal cchar=⋞
+
+  " syntax match Normal "===" conceal cchar=≣
+  " syntax match Normal 'live\ze\s' conceal cchar=≈
+  " syntax match Normal 'live' conceal cchar=≈
+  " syntax match Normal 'live:' conceal cchar=⬿
+
   syntax match Normal 'Resource' conceal cchar=⊟
+  syntax match Normal 'Resources' conceal cchar=ѱ
   syntax match Normal 'ULayer' conceal cchar=⊟
-  syntax match Normal 'Layer' conceal cchar=⊟
+  " syntax match Normal '\vLayer(:)?' conceal cchar=⊟
   syntax match Normal 'fromFunction' conceal cchar=˽
   " syntax match Normal 'ULayer' conceal cchar=﬘
   " syntax match Normal 'Layer' conceal cchar=﬘
@@ -371,6 +399,14 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Response' conceal cchar=≺
   syntax match Normal 'Random' conceal cchar=⌘
   syntax match Normal 'extends' conceal cchar=⟔
+
+  syntax match Normal 'Nil' conceal cchar=◻
+  syntax match Normal 'None' conceal cchar=≢
+  syntax match Normal 'Some' conceal cchar=≡
+  syntax match Normal 'Option' conceal cchar=≟
+  syntax match Normal 'Options' conceal cchar=≟
+  syntax match Normal 'Aborts\ze\W' conceal cchar=∥
+  syntax match Normal 'Either' conceal cchar=∥
 
   syntax match Normal 'Exception' conceal cchar=◌
   " syntax match Normal 'IO\zeException' conceal cchar=⫠
@@ -411,6 +447,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'for\zee' conceal cchar=↗
   syntax match Normal '\vlMap(\:)?' conceal cchar=∘
   syntax match Normal 'eva\zelM' conceal cchar=↗
+  syntax match Normal 'map\zeE' conceal cchar=↗
 
 
   " Refs
@@ -455,7 +492,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'unbounded' conceal cchar=˖
   syntax match Normal 'succeed' conceal cchar=ꜜ
 
-  syntax match Normal 'spec' conceal cchar=
+  syntax match Normal 'spec\ze\W' conceal cchar=
 
   syntax match Normal '\s\zs\.' conceal cchar=ˍ
   " syntax match Normal '\S\zs\.\ze\S' conceal cchar=ˍ

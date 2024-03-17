@@ -3,7 +3,7 @@
 " ─   Helpers                                            ■
 
 func! Scala_BufferCatsOrZio()
-  let lineJs  = searchpos( '\v^import.*(html|dom|calico|laminar)', 'cnbW' )[0]
+  let lineJs  = searchpos( '\v^import.*(html|dom|calico|laminar)\.', 'cnbW' )[0]
   let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
   let lineCats = searchpos( '\v^import\scats\.', 'cnbW' )[0]
   if lineJs
@@ -326,9 +326,11 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
     let typeMode = "zio_collection"
   elseif  typeStr =~ "Either\[" && typeStr =~ '\(Option\|List\)'
     let typeMode = "either_collection"
-  elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[")
+  elseif  effType == 'zio' && (typeStr =~ "IO\["  || typeStr =~ "UIO\[" || typeStr =~ "Task\[")
     let typeMode = "zio"
 
+  elseif  typeStr =~ " < " && typeStr =~ "IOs"
+    let typeMode = "kyo"
 
   elseif  typeStr =~ "ConnectionIO\["
     let typeMode = "doobie"
@@ -341,6 +343,9 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
 
   elseif  typeStr =~ "CompletionStage"
     let typeMode = "CompletionStage"
+
+  elseif  typeStr =~ "Future"
+    let typeMode = "Future"
 
   " elseif  typeStr =~ "ZIO\[" && typeStr =~ "List"
   "   let typeMode = "zio_collection"
@@ -428,6 +433,9 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   elseif typeMode == 'CompletionStage'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . " ).join"
 
+  elseif typeMode == 'Future'
+    let _printValEf = "Fiber.fromFuture( " . identif . " ).join.map( v => pprint.apply(v, width=3, height=2000)  )"
+
   elseif typeMode == 'CompletionStageList'
     let _printValEf = "Fiber.fromCompletionStage( " . identif . ' ).join.map( v => (v.size.toString + "\n" + v.toString ) )'
 
@@ -491,9 +499,12 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let _printValEf = 'ZIO.serviceWithZIO[' . classObjPath . '](_.' . classObjIdentif . ').map( v => pprint.apply(v, width=3, height=2000) )'
 
   elseif typeMode == 'plain'
-    " let _printVal = identif
     let _printVal = 'pprint.apply(' . identif . ', width=3, height=2000 )'
+
+  elseif typeMode == 'kyo'
+    let _printVal = 'pprint.apply( IOs.runLazy(' . identif . '), width=3, height=2000 )'
   endif
+
 
   if a:keyCmdMode == 'server'
     let printerFilePath = getcwd(winnr()) . '/m/_printer/PrinterServer.scala'
