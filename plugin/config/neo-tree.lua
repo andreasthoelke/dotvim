@@ -294,6 +294,7 @@ function _G.Ntree_close_saveView_showFolderInDirvish( state )
   local treeView = Ntree_view_get( state )
   local path = state.tree:get_node().path
   local folder = vim.fn.fnamemodify( path, ":h" )
+  -- putt( folder )
   vim.cmd( "edit " .. folder )
   vim.fn.SearchLine( path )
   vim.w['AlternateTreeView'] = treeView
@@ -322,6 +323,12 @@ end
 vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 -- only set in dirvish maps for now ~/.config/nvim/ftplugin/dirvish.vim‖:47:1
 -- vim.keymap.set( 'n', '<c-space>', Ntree_launchToAltView_saveAltFileLoc )
+vim.keymap.set( 'n', '<localleader>dt', Ntree_launchToAltView_saveAltFileLoc )
+
+
+vim.keymap.set( 'n', '<leader>Os', Ntree_launchToAltView_saveAltFileLoc )
+
+
 
 _G.Ntree_leftOpen = {}
 -- Ntree_leftOpen
@@ -783,6 +790,7 @@ require("neo-tree").setup({
 
 
         ["<c-space>"] = Ntree_close_saveView_showFolderInDirvish,
+        ["<localleader>di"] = Ntree_close_saveView_showFolderInDirvish,
 
         ["gq"] = Ntree_close_saveView_restoreAltFileLoc,
 

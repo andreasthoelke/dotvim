@@ -510,7 +510,8 @@ Telesc = require('telescope').setup{
     mappings = {
       i = {
         ["<c-l>"] = function() vim.fn.feedkeys( ".*" ) end,
-        ["<c-space>"] = function(pbn)
+        -- ["<c-space>"] = function(pbn) // note: this map was no longer working
+        ["<c-w><space>"] = function(pbn)
           local prompt_title = action_state.get_current_picker( pbn ).prompt_title
           if prompt_title == "Key Maps" then
             vim.fn.feedkeys( "<space>" )

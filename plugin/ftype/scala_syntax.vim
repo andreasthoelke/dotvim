@@ -215,6 +215,7 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal '\v(py\.)?Dynamic\.global\.' conceal cchar=⁝
   syntax match Normal 'py_' conceal cchar=ᴵ
+  syntax match Normal 'kyo' conceal cchar=𝑘
   syntax match Normal 'Py_' conceal cchar=ᴵ
   syntax match Normal 'py\ze\"' conceal cchar=⁝
   syntax match Normal 'py\.eval' conceal cchar=⁝
@@ -395,9 +396,9 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'ULayer' conceal cchar=﬘
   " syntax match Normal 'Layer' conceal cchar=﬘
   syntax match Normal 'Method\.' conceal cchar=⁝
-  syntax match Normal 'Request' conceal cchar=≻
+  syntax match Normal '\vRequest(s)?' conceal cchar=≻
   syntax match Normal 'Response' conceal cchar=≺
-  syntax match Normal 'Random' conceal cchar=⌘
+  syntax match Normal '\vRandom(s)?' conceal cchar=⌘
   syntax match Normal 'extends' conceal cchar=⟔
 
   syntax match Normal 'Nil' conceal cchar=◻

@@ -56,6 +56,24 @@ command! Editor :call OpenCurrentFileInSystemEditor()
 nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 
+
+fun! OpenFinder()
+  exec 'silent !open .'
+endfun
+
+fun! OpenCurrentFileInSystemEditor()
+  exec 'silent !open %'
+endfun
+
+nnoremap <silent><leader>Os :call OpenFilePathInSystemEditor( GetLongestWord_inLine() )<cr>
+
+fun! OpenFilePathInSystemEditor( filePath )
+  exec 'silent !open ' . a:filePath
+endfun
+
+
+
+
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
 command! Alacritty exec "silent !open -n '/Applications/Alacritty.app'"

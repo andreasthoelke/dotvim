@@ -29,13 +29,7 @@ nnoremap <silent><leader>vM :FzfMaps<cr>
 nnoremap <silent><leader>vm :call v:lua.Telesc_launch('keymaps')<cr>
 nnoremap <silent><leader>vc :Telescope commands<cr>
 
-fun! OpenFinder()
-  exec 'silent !open .'
-endfun
 
-fun! OpenCurrentFileInSystemEditor()
-  exec 'silent !open %'
-endfun
 
 
 " Search Config: -----------------------------------
