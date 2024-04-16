@@ -268,10 +268,28 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
   let plns[17] = "  val appElement = " . a:identif
 
   " echo a:typeStr
+  " return
   if     a:typeStr =~ "L\.HtmlElement" || a:typeStr =~ "L\.Div" || a:typeStr =~ "ReactiveHtmlElement"
     let plns[18] = '  renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement)'
   elseif a:typeStr =~ "Resource"
     let plns[18] = '  Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()'
+  elseif a:typeStr =~ "Ty App"
+    let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
+  elseif a:typeStr =~ "Html["
+    let plns[17] = "  val appElement = tydefault.TyrianDefaultApp"
+    let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
+
+    " ----- write the *view* identifer into PrinterTyDefault.scala --------
+    let printerFilePathTy = getcwd(winnr()) . '/m/js_simple/PrinterTyDef.scala'
+    if !filereadable(printerFilePathTy)
+      echo printerFilePathTy . " not found!"
+      return
+    endif
+    let plnsTy = readfile( printerFilePathTy, '\n' )
+    let plnsTy[34] = "    " . a:identif
+    call writefile( plnsTy, printerFilePathTy )
+    " ----- write the *view* identifer into PrinterTyDefault.scala --------
+
   else
     echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
   endif
@@ -288,32 +306,37 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   let effType  = Scala_BufferCatsOrZio()
 
   normal! ww
-  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def)\s\zs.', 'cnbW' )
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def|object)\s\zs.', 'cnbW' )
   normal! bb
 
-  let identif = matchstr( getline( hostLn ), '\v(val|def)\s\zs\i*\ze\W' )
+  let identif = matchstr( getline( hostLn ), '\v(val|def|object)\s\zs\i*\ze\W' )
   if getline(hostLn ) =~ 'def '
     let identif = identif . '()'
   endif
 
-  let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
-  if typeStr == "timeout"
-    echo "Lsp timeout .. try again"
-    return
+  if getline(hostLn ) =~ 'TyrianIOApp'
+    let typeStr = "Ty App"
+  else
+    let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+    if typeStr == "timeout"
+      echo "Lsp timeout .. try again"
+      return
+    endif
+    " echo typeStr
+    " echo hostLn identifCol
+    " return
   endif
-  " echo typeStr
-  " echo hostLn identifCol
-  " return
+
 
   " Support nesting in objects
   let classObjPath = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn)[:-2]
   let classObjIdentif = identif
 
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
-  " echo identif
+  " echo typeStr identif
   " return
 
-  if typeStr =~ "Element" || typeStr =~ "ReactiveHtmlElement" || typeStr =~ "L\.Div"
+  if typeStr =~ "Element" || typeStr =~ "ReactiveHtmlElement" || typeStr =~ "L\.Div" || typeStr == "Ty App" || typeStr =~ "Html["
     call Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     return
   endif

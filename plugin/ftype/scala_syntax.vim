@@ -306,7 +306,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'children' conceal cchar=ᴟ
 
 
-  syntax match Normal '@\i*' conceal cchar=❈
+  syntax match Normal '\s\zs@\i*' conceal cchar=❈
   syntax match Normal '@query' conceal cchar=𝑞
   syntax match Normal 'uri\ze\"' conceal cchar=⁝
 
@@ -352,7 +352,9 @@ func! ScalaSyntaxAdditions ()
 
   syntax match Normal 'Var\ze\W' conceal cchar=≀
   syntax match Normal 'signal' conceal cchar=⬿
-  syntax match Normal '\vSignal(:)?' conceal cchar=~
+  " syntax match Normal '\vSignal(:)?' conceal cchar=~
+  syntax match Normal '\vSignal(:)?' conceal cchar=⋞
+  syntax match Normal '\vObserver(:)?' conceal cchar=⋟
   syntax match Normal 'SignallingRef' conceal cchar=≈
   syntax match Normal '\W\zs\Stream' conceal cchar=⋻
   syntax match Normal 'through' conceal cchar=↷
@@ -462,7 +464,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'complete\ze(\W)' conceal cchar=⟢
   " syntax match Normal '\vget\ze(\W|\_$)' conceal cchar=⟡
 
-  syntax match Normal 'self' conceal cchar=∝
+  syntax match Normal '\vself(:)?' conceal cchar=∝
   syntax match Normal 'withSelf\:' conceal cchar=⟄
   syntax match Normal 'this' conceal cchar=∝
   syntax match Normal 'override' conceal cchar=⟑
@@ -482,6 +484,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'case class' conceal cchar=˽
   syntax match Normal 'case object' conceal cchar=˾
   syntax match Normal 'copy\ze\W' conceal cchar=˽
+  syntax match Normal '\vcopy(:)?' conceal cchar=˽
   syntax match Normal 'trait' conceal cchar=⟣
   syntax match Normal '^type\s' conceal
   syntax match Normal 'type' conceal cchar=𝑡
@@ -553,9 +556,12 @@ func! ScalaSyntaxAdditions ()
   " syntax match scalaSignal '\v\s\zs\w{-}S\ze(\W|\_s|:)'
   " call matchadd('scalaSignal', '\v\s\zs\w{-}S\ze(\W|\_s)', 12, -1)
   " Note the \U non uppercase char to exclude all caps var names. w{1,} mandates at least 1 word character
-  call matchadd('scalaVar',    '\v(\(|\s)\zs\l{1,}V\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaSignal', '\v(\(|\s)\zs\l{1,}S\ze(\W|\_s)', 12, -1)
-  call matchadd('scalaChannelBus', '\v(\(|\s)\zs\l{1,}(C|B)\ze(\W|\_s)', 12, -1)
+  " example
+  " private val currentFilterModeV = Var[FtrMode]( FtrMode.ShowAll )
+  " note that \w{1,}\l{1,]}  allows camelCasing before the V
+  call matchadd('scalaVar',    '\v(\(|\s)\zs\w{1,}\l{1,}V\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaSignal', '\v(\(|\s)\zs\w{1,}\l{1,}S\ze(\W|\_s)', 12, -1)
+  call matchadd('scalaChannelBus', '\v(\(|\s)\zs\w{1,}\l{1,}(C|B|O)\ze(\W|\_s)', 12, -1)
 
   " This uses the same approach for the Java-Doc comments:
   " this line overwrites the unicode conceals
