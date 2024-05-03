@@ -692,9 +692,9 @@ Telesc = require('telescope').setup{
 -- ─   Extensions config                                ──
 
   extensions = {
-    bookmarks = {
-      selected_browser = 'chrome',
-    },
+    -- bookmarks = {
+    --   selected_browser = 'chrome',
+    -- },
 
     -- See: https://github.com/cljoly/telescope-repo.nvim
     repo = {

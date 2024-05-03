@@ -41,7 +41,11 @@ vim.api.nvim_set_keymap('n', '<localleader><localleader>sc', ':set filetype=pure
 
 
 
+require('browser_bookmarks').setup({
+ selected_browser = "chrome"
+})
 
+require('telescope').load_extension('bookmarks')
 
 -- https://github.com/dhruvmanila/browser-bookmarks.nvim
 -- local bookmlib = require('browser-bookmarks').setup({

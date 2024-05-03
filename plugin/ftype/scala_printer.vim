@@ -3,10 +3,13 @@
 " ─   Helpers                                            ■
 
 func! Scala_BufferCatsOrZio()
-  let lineJs  = searchpos( '\v^import.*(html|dom|calico|laminar)\.', 'cnbW' )[0]
+  " now using gej to call SbtJs_compile()
+  let lineJs  = 0 " searchpos( '\v^import.*(html|dom|calico|laminar|scalajs|tyrian)\.', 'cnbW' )[0]
   let lineZio  = searchpos( '\v^import\szio', 'cnbW' )[0]
   let lineCats = searchpos( '\v^import\scats\.', 'cnbW' )[0]
   if lineJs
+    return 'js'
+  elseif &filetype == "css"
     return 'js'
   elseif     lineZio && lineCats
     return 'both'
@@ -253,6 +256,50 @@ func! Scala_SetPrinterIdentif( mode )
 endfunc
 
 
+
+" Stop the console.log on app reloads. 
+func! Scala_ReSetPrinterIdentif_Js( hostLn )
+  call VirtualRadioLabel_lineNum( "", a:hostLn )
+  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
+  if !filereadable(printerFilePath)
+    echo printerFilePath . " not found!"
+    return
+  endif
+  let plns = readfile( printerFilePath, '\n' )
+  let plns[19] = "   // pprint line (not active)"  
+  call writefile( plns, printerFilePath )
+endfunc
+
+func! Scala_PrintAnyType_Js()
+  normal! ww
+  let [hostLn, identifCol] = searchpos( '\v(lazy\s)?(val|def|object)\s\zs.', 'cnbW' )
+  normal! bb
+
+  let identif = matchstr( getline( hostLn ), '\v(val|def|object)\s\zs\i*\ze\W' )
+  if getline(hostLn ) =~ 'def '
+    let identif = identif . '()'
+  endif
+
+  " Support nesting in objects
+  let classObjPath = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn)[:-2]
+  let classObjIdentif = identif
+
+  let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
+
+
+  call VirtualRadioLabel_lineNum( "« [any]", hostLn )
+  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
+  if !filereadable(printerFilePath)
+    echo printerFilePath . " not found!"
+    return
+  endif
+  let plns = readfile( printerFilePath, '\n' )
+  let plns[19] = "  pprint.pprintln(" . identif . ")"
+  call writefile( plns, printerFilePath )
+endfunc
+
+
+
 func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
 
   call VirtualRadioLabel_lineNum( "« " . a:typeStr, a:hostLn )
@@ -265,19 +312,27 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
 
   let plns = readfile( printerFilePath, '\n' )
 
-  let plns[17] = "  val appElement = " . a:identif
+  let plns[19] = "   // pprint line (not active)"  
 
   " echo a:typeStr
   " return
   if     a:typeStr =~ "L\.HtmlElement" || a:typeStr =~ "L\.Div" || a:typeStr =~ "ReactiveHtmlElement"
+    let plns[17] = "  val appElement = " . a:identif
     let plns[18] = '  renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement)'
   elseif a:typeStr =~ "Resource"
+    let plns[17] = "  val appElement = " . a:identif
     let plns[18] = '  Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()'
+  " elseif a:typeStr =~ "Ty App"
+  "   let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
   elseif a:typeStr =~ "Ty App"
-    let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
-  elseif a:typeStr =~ "Html["
+    let plns[17] = "  val appElement = " . a:identif
+    let plns[18] = '  appElement.launch( "app-container" )'
+
+  elseif a:typeStr =~ "Html[" || a:typeStr =~ "H["
     let plns[17] = "  val appElement = tydefault.TyrianDefaultApp"
-    let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
+    let plns[18] = '  appElement.launch( "app-container" )'
+
+    " let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
 
     " ----- write the *view* identifer into PrinterTyDefault.scala --------
     let printerFilePathTy = getcwd(winnr()) . '/m/js_simple/PrinterTyDef.scala'
@@ -291,7 +346,10 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     " ----- write the *view* identifer into PrinterTyDefault.scala --------
 
   else
-    echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
+    " NEW 2024-5: All other types are pretty printed in the browser consolue
+    " while keeping the dom app in line 17, 18 as it was.
+    let plns[19] = "  pprint.pprintln(" . a:identif . ")"
+    " echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
   endif
 
   call writefile( plns, printerFilePath )
@@ -336,10 +394,16 @@ func! Scala_SetPrinterIdentif_ScalaCliZIO( keyCmdMode )
   " echo typeStr identif
   " return
 
-  if typeStr =~ "Element" || typeStr =~ "ReactiveHtmlElement" || typeStr =~ "L\.Div" || typeStr == "Ty App" || typeStr =~ "Html["
+
+  if a:keyCmdMode == 'webbrowser'
     call Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     return
   endif
+
+  " if typeStr =~ "Element" || typeStr =~ "ReactiveHtmlElement" || typeStr =~ "L\.Div" || typeStr == "Ty App" || typeStr =~ "Html["
+  "   call Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
+  "   return
+  " endif
 
   if      typeStr =~ "ZIO\[" && typeStr =~ "DataSource_off" && typeStr =~ "\]\]"
     let typeMode = "QuillDSLive_coll"
@@ -582,10 +646,11 @@ endfunc
 
 func! Scala_RunPrinter( termType )
   let effType  = Scala_BufferCatsOrZio()
-  if effType == 'js'
-    call SbtJs_compile ()
-    return
-  endif
+  " now using gej to call SbtJs_compile()
+  " if effType == 'js'
+  "   call SbtJs_compile ()
+  "   return
+  " endif
 
   let effType  = 'zio'
   let repoType = Scala_RepoBuildTool()

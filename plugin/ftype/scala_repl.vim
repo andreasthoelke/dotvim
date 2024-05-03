@@ -200,6 +200,8 @@ nnoremap <silent> <leader><leader>sj :call SbtJsStart()<cr>
 nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 
 let g:SbtJs_projectName = "js_simple"
+" let g:SbtJs_bundler = "vite"
+let g:SbtJs_bundler = "scalajs-esbuild"
 " " for Laminar-fullstack example, set to:
 " let g:SbtJs_projectName = "client"
 
@@ -219,12 +221,27 @@ func! SbtJsStart ()
   let g:SbtJsID = termopen('sbt --client', opts)
   silent wincmd c
 
-  exec "new"
-  let g:SbtJsVite_bufnr = bufnr()
-  let g:SbtJsViteID = termopen( g:SbtJsVite_cmd, opts)
-  silent wincmd c
+  if g:SbtJs_bundler == "vite"
+    exec "new"
+    let g:SbtJsVite_bufnr = bufnr()
+    let g:SbtJsViteID = termopen( g:SbtJsVite_cmd, opts)
+    silent wincmd c
+
+  else
+
+    call T_DelayedCmd( "call SbtJsStart_esbuildServeStart()", 2000 )
+
+
+  endif
 
 endfunc
+
+
+func! SbtJsStart_esbuildServeStart ()
+  let cmd = g:SbtJs_projectName . "/esbuildServeStart" . "\n"
+  call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
+endfunc
+
 
 " g:SbtJsID
 " g:SbtJs_bufnr
@@ -234,17 +251,29 @@ func! SbtJsStop ()
     echo 'SbtJs is not running'
     return
   endif
+  if g:SbtJs_bundler == "scalajs-esbuild"
+    let cmd = g:SbtJs_projectName . "/esbuildServeStop" . "\n"
+    call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
+  endif
   call jobstop( g:SbtJsID )
   unlet g:SbtJsID
   unlet g:SbtJs_bufnr
-  call jobstop( g:SbtJsViteID )
-  unlet g:SbtJsViteID
-  unlet g:SbtJsVite_bufnr
+
+  if g:SbtJs_bundler == "vite"
+    call jobstop( g:SbtJsViteID )
+    unlet g:SbtJsViteID
+    unlet g:SbtJsVite_bufnr
+  endif
 endfunc
 
 func! SbtJs_compile ()
   " let cmd = "client/fastLinkJS" . "\n"
-  let cmd = g:SbtJs_projectName . "/fastLinkJS" . "\n"
+
+  if g:SbtJs_bundler == "scalajs-esbuild"
+    let cmd = g:SbtJs_projectName . "/esbuildStage" . "\n"
+  else
+    let cmd = g:SbtJs_projectName . "/fastLinkJS" . "\n"
+  endif
   call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
 endfunc
 
@@ -360,11 +389,19 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       let g:ReplReceive_open = v:false
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
-      " let g:floatWin_win = FloatingSmallNew ( resultVal )
-      let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
-      " call ScalaSyntaxAdditions() 
-      call FloatWin_FitWidthHeight()
-      wincmd p
+      if len(resultVal)
+        if resultVal[0] =~ "key not found"
+          " echo "ignoring Scala.js key not found error"
+          call SbtJs_compile()
+        else
+          let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
+          call FloatWin_FitWidthHeight()
+          wincmd p
+        endif
+      else
+        " echo "resultVal was empty"
+        call SbtJs_compile()
+      endif
 
       return
     endif

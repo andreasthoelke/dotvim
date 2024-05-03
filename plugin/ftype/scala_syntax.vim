@@ -233,6 +233,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal '\vArray\ze(\W|\_$)' conceal cchar=ᴬ
   syntax match Normal 'Map\ze\W' conceal cchar=ʺ
   syntax match Normal 'empty' conceal cchar=∅
+  syntax match Normal 'Empty' conceal cchar=∅
   syntax match Normal 'Iterable' conceal cchar=⟦
   " syntax match Normal 'Array\ze\W' conceal cchar=⟦
   " syntax match Normal 'Tuple' conceal cchar=T
@@ -304,6 +305,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Element' conceal cchar=⟃
   " syntax match Normal 'children' conceal cchar=⋿
   syntax match Normal 'children' conceal cchar=ᴟ
+  syntax match Normal 'unsafeChild' conceal cchar=ᴟ
 
 
   syntax match Normal '\s\zs@\i*' conceal cchar=❈
@@ -427,7 +429,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'apply' conceal cchar=∝
   syntax match Normal '\vapply(:)?' conceal cchar=∝
 
-  syntax match Normal 'if\ze\W' conceal cchar=˻
+  syntax match Normal '\s\zsif\ze\W' conceal cchar=˻
   syntax match Normal 'else' conceal cchar=˺
   syntax match Normal 'else\sif' conceal cchar=˼
   " syntax match Normal 'then\ze(\W|\_$)' conceal cchar=˹
@@ -458,6 +460,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'getAn' conceal cchar=‹
   syntax match Normal 'dUpdate' conceal cchar=✴
   syntax match Normal 'mo\zedify' conceal cchar=↤
+  " syntax match Normal 'Mo\zedify' conceal cchar=↤
   syntax match Normal 'dify' conceal cchar=✴
   syntax match Normal 'enqueue' conceal cchar=«
   syntax match Normal 'dequeue' conceal cchar=»

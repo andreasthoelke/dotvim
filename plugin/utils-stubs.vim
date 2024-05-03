@@ -123,6 +123,19 @@ nnoremap <silent><leader>e= :call CreateScala_moveTermToNextLine()<cr>
 func! CreateScala_moveTermToNextLine()
   let indentStr = matchstr( getline('.'), '\s*\ze\S')
   normal l
+  " call search('\v\=(\>)?\zs\s', 'cW')
+  call search('\v\=\zs\s', 'cW')
+  call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
+  normal ^j
+  call InsertStringAtLoc(' ', line('.'), col('.')-2)
+endfunc
+
+
+nnoremap <silent><leader>e> :call CreateScala_moveFnBodyToNextLine()<cr>
+
+func! CreateScala_moveFnBodyToNextLine()
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  normal l
   call search('\v\=(\>)?\zs\s', 'cW')
   call BreakLineAtLoc( indentStr, line('.'), col('.')-2)
   normal ^j

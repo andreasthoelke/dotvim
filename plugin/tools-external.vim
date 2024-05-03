@@ -28,7 +28,7 @@ endfunc
 func! LaunchChromium_withDefURL()
  let url = GetUrlFromLine( line('.') )
 
- if url =~ "http"
+ if url =~ "http" || url =~ "file"
    call LaunchChromium( url )
  else
    call LaunchChromium( g:LaunchChromium_URL )
@@ -60,6 +60,23 @@ nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 fun! OpenFinder()
   exec 'silent !open .'
 endfun
+
+
+command! VSCode :call OpenVSCode()
+
+fun! OpenVSCode()
+  exec 'silent !code .'
+endfun
+
+nnoremap <silent><leader>Oc :call OpenFilePathInVSCode( GetLongestWord_inLine() )<cr>
+
+fun! OpenFilePathInVSCode( filePath )
+  let path = len( a:filePath ) ? a:filePath : "."
+  echo "Starting vs code on: " . path
+  exec 'silent !code ' . path
+endfun
+
+
 
 fun! OpenCurrentFileInSystemEditor()
   exec 'silent !open %'

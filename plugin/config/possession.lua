@@ -214,6 +214,7 @@ require('possession').setup {
       res['httpx_request_port']     = vim.g["httpx_request_port"]
       res['dbname']                 = vim.g["dbname"]
       res['dbconn']                 = vim.g["dbconn"]
+      res['SbtJs_bundler']          = vim.g["SbtJs_bundler"]
 
       return res
     end,
@@ -272,6 +273,7 @@ require('possession').setup {
       vim.g["httpx_request_port"] = user_data["httpx_request_port"]
       vim.g["dbname"] = user_data["dbname"]
       vim.g["dbconn"] = user_data["dbconn"]
+      vim.g["SbtJs_bundler"] = user_data["SbtJs_bundler"]
 
     end,
   },

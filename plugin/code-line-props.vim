@@ -318,7 +318,12 @@ endfunc
 
 " An abs path or url is often the longest word in a line
 func! GetLongestWord_inLine()
-  return getline('.')->split()->sort('CompareLength')[-1]
+  let has_chars = len( substitute( getline('.'), ' ', '', 'g' ) )
+  if has_chars
+    return getline('.')->split()->sort('CompareLength')[-1]
+  else
+    return ""
+  endif
 endfunc
 " split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')
 

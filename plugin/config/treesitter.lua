@@ -6,7 +6,7 @@ require('nvim-treesitter.configs').setup {
 
 
   -- A list of parser names, or "all". These parsers should always be installed.
-  ensure_installed = { "scala", "typescript", "python", "sql", "bash" },
+  ensure_installed = { "scala", "typescript", "python", "sql", "bash", "just" },
 
   -- queries = {
   --   scala = {
@@ -30,7 +30,7 @@ require('nvim-treesitter.configs').setup {
     -- additional_vim_regex_highlighting = true,
     -- below doesn't work! .. so i currently use ~/.config/nvim/plugin/HsSyntaxAdditions.vim‖/autocmdˍFil
     -- NOTE: this actually works! but the parser still needs to be installed
-    disable = {"graphql"},
+    disable = {"graphql", "sass", "zsh"},
     -- disable = { "less", "clojure" },
     custom_captures = {
       -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
@@ -152,8 +152,44 @@ vim.g.skip_ts_context_commentstring_module = true
 
 
 
+-- local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+-- parser_config.just = {
+--   install_info = {
+--     url = "https://github.com/IndianBoy42/tree-sitter-just", -- local path or git repo
+--     files = {"src/parser.c"}, -- adjust according to your parser's source files
+--   },
+--   filetype = "just", -- if filetype does not match the parser name
+-- }
 
+-- git clone https://github.com/IndianBoy42/tree-sitter-just ~/.local/share/nvim/site/pack/tree-sitter-queries/start/tree-sitter-just
+-- git clone https://github.com/serenadeai/tree-sitter-scss ~/.local/share/nvim/site/pack/tree-sitter-queries/start/tree-sitter-sass
 
+require('tree-sitter-just').setup({})
+-- require('tree-sitter-scss').setup({})
+-- require('tree-sitter-sass').setup({})
 
+-- Function to disable Tree-sitter for a specific buffer
+local function disable_treesitter_for_sass()
+ if vim.api.nvim_buf_get_option(0, 'filetype') == 'sass' then
+    vim.treesitter.stop()
+ end
+end
+
+-- Autocommand to call the function when entering a buffer
+vim.api.nvim_create_autocmd("BufEnter", {
+ pattern = "*",
+ callback = disable_treesitter_for_sass,
+})
+
+-- local ft_to_lang = require('nvim-treesitter.parsers').ft_to_lang
+-- require('nvim-treesitter.parsers').ft_to_lang = function(ft)
+--     if ft == 'zsh' then
+--         return 'bash'
+--     end
+--     return ft_to_lang(ft)
+-- end
+
+vim.treesitter.language.register("bash", "zsh")
+vim.treesitter.language.register("css", "sass")
 
 

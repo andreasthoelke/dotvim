@@ -54,8 +54,11 @@ func! Scala_bufferMaps()
 
 
 " ─   Printer                                            ■
-  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "plain" )<cr>
-  nnoremap <silent><buffer>         geW :call Scala_SetPrinterIdentif( "server" )<cr>
+  nnoremap <silent><buffer>         gep :call Scala_SetPrinterIdentif( "plain" )<cr>
+  nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "webbrowser" )<cr>
+  nnoremap <silent><buffer> <leader>gew :call Scala_PrintAnyType_Js()<cr>
+  nnoremap <silent><buffer>         geW :call Scala_ReSetPrinterIdentif_Js( getline('.') )<cr>
+  nnoremap <silent><buffer>         geS :call Scala_SetPrinterIdentif( "server" )<cr>
 
   " TODO: to be tested again
   " nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>
@@ -327,7 +330,7 @@ func! MakeOrPttn( listOfPatterns )
   return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
 endfunc
 
-let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '&', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+let g:Scala_columnPttn = MakeOrPttn( ['\:', '%', '+', '&', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
 
 
 func! Scala_ColumnForw()

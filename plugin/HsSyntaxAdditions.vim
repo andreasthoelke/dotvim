@@ -17,7 +17,7 @@ au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.sc,*.scala call ScalaSyntaxAdditions()
 " BufWinEnter is needed to refresh the comment conceals when that buffer was hidden, e.g. using gq in dirvish/nvt
 au ag BufWinEnter *.sc,*.scala,*.java,*.sbt call ScalaSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.sc,*.scala,*.java,*.sbt call Scala_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.sc,*.scala,*.java,*.sbt,*.css call Scala_bufferMaps()
 
 " the filetype .shtp is used in rlist to separate active .sh script from mere command templates.
 au ag BufNewFile,BufRead,WinNew *.sh,*.shtp,r call ShellSyntaxAdditions()
@@ -31,7 +31,7 @@ au ag FileType smithy setlocal commentstring=//%s
 " au ag BufNewFile,BufReadPost,WinNew *.res,*.mli call RescriptSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.res,*resi,*.mli,*.ml call RescriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html call TsSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.css,*.less,*.scss,*.sass call JS_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.less,*.scss,*.sass call JS_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call Sql_bufferMaps()
@@ -70,8 +70,11 @@ augroup track_window
  
    autocmd BufEnter * if &ft == "dirvish" | let g:Ntree_prevWinid = g:Winid_previous | endif
 
-   autocmd FileType less set filetype=css
-   autocmd FileType sass set filetype=css | set syntax=sass
+   " TODO now there's a way to install treesitter parses. see the treesitter-conf lua file at the bottom.
+   " autocmd FileType zsh set filetype=bash | set syntax=zsh
+   " autocmd FileType less set filetype=css
+   " autocmd FileType sass set syntax=scss
+   " autocmd FileType sass set syntax=scss
    " autocmd FileType scss set filetype=css | set syntax=scss
 
    " This is needed because of a treesitter "no parser for 'edgeql' language, see :help treesitter-parsers" error.
