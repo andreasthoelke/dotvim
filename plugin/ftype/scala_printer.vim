@@ -215,9 +215,8 @@ func! Sbt_setSmallModulesPackage()
 endfunc
 
 func! Scala_setPrinterPackageName( packageName )
-  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
   let lineStr = "package " . a:packageName
-  call File_replaceLine( printerFilePath, 0, lineStr )
+  call File_replaceLine( ScalajsPrinterPath(), 0, lineStr )
 endfunc
 
 func! File_replaceLine( path, lineNum, lineStr )
@@ -260,14 +259,14 @@ endfunc
 " Stop the console.log on app reloads. 
 func! Scala_ReSetPrinterIdentif_Js( hostLn )
   call VirtualRadioLabel_lineNum( "", a:hostLn )
-  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
-  if !filereadable(printerFilePath)
-    echo printerFilePath . " not found!"
+  let printerFilePath = ScalajsPrinterPath()
+  if !filereadable(ScalajsPrinterPath())
+    echo ScalajsPrinterPath() . " not found!"
     return
   endif
-  let plns = readfile( printerFilePath, '\n' )
+  let plns = readfile( ScalajsPrinterPath(), '\n' )
   let plns[19] = "   // pprint line (not active)"  
-  call writefile( plns, printerFilePath )
+  call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
 func! Scala_PrintAnyType_Js()
@@ -288,14 +287,13 @@ func! Scala_PrintAnyType_Js()
 
 
   call VirtualRadioLabel_lineNum( "« [any]", hostLn )
-  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
-  if !filereadable(printerFilePath)
-    echo printerFilePath . " not found!"
+  if !filereadable(ScalajsPrinterPath())
+    echo ScalajsPrinterPath() . " not found!"
     return
   endif
-  let plns = readfile( printerFilePath, '\n' )
+  let plns = readfile( ScalajsPrinterPath(), '\n' )
   let plns[19] = "  pprint.pprintln(" . identif . ")"
-  call writefile( plns, printerFilePath )
+  call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
 
@@ -304,13 +302,12 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
 
   call VirtualRadioLabel_lineNum( "« " . a:typeStr, a:hostLn )
 
-  let printerFilePath = getcwd(winnr()) . '/m/js_simple/PrinterJs.scala'
-  if !filereadable(printerFilePath)
-    echo printerFilePath . " not found!"
+  if !filereadable(ScalajsPrinterPath())
+    echo ScalajsPrinterPath() . " not found!"
     return
   endif
 
-  let plns = readfile( printerFilePath, '\n' )
+  let plns = readfile( ScalajsPrinterPath(), '\n' )
 
   let plns[19] = "   // pprint line (not active)"  
 
@@ -335,14 +332,13 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     " let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
 
     " ----- write the *view* identifer into PrinterTyDefault.scala --------
-    let printerFilePathTy = getcwd(winnr()) . '/m/js_simple/PrinterTyDef.scala'
-    if !filereadable(printerFilePathTy)
-      echo printerFilePathTy . " not found!"
+    if !filereadable(ScalaTyDefPrinterPath())
+      echo ScalaTyDefPrinterPath() . " not found!"
       return
     endif
-    let plnsTy = readfile( printerFilePathTy, '\n' )
+    let plnsTy = readfile( ScalaTyDefPrinterPath(), '\n' )
     let plnsTy[34] = "    " . a:identif
-    call writefile( plnsTy, printerFilePathTy )
+    call writefile( plnsTy, ScalaTyDefPrinterPath() )
     " ----- write the *view* identifer into PrinterTyDefault.scala --------
 
   else
@@ -352,7 +348,7 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     " echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
   endif
 
-  call writefile( plns, printerFilePath )
+  call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
 

@@ -472,6 +472,8 @@ lspconfig.cssls.setup({
   flags = flags,
 })
 
+lspconfig.tailwindcss.setup{}
+
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.html.setup({
   capabilities = capabilities,
@@ -734,6 +736,7 @@ vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 -- luasnip setup
 -- local luasnip = require 'luasnip'
 
+-- WARNING - TODO: need to clean up the duplication ~/.config/nvim/plugin/config/cmp.lua‖*nvim-cmpˍsetup
 local cmp = require 'cmp'
 cmp.setup {
   completion = {
@@ -784,6 +787,8 @@ cmp.setup {
       -- end
       return require('lspkind').cmp_format({ 
         with_text = false,
+        -- WORKS! with ~/Documents/Proj/l_local_fst/m/js_simple/esbuild/index.html‖/<divˍclass=
+        before = require("tailwind-tools.cmp").lspkind_format,
         -- mode = "symbol_text",
         menu = ({
           buffer = "B",

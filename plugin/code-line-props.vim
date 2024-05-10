@@ -25,9 +25,10 @@ endfunc
 
 func! GetUrlFromLine ( lineNum )
   let str = matchstr(getline( a:lineNum ), '[a-z]*:\/\/[^ >,;"]*')
-  return ReplaceStringsInLines( [str], [["'", ""]] )[0]
+  return ReplaceStringsInLines( [str], [["'", ""], ["\)", ""]] )[0]
 endfunc
-" echo GetUrlFromLine( line('.') +1 )
+" GetUrlFromLine( line('.') +1 )
+" - [Paper](https://mui.com/material-ui/react-paper/)
 " call LaunchChromium2( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
 " call LaunchChromium2( "https://www.stackage.org/lts-14.1/hoogle?q=map" )
 

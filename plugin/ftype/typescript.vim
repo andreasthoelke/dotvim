@@ -7,10 +7,11 @@ nnoremap <silent> gee :call T_Menu()<cr>
 func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
-  nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
+  " nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
+  nnoremap <silent><buffer> gew :call JS_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gef :call T_Refetch("Client")<cr>
-  nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
+  " nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
 
   " TODO: test this
   " nnoremap <silent><buffer>         gei :call JS_eval_line( line('.'), v:true, v:false, v:false )<cr>
@@ -28,6 +29,7 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer> <leader>geI :call JS_eval_line( line('.'), v:false, v:true, v:true )<cr>
 
   " nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
+  nnoremap <silent><buffer>         gei :call JS_RunPrinter()<cr>
   " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
   " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
@@ -60,6 +62,10 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js_function()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
+
+  nnoremap <silent><buffer> <leader>ebc :call CreateJS_fewerBraces_c()<cr>
+
+
 
 endfunc
 
@@ -560,11 +566,18 @@ endfunc
   " let resLines = systemlist( T_TesterTerminalCommand( a:testerName ) )
   " silent let g:floatWin_win = FloatingSmallNew ( resLines )
 func! T_NodeFunctionCall_TermCmd( filePath, fnName )
-  let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
+  " let js_code_statement = 'require("' . a:filePath . '").' . a:fnName . '()'
+
+  let js_code_statement = '(async () => { const module = await import("' . a:filePath . '")' . '; module.' . a:fnName . '(); })()'
+
+  " let js_c = '(async () => { try { const module = await import("' . a:filePath . '"); module.' . a:fnName . '(); } catch (error) { console.error(error); } })()'
   " call writefile( [js_code_statement], 'tempPrinter.js' )
 
   " return "npx ts-node -T -e '" . js_code_statement . "'"
 
+  " return "NODE_NO_WARNINGS=1 npx ts-node -T -e '" . js_c . "'"
+  " return "NODE_NO_WARNINGS=1 node -e '" . js_code_statement . "'"
+  " return "NODE_NO_WARNINGS=1 node --experimental-require-module -e '" . js_code_statement . "'"
   return "NODE_NO_WARNINGS=1 npx ts-node -T -e '" . js_code_statement . "'"
 
   " return "node --loader ts-node/esm -e '" . js_code_statement . "'"

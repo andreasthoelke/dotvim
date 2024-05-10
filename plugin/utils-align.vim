@@ -125,14 +125,22 @@ command! -range=% StripSemicolon call StripSemicolon( <line1>, <line2> )
 nnoremap <leader>s;      :let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
 vnoremap <leader>s; :<c-u>let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
+func! StripSemicolonLine(line)
+  let startLine = a:line
+  let endLine = a:line
+  let rangeStr = startLine . ',' . endLine
+  exec rangeStr . 's/\;//g'
+endfunc
+
+" StripSemicolonLine(line('.')+1)
+      " x => { return {v: JSON.stringify(x)}; }));
+
 func! StripSemicolon( ... )
   let startLine = a:0 ? a:1 : 1
   let endLine = a:0 ? a:2 : line('$')
   let rangeStr = startLine . ',' . endLine
   exec rangeStr . 's/\;\ze$//g'
 endfunc
-" call StripSemicolon()
-
 
 " Push shift text to the right:
 " nnoremap <localleader>> i <esc>

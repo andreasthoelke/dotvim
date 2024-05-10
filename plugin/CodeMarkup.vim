@@ -39,7 +39,7 @@ endfunc
 " set commentstring=\ --\ \%s
 " dynamically use GetLangCommentStr()
 
-let g:headingPttn = '\v^("|--|#|//)?\s─\s'
+let g:headingPttn = '\v("|--|#|//)?\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
 " let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
 
@@ -82,9 +82,9 @@ func! GoSectionEndAbort( ... )
   " Go to either next start or end marker
   if a:0
     let headerText = (a:1 != '') ? a:1 : GetHeadingTextFromHeadingLine( line('.') )
-    call search('\v^("|--|#|//)\s─(\^|\s)\s{2}' . headerText, 'W')
+    call search('\v("|--|#|//)\s─(\^|\s)\s{2}' . headerText, 'W')
   else
-    call search('\v^("|--|#|//)\s─(\^|\s)', 'W')
+    call search('\v("|--|#|//)\s─(\^|\s)', 'W')
   endif
   let isEndMarker = MatchesInLine(line('.'), '\^')
   if isEndMarker " Confirm we have moved to matching end marker

@@ -344,6 +344,8 @@ Plug 'hrsh7th/vim-vsnip'
 
 Plug 'f3fora/cmp-spell'
 
+Plug 'luckasRanarison/tailwind-tools.nvim'
+
 Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim'
 
 " https://github.com/DNLHC/glance.nvim/blob/master/README.md

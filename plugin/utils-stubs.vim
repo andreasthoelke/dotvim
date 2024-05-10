@@ -216,6 +216,30 @@ func! CreateScala_fewerBraces_c()
 endfunc
 
 
+" ─   typescript                                        ──
+
+    " data.map(x => { return {v: JSON.stringify(x)} })
+    " data.map(x => { return {v: JSON.stringify(x)}; }));
+
+func! CreateJS_fewerBraces_c()
+  let [oLine1, oCol1] = getpos('.')[1:2]
+  let indentStr = matchstr( getline('.'), '\s*\ze\S')
+  call search('\v(\{|\()', 'c')
+  let [oLine2, oCol2] = getpos('.')[1:2]
+  call BreakLineAtLoc( indentStr . '  ', line('.'), col('.')-1)
+  normal! j^
+  call StripSemicolonLine( line('.') )
+  let [oLine, oCol] = getpos('.')[1:2]
+  " normal! %x
+  " call setpos('.', [0, oLine, oCol, 0] )
+  " normal! x
+  " call InsertStringAtLoc(' ', line('.'), col('.')-2)
+  " normal j==
+  " call setpos('.', [0, oLine2, oCol2, 0] )
+  " normal $lr:
+  " call setpos('.', [0, oLine1, oCol1, 0] )
+endfunc
+
 
 
 func! CreateJSDocComment_long()
@@ -626,6 +650,10 @@ endfunc
 
 func! RemoveSpaces( str )
   return substitute( a:str, '\s', '', 'g')
+endfunc
+
+func! RemoveSemicolon( str )
+  return substitute( a:str, '\;', '', 'g')
 endfunc
 
 func! SplitArgs( str )

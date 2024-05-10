@@ -33,7 +33,8 @@ au ag FileType smithy setlocal commentstring=//%s
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html call TsSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.jsx,*.js,*.ts,*.tsx,*mjs,*.json,*.html,*.less,*.scss,*.sass call JS_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.sql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call Sql_bufferMaps()
 
 " au ag BufNewFile,BufRead,WinNew *.sct set filetype=purescript_scratch | set syntax=purescript1

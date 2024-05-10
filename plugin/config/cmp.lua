@@ -1,4 +1,5 @@
 -- ─   nvim-cmp setup                                    ■
+-- WARNING - TODO: need to clean up the duplication ~/.config/nvim/plugin/config/lsp.lua‖/cmp.setupˍ{
 
 -- Set completeopt to have a better completion experience
 -- vim.o.completeopt = 'noinsert,menuone,noselect'
@@ -35,6 +36,32 @@ cmp.setup {
   --     return kind
   --   end,
   -- },
+
+  formatting = {
+    format = function(entry, vim_item)
+      -- if vim.tbl_contains({ 'path' }, entry.source.name) then
+      --   local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+      --   if icon then
+      --     vim_item.kind = icon
+      --     vim_item.kind_hl_group = hl_group
+      --     return vim_item
+      --   end
+      -- end
+      return require('lspkind').cmp_format({ 
+        with_text = false,
+
+        -- WORKS! with ~/Documents/Proj/l_local_fst/m/js_simple/esbuild/index.html‖/<divˍclass=
+        before = require("tailwind-tools.cmp").lspkind_format,
+        -- mode = "symbol_text",
+        menu = ({
+          buffer = "B",
+          -- nvim_lsp = "[LSP]",
+          luasnip = "snip",
+        })
+      })(entry, vim_item)
+    end
+  },
+
 
   snippet = {
     expand = function(args)
@@ -173,4 +200,27 @@ inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
 -- Other setup example: ~/.config/nvim.cam/lua/user/cmp.lua#/cmp.setup%20{
 
 -- ─^  nvim-cmp setup                                    ▲
+
+
+require("tailwind-tools").setup({
+  -- your configuration
+  ---@type TailwindTools.Option
+  {
+    document_color = {
+      enabled = true, -- can be toggled by commands
+      kind = "inline", -- "inline" | "foreground" | "background"
+      inline_symbol = "󰝤 ", -- only used in inline mode
+      debounce = 200, -- in milliseconds, only applied in insert mode
+    },
+    conceal = {
+      enabled = false, -- can be toggled by commands
+      min_length = nil, -- only conceal classes exceeding the provided length
+      symbol = "󱏿", -- only a single character is allowed
+      highlight = { -- extmark highlight options, see :h 'highlight'
+        fg = "#38BDF8",
+      },
+    },
+    custom_filetypes = {} -- see the extension section to learn how it works
+  }
+})
 

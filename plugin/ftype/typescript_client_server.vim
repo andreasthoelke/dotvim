@@ -59,7 +59,8 @@ func! T_MenuCommands()
     let testServerCmds += [ {'label': '_N Install packages',   'cmd': 'call T_InitInstallPackages()' } ]
     let testServerCmds += [ {'label': '_Make snapshot',   'cmd': 'call T_SnapshotTesterFiles( input( "Snapshot name: " ) )' } ]
   endif
-  let snapshotName = T_GetSnapshotNameFromFolder()
+  " let snapshotName = T_GetSnapshotNameFromFolder()
+  let snapshotName = "-"
   if len( snapshotName )
     " let testServerCmds += [ {'label': '_Y Load: ['. snapshotName . ']' ,   'cmd': 'call T_ReactivateSnapshot( getline(".") )' } ]
     let testServerCmds += [ {'label': '_Y Load: ['. snapshotName . ']' ,   'cmd': 'call T_ReactivateSnapshot()' } ]
@@ -81,7 +82,7 @@ func! T_GetSnapshotNameFromFolderPath( path )
   let lastPathComponent = fnamemodify( a:path, ':t' )
   return matchstr( lastPathComponent, 'snapshot_\zs.*' )
 endfunc
-
+" T_GetSnapshotNameFromFolderPath( '~/Documents/Proj/g_edb_gql/scratch' )
 
 
 func! TestServerCmd ( chosenObj )
@@ -293,8 +294,82 @@ func! T_DoSetPrinterIdentif()
   let [identif, modulePath] = T_ImportInfo()
   call T_SetPrinterIdentif( identif, modulePath )
 endfunc
-
 " ─^  Set import variables                               ▲
+
+
+" ─   05-2024 standalone approach                        ■
+
+func! JS_SetPrinterIdentif()
+  let path = expand('%:p')
+  let jsWd = JS_getRootFolderPath(["package.json"])
+  let relPath = substitute( path, jsWd, '', '' )
+  let relPath = '.' . relPath
+  call VirtualRadioLabel( '«')
+
+  let [export, altIdentif, identif; _] = split( getline('.') )
+  if export != 'export'
+    " echo 'identifier needs to be exported'
+    call T_ExportLine()
+    let ident = T_RemoveTypeColon( altIdentif )
+  else
+    let ident = T_RemoveTypeColon( identif )
+  endif
+
+  let importStm = "import { " . identif . " as testIdentif } from '" . relPath . "'"
+  let TesterLines = readfile( JsPrinterPath(), '\n' )
+  let TesterLines[0] = importStm
+  call writefile( TesterLines, JsPrinterPath() )
+endfunc
+
+func! JS_RunPrinter()
+  " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  let Cmd = 'bun '
+  " let Cmd = 'node '
+  let resLines = systemlist( Cmd . JsPrinterPath() )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
+
+func! ScalaTyDefPrinterPath()
+  return JS_getRootFolderPath(["PrinterTyDef.scala"]) . "/PrinterTyDef.scala"
+endfunc
+
+func! ScalajsPrinterPath()
+  return JS_getRootFolderPath(["PrinterJs.scala"]) . "/PrinterJs.scala"
+endfunc
+
+func! JsPrinterPath()
+  return JS_getRootFolderPath(["JsPrinter.js"]) . "/JsPrinter.js"
+endfunc
+
+func! JS_getRootFolderPath(rootFileNames)
+    " Get the current file's directory
+    let l:currentDir = expand('%:p:h')
+
+    " Loop until we reach the root directory or find a root file
+    while l:currentDir !=# '/'
+        " Check if any of the root files exist in the current directory
+        for l:rootFileName in a:rootFileNames
+            if filereadable(l:currentDir . '/' . l:rootFileName)
+                " If a root file is found, return the current directory
+                return l:currentDir
+            endif
+        endfor
+
+        " Move up one directory level
+        let l:currentDir = fnamemodify(l:currentDir, ':h')
+    endwhile
+
+    " If no root file was found, return an empty string
+    return ''
+endfunc
+" JS_getRootFolderPath(["package.json"])
+
+" ─^  05-2024 standalone approach                        ▲
+
+
 
 
 func! T_InsertLineAt( path, lineTxt, idx )
@@ -372,7 +447,7 @@ endfunc
 "  T_TesterTerminalCommand( 'ServerName' ) 
 " T_TesterTerminalCommand( 'Printer' )
 " echo systemlist( T_TesterTerminalCommand( 'Client' ) )
-
+" T_NodeFunctionCall_TermCmd( "fileName", "functionName" )
 
 " The current files' module path
 func! T_AbsModulePath()
