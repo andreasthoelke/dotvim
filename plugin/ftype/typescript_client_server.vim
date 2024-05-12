@@ -331,6 +331,16 @@ func! JS_RunPrinter()
   silent wincmd p
 endfunc
 
+func! JS_RunPrinterAppBundle()
+  " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  let Cmd = 'bun '
+  " let Cmd = 'node '
+  let resLines = systemlist( Cmd . JsPrinterAppBundlePath() )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent call FloatWin_FitWidthHeight()
+  silent wincmd p
+endfunc
+
 
 func! ScalaTyDefPrinterPath()
   return JS_getRootFolderPath(["PrinterTyDef.scala"]) . "/PrinterTyDef.scala"
@@ -343,6 +353,11 @@ endfunc
 func! JsPrinterPath()
   return JS_getRootFolderPath(["JsPrinter.js"]) . "/JsPrinter.js"
 endfunc
+
+func! JsPrinterAppBundlePath()
+  return JS_getRootFolderPath(["JsPrinterAppBundle.js"]) . "/JsPrinterAppBundle.js"
+endfunc
+
 
 func! JS_getRootFolderPath(rootFileNames)
     " Get the current file's directory

@@ -69,6 +69,7 @@ func! Scala_bufferMaps()
   " nnoremap <silent><buffer>         gegs :call Scala_SetPrinterIdentif( "gallias" )<cr>
 
   nnoremap <silent><buffer>         gei :call Scala_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer>         geb :call JS_RunPrinterAppBundle()<cr>
   nnoremap <silent><buffer>         geI :call Scala_RunPrinter( "server" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Scala_RunPrinter( "term"  )<cr>
   nnoremap <silent><buffer>         gej :call SbtJs_compile()<cr>

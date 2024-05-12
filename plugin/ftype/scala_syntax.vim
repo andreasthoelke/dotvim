@@ -226,6 +226,8 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\.bracketUpdate' conceal cchar=⟦
 
   " syntax match Normal '\.toPythonProxy' conceal cchar=‹
+
+
   " syntax match Normal '\.toPythonCopy' conceal cchar=‹
   " syntax match Normal '\v\s\zspy\ze(\W|\_$)' conceal cchar=𝑝
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵛ
@@ -295,7 +297,9 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal 'x => x\ze\.' conceal cchar=_
 
   syntax match Normal 'PartialFunction' conceal cchar=➔
+  syntax match Normal 'Function0' conceal cchar=➔
   syntax match Normal 'Function1' conceal cchar=➔
+  syntax match Normal 'Function2' conceal cchar=➔
   syntax match Normal 'Function1:' conceal cchar=➔
   syntax match Normal "\v\-\>" conceal cchar=➔
   syntax match Normal '@tailrec' conceal cchar=↵
@@ -528,6 +532,13 @@ func! ScalaSyntaxAdditions ()
   " TODO: can somehow not match this properly
   " syntax match Normal ': \A$' conceal cchar=𝑎
   " syntax match Normal ': \zsB$' conceal cchar=𝑏
+
+  syntax match Normal '@js.native' conceal cchar=𝑗
+  syntax match Normal 'JSImport\.Default' conceal cchar=𝑑
+  syntax match Normal 'JSImport\.Namespace' conceal cchar=𝑛
+  " syntax match Normal '@JSImport' conceal cchar=𝑖
+  " syntax match Normal 'js\.Object' conceal cchar=J
+  syntax match Normal 'js\.Object' conceal cchar=
 
   syntax match InlineTestDeclaration '\v^(\s\s)?\zs(lazy\s)?val\se\d(\d)?_\i{-}\s\=' conceal cchar=‥
   " syntax match InlineTestDeclaration '\v^val\se\d_\i{-}\s\=\s' conceal cchar=⠃

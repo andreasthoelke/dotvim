@@ -209,7 +209,7 @@ func! Sbt_setSmallModulesPackage()
     return
   endif
   call Scala_setPrinterPackageName( packageName )
-  let lineStr = '        .withModuleSplitStyle( ModuleSplitStyle.SmallModulesFor(List("' . packageName . '")) )'
+  let lineStr = '          .withModuleSplitStyle( ModuleSplitStyle.SmallModulesFor(List("' . packageName . '")) )'
   call File_searchReplaceLine( "build.sbt", "withModuleSplitStyle", lineStr )
   call SbtPrinterReload ()
 endfunc
@@ -266,6 +266,7 @@ func! Scala_ReSetPrinterIdentif_Js( hostLn )
   endif
   let plns = readfile( ScalajsPrinterPath(), '\n' )
   let plns[19] = "   // pprint line (not active)"  
+  let plns[28] = "  '[empty]'"
   call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
@@ -293,6 +294,7 @@ func! Scala_PrintAnyType_Js()
   endif
   let plns = readfile( ScalajsPrinterPath(), '\n' )
   let plns[19] = "  pprint.pprintln(" . identif . ")"
+  let plns[28] = "  " . identif
   call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
@@ -310,6 +312,7 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
   let plns = readfile( ScalajsPrinterPath(), '\n' )
 
   let plns[19] = "   // pprint line (not active)"  
+  let plns[28] = "  '[empty]'"
 
   " echo a:typeStr
   " return
@@ -323,11 +326,11 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
   "   let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
   elseif a:typeStr =~ "Ty App"
     let plns[17] = "  val appElement = " . a:identif
-    let plns[18] = '  appElement.launch( "app-container" )'
+    " let plns[18] = '  appElement.launch( "app-container" )'
 
   elseif a:typeStr =~ "Html[" || a:typeStr =~ "H["
     let plns[17] = "  val appElement = tydefault.TyrianDefaultApp"
-    let plns[18] = '  appElement.launch( "app-container" )'
+    " let plns[18] = '  appElement.launch( "app-container" )'
 
     " let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
 
@@ -345,6 +348,7 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     " NEW 2024-5: All other types are pretty printed in the browser consolue
     " while keeping the dom app in line 17, 18 as it was.
     let plns[19] = "  pprint.pprintln(" . a:identif . ")"
+    let plns[28] = "  " . a:identif
     " echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
   endif
 

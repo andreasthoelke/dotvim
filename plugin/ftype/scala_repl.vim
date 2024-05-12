@@ -172,7 +172,6 @@ func! SbtReloaderStart ()
   let g:SbtReloaderID = termopen('sbt --client', opts)
   silent wincmd c
 
-
   let cmd = "~printer/reStart" . "\n"
   call ScalaSbtSession_RunMain( g:SbtReloaderID, cmd )
 endfunc
@@ -199,13 +198,13 @@ endfunc
 nnoremap <silent> <leader><leader>sj :call SbtJsStart()<cr>
 nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 
-let g:SbtJs_projectName = "js_simple"
+" let g:SbtJs_projectName = "js_simple"
+" let g:SbtJs_projectName = "js_sbtjsbundler"
 " let g:SbtJs_bundler = "vite"
-let g:SbtJs_bundler = "scalajs-esbuild"
+" let g:SbtJs_bundler = "scalajs-esbuild"
+" let g:SbtJs_bundler = "sbt-jsbundler"
 " " for Laminar-fullstack example, set to:
 " let g:SbtJs_projectName = "client"
-
-let g:SbtJsVite_cmd = "cd m/js_vite && npm run dev"
 
 
 func! SbtJsStart ()
@@ -224,13 +223,22 @@ func! SbtJsStart ()
   if g:SbtJs_bundler == "vite"
     exec "new"
     let g:SbtJsVite_bufnr = bufnr()
-    let g:SbtJsViteID = termopen( g:SbtJsVite_cmd, opts)
+    let cmd = "cd m/" . g:SbtJs_projectName . " && npm run dev"
+    let g:SbtJsViteID = termopen( cmd, opts)
     silent wincmd c
 
-  else
+  elseif g:SbtJs_bundler == "sbt-jsbundler"
+    exec "new"
+    let g:SbtJsVite_bufnr = bufnr()
+    let cmd = "cd m/" . g:SbtJs_projectName . " && ./start-dev-server.sh"
+    let g:SbtJsViteID = termopen( cmd, opts)
+    silent wincmd c
 
+  elseif g:SbtJs_bundler == "scalajs-esbuild"
     call T_DelayedCmd( "call SbtJsStart_esbuildServeStart()", 2000 )
 
+  else
+    echoe "scala_repl: Unsupported bundler"
 
   endif
 
@@ -259,7 +267,7 @@ func! SbtJsStop ()
   unlet g:SbtJsID
   unlet g:SbtJs_bufnr
 
-  if g:SbtJs_bundler == "vite"
+  if g:SbtJs_bundler == "vite" || g:SbtJs_bundler == "sbt-jsbundler"
     call jobstop( g:SbtJsViteID )
     unlet g:SbtJsViteID
     unlet g:SbtJsVite_bufnr
@@ -269,10 +277,18 @@ endfunc
 func! SbtJs_compile ()
   " let cmd = "client/fastLinkJS" . "\n"
 
-  if g:SbtJs_bundler == "scalajs-esbuild"
+  if      g:SbtJs_bundler == "scalajs-esbuild"
     let cmd = g:SbtJs_projectName . "/esbuildStage" . "\n"
-  else
+
+  elseif g:SbtJs_bundler == "sbt-jsbundler"
+    let cmd = g:SbtJs_projectName . "/fastLinkJS/prepareBundleSources" . "\n"
+
+  elseif g:SbtJs_bundler == "vite"
     let cmd = g:SbtJs_projectName . "/fastLinkJS" . "\n"
+
+  else
+    echoe "scala_repl: Unsupported bundler"
+
   endif
   call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
 endfunc
