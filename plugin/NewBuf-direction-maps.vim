@@ -69,6 +69,23 @@ nnoremap <silent> <c-w><leader>U  :call NewBuf_fromLinePath( "up_back" )<cr>
 nnoremap <silent> <c-w><leader>s  :call NewBuf_fromLinePath( "down" )<cr>
 nnoremap <silent> <c-w><leader>S  :call NewBuf_fromLinePath( "down_back" )<cr>
 
+" NEOTREE FOLDER PATH FROM LINE
+nnoremap <silent> <c-w><leader><leader>p  :call Browse_FolderLinePath( "preview" )<cr>
+nnoremap <silent> <c-w><leader><leader>P  :call Browse_FolderLinePath( "preview_back" )<cr>
+nnoremap <silent> <c-w><leader><leader>o  :call Browse_FolderLinePath( "float" )<cr>
+nnoremap <silent> <c-w><leader><leader>i  :call Browse_FolderLinePath( "full" )<cr>
+nnoremap <silent> <c-w><leader><leader>tn :call Browse_FolderLinePath( "tab" )<cr>
+nnoremap <silent> <c-w><leader><leader>tt :call Browse_FolderLinePath( "tab_bg" )<cr>
+nnoremap <silent> <c-w><leader><leader>T  :call Browse_FolderLinePath( "tab_left" )<cr>
+" _                            
+nnoremap <silent> <c-w><leader><leader>v  :call Browse_FolderLinePath( "right" )<cr>
+nnoremap <silent> <c-w><leader><leader>V  :call Browse_FolderLinePath( "right_back" )<cr>
+nnoremap <silent> <c-w><leader><leader>a  :call Browse_FolderLinePath( "left" )<cr>
+nnoremap <silent> <c-w><leader><leader>u  :call Browse_FolderLinePath( "up" )<cr>
+nnoremap <silent> <c-w><leader><leader>U  :call Browse_FolderLinePath( "up_back" )<cr>
+nnoremap <silent> <c-w><leader><leader>s  :call Browse_FolderLinePath( "down" )<cr>
+nnoremap <silent> <c-w><leader><leader>S  :call Browse_FolderLinePath( "down_back" )<cr>
+
 
 " TELESCOPE 
 " ~/.config/nvim/plugin/config/telescope.lua‖*NewBufˍmapsˍi
@@ -191,6 +208,17 @@ endfunc
 
 
 " ─   Browse folder with neo-tree                       ──
+
+
+func! Browse_FolderLinePath( direction )
+  let [direction; maybeBg ] = a:direction->split('_')
+  let [path; _maybeLinkExt] = GetLongestWord_inLine()->split('‖')
+  let cmd = NewBufCmds( path )[ direction ] 
+  exec cmd
+  let path = expand( path )
+  call v:lua.Ntree_launch( path, path ) 
+endfunc
+" call Browse_FolderLinePath('down')
 
 func! Browse_parent( direction )
   let [direction; maybeBg ] = a:direction->split('_')

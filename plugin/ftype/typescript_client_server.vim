@@ -301,10 +301,18 @@ endfunc
 
 func! JS_SetPrinterIdentif()
   let path = expand('%:p')
-  let jsWd = JS_getRootFolderPath(["package.json"])
+  " let jsWd = JS_getRootFolderPath(["package.json"])
+  let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
   let relPath = substitute( path, jsWd, '', '' )
   let relPath = '.' . relPath
   call VirtualRadioLabel( '«')
+
+  " compile typescript
+  if relPath[-3:-1] == ".ts"
+    let cmd = "cd " . jsWd . " && tsc"
+    let _resLines = systemlist( cmd)
+    let relPath = relPath[:-4] . ".js"
+  endif
 
   let [export, altIdentif, identif; _] = split( getline('.') )
   if export != 'export'
@@ -322,9 +330,17 @@ func! JS_SetPrinterIdentif()
 endfunc
 
 func! JS_RunPrinter()
+
+  " compile typescript
+  let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
+  let cmd = "cd " . jsWd . " && tsc"
+  let _resLines = systemlist( cmd)
+
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
-  let Cmd = 'bun '
-  " let Cmd = 'node '
+  " let Cmd = 'bun '
+  " let Cmd = 'npx ts-node --transpile-only '
+  let Cmd = 'node '
+  " let Cmd = 'npx ts-node '
   let resLines = systemlist( Cmd . JsPrinterPath() )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )
   silent call FloatWin_FitWidthHeight()
@@ -333,8 +349,9 @@ endfunc
 
 func! JS_RunPrinterAppBundle()
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
-  let Cmd = 'bun '
-  " let Cmd = 'node '
+  " let Cmd = 'bun '
+  " let Cmd = 'ts-node '
+  let Cmd = 'node '
   let resLines = systemlist( Cmd . JsPrinterAppBundlePath() )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )
   silent call FloatWin_FitWidthHeight()

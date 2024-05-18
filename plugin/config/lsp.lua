@@ -472,7 +472,10 @@ lspconfig.cssls.setup({
   flags = flags,
 })
 
-lspconfig.tailwindcss.setup{}
+-- Works. .. but after some say 5 mins raises an error in js files.
+-- lspconfig.tailwindcss.setup{}
+-- Lazy vim config
+-- https://gist.github.com/nguyenyou/2d7327e3d03b4e0b493e8e9d9063c872
 
 -- https://github.com/hrsh7th/vscode-langservers-extracted
 lspconfig.html.setup({

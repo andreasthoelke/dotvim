@@ -266,7 +266,7 @@ func! Scala_ReSetPrinterIdentif_Js( hostLn )
   endif
   let plns = readfile( ScalajsPrinterPath(), '\n' )
   let plns[19] = "   // pprint line (not active)"  
-  let plns[28] = "  '[empty]'"
+  let plns[28] = '  "[empty]"'
   call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
@@ -312,7 +312,7 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
   let plns = readfile( ScalajsPrinterPath(), '\n' )
 
   let plns[19] = "   // pprint line (not active)"  
-  let plns[28] = "  '[empty]'"
+  let plns[28] = '  "[empty]"'
 
   " echo a:typeStr
   " return

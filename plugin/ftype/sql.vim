@@ -101,6 +101,7 @@ let g:dbname = 'zio_skunk_tradeIO'
 " let g:dbname = 'realworld-prod.sqlite'
 " let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
 " let g:dbconn = 'postgresql://jimmy:banana@0.0.0.0:5432/world'
+" let g:dbconn = 'postgresql://at:at@0.0.0.0:5432/d_myimdb'
 " let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
 let g:dbconn = ''
 

@@ -201,7 +201,7 @@ nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 " let g:SbtJs_projectName = "js_simple"
 " let g:SbtJs_projectName = "js_sbtjsbundler"
 " let g:SbtJs_bundler = "vite"
-" let g:SbtJs_bundler = "scalajs-esbuild"
+" let g:SbtJs_bundler = "scalajs-esbuild_web"
 " let g:SbtJs_bundler = "sbt-jsbundler"
 " " for Laminar-fullstack example, set to:
 " let g:SbtJs_projectName = "client"
@@ -234,8 +234,12 @@ func! SbtJsStart ()
     let g:SbtJsViteID = termopen( cmd, opts)
     silent wincmd c
 
-  elseif g:SbtJs_bundler == "scalajs-esbuild"
+  elseif g:SbtJs_bundler == "scalajs-esbuild_web"
     call T_DelayedCmd( "call SbtJsStart_esbuildServeStart()", 2000 )
+
+  elseif g:SbtJs_bundler == "scalajs-esbuild_node"
+    " Needs now dev server terminal!
+
 
   else
     echoe "scala_repl: Unsupported bundler"
@@ -259,7 +263,7 @@ func! SbtJsStop ()
     echo 'SbtJs is not running'
     return
   endif
-  if g:SbtJs_bundler == "scalajs-esbuild"
+  if g:SbtJs_bundler == "scalajs-esbuild_web"
     let cmd = g:SbtJs_projectName . "/esbuildServeStop" . "\n"
     call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
   endif
@@ -277,8 +281,11 @@ endfunc
 func! SbtJs_compile ()
   " let cmd = "client/fastLinkJS" . "\n"
 
-  if      g:SbtJs_bundler == "scalajs-esbuild"
+  if      g:SbtJs_bundler == "scalajs-esbuild_web"
     let cmd = g:SbtJs_projectName . "/esbuildStage" . "\n"
+
+  elseif  g:SbtJs_bundler == "scalajs-esbuild_node"
+    let cmd = g:SbtJs_projectName . "/run" . "\n"
 
   elseif g:SbtJs_bundler == "sbt-jsbundler"
     let cmd = g:SbtJs_projectName . "/fastLinkJS/prepareBundleSources" . "\n"
@@ -481,6 +488,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     let foundList1[0] = matchstr( foundList1[0], '\v(error:\s|Err|Exception)\zs.*' )
 
     let foundList1 = SubstituteInLines( foundList1, '\[error\]\s', "" )
+    let foundList1 = SubstituteInLines( foundList1, '\[info\]\s', "" )
     let foundList1 = StripLeadingSpaces( foundList1 )
     " "at " indicates WHERE the error occured. -> skip these lines
     " let foundList1 = functional#filter( {line -> !(line =~ '^at\s')}, foundList1 )
@@ -502,6 +510,9 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     call ScalaSyntaxAdditions() 
     call FloatWin_FitWidthHeight()
     wincmd p
+
+  elseif searchString1 =~ "ScalaJsApp_NodePrinterCall"
+    call JS_RunPrinterAppBundle()
 
   else
 
