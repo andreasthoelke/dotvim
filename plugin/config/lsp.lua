@@ -272,9 +272,35 @@ lspconfig.pyright.setup({
 -- vim.fn.exepath("python")
 -- vim.fn.isdirectory("venv" .. "/bin")
 
+-- Custom handler to filter out interface definitions
+local function custom_handler_filter_interfaceDefs(err, result, ctx, config)
+  if err then
+    vim.notify('Error: ' .. err.message, vim.log.levels.ERROR)
+    return
+  end
+
+  if not result or vim.tbl_isempty(result) then
+    vim.notify('No location found', vim.log.levels.INFO)
+    return
+  end
+
+  -- Filter out interface definitions
+  local locations = vim.tbl_filter(function(item)
+    return not string.match(item.uri, '%.ts$')
+  end, result)
+
+  if vim.tbl_isempty(locations) then
+    vim.notify('No 1 implementation found', vim.log.levels.INFO)
+    return
+  end
+
+  vim.lsp.util.jump_to_location(locations[1], 'utf-8')
+end
+
 
 lspconfig.tsserver.setup({
   on_attach = function(client, bufnr)
+    local bufopts = { noremap=true, silent=true, buffer=bufnr }
     client.server_capabilities.document_formatting = false
     client.server_capabilities.document_range_formatting = false
     local ts_utils = require("nvim-lsp-ts-utils")
@@ -284,6 +310,7 @@ lspconfig.tsserver.setup({
     buf_map(bufnr, "n", "gtf", ":TSLspRenameFile<CR>")
     buf_map(bufnr, "n", "gti", ":TSLspImportCurrent<CR>")
     buf_map(bufnr, "n", "gto", ":TSLspImportAll<CR>")
+    vim.keymap.set('n', 'gtg', function() vim.lsp.buf_request(0, 'textDocument/implementation', vim.lsp.util.make_position_params(), custom_handler_filter_interfaceDefs) end, bufopts)
     on_attach(client, bufnr)
   end,
   -- handlers = handlers2,
@@ -1040,13 +1067,33 @@ metals_config.settings = {
   -- TODO 12-23: test these
   showImplicitArguments = false,
   showImplicitConversionsAndClasses = false,
-
   showInferredType = true,
   superMethodLensesEnabled = true,
   enableSemanticHighlighting = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
-
 }
+
+-- codeLens issue 2024-05: method textDocument/codeLens is not supported by any of the servers registered
+-- similar to https://github.com/elixir-tools/elixir-tools.nvim/issues/211
+-- ~/.config/nvim/plugged/nvim-metals/lua/metals/handlers.lua‖/lsp.codelen
+
+-- metals_config.settings = {
+--     superMethodLensesEnabled = false,  -- Disable navigation to parent classes
+--     showImplicitArguments = false,     -- Disable implicit arguments
+--     showInferredType = false,          -- Disable inferred types
+--     enableSemanticHighlighting = true,
+--   }
+
+-- metals_config.init_options = {
+--   statusBarProvider = "on",
+--   isHttpEnabled = true,
+--   compilerOptions = {
+--     completion = {
+--       enable = true
+--     }
+--   }
+-- }
+
 
 -- this doesn't exist, delete
 vim.g['metals_autoImport'] = false
@@ -1061,6 +1108,7 @@ vim.highlight.priorities.semantic_tokens = 125
 -- you'll not see any messages from metals. There is more info in the help
 -- docs about this
 metals_config.init_options.statusBarProvider = "on"
+-- metals_config.init_options.statusBarProvider = "off"
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -1081,6 +1129,7 @@ metals_config.on_attach = function(client, bufnr)
   end
 end
 
+
 -- Autocmd that will actually be in charge of starting the whole thing
 local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
 api.nvim_create_autocmd("FileType", {
@@ -1091,6 +1140,6 @@ api.nvim_create_autocmd("FileType", {
   group = nvim_metals_group,
 })
 
-
+-- lua vim.lsp.handlers["textDocument/codeLens"] = function() end
 
 

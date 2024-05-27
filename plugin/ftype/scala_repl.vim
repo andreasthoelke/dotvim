@@ -337,7 +337,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     " { "[info]   value = Character(", '[info]     name = "aa",', "[info]     age = 12", "[info]   )", "[info] )_RES_multi_END", "[success] Total time: 2 s, completed 8 Dec 2023, 21:12:07", "=sbt:edb_gql> " }
     let idx = functional#findP( lines, {x-> x =~ '_RES_multi_END'} )
 
-    let lines = SubstituteInLines( lines, '\[info\] ', "" )
+    let lines = SubstituteInLines( lines, '\[info\]', "" )
     let lines = SubstituteInLines( lines, '"""', "" )
 
     if idx == -1
@@ -354,6 +354,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
     " let g:floatWin_win = FloatingSmallNew ( resultVal )
+    " echo "11"
     let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
     call ScalaSyntaxAdditions() 
     call FloatWin_FitWidthHeight()
@@ -401,6 +402,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       " Tested with ~/Documents/Proj/g_edb_gql/m/h4s_simple/os_lib/a_oslib.scala‖/e2_vimfˍ=
 
       let resultVal = SubstituteInLines( resultVal, '\[error\]', "" )
+      let resultVal = SubstituteInLines( resultVal, '\[info\]', "" )
       let resultVal = SubstituteInLines( resultVal, '🔥', "" )
       " let resultVal = StripLeadingSpaces( resultVal )
 
@@ -417,6 +419,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
           " echo "ignoring Scala.js key not found error"
           call SbtJs_compile()
         else
+          " echo "22"
           let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
           call FloatWin_FitWidthHeight()
           wincmd p
@@ -459,6 +462,8 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     if len( foundString1 ) > 0
       " In this case the full enclosed result value was found within one line.
       let foundList1 = split( foundString1, "※" )
+      let foundList1 = SubstituteInLines( foundList1, '\[info\]', "" )
+      " echo "33"
       let g:floatWin_win = FloatingSmallNew ( foundList1, "otherWinColumn" )
       call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()
@@ -506,6 +511,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
     call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
     " let g:floatWin_win = FloatingSmallNew ( resultVal )
+    " echo "44"
     let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
     call ScalaSyntaxAdditions() 
     call FloatWin_FitWidthHeight()
@@ -544,6 +550,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       " let foundList2 = functional#filter( {line -> !(line =~ 'sbt\:')}, foundList2 )
 
       let foundList2 = SubstituteInLines( foundList2, '\[error\]', "" )
+      let foundList2 = SubstituteInLines( foundList2, '\[info\]', "" )
 
       let resultVal = foundList1 + foundList2
 
@@ -552,6 +559,7 @@ func! SbtTerms_MainCallback(_job_id, data, _event)
       call T_DelayedCmd( "call ReplReceiveOpen_reset()", 2000 )
 
       " let g:floatWin_win = FloatingSmallNew ( resultVal )
+      " echo "55"
       let g:floatWin_win = FloatingSmallNew ( resultVal, "otherWinColumn" )
       call ScalaSyntaxAdditions() 
       call FloatWin_FitWidthHeight()

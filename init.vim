@@ -195,6 +195,7 @@ Plug 'nvim-lualine/lualine.nvim'
 " enables color tab file icons
 " Plug 'Slotos/lualine.nvim', { 'branch': 'tabs-highlight-formatting' }
 Plug 'WhoIsSethDaniel/lualine-lsp-progress.nvim'
+Plug 'j-hui/fidget.nvim'
 
 Plug 'nanozuki/tabby.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -568,5 +569,10 @@ luafile ~/.config/nvim/lua/utils/general.lua
 " luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
 " luafile ~/.config/nvim/plugin/setup-lsp.lua
 
-
+if exists('g:vscode')
+  echo "in vscode!"
+    
+else
+    " ordinary Neovim
+endif
 

@@ -33,12 +33,32 @@ func! S_MenuCommands()
   let cmds += [ {'label': '_Js term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )' } ]
   let cmds += [ {'label': '_Vite term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )' } ]
 
+  let cmds +=  [ {'section': 'Sjs:  ' . (exists('g:SbtJs_projectName') ? g:SbtJs_projectName : '↓]') } ]
+
+  let cmds +=  [ {'section': 'Py env [' . S_CondaEnv()} ]
+  let cmds +=  [ {'section': 'Pg:   ' . g:dbname } ]
+  let cmds +=  [ {'section': 'Sqli: ' . g:dbname_sqlite } ]
+
   return cmds
 endfunc
 
 func! S_IsInitialized()
   return isdirectory( "m/_printer" )
 endfunc
+
+func! S_CondaEnv()
+  if exists('g:CondaEnv')
+    return g:CondaEnv == 'base' ? '↓]' : g:CondaEnv .']'
+  endif
+  let resLines = systemlist( "conda info" )
+  let words = split( resLines[1] )
+  let g:CondaEnv = len( words ) ? words[3] : "error: conda info"
+  return g:CondaEnv == 'base' ? '↓]' : g:CondaEnv .']'
+  " let resLines = systemlist( "conda env list" )
+  " let resLines = resLines[2:]
+  " let resLines = functional#map( {line -> len(split(line)) ? split(line)[0] : "" }, resLines )
+endfunc
+" S_CondaEnv()
 
 
 " Sbt terminals                           |

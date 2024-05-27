@@ -137,7 +137,10 @@ let g:dbname_sqlite = 'realworld-prod.sqlite'
 func! DB_eval_parag_sqlite()
   let [startLine, endLine] = ParagraphStartEndLines()
   let lines = getline(startLine, endLine)
-  let sqlStr = join(lines, "\n")
+  " let sqlStr = join(lines, "\n")
+  let sqlStr = join(lines, " ") . ";"
+  " echo sqlStr
+  " return
   
   " psql -d zio_skunk_tradeIO -c "select * from accounts"
   " sqlite3 realworld-prod.sqlite "select * from users"
@@ -145,7 +148,27 @@ func! DB_eval_parag_sqlite()
   " echo cmd
   " return
 
-  call System_Float( cmd )
+  let resLines = systemlist( cmd )
+  let resLines = RemoveTermCodes( resLines )
+
+  if !len(resLines)
+    let resLines += ['query completed with nothing returned']
+  endif
+
+  if len(resLines) && resLines[-1] =~ 'current output mode' 
+    let resLines = resLines[:-2]
+  endif
+
+  if len(resLines)
+    let resLines += ['', 'cnt ' . len(resLines)]
+  endif
+
+  let g:floatWin_win = FloatingSmallNew ( resLines, "otherWinColumn" )
+  call ScalaSyntaxAdditions() 
+  call FloatWin_FitWidthHeight()
+  wincmd p
+
+  " call System_Float( cmd )
 endfunc
 
 
