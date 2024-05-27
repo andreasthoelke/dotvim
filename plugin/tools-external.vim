@@ -13,7 +13,8 @@ nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 " nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
-nnoremap <silent><leader>glc :call LaunchChromium2_fromUrl()<cr>
+" nnoremap <silent><leader>glc :call LaunchChromium2_fromUrl()<cr>
+nnoremap <silent><leader>glc :call LaunchChromium_withBundlerUrl()<cr>
 nnoremap <leader>glC :call LaunchChromium( 'http://localhost:4040/graphql' )<cr>
 nnoremap <leader>glp :call LaunchChromium( 'http://localhost:1234' )<cr>
 nnoremap glC :call StopChromium()<cr>

@@ -207,6 +207,19 @@ nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 " let g:SbtJs_projectName = "client"
 
 
+func! LaunchChromium_withBundlerUrl ()
+  if g:SbtJs_bundler == "vite"
+    let url = "http://localhost:5173/"
+  elseif g:SbtJs_bundler == "scalajs-esbuild_web"
+    let url = "http://localhost:3000/"
+  elseif g:SbtJs_bundler == "sbt-jsbundler"
+    let url = "http://localhost:5173/"
+  endif
+  call LaunchChromium( url )
+  echo "Launching Chromium .."
+  call T_DelayedCmd( "echo ''", 2000 )
+endfunc
+
 func! SbtJsStart ()
   if exists('g:SbtJsID')
     echo 'SbtJs is already running'
