@@ -268,6 +268,7 @@ require('possession').setup {
         vim.g["SbtJs_projectName"] = user_data["SbtJs_projectName"]
         vim.g["SbtJsVite_cmd"]     = user_data["SbtJsVite_cmd"]
         vim.defer_fn( vim.fn.SbtJsStart, 3000 )
+        vim.defer_fn( vim.fn.SbtJsStart_BundlerDevServer, 4000 )
       end
 
       -- NOTE: could add more global vars here and above

@@ -230,28 +230,43 @@ func! SbtJsStart ()
   endif
 
   " TEST: Just reuse the main printer term
-  " let opts = { 'cwd': getcwd( -1, -1 ) }
-  " let opts = extend( opts, g:SbtPrinterCallbacks )
-  " exec "new"
-  " let g:SbtJs_bufnr = bufnr()
-  " let g:SbtJsID = termopen('sbt --client', opts)
-  " silent wincmd c
+  " PROBLEM: ScalaJSEsbuildWebPlugin runs in the same term and needs esbuild_serverStop
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:SbtPrinterCallbacks )
+  exec "new"
+  let g:SbtJs_bufnr = bufnr()
+  let g:SbtJsID = termopen('sbt --client', opts)
+  silent wincmd c
 
-  let g:SbtJs_bufnr = g:SbtPrinter_bufnr
-  let g:SbtJsID = g:SbtPrinterID
+  " let g:SbtJs_bufnr = g:SbtPrinter_bufnr
+  " let g:SbtJsID = g:SbtPrinterID
 
-  call SbtJsStart_BundlerDevServer ()
+  " call SbtJsStart_BundlerDevServer ()
 endfunc
 
-
-
-func! SbtJs_ReStart_BundlerDevServer ()
-  call SbtJsStop_BundlerDevServer ()
-  call SbtJsStart_BundlerDevServer ()
-endfunc
 
 
 func! SbtJsStart_BundlerDevServer ()
+
+  " let sbtPath   = filereadable( getcwd(winnr()) . '/build.sbt' )
+  let sbtPath   = "build.sbt"
+  let lines = readfile( sbtPath, "\n" )
+  let idx = functional#findP( lines, {x-> x =~ ("lazy val " . g:SbtJs_projectName)} )
+  let pluginLine = lines[idx + 2]
+
+  if     pluginLine =~ "ScalaJSEsbuildPlugin"
+    let g:SbtJs_bundler = "ScalaJSEsbuildPlugin"
+  elseif pluginLine =~ "ScalaJSEsbuildWebPlugin"
+    let g:SbtJs_bundler = "ScalaJSEsbuildWebPlugin"
+  elseif pluginLine =~ "JSBundlerPlugin"
+    let g:SbtJs_bundler = "JSBundlerPlugin"
+  else
+    echoe "no bundler match!"
+    return
+  endif
+
+  let opts = { 'cwd': getcwd( -1, -1 ) }
+  let opts = extend( opts, g:SbtPrinterCallbacks )
 
   if g:SbtJs_bundler == "vite"
     exec "new"
@@ -262,6 +277,9 @@ func! SbtJsStart_BundlerDevServer ()
 
   " elseif g:SbtJs_bundler == "sbt-jsbundler"
   elseif g:SbtJs_bundler == "JSBundlerPlugin"
+
+    " https://github.com/johnhungerford/sbt-jsbundler
+    " sbt generateDevServerScript
     exec "new"
     let g:SbtJsVite_bufnr = bufnr()
     let cmd = "cd m/" . g:SbtJs_projectName . " && ./start-dev-server.sh"
@@ -284,14 +302,21 @@ func! SbtJsStart_BundlerDevServer ()
 endfunc
 
 func! SbtJsStop_BundlerDevServer ()
-  if g:SbtJs_bundler == "scalajs-esbuild_web"
+
+  if !exists('g:SbtJs_bundler')
+    " echo 'BundlerDevServer not yet running'
+    return
+  endif
+
+  " if g:SbtJs_bundler == "scalajs-esbuild_web"
+  if g:SbtJs_bundler == "ScalaJSEsbuildWebPlugin"
     let cmd = g:SbtJs_projectName . "/esbuildServeStop" . "\n"
     call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
   endif
-  call jobstop( g:SbtJsID )
-  unlet g:SbtJs_bufnr
+  " call jobstop( g:SbtJsID )
+  " unlet g:SbtJs_bufnr
 
-  if g:SbtJs_bundler == "vite" || g:SbtJs_bundler == "sbt-jsbundler"
+  if g:SbtJs_bundler == "vite" || g:SbtJs_bundler == "JSBundlerPlugin"
     call jobstop( g:SbtJsViteID )
     unlet g:SbtJsViteID
     unlet g:SbtJsVite_bufnr
@@ -315,9 +340,11 @@ func! SbtJsStop ()
     return
   endif
 
+  call jobstop( g:SbtJsID )
   unlet g:SbtJsID
+  unlet g:SbtJs_bufnr
 
-  SbtJsStop_BundlerDevServer ()
+  call SbtJsStop_BundlerDevServer ()
 endfunc
 
 func! SbtJs_compile ()
@@ -372,26 +399,12 @@ func! SbtJs_setProject ( path )
   let projName = split( a:path, "/" )[-1]
   if exists('g:SbtJs_projectName') && g:SbtJs_projectName == projName
     echo projName . " was already active!"
-    return
+    " return
   endif
 
   echo projName . " set as sbt-js project. Restart dev server ..."
   call SbtJsStop_BundlerDevServer ()
   let g:SbtJs_projectName = projName
-
-  " let sbtPath   = filereadable( getcwd(winnr()) . '/build.sbt' )
-  let sbtPath   = "build.sbt"
-  let lines = readfile( sbtPath, "\n" )
-  let idx = functional#findP( lines, {x-> x =~ ("lazy val " . projName)} )
-  let pluginLine = lines[idx + 2]
-
-  if     pluginLine =~ "ScalaJSEsbuildPlugin"
-    let g:SbtJs_bundler = "ScalaJSEsbuildPlugin"
-  elseif pluginLine =~ "ScalaJSEsbuildWebPlugin"
-    let g:SbtJs_bundler = "ScalaJSEsbuildWebPlugin"
-  elseif pluginLine =~ "JSBundlerPlugin"
-    let g:SbtJs_bundler = "JSBundlerPlugin"
-  endif
 
   call SbtJsStart_BundlerDevServer ()
 endfunc

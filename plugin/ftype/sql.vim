@@ -96,7 +96,8 @@ endfunc
 
 
 " psql -d zio_skunk_tradeIO -c "select * from accounts"
-let g:dbname = 'zio_skunk_tradeIO'
+" let g:dbname = 'zio_skunk_tradeIO'
+let g:dbname = 'world'
 " let g:dbname = 'learn_dev'
 " let g:dbname = 'realworld-prod.sqlite'
 " let g:dbconn = 'postgresql://postgres:password@0.0.0.0:5432/muse'
@@ -132,7 +133,7 @@ endfunc
 
 
 " sqlite3 --help
-let g:dbname_sqlite = 'realworld-prod.sqlite'
+let g:dbname_sqlite = '/Users/at/Documents/Proj/_dbs/world/world.db'
 
 func! DB_eval_parag_sqlite()
   let [startLine, endLine] = ParagraphStartEndLines()

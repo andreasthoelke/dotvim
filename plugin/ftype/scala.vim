@@ -30,14 +30,15 @@ func! S_MenuCommands()
   " let cmds +=  [ {'section': 'Sbt reloader [' . (exists('g:SbtReloaderID') ? '↑]' : '↓]')} ]
   " let cmds += [ {'label': '_Reloader term',   'cmd': 'call NewBuf_fromBufNr( g:SbtReloader_bufnr, "down" )' } ]
   let cmds +=  [ {'section': 'Sbt Js [' . (exists('g:SbtJsID') ? '↑]' : '↓]')} ]
-  let cmds += [ {'label': '_Js term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )' } ]
+  let cmds += [ {'label': 'Js term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJs_bufnr, "down" )' } ]
   let cmds += [ {'label': '_Vite term',   'cmd': 'call NewBuf_fromBufNr( g:SbtJsVite_bufnr, "down" )' } ]
 
-  let cmds +=  [ {'section': 'Sjs:  ' . (exists('g:SbtJs_projectName') ? g:SbtJs_projectName : '↓]') } ]
+  let cmds +=  [ {'section': 'Sjs P [' . (exists('g:SbtJs_projectName') ? g:SbtJs_projectName . ']' : '↓]') } ]
 
   let cmds +=  [ {'section': 'Py env [' . S_CondaEnv()} ]
   let cmds +=  [ {'section': 'Pg:   ' . g:dbname } ]
-  let cmds +=  [ {'section': 'Sqli: ' . g:dbname_sqlite } ]
+  let cmds +=  [ {'section': 'Sqli: ' . fnamemodify(g:dbname_sqlite, ":t") } ]
+  let cmds += [ {'label': 'sql scratch',   'cmd': 'new ' . g:dbname_sqlite . '_scQ.sql' } ]
 
   return cmds
 endfunc
