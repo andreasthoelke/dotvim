@@ -731,6 +731,8 @@ hi SpecialKey      guifg=#465457
 " hi! Search         guifg=NONE guibg=#212626 gui=underline
 " hi! Search         guifg=NONE guibg=#212626 gui=italic,underline
 hi! Search         guifg=NONE guibg=#1A1E1E gui=italic,underline
+" This is new since v0.11.0 for ga map
+hi! CurSearch      guifg=NONE guibg=#1A1E1E gui=italic,underline
 
 " Visual selection
 " hi Visual guibg=#2E2E2E gui=none

@@ -79,6 +79,7 @@ func! Scala_bufferMaps()
   nnoremap <silent><buffer> <leader>gew :call Scala_PrintAnyType_Js()<cr>
   nnoremap <silent><buffer>         geW :call Scala_ReSetPrinterIdentif_Js( getline('.') )<cr>
   nnoremap <silent><buffer>         geS :call Scala_SetPrinterIdentif( "server" )<cr>
+  nnoremap <silent><buffer> <leader>cdsp :call SbtJs_setProject_fromFile()<cr>
 
   " TODO: to be tested again
   " nnoremap <silent><buffer>         get :call Scala_SetPrinterIdentif( "table" )<cr>

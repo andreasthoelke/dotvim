@@ -213,6 +213,7 @@ require('possession').setup {
       -- NOTE: could add more global vars here and below
       res['httpx_request_port']     = vim.g["httpx_request_port"]
       res['dbname']                 = vim.g["dbname"]
+      res['dbname_sqlite']          = vim.g["dbname_sqlite"]
       res['dbconn']                 = vim.g["dbconn"]
       res['SbtJs_bundler']          = vim.g["SbtJs_bundler"]
 
@@ -272,6 +273,7 @@ require('possession').setup {
       -- NOTE: could add more global vars here and above
       vim.g["httpx_request_port"] = user_data["httpx_request_port"]
       vim.g["dbname"] = user_data["dbname"]
+      vim.g["dbname"] = user_data["dbname_sqlite"]
       vim.g["dbconn"] = user_data["dbconn"]
       vim.g["SbtJs_bundler"] = user_data["SbtJs_bundler"]
 

@@ -210,9 +210,11 @@ nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 func! LaunchChromium_withBundlerUrl ()
   if g:SbtJs_bundler == "vite"
     let url = "http://localhost:5173/"
-  elseif g:SbtJs_bundler == "scalajs-esbuild_web"
+  " elseif g:SbtJs_bundler == "scalajs-esbuild_web"
+  elseif g:SbtJs_bundler == "ScalaJSEsbuildWebPlugin"
     let url = "http://localhost:3000/"
-  elseif g:SbtJs_bundler == "sbt-jsbundler"
+  " elseif g:SbtJs_bundler == "sbt-jsbundler"
+  elseif g:SbtJs_bundler == "JSBundlerPlugin"
     let url = "http://localhost:5173/"
   endif
   call LaunchChromium( url )
@@ -220,18 +222,36 @@ func! LaunchChromium_withBundlerUrl ()
   call T_DelayedCmd( "echo ''", 2000 )
 endfunc
 
+
 func! SbtJsStart ()
   if exists('g:SbtJsID')
     echo 'SbtJs is already running'
     return
   endif
-  let opts = { 'cwd': getcwd( -1, -1 ) }
-  let opts = extend( opts, g:SbtPrinterCallbacks )
 
-  exec "new"
-  let g:SbtJs_bufnr = bufnr()
-  let g:SbtJsID = termopen('sbt --client', opts)
-  silent wincmd c
+  " TEST: Just reuse the main printer term
+  " let opts = { 'cwd': getcwd( -1, -1 ) }
+  " let opts = extend( opts, g:SbtPrinterCallbacks )
+  " exec "new"
+  " let g:SbtJs_bufnr = bufnr()
+  " let g:SbtJsID = termopen('sbt --client', opts)
+  " silent wincmd c
+
+  let g:SbtJs_bufnr = g:SbtPrinter_bufnr
+  let g:SbtJsID = g:SbtPrinterID
+
+  call SbtJsStart_BundlerDevServer ()
+endfunc
+
+
+
+func! SbtJs_ReStart_BundlerDevServer ()
+  call SbtJsStop_BundlerDevServer ()
+  call SbtJsStart_BundlerDevServer ()
+endfunc
+
+
+func! SbtJsStart_BundlerDevServer ()
 
   if g:SbtJs_bundler == "vite"
     exec "new"
@@ -240,26 +260,44 @@ func! SbtJsStart ()
     let g:SbtJsViteID = termopen( cmd, opts)
     silent wincmd c
 
-  elseif g:SbtJs_bundler == "sbt-jsbundler"
+  " elseif g:SbtJs_bundler == "sbt-jsbundler"
+  elseif g:SbtJs_bundler == "JSBundlerPlugin"
     exec "new"
     let g:SbtJsVite_bufnr = bufnr()
     let cmd = "cd m/" . g:SbtJs_projectName . " && ./start-dev-server.sh"
     let g:SbtJsViteID = termopen( cmd, opts)
     silent wincmd c
 
-  elseif g:SbtJs_bundler == "scalajs-esbuild_web"
+  " elseif g:SbtJs_bundler == "scalajs-esbuild_web"
+  elseif g:SbtJs_bundler == "ScalaJSEsbuildWebPlugin"
     call T_DelayedCmd( "call SbtJsStart_esbuildServeStart()", 2000 )
 
-  elseif g:SbtJs_bundler == "scalajs-esbuild_node"
+  " elseif g:SbtJs_bundler == "scalajs-esbuild_node"
+  elseif g:SbtJs_bundler == "ScalaJSEsbuildPlugin"
     " Needs now dev server terminal!
 
 
   else
     echoe "scala_repl: Unsupported bundler"
-
   endif
 
 endfunc
+
+func! SbtJsStop_BundlerDevServer ()
+  if g:SbtJs_bundler == "scalajs-esbuild_web"
+    let cmd = g:SbtJs_projectName . "/esbuildServeStop" . "\n"
+    call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
+  endif
+  call jobstop( g:SbtJsID )
+  unlet g:SbtJs_bufnr
+
+  if g:SbtJs_bundler == "vite" || g:SbtJs_bundler == "sbt-jsbundler"
+    call jobstop( g:SbtJsViteID )
+    unlet g:SbtJsViteID
+    unlet g:SbtJsVite_bufnr
+  endif
+endfunc
+
 
 
 func! SbtJsStart_esbuildServeStart ()
@@ -276,31 +314,25 @@ func! SbtJsStop ()
     echo 'SbtJs is not running'
     return
   endif
-  if g:SbtJs_bundler == "scalajs-esbuild_web"
-    let cmd = g:SbtJs_projectName . "/esbuildServeStop" . "\n"
-    call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
-  endif
-  call jobstop( g:SbtJsID )
-  unlet g:SbtJsID
-  unlet g:SbtJs_bufnr
 
-  if g:SbtJs_bundler == "vite" || g:SbtJs_bundler == "sbt-jsbundler"
-    call jobstop( g:SbtJsViteID )
-    unlet g:SbtJsViteID
-    unlet g:SbtJsVite_bufnr
-  endif
+  unlet g:SbtJsID
+
+  SbtJsStop_BundlerDevServer ()
 endfunc
 
 func! SbtJs_compile ()
   " let cmd = "client/fastLinkJS" . "\n"
 
-  if      g:SbtJs_bundler == "scalajs-esbuild_web"
+  " if      g:SbtJs_bundler == "scalajs-esbuild_web"
+  if      g:SbtJs_bundler == "ScalaJSEsbuildWebPlugin"
     let cmd = g:SbtJs_projectName . "/esbuildStage" . "\n"
 
-  elseif  g:SbtJs_bundler == "scalajs-esbuild_node"
+  " elseif  g:SbtJs_bundler == "scalajs-esbuild_node"
+  elseif  g:SbtJs_bundler == "ScalaJSEsbuildPlugin"
     let cmd = g:SbtJs_projectName . "/run" . "\n"
 
-  elseif g:SbtJs_bundler == "sbt-jsbundler"
+  " elseif g:SbtJs_bundler == "sbt-jsbundler"
+  elseif g:SbtJs_bundler == "JSBundlerPlugin"
     let cmd = g:SbtJs_projectName . "/fastLinkJS/prepareBundleSources" . "\n"
 
   elseif g:SbtJs_bundler == "vite"
@@ -312,6 +344,58 @@ func! SbtJs_compile ()
   endif
   call ScalaSbtSession_RunMain( g:SbtJsID, cmd )
 endfunc
+
+
+" Use l cdsp. Alternative to l cdps from nvim-tree
+func! SbtJs_setProject_fromFile()
+  let printerFilePath = ScalajsPrinterPath()
+  if !filereadable(ScalajsPrinterPath())
+    echo ScalajsPrinterPath() . " not found!"
+    return
+  endif
+  let projFolder = fnamemodify( printerFilePath, ":h")
+  call SbtJs_setProject( projFolder )
+endfunc
+
+
+" IDEA: 
+" to facilitate switching between js-subproject
+" i could just leave a the dev-build server & terminal running per sbt-subproject
+" would only need a mapping: SbtJs_projectName <=> SbtJs_bufnr
+" SbtJs_setProject would start the SbtJsStart_BundlerDevServer if not running.
+" but the term would not be closed, but reused if that project-name is set again.
+" this would produce different vite ports. would need to manage these. 
+" i don't need multiple apps in different browser wins at the same time.
+
+" Sets SbtJs_projectName, SbtJs_bundler and restarts the dev-build server if needed
+func! SbtJs_setProject ( path )
+  let projName = split( a:path, "/" )[-1]
+  if exists('g:SbtJs_projectName') && g:SbtJs_projectName == projName
+    echo projName . " was already active!"
+    return
+  endif
+
+  echo projName . " set as sbt-js project. Restart dev server ..."
+  call SbtJsStop_BundlerDevServer ()
+  let g:SbtJs_projectName = projName
+
+  " let sbtPath   = filereadable( getcwd(winnr()) . '/build.sbt' )
+  let sbtPath   = "build.sbt"
+  let lines = readfile( sbtPath, "\n" )
+  let idx = functional#findP( lines, {x-> x =~ ("lazy val " . projName)} )
+  let pluginLine = lines[idx + 2]
+
+  if     pluginLine =~ "ScalaJSEsbuildPlugin"
+    let g:SbtJs_bundler = "ScalaJSEsbuildPlugin"
+  elseif pluginLine =~ "ScalaJSEsbuildWebPlugin"
+    let g:SbtJs_bundler = "ScalaJSEsbuildWebPlugin"
+  elseif pluginLine =~ "JSBundlerPlugin"
+    let g:SbtJs_bundler = "JSBundlerPlugin"
+  endif
+
+  call SbtJsStart_BundlerDevServer ()
+endfunc
+
 
 
 " ─^  SBT JS terms                                       ▲

@@ -482,8 +482,6 @@ _G.Ntree_setCwd = f.curry3( function( source, scope, state )
   elseif scope == 'global' then
     vim.cmd ( 'cd ' .. path )
   end
-
-
 end )
 
 
@@ -794,6 +792,7 @@ require("neo-tree").setup({
 
         ["gq"] = Ntree_close_saveView_restoreAltFileLoc,
 
+        -- Set the project root / CWD
         ["<leader>cdpl"] = Ntree_setCwd( 'fromTreeRoot', 'local' ),
         ["<leader>cdpt"] = Ntree_setCwd( 'fromTreeRoot', 'tab' ),
         ["<leader>cdpg"] = Ntree_setCwd( 'fromTreeRoot', 'global' ),
@@ -802,6 +801,12 @@ require("neo-tree").setup({
         ["<leader>cdnt"] = Ntree_setCwd( 'fromNode', 'tab' ),
         ["<leader>cdng"] = Ntree_setCwd( 'fromNode', 'global' ),
         ["<leader>cdnu"] = Ntree_setCwd( 'fromNode', 'update' ),
+
+        -- Set the 
+        ["<leader>cdps"] =  function(s)
+          local path = s.tree:get_node().path
+          vim.fn.SbtJs_setProject( path )
+        end,
 
         -- ["go"] = function()
         --   vim.cmd( 'wincmd p' )
