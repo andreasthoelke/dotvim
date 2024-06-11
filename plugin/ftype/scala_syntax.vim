@@ -253,7 +253,7 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal "<--" conceal cchar=⊂
   syntax match Normal "\v\--\>" conceal cchar=⊃
   " syntax match Normal "_\s<-\ze\s" conceal cchar=•
-  syntax match Normal "_\ze\s*<-\s" conceal cchar= 
+  " syntax match Normal "_\ze\s*<-\s" conceal cchar= 
  " ⟄  ⟃
   syntax match Normal "()" conceal cchar=∘
   syntax match Normal "():" conceal

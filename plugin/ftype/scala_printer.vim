@@ -180,7 +180,8 @@ endfunc
 func! Example_AddIdentif()
   let hostLn = line('.')
   " '\v^(\s*)?(\/\/\s|\"\s)?\zs\S.*' ), " " )
-  let identif = matchstr( getline( hostLn ), '\v(\s*)?(val|def)?\s\zs\i*\ze\W' )
+  let identif = matchstr( getline( hostLn ), '\v(\s*)?(export\s|const\s|val|def)?(export|const|val|def)?\s\zs\i*\ze\W' )
+  echo identif
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
   let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
@@ -298,6 +299,52 @@ func! Scala_PrintAnyType_Js()
   call writefile( plns, ScalajsPrinterPath() )
 endfunc
 
+" split('case class State')[2]
+
+func! Scala_SetPrinterFF4sIdentif_Js()
+
+  let lineStr = getline('.')
+
+  if     lineStr =~ "case class" && lineStr =~ "State"
+    let typeStr = "State"
+    let identif = split(lineStr, '\v(\s|\()')[2] " e.g. MyState
+  elseif lineStr =~ "enum"       && lineStr =~ "Action"
+    let typeStr = "Action"
+    let identif = split(lineStr, '\v(\s|\:)')[1] " e.g. MyAction
+  elseif lineStr =~ "object"     && lineStr =~ "Store"
+    let typeStr = "Store"
+    let identif = split(lineStr, '\v(\s|\:)')[1] " e.g. MyStore
+  elseif lineStr =~ "trait"      && lineStr =~ "View"
+    let typeStr = "View"
+    let identif = split(lineStr, '\v(\s|\:)')[1] " e.g. MyView
+  endif
+
+  let identif = Sc_PackagePrefix() . identif
+
+  call VirtualRadioLabel_lineNumNS( "« " . typeStr, line('.'), typeStr )
+
+  if !filereadable(ScalaPrinterFF4sApp())
+    echo ScalaPrinterFF4sApp() . " not found!"
+    return
+  endif
+
+  let plns = readfile( ScalaPrinterFF4sApp(), '\n' )
+
+  " NOTE: plns[ lineNum ] ==>> bufferLine -1 !!!
+  if     typeStr == "State"
+    let plns[12] = "      " . identif . ","
+    let plns[28] = "          " . identif . ","
+  elseif typeStr == "Action"
+    let plns[13] = "      " . identif
+    let plns[29] = "          " . identif
+  elseif typeStr == "Store"
+    let plns[17] = "    " . identif . "[IO]"
+  elseif typeStr == "View"
+    let plns[15] = "    with " . identif . ":"
+  endif
+
+  call writefile( plns, ScalaPrinterFF4sApp() )
+endfunc
 
 
 func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
@@ -311,19 +358,33 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
 
   let plns = readfile( ScalajsPrinterPath(), '\n' )
 
-  let plns[19] = "   // pprint line (not active)"  
-  let plns[28] = '  "[empty]"'
+  let plns[20] = "   // pprint line (not active)"  
+  let plns[32] = '  "[empty]"'
 
+  " LineIndex 23 stays fix for now. Defauld could also be something like ~/Documents/Proj/l_local_fst/m/js_viteB_skdb/BWebApis/a_webapis.scala‖:48:5
+  let plns[23] = '  ff4sapp.FF4sApp.launchIntoDom().unsafeToPromise()'
+  " So this needs a valid  ~/Documents/Proj/l_local_fst/m/js_viteB_skdb/PrinterFF4sApp.scala
+  " Managed by func Scala_SetPrinterFF4sIdentif_Js
+
+  " echo a:identif
   " echo a:typeStr
   " return
+
+  " Laminar support!
   if     a:typeStr =~ "L\.HtmlElement" || a:typeStr =~ "L\.Div" || a:typeStr =~ "ReactiveHtmlElement"
     let plns[17] = "  val appElement = " . a:identif
     let plns[18] = '  renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement)'
-  elseif a:typeStr =~ "Resource"
-    let plns[17] = "  val appElement = " . a:identif
-    let plns[18] = '  Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()'
+
+    " Calico support! 
+  " elseif a:typeStr =~ "Resource"
+  "   let plns[17] = "  val appElement = " . a:identif
+  "   let plns[18] = '  Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()'
+                    " Window[IO].document.getElementById("app").map(_.get).flatMap { appElement.renderInto(_).useForever }.unsafeRunAndForget()
+
   " elseif a:typeStr =~ "Ty App"
   "   let plns[18] = '  TyrianIOApp.onLoad( "tyapp" -> appElement )'
+
+  " Returning an appElement. usually launched into the Dom from main.js
   elseif a:typeStr =~ "Ty App"
     let plns[17] = "  val appElement = " . a:identif
     " let plns[18] = '  appElement.launch( "app-container" )'
@@ -344,11 +405,28 @@ func! Scala_SetPrinterIdentif_Js( identif, hostLn, typeStr )
     call writefile( plnsTy, ScalaTyDefPrinterPath() )
     " ----- write the *view* identifer into PrinterTyDefault.scala --------
 
+
+
+  " The following lineIndex = 20 prints IO, Resource, Stream or normal values in the browser console!
+
+  elseif a:typeStr =~ "IO["
+    let plns[20] = "  " . a:identif . ".map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).flatMap( st => IO.println( st ) ).unsafeToPromise()"
+    let plns[32] = "  " . a:identif . ".map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).flatMap( st => IO.println( st ) ).unsafeToPromise()"
+
+  elseif a:typeStr =~ "Resource[IO, Stream[IO"
+    let plns[20] = "  " . a:identif . ".use( s => s.map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).evalMap( st => IO.println( st ) ).compile.drain ).unsafeToPromise()"
+    let plns[32] = "  " . a:identif . ".use( s => s.map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).evalMap( st => IO.println( st ) ).compile.drain ).unsafeToPromise()"
+
+  elseif a:typeStr =~ "Stream[IO"
+    let plns[20] = "  " . a:identif . ".map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).evalMap( st => IO.println( st ) ).compile.drain.unsafeToPromise()"
+    let plns[32] = "  " . a:identif . ".map( v => pprint.PPrinter.BlackWhite(v, width=3, height=2000)  ).evalMap( st => IO.println( st ) ).compile.drain.unsafeToPromise()"
+
   else
-    " NEW 2024-5: All other types are pretty printed in the browser consolue
+    " NEW 2024-5: No Html types are pretty printed in the browser consolue
     " while keeping the dom app in line 17, 18 as it was.
-    let plns[19] = "  pprint.pprintln(" . a:identif . ")"
-    let plns[28] = "  " . a:identif
+    let plns[20] = "  println( pprint.PPrinter.BlackWhite( " . a:identif . ", width=3, height=2000) )"
+    let plns[32] = "  println( pprint.PPrinter.BlackWhite( " . a:identif . ", width=3, height=2000) )"
+    " let plns[28] = "  " . a:identif
     " echo a:typeStr . " is not supported by Scala_SetPrinterIdentif_Js"
   endif
 

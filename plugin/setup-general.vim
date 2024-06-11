@@ -1535,6 +1535,8 @@ nnoremap <leader>" :Telescope registers<cr>
 " A yank in vim writes to the system clipboard, and a system copy is available to paste in vim. but gets overwritten at the first yank.
 set clipboard=unnamed
 
+if !exists('g:vscode')
+
 " Easyclip: ----------------------------------------
 let g:EasyClipUseYankDefaults = 1
 let g:EasyClipUseCutDefaults = 0
@@ -1592,7 +1594,7 @@ let g:EasyClipEnableBlackHoleRedirectForChangeOperator = 1
 " endif
 
 " Easyclip: ----------------------------------------
-
+endif
 
 " Vim Highlighedhank:
 let g:highlightedyank_highlight_duration = 700

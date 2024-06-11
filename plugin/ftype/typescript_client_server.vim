@@ -363,6 +363,10 @@ func! ScalaTyDefPrinterPath()
   return JS_getRootFolderPath(["PrinterTyDef.scala"]) . "/PrinterTyDef.scala"
 endfunc
 
+func! ScalaPrinterFF4sApp()
+  return JS_getRootFolderPath(["PrinterFF4sApp.scala"]) . "/PrinterFF4sApp.scala"
+endfunc
+
 func! ScalajsPrinterPath()
   return JS_getRootFolderPath(["PrinterJs.scala"]) . "/PrinterJs.scala"
 endfunc

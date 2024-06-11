@@ -1,5 +1,28 @@
 
+if vim.g.vscode then
 
+vim.api.nvim_exec([[
+  augroup CustomSilentErrors
+    autocmd!
+    autocmd TextChangedI * lua << EOF
+      local original_notify = vim.notify
+      function vim.notify(msg, level, opts)
+        if msg:match("Error executing lua callback") then
+          return
+        end
+        original_notify(msg, level, opts)
+      end
+      -- Your original autocommand logic here
+    EOF
+  augroup END
+]], false)
+
+
+end
+
+-- Example usage:
+-- Instead of using :execute, use :SilentExecute
+-- :SilentExecute 'echo "This will not throw an error"'
 
 
 -- https://github.com/nvim-tree/nvim-tree.lua

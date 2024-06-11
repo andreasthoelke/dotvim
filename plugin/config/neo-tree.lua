@@ -663,6 +663,11 @@ require("neo-tree").setup({
 
         ["<C-v>"] = function() vim.cmd("normal! V") end,
 
+        ["<C-v>"] = function() vim.cmd("normal! V") end,
+
+        ["<c-f>"] = function() Tab_go_offset(  1 ) end,
+        ["<c-d>"] = function() Tab_go_offset( -1 ) end,
+
         ["<2-LeftMouse>"] = "open",
         ["<cr>"] = "open",
         -- ["<esc>"] = "cancel", -- close preview or floating neo-tree window

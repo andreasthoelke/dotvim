@@ -132,7 +132,9 @@ Plug 'skywind3000/vim-preview'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
 " " Changes: Add every yank position to the jumplist, comment out 'repeat#invalidate()' as it seems to cause jump to the top of the file
-Plug 'andreasthoelke/vim-easyclip'
+if !exists('g:vscode')
+  Plug 'andreasthoelke/vim-easyclip'
+endif
 " TODO replace with smaller plugins
 " Briefly highlight the yanked region
 " Plug 'machakann/vim-highlightedyank'
@@ -571,7 +573,9 @@ luafile ~/.config/nvim/lua/utils/general.lua
 
 if exists('g:vscode')
   echo "in vscode!"
-    
+
+  " doesn't work
+  let g:easyclip_yank_stack_file = '/Users/at/.config/nvim/easyclip_yank_stack.txt'
 else
     " ordinary Neovim
 endif

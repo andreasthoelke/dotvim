@@ -77,6 +77,7 @@ func! Scala_bufferMaps()
 " ─   Printer                                            ■
   nnoremap <silent><buffer>         gep :call Scala_SetPrinterIdentif( "plain" )<cr>
   nnoremap <silent><buffer>         gew :call Scala_SetPrinterIdentif( "webbrowser" )<cr>
+  nnoremap <silent><buffer>         gef :call Scala_SetPrinterFF4sIdentif_Js()<cr>
   nnoremap <silent><buffer> <leader>gew :call Scala_PrintAnyType_Js()<cr>
   nnoremap <silent><buffer>         geW :call Scala_ReSetPrinterIdentif_Js( getline('.') )<cr>
   nnoremap <silent><buffer>         geS :call Scala_SetPrinterIdentif( "server" )<cr>

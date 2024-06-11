@@ -55,6 +55,19 @@ func! VirtualRadioLabel_lineNum( label, lineNum, ... )
   call nvim_buf_set_virtual_text( bn, ns, line('.') -1, [[a:label, 'CommentMinusCursive']], {})
 endfunc
 
+
+func! VirtualRadioLabel_lineNumNS( label, lineNum, nameSpace )
+  let ns = nvim_create_namespace( a:nameSpace )
+  let bn = bufnr('')
+
+  " Clear all virtual text of this label
+  call nvim_buf_clear_highlight( bn, ns, 0, -1)
+
+  call nvim_buf_set_virtual_text( bn, ns, line('.') -1, [[a:label, 'CommentMinusCursive']], {})
+endfunc
+
+
+
 " NVim Virtual Text: ------------------
 if has('nvim-0.3.2')
   let g:nsid_def = nvim_create_namespace('default')
