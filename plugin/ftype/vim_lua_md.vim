@@ -9,6 +9,23 @@ func! MarkdownBufferMaps()
   call VScriptToolsBufferMaps()
 
   nnoremap <silent><buffer><leader>ot :Vista<cr>
+  " nnoremap <silent><buffer>gdi :lua require("follow-md-links").follow_link()<cr>
+
+  nnoremap <silent><buffer> gdp  :call NewBuf_fromCursorMarkdownRef( "preview_back" )<cr>
+  nnoremap <silent><buffer> gdo  :call NewBuf_fromCursorMarkdownRef( "float" )<cr>
+  nnoremap <silent><buffer> gdi  :call NewBuf_fromCursorMarkdownRef( "full" )<cr>
+  nnoremap <silent><buffer> gdt  :call NewBuf_fromCursorMarkdownRef( "tab" )<cr>
+  nnoremap <silent><buffer> gdT  :call NewBuf_fromCursorMarkdownRef( "tab_bg" )<cr>
+  " _                       
+  nnoremap <silent><buffer> gdv  :call NewBuf_fromCursorMarkdownRef( "right" )<cr>
+  nnoremap <silent><buffer> gdV  :call NewBuf_fromCursorMarkdownRef( "right_back" )<cr>
+  nnoremap <silent><buffer> gda  :call NewBuf_fromCursorMarkdownRef( "left" )<cr>
+  nnoremap <silent><buffer> gdu  :call NewBuf_fromCursorMarkdownRef( "up" )<cr>
+  nnoremap <silent><buffer> gdU  :call NewBuf_fromCursorMarkdownRef( "up_back" )<cr>
+  nnoremap <silent><buffer> gds  :call NewBuf_fromCursorMarkdownRef( "down" )<cr>
+  nnoremap <silent><buffer> gdS  :call NewBuf_fromCursorMarkdownRef( "down_back" )<cr>
+
+  " v:lua.MarkdownBufferMapsLua()
 endfunc
 
 

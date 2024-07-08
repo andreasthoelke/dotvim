@@ -207,6 +207,41 @@ func! NewBuf_fromCursorLspRef( direction )
 endfunc
 
 
+" https://github.com/jakewvincent/mkdnflow.nvim
+
+func! NewBuf_fromCursorMarkdownRef( direction )
+  let [direction; maybe_back ] = a:direction->split('_')
+  let winview = winsaveview()
+  let file = expand('%:p')
+  let cmd = NewBufCmds( file )[ direction ] 
+  " if IsInFloatWin() | wincmd c | endif
+  exec cmd
+  call winrestview( winview )
+
+  " lua vim.lsp.buf.definition()
+  " This plugin doesn't follow header links
+  " lua require("follow-md-links").follow_link()
+  exec 'MkdnEnter'
+
+  if direction != "full"
+    call T_DelayedCmd('normal zz', 300)
+  endif
+
+  " POST ACTION PHASE: 
+  if     a:direction == 'tab_bg' 
+    " delay the tabprevious call
+    call T_DelayedCmd('tabprevious', 1000)
+  " elseif a:direction == 'preview_back' 
+    " preview jump back can actually be instant/ without flicker
+    " wincmd p 
+  else
+    " delay all other _back jumps (as neo-tree seems to need this)
+    if len( maybe_back ) | call T_DelayedCmd('wincmd p', 500) | endif
+  endif
+endfunc
+
+
+
 " ─   Browse folder with neo-tree                       ──
 
 

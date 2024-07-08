@@ -102,6 +102,7 @@ cmp.setup {
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'vsnip' },
+    { name = 'mkdnflow' },
     { name = 'graphql' },
     -- { name = 'luasnip' }, -- For luasnip users.
   }, {

@@ -224,7 +224,7 @@ end
 
 -- LSP[pyright]: Error ON_ATTACH_ERROR: "/Users/at/.vim/plugged/nvim-navic/lua/nvim-navic/init.lua:311: bad argument #3 to '__index' (string expected, got nil)"
 
-
+-- Import "langchain_core.documents" could not be resolved [reportMissingImports]
 -- python 1
 -- https://github.com/microsoft/pyright
 lspconfig.pyright.setup({
@@ -242,22 +242,48 @@ lspconfig.pyright.setup({
     -- disableSelfClsNotAccessed = true,
   },
 
-  -- .venv/bin/python
   before_init = function(_params, config)
-    local dotvenv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
-    -- local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), "venv")
-    local venv_bin = vim.fn.getcwd() .. "/venv/bin"
-    if dotvenv:joinpath("bin"):is_dir() then
-      -- putt( "pyright using poetry .venv" )
-      config.settings.python.pythonPath = tostring(dotvenv:joinpath("bin", "python"))
-    elseif vim.fn.isdirectory( venv_bin ) then
-      -- putt( "pyright using local venv" )
-      config.settings.python.pythonPath = venv_bin
-    else
-      putt( "venv folder not found" )
-      config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+  -- Check if CONDA_PREFIX environment variable is set
+  local conda_prefix = os.getenv('CONDA_PREFIX')
+  if conda_prefix then
+    -- Construct the path to the Python interpreter in the Conda environment
+    local python_path = Path:new(conda_prefix):joinpath("bin", "python")
+    if python_path:is_file() then
+      -- Set the Python interpreter path in Pyright settings
+      config.settings.python.pythonPath = tostring(python_path)
+      return
     end
+  end
+
+  -- Fallback to .venv or system Python if no active Conda environment
+  local dotvenv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
+  local venv_bin = vim.fn.getcwd() .. "/venv/bin"
+  if dotvenv:joinpath("bin"):is_dir() then
+    config.settings.python.pythonPath = tostring(dotvenv:joinpath("bin", "python"))
+  elseif vim.fn.isdirectory(venv_bin) then
+    config.settings.python.pythonPath = venv_bin
+  else
+    config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+  end
   end,
+
+  -- .venv/bin/python
+  -- before_init = function(_params, config)
+  --   local dotvenv = Path:new((config.root_dir:gsub("/", Path.path.sep)), ".venv")
+  --   -- local venv = Path:new((config.root_dir:gsub("/", Path.path.sep)), "venv")
+  --   local venv_bin = vim.fn.getcwd() .. "/venv/bin"
+  --   if dotvenv:joinpath("bin"):is_dir() then
+  --     -- putt( "pyright using poetry .venv" )
+  --     config.settings.python.pythonPath = tostring(dotvenv:joinpath("bin", "python"))
+  --   elseif vim.fn.isdirectory( venv_bin ) then
+  --     -- putt( "pyright using local venv" )
+  --     config.settings.python.pythonPath = venv_bin
+  --   else
+  --     putt( "venv folder not found" )
+  --     config.settings.python.pythonPath = vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+  --   end
+  -- end,
+
   -- from https://www.reddit.com/r/neovim/comments/wls43h/pyright_lsp_configuration_for_python_poetry/
 
   -- before_init = function(_, config)
@@ -660,83 +686,83 @@ lspconfig.smithy_ls.setup ({
 -- ─   null-ls                                          ──
 
 -- vim.g.null_ls_disable = true
--- local null_ls = require("null-ls")
+local null_ls = require("null-ls")
 
 
 -- https://github.com/jose-elias-alvarez/null-ls.nvim
 -- local diagnostics_format = "[#{c}] #{m} (#{s})"
--- local f = null_ls.builtins.formatting
--- local d = null_ls.builtins.diagnostics
--- null_ls.setup({
---   capabilities = capabilities,
---   on_attach = on_attach,
---   flags = flags,
---   sources = {
---     -- codepell
---     d.codespell.with({
---       -- handlers = handlers,
---       diagnostics_format = diagnostics_format,
---       extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
---     }),
---     -- python 2
---     -- d.flake8.with({
---     --   diagnostics_format = diagnostics_format,
---     --   prefer_local = ".venv/bin",
---     -- }),
---     f.isort.with({
---       diagnostics_format = diagnostics_format,
---       prefer_local = ".venv/bin",
---       extra_args = { "--profile", "black" },
---     }),
---     f.black.with({
---       diagnostics_format = diagnostics_format,
---       prefer_local = ".venv/bin",
---       extra_args = { "--fast" },
---     }),
---     -- javascript/typescript
---     -- d.eslint_d.with({
---     --   diagnostics_format = diagnostics_format,
---     -- }),
---     f.prettier.with({
---       diagnostics_format = diagnostics_format,
---       filetypes = { "html", "json", "yaml" },
---     }),
---     -- sh/bash
---     d.shellcheck.with({
---       diagnostics_format = diagnostics_format,
---     }),
---     f.shfmt.with({
---       diagnostics_format = diagnostics_format,
---       extra_args = { "-i", "2" },
---     }),
---     -- lua
---     f.stylua.with({
---       diagnostics_format = diagnostics_format,
---       extra_args = { "--indent-type", "Spaces" },
---     }),
---     -- json
---     f.fixjson.with({
---       diagnostics_format = diagnostics_format,
---     }),
---     -- yaml
---     d.yamllint.with({
---       diagnostics_format = diagnostics_format,
---       extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
---     }),
---     -- sql
---     f.sqlformat.with({
---       diagnostics_format = diagnostics_format,
---     }),
---     -- toml
---     f.taplo.with({
---       diagnostics_format = diagnostics_format,
---     }),
---     -- css/scss/sass/less
---     f.stylelint.with({
---       diagnostics_format = diagnostics_format,
---     }),
---   },
--- })
+local f = null_ls.builtins.formatting
+local d = null_ls.builtins.diagnostics
+null_ls.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+  sources = {
+    -- codepell
+    -- d.codespell.with({
+    --   -- handlers = handlers,
+    --   diagnostics_format = diagnostics_format,
+    --   extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
+    -- }),
+    -- python 2
+    -- d.flake8.with({
+    --   diagnostics_format = diagnostics_format,
+    --   prefer_local = ".venv/bin",
+    -- }),
+    f.isort.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+      extra_args = { "--profile", "black" },
+    }),
+    f.black.with({
+      diagnostics_format = diagnostics_format,
+      prefer_local = ".venv/bin",
+      extra_args = { "--fast" },
+    }),
+    -- javascript/typescript
+    -- d.eslint_d.with({
+    --   diagnostics_format = diagnostics_format,
+    -- }),
+    f.prettier.with({
+      diagnostics_format = diagnostics_format,
+      filetypes = { "html", "json", "yaml" },
+    }),
+    -- sh/bash
+    d.shellcheck.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    f.shfmt.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "-i", "2" },
+    }),
+    -- lua
+    f.stylua.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "--indent-type", "Spaces" },
+    }),
+    -- json
+    f.fixjson.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- yaml
+    d.yamllint.with({
+      diagnostics_format = diagnostics_format,
+      extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
+    }),
+    -- sql
+    f.sqlformat.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- toml
+    f.taplo.with({
+      diagnostics_format = diagnostics_format,
+    }),
+    -- css/scss/sass/less
+    f.stylelint.with({
+      diagnostics_format = diagnostics_format,
+    }),
+  },
+})
 
 
 

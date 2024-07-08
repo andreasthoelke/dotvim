@@ -52,7 +52,10 @@ Plug 'kkharji/sqlite.lua'
 " Lua and telescope:
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
+
+" Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.6'}
 Plug 'nvim-telescope/telescope.nvim'
+
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'romgrk/fzy-lua-native', { 'do': 'make' }
 
@@ -199,7 +202,8 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'WhoIsSethDaniel/lualine-lsp-progress.nvim'
 Plug 'j-hui/fidget.nvim'
 
-Plug 'nanozuki/tabby.nvim'
+Plug 'nanozuki/tabby.nvim', {'tag': 'v2.4.1'}
+" Plug 'nanozuki/tabby.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 
 " May activate this at times to create styled promptline
@@ -405,14 +409,6 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 " This works, but not sure I need it often
 Plug 'chrisbra/csv.vim'
 
-" Nyaovim for realtime markdown writing
-" Plug 'andreasthoelke/nyaovim-markdown-preview'
-
-" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-Plug 'euclio/vim-markdown-composer'
-
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-Plug 'ellisonleao/glow.nvim'
 
 Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tyru/open-browser.vim'
@@ -451,8 +447,23 @@ Plug 'godlygeek/tabular'
 " Sorting lines by vis-sel column :Vissort
 Plug 'navicore/vissort.vim'
 
-" Markdown: -------------
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+" ─   Markdown                                          ──
+
+" note:
+" https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls
+
+" https://github.com/jghauser/follow-md-links.nvim
+" Plug 'jghauser/follow-md-links.nvim'
+
+" https://github.com/jakewvincent/mkdnflow.nvim
+Plug 'jakewvincent/mkdnflow.nvim'
+
+" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+Plug 'euclio/vim-markdown-composer'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'ellisonleao/glow.nvim'
+
+" Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
 " Plug 'plasticboy/vim-markdown'
 
@@ -564,18 +575,23 @@ endif
 
 nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
+" lua require('plugin.config.telescope')
+
 " this file is odd, it is required as a module, but also has _G functions, which require an initial sourcing here?
 luafile ~/.config/nvim/lua/utils/general.lua
+" luafile ~/.config/nvim/plugin/config/telescope.lua
 " luafile ~/.config/nvim/plugin/ui_virtualTx.lua
 " luafile ~/.config/nvim/lua/utils_lsp.lua
 " luafile ~/.config/nvim/plugin/setup-symbols-outline.lua
 " luafile ~/.config/nvim/plugin/setup-lsp.lua
 
+
+
 if exists('g:vscode')
-  echo "in vscode!"
+  " echo "in vscode!"
 
   " doesn't work
-  let g:easyclip_yank_stack_file = '/Users/at/.config/nvim/easyclip_yank_stack.txt'
+  " let g:easyclip_yank_stack_file = '/Users/at/.config/nvim/easyclip_yank_stack.txt'
 else
     " ordinary Neovim
 endif

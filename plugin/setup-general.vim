@@ -1389,6 +1389,15 @@ endfunc
 " type y, then deselect and then
 " paste it into the command line with <leader><alt>p and return
 " you can now run the macro by typing @d
+" do l se on the following line. then type @f to move the cursor
+" let @f = 'jjll'
+
+command! RunFMacro :call RunFMacro()
+func! RunFMacro()
+    normal @f
+endfunc
+
+
 " ---------------------------------------------------------
 
 " Delete-CUT element and black hole delete the space after it, to

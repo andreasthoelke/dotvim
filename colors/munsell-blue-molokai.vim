@@ -69,7 +69,7 @@ hi! def link ErrorMsg purescriptIdentifier
 hi! def link Repeat @constant
 
 hi Exception       guifg=#A6E22E               gui=bold
-hi Float           guifg=#AE81FF
+" hi Float           guifg=#AE81FF
 
 " hi FoldColumn      guifg=#465457 guibg=#000000
 " hi Folded          guifg=#465457 guibg=#000000
@@ -137,7 +137,8 @@ hi Tag             guifg=#F92672               gui=italic
 
 hi Typedef         guifg=#66D9EF
 " hi Type            guifg=#66D9EF               gui=none
-hi Underlined      guifg=#808080               gui=underline
+
+" hi Underlined      guifg=#808080               gui=underline
 
 hi VertSplit       guifg=#000000 guibg=#080808
 hi WarningMsg      guifg=#FFFFFF guibg=#333333 gui=bold
@@ -160,7 +161,7 @@ hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none    
 " hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
 hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
 hi Number               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
-hi Underlined           cterm=none ctermbg=none ctermfg=5           gui=underline   guibg=#272727
+" hi Underlined           cterm=none ctermbg=none ctermfg=5           gui=underline   guibg=#272727
 hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none        guifg=#FAB1AB
 hi Method               cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 hi Interpolation        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
@@ -276,6 +277,15 @@ hi! def link @parameter purescriptIdentifier
 " hi! def link @field purescriptFunctionDeclStart
 hi! def link @include @operator
 hi! def link @type Type
+hi! def link @type.python Trait
+
+hi! def link @function.method.call.python purescriptConstructor
+" hi! def link @variable.python Constant
+hi! def link @function.python FunctionDec
+" hi! def link @variable.parameter.python ParamDec
+hi! def link @variable.parameter.python CommentMinus
+hi! def link @variable.python Normal
+
 hi! def link @tag purescriptOperator
 hi! def link @variable purescriptOperator
 hi! def link @field Type
@@ -831,6 +841,11 @@ hi! Reverse gui=reverse
 
 
 hi! htmlLink guifg=#42606B guibg=#030303
+
+hi! mdLink guifg=#294B54 guibg=none
+
+hi! link Underlined mdLink
+hi! link markdownLinkText mdLink
 
 " run: RedirMessagesBuf hi Folded
 " to get:

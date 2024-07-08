@@ -338,7 +338,9 @@ func! Scala_SetPrinterFF4sIdentif_Js()
     let plns[13] = "      " . identif
     let plns[29] = "          " . identif
   elseif typeStr == "Store"
-    let plns[17] = "    " . identif . "[IO]"
+    " let plns[17] = "    " . identif . "[IO]"
+    " I'm now just fixing the types to IO, so Store.apply[F[_]]: is just apply:
+    let plns[17] = "    " . identif . ".apply"
   elseif typeStr == "View"
     let plns[15] = "    with " . identif . ":"
   endif

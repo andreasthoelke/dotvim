@@ -231,7 +231,8 @@ func! ScalaSyntaxAdditions ()
   " syntax match Normal '\.toPythonCopy' conceal cchar=‹
   " syntax match Normal '\v\s\zspy\ze(\W|\_$)' conceal cchar=𝑝
   " syntax match Normal '\vSeq\ze(\W|\_$)' conceal cchar=ᵛ
-  syntax match Normal '\vSet\ze(\W|\_$)' conceal cchar=ᴺ
+  " syntax match Normal '\vSet\ze(\W|\_$)' conceal cchar=ᴺ
+  syntax match Normal '\v\s\zsSet\ze(\W|\_$)' conceal cchar=ᴺ
   syntax match Normal '\vArray\ze(\W|\_$)' conceal cchar=ᴬ
   syntax match Normal 'Map\ze\W' conceal cchar=ʺ
   syntax match Normal 'empty' conceal cchar=∅
@@ -408,10 +409,13 @@ func! ScalaSyntaxAdditions ()
   syntax match Normal 'Response' conceal cchar=≺
   syntax match Normal '\vRandom(s)?' conceal cchar=⌘
   syntax match Normal 'extends' conceal cchar=⟔
+  syntax match Normal 'with' conceal cchar=⟔
+  " syntax match Normal 'with\ze(\s|\_$)' conceal cchar=⟔
 
   syntax match Normal 'Nil' conceal cchar=◻
   syntax match Normal 'None' conceal cchar=≢
   syntax match Normal 'Some' conceal cchar=≡
+  syntax match Normal 'some' conceal cchar=≡
   syntax match Normal 'Option' conceal cchar=≟
   syntax match Normal 'Options' conceal cchar=≟
   syntax match Normal 'Aborts\ze\W' conceal cchar=∥

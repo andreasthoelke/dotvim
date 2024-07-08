@@ -61,7 +61,7 @@ endfunc
 
 
 " ─   Link files to Bookmark folder & search             ■
-" NOTE: there a also VimBookmark maps: ~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
+" NOTE: there are also VimBookmark maps: ~/.config/nvim/plugin/setup-general.vim#/Vim-Bookmarks
 
   "edit collections" - "collections edit" => ,ce
   "add to collection" - "collection add" => ,ca

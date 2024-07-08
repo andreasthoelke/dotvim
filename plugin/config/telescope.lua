@@ -4,7 +4,8 @@ local actions = require("telescope.actions")
 local action_state = require "telescope.actions.state"
 local resume = require("telescope.builtin").resume
 local action_set = require "telescope.actions.set"
-local trouble = require("trouble.providers.telescope")
+-- deprecated:
+-- local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
 local f = require 'utils.functional'
 local s = require 'utils.string'
@@ -585,7 +586,8 @@ Telesc = require('telescope').setup{
 -- ─   Exchange                                         ──
 
         ["<leader>dd"] = actions.delete_buffer,
-        ["<leader><c-o>"] = trouble.open_with_trouble,
+        -- This was causing "No a picker found error!"
+        -- ["<leader><c-o>"] = require("trouble.sources.telescope").open(),
 
         ["<c-q>"] = actions.send_selected_to_qflist,
 
@@ -909,6 +911,7 @@ function _G.Telesc_launch( picker_name, opts )
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
   -- putt(opts)
+  -- putt(picker_name)
 
   if     picker_name == 'project' then
     opts = f.merge( opts, {initial_mode='normal'} )
@@ -927,6 +930,10 @@ function _G.Telesc_launch( picker_name, opts )
   elseif picker_name == 'bookmarks' then
     opts = f.merge( opts, {initial_mode='insert', layout_strategy='horizontal', layout_config = {width=0.96} } )
     extensions.bookmarks.bookmarks( opts )
+
+  -- elseif picker_name == 'diagnostics' then
+  --   opts = f.merge( opts, {initial_mode='insert', layout_strategy='horizontal', layout_config = {width=0.96} } )
+  --   extensions.bookmarks.bookmarks( opts )
 
   elseif picker_name == 'vim_bookmarks' then
     vim.fn.BookmarkLoad( "/Users/at/.vim-bookmarks", 0, 1 )
