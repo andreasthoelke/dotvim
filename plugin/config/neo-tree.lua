@@ -326,7 +326,7 @@ vim.keymap.set( 'n', 'gq', Ntree_launchToAltView_saveAltFileLoc )
 vim.keymap.set( 'n', '<localleader>dt', Ntree_launchToAltView_saveAltFileLoc )
 
 
-vim.keymap.set( 'n', '<leader>Os', Ntree_launchToAltView_saveAltFileLoc )
+-- vim.keymap.set( 'n', '<leader>Os', Ntree_launchToAltView_saveAltFileLoc )
 
 
 

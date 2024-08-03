@@ -1,21 +1,25 @@
 
+
+-- tempoary!
+_G.vim.deprecate = function() end
+
 if vim.g.vscode then
 
-vim.api.nvim_exec([[
-  augroup CustomSilentErrors
-    autocmd!
-    autocmd TextChangedI * lua << EOF
-      local original_notify = vim.notify
-      function vim.notify(msg, level, opts)
-        if msg:match("Error executing lua callback") then
-          return
-        end
-        original_notify(msg, level, opts)
-      end
-      -- Your original autocommand logic here
-    EOF
-  augroup END
-]], false)
+-- vim.api.nvim_exec([[
+--   augroup CustomSilentErrors
+--     autocmd!
+--     autocmd TextChangedI * lua << EOF
+--       local original_notify = vim.notify
+--       function vim.notify(msg, level, opts)
+--         if msg:match("Error executing lua callback") then
+--           return
+--         end
+--         original_notify(msg, level, opts)
+--       end
+--       -- Your original autocommand logic here
+--     EOF
+--   augroup END
+-- ]], false)
 
 
 end

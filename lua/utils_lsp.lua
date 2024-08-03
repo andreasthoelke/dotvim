@@ -73,6 +73,12 @@ function M.LspType()
   if retval == "" then
     retval = vim.api.nvim_call_function( "matchstr", { split[slen-1], [[\v:\s\zs.*]] } )
   end
+
+  -- for python 08-2024
+  if retval == "" then
+    retval = vim.api.nvim_call_function( "matchstr", { split[slen-1], [[\v\>\s\zs.*]] } )
+  end
+
   -- local retval = vim.api.nvim_call_function( "matchstr", { retval, [[\v:\s\zs.*\ze\n]] } )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\]\n]] } )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )

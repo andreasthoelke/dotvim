@@ -686,6 +686,9 @@ hi! ConcealOne  guifg=#2A4651
 
 hi! CopilotSuggestion  guifg=#4A7780
 
+
+hi! NotifyBackground guifg=#3F5C66 guibg=#121416
+
 hi! link NotifyERRORTitle CommentMinus
 hi! link NotifyERRORBorder CommentMinusMinus
 hi! link NotifyINFOTitle CommentMinus

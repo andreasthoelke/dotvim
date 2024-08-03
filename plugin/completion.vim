@@ -54,9 +54,9 @@ let g:coc_config_home = '~/.config/nvim'
 " ~/.coc-settings.json
 " old settings: ~/.config/nvim/plugin/tools-langClientHIE-completion.vim.bak#/let%20g.coc_config_home%20=
 
-" Coc's completion menu can itegrate many sources (like webbrowser, buffer, lsp).
+" Coc's completion menu can integrate many sources (like webbrowser, buffer, lsp).
 " inoremap <silent><expr> <c-i> coc#refresh()
-inoremap <silent><expr> <Tab> coc#refresh()
+" inoremap <silent><expr> <Tab> coc#refresh()
 " nnoremap <Tab> :echo "hi4"<cr>
 
 " ~/.config/nvim/lua/utils_lsp.lua‖/vim.keymap.

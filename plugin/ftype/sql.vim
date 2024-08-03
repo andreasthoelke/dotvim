@@ -110,7 +110,7 @@ func! DB_eval_parag_psql()
   let [startLine, endLine] = ParagraphStartEndLines()
   let lines = getline(startLine, endLine)
   let sqlStr = join(lines, "\n")
-  
+
   " psql -d zio_skunk_tradeIO -c "select * from accounts"
   " let cmd = 'psql -d ' . g:dbname . ' -c "' . sqlStr . '"'
   " let cmd = 'psql ' . g:dbconn . ' -c "' . sqlStr . '"'

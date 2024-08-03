@@ -523,7 +523,7 @@ Plug 'sbdchd/neoformat'
 
 
 " coc nvim:
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "  https://blog.claude.nl/tech/howto/Setup-Neovim-as-Python-IDE-with-virtualenvs/
 " Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}

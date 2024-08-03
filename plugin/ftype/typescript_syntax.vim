@@ -3,6 +3,7 @@ func! TsSyntaxAdditions ()
 
   call clearmatches()
 
+  syntax match Normal 'import\s' conceal cchar=⁝
 
   " for Arangodb AQL
   syntax keyword aqlKeywords

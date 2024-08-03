@@ -44,6 +44,9 @@ nnoremap <silent><buffer>S :call NewBuf_fromCursorLinkPath("down_back")<cr>
 " nnoremap <silent><buffer><c-]>     :call v:lua.Tree_expandFolderInRootPath( getline('.'), expand('%:p') )<cr>
 nnoremap <silent><buffer><c-]>     :call v:lua.Ntree_launch( getline('.'), expand('%:p') )<cr>
 
+nnoremap <silent><buffer><c-]>     :call v:lua.Ntree_launch( getline('.'), expand('%:p') )<cr>
+nnoremap <silent><buffer> <leader>Os   :exec "silent !open " .. getline('.')<cr>
+
 " nnoremap <silent><buffer><c-space> :call v:lua.Ntree_launch( getline('.'), expand('%:p') )<cr>
 nnoremap <silent><buffer><c-space> :call v:lua.Ntree_launchToAltView_saveAltFileLoc()<cr>
 

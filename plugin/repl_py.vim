@@ -180,11 +180,22 @@ func! PyReplEvalLines( ... )
   endfor
 endfunc
 
+func! GetPyDefName()
+  let funcName = matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
+  return funcName
+endfunc
+
+func! GetPyDefExpression()
+  return matchstr( getline('.'), '\vreturn\s\zs.*' )
+endfunc
+
+
 func! GetPyReplExprLN( lineNum )
   if IsEmptyLine( a:lineNum )
     return ""
   endif
 
+  let funcName = matchstr( getline(a:lineNum), '\vdef\s\zs\i*\ze\(' )
   let lineList                = split( getline( a:lineNum ) )
   let secondWordOnwards       = join( l:lineList[1:], ' ')
   let expressionOfBind        = join( l:lineList[2:], ' ')
@@ -195,7 +206,10 @@ func! GetPyReplExprLN( lineNum )
   let isToplevelLine          = IndentLevel( a:lineNum ) == 1
   let cursorIsAtStartOfLine   = col('.') == 1 " not sure where?
 
-  if IsImportLine( a:lineNum )
+  if len(funcName)
+    " return Py_GetPackageName() . "." . funcName . "()"
+    return funcName . "()"
+  elseif IsImportLine( a:lineNum )
     return getline( a:lineNum )
   elseif IsDoStartLine( a:lineNum )
     return topLevelSymbol
@@ -218,24 +232,21 @@ func! GetPyReplExprLN( lineNum )
 endfunc
 
 
-" nnoremap <silent> <leader>ro :call PyReplStart()<cr>
-" nnoremap <silent> <leader>rq :call PyReplStop()<cr>
-" nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
-" nnoremap <silent> dr         :call ReplEval(':reload')<cr>:call ReplReload_Refreshed( expand('%') )<cr>
-" nnoremap <silent> dr         :call PyReplReload()<cr>
-" nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
+nnoremap <silent> <leader>ro :call PyReplStart()<cr>
+nnoremap <silent> <leader>rq :call PyReplStop()<cr>
+nnoremap <silent> <leader>rl :call PyReplEval('import ' . Py_GetPackageName())<cr>
+" nnoremap <silent> <leader>dr         :call ReplEval(':reload')<cr>:call ReplReload_Refreshed( expand('%') )<cr>
+nnoremap <silent> <leader>dr         :call PyReplReload()<cr>
+nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
 " Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses
 " nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
 " vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
-" nnoremap <silent> gei      :silent call PyReplEval( GetPyReplExprLN( line('.') ) )<cr>
-" nnoremap <silent> gei      :silent call PyReplEval( GetLineFromCursor() )<cr>
-" vnoremap <silent> gei :<c-u>call PyReplEval( Get_visual_selection() )<cr>
 
 " now moved to ~/.vim/plugin/HsAPI.vim#/Get%20.type%20from
-" nnoremap get      :call PyReplEval( '?' . expand('<cword>') )<cr>
-" vnoremap get :<c-u>call PyReplEval( '?' . GetVisSel() )<cr>
+" nnoremap <leader>get      :call PyReplEval( '?' . expand('<cword>') )<cr>
+" vnoremap <leader>get :<c-u>call PyReplEval( '?' . GetVisSel() )<cr>
 
 
 
@@ -250,6 +261,8 @@ func! PyReplStart ()
   exec "new"
   " let g:PursPyReplID = jobstart("ipython", g:PyReplCallbacks)
   let g:PursPyReplID = termopen("ipython", g:PyReplCallbacks)
+
+  call jobsend(g:PursPyReplID, "%autoindent 0" . "\n")
 endfunc
 
 func! TestTer()
@@ -303,6 +316,18 @@ func! PyReplEval( expr )
   call jobsend(g:PursPyReplID, a:expr . "\n")
 endfunc
 
+
+func! PyReplParag()
+  let [startLine, endLine] = ParagraphStartEndLines()
+  let lines = getline(startLine, endLine)
+  let pyStr = join(lines, "\n") . "\n"
+  " echo pyStr
+  " return
+
+  call jobsend(g:PursPyReplID, pyStr . "\n")
+endfunc
+
+
 " ANSI colors are encoded into the error messages and need to be removed (TODO there is also a setting for psci). e.g.  [32m'Done!'[39m
 let g:PyReplaceBashEscapeStrings = [['[33m',''], ['[32m',''], ['[39m',''], ['[0m','']]
 
@@ -324,21 +349,23 @@ func! PyReplSimpleResponseHandler( lines )
 
   if len( l:lines ) == 3
     " PyRepl returned the typlical one value
-    call VirtualtextShowMessage( l:lines[0], 'CommentSection' )
+    " call VirtualtextShowMessage( l:lines[0], 'CommentSection' )
     let hsReturnVal = l:lines[0]
-    if hsReturnVal[0:1] == '["'
+    " if hsReturnVal[0:1] == '["'
       " Detected list of strings: To split the list into lines, convert to vim list of line-strings!
-      call FloatWin_ShowLines( eval ( hsReturnVal ) )
-    else
-      call FloatWin_ShowLines( [hsReturnVal] )
-    endif
+      " call FloatWin_ShowLines( eval ( hsReturnVal ) )
+    " else
+      " call FloatWin_ShowLines( [hsReturnVal] )
+      " call Py_showInFloat( [hsReturnVal] )
+    " endif
   elseif len( l:lines ) == 0
-    echo "PyRepl returned 0 lines"
+    " echo "PyRepl returned 0 lines"
   " elseif len( l:lines ) > 15
   "   call PsShowLinesInBuffer( l:lines )
   else
-    call FloatWin_ShowLines( l:lines )
-    call VirtualtextShowMessage( join(l:lines[:1]), 'CommentSection' )
+    " call FloatWin_ShowLines( l:lines )
+    " call Py_showInFloat( l:lines )
+    " call VirtualtextShowMessage( join(l:lines[:1]), 'CommentSection' )
   endif
 endfunc
 " call PyReplSimpleResponseHandler (["eins", "zwei"])

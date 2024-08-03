@@ -30,7 +30,8 @@ nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor
 
 nnoremap <silent>gwj :call RunTerm_showFloat()<cr>
 nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
-nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
+" nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
+nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
 
 func! RunTerm_showFloat()
  " echo "Running terminal command .."
@@ -40,6 +41,16 @@ func! RunTerm_showFloat()
  " return
  call System_Float( line )
 endfunc
+
+func! RunTerm_showTerm()
+ let cmdline = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
+ echo "running cmd: " . cmdline
+ exec "26new"
+ let opts = { 'cwd': getcwd( winnr() ) }
+ let g:TermID = termopen( cmdline, opts )
+ normal G
+endfunc
+
 
 " ─   One shot async Terminal                            ■
 

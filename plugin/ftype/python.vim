@@ -11,18 +11,29 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer>         gegj :call Py_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Py_SetPrinterIdentif( "gallias" )<cr>
 
+  nnoremap <silent><buffer> <leader>gep      :call PyReplEval( GetPyReplExprLN( line('.') ) )<cr>
+  nnoremap <silent><buffer> geJ              :call PyReplEval( GetPyDefName() )<cr>
+  nnoremap <silent><buffer> gej              :call PyReplEval( GetPyDefExpression() )<cr>
+
+  " nnoremap <silent> gep              :silent call PyReplEval( GetLineFromCursor() )<cr>
+  " nnoremap <silent> gep              :silent call PyReplEval( GetLineFromCursor() )<cr>
+  " vnoremap <silent> gep :<c-u>call PyReplEval( Get_visual_selection() )<cr>
+  nnoremap <silent><buffer>         gep :call PyReplParag()<cr>
+
+
   nnoremap <silent><buffer> <leader>es  :call Py_AddSignature()<cr>
 
   nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
 
-  nnoremap <silent><buffer>         gej :call Py_RunPrinter( "float" )<cr>
-  nnoremap <silent><buffer> <leader>gej :call Py_RunPrinter( "term"  )<cr>
+  " nnoremap <silent><buffer>         gej :call Py_RunPrinter( "float" )<cr>
+  " nnoremap <silent><buffer> <leader>gej :call Py_RunPrinter( "term"  )<cr>
 
-  nnoremap <silent><buffer>gwj :call Py_RunCli( "showReturn" )<cr>
-  nnoremap <silent><buffer>gwJ :call Py_RunCli( "notShowReturn" )<cr>
-  nnoremap <silent><buffer>,gwj :call Py_RunCli( "termFloat" )<cr>
-  nnoremap <silent><buffer><leader>gwj :call Py_RunCli( "termSplit" )<cr>
+  " currently not using poety to run
+  " nnoremap <silent><buffer>gwj :call Py_RunCli( "showReturn" )<cr>
+  " nnoremap <silent><buffer>gwJ :call Py_RunCli( "notShowReturn" )<cr>
+  " nnoremap <silent><buffer>,gwj :call Py_RunCli( "termFloat" )<cr>
+  " nnoremap <silent><buffer><leader>gwj :call Py_RunCli( "termSplit" )<cr>
 
   nnoremap <silent><buffer> <leader>(     :call Py_MvStartOfBlock()<cr>
   onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
@@ -71,6 +82,7 @@ func! Py_bufferMaps()
 
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call Py_InlineTestDec()<cr>
+  nnoremap <silent><buffer> ,et :call Py_InlineTestDec()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
@@ -78,7 +90,14 @@ endfunc
 
 
 func! Py_InlineTestDec()
-  let func_ln = searchpos( '^def\s\(e\d_\)\@!', 'cnb' )[0]
+  let func_ln = searchpos( 'def\s\(e\d_\)\@!', 'cnb' )[0]
+
+  if getline( func_ln ) =~ "async"
+    let async = v:true
+  else
+    let async = v:false
+  endif
+
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
   let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
   let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
@@ -96,6 +115,9 @@ func! Py_InlineTestDec()
   let nextIndex = GetNextTestDeclIndex(func_ln)
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
   let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
+  if async
+    let lineText = "async " . lineText
+  endif
   call append( line('.') -1, lineText )
   normal k^
   call search('return')
@@ -106,11 +128,11 @@ endfunc
 "   return aa * bb
 " e1_mult = mult('aa', 'bb')
 
-
 func! Py_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  let l:typeStr = v:lua.require'utils_lsp'.LspType()
+  " currently doesn't return "async", but could
+  let l:typeStr = v:lua.require('utils_lsp').LspType()
   call setpos('.', [0, oLine, oCol, 0] )
   return l:typeStr
 endfunc
@@ -217,9 +239,20 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " let [hostLn, identifCol] = searchpos( '^def\s\zs\i*\ze\=', 'cnbW' )
   let hostLn = line('.')
-  let identifCol = 5
+  let typeStr = ""
 
-  let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
+  if getline(hostLn ) =~ "async"
+    let _printEval = "    valu = await symToEval()"
+    let identifCol = 11
+    let typeDisp = "≀"
+    let identif = matchstr( getline(hostLn ), '^async def\s\zs\i*\ze\=' )
+  else
+    let _printEval = "    valu = symToEval()"
+    let identifCol = 5
+    let typeMode = ""
+    let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
+  endif
+
   " echo identif hostLn identifCol
   " return
 
@@ -228,37 +261,42 @@ func! Py_SetPrinterIdentif( keyCmdMode )
     echo "Lsp timeout .. try again"
     return
   endif
-  let typeStr = typeStr[6:]
+  " let typeStr = typeStr[6:]
   " echo typeStr
-  " echo hostLn identifCol
   " return
 
+  let typeDisp = typeStr
   if     typeStr =~ "list" || typeStr =~ "set"
     let typeMode = "collection"
   elseif typeStr =~ "DataFrame" || typeStr =~ "Series"
     let typeMode = "DataFrame"
+  elseif typeStr =~ "Coroutine"
+    let typeMode = "≀"
+    let corouRetType = matchstr( typeStr, '\,\s\zs\i*\ze\]' )
+    let typeDisp = "• " . corouRetType
   else
     let typeMode = "plain"
   endif
 
+
   " echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
-  call VirtualRadioLabel_lineNum( "« " . typeStr . " " . typeMode, hostLn )
+  call VirtualRadioLabel_lineNum( "« " . typeDisp . " " . typeMode, hostLn )
 
   " from t2 import fruits as symToEval
   let _import = "from " . Py_GetPackageName() . " import " . identif . " as symToEval"
 
-  let _bindVal  = "valu = symToEval()"
-  let _bindIsColl = 'isColl = "list" in str(type(valu))'
+  " let _bindVal  = "valu = symToEval()"
+  " let _bindIsColl = 'isColl = "list" in str(type(valu))'
 
   let _print_type = "print( str(type(valu)) + ' | ' + '" . typeStr . "' )"
   " let _print_type = "if isColl: print( type( valu[0] ) )"
-  let _print_info = "if isColl: print( len( valu ) )"
+  " let _print_info = "if isColl: print( len( valu ) )"
 
-  let _printSetting = ""
+  " let _printSetting = ""
 
-  let _printVal1 = "if isColl:"
-  let _printVal2 = "  for x in valu: print(x)"
-  let _printVal3 = "else: print(valu)"
+  " let _printVal1 = "if isColl:"
+  " let _printVal2 = "  for x in valu: print(x)"
+  " let _printVal3 = "else: print(valu)"
 
   " if     typeMode == 'collection'
   "   let _print_type     = "print( type( valu ) )"
@@ -280,19 +318,25 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let printerFilePath = Py_GetPrinterPath()
   let plns = readfile( printerFilePath, '\n' )
 
+  let plns[1] = _import
+
 
   " let plns[0] = "import pandas as pd"
-  let plns[0] = ""
-  let plns[1] = "from pprint import pprint"
-  let plns[2] = _import
-  let plns[4] = _bindVal
-  let plns[5] = _bindIsColl
-  let plns[6] = _print_type
-  let plns[7] = _print_info
-  let plns[8] = _printSetting
-  let plns[10] = _printVal1
-  let plns[11] = _printVal2
-  let plns[12] = _printVal3
+  " let plns[0] = ""
+  " let plns[1] = "from pprint import pprint"
+  " let plns[1] = ""
+  " let plns[4] = _bindVal
+  " let plns[5] = _bindIsColl
+
+  " let plns[4] = _print_type
+
+  let plns[6] = _printEval
+
+  " let plns[7] = _print_info
+  " let plns[8] = _printSetting
+  " let plns[10] = _printVal1
+  " let plns[11] = _printVal2
+  " let plns[12] = _printVal3
 
   call writefile( plns, printerFilePath )
 endfunc
