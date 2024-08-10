@@ -224,6 +224,7 @@ end
 
 -- LSP[pyright]: Error ON_ATTACH_ERROR: "/Users/at/.vim/plugged/nvim-navic/lua/nvim-navic/init.lua:311: bad argument #3 to '__index' (string expected, got nil)"
 
+
 -- Import "langchain_core.documents" could not be resolved [reportMissingImports]
 -- python 1
 -- https://github.com/microsoft/pyright
@@ -232,10 +233,22 @@ lspconfig.pyright.setup({
   on_attach = function(client, bufnr)
     client.server_capabilities.document_formatting = false
     client.server_capabilities.document_range_formatting = false
+    if client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(bufnr, true)
+    end
     on_attach(client, bufnr)
   end,
   flags = flags,
   settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "basic",
+        inlayHints = {
+          variableTypes = true,
+          functionReturnTypes = true,
+        },
+      },
+    },
     disableOrganizeImports = true,
     -- TODO: this seems to have no effect?
     -- reportUnusedVariable = false,
@@ -291,6 +304,8 @@ lspconfig.pyright.setup({
   -- end,
 
 })
+
+
 
 -- NOTE these also find this local env paths! but only when source venv/bin/activate was run!?
 -- vim.fn.exepath("python3")

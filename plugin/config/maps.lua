@@ -374,11 +374,18 @@ vim.keymap.set( 'n',
     vim.diagnostic.goto_prev()
   end )
 
+
+-- note I'm overriding this in python.vim to use lspimport
 vim.keymap.set( 'n',
-  '<leader>ca', function()
+  '<leader>cA', function()
     vim.lsp.buf.code_action()
   end )
 
+-- this uses Plug 'stevanmilic/nvim-lspimport' specifically for pyright
+vim.keymap.set( 'n',
+  '<leader>ca', 
+  require("lspimport").import 
+)
 
 
 

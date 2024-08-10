@@ -10,7 +10,9 @@ nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 
 " nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
-nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
+" nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
+nnoremap <silent>glc :call LaunchChromium_UrlOrPath()<cr>
+nnoremap <silent>glv :call ViewInMpv( GetAbsFilePathInLine() )<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 " nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium2_fromUrl()<cr>
@@ -26,11 +28,30 @@ func! LaunchChromium_setURL()
   echo  "URL set to: " . g:LaunchChromium_URL 
 endfunc
 
+func! LaunchChromium_UrlOrPath()
+ let url = GetUrlFromLine( line('.') )
+ if url == ''
+   let url = GetAbsFilePathInLine()
+ endif
+
+ if url =~ "http" || url =~ "file"
+   call LaunchChromium( url )
+ " elseif url =~ "\.png" || url =~ "\.jpg"
+ else
+   call ShowLocalWebFile( url )
+ endif
+ echo "Launching Chromium .."
+ call T_DelayedCmd( "echo ''", 2000 )
+endfunc
+
+
 func! LaunchChromium_withDefURL()
  let url = GetUrlFromLine( line('.') )
 
  if url =~ "http" || url =~ "file"
    call LaunchChromium( url )
+ elseif url =~ "\.png" || url =~ "\.jpg"
+   call ShowLocalWebFile( url )
  else
    call LaunchChromium( g:LaunchChromium_URL )
  endif
@@ -79,16 +100,26 @@ endfun
 
 
 
-fun! OpenCurrentFileInSystemEditor()
+func! OpenCurrentFileInSystemEditor()
   exec 'silent !open %'
 endfun
 
 nnoremap <silent><leader>Os :call OpenFilePathInSystemEditor( GetLongestWord_inLine() )<cr>
 
-fun! OpenFilePathInSystemEditor( filePath )
+func! OpenFilePathInSystemEditor( filePath )
   exec 'silent !open ' . a:filePath
-endfun
+endfunc
 
+" alias disp='mpv --keep-open --loop-file=inf --image-display-duration=inf'
+" call systemlist("zsh -c 'source ~/.zshrc && disp m/_data/graphs/lgraph1.png'")
+
+func! ViewInMpv( filePath )
+  if a:filePath =~ "\.png" || a:filePath =~ "\.jpg"
+    exec 'silent !mpv --keep-open --loop-file=inf --image-display-duration=inf --geometry=700x0 ' . a:filePath
+  else
+    exec 'silent !mpv ' . a:filePath
+  endif
+endfunc
 
 
 
@@ -317,9 +348,9 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 " alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
 
 func! ShowLocalWebFile( path )
-  " call LaunchChromium( 'file:///private' . a:path )
-  " for some reason this doesn't have a small tool window and remembers the previously set size and pos.
-  call LaunchChromium2( 'file:///' . a:path )
+  let pathAbs = fnamemodify( a:path, ':p' )
+  " for some reason this doesn't have a small tool window (though sometimes it does) and doesn't remember the previously set size and pos.
+  call LaunchChromium2( 'file:///' . pathAbs )
   " call LaunchChromium( 'file:///' . a:path )
 endfunc
 " call ShowLocalWebFile( '/tmp/giphy2.gif' )

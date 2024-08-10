@@ -15,6 +15,8 @@ Plug 'junegunn/vim-plug'
 " Plug 'derekthecool/luafun_neovim'
 Plug 'github/copilot.vim'
 
+Plug 'robitx/gp.nvim'
+
 " https://github.com/piersolenski/wtf.nvim
 Plug 'piersolenski/wtf.nvim'
 
@@ -324,6 +326,7 @@ Plug 'folke/lsp-colors.nvim'
 Plug 'SmiteshP/nvim-navic'
 Plug 'numToStr/Comment.nvim'
 Plug 'SmiteshP/nvim-navbuddy'
+Plug 'stevanmilic/nvim-lspimport'
 
 " not needed to get vim diagnostic messages?!
 " Plug 'creativenull/diagnosticls-configs-nvim'

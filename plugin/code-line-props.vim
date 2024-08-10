@@ -38,12 +38,27 @@ func! GetFilePathAtCursor ()
   if filereadable( filepath )
     return filepath
   else
-    echoe ("Not a valid file path: " . filepath)
+    echo ("Not a valid file path: " . filepath)
   endif
 endfunc
 " echo GetFilePathAtCursor()
 " echo split('" call FloatingBuffer( "/Users/at/.vim/notes/links2"', '"' )
 " /Users/at/Documents/PS/A/TestsA/webpack-reload/.spago/console/v4.4.0/src/Effect/Class/Console.purs#:10:1
+
+func! GetAbsFilePathInLine ()
+  let words = getline('.')->split()
+  for word in words
+    let filepath = ReplaceStringsInLines( [word], [["'", ""], ['"', ''], [',', ''], [':', '']] )[0]
+    let filepathAbs = fnamemodify( filepath, ':p' )
+    if filereadable( filepathAbs )
+      return filepath
+    endif
+  endfor
+endfunc
+" echo GetFilePathAtCursor()
+" echo split('" call FloatingBuffer( "/Users/at/.vim/notes/links2"', '"' )
+" /Users/at/Documents/PS/A/TestsA/webpack-reload/.spago/console/v4.4.0/src/Effect/Class/Console.purs#:10:1
+
 
 
 func! GetEncloseInQuotesFromLine ( lineNum )
@@ -320,10 +335,19 @@ endfunc
 " An abs path or url is often the longest word in a line
 func! GetLongestWord_inLine()
   let has_chars = len( substitute( getline('.'), ' ', '', 'g' ) )
+  let path = ""
   if has_chars
-    return getline('.')->split()->sort('CompareLength')[-1]
+    let path = getline('.')->split()->sort('CompareLength')[-1]
+  endif
+  if filereadable( path )
+    return path
   else
-    return ""
+    let abspath = fnamemodify( getline('.'), ':p' )
+    if filereadable(abspath) || isdirectory(abspath)
+      return abspath
+    else
+      echo "Error. Not readable: " . abspath
+    endif
   endif
 endfunc
 " split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')

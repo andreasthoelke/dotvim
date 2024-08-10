@@ -21,7 +21,7 @@ hi vimString guifg=#009900
 hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
-hi String          guifg=#E6DB74
+" hi String          guifg=#E6DB74
 " hi Conditional     guifg=#F92672               gui=bold
 hi Conditional     guifg=#F92672
 hi Constant        guifg=#AE81FF               gui=bold
@@ -159,7 +159,7 @@ hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none    
 hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#72BCD6
 hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 " hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
-hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
+" hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
 hi Number               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
 " hi Underlined           cterm=none ctermbg=none ctermfg=5           gui=underline   guibg=#272727
 hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none        guifg=#FAB1AB
@@ -349,12 +349,14 @@ exec 'hi! Number guifg=' . g:color_sacramento_green_brighter
 exec 'hi! Float guifg=' . g:color_sacramento_green_brighter
 
 " purescriptString > String
-exec 'hi! String guifg=' . g:color_sacramento_green_brighter
+" exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 
 " purescriptBoolean > Boolean
 " exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter
 hi! Boolean guifg=#66A279
-hi! String guifg=#66A279
+" hi! String guifg=#66A279
+" hi! String guifg=#3D695C
+hi! String guifg=#518173
 
 hi! hsTopLevelBind guifg=#459AB3 guibg=#0C0C0C
 " hi! tsBind guifg=#459AB3

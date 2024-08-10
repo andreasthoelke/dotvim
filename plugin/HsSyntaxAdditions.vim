@@ -63,6 +63,12 @@ au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 let g:Winid_previous = 0
 let g:Ntree_prevWinid = 0
 
+" Temp hack to fix the treesitter error "no parser for buffer" e.g. in gp.nvim :GpFindChat
+augroup DefaultToBash
+  autocmd!
+  autocmd BufWinEnter,BufRead * if empty(&filetype) | setfiletype bash | endif
+augroup END
+
 augroup track_window
    autocmd!
 

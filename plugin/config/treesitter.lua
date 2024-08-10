@@ -6,7 +6,8 @@ require('nvim-treesitter.configs').setup {
 
 
   -- A list of parser names, or "all". These parsers should always be installed.
-  ensure_installed = { "scala", "typescript", "python", "sql", "bash", "just" },
+  -- ensure_installed = { "scala", "typescript", "python", "sql", "bash", "just" },
+  ensure_installed = "all",
 
   -- queries = {
   --   scala = {

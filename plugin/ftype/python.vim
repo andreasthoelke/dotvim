@@ -17,7 +17,7 @@ func! Py_bufferMaps()
 
   " nnoremap <silent> gep              :silent call PyReplEval( GetLineFromCursor() )<cr>
   " nnoremap <silent> gep              :silent call PyReplEval( GetLineFromCursor() )<cr>
-  " vnoremap <silent> gep :<c-u>call PyReplEval( Get_visual_selection() )<cr>
+  vnoremap <silent> gep :<c-u>call PyReplEval( Get_visual_selection() )<cr>
   nnoremap <silent><buffer>         gep :call PyReplParag()<cr>
 
 
@@ -50,7 +50,9 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer> I :call Py_ColumnForw()<cr>
   nnoremap <silent><buffer> Y :call Py_ColumnBackw()<cr>
 
+  nnoremap <silent><buffer> <leader><c-p> :call Py_MainStartBindingBackw()<cr>
   nnoremap <silent><buffer> <c-p>         :call Py_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Py_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> <c-n>         :call Py_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
@@ -71,6 +73,9 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
   nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+
+  " TODO: doesn't work
+  nnoremap <silent><buffer> <leader>ca :lua require("lspimport").import()<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
@@ -114,9 +119,10 @@ func! Py_InlineTestDec()
   let lineText = funcName . '(' . paramNames . ')'
   let nextIndex = GetNextTestDeclIndex(func_ln)
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
-  let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
   if async
-    let lineText = "async " . lineText
+    let lineText = 'async def e' . nextIndex . '_' . funcName . "(): return await " . lineText
+  else
+    let lineText = 'def e' . nextIndex . '_' . funcName . "(): return " . lineText
   endif
   call append( line('.') -1, lineText )
   normal k^
@@ -407,17 +413,34 @@ endfun
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 " let g:Py_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
-let g:Py_TopLevPattern = '\v(^class|def|\i*\s\=\s)'
+let g:Py_TopLevPattern = '\v(class|def)\s\zs\i*'
+let g:Py_MainStartPattern = '\v(class)\s\zs\i*'
+
+func! Py_MainStartBindingForw()
+  " normal! }
+  normal! jj
+  call search( g:Py_MainStartPattern, 'W' )
+endfunc
+
+func! Py_MainStartBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:Scala_MainStartPattern, 'bW' )
+  " normal! {
+  normal! kk
+  call search( g:Py_MainStartPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
 
 func! Py_TopLevBindingForw()
-  normal! }
+  normal! jj
   call search( g:Py_TopLevPattern, 'W' )
 endfunc
 
 func! Py_TopLevBindingBackw()
   " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Py_TopLevPattern, 'bW' )
-  normal! {
+  normal! kk
   call search( g:Py_TopLevPattern, 'W' )
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
