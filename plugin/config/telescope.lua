@@ -893,6 +893,7 @@ easypick.setup({
 -- ─^  Telescope extensions                              ▲
 
 
+-- NOTE: as reusable telecope template consider Gp_SelectAgent_chat  ~/.config/nvim/plugin/config/gp_ai.lua‖/functionˍ_G.Gp_Select
 
 function _G.Telesc_dynPosOpts_ext( opts )
   local posOpts = Float_dynAnchorWidth()

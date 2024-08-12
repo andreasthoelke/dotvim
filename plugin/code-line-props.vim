@@ -339,7 +339,9 @@ func! GetLongestWord_inLine()
   if has_chars
     let path = getline('.')->split()->sort('CompareLength')[-1]
   endif
-  if filereadable( path )
+  if path =~ '‖'
+    return path
+  elseif filereadable( path )
     return path
   else
     let abspath = fnamemodify( getline('.'), ':p' )

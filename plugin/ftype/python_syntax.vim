@@ -13,6 +13,11 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal '""' conceal cchar=∅
   syntax match Normal '"""' conceal cchar=❞
+  syntax match Normal 'f"' conceal cchar=❞
+  syntax match Normal "f'" conceal cchar=❞
+
+  syntax match Normal '(Base' conceal cchar= 
+  syntax match Normal 'Model):' conceal cchar=
 
   syntax match Normal '@tool' conceal cchar=⋺
   syntax match Normal '@step' conceal cchar=⋻
@@ -21,6 +26,7 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal 'set_entry_point' conceal cchar=󰶡
   syntax match Normal 'flow' conceal cchar=
+  syntax match Normal 'graph_builder' conceal cchar=
   syntax match Normal 'add_node' conceal cchar=❇
   syntax match Normal 'add_edge' conceal cchar=󰔰
   syntax match Normal 'add_conditional_edges' conceal cchar=⭄
@@ -54,6 +60,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃
   syntax match Normal '\s\zsas\ze\s' conceal cchar=⊂
 
+  syntax match Normal 'from' conceal cchar=⊃
   syntax match Normal 'import\s' conceal cchar=⁝
   syntax match Normal 'class' conceal cchar=□
   syntax match Normal 'self' conceal cchar=∝

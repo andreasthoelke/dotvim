@@ -113,8 +113,9 @@ hi PreCondit       guifg=#A6E22E               gui=bold
 hi PreProc         guifg=#A6E22E
 hi Question        guifg=#66D9EF
 " hi Repeat          guifg=#F92672               gui=bold
-hi SpecialChar     guifg=#F92672               gui=bold
+" hi SpecialChar     guifg=#F92672               gui=bold
 hi SpecialComment  guifg=#7E8E91
+hi SpecialChar     guifg=#2F646E
 hi Special         guifg=#2F646E guibg=bg      gui=italic
 if has("spell")
     hi SpellBad    guisp=#FF0000 gui=undercurl
@@ -1084,6 +1085,8 @@ hi! def link @lsp.typemod.method.definition Function
 
 " import paths should be rel dark
 hi!          @lsp.type.namespace guifg=NONE
+" hi!          @character.special.scala guifg=NONE
+hi! def link @character.special.scala CommentMinus
 " hi! def link @lsp.type.namespace Structure
 
 " PRO: this can highlight the param and the usages in the body of the function!

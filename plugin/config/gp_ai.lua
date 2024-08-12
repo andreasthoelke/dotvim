@@ -1,4 +1,117 @@
 
+-- require('gp')._chat_agents
+-- require('gp')._command_agents
+
+-- Add this to your config = function()
+-- require( 'gp' ).setup( conf )
+
+-- ─   Select Chat & Command Agent                       ■
+
+local pickers = require 'telescope.pickers'
+local finders = require 'telescope.finders'
+local actions = require 'telescope.actions'
+local action_state = require 'telescope.actions.state'
+local conf = require('telescope.config').values
+local f = require 'utils.functional'
+
+function _G.Gp_SelectAgent_chat()
+  opts = require('telescope.themes').get_dropdown { winblend = 15, previewer = false }
+  opts = f.merge( opts, {initial_mode='normal'} )
+  currentAgent = require('gp')._state.chat_agent
+  pickers
+  .new(opts, {
+    prompt_title = 'Chat Agents [' .. currentAgent .. ']',
+    finder = finders.new_table {
+      results = require('gp')._chat_agents
+    },
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(prompt_bufnr, map)
+        map('n', 'o', function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            Gp_SetAgent_chat( selection[1] )
+          end)
+        map('n', '<cr>', function() print( "use o to select" ) end)
+      -- end)
+      return true
+    end,
+  })
+  :find()
+end
+-- Gp_SelectAgent_chat()
+
+function _G.Gp_SetAgent_chat( name )
+  local agent_name = string.gsub(name, "^%s*(.-)%s*$", "%1")
+  require('gp').refresh_state({ chat_agent = agent_name })
+  print( "Chat Agent: " .. agent_name )
+end
+
+-- Gp_SetAgent_chat( 'ChatGPT4o-mini' )
+-- Gp_SetAgent_chat( 'ChatGPT4o' )
+
+vim.keymap.set('n', '<leader>gca', function()
+  Gp_SelectAgent_chat()
+end, {
+  noremap = true,
+  silent = false,
+  nowait = true,
+  desc = 'Select Chat Agent',
+})
+
+
+-- SELECT COMMAND AGENT
+
+function _G.Gp_SelectAgent_command()
+  opts = require('telescope.themes').get_dropdown { winblend = 15, previewer = false }
+  opts = f.merge( opts, {initial_mode='normal'} )
+  currentAgent = require('gp')._state.command_agent
+  pickers
+  .new(opts, {
+    prompt_title = 'Command Agents [' .. currentAgent .. ']',
+    finder = finders.new_table {
+      results = require('gp')._chat_agents
+    },
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(prompt_bufnr, map)
+        map('n', 'o', function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            Gp_SetAgent_command( selection[1] )
+          end)
+        map('n', '<cr>', function() print( "use o to select" ) end)
+      -- end)
+      return true
+    end,
+  })
+  :find()
+end
+-- Gp_SelectAgent_command()
+
+function _G.Gp_SetAgent_command( name )
+  local agent_name = string.gsub(name, "^%s*(.-)%s*$", "%1")
+  require('gp').refresh_state({ command_agent = agent_name })
+  print( "Command Agent: " .. agent_name )
+end
+
+-- Gp_SetAgent_chat( 'ChatGPT4o-mini' )
+-- Gp_SetAgent_chat( 'ChatGPT4o' )
+
+vim.keymap.set('n', '<leader>gco', function()
+  Gp_SelectAgent_command()
+end, {
+  noremap = true,
+  silent = false,
+  nowait = true,
+  desc = 'Select Command Agent',
+})
+
+
+-- ─^  Select Chat & Command Agent                       ▲
+
+
+
+-- ─   Config                                           ──
+
 -- os.getenv("OPENAI_API_KEY")
 -- os.getenv("ANTHROPIC_API_KEY")
 
@@ -226,6 +339,8 @@ local conf = {
   },
  -- ▲
 
+  chat_dir = "/Users/at/Documents/Proj/j_edb_smithy/m/_data/chats/",
+
   chat_user_prefix = "💬:",
 
   chat_assistant_prefix = { "🤖:", "[{{agent}}]" },
@@ -245,15 +360,17 @@ local conf = {
   chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>s" },
   chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
 
+  -- if true, finished ChatResponder won't move the cursor to the end of the buffer
+  -- true cutted of the reponse in my first test
+  chat_free_cursor = false,
+
   -- use prompt buftype for chats (:h prompt-buffer)
   -- TODO try
   chat_prompt_buf_type = false,
 
-
-  image = {
+  image = { -- ■
     -- you can disable image generation logic completely by image = {disable = true}
     disable = false,
-
     -- openai api key (string or table with command and arguments)
     -- secret = { "cat", "path_to/openai_api_key" },
     -- secret = { "bw", "get", "password", "OPENAI_API_KEY" },
@@ -261,7 +378,6 @@ local conf = {
     -- secret = os.getenv("env_name.."),
     -- if missing openai_api_key is used
     secret = os.getenv("OPENAI_API_KEY"),
-
     -- image prompt prefix for asking user for input (supports {{agent}} template variable)
     prompt_prefix_template = "🖌️ {{agent}} ~ ",
     -- image prompt prefix for asking location to save the image
@@ -364,6 +480,7 @@ local conf = {
     },
   },
 
+ -- ▲
 
 }
 
@@ -950,6 +1067,33 @@ local default_conf = {
     -- end,
   },
 }
+
+
+-- vim.keymap.set({ "x" }, "<space>cd", ":GpDiff ", { remap = true, desc = "[C]opilot rewrite to [D]iff" })
+
+
+function _G.gp_diff(args, line1, line2)
+  local contents = vim.api.nvim_buf_get_lines(vim.api.nvim_get_current_buf(), 0, -1, false)
+
+  vim.cmd("vnew")
+  local scratch_buf = vim.api.nvim_get_current_buf()
+  vim.bo[scratch_buf].buftype = "nofile"
+  vim.bo[scratch_buf].bufhidden = "wipe"
+
+  vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, contents)
+
+  vim.cmd(line1 .. "," .. line2 .. "GpRewrite " .. args)
+
+  vim.defer_fn(function()
+    vim.cmd("diffthis")
+    vim.cmd("wincmd p")
+    vim.cmd("diffthis")
+  end, 1000)
+end
+
+vim.cmd("command! -range -nargs=+ GpDiff lua gp_diff(<q-args>, <line1>, <line2>)")
+
+
 
 
 

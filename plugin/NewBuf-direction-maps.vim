@@ -382,7 +382,8 @@ endfunc
 func! NewBuf_fromLinePath( direction )
   let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
-
+  " echo cmd
+  " return
   " if IsInFloatWin() | wincmd c | endif
   exec cmd
   if len(maybeLinkExt) | call Link_jumpToLine( maybeLinkExt[0] ) | endif

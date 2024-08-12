@@ -16,6 +16,7 @@ Plug 'junegunn/vim-plug'
 Plug 'github/copilot.vim'
 
 Plug 'robitx/gp.nvim'
+" Plug 'pasky/claude.vim'
 
 " https://github.com/piersolenski/wtf.nvim
 Plug 'piersolenski/wtf.nvim'
