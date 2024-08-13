@@ -46,6 +46,8 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal 'else:' conceal cchar=˺
   syntax match Normal 'elif' conceal cchar=˼
 
+  syntax match Normal 'for\ze\W' conceal cchar=↖
+
   syntax match Normal 'isinstance' conceal cchar=˰
 
   syntax match Normal '\vlist\ze(\W|\_$)' conceal cchar=˄

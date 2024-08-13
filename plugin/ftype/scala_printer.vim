@@ -180,19 +180,32 @@ endfunc
 func! Example_AddIdentif()
   let hostLn = line('.')
   " '\v^(\s*)?(\/\/\s|\"\s)?\zs\S.*' ), " " )
+
   let identif = matchstr( getline( hostLn ), '\v(\s*)?(export\s|const\s|val|def)?(export|const|val|def)?\s\zs\i*\ze\W' )
-  echo identif
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
-  let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+  let lnStr = getline('.')
+  if split( lnStr )[0] =~ '\v(#|//)?'
+    let comment = matchstr( getline( hostLn ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+  else
+    let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+  endif
 
   let linkPath = LinkPath_get()
-  if len(comment)
-    call writefile( [comment, identif . " " . linkPath], g:ExamplesPath, "a" )
+
+  if len(identif)
+    let linkLines = [identif . " " . linkPath]
   else
-    call writefile( [identif . " " . linkPath], g:ExamplesPath, "a" )
+    let linkLines = [linkPath]
   endif
-  echo 'added ' . identif
+
+  if len(comment)
+    call writefile( [comment] + linkLines, g:ExamplesPath, "a" )
+    echo 'Added line: ' . comment
+  else
+    call writefile( linkLines, g:ExamplesPath, "a" )
+    echo 'Added line: ' . linkLines[0]
+  endif
 endfunc
 
 

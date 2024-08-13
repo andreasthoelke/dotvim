@@ -4,6 +4,8 @@
 let g:accountsGithub = ''
 let g:accountsGithub = readfile( expand( '~/.accounts/github' ) )[0:0][0]
 
+" g:accountsGithub
+
 " Tip: Link local repo to github remote repo:
 " git remote add origin https://github.com/andreasthoelke/dotfiles.git",
 " git push -u origin master" `-u` add upstream tracking(!?)

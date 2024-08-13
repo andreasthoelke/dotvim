@@ -5,9 +5,10 @@
 
 " nnoremap glm :call StopChromium()<cr>:MarkdownPreview<cr>
 nnoremap <leader>glm :Markdown<cr>
+nnoremap glm :Markdown<cr>
 " nnoremap gsm :call StopChromium()<cr>
 
-
+" call OpenMarkdownPreview()
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 0
 let g:mkdp_command_for_global = 1
@@ -106,19 +107,38 @@ command! Markdown :call OpenMarkdownPreview()
 "     \ )
 " endfunction
 
-" a simpler version of the above
-function! OpenMarkdownPreview() abort
+" pgrep -f "python.*grip"
+
+func! KillGripProcesses() abort
+  let l:grep_command = 'pgrep -f "python.*grip"'
+  let l:grip_pids = systemlist(l:grep_command)
+  
+  for pid in l:grip_pids
+    call system('kill ' . pid)
+  endfor
+endfunc
+
+func! OpenMarkdownPreview() abort
+
   if exists('g:markdown_job_id') && g:markdown_job_id > 0
     call jobstop(g:markdown_job_id)
     unlet g:markdown_job_id
+  else
+    " Kill any existing grip processes
+    call KillGripProcesses()
   endif
   " let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
   let g:markdown_job_id = jobstart('grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')))
 
   if g:markdown_job_id <= 0 | return | endif
-  " call system('open http://localhost:6419')
   call LaunchChromium( 'http://localhost:6419' )
-endfunction
+endfunc
+
+" ||  * Serving Flask app 'grip.app'
+" ||  * Debug mode: off
+" || Address already in use
+" || Port 6419 is in use by another program. Either identify and stop that program, or start the server with a different port.
+
 
 " call append('.', 'grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')) )
 " grip --user=andreasthoelke --pass=nada9simgh '/Users/at/.config/nvim/help.md'
