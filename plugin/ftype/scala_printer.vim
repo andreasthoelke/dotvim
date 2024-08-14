@@ -185,7 +185,7 @@ func! Example_AddIdentif()
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
   let lnStr = getline('.')
-  if split( lnStr )[0] =~ '\v(#|//)?'
+  if split( lnStr )[0] =~ '\v(#|//)'
     let comment = matchstr( getline( hostLn ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
   else
     let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )

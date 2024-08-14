@@ -194,7 +194,8 @@ func! Scala_bufferMaps_shared()
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
   " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>
-  nnoremap <silent><buffer> ged :Telescope diagnostics initial_mode=normal<cr>
+  nnoremap <silent><buffer> <leader>ged :Telescope diagnostics initial_mode=normal<cr>
+  nnoremap <silent><buffer> ged :Trouble diagnostics toggle focus=false filter.buf=0<cr>
   " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
   nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
   " " this is small and local

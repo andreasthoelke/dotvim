@@ -1072,31 +1072,46 @@ local default_conf = {
 -- vim.keymap.set({ "x" }, "<leader>gr", ":GpDiff ", { remap = true, desc = "GPT rewrite" })
 -- vim.keymap.set({ "x" }, "<leader>gr", ":GpDiff ", { remap = true, desc = "GPT rewrite" })
 
--- ─   Diff custom command                              ──
-
-function _G.gp_diff(args, line1, line2)
-  local contents = vim.api.nvim_buf_get_lines(vim.api.nvim_get_current_buf(), 0, -1, false)
-
-  vim.cmd("vnew")
-  local scratch_buf = vim.api.nvim_get_current_buf()
-  vim.bo[scratch_buf].buftype = "nofile"
-  vim.bo[scratch_buf].bufhidden = "wipe"
-
-  vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, contents)
-
-  vim.cmd(line1 .. "," .. line2 .. "GpRewrite " .. args)
-
-  vim.defer_fn(function()
-    vim.cmd("diffthis")
-    vim.cmd("wincmd p")
-    vim.cmd("diffthis")
-  end, 1000)
-end
-
-vim.cmd("command! -range -nargs=+ GpDiff lua gp_diff(<q-args>, <line1>, <line2>)")
 
 
--- ─   Keymaps                                          ──
+local Input = require("nui.input")
+local event = require("nui.utils.autocmd").event
+
+local popup_options = {
+  relative = "cursor",
+  position = {
+    row = 1,
+    col = 0,
+  },
+  size = 20,
+  border = {
+    style = "rounded",
+    text = {
+      top = "[Input]",
+      top_align = "left",
+    },
+  },
+  win_options = {
+    winhighlight = "Normal:Normal",
+  },
+}
+
+
+-- mount/open the component
+
+-- local input = Input(popup_options, {
+--   prompt = "> ",
+--   default_value = "42",
+--   on_close = function()
+--     print("Input closed!")
+--   end,
+--   on_submit = function(value)
+--     print("Value submitted: ", value)
+--   end,
+--   on_change = function(value)
+--     print("Value changed: ", value)
+--   end,
+-- })
 
 local function keymapOptions(desc)
     return {
@@ -1106,6 +1121,81 @@ local function keymapOptions(desc)
         desc = "GPT prompt " .. desc,
     }
 end
+
+
+-- ─   Diff custom command                              ──
+
+
+
+vim.keymap.set("v", "<C-g>r", ":<C-u>lua _G.gp_diff_input(vim.fn.line(\"'<\"), vim.fn.line(\"'>\"))<CR>", { desc = "Diff selected lines" })
+
+function _G.gp_diff_input(line1, line2)
+  local input = Input({
+    position = "50%",
+    size = {
+      width = 50,
+    },
+    border = {
+      style = "single",
+      text = {
+        top = " Rewrite instruction ",
+        top_align = "center",
+      },
+    },
+    win_options = {
+      winhighlight = "Normal:Normal,FloatBorder:Normal",
+    },
+  }, {
+    prompt = " ",
+    default_value = "",
+    on_close = function()
+      print("Input Closed!")
+    end,
+    on_submit = function(value)
+      _G.gp_diff( value, line1, line2 )
+    end,
+  })
+
+  -- unmount component when cursor leaves buffer
+  input:on(event.BufLeave, function()
+    input:unmount()
+  end)
+
+  input:mount()
+end
+
+
+function _G.gp_diff(instruction, line1, line2)
+--   -- Grab all text/lines from the current buffer
+  local contents = vim.api.nvim_buf_get_lines(vim.api.nvim_get_current_buf(), 0, -1, false)
+
+--   -- Create a new vert window and make the buffer temp.
+  vim.cmd("vnew")
+  local scratch_buf = vim.api.nvim_get_current_buf()
+  vim.bo[scratch_buf].buftype = "nofile"
+  vim.bo[scratch_buf].bufhidden = "wipe"
+
+--   -- Put the lines in there
+  vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, contents)
+
+--   -- And run the Gp.rewrite command in that scratch buffer
+  vim.cmd(line1 .. "," .. line2 .. "GpRewrite " .. instruction)
+
+--   -- Then enter diff mode in the rewrite (right) and the original (left) window.
+--   -- Apparently in this case vimdiff figures out how to diff the two buffers.
+--   -- Also now the diff-put and diff-get maps work in the two buffers.
+  vim.defer_fn(function()
+    vim.cmd("diffthis")
+    vim.cmd("wincmd p")
+    vim.cmd("diffthis")
+  end, 1000)
+end
+
+vim.cmd("command! -range -nargs=+ GpDiff lua gp_diff(<line1>, <line2>)")
+
+
+-- ─   Keymaps                                          ──
+
 
 -- Chat commands
 vim.keymap.set({"n", "i"}, "<C-g>c", "<cmd>GpChatNew split<cr>", keymapOptions("New Chat"))
@@ -1126,11 +1216,11 @@ vim.keymap.set("v", "<C-g><C-t>", ":<C-u>'<,'>GpChatNew tabnew<cr>", keymapOptio
 
 -- Prompt commands
 -- vim.keymap.set({"n", "i"}, "<C-g>r", "<cmd>GpRewrite<cr>", keymapOptions("Inline Rewrite"))
-vim.keymap.set({"n", "i"}, "<C-g>r", "<cmd>GpDiff<cr>", keymapOptions("Inline Rewrite"))
+-- vim.keymap.set({"n", "i"}, "<C-g>r", "<cmd>GpDiff<cr>", keymapOptions("Inline Rewrite"))
 vim.keymap.set({"n", "i"}, "<C-g>a", "<cmd>GpAppend<cr>", keymapOptions("Append (after)"))
 vim.keymap.set({"n", "i"}, "<C-g>b", "<cmd>GpPrepend<cr>", keymapOptions("Prepend (before)"))
 
-vim.keymap.set("v", "<C-g>r", ":<C-u>'<,'>GpDiff ", keymapOptions("Visual Rewrite"))
+-- vim.keymap.set("v", "<C-g>r", ":<C-u>'<,'>GpDiff<cr>", keymapOptions("Visual Rewrite"))
 vim.keymap.set("v", "<C-g>a", ":<C-u>'<,'>GpAppend<cr>", keymapOptions("Visual Append (after)"))
 vim.keymap.set("v", "<C-g>b", ":<C-u>'<,'>GpPrepend<cr>", keymapOptions("Visual Prepend (before)"))
 vim.keymap.set("v", "<C-g>i", ":<C-u>'<,'>GpImplement<cr>", keymapOptions("Implement selection"))

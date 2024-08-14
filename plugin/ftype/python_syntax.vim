@@ -35,6 +35,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal "await\ze\s" conceal cchar=≀
 
   syntax match Normal "Annotated" conceal cchar=⁝
+  syntax match Normal "Literal" conceal cchar=⟮
   syntax match Normal "Union" conceal cchar=|
   syntax match Normal '\vField\ze\(' conceal cchar=˾
   syntax match Normal 'Optional' conceal cchar=≟
