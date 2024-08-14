@@ -479,6 +479,17 @@ end )
 -- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
 -- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
 
+-- ─   Trouble integration                              ──
+
+local trouble = require("trouble").setup( defaults )
+
+
+local actions = require("telescope.actions")
+local open_with_trouble = require("trouble.sources.telescope").open
+
+-- Use this to add more results without clearing the trouble list
+local add_to_trouble = require("trouble.sources.telescope").add
+
 
 -- ─   Config                                            ■
 
@@ -531,6 +542,8 @@ Telesc = require('telescope').setup{
         ["<c-o>"] = actions.cycle_history_prev,
         ["µ"]     = actions.cycle_history_next,
 
+        ["<c-t>"] = open_with_trouble,
+        ["<c-a>"] = add_to_trouble,
 
 -- ─   NewBuf maps i                                    ──
         -- NewBuf is consistent with ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/LINE-WORD
@@ -556,6 +569,9 @@ Telesc = require('telescope').setup{
 
       },
       n = {
+
+        ["<c-t>"] = open_with_trouble,
+        ["<c-a>"] = add_to_trouble,
 
 
 -- ─   NewBuf maps n                                    ──

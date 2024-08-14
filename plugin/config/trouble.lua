@@ -82,7 +82,19 @@ local defaults = {
   warn_no_results = true, -- show a warning when there are no results
   open_no_results = false, -- open the trouble window when there are no results
   ---@type trouble.Window.opts
-  win = {}, -- window options for the results window. Can be a split or a floating window.
+  -- win = {}, -- window options for the results window. Can be a split or a floating window.
+
+  win = {
+    type = "float",
+    relative = "editor",
+    border = "rounded",
+    title = "-",
+    title_pos = "center",
+    position = { 0, -2 },
+    size = { width = 0.45, height = 0.2 },
+    zindex = 200,
+  },
+
   -- Window options for the preview window. Can be a split, floating window,
   -- or `main` to show the preview in the main editor window.
   ---@type trouble.Window.opts
@@ -165,6 +177,44 @@ local defaults = {
   },
   ---@type table<string, trouble.Mode>
   modes = {
+
+    -- Note: Open these with Trouble preview_float/split. They are interesting. But I want preview in main window.
+    preview_float = {
+      mode = "diagnostics",
+      preview = {
+        type = "float",
+        relative = "editor",
+        border = "rounded",
+        title = "Preview",
+        title_pos = "center",
+        position = { 0, -2 },
+        size = { width = 0.3, height = 0.3 },
+        zindex = 200,
+      },
+    },
+    preview_split = {
+      mode = "diagnostics",
+      preview = {
+        type = "split",
+        relative = "win",
+        position = "right",
+        size = 0.5,
+      },
+    },
+
+    cascade = {
+      mode = "diagnostics", -- inherit from diagnostics mode
+      filter = function(items)
+        local severity = vim.diagnostic.severity.HINT
+        for _, item in ipairs(items) do
+          severity = math.min(severity, item.severity)
+        end
+        return vim.tbl_filter(function(item)
+          return item.severity == severity
+        end, items)
+      end,
+    },
+
     -- sources define their own modes, which you can use directly,
     -- or override like in the example below
     lsp_references = {
@@ -260,9 +310,24 @@ local defaults = {
   },
 }
 
--- local trouble = require("trouble").setup( defaults )
+local trouble = require("trouble").setup( defaults )
 
 
+local actions = require("telescope.actions")
+local open_with_trouble = require("trouble.sources.telescope").open
 
+-- Use this to add more results without clearing the trouble list
+local add_to_trouble = require("trouble.sources.telescope").add
+
+local telescope = require("telescope")
+
+telescope.setup({
+  defaults = {
+    mappings = {
+      i = { ["<c-t>"] = open_with_trouble },
+      n = { ["<c-t>"] = open_with_trouble },
+    },
+  },
+})
 
 
