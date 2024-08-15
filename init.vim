@@ -178,6 +178,9 @@ Plug 'edgedb/edgedb-vim'
 
 
 " ─   Git related plugins                               ──
+
+Plug 'sindrets/diffview.nvim'
+
 Plug 'tpope/vim-fugitive'
 " Plug 'jreybert/vimagit'
 " Plug 'airblade/vim-gitgutter'
