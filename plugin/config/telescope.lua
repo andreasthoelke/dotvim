@@ -14,6 +14,11 @@ local s = require 'utils.string'
 -- local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 -- { "__cycle_layout_list", "__scrolling_limit", "_selection_row", "_on_lines", "tiebreak", "window", "original_win_id", "get_status_text", "file_ignore_patterns", "prompt_bufnr", "_original_mode", "stats", "_multi", "preview_win", "push_cursor_on_edit", "preview_border", "layout_strategy", "prompt_win", "max_results", "manager", "scroller", "prompt_title", "layout", "_selection_entry", "initial_mode", "highlighter", "get_window_options", "prompt_border", "results_border", "sorting_strategy", "previewer", "push_tagstack_on_edit", "selection_strategy", "cache_picker", "scroll_strategy", "results_win", "results_bufnr", "create_layout", "preview_bufnr", "layout_config", "get_selection_window", "sorter", "results_title", "attach_mappings", "wrap_results", "multi_icon", "prompt_prefix", "_finder_attached", "preview_title", "selection_caret", "_on_input_filter_cb", "entry_prefix", "finder", "all_previewers", "current_previewer_index", "_find_id", "_completion_callbacks", "track" }
 
+-- ─   Trouble integration                              ──
+
+local open_with_trouble = require("trouble.sources.telescope").open
+local add_to_trouble = require("trouble.sources.telescope").add
+
 
 -- ─   Helpers                                          ──
 
@@ -479,22 +484,11 @@ end )
 -- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
 -- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
 
--- ─   Trouble integration                              ──
-
-local trouble = require("trouble").setup( defaults )
-
-
-local actions = require("telescope.actions")
-local open_with_trouble = require("trouble.sources.telescope").open
-
--- Use this to add more results without clearing the trouble list
-local add_to_trouble = require("trouble.sources.telescope").add
-
 
 -- ─   Config                                            ■
 
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
-Telesc = require('telescope').setup{
+require('telescope').setup{
   defaults = {
     -- config_key = value,
     path_display = { 'shorten' },
@@ -532,6 +526,8 @@ Telesc = require('telescope').setup{
           end
         end,
 
+        ["<c-t>"] = open_with_trouble,
+
         ["<c-j>"] = move_selection_next_with_space(),
         ["<c-k>"] = move_selection_previous_with_space(),
 
@@ -542,8 +538,6 @@ Telesc = require('telescope').setup{
         ["<c-o>"] = actions.cycle_history_prev,
         ["µ"]     = actions.cycle_history_next,
 
-        ["<c-t>"] = open_with_trouble,
-        ["<c-a>"] = add_to_trouble,
 
 -- ─   NewBuf maps i                                    ──
         -- NewBuf is consistent with ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/LINE-WORD
@@ -570,11 +564,10 @@ Telesc = require('telescope').setup{
       },
       n = {
 
-        ["<c-t>"] = open_with_trouble,
-        ["<c-a>"] = add_to_trouble,
-
 
 -- ─   NewBuf maps n                                    ──
+
+        ["<c-t>"] = open_with_trouble,
 
         ['<c-w>p'] = NewBuf 'preview_back',
         ['<c-w>o'] = NewBuf 'float',

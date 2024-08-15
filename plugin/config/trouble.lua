@@ -66,7 +66,7 @@
 ---@field formatters? table<string,trouble.Formatter> custom formatters
 ---@field filters? table<string, trouble.FilterFn> custom filters
 ---@field sorters? table<string, trouble.SorterFn> custom sorters
-local defaults = {
+local config = {
   auto_close = false, -- auto close when there are no items
   auto_open = false, -- auto open when there are items
   auto_preview = true, -- automatically open preview when on an item
@@ -310,24 +310,9 @@ local defaults = {
   },
 }
 
-local trouble = require("trouble").setup( defaults )
+local trouble = require("trouble").setup( config )
 
 
-local actions = require("telescope.actions")
-local open_with_trouble = require("trouble.sources.telescope").open
 
--- Use this to add more results without clearing the trouble list
-local add_to_trouble = require("trouble.sources.telescope").add
-
-local telescope = require("telescope")
-
-telescope.setup({
-  defaults = {
-    mappings = {
-      i = { ["<c-t>"] = open_with_trouble },
-      n = { ["<c-t>"] = open_with_trouble },
-    },
-  },
-})
 
 
