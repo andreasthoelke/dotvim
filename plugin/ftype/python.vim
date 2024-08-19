@@ -163,22 +163,16 @@ func! Py_LspTopLevelHover()
 endfunc
 
 func! Py_GetPrinterPath()
-
-  let printerPath = "m/_printer/printer.py"
-
+  let printerPath = "m/printer.py"
   if filereadable( printerPath )
     return printerPath
   endif
-
   let parentFolderPath = expand('%:h')
   let printerPath = parentFolderPath . "/printer.py"
-
   if filereadable( printerPath )
     return printerPath
   endif
-
   let grandParentFolderPath = fnamemodify( parentFolderPath, ':h' )
-
   let printerPath = grandParentFolderPath . "/printer.py"
   if filereadable( printerPath )
     return printerPath
@@ -187,7 +181,7 @@ func! Py_GetPrinterPath()
   endif
 endfunc
 
-func! Py_GetPackageName()
+func! Py_GetPackageName_old()
   let thisModuleName = expand('%:t:r')
   let parentFolderPath = expand('%:h')
 
@@ -206,6 +200,38 @@ func! Py_GetPackageName()
   endif
 
 endfunc
+
+func! Py_GetPackageName()
+  " Get the current file path
+  let l:current_file_path = expand('%:p')
+
+  " Get the current working directory
+  let l:cwd = getcwd()
+
+  " Ensure the CWD ends with a slash to match the start of the file path
+  if l:cwd[-1] != '/'
+    let l:cwd .= '/'
+  endif
+
+  " Find the position of the CWD in the full path
+  let l:cwd_pos = match(l:current_file_path, '^' . l:cwd)
+
+  " If CWD is not found in the current file path, return an empty string
+  if l:cwd_pos == -1
+    return ''
+  endif
+
+  " Extract the relative file path using the CWD's position
+  let l:relative_path = l:current_file_path[l:cwd_pos + len(l:cwd):]
+
+  " Replace file separators with dots and remove the file extension
+  let l:module_path = substitute(l:relative_path, '/', '.', 'g')
+  let l:module_path = substitute(l:module_path, '\.py$', '', '')
+  let l:module_path = substitute(l:module_path, 'm.', '', '')
+
+  return l:module_path
+endfunc
+
 
 func! Py_AddSignature()
 
@@ -321,6 +347,9 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   " endif
 
   " let printerFilePath = getcwd() . '/printer.py'
+  " echo Py_GetPrinterPath()
+  " return
+
   let printerFilePath = Py_GetPrinterPath()
   let plns = readfile( printerFilePath, '\n' )
 

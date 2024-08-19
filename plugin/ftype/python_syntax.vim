@@ -26,6 +26,7 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal 'set_entry_point' conceal cchar=󰶡
   syntax match Normal 'flow' conceal cchar=
+  syntax match Normal 'workflow' conceal cchar=
   syntax match Normal 'graph_builder' conceal cchar=
   syntax match Normal 'add_node' conceal cchar=❇
   syntax match Normal 'add_edge' conceal cchar=󰔰

@@ -360,6 +360,8 @@ local conf = {
   chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>s" },
   chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
 
+  chat_finder_pattern = "",
+
   -- if true, finished ChatResponder won't move the cursor to the end of the buffer
   -- true cutted of the reponse in my first test
   chat_free_cursor = false,

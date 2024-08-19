@@ -58,7 +58,7 @@ nnoremap gwT :call TermOneShot( GetLineFromCursor() )<cr>
 nnoremap ,gwt :call TermOneShot_FloatBuffer( GetLineFromCursor() )<cr>
 
 func! TermOneShot( cmd )
-  exec "8new"
+  exec "16new"
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:TermID = termopen( a:cmd, opts )
   normal G

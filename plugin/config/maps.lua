@@ -212,15 +212,27 @@ vim.keymap.set( 'n',
 
 -- ─   Git picker maps                                  ──
 
-vim.keymap.set( 'n',
-  '<leader>ogl', function() require( 'utils.general' )
-  .Git_commits_picker( opts_1, vim.fn.expand('%') )
-  end )
+-- These work well!
+-- vim.keymap.set( 'n',
+--   '<leader>ogl', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_1, vim.fn.expand('%') )
+--   end )
+
+-- vim.keymap.set( 'n',
+--   '<leader>ogL', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_1 )
+--   end )
+
+-- But DiffviewFileHistory is better
+vim.keymap.set('n', '<leader>ogl', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Open Git log for current file" })
+vim.keymap.set('n', '<leader>ogL', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
+
 
 vim.keymap.set( 'n',
-  '<leader>ogL', function() require( 'utils.general' )
-  .Git_commits_picker( opts_1 )
+  '<leader>ogs', function() require( 'utils.general' )
+  .Git_status_picker( opts_1 )
   end )
+
 
 
 vim.keymap.set( 'n',
