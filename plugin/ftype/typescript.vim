@@ -7,6 +7,9 @@ nnoremap <silent> gee :call T_Menu()<cr>
 func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
+  nnoremap <silent><buffer> <leader>ca :TSLspImportCurrent<cr>
+  nnoremap <silent><buffer> <leader>cA :TSLspImportAll<cr>
+
   " nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gew :call JS_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer> gej :call T_DoSetImport()<cr>

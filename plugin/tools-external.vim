@@ -4,7 +4,7 @@
 "  Launching external apps
 command! Browser :call OpenVisSel()
 vmap glb :call OpenVisSel()<cr>
-nnoremap glb :call HandleURL()<cr>
+" nnoremap glb :call HandleURL()<cr>
 
 nnoremap glwf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
@@ -12,6 +12,7 @@ nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 " nnoremap <silent>glc :call LaunchChromium( GetUrlFromLine(line('.')) )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 " nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
 nnoremap <silent>glc :call LaunchChromium_UrlOrPath()<cr>
+nnoremap <silent>glb :call LaunchChrome_UrlOrPath()<cr>
 nnoremap <silent>glv :call ViewInMpv( GetAbsFilePathInLine() )<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 " nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
@@ -43,6 +44,24 @@ func! LaunchChromium_UrlOrPath()
  echo "Launching Chromium .."
  call T_DelayedCmd( "echo ''", 2000 )
 endfunc
+
+func! LaunchChrome_UrlOrPath()
+ let url = GetUrlFromLine( line('.') )
+ if url == ''
+   let url = GetAbsFilePathInLine()
+ endif
+
+ if url =~ "http" || url =~ "file"
+   call LaunchChrome( url )
+ " elseif url =~ "\.png" || url =~ "\.jpg"
+ else
+   call ShowLocalWebFile( url )
+ endif
+ echo "Launching Chrome .."
+ call T_DelayedCmd( "echo ''", 2000 )
+endfunc
+
+
 
 
 func! LaunchChromium_withDefURL()
@@ -361,6 +380,7 @@ endfunc
 " /tmp/giphy2.gif
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
+let g:chromeAppPath =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 " let g:chromiumAppPath = "/Applications/Google\ Chrome.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 
@@ -391,6 +411,12 @@ func! LaunchChromium_addWin( url )
   call jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunc
 
+func! LaunchChrome( url )
+  " let g:launchChrome_job_id = jobstart( g:chromeAppPath . ' --app=' . shellescape( a:url ))
+  " let g:launchChrome_job_id = jobstart( g:chromeAppPath . shellescape( a:url ))
+  call systemlist( "open " . shellescape( a:url ) )
+endfunc
+" LaunchChrome( 'http://purescript.org' )
 
 
 command! -nargs=1 C call LaunchChromium2(<q-args>)

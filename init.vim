@@ -392,6 +392,9 @@ Plug 'mfussenegger/nvim-dap'
 
 Plug 'kyoh86/vim-jsonl'
 
+" https://github.com/cuducos/yaml.nvim
+Plug 'cuducos/yaml.nvim'
+
 " Plug 'kevinoid/vim-jsonc'
 " Plug 'leafgarland/typescript-vim'
 " Plug 'peitalin/vim-jsx-typescript'

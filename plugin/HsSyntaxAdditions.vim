@@ -49,6 +49,7 @@ au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 " au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufWinEnter *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.yaml call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()

@@ -35,7 +35,7 @@ func! S_MenuCommands()
 
   let cmds +=  [ {'section': 'Sjs P [' . (exists('g:SbtJs_projectName') ? g:SbtJs_projectName . ']' : '↓]') } ]
 
-  let cmds +=  [ {'section': 'Py env [' . S_CondaEnv()} ]
+  let cmds +=  [ {'section': 'Py env [' . S_PyEnv()} ]
   let cmds +=  [ {'section': 'Pg:   ' . g:dbname } ]
   let cmds +=  [ {'section': 'Sqli: ' . fnamemodify(g:dbname_sqlite, ":t") } ]
   let cmds += [ {'label': 'sql scratch',   'cmd': 'new ' . g:dbname_sqlite . '_scQ.sql' } ]
@@ -45,6 +45,18 @@ endfunc
 
 func! S_IsInitialized()
   return isdirectory( "m/_printer" )
+endfunc
+
+func! S_PyEnv()
+  if exists('g:PyEnv')
+    return g:PyEnv == 'base' ? '↓]' : g:CondaEnv .']'
+  endif
+  let resLines = systemlist( "echo $VIRTUAL_ENV" )
+  " /Users/at/Documents/Proj/k_mindgraph/b_yf_n4/.env
+  if len(resLines) == 0
+    return "Conda: " . S_CondaEnv()
+  endif
+  return split( resLines[0], "/" )[-2] . ']'
 endfunc
 
 func! S_CondaEnv()
