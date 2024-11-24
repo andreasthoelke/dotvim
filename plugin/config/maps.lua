@@ -213,31 +213,46 @@ vim.keymap.set( 'n',
 -- ─   Git picker maps                                  ──
 
 -- These work well!
--- vim.keymap.set( 'n',
---   '<leader>ogl', function() require( 'utils.general' )
---   .Git_commits_picker( opts_1, vim.fn.expand('%') )
---   end )
 
--- vim.keymap.set( 'n',
---   '<leader>ogL', function() require( 'utils.general' )
---   .Git_commits_picker( opts_1 )
---   end )
-
--- But DiffviewFileHistory is better
-vim.keymap.set('n', '<leader>ogl', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Open Git log for current file" })
-vim.keymap.set('n', '<leader>ogL', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
+opts_gitstat = {
+  layout_config = {
+    height=0.99, 
+    width=0.82,
+    horizontal = {
+      preview_width = 0.6,  -- Takes up 60% of the window width
+    },
+    vertical = {
+      preview_height = 0.8,  -- Takes up 70% of the window height
+    },
+  },
+  initial_mode='normal',
+}
 
 
 vim.keymap.set( 'n',
-  '<leader>ogs', function() require( 'utils.general' )
-  .Git_status_picker( opts_1 )
+  '<leader>ogl', function() require( 'utils.general' )
+  .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
   end )
 
+vim.keymap.set( 'n',
+  '<leader>ogL', function() require( 'utils.general' )
+  .Git_commits_picker( opts_gitstat )
+  end )
+
+-- But DiffviewFileHistory is better
+vim.keymap.set('n', '<leader><leader>ogl', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Open Git log for current file" })
+vim.keymap.set('n', '<leader><leader>ogL', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
+
+
+-- vim.keymap.set( 'n',
+--   '<leader>ogs', function() require( 'utils.general' )
+--   .Git_status_picker( opts_1 )
+--   end )
 
 
 vim.keymap.set( 'n',
   '<leader>ogs', function() require( 'utils.general' )
-  .Git_status_picker( opts_1 )
+  .Git_status_picker( opts_gitstat )
   end )
 
 -- no nice styling of diffs

@@ -932,6 +932,9 @@ end
 
 function M.Git_commits_picker( opts, filepath )
   opts = opts or {}
+
+  -- opts = f.merge( opts, {initial_mode='normal', layout_strategy='vertical', layout_config = {height=0.99, width=0.99} } )
+
   opts.attach_mappings = GitCopyFileFromCommit_sel_action
   opts.previewer = {
     previewers.new_termopen_previewer {
