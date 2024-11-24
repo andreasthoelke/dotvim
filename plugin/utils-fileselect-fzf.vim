@@ -1,7 +1,51 @@
 
 
+" Default: Preview window on the right with 50% width
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window = ['down,90%', 'ctrl-/']
 
+" Preview window above with 40% height
+" let g:fzf_vim.preview_window = ['up,40%', 'ctrl-/']
 
+" Hidden preview window that can be toggled with ctrl-/
+" let g:fzf_vim.preview_window = ['hidden,right,50%', 'ctrl-/']
+
+" Preview window with conditional position
+" let g:fzf_vim.preview_window = ['hidden,right,50%,<70(up,40%)', 'ctrl-/']
+
+" Popup window settings
+let g:fzf_layout = { 'window': { 
+    \ 'width': 1.0, 
+    \ 'height': 0.95,
+    \ 'style': 'minimal',
+    \ 'border': 'rounded'
+    \ } }
+
+" $FZF_DEFAULT_OPTS = '--inline-info --ansi --multi --layout=reverse --height=90% --exact'
+" let $FZF_DEFAULT_OPTS = '--layout=reverse'
+" let $FZF_DEFAULT_OPTS = '--height=95%'
+
+function! FloatingFZF()
+  let width = float2nr(&columns * 0.95)  " 95% of screen width
+  let height = float2nr(&lines * 0.95)   " 85% of screen height
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': (&lines - height) / 2,
+        \ 'col': (&columns - width) / 2,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
+
+  let buf = nvim_create_buf(v:false, v:true)
+  let win = nvim_open_win(buf, v:true, opts)
+  
+  " Optional: Set window highlight
+  call setwinvar(win, '&winhl', 'NormalFloat:TabLine')
+endfunction
+
+" let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+" let g:fzf_preview_window = ['right,60%', 'ctrl-/']                                       
 
 " ─   fzf-vim                                            ■
 
@@ -179,11 +223,17 @@ command! -bang -nargs=? -complete=dir FzfOpenHistory
 let g:fzf_command_prefix = 'Fzf'
 
 " Preview window on the upper side of the window with 40% height, hidden by default, ctrl-/ to toggle
-" TODO: somehow this setting prevents that the preview is show when vim is in Alacritty terminal
+" TODO: somehow this setting prevents that the preview is shown when vim is in Alacritty terminal
 " let g:fzf_preview_window = ['down:60%:hidden', 'ctrl-/']
-let g:fzf_preview_window = ['down:66%']
+" let g:fzf_preview_window = ['down:90%']
 
 let g:vista_fzf_preview = ['down:50%']
+
+" let g:fzf_vim = {                                                                        
+"    \ 'preview_window': ['down,90%', 'ctrl-/']                                            
+"    \ }                                                                                    
+                                                                                          
+
 
 " This is the default extra key bindings
 " let g:fzf_action = {
@@ -208,7 +258,7 @@ let g:fzf_action = {
 " Default fzf layout
 " - Popup window (center of the screen)
 " let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.85} }
-let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.7} }
+" let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.7} }
 " - Popup window (center of the current window)
 " let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
 " - Popup window (anchored to the bottom of the current window)

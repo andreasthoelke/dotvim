@@ -3,7 +3,7 @@
 # Settings from https://youtu.be/qgG5Jhi_Els?t=404
 FD_OPTIONS="--follow --exclude .git --exclude node_modules"
 
-export FZF_DEFAULT_OPTS="--inline-info --ansi --multi --layout=reverse --height=80% --exact"
+export FZF_DEFAULT_OPTS="--inline-info --ansi --multi --layout=reverse --height=90% --exact"
 # export FZF_DEFAULT_OPTS="--no-mouse -height 50% -1 --reverse --multi --inline-info --preview='[[ \$(file --mime {}) && echo {} is a binary file || (bat --style=numbers --color=always {} || cat {}) @> /dev/null"
 
 # export FZF_DEFAULT_OPTS='--preview "bat --style=numbers --color=always --line-range :500 {}"'

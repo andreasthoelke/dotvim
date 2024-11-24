@@ -137,6 +137,56 @@ function M.diagnostic_buffer()
   return res
 end
 
+
+-- Get all diagnostics from the current buffer
+-- local function M.get_diagnostics()
+--     local diagnostics = vim.diagnostic.get(0)  -- 0 means current buffer
+--     local formatted = {}
+--     for _, diagnostic in ipairs(diagnostics) do
+--         table.insert(formatted, {
+--             message = diagnostic.message,
+--             line = diagnostic.lnum + 1,
+--             severity = diagnostic.severity,
+--             source = diagnostic.source
+--         })
+--     end
+--     return formatted
+-- end
+
+-- Function to collect LSP diagnostics and write to a file
+-- function _G.CollectLspWarnings()
+--     local diagnostics = vim.diagnostic.get(0)  -- Get diagnostics for current buffer
+--     local file = vim.fn.expand('%:p')         -- Get current file path
+--     local output = {}
+    
+--     -- Format diagnostics
+--     for _, diagnostic in ipairs(diagnostics) do
+--         table.insert(output, string.format(
+--             "%s:%d: %s",
+--             file,
+--             diagnostic.lnum + 1,
+--             diagnostic.message
+--         ))
+--     end
+    
+--     -- print( table.concat(output, '\n') )
+--     -- Write to temporary file
+--     local tmp_file = '.lsp_warn'
+--     local f = io.open(tmp_file, 'w')
+--     if f then
+--         f:write(table.concat(output, '\n'))
+--         f:close()
+        
+--         -- Call aider with the warnings file
+--         -- vim.fn.system('aider --message-file ' .. tmp_file)
+--         -- print( tmp_file )
+--     end
+-- end
+
+-- require'utils_lsp'.collectLspWarnings()
+
+-- CollectLspWarnings()
+
 function M.diagnosticsShow()
   vim.lsp.util.open_floating_preview( {M.diagnostic_buffer()} )
 end
@@ -184,7 +234,6 @@ end
 
 
 return M
-
 
 
 

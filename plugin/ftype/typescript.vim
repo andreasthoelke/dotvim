@@ -39,7 +39,7 @@ func! JS_bufferMaps()
 
 
 " ─   Motions                                           ──
-" are this consistent with scala?
+" are these consistent with scala?
 
   nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
@@ -51,9 +51,6 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
 
-  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
-  nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
-  nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
 
   " nnoremap geR :Glance references<CR>
   " nnoremap geD :Glance definitions<CR>
@@ -68,6 +65,43 @@ func! JS_bufferMaps()
 
   nnoremap <silent><buffer> <leader>ebc :call CreateJS_fewerBraces_c()<cr>
 
+
+
+  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  " nnoremap <silent><buffer> ged :Trouble diagnostics toggle focus=false filter.buf=0<cr>
+  " nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  " nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+
+" ─   Lsp                                                ■
+
+  " Copied from Scala
+
+  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+
+  " nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
+  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+  nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
+  nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
+  nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+
+  " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>
+  " TS diagnostics
+  nnoremap <silent><buffer> <leader>ged :Telescope diagnostics initial_mode=normal<cr>
+  nnoremap <silent><buffer> ged :Trouble diagnostics toggle focus=false filter.buf=0<cr>
+  " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
+  nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " " this is small and local
+  " nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
+  nnoremap <silent><buffer> ,ger <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> ger <cmd>Glance references<cr>
+  " doesn't seem to work properly. using ]d for now
+  " nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
+  " nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
 
 
 endfunc

@@ -33,6 +33,8 @@ nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
 " nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
 
+nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
+
 func! RunTerm_showFloat()
  " echo "Running terminal command .."
  " call T_DelayedCmd( "echo ''", 2000 )
@@ -49,6 +51,18 @@ func! RunTerm_showTerm()
  let opts = { 'cwd': getcwd( winnr() ) }
  let g:TermID = termopen( cmdline, opts )
  normal G
+endfunc
+
+func! StartDevServer()
+ let cmdline = 'pnpm run dev'
+ " echo "running cmd: " . cmdline
+ exec "5new"
+ let opts = { 'cwd': getcwd( winnr() ) }
+ let g:TermID = termopen( cmdline, opts )
+ normal G
+ " close the window withougt closing the terminal buffer
+ silent wincmd c
+ call LaunchChromium( "http://localhost:5173/" )
 endfunc
 
 

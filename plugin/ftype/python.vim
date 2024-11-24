@@ -163,10 +163,17 @@ func! Py_LspTopLevelHover()
 endfunc
 
 func! Py_GetPrinterPath()
+
   let printerPath = "m/printer.py"
   if filereadable( printerPath )
     return printerPath
   endif
+
+  let printerPath = "printer.py"
+  if filereadable( printerPath )
+    return printerPath
+  endif
+
   let parentFolderPath = expand('%:h')
   let printerPath = parentFolderPath . "/printer.py"
   if filereadable( printerPath )
@@ -406,8 +413,8 @@ endfunc
 func! Py_RunPrinter( termType )
 
   let cmd = "python " . Py_GetPrinterPath()
-  let isPoetryProject = filereadable( getcwd() . '/pyproject.toml' )
-  " let cmd = isPoetryProject ? "poetry run " . cmd : cmd
+  let isUVProject = filereadable( getcwd() . '/pyproject.toml' )
+  let cmd = isUVProject ? "uv run " . cmd : cmd
 
   if     a:termType == 'float'
     let resLines = systemlist( cmd )
@@ -418,7 +425,8 @@ func! Py_RunPrinter( termType )
 
   endif
 endfunc
-
+" filereadable( getcwd() . '/pyproject.toml' )
+" Py_GetPrinterPath()
 
 func! Py_showInFloat( data )
   let lines = RemoveTermCodes( a:data )

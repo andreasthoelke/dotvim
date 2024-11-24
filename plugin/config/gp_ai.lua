@@ -339,7 +339,8 @@ local conf = {
   },
  -- ▲
 
-  chat_dir = "/Users/at/Documents/Proj/j_edb_smithy/m/_data/chats/",
+  -- chat_dir = "/Users/at/Documents/Proj/j_edb_smithy/m/_data/chats/",
+  chat_dir = "/Users/at/Documents/Notes/aichats/",
 
   chat_user_prefix = "💬:",
 

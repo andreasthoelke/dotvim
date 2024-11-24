@@ -848,11 +848,25 @@ hi! Reverse gui=reverse
 
 hi! htmlLink guifg=#42606B guibg=#030303
 
-hi! mdLink guifg=#294B54 guibg=none
+" hi! mdLink guifg=#294B54 guibg=none
+hi! mdLink guifg=#3D7280 guibg=none
 
 hi! link Underlined mdLink
 hi! link markdownLinkText mdLink
 
+" Treesitter
+"   - @spell.markdown links to @spell markdown
+"   - @markup.strong.markdown_inline links to @markup.strong markdown_inline
+" Syntax
+"   - markdownBold links to htmlBold 
+  " - @spell.markdown links to @spell markdown
+
+hi! htmlBold    guifg=#508DA0
+" hi! @spell.markdown    guifg=#557680
+hi! link markdownH2 Function
+" hi! markdownItalic guifg=#508DA0
+" hi! link mdLink htmlLink
+hi! mdLink guifg=#508DA0
 " run: RedirMessagesBuf hi Folded
 " to get:
 " guifg=#4B5B61 guibg=#0B0B0B
