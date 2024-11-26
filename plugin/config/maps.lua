@@ -306,6 +306,7 @@ vim.keymap.set('n', '<leader>g1', ':Gitsigns change_base ~1<CR>', { noremap = tr
 vim.keymap.set('n', '<leader>g2', ':Gitsigns change_base ~2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>g3', ':Gitsigns change_base ~3<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>g5', ':Gitsigns change_base ~5<CR>', { noremap = true, silent = true })
 
 -- ─^  Gitsigns                                          ▲
 
