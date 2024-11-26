@@ -300,6 +300,12 @@ vim.keymap.set( 'n',
 -- l g3    - Gitsigns change_base ~3
 -- l g4    - Gitsigns change_base ~4
 
+vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>g1', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>g2', ':Gitsigns change_base ~2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>g3', ':Gitsigns change_base ~3<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>', { noremap = true, silent = true })
 
 -- ─^  Gitsigns                                          ▲
 
