@@ -241,15 +241,16 @@ vim.keymap.set( 'n',
   .Git_commits_picker( opts_gitstat )
   end )
 
-vim.keymap.set( 'n',
-  'ggl', function() require( 'utils.general' )
-  .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
-  end )
+-- NOTE: gg.. maps conflict with gg - go to top of page!
+-- vim.keymap.set( 'n',
+--   'ggl', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
+--   end )
 
-vim.keymap.set( 'n',
-  'ggL', function() require( 'utils.general' )
-  .Git_commits_picker( opts_gitstat )
-  end )
+-- vim.keymap.set( 'n',
+--   'ggL', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_gitstat )
+--   end )
 
 
 -- DiffviewFileHistory shows new code blocks in the normal editor with normal syntax highlight.
@@ -268,10 +269,10 @@ vim.keymap.set( 'n',
   .Git_status_picker( opts_gitstat )
   end )
 
-vim.keymap.set( 'n',
-  'ggs', function() require( 'utils.general' )
-  .Git_status_picker( opts_gitstat )
-  end )
+-- vim.keymap.set( 'n',
+--   'ggs', function() require( 'utils.general' )
+--   .Git_status_picker( opts_gitstat )
+--   end )
 
 
 -- no nice styling of diffs
@@ -283,12 +284,12 @@ vim.keymap.set( 'n',
   end )
 
 -- no nice styling of diffs
-vim.keymap.set( 'n',
-  'ggS', function() Telesc_launch( 'git_status', {
-    initial_mode = 'normal',
-    cwd = vim.fn.getcwd( vim.fn.winnr() ),
-  } )
-  end )
+-- vim.keymap.set( 'n',
+--   'ggS', function() Telesc_launch( 'git_status', {
+--     initial_mode = 'normal',
+--     cwd = vim.fn.getcwd( vim.fn.winnr() ),
+--   } )
+--   end )
 
 -- ─   Gitsigns                                          ■
 

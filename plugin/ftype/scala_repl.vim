@@ -209,7 +209,10 @@ nnoremap <silent> <leader><leader>sJ :call SbtJsStop()<cr>
 
 
 func! LaunchChromium_withBundlerUrl ()
-  if g:SbtJs_bundler == "vite"
+  " if g:SbtJs_bundler is not defined
+  if !exists('g:SbtJs_bundler') 
+    let url = "http://localhost:5173/"
+  elseif g:SbtJs_bundler == "vite"
     let url = "http://localhost:5173/"
   " elseif g:SbtJs_bundler == "scalajs-esbuild_web"
   elseif g:SbtJs_bundler == "ScalaJSEsbuildWebPlugin"

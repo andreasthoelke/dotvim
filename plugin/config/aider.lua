@@ -1,8 +1,11 @@
 
 
--- Note there are two plugins:
--- aider.nvim: ~/.config/nvim/plugged/aider.nvim/lua/aider.lua
+-- Note there are two aider plugins:
+-- 1. the code below (copied from github) which allows to only focus aider on the visually selected text. but now I'd rather use
+-- --watch-files and the // .. AI!
+-- 2. aider.nvim: ~/.config/nvim/plugged/aider.nvim/lua/aider.lua
 -- This is modified! ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
+-- WriteLspWarnings  ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍ_G
 -- ~/Documents/Notes/Mindmap_app.md‖/##ˍaider.nv
 -- - adds the current file to running chat
 -- - i'll have to delete files or reset chat
