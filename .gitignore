@@ -20,6 +20,8 @@ startup.log
 .luarc_bak
 openai_key.txt
 
-rcmd/**
+# Completely ignore rcmd directory
+rcmd/
+rcmd/**/*
 .aider*
 .env
