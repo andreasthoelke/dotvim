@@ -39,6 +39,7 @@ function _G.Ntree_getOpenFolders()
   end, renderer.get_expanded_nodes(state.tree))
 end                                                                                                  
 -- lua putt( Ntree_currentNode() )
+-- use putt to output the paths AI!
 vim.keymap.set( 'n', '<leader>fu', Ntree_getOpenFolders )
 
 
