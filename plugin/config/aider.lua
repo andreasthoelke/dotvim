@@ -73,6 +73,7 @@ function _G.Aider_updateAiderIgnore()
     -- Find the auto-update marker
     local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
     local before_marker = content:match("^(.-)%" .. marker)
+    -- if the marker is not found, append it to the end of the file. AI!
     if not before_marker then return end
 
     -- Write updated content
