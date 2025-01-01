@@ -120,7 +120,6 @@ local function config_to_args(config)
     table.insert(args, '--subtree-only')
     table.insert(args, '--cache-prompts')
     table.insert(args, '--no-stream')
-    table.insert(args, '--watch-files')
     if config.dark_mode then
         table.insert(args, '--dark-mode')
     end
@@ -314,7 +313,7 @@ vim.keymap.set({'v', 'n'}, '<C-g>o', ':AiderEdit<CR>', { noremap = true, silent 
 
 M.setup({
     command = 'aider',           -- Path to aider command
-    model = 'sonnet',            -- AI model to use
+    model = 'sonnet',            -- model to use
     mode = 'diff',               -- Edit mode: 'diff' or 'inline'
     -- Floating window options
     float_opts = {
