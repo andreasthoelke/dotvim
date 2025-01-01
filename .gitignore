@@ -21,6 +21,6 @@ startup.log
 openai_key.txt
 
 rcmd/**
-rcmd/lib/**
+rcmd/lib/*
 .aider*
 .env
