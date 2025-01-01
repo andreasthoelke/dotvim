@@ -32,9 +32,11 @@ function _G.Ntree_getOpenFolders()
   local state = manager.get_state_for_window(winIds[1])                                              
   if not state then return {} end                                                                    
                                                                                                      
-  -- Get expanded nodes from renderer                                                                
-  -- putt( renderer.get_expanded_nodes(state.tree) )
-  return renderer.get_expanded_nodes(state.tree)                                                     
+  -- Get expanded nodes from renderer and make paths relative to cwd
+  local cwd = vim.fn.getcwd()
+  return vim.tbl_map(function(path)
+    return vim.fn.fnamemodify(path, ':.' .. (cwd:sub(-1) == '/' and '' or '/'))
+  end, renderer.get_expanded_nodes(state.tree))
 end                                                                                                  
 -- lua putt( Ntree_currentNode() )
 vim.keymap.set( 'n', '<leader>fu', Ntree_getOpenFolders )
