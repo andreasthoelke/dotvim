@@ -44,13 +44,17 @@ function _G.Aider_updateAiderIgnore()
 
     -- Generate ignore patterns
     local patterns = {}
+    local cwd = vim.fn.getcwd()
+    
     for _, path in ipairs(folders) do
-        -- Skip the absolute path (cwd)
-        if not vim.fn.isdirectory(path) then
+        if path == cwd then
+            -- Handle the root/cwd path
+            table.insert(patterns, "!/*.*")
+        else
+            -- Handle relative paths
             table.insert(patterns, "!" .. path .. "/*.*")
         end
     end
-    table.insert(patterns, 1, "!/*.*") -- Add root pattern first
 
     -- Read existing .aiderignore content
     local f = io.open(".aiderignore", "r")
