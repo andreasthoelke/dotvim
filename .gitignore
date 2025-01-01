@@ -20,6 +20,6 @@ startup.log
 .luarc_bak
 openai_key.txt
 
-
+rcmd/**
 .aider*
 .env
