@@ -36,7 +36,6 @@ require('aider').setup({
 -- # AUTOUPDATED by _G.Aider_updateAiderIgnore()
 -- actually you can replace all lines until the end of the file with the new lines.
 
--- debug _G.Aider_updateAiderIgnore(). currently only a single line is added "!/*.*" while the relative paths are not added.
 function _G.Aider_updateAiderIgnore()
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
@@ -58,6 +57,7 @@ function _G.Aider_updateAiderIgnore()
 
     -- Read existing .aiderignore content
     local f = io.open(".aiderignore", "r")
+    -- if it doesn't exist, create it with aiderignore_default_lines AI!
     if not f then return end
     local content = f:read("*all")
     f:close()
@@ -76,9 +76,9 @@ function _G.Aider_updateAiderIgnore()
     f:close()
 end
 
-vim.keymap.set( 'n', '<leader>fu', Aider_updateAiderIgnore )
+-- vim.keymap.set( 'n', '<leader>fu', Aider_updateAiderIgnore )
 
-
+local aiderignore_default_lines = { '# Ignore everything', ' /*', ' # manually allow specific files and directories', ' # AUTOUPDATED by _G.Aider_updateAiderIgnore()' }
 
 -- From https://github.com/ddzero2c/aider.nvim/blob/main/lua/aider/init.lua
 local M = {}
