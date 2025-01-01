@@ -23,5 +23,6 @@ openai_key.txt
 # Completely ignore rcmd directory
 rcmd/
 rcmd/**/*
+
 .aider*
 .env

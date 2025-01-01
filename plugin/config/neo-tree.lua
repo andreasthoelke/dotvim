@@ -38,8 +38,8 @@ function _G.Ntree_getOpenFolders()
     return vim.fn.fnamemodify(path, ':.' .. (cwd:sub(-1) == '/' and '' or '/'))
   end, renderer.get_expanded_nodes(state.tree))
 end                                                                                                  
--- lua putt( Ntree_currentNode() )
-vim.keymap.set( 'n', '<leader>fu', function() putt(Ntree_getOpenFolders()) end )
+
+-- vim.keymap.set( 'n', '<leader>fu', function() putt(Ntree_getOpenFolders()) end )
 
 
 -- Note the statusline helper functions here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()

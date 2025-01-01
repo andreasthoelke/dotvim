@@ -18,9 +18,20 @@ require('aider').setup({
   vim = true, --
 
   -- only necessary if you want to change the default keybindings. <Leader>C is not a particularly good choice. It's just shown as an example.
-  vim.api.nvim_set_keymap('n', '<c-g>v', ':AiderOpen<CR>', {noremap = true, silent = true})
+  -- vim.api.nvim_set_keymap('n', '<c-g>v', ':AiderOpen<CR>', {noremap = true, silent = true})
 })
 
+
+-- Note there's also an autocmd here: ~/.config/nvim/plugged/aider.nvim/lua/helpers.lua‖/localˍfunctionˍsetup_
+-- but this only updates on term focus, not on open aider term?
+function _G.Aider_open()
+  Aider_updateAiderIgnore()
+  OpenBuffersInTab()
+  -- run vim cmd :AiderOpen
+  vim.cmd('AiderOpen')
+end
+
+vim.keymap.set( 'n', '<c-g>v', Aider_open )
 
 -- write a function _G.Aider_updateAiderIgnore() using _G.Ntree_getOpenFolders()
 -- this is an example output: { "/Users/at/.config/nvim", "lua", "lua/utils", "plugin/config" }
@@ -39,8 +50,24 @@ require('aider').setup({
 function _G.Aider_updateAiderIgnore()
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
-    -- if no folders are returned, set AUTOUPDATED section to empty AI!
-    if not folders then return end
+    if not folders or #folders == 0 then
+        -- If no folders returned, clear everything after AUTOUPDATED marker
+        local f = io.open(".aiderignore", "r")
+        if not f then return end
+        local content = f:read("*all")
+        f:close()
+        
+        local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
+        local before_marker = content:match("^(.-)%" .. marker)
+        if not before_marker then return end
+        
+        f = io.open(".aiderignore", "w")
+        if not f then return end
+        f:write(before_marker)
+        f:write(marker .. "\n")
+        f:close()
+        return
+    end
 
     -- Generate ignore patterns
     local patterns = {}
@@ -54,6 +81,13 @@ function _G.Aider_updateAiderIgnore()
             -- Handle relative paths
             table.insert(patterns, "!" .. path .. "/*.*")
         end
+    end
+
+    -- 
+    local openFiles = _G.OpenBuffersInTab()
+    local filePatterns = {}
+    for _, path in ipairs(folders) do
+      table.insert(filePatterns, "!" .. path)
     end
 
     -- Read existing .aiderignore content or create it
@@ -94,7 +128,66 @@ end
 
 -- vim.keymap.set( 'n', '<leader>fu', Aider_updateAiderIgnore )
 
+    -- if no folders are returned, set AUTOUPDATED section to empty 
+    -- if not folders then return end
+
 local aiderignore_default_lines = { '# Ignore everything', ' /*', ' # manually allow specific files and directories', ' # AUTOUPDATED by _G.Aider_updateAiderIgnore()' }
+
+local function is_valid_buffer(bufnr)
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+  local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+
+  -- Ignore special buffers and directories
+  if
+      buftype ~= ""
+      or filetype == "NvimTree"
+      or filetype == "neo-tree"
+      or bufname:match("^term://")
+      or not vim.fn.filereadable(bufname)
+      or vim.fn.isdirectory(bufname) == 1
+  then
+    return false
+  end
+
+  return true
+end
+
+function _G.OpenBuffersInTab()
+  -- Get list of windows in current tab and add their buffers
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  local windows = vim.api.nvim_tabpage_list_wins(current_tab)
+
+  -- Create a function that checks if a buffer is in the current tab's windows
+  local function is_buffer_in_current_tab(bufnr)
+    if not is_valid_buffer(bufnr) then
+      return false
+    end
+    for _, win in ipairs(windows) do
+      if vim.api.nvim_win_get_buf(win) == bufnr then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Get list of buffers and add them to the aider session
+  local buffers = vim.api.nvim_list_bufs()
+  local files_to_add = {}
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_loaded(buf) and is_buffer_in_current_tab(buf) then
+      local bufname = vim.api.nvim_buf_get_name(buf)
+      if vim.fn.filereadable(bufname) == 1 then
+        local relative_filename = vim.fn.fnamemodify(bufname, ":~:.")
+        table.insert(files_to_add, relative_filename)
+      end
+    end
+  end
+  -- putt( files_to_add )
+  return files_to_add
+end
+
+vim.keymap.set( 'n', '<leader>fu', OpenBuffersInTab )
 
 -- From https://github.com/ddzero2c/aider.nvim/blob/main/lua/aider/init.lua
 local M = {}
