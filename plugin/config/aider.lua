@@ -39,6 +39,7 @@ require('aider').setup({
 function _G.Aider_updateAiderIgnore()
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
+    -- if no folders are returned, set AUTOUPDATED section to empty AI!
     if not folders then return end
 
     -- Generate ignore patterns
