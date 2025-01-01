@@ -55,12 +55,20 @@ function _G.Aider_updateAiderIgnore()
         end
     end
 
-    -- Read existing .aiderignore content
+    -- Read existing .aiderignore content or create it
     local f = io.open(".aiderignore", "r")
-    -- if it doesn't exist, create it with aiderignore_default_lines AI!
-    if not f then return end
-    local content = f:read("*all")
-    f:close()
+    local content
+    if not f then
+        -- Create new file with default content
+        f = io.open(".aiderignore", "w")
+        if not f then return end
+        content = table.concat(aiderignore_default_lines, '\n')
+        f:write(content)
+        f:close()
+    else
+        content = f:read("*all")
+        f:close()
+    end
 
     -- Find the auto-update marker
     local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
