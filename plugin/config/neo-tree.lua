@@ -23,6 +23,23 @@ local common_commands = require("neo-tree.sources.common.commands")
 
 -- ─   Helpers                                           ■
 
+
+function _G.Ntree_getOpenFolders()                                                                   
+  local winIds = Ntree_winIds(vim.api.nvim_get_current_tabpage())                                    
+  if #winIds == 0 then return {} end                                                                 
+                                                                                                     
+  -- Get state from first neo-tree window                                                            
+  local state = manager.get_state_for_window(winIds[1])                                              
+  if not state then return {} end                                                                    
+                                                                                                     
+  -- Get expanded nodes from renderer                                                                
+  -- putt( renderer.get_expanded_nodes(state.tree) )
+  return renderer.get_expanded_nodes(state.tree)                                                     
+end                                                                                                  
+-- lua putt( Ntree_currentNode() )
+vim.keymap.set( 'n', '<leader>fu', Ntree_getOpenFolders )
+
+
 -- Note the statusline helper functions here: ~/.config/nvim/plugin/tools-tab-status-lines.vim‖/Ntree_rootDirRel()
 
 
