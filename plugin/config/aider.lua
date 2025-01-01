@@ -23,6 +23,27 @@ require('aider').setup({
 })
 
 
+-- write a function _G.Aider_updateAiderIgnore() using _G.Ntree_getOpenFolders()
+-- this is an example output: { "/Users/at/.config/nvim", "lua", "lua/utils", "plugin/config" }
+-- where "/Users/at/.config/nvim" is the cwd and repo root (note this is the only absolute path). the other items are relative folder paths.
+-- the function should update .aiderignore as follows:
+-- the cwd (e.i. the absolute path matching the cwd) should be turned into this line:
+-- !/*.*
+-- the other normal folder paths (relative paths) of the example above would translate to the following lines:
+-- !lua/*.*
+-- !lua/config/*.*
+-- !plugin/config/*.*
+-- the lines need to be inserted into .aiderignore after the following comment:
+-- # AUTOUPDATED by _G.Aider_updateAiderIgnore()
+-- actually you can replace all lines until the end of the file with the new lines.
+
+function _G.Aider_updateAiderIgnore()
+
+end
+
+vim.keymap.set( 'n', '<leader>fu', Aider_updateAiderIgnore )
+
+
 
 -- From https://github.com/ddzero2c/aider.nvim/blob/main/lua/aider/init.lua
 local M = {}
