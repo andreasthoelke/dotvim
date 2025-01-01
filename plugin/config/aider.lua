@@ -38,7 +38,38 @@ require('aider').setup({
 -- actually you can replace all lines until the end of the file with the new lines.
 
 function _G.Aider_updateAiderIgnore()
+    -- Get open folders
+    local folders = _G.Ntree_getOpenFolders()
+    if not folders then return end
 
+    -- Generate ignore patterns
+    local patterns = {}
+    for _, path in ipairs(folders) do
+        -- Skip the absolute path (cwd)
+        if not vim.fn.isdirectory(path) then
+            table.insert(patterns, "!" .. path .. "/*.*")
+        end
+    end
+    table.insert(patterns, 1, "!/*.*") -- Add root pattern first
+
+    -- Read existing .aiderignore content
+    local f = io.open(".aiderignore", "r")
+    if not f then return end
+    local content = f:read("*all")
+    f:close()
+
+    -- Find the auto-update marker
+    local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
+    local before_marker = content:match("^(.-)%" .. marker)
+    if not before_marker then return end
+
+    -- Write updated content
+    f = io.open(".aiderignore", "w")
+    if not f then return end
+    f:write(before_marker)
+    f:write(marker .. "\n")
+    f:write(table.concat(patterns, "\n"))
+    f:close()
 end
 
 vim.keymap.set( 'n', '<leader>fu', Aider_updateAiderIgnore )
