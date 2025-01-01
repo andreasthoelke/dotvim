@@ -1,8 +1,7 @@
 
 
 -- Note there are two aider plugins:
--- 1. the code below (copied from github) which allows to only focus aider on the visually selected text. but now I'd rather use
--- --watch-files and the // .. AI!
+-- 1. the code below (copied from github) which allows to only focus aider on the visually selected text
 -- 2. aider.nvim: ~/.config/nvim/plugged/aider.nvim/lua/aider.lua
 -- This is modified! ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
 -- WriteLspWarnings  ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍ_G
@@ -121,6 +120,7 @@ local function config_to_args(config)
     table.insert(args, '--subtree-only')
     table.insert(args, '--cache-prompts')
     table.insert(args, '--no-stream')
+    table.insert(args, '--watch-files')
     if config.dark_mode then
         table.insert(args, '--dark-mode')
     end
