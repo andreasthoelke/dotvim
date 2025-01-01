@@ -73,8 +73,14 @@ function _G.Aider_updateAiderIgnore()
     -- Find the auto-update marker
     local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
     local before_marker = content:match("^(.-)%" .. marker)
-    -- if the marker is not found, append it to the end of the file. AI!
-    if not before_marker then return end
+    
+    -- If marker not found, use whole content and append marker
+    if not before_marker then
+        before_marker = content
+        if before_marker:sub(-1) ~= "\n" then
+            before_marker = before_marker .. "\n"
+        end
+    end
 
     -- Write updated content
     f = io.open(".aiderignore", "w")
