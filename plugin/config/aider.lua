@@ -37,7 +37,7 @@ require('aider').setup({
 -- # AUTOUPDATED by _G.Aider_updateAiderIgnore()
 -- actually you can replace all lines until the end of the file with the new lines.
 
--- debug this. currently only one line is added: ""
+-- debug _G.Aider_updateAiderIgnore(). currently only a single line is added "!/*.*" while the relative paths are not added.
 function _G.Aider_updateAiderIgnore()
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
