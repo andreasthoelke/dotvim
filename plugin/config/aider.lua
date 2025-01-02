@@ -26,7 +26,6 @@ require('aider').setup({
 -- but this only updates on term focus, not on open aider term?
 function _G.Aider_open()
   Aider_updateAiderIgnore()
-  OpenBuffersInTab()
   -- run vim cmd :AiderOpen
   vim.cmd('AiderOpen')
 end
@@ -82,11 +81,10 @@ function _G.Aider_updateAiderIgnore()
             table.insert(patterns, "!" .. path .. "/*.*")
         end
     end
-
     -- 
     local openFiles = _G.OpenBuffersInTab()
     local filePatterns = {}
-    for _, path in ipairs(folders) do
+    for _, path in ipairs(openFiles) do
       table.insert(filePatterns, "!" .. path)
     end
 
@@ -123,6 +121,8 @@ function _G.Aider_updateAiderIgnore()
     f:write(before_marker)
     f:write(marker .. "\n")
     f:write(table.concat(patterns, "\n"))
+    f:write("\n")
+    f:write(table.concat(filePatterns, "\n"))
     f:close()
 end
 
