@@ -62,7 +62,8 @@ func! StartDevServer()
  normal G
  " close the window withougt closing the terminal buffer
  silent wincmd c
- call LaunchChromium( "http://localhost:5173/" )
+ " call LaunchChromium( "http://localhost:5173/" )
+ call LaunchChrome( "http://localhost:5173/" )
 endfunc
 
 
