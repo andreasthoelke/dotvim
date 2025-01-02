@@ -43,7 +43,8 @@ nnoremap <silent><leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
 " git undo commit
 " nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
 " TODO do i use this map?
-nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+" nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
+nnoremap <silent><leader><leader>gc :call GitCommitViaAider()<cr>
 
 
 " COMMIT ALL maps:
@@ -143,6 +144,11 @@ func! GitCommitAll_withDialog()
   let cmd = 'git -C ' . cwd . ' add -A -v'
   echo system( cmd )
   exec 'Git commit'
+endfunc
+
+
+func! GitCommitViaAider()
+  echo system( "aider --commit" )
 endfunc
 
 
