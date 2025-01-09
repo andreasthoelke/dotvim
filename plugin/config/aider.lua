@@ -46,7 +46,25 @@ vim.keymap.set( 'n', '<c-g>v', Aider_open )
 -- # AUTOUPDATED by _G.Aider_updateAiderIgnore()
 -- actually you can replace all lines until the end of the file with the new lines.
 
+local aiderignore_default_lines = { '# Ignore everything', '/*', '# manually allow specific files and directories', '# AUTOUPDATED by _G.Aider_updateAiderIgnore()' }
+
 function _G.Aider_updateAiderIgnore()
+
+    -- Read existing .aiderignore content or create it
+    local f = io.open(".aiderignore", "r")
+    local content
+    if not f then
+        -- Create new file with default content
+        f = io.open(".aiderignore", "w")
+        if not f then return end
+        content = table.concat(aiderignore_default_lines, '\n')
+        f:write(content)
+        f:close()
+    else
+        content = f:read("*all")
+        f:close()
+    end
+
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
     if not folders or #folders == 0 then
@@ -88,21 +106,6 @@ function _G.Aider_updateAiderIgnore()
       table.insert(filePatterns, "!" .. path)
     end
 
-    -- Read existing .aiderignore content or create it
-    local f = io.open(".aiderignore", "r")
-    local content
-    if not f then
-        -- Create new file with default content
-        f = io.open(".aiderignore", "w")
-        if not f then return end
-        content = table.concat(aiderignore_default_lines, '\n')
-        f:write(content)
-        f:close()
-    else
-        content = f:read("*all")
-        f:close()
-    end
-
     -- Find the auto-update marker
     local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
     local before_marker = content:match("^(.-)%" .. marker)
@@ -131,7 +134,6 @@ end
     -- if no folders are returned, set AUTOUPDATED section to empty 
     -- if not folders then return end
 
-local aiderignore_default_lines = { '# Ignore everything', ' /*', ' # manually allow specific files and directories', ' # AUTOUPDATED by _G.Aider_updateAiderIgnore()' }
 
 local function is_valid_buffer(bufnr)
   local bufname = vim.api.nvim_buf_get_name(bufnr)

@@ -77,7 +77,8 @@ func! JS_bufferMaps()
   " Copied from Scala
 
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  nnoremap <silent><buffer> <leader>ot  :Vista<cr>
+  nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
 
   " nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
@@ -562,11 +563,11 @@ endfunc
 
 func! JS_TopLevBindingForw()
   " normal! j
-  call search( '\v^(export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let)\s', 'W' )
+  call search( '\v^(async|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let)\s', 'W' )
 endfunc
 
 func! JS_TopLevBindingBackw()
-  call search( '\v^(export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
+  call search( '\v^(async|export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
   " normal! {
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc

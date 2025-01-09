@@ -76,6 +76,8 @@ endfunc
 nnoremap ,ca :call LinkPathToFolder()<cr>
 command! LinkPathToFolder call LinkPathToFolder()
 
+let g:PathSelect_recentFolder = '/Users/at/Documents/Bookmarks/'
+
 func! LinkPathToFolder()
  let g:LinkPath_temp = getline('.')
  if isdirectory( g:LinkPath_temp )
@@ -94,7 +96,7 @@ func! LinkPathToFolder()
    call FloatWin_close()
    " as we are about to open another dirvish float, close this one
  endif
- call PathSelect_withCB( '/Users/at/Documents/Bookmarks/', "LinkPathToFolder_cb" )
+ call PathSelect_withCB( g:PathSelect_recentFolder, "LinkPathToFolder_cb" )
 endfunc
 "  |
 func! LinkPathToFolder_cb( folderPath )

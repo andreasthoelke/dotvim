@@ -1,3 +1,4 @@
 LSP diagnostics of files in current tab:
 
-No diagnostics found.
+Diagnostics for /Users/at/.config/nvim/plugin/setup-general.vim:
+  Line 1656: [ERROR] E492: Not an editor command: wshada! | else | wviminfo! | endif

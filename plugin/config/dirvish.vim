@@ -319,6 +319,7 @@ endfunc
 "  |
 func! PathSelect_callCB()
   let folderPath = getline('.')
+  let g:PathSelect_recentFolder = folderPath
   call call( g:PathSelect_cbFnName, [folderPath] )
   " call FloatWin_close()
 endfunc

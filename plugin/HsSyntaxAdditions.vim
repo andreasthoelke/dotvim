@@ -68,6 +68,8 @@ let g:Ntree_prevWinid = 0
 augroup DefaultToBash
   autocmd!
   autocmd BufWinEnter,BufRead * if empty(&filetype) | setfiletype bash | endif
+  " IMPORTANT: this works: ".conf" files don't have a treesitter parser, this just uses bash. 2025-01. not perfect though as the other filetype might trigger e.g. lsp.
+  autocmd BufWinEnter,BufRead * if &filetype=='conf' | setfiletype bash | endif
 augroup END
 
 augroup track_window
@@ -511,6 +513,8 @@ endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
   set syntax=markdown
+  " temp fix bc/ underscores are hidden with markdown syntax e.g. in ~/Documents/Proj/k_mindgraph/_plan/a_graph_sql/schema_.sql
+  " set syntax=js
   call clearmatches()
   " syntax match Normal '\`\`\`' conceal cchar=⊃
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})

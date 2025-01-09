@@ -1468,6 +1468,9 @@ let g:vista_executive_for = {
 
 
 let g:vista_floating_delay = 10000
+let g:vista_echo_cursor_strategy = "floating_win"
+let g:vista_echo_cursor = 0
+
 let g:vista_highlight_whole_line = 0
 let g:vista_blink = [0, 0]
 " autocmd FileType vista,vista_kind nnoremap <buffer> <silent> P :<c-u>call vista#finder#fzf#Run()<CR>
