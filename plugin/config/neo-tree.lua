@@ -571,7 +571,6 @@ require("neo-tree").setup({
 
     file = {
       { "indent" },
-      -- note that i have now added the component here AI!
       { "select_status" },
       { "icon" },
       {
@@ -886,13 +885,9 @@ require("neo-tree").setup({
 
 
     components = {
-
-      select_status = {
-        name = "select_status",
-        renderer = function(config, node, state)
-            return { { text = "hi", highlight = "NeoTreeFileIcon" } }
-        end,
-      }      
+      select_status = function(config, node, state)
+        return { { text = "hi", highlight = "NeoTreeFileIcon" } }
+      },
 
       -- name = function(config, node)
       --   return {
