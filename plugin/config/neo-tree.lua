@@ -506,17 +506,17 @@ end )
 
 -- ─^  Helpers                                           ▲
 
--- this is my component definition AI.
-local select_status = {
-  name = "select_status",
-  renderer = function(config, node, state)
-    if state.is_selected(node.id) then
-      return { { text = "◌", highlight = "NeoTreeFileIcon" } }
-    else
-      return { { text = "-", highlight = "Comment" } }
-    end
-  end,
-}
+
+-- local select_status = {
+--   name = "select_status",
+--   renderer = function(config, node, state)
+--     if state.is_selected(node.id) then
+--       return { { text = "◌", highlight = "NeoTreeFileIcon" } }
+--     else
+--       return { { text = "-", highlight = "Comment" } }
+--     end
+--   end,
+-- }
 
 -- ─   Config                                            ■
 
@@ -570,9 +570,10 @@ require("neo-tree").setup({
     },
 
     file = {
-      -- { "indent" },
-      { "icon" },
+      { "indent" },
+      -- note that i have now added the component here AI!
       { "select_status" },
+      { "icon" },
       {
         "container",
         content = {
@@ -594,7 +595,6 @@ require("neo-tree").setup({
           { "type", zindex = 10, align = "right" },
           { "last_modified", zindex = 10, align = "right" },
           { "created", zindex = 10, align = "right" },
-          { "select_status", zindex = 10, align = "right" },
         },
       },
     },
@@ -886,16 +886,23 @@ require("neo-tree").setup({
 
 
     components = {
+
       select_status = {
         name = "select_status",
         renderer = function(config, node, state)
-          if state.is_selected(node.id) then
-            return { { text = "◌", highlight = "NeoTreeFileIcon" } }
-          else
-            return { { text = "-", highlight = "Comment" } }
-          end
+            return { { text = "hi", highlight = "NeoTreeFileIcon" } }
         end,
-      },
+      }      
+
+      -- name = function(config, node)
+      --   return {
+      --     text = node.name .. " hi",
+      --     highlight = "NeoTreeFileName"
+      --   }
+      -- end,
+
+      -- icon = icon,
+
     },
 
     group_empty_dirs = false, -- when true, empty directories will be grouped together
