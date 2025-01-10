@@ -594,8 +594,7 @@ require("neo-tree").setup({
           { "type", zindex = 10, align = "right" },
           { "last_modified", zindex = 10, align = "right" },
           { "created", zindex = 10, align = "right" },
-          -- I want to add my component here. but i need to register it first so neo-tree can find it. AI!
-          -- { "select_status", zindex = 10, align = "right" },
+          { "select_status", zindex = 10, align = "right" },
         },
       },
     },
@@ -887,16 +886,16 @@ require("neo-tree").setup({
 
 
     components = {
-
-      -- name = function(config, node)
-      --   return {
-      --     text = node.name .. " hi",
-      --     highlight = "NeoTreeFileName"
-      --   }
-      -- end,
-
-      -- icon = icon,
-
+      select_status = {
+        name = "select_status",
+        renderer = function(config, node, state)
+          if state.is_selected(node.id) then
+            return { { text = "◌", highlight = "NeoTreeFileIcon" } }
+          else
+            return { { text = "-", highlight = "Comment" } }
+          end
+        end,
+      },
     },
 
     group_empty_dirs = false, -- when true, empty directories will be grouped together
