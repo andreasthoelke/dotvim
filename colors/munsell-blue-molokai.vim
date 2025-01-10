@@ -854,6 +854,8 @@ hi! mdLink guifg=#3D7280 guibg=none
 hi! link Underlined mdLink
 hi! link markdownLinkText mdLink
 
+hi! link markdownError Comment
+
 " Treesitter
 "   - @spell.markdown links to @spell markdown
 "   - @markup.strong.markdown_inline links to @markup.strong markdown_inline

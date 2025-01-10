@@ -929,6 +929,12 @@ require("neo-tree").setup({
           vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
         end,
 
+        ["<leader>cP"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
+        end,
+
         ["gee"] = function()
           vim.cmd 'wincmd p'
           vim.fn.T_Menu()

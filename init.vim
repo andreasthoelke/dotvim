@@ -585,7 +585,7 @@ if !exists('g:colors_name')
   colorscheme munsell-blue-molokai
 endif
 
-nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
+" nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
 " lua require('plugin.config.telescope')
 
