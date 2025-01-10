@@ -506,6 +506,17 @@ end )
 
 -- ─^  Helpers                                           ▲
 
+-- this is my component definition AI.
+local select_status = {
+  name = "select_status",
+  renderer = function(config, node, state)
+    if state.is_selected(node.id) then
+      return { { text = "◌", highlight = "NeoTreeFileIcon" } }
+    else
+      return { { text = "-", highlight = "Comment" } }
+    end
+  end,
+}
 
 -- ─   Config                                            ■
 
@@ -561,6 +572,7 @@ require("neo-tree").setup({
     file = {
       -- { "indent" },
       { "icon" },
+      { "select_status" },
       {
         "container",
         content = {
@@ -582,6 +594,8 @@ require("neo-tree").setup({
           { "type", zindex = 10, align = "right" },
           { "last_modified", zindex = 10, align = "right" },
           { "created", zindex = 10, align = "right" },
+          -- I want to add my component here. but i need to register it first so neo-tree can find it. AI!
+          -- { "select_status", zindex = 10, align = "right" },
         },
       },
     },
@@ -904,6 +918,7 @@ require("neo-tree").setup({
         ["-"] = "navigate_up",
         ["."] = "set_root",
         ["<space>b"] = "set_root",
+        ["<space>scm"] = "toggle_node",
         ["[g"] = "prev_git_modified",
         ["]g"] = "next_git_modified",
 
@@ -929,11 +944,11 @@ require("neo-tree").setup({
           vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
         end,
 
-        ["<leader>cP"] = function(state)
-          local node = state.tree:get_node()
-          local current_path = node:get_id()
-          vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
-        end,
+        -- ["<leader>cP"] = function(state)
+        --   local node = state.tree:get_node()
+        --   local current_path = node:get_id()
+        --   vim.fn.ClipBoard_LinkPath( current_path, "", 'full' )
+        -- end,
 
         ["gee"] = function()
           vim.cmd 'wincmd p'
