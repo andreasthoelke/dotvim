@@ -427,21 +427,21 @@ hi! def link TelescopeSelection CursorLine
 " Nvim Tree
 " ~/.config/nvim/plugged/nvim-tree.lua/doc/nvim-tree-lua.txt#/Default%20linked%20group
 " hi! def link NvimTreeOpenedFile Operator
-hi! def link NvimTreeOpenedFile purescriptRecordKeys
-" hi! def link NvimTreeOpenedFile Function
-" hi! def link NvimTreeOpenedFile CommentSection
-hi! def link NvimTreeFolderName CommentMinus
-hi! def link NvimTreeOpenedFolderName Comment
-hi! def link NvimTreeNormal CommentMinus
-hi! def link NvimTreeRootFolder CommentSection
-hi! def link NvimTreeBookmark Comment
-hi! def link NvimTreeExecFile CommentMinus
-hi! def link NvimTreeSpecialFile Comment
-hi! def link NvimTreeEmptyFolderName Comment
-hi! def link NvimTreeImageFile Comment
-" hi! def link NvimTreeGitDirty Function
-hi! def link NvimTreeGitStaged purescriptIdentifier
-hi! def link NvimTreeGitNew purescriptIdentifier
+" hi! def link NvimTreeOpenedFile purescriptRecordKeys
+" " hi! def link NvimTreeOpenedFile Function
+" " hi! def link NvimTreeOpenedFile CommentSection
+" hi! def link NvimTreeFolderName CommentMinus
+" hi! def link NvimTreeOpenedFolderName Comment
+" hi! def link NvimTreeNormal CommentMinus
+" hi! def link NvimTreeRootFolder CommentSection
+" hi! def link NvimTreeBookmark Comment
+" hi! def link NvimTreeExecFile CommentMinus
+" hi! def link NvimTreeSpecialFile Comment
+" hi! def link NvimTreeEmptyFolderName Comment
+" hi! def link NvimTreeImageFile Comment
+" " hi! def link NvimTreeGitDirty Function
+" hi! def link NvimTreeGitStaged purescriptIdentifier
+" hi! def link NvimTreeGitNew purescriptIdentifier
 
 
 hi! def link WinBar CommentSection
@@ -483,8 +483,9 @@ hi! def link NeoTreeGitIgnored CommentMinus
 " NeoTreeGitUntracked       File name when the git status is untracked.
 " NeoTreeGitStaged          Used for git staged symbol.
 " NeoTreeHiddenByName       Used for icons and names when `hide_by_name` is used.
-hi! def link NeoTreeGitUnstaged purescriptRecordKeys
-hi! def link NeoTreeGitModified purescriptRecordKeys
+hi! def link NeoTreeGitUnstaged Comment
+" hi! def link NeoTreeGitModified purescriptRecordKeys
+hi! def link NeoTreeGitModified Comment
 hi! def link NeoTreeGitUntracked purescriptRecordKeys
 " NeoTreeIndentMarker       The style of indentation markers (guides). By default,
 "                           the "Normal" highlight is used.
@@ -911,10 +912,17 @@ hi link dhallLabel Define
 
 hi LspInfo1 guifg=#416469
 
-hi link DiagnosticSignError LspInfo1
-hi link DiagnosticSignWarn LspInfo1
-hi link DiagnosticSignInfo LspInfo1
-hi link DiagnosticSignHint LspInfo1
+hi! link DiagnosticError purescriptRecordKeys
+
+" hi link DiagnosticSignError LspInfo1
+" hi link DiagnosticSignWarn LspInfo1
+" hi link DiagnosticSignInfo LspInfo1
+" hi link DiagnosticSignHint LspInfo1
+
+hi! link DiagnosticSignError Comment
+hi! link DiagnosticSignWarn Comment
+hi! link DiagnosticSignInfo Comment
+hi! link DiagnosticSignHint Comment
 
 hi link DiagnosticVirtualTextError LspInfo1
 hi link DiagnosticVirtualTextWarn LspInfo1

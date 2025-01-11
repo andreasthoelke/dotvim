@@ -2,55 +2,27 @@
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 
--- REQUIRED
-harpoon:setup({
-  settings = {
-    save_on_toggle = false,
-    sync_on_ui_close = false,
-    key = function()
-      return vim.loop.cwd()
-    end
-  },
-  -- Add UI configuration
-  menu = {
-    width = vim.api.nvim_win_get_width(0) - 4,
-    auto_close = false,
-  }
-})
-
-local function show_harpoon_menu()
-    print("4. Entering show_harpoon_menu()")
-    local list = harpoon:list()
-    if not (list and list.items) then
-        print("No items in harpoon list")
-        return
-    end
-    
-    print("5. List items count:", #list.items)
-    
-    -- Directly toggle the menu without creating a temporary buffer
-    harpoon.ui:toggle_quick_menu(list)
-end
-
-vim.keymap.set("n", "<leader>bb", function()
-    print("1. Starting keymap function...")
-    print("2. Opening harpoon menu...")
-    local ok, err = pcall(show_harpoon_menu)
-    print("3. After pcall")
-    if not ok then
-        print("Error:", err)
-    end
-end)
-
-
-
-
+harpoon:setup()
 
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<leader>bb", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+vim.keymap.set("n", ",1", function() harpoon:list():select(1) end)
+vim.keymap.set("n", ",2", function() harpoon:list():select(2) end)
+vim.keymap.set("n", ",3", function() harpoon:list():select(3) end)
+vim.keymap.set("n", ",4", function() harpoon:list():select(4) end)
+vim.keymap.set("n", ",5", function() harpoon:list():select(5) end)
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "]a", function() harpoon:list():prev() end)
+vim.keymap.set("n", "[a", function() harpoon:list():next() end)
 
 
+-- lua require("harpoon"):list():add()
+-- lua putt( require("harpoon"):list() )
+-- lua require("harpoon").ui:toggle_quick_menu( require("harpoon"):list() )
 
-
+-- basic telescope configuration
 local conf = require("telescope.config").values
 local function toggle_telescope(harpoon_files)
     local file_paths = {}
@@ -68,8 +40,7 @@ local function toggle_telescope(harpoon_files)
     }):find()
 end
 
-vim.keymap.set("n", "<leader>abb", function() toggle_telescope(harpoon:list()) end,
-    { desc = "Open harpoon window" })
+vim.keymap.set("n", "<leader>abb", function() toggle_telescope(harpoon:list()) end, { desc = "Open harpoon window" })
 
 
 
