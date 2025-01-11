@@ -6,11 +6,17 @@ local harpoon = require("harpoon")
 harpoon:setup({
     settings = {
         save_on_toggle = false,
-        sync_on_ui_close = false
+        sync_on_ui_close = false,
+        key = function()
+            return vim.loop.cwd()
+        end
+    },
+    -- Add UI configuration
+    menu = {
+        width = vim.api.nvim_win_get_width(0) - 4,
     }
 })
 
--- Helper function to safely create and show menu
 local function show_harpoon_menu()
     print("4. Entering show_harpoon_menu()")
     local list = harpoon:list()
@@ -21,29 +27,8 @@ local function show_harpoon_menu()
     
     print("5. List items count:", #list.items)
     
-    -- Create a buffer with a window to display the menu
-    local buf = vim.api.nvim_create_buf(false, true)
-    if not buf then
-        print("Failed to create buffer")
-        return
-    end
-    print("6. Buffer created:", buf)
-    
-    -- Set some buffer options
-    vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-    vim.api.nvim_buf_set_option(buf, 'filetype', 'harpoon')
-    print("7. Buffer options set")
-    
-    -- Create the menu with a small delay
-    vim.defer_fn(function()
-        print("8. Inside defer_fn")
-        pcall(function()
-            print("9. About to toggle menu")
-            harpoon.ui:toggle_quick_menu(list)
-            print("10. After toggle menu")
-        end)
-    end, 10)
-    print("11. End of show_harpoon_menu()")
+    -- Directly toggle the menu without creating a temporary buffer
+    harpoon.ui:toggle_quick_menu(list)
 end
 
 vim.keymap.set("n", "<leader>bb", function()
