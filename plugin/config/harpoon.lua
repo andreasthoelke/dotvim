@@ -58,9 +58,15 @@ vim.keymap.set("n", "]a", function() harpoon:list():prev() end)
 vim.keymap.set("n", "[a", function() harpoon:list():next() end)
 
 
+-- Test commands for default list:
 -- lua require("harpoon"):list():add()
--- lua putt( require("harpoon"):list() )
--- lua require("harpoon").ui:toggle_quick_menu( require("harpoon"):list() )
+-- lua print(vim.inspect(require("harpoon"):list()))
+-- lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+
+-- Test commands for "cmd" list:
+-- lua require("harpoon"):list("cmd"):add()  -- Add current line as command
+-- lua print(vim.inspect(require("harpoon"):list("cmd")))  -- Inspect cmd list contents
+-- lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list("cmd"))  -- Show cmd menu
 
 -- basic telescope configuration
 local conf = require("telescope.config").values
