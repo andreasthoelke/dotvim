@@ -25,7 +25,7 @@ harpoon:setup({
 
             return {
                 value = cmd,
-                context = {}, -- can store any additional data you want
+                context = {"hi there"}, -- can store any additional data you want
             }
         end,
 
@@ -43,7 +43,9 @@ harpoon:setup({
 })
 
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<localleader>a", function() harpoon:list("cmd"):add() end)
 vim.keymap.set("n", "<leader>bb", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set("n", "<leader>aab", function() harpoon.ui:toggle_quick_menu(harpoon:list("cmd")) end)
 
 vim.keymap.set("n", ",1", function() harpoon:list():select(1) end)
 vim.keymap.set("n", ",2", function() harpoon:list():select(2) end)
