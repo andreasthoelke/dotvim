@@ -25,7 +25,7 @@ harpoon:setup({
 
             return {
                 value = cmd,
-                context = { ... any data you want ... },
+                context = {}, -- can store any additional data you want
             }
         end,
 
