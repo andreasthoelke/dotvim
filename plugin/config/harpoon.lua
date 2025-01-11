@@ -12,13 +12,14 @@ harpoon:setup({
 
 -- Helper function to safely create and show menu
 local function show_harpoon_menu()
+    print("4. Entering show_harpoon_menu()")
     local list = harpoon:list()
     if not (list and list.items) then
         print("No items in harpoon list")
         return
     end
     
-    print("List 11 items count:", #list.items)
+    print("5. List items count:", #list.items)
     
     -- Create a buffer with a window to display the menu
     local buf = vim.api.nvim_create_buf(false, true)
@@ -26,22 +27,30 @@ local function show_harpoon_menu()
         print("Failed to create buffer")
         return
     end
+    print("6. Buffer created:", buf)
     
     -- Set some buffer options
     vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
     vim.api.nvim_buf_set_option(buf, 'filetype', 'harpoon')
+    print("7. Buffer options set")
     
     -- Create the menu with a small delay
     vim.defer_fn(function()
+        print("8. Inside defer_fn")
         pcall(function()
+            print("9. About to toggle menu")
             harpoon.ui:toggle_quick_menu(list)
+            print("10. After toggle menu")
         end)
     end, 10)
+    print("11. End of show_harpoon_menu()")
 end
 
 vim.keymap.set("n", "<leader>bb", function()
-    print("Opening harpoon menu...")
+    print("1. Starting keymap function...")
+    print("2. Opening harpoon menu...")
     local ok, err = pcall(show_harpoon_menu)
+    print("3. After pcall")
     if not ok then
         print("Error:", err)
     end
