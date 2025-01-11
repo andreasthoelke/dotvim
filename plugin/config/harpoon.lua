@@ -18,7 +18,7 @@ local function show_harpoon_menu()
         return
     end
     
-    print("List items count:", #list.items)
+    print("List 11 items count:", #list.items)
     
     -- Create a buffer with a window to display the menu
     local buf = vim.api.nvim_create_buf(false, true)
