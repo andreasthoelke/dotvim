@@ -4,7 +4,7 @@ local harpoon = require("harpoon")
 
 harpoon:setup({
     -- Setting up custom behavior for a list named "cmd"
-    "cmd" = {
+    cmd = {
 
         -- When you call list:add() this function is called and the return
         -- value will be put in the list at the end.
