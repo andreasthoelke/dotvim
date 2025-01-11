@@ -27,6 +27,7 @@ Plug 'piersolenski/wtf.nvim'
 " Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-tree/nvim-web-devicons'
 
+" PlugUpdate neo-tree.nvim
 Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'mrbjarksen/neo-tree-diagnostics.nvim'
 Plug 'miversen33/netman.nvim'
@@ -79,6 +80,8 @@ Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-telescope/telescope-frecency.nvim'
 
 Plug 'Marskey/telescope-sg'
+
+Plug 'ThePrimeagen/harpoon', { 'branch': 'harpoon2' }
 
 
 Plug 'folke/noice.nvim'
@@ -300,7 +303,11 @@ Plug 'sjl/vitality.vim'
 " Plug 'simnalamburt/vim-mundo'
 Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
 " Autosaves buffers on specific events
-Plug '907th/vim-auto-save'
+" Plug '907th/vim-auto-save'
+" https://github.com/okuuva/auto-save.nvim
+" Plug 'okuuva/auto-save.nvim'
+" https://github.com/0x00-ketsu/autosave.nvim
+Plug '0x00-ketsu/autosave.nvim'
 " Plug 'skywind3000/quickmenu.vim'
 " This fork allows to define letter shortcuts per menu-item
 Plug 'CharlesGueunet/quickmenu.vim'

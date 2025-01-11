@@ -4,17 +4,18 @@ local harpoon = require("harpoon")
 
 -- REQUIRED
 harpoon:setup({
-    settings = {
-        save_on_toggle = false,
-        sync_on_ui_close = false,
-        key = function()
-            return vim.loop.cwd()
-        end
-    },
-    -- Add UI configuration
-    menu = {
-        width = vim.api.nvim_win_get_width(0) - 4,
-    }
+  settings = {
+    save_on_toggle = false,
+    sync_on_ui_close = false,
+    key = function()
+      return vim.loop.cwd()
+    end
+  },
+  -- Add UI configuration
+  menu = {
+    width = vim.api.nvim_win_get_width(0) - 4,
+    auto_close = false,
+  }
 })
 
 local function show_harpoon_menu()

@@ -3,7 +3,8 @@
 -- Note there are two aider plugins:
 -- 1. the code below (copied from github) which allows to only focus aider on the visually selected text
 -- 2. aider.nvim: ~/.config/nvim/plugged/aider.nvim/lua/aider.lua
--- This is modified! ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
+-- This is modified! 
+-- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
 -- WriteLspWarnings  ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍ_G
 -- ~/Documents/Notes/Mindmap_app.md‖/##ˍaider.nv
 -- - adds the current file to running chat
@@ -11,6 +12,7 @@
 -- - allows to close aider window and re-open it in different tabs
 -- - always write lsp warnings of the current buffer to /tmp/nvim_lsp_warnings.txt and includes this file on aider start.
 
+-- note: help aider
 require('aider').setup({
   auto_manage_context = false,
   default_bindings = false,

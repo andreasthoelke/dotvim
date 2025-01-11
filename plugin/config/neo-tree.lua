@@ -523,7 +523,7 @@ end )
 require("neo-tree").setup({
 
   log_level = 'warn',
-
+  enable_modified_markers = false, -- Show markers for files with unsaved changes.
   hide_root_node = true, -- Hide the root node.
   -- auto_clean_after_session_restore = true, -- Automatically clean up broken neo-tree buffers saved in sessions
 
@@ -570,8 +570,9 @@ require("neo-tree").setup({
     },
 
     file = {
-      { "indent" },
-      { "select_status" },
+      -- { "indent" },
+      -- { "select_status" },
+      { "harpoon_index" },
       { "icon" },
       {
         "container",
@@ -596,6 +597,7 @@ require("neo-tree").setup({
           { "created", zindex = 10, align = "right" },
         },
       },
+
     },
 
 
@@ -885,9 +887,63 @@ require("neo-tree").setup({
 
 
     components = {
-      select_status = function(config, node, state)
-        return { { text = "hi", highlight = "NeoTreeFileIcon" } }
-      },
+
+        harpoon_index = function(config, node, _)
+          local Marked = require("harpoon.mark")
+          local path = node:get_id()
+          local success, index = pcall(Marked.get_index_of, path)
+          if success and index and index > 0 then
+            return {
+              text = string.format("%d ", index), -- <-- Add your favorite harpoon like arrow here
+              highlight = config.highlight or "NeoTreeDirectoryIcon",
+            }
+          else
+            return {
+              text = "  ",
+            }
+          end
+        end,
+
+      -- harpoon_index = function(config, node, _)
+      --   local harpoon_list = require("harpoon"):list()
+      --   local path = node:get_id()
+      --   local harpoon_key = vim.uv.cwd()
+      --   for i, item in ipairs(harpoon_list.items) do
+      --     local value = item.value
+      --     if string.sub(item.value, 1, 1) ~= "/" then
+      --       value = harpoon_key .. "/" .. item.value
+      --     end
+      --     if value == path then
+      --       vim.print(path)
+      --       return {
+      --         text = string.format(" ⥤ %d", i), -- <-- Add your favorite harpoon like arrow here
+      --         highlight = config.highlight or "NeoTreeDirectoryIcon",
+      --       }
+      --     end
+      --   end
+      --   return {}
+      -- end,
+
+      -- select_status = function(config, node, state)                                                  
+      --   return  { text = "hi", highlight = "NeoTreeFileIcon" }                                     
+      -- end,
+
+      -- select_status = {
+      --   name = "select_status",
+      --   renderer = function(config, node, state)
+      --       return { { text = "hi", highlight = "NeoTreeFileIcon" } }
+      --   end,
+      -- }      
+
+      -- name = function(config, node, state)
+      --   local text = node.name
+      --   local highlight = "NeoTreeFileName"
+      --   return { 
+      --     text = text,
+      --     highlight = highlight
+      --   }
+      -- end,
+
 
       -- name = function(config, node)
       --   return {

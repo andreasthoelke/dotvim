@@ -21,7 +21,7 @@ func! FlipListList ( listList )
   endfor
   return flippedList
 endfunc
-" echo FlipListList( [[11, 22], [33, 44]] )
+" FlipListList( [[11, 22], [33, 44]] )
 
 func! TrimListOfStr( listOfStr )
   return map( a:listOfStr, {key, val -> trim(val)} )
