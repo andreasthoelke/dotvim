@@ -930,6 +930,7 @@ local function GitCopyFileFromCommit_sel_action(prompt_bufnr, map)
   return true
 end
 
+-- git -c core.pager=delta -c delta.side-by-side=false diff HEAD^ -- ./lua/utils/general.lua
 function M.Git_commits_picker( opts, filepath )
   opts = opts or {}
 
@@ -940,8 +941,7 @@ function M.Git_commits_picker( opts, filepath )
     previewers.new_termopen_previewer {
 
       get_command = function(entry)
-        local cwd = vim.fn.getcwd(vim.fn.winnr())
-        return { 'git', '-C', cwd, '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value, '--', filepath }
+        return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', filepath }
       end,
 
       dyn_title = function(_, entry)
