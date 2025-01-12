@@ -57,8 +57,10 @@ end
 
 vim.keymap.set("n", "gsh", function() toggle_telescope(harpoon:list()) end, { desc = "Open harpoon window" })
 
--- Implement using function _G.Hpon_add_file(file_path, opts) AI!
 function _G.Hpon_add_current_file_row_col()
+  local file_path = vim.fn.expand('%:p')  -- Get full path of current buffer
+  local cursor = vim.api.nvim_win_get_cursor(0)  -- Get cursor position [row, col]
+  Hpon_add_file(file_path, {row = cursor[1], col = cursor[2]})
 end
 
 ---@param file_path string Path to file to add                            
