@@ -1,11 +1,21 @@
 
+-- NOTE: the plugin is updated: ~/.config/nvim/plugged/harpoon/README.md
+-- see the commits. persistence is working in ~/.local/share/nvim/harpoon/
+-- initial row, column is saved. but harpoon/vim maintains the current cursor, but is not updating the json.
+-- Issue: telescope doesn't maintain/use the current buffer pos. could have aider fix this.
+
+-- NOTE: these maps work in the harpoon buffer and in telescope: ~/.config/nvim/plugin/utils/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
+
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 
 harpoon:setup()
 
-vim.keymap.set("n", "<leader>cah", function() Hpon_add_current_file_row_col() end)
-vim.keymap.set("n", "<leader>caf", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
+vim.keymap.set("n", "<leader>ah", function() Hpon_add_current_file_row_col() end)
+vim.keymap.set("n", "<leader>aa", function() Hpon_add_current_file_row_col() end)
+vim.keymap.set("n", "<leader>ad", function() Hpon_remove_current_file() end)
+
+vim.keymap.set("n", "<leader>af", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
 vim.keymap.set("n", "<leader>oh", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
 
 vim.keymap.set("n", ",1", function() harpoon:list():select(1) end)
@@ -14,11 +24,11 @@ vim.keymap.set("n", ",3", function() harpoon:list():select(3) end)
 vim.keymap.set("n", ",4", function() harpoon:list():select(4) end)
 vim.keymap.set("n", ",5", function() harpoon:list():select(5) end)
 
-vim.keymap.set("n", ",d1", function() harpoon:list():remove_at(1) end)
-vim.keymap.set("n", ",d2", function() harpoon:list():remove_at(2) end)
-vim.keymap.set("n", ",d3", function() harpoon:list():remove_at(3) end)
-vim.keymap.set("n", ",d4", function() harpoon:list():remove_at(4) end)
-vim.keymap.set("n", ",d5", function() harpoon:list():remove_at(5) end)
+vim.keymap.set("n", ",d1", function() Hpon_remove_at(1) end)
+vim.keymap.set("n", ",d2", function() Hpon_remove_at(2) end)
+vim.keymap.set("n", ",d3", function() Hpon_remove_at(3) end)
+vim.keymap.set("n", ",d4", function() Hpon_remove_at(4) end)
+vim.keymap.set("n", ",d5", function() Hpon_remove_at(5) end)
 
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "]a", function() harpoon:list():prev() end)
@@ -62,6 +72,13 @@ function _G.Hpon_add_current_file_row_col()
   local cursor = vim.api.nvim_win_get_cursor(0)  -- Get cursor position [row, col]
   Hpon_add_file(file_path, {row = cursor[1], col = cursor[2]})
 end
+
+function _G.Hpon_remove_current_file()                                         
+  local file_path = vim.fn.expand('%:p')  -- Get full path of current buffer
+  Hpon_remove(file_path)                            
+end                                                                       
+-- Hpon_remove_current_file()
+
 
 ---@param file_path string Path to file to add                            
 ---@param opts? {row?: number, col?: number} Optional cursor position     

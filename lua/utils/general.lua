@@ -930,7 +930,9 @@ local function GitCopyFileFromCommit_sel_action(prompt_bufnr, map)
   return true
 end
 
+-- this works
 -- git -c core.pager=delta -c delta.side-by-side=false diff HEAD^ -- ./lua/utils/general.lua
+-- theres a small issue with it sometimes using an outer git repo if thats active in vim. but i can fall back to using ll ogl
 function M.Git_commits_picker( opts, filepath )
   opts = opts or {}
 

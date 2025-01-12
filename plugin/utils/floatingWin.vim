@@ -55,10 +55,10 @@ let g:floatWin_win_Pers = 0
 "   call nvim_buf_set_lines( g:floatWin_scratchBuf_Id, 0, -1, v:true, a:lines )
 "   let g:floatWin_win_Id = nvim_open_win( g:floatWin_scratchBuf_Id, 0, g:floatWin_opts )
 " endfunc
-" call FloatWin_ShowLines( ['eins', 'zwei drei'])
-nnoremap <leader>abb :call nvim_win_close( g:floatWin_win, v:false )<cr>
-nnoremap <leader>acc :call ExecRange( "ShowInFloatWin", 10, 20 )<cr>
-nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
+" FloatWin_ShowLines( ['eins', 'zwei drei'])
+" nnoremap <leader>abb :call nvim_win_close( g:floatWin_win, v:false )<cr>
+" nnoremap <leader>acc :call ExecRange( "ShowInFloatWin", 10, 20 )<cr>
+" nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
 " let info = split(info, "\n", 1)
 
 nnoremap <silent> <c-w>[ :call FloatWin_close()<cr>
