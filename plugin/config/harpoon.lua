@@ -57,19 +57,23 @@ end
 
 vim.keymap.set("n", "gsh", function() toggle_telescope(harpoon:list()) end, { desc = "Open harpoon window" })
 
+-- Implement using function _G.Hpon_add_file(file_path, opts) AI!
+function _G.Hpon_add_current_file_row_col()
+end
 
 ---@param file_path string Path to file to add                            
 ---@param opts? {row?: number, col?: number} Optional cursor position     
 function _G.Hpon_add_file(file_path, opts)                                      
-    opts = opts or {}                                                     
-    local list_item = {                                                   
-        value = file_path,                                                
-        context = {                                                       
-            row = opts.row or 1,                                          
-            col = opts.col or 0                                           
-        }                                                                 
-    }                                                                     
-    require("harpoon"):list():add(list_item)                              
+  opts = opts or {}                                                     
+  local list_item = {                                                   
+    value = file_path,                                                
+    context = {                                                       
+      row = opts.row or 1,                                          
+      col = opts.col or 0                                           
+    }                                                                 
+  }                                                                     
+  require("harpoon"):list():add(list_item)                              
+  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
 end                                                                       
                                                                           
 -- Hpon_add_file("path/to/file.txt")                       
@@ -119,7 +123,7 @@ end
 function _G.Hpon_remove_at(index)                                         
   require("harpoon"):list():remove_at(index)                            
   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
-  print(string.format("Removed item at index %d", index))               
+  -- print(string.format("Removed item at index %d", index))               
 end                                                                       
 -- Hpon_remove_at(1)
 
@@ -135,7 +139,8 @@ function _G.Hpon_remove(file_path)
     }                                                                 
   }                                                                     
   list:remove(item)                                                     
-  print(string.format("Removed '%s' from list", file_path))             
+  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
+  -- print(string.format("Removed '%s' from list", file_path))             
 end                                                                       
 -- Hpon_remove("path/to/file.txt")
 
