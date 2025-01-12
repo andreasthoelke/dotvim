@@ -1014,37 +1014,64 @@ end
 -- MapInfo("tu")
 -- Keymap_props( 'n', '<Space>st')
 
-function _G.Keymap_props( mode, lhs_map_string )
--- function M.Keymap_props( mode, lhs_map_string )
+function _G.Keymap_props(mode, lhs_map_string)
   local cmd = "verbose " .. mode .. "map " .. lhs_map_string
-  local propsstr = vim.api.nvim_exec( cmd, true )
+  local propsstr = vim.api.nvim_exec(cmd, true)
   local propsstr_clean = propsstr:gsub("\n", " ")
-  local propslist = vim.split( propsstr_clean, " " )
-  vim.print( propslist )
-  -- vim.print( M.IndexOf( propslist, "from" ) )
+  local propslist = vim.split(propsstr_clean, " ")
 
-  -- n  <Space>tu   * <Lua 27185: ~/.config/nvim/plugin/config/tabline_tabby.lua:142>
-  -- { "", "n", "", "<Space>tu", "", "", "*", "<Lua", "27185:", "~/.config/nvim/plugin/config/tabline_tabby.lua:142>", "\tLast", "set", "from", "Lua", "line", "4", "n", "", "<Space>t", "", "", "", "*", ":let", "g:opContFn='HsTabu'<CR>:let", "g:opContArgs=[g:pttnsTypeSigs4]<CR>:set", "opfunc=Gen_opfuncAc<CR>g@", "\tLast", "set", "from", "~/.config/nvim/plugin/utils-align.vim", "line", "21" }
+  -- Check if we need to use fallback search
+  if vim.tbl_contains(propslist, "-V1") then
+    -- Get the full keymap details
+    local matching_map = nil
+    for _, map in ipairs(vim.api.nvim_get_keymap(mode)) do
+      if map.lhs == lhs_map_string then
+        matching_map = map
+        break
+      end
+    end
 
-  -- lua print(vim.api.nvim_get_keymap('n', '<Space>tu'))
+    if matching_map then
+      -- Search lua files for the keymap definition
+      local cmd = string.format(
+        "rg --line-number --no-heading 'vim.api.nvim_set_keymap.*%s.*%s' ~/.config/nvim/",
+        vim.fn.escape(lhs_map_string, "^$()%.[]*+-?"), -- escape special regex chars
+        vim.fn.escape(matching_map.rhs or "", "^$()%.[]*+-?")
+      )
+      
+      local results = vim.fn.systemlist(cmd)
+      if #results > 0 then
+        -- Extract filename and line number from first result
+        local parts = vim.split(results[1], ":")
+        return {
+          filename = parts[1],
+          lnum = tonumber(parts[2])
+        }
+      end
+    end
+  end
 
-
+  -- Fall back to original parsing logic
   local fnameVal, lineVal
-  local fromVal = propslist[ M.IndexOf( propslist, "from" ) + 1 ]
+  local fromVal = propslist[M.IndexOf(propslist, "from") + 1]
   if fromVal == "Lua" then
-    -- The next lines fails when propslist is: { "", "n", "", ",dp", "", "", "", "", "", "", "", "", "*", ":DiffClipboard<CR>", "\tLast", "set", "from", "Lua", "(run", "Nvim", "with", "-V1", "for", "more", "details)" } AI
-    local idx = M.IndexOf( propslist, "<Lua" ) + 2
-    local luaPath = propslist[ idx ]
-    fnameVal, lineVal = table.unpack( vim.fn.split( luaPath, ":" ) )
-    lineVal = lineVal:sub( 1, -2 )
+    local idx = M.IndexOf(propslist, "<Lua") + 2
+    if idx and propslist[idx] then
+      local luaPath = propslist[idx]
+      fnameVal, lineVal = table.unpack(vim.fn.split(luaPath, ":"))
+      lineVal = lineVal:sub(1, -2)
+    end
   else
     fnameVal = fromVal
-    lineVal = propslist[ M.IndexOf( propslist, "line" ) + 1 ]
+    local lineIdx = M.IndexOf(propslist, "line")
+    if lineIdx then
+      lineVal = propslist[lineIdx + 1]
+    end
   end
 
   return {
     filename = fnameVal,
-    lnum = tonumber( lineVal )
+    lnum = tonumber(lineVal)
   }
 end
 -- require('utils.general').Keymap_props("n", "<space>vm")
