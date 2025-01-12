@@ -940,7 +940,7 @@ function M.Git_commits_picker( opts, filepath )
     previewers.new_termopen_previewer {
 
       get_command = function(entry)
-        return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', '--', filepath }
+        return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value, '--', filepath }
       end,
 
       dyn_title = function(_, entry)
