@@ -1,6 +1,7 @@
 local M = {}
 
 local actions = require("telescope.actions")
+local action_utils = require("telescope.actions.utils")
 local action_state = require "telescope.actions.state"
 local resume = require("telescope.builtin").resume
 local action_set = require "telescope.actions.set"
@@ -402,6 +403,7 @@ end
 _G.TelescPreview_resetPos = {}
 
 
+-- This now works with harpoon telescope. 2025-01
 local preview = f.curry( function( next_previous, mode, pbn )
 
   -- 1. MOVE SELECTION (potentially)
@@ -448,7 +450,9 @@ local preview = f.curry( function( next_previous, mode, pbn )
   end
 
   -- 4. FOCUS & HIGHLIGHT LINE & KEYWORD
-  if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
+  if     prompt_title == "Harpoon" then
+    -- nothing yet
+  elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
     local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
     vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
     vim.cmd 'normal zz'
@@ -483,6 +487,98 @@ end )
 -- lua/utils_general.lua
 -- with custom pickers. also this example: ~/.config/nvim/plugged/telescope.nvim/lua/telescope/builtin/__files.lua#/pickers
 -- require("telescope.builtin").find_files({hidden=true, layout_config={prompt_position="top"}})
+
+
+
+-- ─   Harpoon extension                                 ■
+
+local harpoon = require("harpoon")
+local finders = require("telescope.finders")
+local entry_display = require("telescope.pickers.entry_display")
+
+
+local function filter_empty_string(list)
+  local next = {}
+  for idx = 1, #list do
+    if list[idx].value ~= "" then
+      table.insert(next, list[idx])
+    end
+  end
+
+  return next
+end
+
+local generate_new_finder = function()
+  return finders.new_table({
+    results = filter_empty_string(harpoon:list().items),
+    entry_maker = function(entry)
+      local line = entry.value
+      .. ":"
+      .. entry.context.row
+      .. ":"
+      .. entry.context.col
+      local displayer = entry_display.create({
+        separator = " - ",
+        items = {
+          { width = 2 },
+          { width = 50 },
+          { remaining = true },
+        },
+      })
+      local make_display = function()
+        return displayer({
+          tostring(entry.index),
+          line,
+        })
+      end
+      return {
+        value = entry,
+        ordinal = line,
+        display = make_display,
+        lnum = entry.row,
+        col = entry.col,
+        filename = entry.value,
+      }
+    end,
+  })
+end
+
+local delete_harpoon_mark = function(prompt_bufnr)
+  -- local confirmation =
+  -- vim.fn.input(string.format("Delete current mark(s)? [y/n]: "))
+  -- if
+  --   string.len(confirmation) == 0
+  --   or string.sub(string.lower(confirmation), 0, 1) ~= "y"
+  -- then
+  --   print(string.format("Didn't delete mark"))
+  --   return
+  -- end
+
+  local selection = action_state.get_selected_entry()
+  print(selection.value)
+  harpoon:list():remove(selection.value)
+  print(harpoon:list():length() .. " marks remaining")
+
+  local function get_selections()
+    local results = {}
+    action_utils.map_selections(prompt_bufnr, function(entry)
+      table.insert(results, entry)
+    end)
+    return results
+  end
+
+  local selections = get_selections()
+  for _, current_selection in ipairs(selections) do
+    harpoon:list():remove(current_selection.value)
+  end
+
+  local current_picker = action_state.get_current_picker(prompt_bufnr)
+  current_picker:refresh(generate_new_finder(), { reset_prompt = true })
+end
+
+-- ─^  Harpoon extension                                 ▲
+
+
 
 
 -- ─   Config                                            ■
@@ -590,6 +686,8 @@ require('telescope').setup{
         -- ['<cr>']   = actions.select_default,
         -- ["<esc>"] = function() vim.print 'hi' end,
         -- ["<cr>"] = function() vim.print 'hi' end,
+        ["<c-w>dd"] = delete_harpoon_mark,
+
         ["<esc>"] = closeAndResetPreview,
 
 -- ─   Exchange                                         ──

@@ -360,11 +360,12 @@ vim.keymap.set( 'n',
 
 -- search in VIM_HELP:
 vim.keymap.set( 'n',
-  'gsh', function()
+  'gsH', function()
   Telesc_launch( 'help_tags', {
     default_text = vim.fn.expand '<cword>',
     initial_mode = 'normal',
   } ) end )
+
 
 function vim.getVisualSelection()
    vim.cmd('noau normal! "vy"')

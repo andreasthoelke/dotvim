@@ -17,6 +17,8 @@ require('aider').setup({
   auto_manage_context = false,
   default_bindings = false,
   debug = false,
+  -- test this. this was to double make sure that its not loaded. but still written.
+  restore_history = false,
   vim = true, --
 
   -- only necessary if you want to change the default keybindings. <Leader>C is not a particularly good choice. It's just shown as an example.
@@ -69,24 +71,6 @@ function _G.Aider_updateAiderIgnore()
 
     -- Get open folders
     local folders = _G.Ntree_getOpenFolders()
-    if not folders or #folders == 0 then
-        -- If no folders returned, clear everything after AUTOUPDATED marker
-        local f = io.open(".aiderignore", "r")
-        if not f then return end
-        local content = f:read("*all")
-        f:close()
-        
-        local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
-        local before_marker = content:match("^(.-)%" .. marker)
-        if not before_marker then return end
-        
-        f = io.open(".aiderignore", "w")
-        if not f then return end
-        f:write(before_marker)
-        f:write(marker .. "\n")
-        f:close()
-        return
-    end
 
     -- Generate ignore patterns
     local patterns = {}
@@ -107,6 +91,7 @@ function _G.Aider_updateAiderIgnore()
     for _, path in ipairs(openFiles) do
       table.insert(filePatterns, "!" .. path)
     end
+    table.insert(filePatterns, "!" .. ".lsp_warn")
 
     -- Find the auto-update marker
     local marker = "# AUTOUPDATED by _G.Aider_updateAiderIgnore()"
