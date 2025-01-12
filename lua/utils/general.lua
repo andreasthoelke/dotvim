@@ -1015,11 +1015,12 @@ end
 -- Keymap_props( 'n', '<Space>st')
 
 function _G.Keymap_props( mode, lhs_map_string )
+-- function M.Keymap_props( mode, lhs_map_string )
   local cmd = "verbose " .. mode .. "map " .. lhs_map_string
   local propsstr = vim.api.nvim_exec( cmd, true )
   local propsstr_clean = propsstr:gsub("\n", " ")
   local propslist = vim.split( propsstr_clean, " " )
-  -- vim.print( propslist )
+  vim.print( propslist )
   -- vim.print( M.IndexOf( propslist, "from" ) )
 
   -- n  <Space>tu   * <Lua 27185: ~/.config/nvim/plugin/config/tabline_tabby.lua:142>
@@ -1031,7 +1032,9 @@ function _G.Keymap_props( mode, lhs_map_string )
   local fnameVal, lineVal
   local fromVal = propslist[ M.IndexOf( propslist, "from" ) + 1 ]
   if fromVal == "Lua" then
-    local luaPath = propslist[ M.IndexOf( propslist, "<Lua" ) + 2 ]
+    -- The next lines fails when propslist is: { "", "n", "", ",dp", "", "", "", "", "", "", "", "", "*", ":DiffClipboard<CR>", "\tLast", "set", "from", "Lua", "(run", "Nvim", "with", "-V1", "for", "more", "details)" } AI
+    local idx = M.IndexOf( propslist, "<Lua" ) + 2
+    local luaPath = propslist[ idx ]
     fnameVal, lineVal = table.unpack( vim.fn.split( luaPath, ":" ) )
     lineVal = lineVal:sub( 1, -2 )
   else
@@ -1045,6 +1048,7 @@ function _G.Keymap_props( mode, lhs_map_string )
   }
 end
 -- require('utils.general').Keymap_props("n", "<space>vm")
+-- require('utils.general').Keymap_props("n", ":DiffClipboard>")
 -- require('utils.general').Keymap_props("n", "gei")
 -- vim.api.nvim_exec( "verbose ".."n".."map ".."gei", true )
 -- vim.api.nvim_exec( 'verbose nmap gei', true )
