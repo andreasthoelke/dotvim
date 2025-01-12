@@ -121,7 +121,7 @@ function _G.Hpon_remove_at(index)
   vim.cmd("redraw!")  -- Force refresh of UI
   print(string.format("Removed item at index %d", index))               
 end                                                                       
--- Hpon_remove_at(2)
+-- Hpon_remove_at(1)
 
 ---Remove an item by its file path from the harpoon list                  
 ---@param file_path string The file path to remove                        
