@@ -4,7 +4,7 @@ local harpoon = require("harpoon")
 
 harpoon:setup()
 
-vim.keymap.set("n", "<leader>cah", function() harpoon:list():add() end)
+vim.keymap.set("n", "<leader>cah", function() harpoon:list():Hpon_add_current_file_row_col() end)
 vim.keymap.set("n", "<leader>caf", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
 vim.keymap.set("n", "<leader>oh", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
 
