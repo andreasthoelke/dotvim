@@ -118,6 +118,7 @@ end
 ---@param index number The index to remove                                
 function _G.Hpon_remove_at(index)                                         
   require("harpoon"):list():remove_at(index)                            
+  vim.cmd("redraw!")  -- Force refresh of UI
   print(string.format("Removed item at index %d", index))               
 end                                                                       
 -- Hpon_remove_at(2)
