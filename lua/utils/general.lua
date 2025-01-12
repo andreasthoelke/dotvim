@@ -1032,44 +1032,11 @@ function _G.Keymap_props( mode, lhs_map_string )
   local fnameVal, lineVal
   local fromVal = propslist[ M.IndexOf( propslist, "from" ) + 1 ]
   if fromVal == "Lua" then
-    -- Check if we got the unhelpful "run Nvim with -V1" message
-    if propslist[M.IndexOf(propslist, "from") + 2] == "(run" then
-      -- Do a fallback search for the keymap definition
-      local keymap = vim.api.nvim_get_keymap(mode)
-      -- Find the matching keymap entry
-      local matching_map
-      for _, map in ipairs(keymap) do
-        if map.lhs == lhs_map_string then
-          matching_map = map
-          break
-        end
-      end
-      
-      if matching_map then
-        -- Escape special characters for grep
-        local escaped_lhs = vim.fn.shellescape(lhs_map_string)
-        local escaped_rhs = vim.fn.shellescape(matching_map.rhs)
-        -- Search in lua files for this keymap definition
-        local cmd = string.format(
-          "rg --line-number --no-heading 'vim.api.nvim_set_keymap.*%s.*%s' ~/.config/nvim/",
-          vim.fn.escape(lhs_map_string, "^$()%.[]*+-?"), -- escape special regex chars
-          vim.fn.escape(matching_map.rhs or "", "^$()%.[]*+-?")
-        )
-        local results = vim.fn.systemlist(cmd)
-        if #results > 0 then
-          -- Parse first result - format is "file:line:content"
-          local parts = vim.split(results[1], ":")
-          fnameVal = parts[1]
-          lineVal = parts[2]
-        end
-      end
-    else
-      -- Normal Lua case - extract from <Lua path:line>
-      local idx = M.IndexOf( propslist, "<Lua" ) + 2
-      local luaPath = propslist[ idx ]
-      fnameVal, lineVal = table.unpack( vim.fn.split( luaPath, ":" ) )
-      lineVal = lineVal:sub( 1, -2 )
-    end
+    -- The next lines fails when propslist is: { "", "n", "", ",dp", "", "", "", "", "", "", "", "", "*", ":DiffClipboard<CR>", "\tLast", "set", "from", "Lua", "(run", "Nvim", "with", "-V1", "for", "more", "details)" } AI
+    local idx = M.IndexOf( propslist, "<Lua" ) + 2
+    local luaPath = propslist[ idx ]
+    fnameVal, lineVal = table.unpack( vim.fn.split( luaPath, ":" ) )
+    lineVal = lineVal:sub( 1, -2 )
   else
     fnameVal = fromVal
     lineVal = propslist[ M.IndexOf( propslist, "line" ) + 1 ]
