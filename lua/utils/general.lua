@@ -1051,9 +1051,9 @@ function _G.Keymap_props( mode, lhs_map_string )
         local escaped_rhs = vim.fn.shellescape(matching_map.rhs)
         -- Search in lua files for this keymap definition
         local cmd = string.format(
-          "rg --line-number --no-heading 'vim%.api%.nvim_set_keymap.*%s.*%s' ~/.config/nvim/",
-          escaped_lhs:sub(2,-2), -- remove outer quotes
-          escaped_rhs:sub(2,-2)
+          "rg --line-number --no-heading 'vim.api.nvim_set_keymap.*%s.*%s' ~/.config/nvim/",
+          vim.fn.escape(lhs_map_string, "^$()%.[]*+-?"), -- escape special regex chars
+          vim.fn.escape(matching_map.rhs or "", "^$()%.[]*+-?")
         )
         local results = vim.fn.systemlist(cmd)
         if #results > 0 then
