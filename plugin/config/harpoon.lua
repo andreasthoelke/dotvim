@@ -112,9 +112,17 @@ end
 ---@param link string link to add
 function _G.Hpon_add_file_join_links(path, link)                                      
   local items = Hpon_get_list()
-  -- problem: if items is empty we should still add Hpon_update_file_item(path, {link}) AI!
+  
+  if #items == 0 then
+    -- If list is empty, just add the new file with the link
+    Hpon_update_file_item(path, {link})
+    return
+  end
+
+  local found = false
   for _, item in ipairs(items) do                                       
-    if item.value == path then                                                      
+    if item.value == path then
+      found = true                                                    
       -- Check if link already exists in the array
       local exists = false
       local joined_links = {}
@@ -131,9 +139,12 @@ function _G.Hpon_add_file_join_links(path, link)
         table.insert(joined_links, link)
       end
       Hpon_update_file_item(path, joined_links)
-    else
-      Hpon_update_file_item(path, {link})
     end
+  end
+
+  -- If path wasn't found in existing items, add it with the new link
+  if not found then
+    Hpon_update_file_item(path, {link})
   end
 end                                                                       
 -- Hpon_get_list()
