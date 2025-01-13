@@ -108,7 +108,8 @@ function _G.Hpon_add_file_linkPath()
   local list_item = {                                                   
     value = file_path,                                                
     context = {                                                       
-      row = []
+      row = 1,
+      col = 0
     }                                                                 
   }                                                                     
   require("harpoon"):list():add(list_item)                              
