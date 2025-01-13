@@ -20,10 +20,6 @@ local common_commands = require("neo-tree.sources.common.commands")
 -- lua putt( require('neo-tree.sources.manager').get_state_for_window() )
 -- lua putt( require('neo-tree.sources.manager').get_state_for_window().position )
 
--- vim.fn.sign_define("DiagnosticSignError", {text = " ", texthl = "DiagnosticSignError"})
--- vim.fn.sign_define("DiagnosticSignWarn", {text = " ", texthl = "DiagnosticSignWarn"})
--- vim.fn.sign_define("DiagnosticSignInfo", {text = " ", texthl = "DiagnosticSignInfo"})
--- vim.fn.sign_define("DiagnosticSignHint", {text = "󰌵", texthl = "DiagnosticSignHint"})
 
 
 -- ─   Helpers                                           ■
@@ -577,7 +573,6 @@ require("neo-tree").setup({
     file = {
       -- { "indent" },
       -- { "select_status" },
-      { "harpoon_index" },
       { "icon" },
       {
         "container",
@@ -596,6 +591,7 @@ require("neo-tree").setup({
           { "modified", zindex = 20, align = "right" },
           { "diagnostics",  zindex = 20, align = "right" },
           { "git_status", zindex = 10, align = "right" },
+          { "source_to_target", zindex = 10, align = "right" },
           { "harpoon_index", zindex = 10, align = "right" },
           { "file_size", zindex = 10, align = "right" },
           { "type", zindex = 10, align = "right" },
@@ -910,21 +906,37 @@ require("neo-tree").setup({
 
     components = {
 
-        -- harpoon_index = function(config, node, _)
-        --   local Marked = require("harpoon.mark")
-        --   local path = node:get_id()
-        --   local success, index = pcall(Marked.get_index_of, path)
-        --   if success and index and index > 0 then
+      source_to_target = function(config, node, state)
+        local path = node:get_id()
+            
+        -- if "/Users/at/.config/nvim/plugin/config/gp_ai.lua" == path then
+        -- how to make this a match for all files in this folder that start with 'l' AI!
+        if "/Users/at/.config/nvim/plugin/config/l*" == path then
+          -- vim.print("a1: " .. path)
+          return {
+            text = "↘ ",
+            highlight = "Comment",
+          }
+        end
+
+        -- local harpoon_key = vim.uv.cwd()
+        -- for i, item in ipairs(harpoon_list.items) do
+        --   local value = item.value
+        --   if string.sub(item.value, 1, 1) ~= "/" then
+        --     value = harpoon_key .. "/" .. item.value
+        --   end
+        --   if value == path then
+        --     -- vim.print('hi there')
         --     return {
-        --       text = string.format("%d ", index), -- <-- Add your favorite harpoon like arrow here
-        --       highlight = config.highlight or "NeoTreeDirectoryIcon",
-        --     }
-        --   else
-        --     return {
-        --       text = "  ",
+        --       text = string.format("%d ", i), -- <-- Add your favorite harpoon like arrow here
+        --       highlight = config.highlight or "Comment",
         --     }
         --   end
-        -- end,
+        -- end
+
+        return {}
+      end,
+
 
       harpoon_index = function(config, node, _)
         local harpoon_list = require("harpoon"):list()
@@ -936,7 +948,7 @@ require("neo-tree").setup({
             value = harpoon_key .. "/" .. item.value
           end
           if value == path then
-            -- vim.print('hi there')
+            -- vim.print("hi: " .. path)
             return {
               text = string.format("%d ", i), -- <-- Add your favorite harpoon like arrow here
               highlight = config.highlight or "Comment",
