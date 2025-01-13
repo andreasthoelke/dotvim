@@ -909,9 +909,8 @@ require("neo-tree").setup({
       source_to_target = function(config, node, state)
         local path = node:get_id()
             
-        -- if "/Users/at/.config/nvim/plugin/config/gp_ai.lua" == path then
-        -- how to make this a match for all files in this folder that start with 'l' AI!
-        if "/Users/at/.config/nvim/plugin/config/l*" == path then
+        -- Match files starting with 'l' in the config directory
+        if string.match(path, "^/Users/at/.config/nvim/plugin/config/l[^/]*$") then
           -- vim.print("a1: " .. path)
           return {
             text = "↘ ",
