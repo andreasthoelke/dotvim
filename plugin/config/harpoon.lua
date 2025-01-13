@@ -104,8 +104,7 @@ end
 ---@param file_path string Path to file to add                            
 ---@param opts? {row?: number, col?: number} Optional cursor position     
 function _G.Hpon_add_file_linkPath()                                      
-  -- how to destructure the tuple? AI!
-  local [file_path, linkExt] = vim.fn.LinkPath_as_tuple()
+  local file_path, linkExt = vim.fn.LinkPath_as_tuple()
   local list_item = {                                                   
     value = file_path,                                                
     context = {                                                       
