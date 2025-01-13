@@ -117,11 +117,24 @@ end
 ---@param link string link to add
 function _G.Hpon_add_file_join_links(path, link)                                      
   local items = Hpon_get_list()
-  for _, item, links in ipairs(items) do                                       
-    if item == path then                                                      
-      -- add link to links. the strings should be unique in joined_links AI! 
-      local joined_links = { unpack(links) }
-      Hpon_update_file_item( path, joined_links )
+  for _, item in ipairs(items) do                                       
+    if item.value == path then                                                      
+      -- Check if link already exists in the array
+      local exists = false
+      local joined_links = {}
+      if item.links then
+        for _, existing_link in ipairs(item.links) do
+          if existing_link == link then
+            exists = true
+          end
+          table.insert(joined_links, existing_link)
+        end
+      end
+      -- Only add if it's a new unique link
+      if not exists then
+        table.insert(joined_links, link)
+      end
+      Hpon_update_file_item(path, joined_links)
     end
   end
 end                                                                       
