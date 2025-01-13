@@ -1,10 +1,11 @@
 
--- NOTE: the plugin is updated: ~/.config/nvim/plugged/harpoon/README.md
+-- Note: the plugin is updated: ~/.config/nvim/plugged/harpoon/README.md
 -- see the commits. persistence is working in ~/.local/share/nvim/harpoon/
 -- initial row, column is saved. but harpoon/vim maintains the current cursor, but is not updating the json.
 -- Issue: telescope doesn't maintain/use the current buffer pos. could have aider fix this.
-
--- NOTE: these maps work in the harpoon buffer and in telescope: ~/.config/nvim/plugin/utils/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
+-- Note: i can just edit the edit the harpoon menu/buffer (like using ]e to change sequ) and then ,,w. still needs a vim window change to update the neotree view
+-- Note: these maps work in the harpoon buffer and in telescope: ~/.config/nvim/plugin/utils/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
+-- abs and cwd relative paths are supported!
 
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
@@ -94,9 +95,27 @@ function _G.Hpon_add_file(file_path, opts)
   require("harpoon"):list():add(list_item)                              
   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
 end                                                                       
-                                                                          
 -- Hpon_add_file("path/to/file.txt")                       
 -- Hpon_add_file("path/to/bb.txt", {row = 10, col = 5})  
+
+
+-- lua putt(vim.fn.LinkPath_as_tuple())
+
+---@param file_path string Path to file to add                            
+---@param opts? {row?: number, col?: number} Optional cursor position     
+function _G.Hpon_add_file_linkPath()                                      
+  -- how to destructure the tuple? AI!
+  local [file_path, linkExt] = vim.fn.LinkPath_as_tuple()
+  local list_item = {                                                   
+    value = file_path,                                                
+    context = {                                                       
+      row = []
+    }                                                                 
+  }                                                                     
+  require("harpoon"):list():add(list_item)                              
+  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
+end                                                                       
+
 
 
 ---@return table List of all items in harpoon                             
