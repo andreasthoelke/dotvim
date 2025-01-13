@@ -1,6 +1,7 @@
 
 -- Note: the plugin is updated: ~/.config/nvim/plugged/harpoon/README.md
--- see the commits. persistence is working in ~/.local/share/nvim/harpoon/
+-- see the commits. persistence is working in 
+-- ~/.local/share/nvim/harpoon/
 -- initial row, column is saved. but harpoon/vim maintains the current cursor, but is not updating the json.
 -- Issue: telescope doesn't maintain/use the current buffer pos. could have aider fix this.
 -- Note: i can just edit the edit the harpoon menu/buffer (like using ]e to change sequ) and then ,,w. still needs a vim window change to update the neotree view
@@ -14,8 +15,8 @@ local harpoon = require("harpoon")
 
 harpoon:setup()
 
-vim.keymap.set("n", "<leader>ah", function() Hpon_add_current_file_row_col() end)
-vim.keymap.set("n", "<leader>aa", function() Hpon_add_current_file_row_col() end)
+vim.keymap.set("n", "<leader>ah", function() Hpon_add_file_linkPath() end)
+vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>ad", function() Hpon_remove_current_file() end)
 
 vim.keymap.set("n", "<leader>af", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
@@ -101,22 +102,17 @@ end
 -- lua putt(vim.fn.LinkPath_as_tuple())
 
 ---@param opts? {row?: number, col?: number} Optional cursor position     
--- function _G.Hpon_add_file_linkPath()                                      
---   local file_path, linkExt = vim.fn.LinkPath_as_tuple()
---   local list_item = {                                                   
---     value = file_path,                                                
---     context = {                                                       
---       links = { 
---     }                                                                 
---   }                                                                     
---   require("harpoon"):list():add(list_item)                              
---   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
--- end                                                                       
+function _G.Hpon_add_file_linkPath()                                      
+  local file_path, linkExt = vim.fn.LinkPath_as_tuple()
+  Hpon_add_file_join_links( file_path, linkExt )
+  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
+end                                                                       
 
----@param file_path string Path to file to add                            
+---@param file_path string Path to add                            
 ---@param link string link to add
 function _G.Hpon_add_file_join_links(path, link)                                      
   local items = Hpon_get_list()
+  -- problem: if items is empty we should still add Hpon_update_file_item(path, {link}) AI!
   for _, item in ipairs(items) do                                       
     if item.value == path then                                                      
       -- Check if link already exists in the array
@@ -135,9 +131,13 @@ function _G.Hpon_add_file_join_links(path, link)
         table.insert(joined_links, link)
       end
       Hpon_update_file_item(path, joined_links)
+    else
+      Hpon_update_file_item(path, {link})
     end
   end
 end                                                                       
+-- Hpon_get_list()
+-- Hpon_add_file_join_links("path/to/bbxb.txt", "new3")  
 
 
 ---@return table List of all items in harpoon                             
@@ -157,7 +157,7 @@ function _G.Hpon_get_list()
   return items                                                          
 end                                                                       
 -- Hpon_get_list()
-
+-- require("harpoon"):list():display()
 
 ---Print the current harpoon list to console                              
 function _G.Hpon_print_list()                                                   
