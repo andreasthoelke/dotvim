@@ -7,6 +7,8 @@
 -- Note: these maps work in the harpoon buffer and in telescope: ~/.config/nvim/plugin/utils/NewBuf-direction-maps.vim‖*NewBufˍfromˍpath
 -- abs and cwd relative paths are supported!
 
+-- TODO: bring back ui update vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
+
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 
@@ -82,40 +84,47 @@ end
 
 
 ---@param file_path string Path to file to add                            
----@param opts? {row?: number, col?: number} Optional cursor position     
-function _G.Hpon_add_file(file_path, opts)                                      
+---@param links table
+function _G.Hpon_update_file_item(file_path, links)                                      
   opts = opts or {}                                                     
   local list_item = {                                                   
     value = file_path,                                                
-    context = {                                                       
-      row = opts.row or 1,                                          
-      col = opts.col or 0                                           
-    }                                                                 
+    context = { links = links }
   }                                                                     
   require("harpoon"):list():add(list_item)                              
-  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
 end                                                                       
 -- Hpon_add_file("path/to/file.txt")                       
 -- Hpon_add_file("path/to/bb.txt", {row = 10, col = 5})  
-
+-- Hpon_add_file("path/to/bbcb.txt", {"hi there", "c"})  
+-- Hpon_get_list()
 
 -- lua putt(vim.fn.LinkPath_as_tuple())
 
----@param file_path string Path to file to add                            
 ---@param opts? {row?: number, col?: number} Optional cursor position     
-function _G.Hpon_add_file_linkPath()                                      
-  local file_path, linkExt = vim.fn.LinkPath_as_tuple()
-  local list_item = {                                                   
-    value = file_path,                                                
-    context = {                                                       
-      row = 1,
-      col = 0
-    }                                                                 
-  }                                                                     
-  require("harpoon"):list():add(list_item)                              
-  vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
-end                                                                       
+-- function _G.Hpon_add_file_linkPath()                                      
+--   local file_path, linkExt = vim.fn.LinkPath_as_tuple()
+--   local list_item = {                                                   
+--     value = file_path,                                                
+--     context = {                                                       
+--       links = { 
+--     }                                                                 
+--   }                                                                     
+--   require("harpoon"):list():add(list_item)                              
+--   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
+-- end                                                                       
 
+---@param file_path string Path to file to add                            
+---@param link string link to add
+function _G.Hpon_add_file_join_links(path, link)                                      
+  local items = Hpon_get_list()
+  for _, item, links in ipairs(items) do                                       
+    if item == path then                                                      
+      -- add link to links. the strings should be unique in joined_links AI! 
+      local joined_links = { unpack(links) }
+      Hpon_update_file_item( path, joined_links )
+    end
+  end
+end                                                                       
 
 
 ---@return table List of all items in harpoon                             
@@ -128,7 +137,7 @@ function _G.Hpon_get_list()
       table.insert(items, {                                         
         index = idx,                                              
         value = item.value,                                       
-        context = item.context                                    
+        links = item.context.links
       })                                                            
     end                                                               
   end                                                                   
