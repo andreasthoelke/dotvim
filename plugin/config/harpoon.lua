@@ -13,13 +13,13 @@
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 
--- fix AI!
-harpoon:setup(
-  {
-    save_on_toggle = false,
-    sync_on_ui_close = false
+harpoon:setup({
+  settings = {
+    save_on_toggle = true,
+    sync_on_ui_close = true,
+    save_on_change = true
   }
-)
+})
 
 vim.keymap.set("n", "<leader>ah", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
