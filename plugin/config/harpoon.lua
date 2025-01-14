@@ -106,9 +106,12 @@ end
 
 -- lua putt(vim.fn.LinkPath_as_tuple())
 
----@param opts? {row?: number, col?: number} Optional cursor position     
 function _G.Hpon_add_file_linkPath()                                      
   local file_path, linkExt = vim.fn.LinkPath_as_tuple()
+  -- putt( file_path, linkExt )
+  -- putt( vim.fn.LinkPath_as_tuple() )
+  -- print( file_path )
+  -- print( linkExt )
   Hpon_add_file_join_links( file_path, linkExt )
   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
 end                                                                       
@@ -153,7 +156,7 @@ function _G.Hpon_add_file_join_links(path, link)
   end
 end                                                                       
 -- Hpon_get_list()
--- Hpon_add_file_join_links("path/to/bbxb.txt", "new3")  
+-- Hpon_add_file_join_links("path/to/aa.txt", "new3")  
 -- require("harpoon"):list():display()
 -- require("harpoon"):list():recreate({"eins", "zwei"})
 
