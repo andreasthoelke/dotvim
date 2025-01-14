@@ -107,12 +107,23 @@ end
 -- lua putt(vim.fn.LinkPath_as_tuple())
 
 function _G.Hpon_add_file_linkPath()                                      
-  local file_path, linkExt = vim.fn.LinkPath_as_tuple()
-  -- putt( file_path, linkExt )
-  -- putt( vim.fn.LinkPath_as_tuple() )
-  -- print( file_path )
-  -- print( linkExt )
-  Hpon_add_file_join_links( file_path, linkExt )
+  local result = vim.fn.LinkPath_as_tuple()
+  print("Type of result:", type(result))
+  print("Raw result:", vim.inspect(result))
+  
+  local file_path, linkExt
+  if type(result) == "table" then
+    file_path = result[1]
+    linkExt = result[2]
+  else
+    file_path = result
+    linkExt = ""
+  end
+  
+  print("file_path:", file_path, "type:", type(file_path))
+  print("linkExt:", linkExt, "type:", type(linkExt))
+  
+  Hpon_add_file_join_links(file_path, linkExt)
   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
 end                                                                       
 
