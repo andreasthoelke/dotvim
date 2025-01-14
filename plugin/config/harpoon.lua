@@ -13,7 +13,13 @@
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 
-harpoon:setup()
+-- fix AI!
+harpoon:setup(
+  {
+    save_on_toggle = false,
+    sync_on_ui_close = false
+  }
+)
 
 vim.keymap.set("n", "<leader>ah", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
@@ -149,7 +155,7 @@ function _G.Hpon_add_file_join_links(path, link)
 end                                                                       
 -- Hpon_get_list()
 -- Hpon_add_file_join_links("path/to/bbxb.txt", "new3")  
-
+-- require("harpoon"):list():display()
 
 ---@return table List of all items in harpoon                             
 function _G.Hpon_get_list()                                                     
