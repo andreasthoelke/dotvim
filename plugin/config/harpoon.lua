@@ -17,7 +17,6 @@ harpoon:setup({
   settings = {
     save_on_toggle = true,
     sync_on_ui_close = true,
-    save_on_change = true
   }
 })
 
@@ -156,6 +155,7 @@ end
 -- Hpon_get_list()
 -- Hpon_add_file_join_links("path/to/bbxb.txt", "new3")  
 -- require("harpoon"):list():display()
+-- require("harpoon"):list():recreate({"eins", "zwei"})
 
 ---@return table List of all items in harpoon                             
 function _G.Hpon_get_list()                                                     
