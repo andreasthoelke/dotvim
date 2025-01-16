@@ -221,8 +221,11 @@ end
 -- plugin/basics/CodeMarkup.vim‖/TODO
 
 function _G.Hpon_parentFolderName(line)                                        
-  -- first split by ‖. then given the examples above the result should be 'colors' and 'basics' AI!
-
+  -- Split by ‖ and take first part (the file path)
+  local path = vim.split(line, "‖")[1]
+  -- Split path by / and take first component
+  local parent = vim.split(path, "/")[1]
+  return parent
 end
 
 
