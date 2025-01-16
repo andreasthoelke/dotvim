@@ -223,8 +223,8 @@ end
 function _G.Hpon_parentFolderName(line)                                        
   -- Split by ‖ and take first part (the file path)
   local path = vim.split(line, "‖")[1]
-  -- Split path by / and take first component
-  local parent = vim.split(path, "/")[1]
+  -- Get the directory part of the path
+  local parent = vim.fn.fnamemodify(path, ":h:t")
   return parent
 end
 
