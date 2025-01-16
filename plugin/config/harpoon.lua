@@ -228,6 +228,16 @@ function _G.Hpon_parentFolderName(line)
   return parent
 end
 
+-- Hpon_parentFolderName("/Users/at/Doc/colors/munsell-blue-molokai.vim‖/hi!ˍdefˍlinkˍTelescopePreviewLineˍCursorLine")
+-- Hpon_parentFolderName("plugin/basics/CodeMarkup.vim‖/TODO")
+
+-- local folderPattern = _G.Hpon_parentFolderName(line) .. "\\ze\\/"
+-- vim.fn.matchadd('mdNormHiBG', folderPattern, 11, -1)
+-- vim.fn.matchadd('mdNormHi', 'CodeMarkup', 11, -1)
+
+function _G.Hpon_highlighFolderName(line)                                        
+  -- local folderPattern = _G.Hpon_parentFolderName(line) .. "\\ze\\/"
+end
 
 
 
