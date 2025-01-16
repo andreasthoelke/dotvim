@@ -12,6 +12,8 @@
 
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
+-- require("harpoon.logger"):show()
+-- del ~/.local/share/nvim/harpoon/
 
 harpoon:setup({
   settings = {
@@ -20,7 +22,10 @@ harpoon:setup({
   }
 })
 
-vim.keymap.set("n", "<leader>ah", function() Hpon_add_file_linkPath() end)
+vim.keymap.set("n", "<leader>ah", function() 
+  Hpon_add_file_linkPath()
+  vim.fn.VScriptToolsBufferMaps()
+end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>ad", function() Hpon_remove_current_file() end)
 
@@ -40,8 +45,8 @@ vim.keymap.set("n", ",d4", function() Hpon_remove_at(4) end)
 vim.keymap.set("n", ",d5", function() Hpon_remove_at(5) end)
 
 -- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "]a", function() harpoon:list():prev() end)
-vim.keymap.set("n", "[a", function() harpoon:list():next() end)
+vim.keymap.set("n", "[a", function() harpoon:list():prev() end)
+vim.keymap.set("n", "]a", function() harpoon:list():next() end)
 
 
 -- lua require("harpoon"):list():add()
@@ -92,10 +97,14 @@ end
 ---@param file_path string Path to file to add                            
 ---@param links table
 function _G.Hpon_update_file_item(file_path, links)                                      
-  opts = opts or {}                                                     
+  local pos = vim.api.nvim_win_get_cursor(0)
   local list_item = {                                                   
     value = file_path,                                                
-    context = { links = links }
+    context = { 
+      links = links,
+      row = pos[1],
+      col = pos[2] 
+    }
   }                                                                     
   require("harpoon"):list():add(list_item)                              
 end                                                                       
@@ -108,20 +117,8 @@ end
 
 function _G.Hpon_add_file_linkPath()                                      
   local result = vim.fn.LinkPath_as_tuple()
-  print("Type of result:", type(result))
-  print("Raw result:", vim.inspect(result))
-  
-  local file_path, linkExt
-  if type(result) == "table" then
-    file_path = result[1]
-    linkExt = result[2]
-  else
-    file_path = result
-    linkExt = ""
-  end
-  
-  print("file_path:", file_path, "type:", type(file_path))
-  print("linkExt:", linkExt, "type:", type(linkExt))
+  local file_path = result[1]
+  local linkExt = result[2]
   
   Hpon_add_file_join_links(file_path, linkExt)
   vim.cmd("doautocmd BufEnter")  -- Trigger buffer event to refresh UI
@@ -179,9 +176,9 @@ function _G.Hpon_get_list()
     local item = list:get(idx)                                        
     if item then                                                      
       table.insert(items, {                                         
-        index = idx,                                              
+        -- index = idx,                                              
         value = item.value,                                       
-        links = item.context.links
+        context = item.context
       })                                                            
     end                                                               
   end                                                                   
@@ -189,24 +186,6 @@ function _G.Hpon_get_list()
 end                                                                       
 -- Hpon_get_list()
 -- require("harpoon"):list():display()
-
----Print the current harpoon list to console                              
-function _G.Hpon_print_list()                                                   
-  local items = Hpon_get_list()
-  if #items == 0 then                                                   
-    print("Harpoon list is empty")                                    
-    return                                                            
-  end                                                                   
-  print("Harpoon list:")                                                
-  for _, item in ipairs(items) do                                       
-    print(string.format("%d: %s (row:%d, col:%d)",                    
-      item.index,                                                   
-      item.value,                                                   
-      item.context.row,                                             
-      item.context.col))                                            
-  end                                                                   
-end                                                                       
--- Hpon_print_list()
 
 
 ---Remove an item at the specified index from the harpoon list            
@@ -234,5 +213,18 @@ function _G.Hpon_remove(file_path)
   -- print(string.format("Removed '%s' from list", file_path))             
 end                                                                       
 -- Hpon_remove("path/to/file.txt")
+
+
+-- ─   Helpers                                           ■
+
+-- colors/munsell-blue-molokai.vim‖/hi!ˍdefˍlinkˍTelescopePreviewLineˍCursorLine
+-- plugin/basics/CodeMarkup.vim‖/TODO
+
+function _G.Hpon_parentFolderName(line)                                        
+  -- first split by ‖. then given the examples above the result should be 'colors' and 'basics' AI!
+
+end
+
+
 
 
