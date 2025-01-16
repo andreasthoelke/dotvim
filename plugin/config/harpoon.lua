@@ -221,6 +221,9 @@ end
 -- plugin/basics/CodeMarkup.vim‖/TODO
 
 function _G.Hpon_parentFolderName(line)                                        
+  if type(line) ~= "string" or line == nil then
+    error("Hpon_parentFolderName: expected a string, got nil or invalid type")
+  end
   -- Split by ‖ and take first part (the file path)
   local path = vim.split(line, "‖")[1]
   -- Get the directory part of the path
