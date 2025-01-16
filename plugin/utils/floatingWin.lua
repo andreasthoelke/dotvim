@@ -84,7 +84,10 @@ function _G.Float_dynAnchorWidth()
   if thisWinWidth == neovim_full_client_width then
     width = widthDefault
   else
-    width = neovim_full_client_width - thisWinWidth - 2
+    -- Get the width of the current window's column
+    local curWinCol = vim.api.nvim_win_get_position(0)[2]
+    local availableWidth = neovim_full_client_width - curWinCol - thisWinWidth
+    width = availableWidth - 2
     width = width > 50 and width or widthDefault
   end
   local cursorWinCol = CursorIsInWinColumn()
