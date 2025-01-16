@@ -50,7 +50,7 @@ function _G.FloatOpts_inOtherWinColumn(bufnr)
     -- anchor = 'N' .. posOpts.anchor,
     width = posOpts.width - 1,
     -- width = math.floor( posOpts.width / 2.0 ),
-    height = vim.api.nvim_buf_line_count(bufnr) + 2,  -- content height plus border padding
+    height = bufnr and vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_line_count(bufnr) + 2 or math.floor(nvim_height / 3),
     border = 'rounded'
   }
 
