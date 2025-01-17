@@ -1154,11 +1154,6 @@ vim.g['metals_autoImport'] = false
 vim.highlight.priorities.semantic_tokens = 125
 -- vim.highlight.priorities.semantic_tokens = 22
 
--- *READ THIS*
--- I *highly* recommend setting statusBarProvider to true, however if you do,
--- you *have* to have a setting to display this in your statusline or else
--- you'll not see any messages from metals. There is more info in the help
--- docs about this
 metals_config.init_options.statusBarProvider = "on"
 -- metals_config.init_options.statusBarProvider = "off"
 

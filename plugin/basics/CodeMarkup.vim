@@ -32,7 +32,7 @@ endfunc
 " Test: qqq and QQQ - make sure jumps are only to highlighted labels
 " An ano othe:
 " one
-
+" matchadd('BlackBG', 'use', 11, -1 )
 " class Functor f => Align (f :: * -> *) where
 
 " TODO

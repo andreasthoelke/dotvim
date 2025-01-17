@@ -14,6 +14,10 @@ local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 -- require("harpoon.logger"):show()
 -- del ~/.local/share/nvim/harpoon/
+-- -- could use this ]a [a to keep win closed or close other haroon win.
+-- vim.g["harpoon_win_id"]
+-- vim.g["harpoon_bufnr"]
+
 
 harpoon:setup({
   settings = {
@@ -24,13 +28,17 @@ harpoon:setup({
 
 vim.keymap.set("n", "<leader>ah", function() 
   Hpon_add_file_linkPath()
-  vim.fn.VScriptToolsBufferMaps()
 end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>ad", function() Hpon_remove_current_file() end)
 
-vim.keymap.set("n", "<leader>af", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
-vim.keymap.set("n", "<leader>oh", function() harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" }) end)
+vim.keymap.set("n", "<leader>af", function() 
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+end)
+vim.keymap.set("n", "<leader>oh", function() 
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+end)
+
 
 vim.keymap.set("n", ",1", function() harpoon:list():select(1) end)
 vim.keymap.set("n", ",2", function() harpoon:list():select(2) end)
@@ -45,8 +53,23 @@ vim.keymap.set("n", ",d4", function() Hpon_remove_at(4) end)
 vim.keymap.set("n", ",d5", function() Hpon_remove_at(5) end)
 
 -- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "[a", function() harpoon:list():prev() end)
-vim.keymap.set("n", "]a", function() harpoon:list():next() end)
+vim.keymap.set("n", "[a", function() 
+  harpoon:list():prev() 
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+  vim.cmd( 'wincmd p' )
+
+  -- Note: -- could use this ]a [a to keep win closed or close other haroon win.
+  -- vim.g["harpoon_win_id"]
+  -- not working:
+  -- harpoon.ui:refresh_highlight(harpoon:list(), { title = "" })
+end)
+vim.keymap.set("n", "]a", function() 
+  harpoon:list():next() 
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+  vim.cmd( 'wincmd p' )
+end)
+
+-- vim.keymap.set("n", "]a", function() harpoon:list():next() end)
 
 
 -- lua require("harpoon"):list():add()
@@ -185,7 +208,10 @@ function _G.Hpon_get_list()
   return items                                                          
 end                                                                       
 -- Hpon_get_list()
+-- Hpon_get_list()[2].value
 -- require("harpoon"):list():display()
+-- require("harpoon"):list():get(2).value
+-- require("harpoon"):list()._index
 
 
 ---Remove an item at the specified index from the harpoon list            
@@ -221,9 +247,6 @@ end
 -- plugin/basics/CodeMarkup.vim‖/TODO
 
 function _G.Hpon_parentFolderName(line)                                        
-  if type(line) ~= "string" or line == nil then
-    error("Hpon_parentFolderName: expected a string, got nil or invalid type")
-  end
   -- Split by ‖ and take first part (the file path)
   local path = vim.split(line, "‖")[1]
   -- Get the directory part of the path
@@ -233,6 +256,7 @@ end
 
 -- Hpon_parentFolderName("/Users/at/Doc/colors/munsell-blue-molokai.vim‖/hi!ˍdefˍlinkˍTelescopePreviewLineˍCursorLine")
 -- Hpon_parentFolderName("plugin/basics/CodeMarkup.vim‖/TODO")
+-- Hpon_parentFolderName("")
 
 -- local folderPattern = _G.Hpon_parentFolderName(line) .. "\\ze\\/"
 -- vim.fn.matchadd('mdNormHiBG', folderPattern, 11, -1)

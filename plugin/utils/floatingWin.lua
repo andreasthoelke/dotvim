@@ -26,7 +26,7 @@ function _G.FloatBuf_inOtherWinColumn( bufnrOrPath )
     end
   end
 
-  local config = FloatOpts_inOtherWinColumn(bufnr)
+  local config = FloatOpts_inOtherWinColumn()
 
   local floating_winId = vim.api.nvim_open_win(bufnr, false, config)
   vim.g['floating_win'] = floating_winId
@@ -36,7 +36,7 @@ end
 -- vim.api.nvim_open_win(0, false, {relative='editor', row=3, col=3, width=12, height=12})
 
 
-function _G.FloatOpts_inOtherWinColumn(bufnr)
+function _G.FloatOpts_inOtherWinColumn()
   local posOpts = Float_dynAnchorWidth()
 
   -- Get the height and width of the Neovim window
@@ -50,7 +50,7 @@ function _G.FloatOpts_inOtherWinColumn(bufnr)
     -- anchor = 'N' .. posOpts.anchor,
     width = posOpts.width - 1,
     -- width = math.floor( posOpts.width / 2.0 ),
-    height = bufnr and vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_line_count(bufnr) + 2 or math.floor(nvim_height / 3),
+    height = math.floor(nvim_height / 2),
     border = 'rounded'
   }
 

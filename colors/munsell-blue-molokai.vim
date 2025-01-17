@@ -852,10 +852,51 @@ hi! htmlLink guifg=#42606B guibg=#030303
 " hi! mdLink guifg=#294B54 guibg=none
 hi! mdLink guifg=#3D7280 guibg=none
 
+" don't toggle just open, refresh on buffer change next line.
+" colors custom inverse
+
+" ─   Hpon                                               ■
+" hi! HponLine guifg=#3D7280 guibg=none
+hi! link HponLine CommentMinus
+
+" hi! HponLineSel guifg=#273A40 guibg=none
+hi! link HponLineSel CommentMinus
+
+hi! HponFile guifg=#325F6C gui=none
+" hi! link HponFolder purescriptClasses
+
+hi! HponFileSel guifg=#3D7280 guibg=#141818
+" hi! link HponFolderSel purescriptIdentifier
+
+hi! HponFolder guifg=#3D4C50 gui=italic
+" hi! link HponFile purescriptClasses
+
+hi! HponFolderSel guifg=#4B584D guibg=#141818 gui=italic
+" hi! link HponFileSel purescriptConstructor
+
+
+" Just notes
+" hi! link HponFolderSel purescriptConstructor
+" hi! link HponFile purescriptConstructor
+
+" hi! mdNormHiBG guifg=#344B53 guibg=#141818 gui=italic
+hi! mdNormHiBG guifg=#2C525D guibg=#141818 gui=italic
+hi! mdNormHiBG guifg=#2C525D guibg=#0F1212 gui=italic
+hi! mdNormHiBG guifg=#2C525D guibg=one gui=italic
+hi! link mdNormHiBG purescriptConstructor
+hi! link mdNormHiBG purescriptClasses
+
+hi! mdNormHiBGReverse guibg=#2C525D guifg=#141818 gui=italic
+hi! mdNormHiBGReverse guifg=#2C525D guibg=#141818 gui=undercurl
+
+hi! mdNormHiBGReverse guifg=#3D7280 guibg=#141818 gui=none
+
 hi! link Underlined mdLink
 hi! link markdownLinkText mdLink
 
 hi! link markdownError Comment
+" ─^  Hpon                                               ▲
+
 
 " Treesitter
 "   - @spell.markdown links to @spell markdown

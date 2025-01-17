@@ -156,15 +156,16 @@ endfunc
 nnoremap <silent><leader>ces :call Example_SetStart()<cr>
 nnoremap <silent><leader>cea :call Example_AddIdentif()<cr>
 
-let g:ExamplesPath = "m/_printer/ExampleLog.md"
+" let g:ExamplesPath = "m/_printer/ExampleLog.md"
+let g:ExamplesPath = "ExampleLog.md"
 
 " filereadable( g:ExamplesPath )
 
 func! Example_SetStart()
   if !filereadable( g:ExamplesPath )
-    " call writefile( [], g:ExamplesPath )
-    echo "missing ExampleLog.md"
-    return
+    call writefile( [], g:ExamplesPath )
+    echo "created ExampleLog.md"
+    " return
   endif
   let headerText = GetHeadingTextFromHeadingLine( line('.') )
   let linkPath = LinkPath_get()

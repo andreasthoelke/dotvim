@@ -46,6 +46,9 @@ func! VScriptToolsBufferMaps()
 
   " the below should overwrite the default/scala maps
 
+  nnoremap <silent><buffer> <leader>ot  :Vista<cr>
+  nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
+
   " Untested
   " nnoremap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
 

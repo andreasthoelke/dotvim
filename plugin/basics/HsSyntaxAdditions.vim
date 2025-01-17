@@ -490,6 +490,9 @@ func! LuaSyntaxAdditions() " ■
   " syntax match Normal '--\s' conceal
   " Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '--\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '---', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '---@param\s', 12, -1, {'conceal': ''})
+  call matchadd('Conceal', '---@', 12, -1, {'conceal': ''})
 
   syntax match Normal 'local\s' conceal cchar=ˍ
   syntax match Normal '^local\s' conceal

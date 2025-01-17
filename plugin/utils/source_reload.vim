@@ -162,6 +162,16 @@ func! PrintVimOrLuaLine()
     return
   endif
 
+  if &filetype == 'markdown'
+    let expr = line
+    let code = [0,0]
+    let code[0] = 'let ret = ' . expr
+    " let code[1] = 'if ret | call v:lua.putt(ret) | endif'
+    let code[1] = 'echo ret'
+    call SourceLines( 'source', code )
+    return
+  endif
+
   let expr = line[0:1] == "--" ? 
     \ line[3:] : line
 

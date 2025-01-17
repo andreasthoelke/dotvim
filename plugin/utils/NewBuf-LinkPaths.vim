@@ -73,6 +73,7 @@ func! AlternateFileLoc_info()
 endfunc
 
 
+" TODO why not use: (?) ~/.config/nvim/plugin/utils/NewBuf-LinkPaths.vim‖/LinkPath_get()
 func! ClipBoard_LinkPath_linesearch( shorten )
   let filePath = expand('%:p')
   let lineStr = getline('.')
@@ -84,7 +85,7 @@ func! ClipBoard_LinkPath_linesearch( shorten )
     call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )
   endif
 endfunc
-" FOR TESTING GO: ~/.config/nvim/plugin/NewBuf-LinkPaths.vim‖/NOTE:ˍthisˍ
+" FOR TESTING GO: ~/.config/nvim/plugin/utils/NewBuf-LinkPaths.vim‖/NOTE:ˍthisˍ
 " ClipBoard_LinkPath_linesearch( 'shorten' )
 " echo ClipBoard_LinkPath_linesearch( 'full' )
 
@@ -107,6 +108,11 @@ endfunc
 
 
 func! LinkPath_get()
+  let [path, linkExt] = LinkPath_as_tuple()
+  return path . linkExt
+endfunc
+
+func! LinkPath_as_tuple()
   let filePath = expand('%:p')
   let filePath = substitute( filePath, '/Users/at/', '~/', 'g' )
 
@@ -114,11 +120,11 @@ func! LinkPath_get()
   if lineStr =~ '─'
     let searchStr = GetHeadingTextFromHeadingLine( line('.') )
     let searchStr = substitute( searchStr, " ", "ˍ", "g" )
-    return filePath . "‖*" . searchStr
+    return [filePath, "‖*" . searchStr]
   else
     let searchStr = LinkPath_getKeyword()
     let searchStr = substitute( searchStr, " ", "ˍ", "g" )
-    return filePath . "‖/" . searchStr
+    return [filePath, "‖/" . searchStr]
   endif
 endfunc
 

@@ -562,6 +562,7 @@ require("neo-tree").setup({
           { "clipboard", zindex = 10 },
           { "diagnostics", errors_only = true, zindex = 20, align = "right", hide_when_expanded = true },
           { "git_status", zindex = 10, align = "right", hide_when_expanded = true },
+          -- { "source_to_target", zindex = 10, align = "right" },
           { "file_size", zindex = 10, align = "right" },
           { "type", zindex = 10, align = "right" },
           { "last_modified", zindex = 10, align = "right" },
@@ -591,7 +592,7 @@ require("neo-tree").setup({
           { "modified", zindex = 20, align = "right" },
           { "diagnostics",  zindex = 20, align = "right" },
           { "git_status", zindex = 10, align = "right" },
-          { "source_to_target", zindex = 10, align = "right" },
+          -- { "source_to_target", zindex = 10, align = "right" },
           { "harpoon_index", zindex = 10, align = "right" },
           { "file_size", zindex = 10, align = "right" },
           { "type", zindex = 10, align = "right" },
@@ -906,35 +907,52 @@ require("neo-tree").setup({
 
     components = {
 
-      source_to_target = function(config, node, state)
-        local path = node:get_id()
-            
-        -- Match only the config directory node
-        if string.match(path, "^/Users/at/.config/nvim/plugin/config$") then
-          -- vim.print("a1: " .. path)
-          return {
-            text = "↘ ",
-            highlight = "Comment",
-          }
-        end
+      -- source_to_target = function(config, node, state)
+      --   local pathPattern = nil
+      --   if vim.g["source_to_target_target_path_pattern"] == nil
+      --     return {}
+      --   else
 
-        -- local harpoon_key = vim.uv.cwd()
-        -- for i, item in ipairs(harpoon_list.items) do
-        --   local value = item.value
-        --   if string.sub(item.value, 1, 1) ~= "/" then
-        --     value = harpoon_key .. "/" .. item.value
-        --   end
-        --   if value == path then
-        --     -- vim.print('hi there')
-        --     return {
-        --       text = string.format("%d ", i), -- <-- Add your favorite harpoon like arrow here
-        --       highlight = config.highlight or "Comment",
-        --     }
-        --   end
-        -- end
+      --     harpoon from neotree, multi delete!
+      --   local pathPattern = nil
+      --   end
 
-        return {}
-      end,
+      --   local path = node:get_id()
+
+      --   -- match the file prefix
+      --   -- lua vim.g["source_to_target_target_path_pattern"] = "^/Users/at/.config/nvim/plugin/config/l[^/]*$"
+      --   -- if string.match(path, "^/Users/at/.config/nvim/plugin/config/l[^/]*$") then
+      --   if string.match(path, "^/Users/at/.config/nvim/plugin/config/l[^/]*$") then
+      --   -- match all files but not folder
+      --   -- if string.match(path, "^/Users/at/.config/nvim/plugin/config/[^/]*$") then
+      --   -- both match the folder
+      --   -- if string.match(path, "^/Users/at/.config/nvim/plugin/config*$") then
+      --   -- if string.match(path, "^/Users/at/.config/nvim/plugin/config/*$") then
+      --   -- if string.match(path, "^/Users/at/.config/nvim/plugin/config$") then
+      --     -- vim.print("a1: " .. path)
+      --     return {
+      --       text = "↘ ",
+      --       highlight = "Comment",
+      --     }
+      --   end
+
+      --   -- local harpoon_key = vim.uv.cwd()
+      --   -- for i, item in ipairs(harpoon_list.items) do
+      --   --   local value = item.value
+      --   --   if string.sub(item.value, 1, 1) ~= "/" then
+      --   --     value = harpoon_key .. "/" .. item.value
+      --   --   end
+      --   --   if value == path then
+      --   --     -- vim.print('hi there')
+      --   --     return {
+      --   --       text = string.format("%d ", i), -- <-- Add your favorite harpoon like arrow here
+      --   --       highlight = config.highlight or "Comment",
+      --   --     }
+      --   --   end
+      --   -- end
+
+      --   return {}
+      -- end,
 
 
       harpoon_index = function(config, node, _)
