@@ -28,14 +28,12 @@ harpoon:setup({
 
 vim.keymap.set("n", "<leader>ah", function() 
   Hpon_add_file_linkPath()
-  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
-  vim.cmd( 'wincmd p' )
+  Hpon_rerender()
 end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>ad", function() 
   Hpon_remove_current_file() 
-  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
-  vim.cmd( 'wincmd p' )
+  Hpon_rerender()
 end)
 vim.keymap.set("n", "<leader>aD", function() Hpon_clearList() end)
 
@@ -51,32 +49,11 @@ end)
 --     vim.api.nvim_win_set_cursor(0, {1, 0})
 --     vim.cmd( 'wincmd p' )
 -- end)
--- vim.keymap.set("n", ",2", function() 
---     harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
---     vim.api.nvim_win_set_cursor(0, {2, 0})
---     vim.cmd( 'wincmd p' )
--- end)
--- vim.keymap.set("n", ",3", function() 
---     harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
---     vim.api.nvim_win_set_cursor(0, {3, 0})
---     vim.cmd( 'wincmd p' )
--- end)
--- vim.keymap.set("n", ",4", function() 
---     harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
---     vim.api.nvim_win_set_cursor(0, {4, 0})
---     vim.cmd( 'wincmd p' )
--- end)
--- vim.keymap.set("n", ",5", function() 
---     harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
---     vim.api.nvim_win_set_cursor(0, {5, 0})
---     vim.cmd( 'wincmd p' )
--- end)
 
 
 vim.keymap.set("n", ",1", function() 
   harpoon:list():select(1) 
-  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
-  vim.cmd( 'wincmd p' )
+  Hpon_rerender()
 end)
 vim.keymap.set("n", ",2", function() 
   harpoon:list():select(2) 
@@ -273,7 +250,7 @@ function _G.Hpon_get_list()
         -- index = idx,                                              
         value = item.value,                                       
         context = item.context,
-        links = item.context and item.context.links
+        -- links = item.context and item.context.links
       })                                                            
     end                                                               
   end                                                                   
@@ -338,5 +315,14 @@ function _G.Hpon_highlighFolderName(line)
   -- local folderPattern = _G.Hpon_parentFolderName(line) .. "\\ze\\/"
 end
 
+function _G.Hpon_rerender()                                        
+  local old_winid = vim.g["harpoon_win_id"]
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+
+  -- delay this call by 50ms AI!
+  vim.api.nvim_win_close(old_winid, true)
+
+  vim.cmd( 'wincmd p' )
+end
 
 
