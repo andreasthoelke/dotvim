@@ -319,10 +319,10 @@ function _G.Hpon_rerender()
   local old_winid = vim.g["harpoon_win_id"]
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 
-  -- delay this call by 50ms AI!
-  vim.api.nvim_win_close(old_winid, true)
-
-  vim.cmd( 'wincmd p' )
+  vim.defer_fn(function()
+    vim.api.nvim_win_close(old_winid, true)
+    vim.cmd('wincmd p')
+  end, 50)
 end
 
 
