@@ -321,8 +321,9 @@ function _G.Hpon_rerender()
 
   vim.defer_fn(function()
     vim.api.nvim_win_close(old_winid, true)
-    vim.cmd('wincmd p')
   end, 50)
+
+  vim.cmd('wincmd p')
 end
 
 
