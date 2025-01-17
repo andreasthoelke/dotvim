@@ -28,9 +28,16 @@ harpoon:setup({
 
 vim.keymap.set("n", "<leader>ah", function() 
   Hpon_add_file_linkPath()
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+  vim.cmd( 'wincmd p' )
 end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
-vim.keymap.set("n", "<leader>ad", function() Hpon_remove_current_file() end)
+vim.keymap.set("n", "<leader>ad", function() 
+  Hpon_remove_current_file() 
+  harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
+  vim.cmd( 'wincmd p' )
+end)
+vim.keymap.set("n", "<leader>aD", function() Hpon_clearList() end)
 
 vim.keymap.set("n", "<leader>af", function() 
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
@@ -167,6 +174,11 @@ function _G.Hpon_remove_current_file()
 end                                                                       
 -- Hpon_remove_current_file()
 
+function _G.Hpon_clearList()                                         
+  require("harpoon"):list():recreate({})                            
+  print 'List cleared'
+end                                                                       
+-- Hpon_remove_current_file()
 
 ---@param file_path string Path to file to add                            
 ---@param links table
@@ -181,6 +193,7 @@ function _G.Hpon_update_file_item(file_path, links)
     }
   }                                                                     
   require("harpoon"):list():add(list_item)                              
+  -- require("harpoon"):list():addplus(list_item)                              
 end                                                                       
 -- Hpon_add_file("path/to/file.txt")                       
 -- Hpon_add_file("path/to/bb.txt", {row = 10, col = 5})  
