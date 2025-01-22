@@ -308,11 +308,12 @@ func! JS_SetPrinterIdentif()
   call VirtualRadioLabel( '«')
 
   " compile typescript
-  if relPath[-3:-1] == ".ts"
-    let cmd = "cd " . jsWd . " && tsc"
-    let _resLines = systemlist( cmd)
-    let relPath = relPath[:-4] . ".js"
-  endif
+  " skipping this, not sure where it was putting the .js file, using node 23
+  " if relPath[-3:-1] == ".ts"
+  "   let cmd = "cd " . jsWd . " && tsc"
+  "   let _resLines = systemlist( cmd)
+  "   let relPath = relPath[:-4] . ".js"
+  " endif
 
   let [export, altIdentif, identif; _] = split( getline('.') )
   if export != 'export'
@@ -323,23 +324,23 @@ func! JS_SetPrinterIdentif()
     let ident = T_RemoveTypeColon( identif )
   endif
 
-  let importStm = "import { " . identif . " as testIdentif } from '" . relPath . "'"
+  let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
   let TesterLines = readfile( JsPrinterPath(), '\n' )
   let TesterLines[0] = importStm
   call writefile( TesterLines, JsPrinterPath() )
 endfunc
 
 func! JS_RunPrinter()
-
   " compile typescript
-  let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
-  let cmd = "cd " . jsWd . " && tsc"
-  let _resLines = systemlist( cmd)
+  " let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
+  " let cmd = "cd " . jsWd . " && tsc"
+  " let _resLines = systemlist( cmd)
 
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
   " let Cmd = 'bun '
   " let Cmd = 'npx ts-node --transpile-only '
-  let Cmd = 'node '
+  " let Cmd = 'node '
   " let Cmd = 'npx ts-node '
   let resLines = systemlist( Cmd . JsPrinterPath() )
   silent let g:floatWin_win = FloatingSmallNew ( resLines )

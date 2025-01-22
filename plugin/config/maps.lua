@@ -211,6 +211,7 @@ vim.keymap.set( 'n',
     ) end )
 
 -- ─   Git picker maps                                  ──
+-- NOTE these maps: ~/.config/nvim/plugin/utils/utils-git.vim‖*GitˍTools
 
 -- These work well!
 
@@ -300,6 +301,15 @@ vim.keymap.set( 'n',
 -- l g2    - Gitsigns change_base ~2
 -- l g3    - Gitsigns change_base ~3
 -- l g4    - Gitsigns change_base ~4
+
+vim.keymap.set( 'n',
+  '<leader>gd', function()
+    MiniDiff.toggle_overlay()
+    vim.cmd 'Gitsigns toggle_signs'
+    -- potential alterative:
+    -- vim.cmd 'set number'
+    -- vim.cmd 'set nonumber'
+  end )
 
 vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true })

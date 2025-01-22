@@ -20,6 +20,12 @@ Plug 'robitx/gp.nvim'
 " https://github.com/jondkinney/aider.nvim
 Plug 'jondkinney/aider.nvim'
 
+" https://github.com/dlants/magenta.nvim
+Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }
+" Plug('dlants/magenta.vim', {
+"   ['do'] = 'npm install --frozen-lockfile',
+" })
+
 " https://github.com/piersolenski/wtf.nvim
 Plug 'piersolenski/wtf.nvim'
 
@@ -46,6 +52,9 @@ Plug 'junegunn/fzf.vim'
 " Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
 
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
+
+Plug 'ibhagwan/fzf-lua'
+
 
 Plug 'MattesGroeger/vim-bookmarks'
 " Plug 'tom-anders/telescope-vim-bookmarks.nvim'
@@ -192,6 +201,9 @@ Plug 'tpope/vim-fugitive'
 
 " Lua version of gitgutter!
 Plug 'lewis6991/gitsigns.nvim'
+
+" https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-diff.md
+Plug 'echasnovski/mini.diff'
 
 " No longer supported
 " Plug 'gregsexton/gitv', {'on': ['Gitv']}

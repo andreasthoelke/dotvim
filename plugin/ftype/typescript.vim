@@ -563,11 +563,12 @@ endfunc
 
 func! JS_TopLevBindingForw()
   " normal! j
-  call search( '\v^(async|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let)\s', 'W' )
+  call search( '\v^(async|\s\s\zsasync|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let|\s\s\zs\i*\()', 'W' )
 endfunc
 
 func! JS_TopLevBindingBackw()
-  call search( '\v^(async|export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
+  " call search( '\v^(async|export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
+  call search( '\v^(async|\s\s\zsasync|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let|\s\s\zs\i*\()', 'bW' )
   " normal! {
   " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc

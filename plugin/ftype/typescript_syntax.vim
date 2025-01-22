@@ -100,6 +100,8 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal '\s\zstype_=' conceal
 
+  syntax match Normal 'interface' conceal cchar=◈
+
 " ➹  ⤤  ⬀  ⬈  ⧼  ⪦ ⇡ ⇞  ⇾  ~➚
 " ᐣ ᐤ  ᐥ  ᐦᐧ  ᐨ  ᑆ   ᑄ   ᑋ  ᑓ   ᑣ   ᒾ  ᓋ  ᓩ  ᓫ ›
 

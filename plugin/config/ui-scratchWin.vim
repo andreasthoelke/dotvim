@@ -51,14 +51,13 @@ endfunc
 
 func! ScratchWinNext_Show( linesToShow, resize )
   " let g:ScratchBufferCounter += 1
-  " exec ('aboveleft new ~.vim/scratch/' . g:ScratchBufferCounter)
-  exec ('aboveleft new ~/.vim/scratch/' . GetRandNumberString())
+  exec ('aboveleft new ~/.vim/scratch/' . GetRandNumberString() . '.md')
   " let filePath = GetNextScratchFilePath()
   " e ~/.vim/scratch/
   " exec ('belowright 5new Scratch' . g:ScratchBufferCounter)
   " call MakeBufferDisposable()
-  set filetype=purescript_scratch
-  set syntax=purescript1
+  " set filetype=purescript_scratch
+  " set syntax=purescript1
   call append( line(1), a:linesToShow )
 
   if a:resize == 'auto'
@@ -69,7 +68,7 @@ func! ScratchWinNext_Show( linesToShow, resize )
   exec ('resize ' . l:height)
   exec 'normal! gg0'
 endfunc
-" call ScratchWinNext_Show(['eins zwei', 'drei'])
+" ScratchWinNext_Show(['eins zwei', 'drei'], 8)
 
 func! GetNextScratchFilePath()
   " project root
@@ -115,4 +114,9 @@ endfunc
 func! GetRandNumberString ()
   return string(reltime()[1])[3:][:2]
 endfunc
+" GetRandNumberString()
+
+
+
+
 

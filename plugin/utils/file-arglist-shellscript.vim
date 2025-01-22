@@ -40,7 +40,8 @@ nnoremap <leader>X :echo 'use cA (clear Arglist)'<cr>
 func! ReloadKeepView()
   let l:winview = winsaveview()
   exec 'e'
-  exec 'normal!' "\<C-o>"
+  " this caused 'mark not set'
+  " exec "normal!" "\<C-o>"
   call winrestview(l:winview)
 endfunc
 

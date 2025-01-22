@@ -48,12 +48,33 @@ hi! DiffText                      guibg=#282C31
 lua vim.api.nvim_set_hl(0, 'DiffAdd', { fg='NONE', bg='#17191C' })
 lua vim.api.nvim_set_hl(0, 'DiffDelete', { bg='#0E0E0E' })
 
+" MiniDiffSignAdd     - "add" hunk lines visualization.
+" MiniDiffSignChange  - "change" hunk lines visualization.
+" MiniDiffSignDelete  - "delete" hunk lines visualization.
+" MiniDiffOverAdd     - added text shown in overlay.
+" MiniDiffOverChange  - changed text shown in overlay.
+" MiniDiffOverContext - context of changed text shown in overlay.
+" MiniDiffOverDelete  - deleted text shown in overlay.
 
-" hi Directory       guifg=#A6E22E               gui=bold
+" :hi MiniDiffSignAdd
+" :hi Added
+" :hi NvimLightGreen
+" :hi MiniDiffSignChange
+" :hi MiniDiffSignDelete
+
+" hi! MiniDiffSignAdd guibg=#b3f6c0
+  " - MiniDiffOverChange links to DiffText MiniDiffOverlay
+
+" hi! MiniDiffOverChange guifg=none guibg=#1C1105
+" hi! MiniDiffOverChange guifg=none guibg=#1B0707
+" hi! MiniDiffOverChange guifg=none guibg=#B0F8B7
+" now using a light green background to highlight changed text
+hi! MiniDiffOverChange guifg=none guibg=#A3EDAE
+
+" hi Directory       guifg=#A6E22E               gui=ital
 hi Directory       guifg=#11C8D7
 
 " hi Error           guifg=#960050 guibg=#1E0010
-" hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
 " hi ErrorMsg        guifg=#960050 guibg=#151719
 
 " doesn't work

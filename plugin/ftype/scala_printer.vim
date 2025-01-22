@@ -124,6 +124,7 @@ func! Scala_AddSignature()
   " echo hostLn identifCol
   " return
   let typeStr = Scala_LspTypeAtPos(hostLn, identifCol)
+  " let typeStr = v:lua.require('utils_lsp').hover()
   if typeStr == "timeout"
     echo "Lsp timeout .. try again"
     return
