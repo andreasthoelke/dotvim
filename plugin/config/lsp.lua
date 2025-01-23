@@ -340,6 +340,14 @@ end
 
 
 lspconfig.tsserver.setup({
+  settings = {
+    typescript = {
+      symbolInfo = {
+        memberSymbols = true,
+        classSymbols = true
+      }
+    }
+  },
   on_attach = function(client, bufnr)
     local bufopts = { noremap=true, silent=true, buffer=bufnr }
     client.server_capabilities.document_formatting = false

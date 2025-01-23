@@ -92,7 +92,6 @@ end
 function _G.LspMeaningfulSymbol( bufnr )
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local symbStack = navic.get_data( bufnr )
-
   local candidateStack
   if vim.bo.filetype == 'scala' then
     candidateStack = fun.filter(

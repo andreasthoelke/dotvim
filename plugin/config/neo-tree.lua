@@ -471,7 +471,9 @@ end
 
 
 local function open_startup()
-  Ntree_openLeft()
+  if not vim.g.vscode then
+    Ntree_openLeft()
+  end
 end
 
 -- vim.fn.NewBufCmds( "" )[ 'left' ]

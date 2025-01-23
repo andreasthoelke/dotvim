@@ -14,6 +14,14 @@ func! TsSyntaxAdditions ()
         \ UPDATE
         \ WITH
 
+  syntax match Normal 'switch' conceal cchar=⌋
+  syntax match Normal 'case' conceal cchar=˰
+  syntax match Normal '\s\zsif\ze\W' conceal cchar=˻
+  syntax match Normal 'else' conceal cchar=˺
+  syntax match Normal 'else\sif' conceal cchar=˼
+  " syntax match Normal 'then\ze(\W|\_$)' conceal cchar=˹
+  " syntax match Normal '\v(\s|^)\zsthen\ze(\s|\_$)' conceal cchar=˹
+
 
   syntax match Normal "\v\=\=" conceal cchar=≡
   syntax match Normal "===" conceal cchar=≣
@@ -52,6 +60,9 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal "const\s" conceal
   syntax match Normal "readonly\s" conceal cchar=‧
+  syntax match Normal 'private' conceal cchar=ˌ
+  syntax match Normal 'public' conceal cchar=∘
+  syntax match Normal '\s\zsas\ze\s' conceal cchar=«
 
   syntax match Normal "'" conceal
   syntax match Normal "''" conceal cchar=∅
@@ -78,11 +89,11 @@ func! TsSyntaxAdditions ()
   syntax match Normal "await\ze\s" conceal cchar=≀
   syntax match Normal "Promise" conceal cchar=~
   syntax match Normal "Deferred" conceal cchar=~
-  syntax match Normal "undefined" conceal cchar=∪
+  syntax match Normal "undefined" conceal cchar=𝇇
   syntax match Normal "unknown" conceal cchar=⪦
   syntax match Normal "never" conceal cchar=ˍ
   syntax match Normal "null\ze\s" conceal cchar=⨆
-  " syntax match Normal "this\." conceal cchar=⫶
+  syntax match Normal "this\." conceal cchar=⫰
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
   syntax match Normal "void" conceal cchar=✴
@@ -98,9 +109,13 @@ func! TsSyntaxAdditions ()
   syntax match Normal '/>' conceal cchar=˗
   syntax match Normal '|>' conceal cchar=⇾
 
-  syntax match Normal '\s\zstype_=' conceal
+  " syntax match Normal '\s\zstype_=' conceal
 
   syntax match Normal 'interface' conceal cchar=◈
+  syntax match Normal 'type' conceal cchar=◇
+  syntax match Normal 'class' conceal cchar=□
+  syntax match Normal 'constructor' conceal cchar=≈
+  syntax match Normal 'enum' conceal cchar=|
 
 " ➹  ⤤  ⬀  ⬈  ⧼  ⪦ ⇡ ⇞  ⇾  ~➚
 " ᐣ ᐤ  ᐥ  ᐦᐧ  ᐨ  ᑆ   ᑄ   ᑋ  ᑓ   ᑣ   ᒾ  ᓋ  ᓩ  ᓫ ›
@@ -113,6 +128,13 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
   syntax match Normal 'combine' conceal cchar=◇
+  syntax match Normal 'try\ze\s' conceal cchar=⟑
+  syntax match Normal 'catch\s\ze' conceal cchar=↓
+  syntax match Normal 'finally\s\ze' conceal cchar=ᐶ
+  syntax match Normal 'Error' conceal cchar=⊡
+  syntax match Normal 'throw' conceal cchar=⊖
+  syntax match Normal 'JSON' conceal cchar=❉
+  syntax match Normal 'new' conceal cchar=⟑
 
   syntax match Normal 'i => {i' conceal cchar=_
   syntax match Normal 'x => x\ze\s' conceal cchar=_

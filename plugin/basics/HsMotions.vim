@@ -1151,7 +1151,7 @@ func! CommaItemStartForw() " ■
   " Find delimiter on the same bracket level, skip matches in Strings
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
   " Test this: I may want to use this in comments and strings?!
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\)', '}\|\]\|)', 'nW' )
   " echo sLine . '-' . sCol
   call setpos('.', [0, sLine, sCol, 0] )
   normal! w
@@ -1173,10 +1173,13 @@ func! CommaItemStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
   " Find delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\)', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   call setpos('.', [0, sLine, sCol, 0] )
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  "NOTE the added (,|;) instead of just "," (also see above) which is needed to go back with [t.
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\)\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+
   call setpos('.', [0, sLine, sCol, 0] )
   normal! w
   return

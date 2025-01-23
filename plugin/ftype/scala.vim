@@ -323,7 +323,7 @@ endfunc
 
 
 " let g:Scala_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
-let g:Scala_MvStartLine_SkipWordsL = ['val', 'def', 'case', 'lazy', 'private', 'final', 'override']
+let g:Scala_MvStartLine_SkipWordsL = ['val', 'def', 'lazy', 'private', 'final', 'override', 'const', 'await', 'return']
 " echo "private" =~ g:Scala_MvStartLine_SkipWords
 
 func! SkipScalaSkipWords()

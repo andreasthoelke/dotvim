@@ -561,17 +561,63 @@ endfunc
 " echo substitute( 'const e3_eins = 33', '\zeconst\se\d_', '// ', 'g' )
 " echo functional#map( {lineStr -> substitute( lineStr, '\zeconst\se\d_', '// ', 'g' )}, ['const e3_eins = 33', 'const zwei = 33'] )
 
+" func! JS_TopLevBindingForw()
+"   " normal! j
+"   call search( '\v^(async|\s\s(private\s)?async\s\zs\i|final|override|case|enum|final|lazy|(export\s)?(\s\s)?(\s\s)?function\s\zs\i|(export\s)?type\s\zs\i|object\s\zs\i|(export\s)?class\s\zs\i|def|val|var|const|let|export\s\zs\i|(\s\s)?\s\s\zs\i*(\(|\<))', 'W' )
+" endfunc
+
 func! JS_TopLevBindingForw()
-  " normal! j
-  call search( '\v^(async|\s\s\zsasync|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let|\s\s\zs\i*\()', 'W' )
+  let patterns = [
+        \ '\scase\s\zs\S',
+        \ '^\s\s\zs\i.*\=\>',
+        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
+        \ '^final',
+        \ '^override', 
+        \ '^enum',
+        \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
+        \ '^(export\s)?type\s\zs\i',
+        \ '^object\s\zs\i',
+        \ '^(export\s)?class\s\zs\i',
+        \ '^const',
+        \ '^let',
+        \ '^export\s\zs\i',
+        \ '\sprivate\s\zs\i*(\(|\<)',
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'W')
 endfunc
 
 func! JS_TopLevBindingBackw()
-  " call search( '\v^(async|export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
-  call search( '\v^(async|\s\s\zsasync|export|final|override|case|enum|final|lazy|function|object|class|def|val|var|const|let|\s\s\zs\i*\()', 'bW' )
-  " normal! {
-  " call search( '\v^(export|function|const|let)\s', 'W' )
+  let patterns = [
+        \ '\scase\s\zs\S',
+        \ '^\s\s\zs\i.*\=\>',
+        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
+        \ '^final',
+        \ '^override', 
+        \ '^enum',
+        \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
+        \ '^(export\s)?type\s\zs\i',
+        \ '^object\s\zs\i',
+        \ '^(export\s)?class\s\zs\i',
+        \ '^const',
+        \ '^let',
+        \ '^export\s\zs\i',
+        \ '\sprivate\s\zs\i*(\(|\<)',
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'bW')
 endfunc
+
+
+
+" func! JS_TopLevBindingBackw()
+"   " call search( '\v^(async|export|final|override|case|enum|final|def|lazy|val|function|var|object|class|const|let)\s', 'bW' )
+"   call search( '\v^(async|\s\s(private\s)?async\s\zs\i|final|override|case|enum|final|lazy|(export\s)?(\s\s)?(\s\s)?function\s\zs\i|(export\s)?type\s\zs\i|object\s\zs\i|(export\s)?class\s\zs\i|def|val|var|const|let|export\s\zs\i|(\s\s)?\s\s\zs\i*(\(|\<))', 'bW' )
+"   " normal! {
+"   " call search( '\v^(export|function|const|let)\s', 'W' )
+" endfunc
 
 " call search('\v^(\s*)?call', 'W')
 
