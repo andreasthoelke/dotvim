@@ -1,4 +1,7 @@
 
+
+
+
 set autoread | au CursorHold * checktime
 
 " Enables 'setlocal' for filestypes
