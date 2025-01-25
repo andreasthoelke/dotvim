@@ -768,6 +768,12 @@ lua vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = t
 " au ag InsertEnter * exec "normal! m'"
 " au! ag InsertEnter * call InsertEnter()
 
+" Debug autocmd for VSCode-neovim duplicate insert issue
+augroup debug_insert_leave
+  autocmd!
+  autocmd InsertLeave * sleep 500m
+augroup END
+
 " Note: adding to the jumplist on insert Enter/Leave does not seem to work?!
 " Now go to insert start/end explicitly
 
