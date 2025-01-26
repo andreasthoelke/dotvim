@@ -962,9 +962,9 @@ cmp.setup {
   -- },
 }
 
-require('cmp-graphql').setup({
-  schema_path = 'graphql.schema.json', -- Path to generated json schema file in project
-})
+-- require('cmp-graphql').setup({
+--   schema_path = 'graphql.schema.json', -- Path to generated json schema file in project
+-- })
 
 
 

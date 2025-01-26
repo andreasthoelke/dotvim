@@ -103,7 +103,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'vsnip' },
     { name = 'mkdnflow' },
-    { name = 'graphql' },
+    -- { name = 'graphql' },
     -- { name = 'luasnip' }, -- For luasnip users.
   }, {
       {
@@ -126,9 +126,10 @@ cmp.setup {
   -- },
 }
 
-require('cmp-graphql').setup({
-  schema_path = 'graphql.schema.json', -- Path to generated json schema file in project
-})
+-- -- this seemed to work. just temp disabled
+-- require('cmp-graphql').setup({
+--   schema_path = 'graphql.schema.json', -- Path to generated json schema file in project
+-- })
 
 
 

@@ -21,7 +21,8 @@ Plug 'robitx/gp.nvim'
 Plug 'jondkinney/aider.nvim'
 
 " https://github.com/dlants/magenta.nvim
-Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }
+" Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }
+Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --frozen-lockfile' }
 " Plug('dlants/magenta.vim', {
 "   ['do'] = 'npm install --frozen-lockfile',
 " })

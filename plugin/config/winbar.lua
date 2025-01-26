@@ -88,6 +88,22 @@ function _G.formattedFileInfo()
   return "%#WinBarFilename#" .. vim.fn.expand('%:t:r') .. "%*"
 end
 
+function _G.Magenta_model()
+  local ok, value = pcall(vim.api.nvim_win_get_var, 0, 'magenta_model')
+  if ok then
+    return value
+  else
+    return ""
+  end
+end
+
+-- vim.api.nvim_win_get_option(0, 'wrap')
+-- vim.api.nvim_win_get_option(0, 'winbar')
+-- lua putt( vim.api.nvim_win_get_option(0, 'winbar') )
+-- vim.api.nvim_win_set_var(0, 'abc', 'hi there')
+-- vim.api.nvim_win_get_var(0, 'abc')
+-- lua putt( vim.api.nvim_win_get_var(0, 'magenta_model') )
+
 
 function _G.LspMeaningfulSymbol( bufnr )
   bufnr = bufnr or vim.api.nvim_get_current_buf()
@@ -149,10 +165,12 @@ function _G.formatLspSymbolsStack( lspSymbolsStack )
 end
 
 
+-- NOTE: not using this, but lualine
 function M.get_winbar()
   if excludes() then
     return ""
   end
+
   if navic.is_available() then
     return "%#WinBarSeparator#"
       .. "%="

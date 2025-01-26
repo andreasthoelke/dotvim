@@ -133,7 +133,12 @@ function custom_ftype:apply_icon()
     if fname == "[quickmenu]" then
       self.status = ""
     else
-      self.status = icon .. ' ' .. fname
+      local ok, value = pcall(vim.api.nvim_win_get_var, 0, 'magenta_title')
+      if ok then
+        self.status = icon .. ' ' .. value
+      else
+        self.status = icon .. ' ' .. fname
+      end
     end
   end
 end
@@ -273,7 +278,17 @@ local lualine_config = {
     --   "LspSymbolsStack()",
     --   -- color = 'LuLine_Winbar_y_ac',
     -- },
-    lualine_z = {},
+    -- lualine_z = {},
+      -- "Magenta_model()",
+      -- color = 'LuLine_Winbar_b_in',
+
+    lualine_z = {
+      {
+        'Magenta_model()',
+        color = 'LuLine_Winbar_b_in',
+      }
+    }
+
     -- lualine_z = {
     --   {
     --     fname_noExt,
@@ -299,7 +314,15 @@ local lualine_config = {
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    lualine_z = {},
+
+    lualine_z = {
+      {
+        'Magenta_model()',
+        color = inactiveWinbarColor,
+      }
+    },
+
+    -- lualine_z = {},
   },
 
 

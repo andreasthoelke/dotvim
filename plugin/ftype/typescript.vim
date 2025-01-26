@@ -32,7 +32,8 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer> <leader>geI :call JS_eval_line( line('.'), v:false, v:true, v:true )<cr>
 
   " nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
-  nnoremap <silent><buffer>         gei :call JS_RunPrinter()<cr>
+  nnoremap <silent><buffer>         gei :call JS_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
   " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
   " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
@@ -569,17 +570,15 @@ endfunc
 func! JS_TopLevBindingForw()
   let patterns = [
         \ '\scase\s\zs\S',
-        \ '^\s\s\zs\i.*\=\>',
+        \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ '^final',
-        \ '^override', 
+        \ '^\s\sasync\s\zs\i',
+        \ '^\s\sstatic\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
-        \ '^const',
-        \ '^let',
         \ '^export\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
         \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
@@ -591,17 +590,14 @@ endfunc
 func! JS_TopLevBindingBackw()
   let patterns = [
         \ '\scase\s\zs\S',
-        \ '^\s\s\zs\i.*\=\>',
+        \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ '^final',
-        \ '^override', 
+        \ '^\s\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
-        \ '^const',
-        \ '^let',
         \ '^export\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
         \ '^(\s\s)?\s\s\zs\i*(\(|\<)'

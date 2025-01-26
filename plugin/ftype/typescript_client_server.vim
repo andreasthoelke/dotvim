@@ -299,6 +299,16 @@ endfunc
 
 " ─   05-2024 standalone approach                        ■
 
+func! JS_LspTypeAtPos(lineNum, colNum)
+  let [oLine, oCol] = getpos('.')[1:2]
+  call setpos('.', [0, a:lineNum, a:colNum, 0] )
+  " currently doesn't return "async", but could
+  let l:typeStr = v:lua.require('utils_lsp').type()
+  call setpos('.', [0, oLine, oCol, 0] )
+  return l:typeStr
+endfunc
+" echo JS_LspTypeAtPos(111, 10)
+
 func! JS_SetPrinterIdentif()
   let path = expand('%:p')
   " let jsWd = JS_getRootFolderPath(["package.json"])
@@ -324,13 +334,16 @@ func! JS_SetPrinterIdentif()
     let ident = T_RemoveTypeColon( identif )
   endif
 
+  let identifCol = 15
+  echo JS_LspTypeAtPos(line('.'), 10)
+
   let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
   let TesterLines = readfile( JsPrinterPath(), '\n' )
   let TesterLines[0] = importStm
   call writefile( TesterLines, JsPrinterPath() )
 endfunc
 
-func! JS_RunPrinter()
+func! JS_RunPrinter( termType )
   " compile typescript
   " let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
   " let cmd = "cd " . jsWd . " && tsc"
@@ -342,10 +355,16 @@ func! JS_RunPrinter()
   " let Cmd = 'npx ts-node --transpile-only '
   " let Cmd = 'node '
   " let Cmd = 'npx ts-node '
-  let resLines = systemlist( Cmd . JsPrinterPath() )
-  silent let g:floatWin_win = FloatingSmallNew ( resLines )
-  silent call FloatWin_FitWidthHeight()
-  silent wincmd p
+
+  if     a:termType == 'float'
+    let resLines = systemlist( Cmd . JsPrinterPath() )
+    silent let g:floatWin_win = FloatingSmallNew ( resLines )
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
+  elseif a:termType == 'term'
+    call TermOneShot( Cmd . JsPrinterPath() )
+  endif
+
 endfunc
 
 func! JS_RunPrinterAppBundle()

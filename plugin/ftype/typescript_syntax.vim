@@ -113,6 +113,7 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal 'interface' conceal cchar=◈
   syntax match Normal 'type' conceal cchar=◇
+  syntax match Normal 'typeof' conceal cchar=◇
   syntax match Normal 'class' conceal cchar=□
   syntax match Normal 'constructor' conceal cchar=≈
   syntax match Normal 'enum' conceal cchar=|

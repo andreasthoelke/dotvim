@@ -49,7 +49,7 @@ end
 --   local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/type", params, 2000)
 --   return results_lsp
 -- end
--- -- put( require'utils_lsp'.hover() )
+-- lua putt( require'utils_lsp'.hover() )
 
 function M.LspType()
   local typeString = ""
@@ -84,7 +84,7 @@ function M.LspType()
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )
   return retval
 end
--- put( require'utils_lsp'.LspType() )
+-- putt( require'utils_lsp'.LspType() )
 -- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
 -- vim.api.nvim_call_function( "matchstr", { "lazy val e1_sql: HeadZ\n", [[\v:\s\zs\w*]] } )
 
