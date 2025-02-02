@@ -125,7 +125,7 @@ endfunc
 " NOW HERE: ~/.config/nvim/plugin/tools_rescript.vim#/nnoremap%20<silent><buffer>%20<c-n>
 
 " NOTE: These maps get overwritten by "tool_<languge>" buffer local maps!
-nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+" nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
 " nnoremap <silent> <c-n> :call vista#jump#NextTopLevel()<cr>
 func! TopLevBindingForw()
   normal! }

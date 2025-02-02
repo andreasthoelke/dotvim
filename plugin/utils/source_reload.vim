@@ -29,6 +29,7 @@ func! LuaModuleName()
   return modpath
 endfunc
 " LuaModuleName()
+" lua print( LuaModuleName() )
 
 func! SourceFile ()
   silent exec "w"

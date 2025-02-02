@@ -1015,6 +1015,7 @@ end
 
 -- note this has no definition infos!
 -- MapInfo("tu")
+-- MapInfo(",sm")
 -- Keymap_props( 'n', '<Space>st')
 
 function _G.Keymap_props(mode, lhs_map_string)

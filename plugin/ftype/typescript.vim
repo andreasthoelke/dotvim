@@ -34,6 +34,7 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
   nnoremap <silent><buffer>         gei :call JS_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
+  nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
   " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
   " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
@@ -42,11 +43,13 @@ func! JS_bufferMaps()
 " ─   Motions                                           ──
 " are these consistent with scala?
 
-  nnoremap <silent><buffer> <c-p>         :call JS_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> <c-p>         :call JS_BindingBackw()<cr>:call ScrollOff(10)<cr>
+  " nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call JS_TopLevBindingForw()<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <c-n>         :call JS_TopLevBindingForw()<cr>:call ScrollOff(25)<cr>
-  nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> <c-n>         :call JS_BindingForw()<cr>:call ScrollOff(25)<cr>
+  " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> <leader><c-p> :call JS_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
@@ -567,13 +570,39 @@ endfunc
 "   call search( '\v^(async|\s\s(private\s)?async\s\zs\i|final|override|case|enum|final|lazy|(export\s)?(\s\s)?(\s\s)?function\s\zs\i|(export\s)?type\s\zs\i|object\s\zs\i|(export\s)?class\s\zs\i|def|val|var|const|let|export\s\zs\i|(\s\s)?\s\s\zs\i*(\(|\<))', 'W' )
 " endfunc
 
+
 func! JS_TopLevBindingForw()
+  let patterns = [
+        \ '^enum',
+        \ '^(export\s)?type\s\zs\i',
+        \ '^object\s\zs\i',
+        \ '^(export\s)?class\s\zs\i',
+        \ '^export\s\zs\i',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'W')
+endfunc
+
+func! JS_TopLevBindingBackw()
+  let patterns = [
+        \ '^enum',
+        \ '^(export\s)?type\s\zs\i',
+        \ '^object\s\zs\i',
+        \ '^(export\s)?class\s\zs\i',
+        \ '^export\s\zs\i',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'bW')
+endfunc
+
+func! JS_BindingForw()
   let patterns = [
         \ '\scase\s\zs\S',
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
         \ '^\s\sasync\s\zs\i',
         \ '^\s\sstatic\sasync\s\zs\i',
+        \ '^\s\sprivate\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
@@ -587,12 +616,14 @@ func! JS_TopLevBindingForw()
   call search(combined_pattern, 'W')
 endfunc
 
-func! JS_TopLevBindingBackw()
+func! JS_BindingBackw()
   let patterns = [
         \ '\scase\s\zs\S',
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
         \ '^\s\sasync\s\zs\i',
+        \ '^\s\sstatic\sasync\s\zs\i',
+        \ '^\s\sprivate\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',

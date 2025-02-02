@@ -56,7 +56,9 @@ au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
-au ag BufWinEnter *.md          call MarkdownBufferMaps()
+au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
+au ag FileType markdown             call MarkdownBufferMaps()
+
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──

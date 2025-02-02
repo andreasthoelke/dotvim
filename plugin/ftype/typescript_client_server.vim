@@ -334,8 +334,8 @@ func! JS_SetPrinterIdentif()
     let ident = T_RemoveTypeColon( identif )
   endif
 
-  let identifCol = 15
-  echo JS_LspTypeAtPos(line('.'), 10)
+  " let identifCol = 15
+  " echo JS_LspTypeAtPos(line('.'), 10)
 
   let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
   let TesterLines = readfile( JsPrinterPath(), '\n' )
@@ -349,8 +349,8 @@ func! JS_RunPrinter( termType )
   " let cmd = "cd " . jsWd . " && tsc"
   " let _resLines = systemlist( cmd)
 
-  " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
   let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  " let Cmd = 'NODE_NO_WARNINGS=1 ts-node '
   " let Cmd = 'bun '
   " let Cmd = 'npx ts-node --transpile-only '
   " let Cmd = 'node '
@@ -363,6 +363,9 @@ func! JS_RunPrinter( termType )
     silent wincmd p
   elseif a:termType == 'term'
     call TermOneShot( Cmd . JsPrinterPath() )
+  elseif a:termType == 'term_float'
+    call TermOneShot_FloatBuffer( Cmd . JsPrinterPath() )
+
   endif
 
 endfunc

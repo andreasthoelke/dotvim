@@ -115,6 +115,9 @@ function _G.LspMeaningfulSymbol( bufnr )
       function( el ) return 0 == vim.fn.match( el.type, [[\v(Method|Function|Class|Interface)]] ) end,
       vim.fn.reverse(symbStack)
     )
+  elseif vim.bo.filetype == 'typescript' then
+    candidateStack = 
+      vim.fn.reverse(symbStack)
   else
     candidateStack = fun.filter(
       -- function( el ) return el.type == "Function" or el.type == "Object" end,
@@ -151,7 +154,7 @@ function _G.filterLspSymbolsStack( lspSymbolsStack )
     -- NOTE: I'm still experimenting with this: packagesDepth + 2 shows the typical Object - def methodname() lsp-path
     lspSymbolsStack_filtered = fun.totable( fun.take_n( packagesDepth + 2, lspSymbolsStack ) )
   else
-    lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
+    lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 3 )
   end
   -- return vim.fn.reverse( lspSymbolsStack_filtered )
   return lspSymbolsStack_filtered

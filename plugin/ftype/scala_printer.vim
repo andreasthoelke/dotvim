@@ -156,6 +156,7 @@ endfunc
 
 nnoremap <silent><leader>ces :call Example_SetStart()<cr>
 nnoremap <silent><leader>cea :call Example_AddIdentif()<cr>
+vnoremap <silent><leader>cea :call Example_AddVisSel()<cr>
 
 " let g:ExamplesPath = "m/_printer/ExampleLog.md"
 let g:ExamplesPath = "ExampleLog.md"
@@ -209,6 +210,15 @@ func! Example_AddIdentif()
     echo 'Added line: ' . linkLines[0]
   endif
 endfunc
+
+" TODO fix: this repleats the selLines
+func! Example_AddVisSel()
+  let linkPath = LinkPath_get()
+  let selLines = Get_visual_selection_lines()
+  let textLines = selLines + [linkPath]
+  call writefile( selLines, g:ExamplesPath, "a" )
+endfunc
+
 
 
 " ─^  Printer examples                                   ▲

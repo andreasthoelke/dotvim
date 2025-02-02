@@ -27,6 +27,8 @@ Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --
 "   ['do'] = 'npm install --frozen-lockfile',
 " })
 
+Plug 'olimorris/codecompanion.nvim'
+
 " https://github.com/piersolenski/wtf.nvim
 Plug 'piersolenski/wtf.nvim'
 
@@ -364,6 +366,8 @@ Plug 'stevanmilic/nvim-lspimport'
 " Plug 'hrsh7th/cmp-path'
 " Plug 'hrsh7th/cmp-cmdline'
 
+" Plug 'saghen/blink.cmp'
+
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -608,6 +612,7 @@ endif
 " nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
 " lua require('plugin.config.telescope')
+" lua require("config.lazy")
 
 " this file is odd, it is required as a module, but also has _G functions, which require an initial sourcing here?
 luafile ~/.config/nvim/lua/utils/general.lua

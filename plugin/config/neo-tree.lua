@@ -119,6 +119,26 @@ end
 -- { { {}, {}, { 1045 }, {}, {} }, { { 1023 }, {}, {} }, { {} } }
 -- vim.api.nvim_list_tabpages()
 
+function _G.Ntree_get_selected_nodes(state)
+  if state.winid ~= vim.api.nvim_get_current_win() then
+    return nil
+  end
+  local start_pos = vim.fn.getpos("'<")[2]
+  local end_pos = vim.fn.getpos("'>")[2]
+  if end_pos < start_pos then
+    start_pos, end_pos = end_pos, start_pos
+  end
+  local selected_nodes = {}
+  while start_pos <= end_pos do
+    local node = state.tree:get_node(start_pos)
+    if node then
+      table.insert(selected_nodes, node)
+    end
+    start_pos = start_pos + 1
+  end
+  putt( selected_nodes )
+end
+
 
 function _G.Ntree_currentNode( state )
   state = state ~= nil and state or manager.get_state_for_window()
@@ -763,7 +783,7 @@ require("neo-tree").setup({
         ["r"] = "noop",
         ["y"] = "noop",
         ["x"] = "noop",
-        ["m"] = "noop",
+        -- ["m"] = "noop",
         ["A"] = "noop",
         -- ["go"] = "noop",
 
@@ -906,6 +926,41 @@ require("neo-tree").setup({
 
   filesystem = {
 
+    commands = {
+      print_me = function(state)
+        local node = state.tree:get_node()
+        print(node.name)
+      end,
+      magenta_context_add = function(state)
+        local node = state.tree:get_node()
+        local current_path = node:get_id()
+        vim.cmd( "Magenta context-files " .. current_path )
+        vim.cmd("normal! j^")
+      end,
+      magenta_context_add_visual = function(state, selected_nodes, callback)
+        local paths = {}
+        for _, node in pairs(selected_nodes) do
+          table.insert(paths, node.path)
+        end
+        vim.cmd("Magenta context-files " .. table.concat(paths, " "))
+        vim.cmd("normal! j^")
+      end,
+      magenta_context_remove = function(state)
+        local node = state.tree:get_node()
+        local current_path = node:get_id()
+        vim.cmd( "Magenta remove-context-files " .. current_path )
+        vim.cmd("normal! j^")
+      end,
+      magenta_context_remove_visual = function(state, selected_nodes, callback)
+        local paths = {}
+        for _, node in pairs(selected_nodes) do
+          table.insert(paths, node.path)
+        end
+        vim.cmd("Magenta remove-context-files " .. table.concat(paths, " "))
+        vim.cmd("normal! j^")
+      end
+
+    },
 
     components = {
 
@@ -976,6 +1031,27 @@ require("neo-tree").setup({
         end
         return {}
       end,
+
+      magenta_state = function(config, node, _)
+        local harpoon_list = require("harpoon"):list()
+        local path = node:get_id()
+        local harpoon_key = vim.uv.cwd()
+        for _, item in ipairs(harpoon_list.items) do
+          local value = item.value
+          if string.sub(item.value, 1, 1) ~= "/" then
+            value = harpoon_key .. "/" .. item.value
+          end
+          if value == path then
+            -- vim.print("hi: " .. path)
+            return {
+              text = string.format("%d ", i), -- <-- Add your favorite harpoon like arrow here
+              highlight = config.highlight or "Comment",
+            }
+          end
+        end
+        return {}
+      end,
+
 
       -- select_status = function(config, node, state)                                                  
       --   return  { text = "hi", highlight = "NeoTreeFileIcon" }                                     
@@ -1076,6 +1152,31 @@ require("neo-tree").setup({
           local current_path = node:get_id()
           vim.cmd( "silent !code " .. current_path )
         end,
+
+        ["<leader>mb"] = function(state)
+          local node = state.tree:get_node()
+          local current_path = node:get_id()
+          vim.cmd( "Magenta context-files " .. current_path )
+        end,
+
+        ["m"] = "magenta_context_add",
+        ["M"] = "magenta_context_remove",
+
+        -- ["m"] = Ntree_get_selected_nodes,
+
+        -- ["m"] = function(state, selected_nodes, callback)
+        --   local paths = {}
+        --   for _, node in pairs(selected_nodes) do
+        --     table.insert(paths, node.path)
+        --   end
+        --   -- Handle multiple nodes here
+        --   print("Visual mode:", vim.inspect(paths))
+        --   callback()
+        --   -- local node = state.tree:get_node()
+        --   -- local current_path = node:get_id()
+        --   -- vim.cmd( "Magenta context-files " .. current_path )
+        --   -- vim.cmd("normal! j^")
+        -- end,
 
         -- SELECTION COMMANDS
         -- there are just COPY and CUT selection commands
