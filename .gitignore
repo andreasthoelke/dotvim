@@ -1,5 +1,6 @@
 .git
 plugged/
+plugged_bak/
 autoload/
 spell/
 sessions/
