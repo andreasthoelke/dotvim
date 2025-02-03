@@ -446,6 +446,8 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
       pattern = [[^(#|function|m|f\.|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(#|.*\*|func|comma|" ─ ).*]]
+    elseif vim.fn.expand("%:e") == "ts" then
+      pattern = vim.fn.JS_TopLevPattern()
     else
       pattern = [[(^#|\*).*]]
     end

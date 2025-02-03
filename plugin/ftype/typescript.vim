@@ -89,7 +89,11 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
-  nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+  " " TODO: gsl seems more consistent
+  nnoremap <silent><buffer> gel :echo 'use gsl'<cr>
+  nnoremap <silent><buffer> geL :echo 'use gsL'<cr>
+  nnoremap <silent><buffer> gsl :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+  nnoremap <silent><buffer> gsL <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
@@ -570,6 +574,13 @@ endfunc
 "   call search( '\v^(async|\s\s(private\s)?async\s\zs\i|final|override|case|enum|final|lazy|(export\s)?(\s\s)?(\s\s)?function\s\zs\i|(export\s)?type\s\zs\i|object\s\zs\i|(export\s)?class\s\zs\i|def|val|var|const|let|export\s\zs\i|(\s\s)?\s\s\zs\i*(\(|\<))', 'W' )
 " endfunc
 
+func! JS_TopLevPattern()
+  let patterns = [
+        \ 'function',
+        \ 'const',
+        \]
+  return '(' . join(patterns, '|') . ') '
+endfunc
 
 func! JS_TopLevBindingForw()
   let patterns = [
@@ -595,10 +606,12 @@ func! JS_TopLevBindingBackw()
   call search(combined_pattern, 'bW')
 endfunc
 
+
 func! JS_BindingForw()
   let patterns = [
         \ '\scase\s\zs\S',
         \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
         \ '^\s\sasync\s\zs\i',
         \ '^\s\sstatic\sasync\s\zs\i',
@@ -620,6 +633,7 @@ func! JS_BindingBackw()
   let patterns = [
         \ '\scase\s\zs\S',
         \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
         \ '^\s\sasync\s\zs\i',
         \ '^\s\sstatic\sasync\s\zs\i',

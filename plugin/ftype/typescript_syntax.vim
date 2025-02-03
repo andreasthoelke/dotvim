@@ -65,6 +65,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\s\zsas\ze\s' conceal cchar=«
 
   syntax match Normal "'" conceal
+  syntax match Normal ";" conceal
   syntax match Normal "''" conceal cchar=∅
   syntax match Normal '"' conceal
   syntax match Normal '""' conceal cchar=∅
