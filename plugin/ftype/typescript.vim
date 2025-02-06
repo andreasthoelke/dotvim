@@ -92,8 +92,10 @@ func! JS_bufferMaps()
   " " TODO: gsl seems more consistent
   nnoremap <silent><buffer> gel :echo 'use gsl'<cr>
   nnoremap <silent><buffer> geL :echo 'use gsL'<cr>
-  nnoremap <silent><buffer> gsl :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
-  nnoremap <silent><buffer> gsL <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+  " nnoremap <silent><buffer> gsl :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+  " nnoremap <silent><buffer> gsL <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+  nnoremap <silent><buffer> gsl :call v:lua.Telesc_launch('lsp_document_symbols')<cr>
+  nnoremap <silent><buffer> gsL :call v:lua.Telesc_launch('lsp_dynamic_workspace_symbols')<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
@@ -101,6 +103,7 @@ func! JS_bufferMaps()
   " TS diagnostics
   nnoremap <silent><buffer> <leader>ged :Telescope diagnostics initial_mode=normal<cr>
   nnoremap <silent><buffer> ged :Trouble diagnostics toggle focus=false filter.buf=0<cr>
+  nnoremap <silent><buffer> geD :Trouble diagnostics toggle focus=false<cr>
   " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
   nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
   " " this is small and local
@@ -576,10 +579,13 @@ endfunc
 
 func! JS_TopLevPattern()
   let patterns = [
-        \ 'function',
-        \ 'const',
+        \ 'function ',
+        \ 'async ',
+        \ 'case "',
+        \ 'it."',
+        \ 'const ',
         \]
-  return '(' . join(patterns, '|') . ') '
+  return '(' . join(patterns, '|') . ')'
 endfunc
 
 func! JS_TopLevBindingForw()

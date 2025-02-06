@@ -416,9 +416,10 @@ endfunc
 
 func! EscapeSpecialChars( str )
   " return substitute( a:str, '\([^a-zA-Z0-9_.-]\)', '\="\\" . submatch(1)', 'g')
-  return substitute( a:str, '\([\(\)\~\$\=]\)', '\="\\" . submatch(1)', 'g')
+  return substitute( a:str, '\([\(\)\~\$\=\"\:\<\{\}\>\?\[\]\`]\)', '\="\\" . submatch(1)', 'g')
 endfunc
 " EscapeSpecialChars( 'ein(s)' )
+" EscapeSpecialChars( 'ein"s"' )
 " EscapeSpecialChars( '(~=)' )
 " EscapeSpecialChars( 'PLANET=$(cu' )
 

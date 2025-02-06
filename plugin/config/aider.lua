@@ -12,6 +12,14 @@
 -- - allows to close aider window and re-open it in different tabs
 -- - always write lsp warnings of the current buffer to /tmp/nvim_lsp_warnings.txt and includes this file on aider start.
 
+-- Define a cmd that calls lua _G.WriteLspWarnings()
+vim.api.nvim_create_user_command('LspWarnFileUpdate', function()
+    _G.WriteLspWarnings()
+end, {
+    desc = "Write LSP warnings to the local .lsp_warn file"
+})
+
+
 -- note: help aider
 require('aider').setup({
   auto_manage_context = false,

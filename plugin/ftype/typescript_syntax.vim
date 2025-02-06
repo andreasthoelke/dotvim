@@ -104,6 +104,9 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\s\zs>\ze\s' conceal cchar=▷
   syntax match Normal '\s\zs<\ze\s' conceal cchar=◁
 
+  syntax match Normal 'describe' conceal cchar=⊃
+  syntax match Normal 'it\ze(' conceal cchar=˽
+
   syntax match Normal '<div' conceal cchar=⋮
   syntax match Normal '<div>' conceal cchar=⋮
   syntax match Normal '</div>' conceal cchar=⋮

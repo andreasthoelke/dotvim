@@ -178,7 +178,8 @@ endfunc
 " ~/.config/nvim/plugin/NewBuf-LinkPaths.vim‖*Linkˍpaths
 
 func! LineSearch_makeShortUnique_orWarn( fullString )
-  let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]
+  " let attempts = [ a:fullString[:10], a:fullString[:15], a:fullString[:20], a:fullString[:25], a:fullString[:30], a:fullString ]
+  let attempts = [ a:fullString[:25], a:fullString[:30], a:fullString ]
   let idx = attempts->functional#findP({ str -> LineSearch_isUniqueInBuf( str ) })
   if idx == -1 | echo "The current line is not unique in this buffer." | endif
   return attempts[ idx ]

@@ -193,11 +193,11 @@ end
 function _G.Hpon_add_file_join_links(path, link)                                      
   local items = Hpon_get_list()
   
-  print("Adding link:", link, "to path:", path)
-  print("Current items:", vim.inspect(items))
+  -- print("Adding link:", link, "to path:", path)
+  -- print("Current items:", vim.inspect(items))
   
   if #items == 0 then
-    print("Empty list, adding first item")
+    -- print("Empty list, adding first item")
     Hpon_update_file_item(path, {link})
     return
   end
@@ -209,9 +209,9 @@ function _G.Hpon_add_file_join_links(path, link)
       -- Check if link already exists in the array
       local exists = false
       local joined_links = {}
-      print("Found existing item:", vim.inspect(item))
+      -- print("Found existing item:", vim.inspect(item))
       if item.context and item.context.links then
-        print("Existing links:", vim.inspect(item.context.links))
+        -- print("Existing links:", vim.inspect(item.context.links))
         for _, existing_link in ipairs(item.context.links) do
           if existing_link == link then
             exists = true
@@ -223,14 +223,14 @@ function _G.Hpon_add_file_join_links(path, link)
       if not exists then
         table.insert(joined_links, link)
       end
-      print("Final joined links:", vim.inspect(joined_links))
+      -- print("Final joined links:", vim.inspect(joined_links))
       Hpon_update_file_item(path, joined_links)
     end
   end
 
   -- If path wasn't found in existing items, add it with the new link
   if not found then
-    print("Path not found, adding new item")
+    -- print("Path not found, adding new item")
     Hpon_update_file_item(path, {link})
   end
 end                                                                       
@@ -321,7 +321,8 @@ function _G.Hpon_rerender()
 
   if old_winid then
     vim.defer_fn(function()
-      vim.api.nvim_win_close(old_winid, true)
+      -- TODO: currently errors
+      -- vim.api.nvim_win_close(old_winid, true)
     end, 50)
   end
 

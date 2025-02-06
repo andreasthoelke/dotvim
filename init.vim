@@ -114,7 +114,7 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
 
-Plug 'vim-denops/denops.vim'
+" Plug 'vim-denops/denops.vim'
 
 " Plug 'ekalinin/Dockerfile.vim'
 " run language servers in docker containers. i don't need
