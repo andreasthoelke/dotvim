@@ -840,8 +840,25 @@ require('telescope').setup{
       }, -- must have --json=stream
       grep_open_files = false, -- search in opened files
       lang = nil, -- string value, specify language for ast-grep `nil` for default
-    }
+    },
 
+    -- ~/.config/nvim/plugin/config/aerial.nvim.lua‖/require("aerial").setup({
+    -- aerial = {
+    --   -- Set the width of the first two columns (the second
+    --   -- is relevant only when show_columns is set to 'both')
+    --   col1_width = 4,
+    --   col2_width = 30,
+    --   -- How to format the symbols
+    --   format_symbol = function(symbol_path, filetype)
+    --     if filetype == "json" or filetype == "yaml" then
+    --       return table.concat(symbol_path, ".")
+    --     else
+    --       return symbol_path[#symbol_path]
+    --     end
+    --   end,
+    --   -- Available modes: symbols, lines, both
+    --   show_columns = "both",
+    -- },
 
     -- ['ui-select'] = {
     --   -- require('telescope.themes').get_dropdown {
@@ -919,7 +936,7 @@ require('telescope').load_extension('bookmarks')
 require('telescope').load_extension('frecency')
 require('telescope').load_extension('ast_grep')
 require('telescope').load_extension('possession')
-
+-- require("telescope").load_extension("aerial")
 
 vim.api.nvim_set_keymap('n',
   '<leader>si',

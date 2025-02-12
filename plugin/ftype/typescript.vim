@@ -35,6 +35,7 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer>         gei :call JS_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
   nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
+  nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
   " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
   " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
   " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
@@ -64,6 +65,7 @@ func! JS_bufferMaps()
   " Stubs and inline tests
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js()<cr>
   nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js_function()<cr>
+  nnoremap <silent><buffer> <leader>ev :call CreateInlineTestDec_js_nvim()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
@@ -81,7 +83,7 @@ func! JS_bufferMaps()
   " Copied from Scala
 
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista<cr>
+  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
   nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
 
   " nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
@@ -619,9 +621,9 @@ func! JS_BindingForw()
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ '^\s\sasync\s\zs\i',
-        \ '^\s\sstatic\sasync\s\zs\i',
-        \ '^\s\sprivate\sasync\s\zs\i',
+        \ 'async\s\zs\i',
+        \ 'static\sasync\s\zs\i',
+        \ 'private\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
@@ -641,9 +643,9 @@ func! JS_BindingBackw()
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ '^\s\sasync\s\zs\i',
-        \ '^\s\sstatic\sasync\s\zs\i',
-        \ '^\s\sprivate\sasync\s\zs\i',
+        \ 'async\s\zs\i',
+        \ 'static\sasync\s\zs\i',
+        \ 'private\sasync\s\zs\i',
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',

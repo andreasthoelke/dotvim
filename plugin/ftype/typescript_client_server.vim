@@ -349,7 +349,9 @@ func! JS_RunPrinter( termType )
   " let cmd = "cd " . jsWd . " && tsc"
   " let _resLines = systemlist( cmd)
 
-  let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  " https://tsx.is/typescript
+  " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  let Cmd = 'npx tsx --no-deprecation '
   " let Cmd = 'NODE_NO_WARNINGS=1 ts-node '
   " let Cmd = 'bun '
   " let Cmd = 'npx ts-node --transpile-only '
@@ -363,6 +365,9 @@ func! JS_RunPrinter( termType )
     silent wincmd p
   elseif a:termType == 'term'
     call TermOneShot( Cmd . JsPrinterPath() )
+  elseif a:termType == 'term_hidden'
+    call TermOneShot( Cmd . JsPrinterPath() )
+    silent wincmd c
   elseif a:termType == 'term_float'
     call TermOneShot_FloatBuffer( Cmd . JsPrinterPath() )
 

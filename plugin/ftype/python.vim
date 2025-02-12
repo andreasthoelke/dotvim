@@ -69,7 +69,8 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
   " this works super nice. there's another (default?) mapping for leader ?
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  " nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
   nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>

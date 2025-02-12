@@ -194,7 +194,8 @@ func! Scala_bufferMaps_shared()
 
 
   nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  " nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
 
   nnoremap <silent><buffer> <leader>gek :call Scala_LspTopLevelHover()<cr>
   nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>

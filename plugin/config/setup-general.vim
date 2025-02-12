@@ -1136,8 +1136,26 @@ map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
 " map <localleader>j <Plug>(easymotion-j)
 " map <localleader>k <Plug>(easymotion-k)
-map ,j <Plug>(easymotion-j)
-map ,k <Plug>(easymotion-k)
+" map ,j <Plug>(easymotion-j)
+" map ,k <Plug>(easymotion-k)
+
+lua << EOF
+require'hop'.setup()
+vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('n', ',k', "<cmd>HopLineStartBC<cr>", {noremap=true})
+
+vim.keymap.set('o', ',j', function()
+    -- Set operator as linewise
+    vim.cmd('normal! V')
+    require'hop'.hint_lines({
+        multi_windows = false,
+        hint_position = require'hop.hint'.HintPosition.BEGIN,
+        direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+        current_line_only = false
+    })
+end, {remap=true})
+
+EOF
 
 " Jump to paragraphs
 map <localleader><c-l> :call EasyMotion#Paragraph(0, 0)<cr>
@@ -1509,6 +1527,9 @@ endfunction
 
 
 " Tagbar: --------------------------------------------------------------------------
+
+" NOTE: see ~/.config/nvim/plugin/config/aerial.nvim.lua
+
 " In ~/.vim/after/plugin/zmaps.vim
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
@@ -1516,7 +1537,7 @@ endfunction
 " nnoremap <leader>ot :Vista nvim_lsp<cr>
 " nnoremap <leader>ot :Vista<cr>
 " nnoremap <silent><leader>on :Navbuddy<cr>
-nnoremap <silent><leader>ot :Vista<cr>
+" nnoremap <silent><leader>ot :Vista<cr>
 " nnoremap <leader>ot :TagbarToggle<cr>
 " nnoremap <leader>oT :SymbolsOutline<cr>
 

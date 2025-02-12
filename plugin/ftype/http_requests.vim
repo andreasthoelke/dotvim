@@ -1,6 +1,6 @@
 
 
-nnoremap <silent> geh :call Scala_ServerClientRequest_x()<cr>
+nnoremap <silent> ,geh :call Scala_ServerClientRequest_x()<cr>
 
 
 let g:httpx_request_port = 8080

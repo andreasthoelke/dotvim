@@ -389,7 +389,7 @@ func! LaunchChromium( url ) abort
   "   call jobstop( g:launchChromium_job_id )
   "   unlet g:launchChromium_job_id
   " endif
-  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --no-message-box --app=' . shellescape( a:url ))
 endfunc
 " call LaunchChromium( 'http://purescript.org' )
 " call LaunchChromium( 'file:///private/tmp/giphy2.gif' )

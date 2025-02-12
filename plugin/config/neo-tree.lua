@@ -503,7 +503,7 @@ vim.keymap.set( 'n', '<leader>oa', Ntree_openLeft )
 vim.keymap.set( 'n', '<leader>ov', Ntree_openRight )
 vim.keymap.set( 'n', '<leader>oo', Ntree_openFloat )
 
-vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
+-- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 
 
 _G.Ntree_setCwd = f.curry3( function( source, scope, state )

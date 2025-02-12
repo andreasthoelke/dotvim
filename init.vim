@@ -138,16 +138,19 @@ Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'bash install.sh' }
 " enhance the quickfix list
 Plug 'kevinhwang91/nvim-bqf'
 " Tools: ------------------------------------------
-" Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
-Plug 'majutsushi/tagbar'
 " this showed channel errors after quitting nvim
 " Plug 'ludovicchabant/vim-gutentags'
 " Make the preview window more convienient to use. use in quickfix via 'p'
 
+" Plug 'stevearc/aerial.nvim'
+Plug 'hedyhli/outline.nvim'
+
+" Old:
 " Also for Tags, but from language server
 Plug 'liuchengxu/vista.vim'
-
-Plug 'simrat39/symbols-outline.nvim'
+" Plug 'simrat39/symbols-outline.nvim'
+" Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
+" Plug 'majutsushi/tagbar'
 
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
@@ -454,6 +457,7 @@ Plug 'aklt/plantuml-syntax'
 " Plug 'easymotion/vim-easymotion'
 Plug 'andreasthoelke/vim-easymotion'
 Plug 'justinmk/vim-sneak'
+Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'

@@ -69,6 +69,7 @@ function _G.LspSymbolsStack()
   return joinedStrs == "" and " " or joinedStrs
 end
 -- lua vim.print( LspSymbolsStack() )
+-- lua vim.print( require('nvim-navic').get_data() )
 -- vim.print( LspSymbolsStack() )
 -- 
 -- This is using the WinLeave lsp cursor state. If I'd just use LspSymbolsStack
@@ -136,11 +137,14 @@ function _G.LspMeaningfulSymbol( bufnr )
 end
 
 -- lua putt( { LspMeaningfulSymbol( vim.fn.bufnr() ) } )
--- lua putt( { LspMeaningfulSymbol( 9 ) } )
--- LspMeaningfulSymbol( 10 ) 
+-- lua putt( { LspMeaningfulSymbol( 23 ) } )
+-- LspMeaningfulSymbol( 23 ) 
 -- vim.fn.match( "Function", [[\v(Method|Function|Class|Interface)]] )
 -- vim.fn.match( "abcd", [[(c|f)]] )
 
+-- ─   WinBar Lsp Symbol Stack                          ──
+-- To explore datasource fields like 'type' and 'name' run this at cursor pos:
+-- lua vim.print( require('nvim-navic').get_data() )
 
 function _G.filterLspSymbolsStack( lspSymbolsStack )
   if lspSymbolsStack == nil then return {} end
@@ -153,6 +157,13 @@ function _G.filterLspSymbolsStack( lspSymbolsStack )
     ):length()
     -- NOTE: I'm still experimenting with this: packagesDepth + 2 shows the typical Object - def methodname() lsp-path
     lspSymbolsStack_filtered = fun.totable( fun.take_n( packagesDepth + 2, lspSymbolsStack ) )
+
+    -- TYPESCRIPT:
+  elseif vim.bo.filetype == 'typescript' and string.match(vim.fn.expand('%'), '%.spec') then
+    lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 1 )
+  elseif vim.bo.filetype == 'typescript' then
+    lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 3 )
+
   else
     lspSymbolsStack_filtered = vim.list_slice( lspSymbolsStack, 0, 3 )
   end

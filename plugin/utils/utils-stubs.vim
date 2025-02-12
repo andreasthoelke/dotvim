@@ -394,6 +394,24 @@ func! CreateInlineTestDec_js_function()
   normal l
 endfunc
 
+" export const e1_nvim_m = () => v(async (v) => {
+
+func! CreateInlineTestDec_js_nvim()
+  let hostLn = searchpos( 'function\s', 'cnb' )[0]
+  let hostDecName = matchstr( getline( hostLn ), 'function\s\zs\i*' )
+  let strInParan = matchstr( getline(hostLn ), '\v\(\zs.{-}\ze\)' )
+  let paramNames = string( SubstituteInLines( split( strInParan, ',' ), '\s', '' ) )
+  let lineText = hostDecName . '(' . paramNames[1:-2] . ')'
+  let nextIndex = GetNextTestDeclIndex( hostLn )
+  let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = () => v(async (nvim) => {'
+  call append( line('.') -1, lineText )
+  call append( line('.') -1, "  await note(nvim, 'ab1')" )
+  call append( line('.') -1, '})' )
+  normal kkw
+  " call search('(')
+  " normal l
+endfunc
+
 
 func! CreateInlineTestDec_scala1()
   let hostLn1 = searchpos( 'def\s\w\(e\d_\)\@!', 'cnbW' )[0]

@@ -391,8 +391,8 @@ func! FloatingSmallNew( linesToShow, ... )
 
   let opts = {}
   let opts.focusable = v:true
-  let opts.width     = 100
-  let opts.height    = 30
+  let opts.width     = 4
+  let opts.height    = 3
   let opts.anchor    = 'NW'
 
   if a:0 && a:1 == 'cursor'

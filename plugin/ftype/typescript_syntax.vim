@@ -105,7 +105,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\s\zs<\ze\s' conceal cchar=◁
 
   syntax match Normal 'describe' conceal cchar=⊃
-  syntax match Normal 'it\ze(' conceal cchar=˽
+  syntax match Normal '\s\zsit\ze(' conceal cchar=˽
 
   syntax match Normal '<div' conceal cchar=⋮
   syntax match Normal '<div>' conceal cchar=⋮
@@ -125,7 +125,21 @@ func! TsSyntaxAdditions ()
 " ➹  ⤤  ⬀  ⬈  ⧼  ⪦ ⇡ ⇞  ⇾  ~➚
 " ᐣ ᐤ  ᐥ  ᐦᐧ  ᐨ  ᑆ   ᑄ   ᑋ  ᑓ   ᑣ   ᒾ  ᓋ  ᓩ  ᓫ ›
 
-  syntax match Normal 'map' conceal cchar=➚
+" ─   Negative lookbehind                               ──
+" CLAUDE: Ah, I understand the problem now - you want to ensure there isn't another identifier character before "map".
+" You need a negative lookbehind to ensure there isn't an identifier character before the optional dot/space. Here's how to fix it:
+" vimCopysyntax match Normal '\%([@a-zA-Z0-9_]\)\@<![. ]\?\zsmap\ze(' conceal cchar=➚
+" The \%([@a-zA-Z0-9_]\)\@<! is a negative lookbehind that ensures there isn't an identifier character before the match position.
+" Now it should:
+
+" Match: await inputBuffer.map({
+" Match: await inputBuffer map({
+" NOT match: await inputBuffer.setKeymap({
+
+" The negative lookbehind prevents the match when "map" is part of a longer identifier like "setKeymap".
+
+  " syntax match Normal '[. ]\?\zsmap\ze(' conceal cchar=➚
+  syntax match Normal '\%([@a-zA-Z0-9_]\)\@<![. ]\?\zsmap\ze(' conceal cchar=➚
   syntax match Normal 'and\zeThen' conceal cchar=~
   syntax match Normal 'Then\ze\W' conceal cchar=➚
   syntax match Normal 'pipe' conceal cchar=→

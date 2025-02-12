@@ -93,14 +93,14 @@ endfunc
 
 func! TermOneShotCB (job_id, data, event)
   let resLines = RemoveTermCodes( a:data )
-  call append('.', resLines )
+  call append(line('$'), resLines )
   silent call FloatWin_FitWidthHeight()
 endfunc
 
 func! TermOneShotCB_exit (job_id, data, event)
-  call append('.', 'done' )
+  " call append('.', 'done' )
+  silent call FloatWin_FitWidthHeight()
   silent wincmd p
-  " silent call FloatWin_FitWidthHeight()
 endfunc
 
 let g:TermOneShotCBs = {
@@ -109,6 +109,7 @@ let g:TermOneShotCBs = {
       \ 'on_exit': function('TermOneShotCB_exit')
       \ }
 
+" NOTE this one keeps appending lines to a floating buffer. while TermOneShot is a term buffer
 func! TermOneShot_FloatBuffer( cmd )
   " echo "Running terminal command .."
   " call T_DelayedCmd( "echo ''", 2000 )

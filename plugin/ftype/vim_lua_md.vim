@@ -8,7 +8,7 @@ let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#
 func! MarkdownBufferMaps()
   call VScriptToolsBufferMaps()
 
-  nnoremap <silent><buffer><leader>ot :Vista<cr>
+  nnoremap <silent><buffer><leader>ot :Outline<cr>
   " nnoremap <silent><buffer>gdi :lua require("follow-md-links").follow_link()<cr>
 
   nnoremap <silent><buffer> gdp  :call NewBuf_fromCursorMarkdownRef( "preview_back" )<cr>
@@ -46,7 +46,7 @@ func! VScriptToolsBufferMaps()
 
   " the below should overwrite the default/scala maps
 
-  nnoremap <silent><buffer> <leader>ot  :Vista<cr>
+  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
   nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
 
   " Untested
@@ -97,7 +97,7 @@ let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s|.*─)'
 
 
 func! Vim_MainStartBindingForw()
-  normal! jj
+  normal! j
   call search( g:Vim_MainStartPattern, 'W' )
   call Vim_goFistWord()
 endfunc
