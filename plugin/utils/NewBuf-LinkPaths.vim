@@ -8,13 +8,15 @@
 " l ct   - transform absolute > local or local to absolute
 
 nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "shorten" )<cr>
-nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
-nnoremap <silent> <leader>cl  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
-nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "full" )<cr>
+" nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
+nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "local" )<cr>
+nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
+" nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "full" )<cr>
 nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
 nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
 
 nnoremap <silent> <leader>ct                  :call ClipBoard_LinkPath_makeLocal()<cr>
+nnoremap <silent> <leader>cl                  :call ClipBoard_LinkPath_makeLocal()<cr>
 nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsolute( "shorten" )<cr>
 nnoremap <silent> <leader><leader><leader>ct  :call ClipBoard_LinkPath_makeAbsolute( "full" )<cr>
 

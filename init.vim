@@ -269,13 +269,15 @@ Plug 'plexigras/promptline.vim'
 
 Plug 'rktjmp/fwatch.nvim'
 
-" Colorschemes: ------------------
+" ─   Colors, style                                      ■
 " Plug 'tomasr/molokai'
 " Plug 'NLKNguyen/papercolor-theme'
 " Another colorscheme used (where?)
 " Plug 'dim13/smyck.vim'
 " Plug 'yosiat/oceanic-next-vim'
 " Plug 'cormacrelf/vim-colors-github'
+
+Plug 'echasnovski/mini.colors'
 
 Plug 'chrisbra/Colorizer'
 " https://github.com/norcalli/nvim-colorizer.lua\#commands
@@ -290,9 +292,12 @@ Plug 'nvim-telescope/telescope-symbols.nvim'
 " fullscreen mode
 Plug 'junegunn/goyo.vim'
 " didn't allow window splits
-" Plug 'folke/zen-mode.nvim'
-" Plug 'pocco81/true-zen.nvim'
+Plug 'folke/zen-mode.nvim'
+Plug 'pocco81/true-zen.nvim'
 " Plug 'junegunn/limelight.vim'
+
+" ─^  Colors, style                                      ▲
+
 " Note taking with vim
 " Plug 'fmoralesc/vim-pad', { 'branch': 'devel' }
 
@@ -611,6 +616,8 @@ if !exists('g:colors_name')
   " && g:colors_name != 'munsell-blue-molokai'
   set background=dark
   colorscheme munsell-blue-molokai
+  " colorscheme munsell-blue-molokai_light_1
+  " colorscheme munsell-blue-molokai_20250214_180417
 endif
 
 " nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>

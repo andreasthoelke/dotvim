@@ -438,6 +438,17 @@ vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_
 -- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
 
 
+-- ─   Style & color maps                               ──
+
+vim.keymap.set( 'n',
+  ',,cl', function()
+    vim.cmd'colorscheme munsell-blue-molokai_light_1'
+  end )
+
+vim.keymap.set( 'n',
+  ',,cd', function()
+    vim.cmd'colorscheme munsell-blue-molokai'
+  end )
 
 
 -- ─   Lsp maps                                         ──

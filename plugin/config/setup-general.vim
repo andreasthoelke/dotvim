@@ -906,8 +906,9 @@ set termguicolors
 
 " Goyo Zen view:
 
-nnoremap <silent> <leader>oz :Goyo<cr>
-nnoremap <silent> <leader>z :Goyo<cr>
+" now using ~/.config/nvim/plugin/config/true-zen.nvim.lua‖/keymap.set('n',ˍ'<leader>z
+" nnoremap <silent> <leader>oz :Goyo<cr>
+" nnoremap <silent> <leader>z :Goyo<cr>
 let g:goyo_width = '80%'
 let g:goyo_height = '80%'
 

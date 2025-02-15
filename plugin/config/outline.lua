@@ -227,7 +227,8 @@ require("outline").setup(
       -- Only include Package, Module, and Function:
       --   filter = { 'Package', 'Module', 'Function' }
       -- See more examples below.
-      filter = nil,
+      -- filter = nil,
+      filter = { 'Variable', 'Constant', exclude = true },
 
       -- You can use a custom function that returns the icon for each symbol kind.
       -- This function takes a kind (string) as parameter and should return an
