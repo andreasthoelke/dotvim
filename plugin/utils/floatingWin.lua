@@ -90,6 +90,8 @@ function _G.Float_dynAnchorWidth()
     width = availableWidth - 2
     width = width > 50 and width or widthDefault
   end
+  -- width should be at least 70
+  width = width > 76 and width or 76
   local cursorWinCol = CursorIsInWinColumn()
   local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
   return { anchor = winAnchor, width = width}

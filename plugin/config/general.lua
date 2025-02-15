@@ -4,6 +4,18 @@
 _G.vim.deprecate = function() end
 
 if vim.g.neovide then
+
+  vim.g.neovide_scale_factor = 1.0
+  local change_scale_factor = function(delta)
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
+  end
+  vim.keymap.set("n", "<C-=>", function()
+    change_scale_factor(1.05)
+  end)
+  vim.keymap.set("n", "<C-->", function()
+    change_scale_factor(1/1.05)
+  end)
+
   -- vim.o.guifont = "Source Code Pro:h10.5" -- text below applies for VimScript
   vim.o.guifont = "MonoLisa Nerd Font:h10.5" -- text below applies for VimScript
 
@@ -23,7 +35,8 @@ if vim.g.neovide then
 
   vim.g.neovide_remember_window_size = true
 
-  vim.g.neovide_cursor_animation_length = 0.0021
+  -- vim.g.neovide_cursor_animation_length = 0.0021
+  vim.g.neovide_cursor_animation_length = 0
 
   -- vim.opt.guicursor = "n-v-c:block-Cursor/lCursor,i:ver25-Cursor/lCursor,r-cr:hor20,o:hor50"
   vim.opt.guicursor = "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor"
