@@ -1225,6 +1225,38 @@ hi! def link @lsp.typemod.variable.declaration VarDec
 
 
 
+lua << EOF
+
+-- ─   New Colors                                       ──
+local hi = vim.api.nvim_set_hl
+-- just a nice color! { fg = "#B8766E" })
+-- gold! fg = "#898861" })
+-- below is a darker pale derivative
+-- Let bindings (mutable vars) in typescript
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#917673" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E807D" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#806865" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E6D6D" })
+hi(0, "@lsp.type.variable.typescript", { fg = "#5F4849" })
+-- hi(0, "@lsp.typemod.variable.declaration.typescript", { fg = "#3A666E" })
+-- lua vim.api.nvim_set_hl(0, "@lsp.mod.declaration.typescript", { fg = "#00666E" })
+
+-- Function arguments!
+hi(0, "@lsp.type.parameter.typescript", { fg = "#717050" })
+
+-- const bindings
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#78887a" })
+hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A666E" })
+-- just to highlight in lila!
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A006E" })
+
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#0A6600" })
+
+-- defaultLibrary methods
+hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
+
+
+EOF
 
 
 " @lsp.type.class         Structure

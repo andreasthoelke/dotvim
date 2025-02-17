@@ -111,6 +111,7 @@ nnoremap <silent> ≤ :resize +4<cr>
 nnoremap <silent> <C-w>. :vertical resize -4<cr>
 nnoremap <silent> <C-w>≥ :vertical resize -4<cr>
 nnoremap <silent> <C-w>,, :resize -4<cr>
+" not working? .. use c-w ,,
 nnoremap <silent> <C-w>≤ :resize -4<cr>
 
 " Note: - "<c-s-.>", "<c-s-,>", "<c-.>", "<c-,>" are not possible within Vim, thus remapping these

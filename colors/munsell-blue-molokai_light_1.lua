@@ -48,11 +48,41 @@ hi(0, "@lsp.type.struct", { link = "@type" })
 hi(0, "@lsp.type.type", { link = "@type" })
 hi(0, "@lsp.type.typeParameter", { link = "Typedef" })
 hi(0, "@lsp.type.variable", { link = "Variable" })
-hi(0, "@lsp.typemod.method.declaration", { link = "FunctionDec" })
+-- hi(0, "@lsp.typemod.method.declaration", { link = "FunctionDec" })
 hi(0, "@lsp.typemod.method.definition", { link = "Function" })
-hi(0, "@lsp.typemod.parameter.declaration", { link = "ParamDec" })
-hi(0, "@lsp.typemod.variable.declaration", { link = "VarDec" })
-hi(0, "@lsp.typemod.variable.definition", { link = "VarDec" })
+-- hi(0, "@lsp.typemod.parameter.declaration", { link = "ParamDec" })
+-- hi(0, "@lsp.typemod.variable.declaration", { link = "VarDec" })
+-- hi(0, "@lsp.typemod.variable.definition", { link = "VarDec" })
+
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { link = "purescriptOperator" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { link = "Special" })
+
+-- ─   New Colors                                       ──
+-- just a nice color! { fg = "#B8766E" })
+-- gold! fg = "#898861" })
+-- below is a darker pale derivative
+-- Let bindings (mutable vars) in typescript
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#917673" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E807D" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#806865" })
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E6D6D" })
+hi(0, "@lsp.type.variable.typescript", { fg = "#9E6D6D" })
+-- hi(0, "@lsp.typemod.variable.declaration.typescript", { fg = "#3A666E" })
+-- lua vim.api.nvim_set_hl(0, "@lsp.mod.declaration.typescript", { fg = "#00666E" })
+
+-- Function arguments!
+hi(0, "@lsp.type.parameter.typescript", { fg = "#898861" })
+
+-- const bindings
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#78887a" })
+hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A666E" })
+-- just to highlight in lila!
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A006E" })
+
+-- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#0A6600" })
+
+-- defaultLibrary methods
+hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
 
 hi(0, "@module.builtin", { link = "Special" })
 hi(0, "@number.float", { link = "Float" })

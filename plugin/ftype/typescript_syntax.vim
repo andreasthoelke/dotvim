@@ -58,8 +58,12 @@ func! TsSyntaxAdditions ()
   syntax match Normal ")\zs:" conceal cchar=˃
   syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
 
-  syntax match Normal "const\s" conceal
+  " syntax match Normal "const\s" conceal
+  syntax match Normal "const\s" conceal cchar=⁝
   syntax match Normal "readonly\s" conceal cchar=‧
+  " syntax match Normal "let\ze\s" conceal cchar=╴
+  syntax match Normal "let\ze\s" conceal cchar=𝇊
+  " syntax match Normal "let\s" conceal cchar=╸
   syntax match Normal 'private' conceal cchar=ˌ
   syntax match Normal 'public' conceal cchar=∘
   syntax match Normal '\s\zsas\ze\s' conceal cchar=«
