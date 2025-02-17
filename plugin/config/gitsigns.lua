@@ -4,7 +4,8 @@
 -- ─   Helpers                                          ──
 
 
-
+-- set signcolumn=yes
+vim.opt.signcolumn = "yes"
 
 
 -- ─   Config                                           ──

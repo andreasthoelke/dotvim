@@ -508,6 +508,8 @@ Plug 'euclio/vim-markdown-composer'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'ellisonleao/glow.nvim'
 
+Plug 'toppair/peek.nvim', { 'do': 'deno task --quiet build:fast' }
+
 " Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
 " Plug 'plasticboy/vim-markdown'

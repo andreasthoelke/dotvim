@@ -416,15 +416,20 @@ func! FloatingSmallNew( linesToShow, ... )
   " call nvim_buf_set_option( textbuf, 'filetype', 'graphql' )
   let filetype = GetFileTypeFromBufText( a:linesToShow )
   call setbufvar( textbuf, "&filetype", filetype )
+  " call setbufvar( textbuf, "&signcolumn", "no")  " Add this line
+  " call nvim_buf_set_option(textbuf, 'signcolumn', 'no')
   " call setbufvar( textbuf, "&syntax", "scala" )
 
-  return nvim_open_win( l:textbuf, v:true, opts)
+  let win_id = nvim_open_win( textbuf, v:true, opts)
+  call win_execute(win_id, 'setlocal signcolumn=no')
+    
+  return win_id
   " Todo: is there a way to prevent the file name being echoed?
   " silent call nvim_open_win( nvim_create_buf(v:false, v:true), v:true, opts)
 endfunc
 
 " preloading this file bc/ NvimTree would error on nvim open win
-let _ = bufnr( "/Users/at/.vim/notes/scratch2022.md", v:true )
+" let _ = bufnr( "/Users/at/.vim/notes/scratch2022.md", v:true )
 
 func! FloatingBuffer( filePath )
   let opts = { 'focusable': v:true,

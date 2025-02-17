@@ -360,7 +360,7 @@ func! JS_RunPrinter( termType )
 
   if     a:termType == 'float'
     let resLines = systemlist( Cmd . JsPrinterPath() )
-    silent let g:floatWin_win = FloatingSmallNew ( resLines )
+    silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
     silent call FloatWin_FitWidthHeight()
     silent wincmd p
   elseif a:termType == 'term'
