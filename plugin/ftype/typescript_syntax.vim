@@ -58,6 +58,11 @@ func! TsSyntaxAdditions ()
   syntax match Normal ")\zs:" conceal cchar=˃
   syntax match Normal ")\s\zs=>\ze\s.*=>" conceal cchar=⇾
 
+" ─     Const Let This                                  ──
+  " syntax match Normal "this\." conceal cchar=∙
+  " syntax match Normal "this\." conceal cchar=◖
+  " syntax match Normal "this\." conceal cchar=⏽
+  syntax match Normal "this\." conceal cchar=∎
   " syntax match Normal "const\s" conceal
   syntax match Normal "const\s" conceal cchar=⁝
   syntax match Normal "readonly\s" conceal cchar=‧
@@ -98,7 +103,6 @@ func! TsSyntaxAdditions ()
   syntax match Normal "unknown" conceal cchar=⪦
   syntax match Normal "never" conceal cchar=ˍ
   syntax match Normal "null\ze\s" conceal cchar=⨆
-  syntax match Normal "this\." conceal cchar=⫰
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
   syntax match Normal "void" conceal cchar=✴

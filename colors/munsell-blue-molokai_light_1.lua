@@ -61,21 +61,22 @@ hi(0, "@lsp.typemod.method.definition", { link = "Function" })
 -- just a nice color! { fg = "#B8766E" })
 -- gold! fg = "#898861" })
 -- below is a darker pale derivative
--- Let bindings (mutable vars) in typescript
 -- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#917673" })
 -- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E807D" })
 -- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#806865" })
 -- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E6D6D" })
-hi(0, "@lsp.type.variable.typescript", { fg = "#9E6D6D" })
 -- hi(0, "@lsp.typemod.variable.declaration.typescript", { fg = "#3A666E" })
 -- lua vim.api.nvim_set_hl(0, "@lsp.mod.declaration.typescript", { fg = "#00666E" })
 
--- Function arguments!
-hi(0, "@lsp.type.parameter.typescript", { fg = "#898861" })
+-- LET BINDINGS (MUTABLE VARS) IN TYPESCRIPT
+hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#9E6D6D" })
 
--- const bindings
--- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#78887a" })
+-- FUNCTION ARGUMENTS!
+hi(0, "@lsp.type.parameter.typescript", { fg = "#89873B" })
+
+-- CONST BINDINGS
 hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A666E" })
+-- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#78887a" })
 -- just to highlight in lila!
 -- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A006E" })
 
@@ -299,6 +300,8 @@ hi(0, "MsgArea", { fg = "#3e7478" })
 hi(0, "NavbuddyCursorLine", { reverse = true })
 hi(0, "NavbuddyName", { link = "Search" })
 hi(0, "NavbuddyScope", { link = "BlackBGsoft" })
+
+hi(0, "NeoTreeDirectoryName", { link = "Comment" })
 hi(0, "NeoTreeDimText", { fg = "#c5d1d8" })
 hi(0, "NeoTreeFadeText1", { fg = "#8c8c8c" })
 hi(0, "NeoTreeFadeText2", { fg = "#adadad" })
@@ -313,6 +316,7 @@ hi(0, "NeoTreeGitConflict", { bold = true, fg = "#93521c", italic = true })
 hi(0, "NeoTreeGitIgnored_35", { fg = "#cfd9dd" })
 hi(0, "NeoTreeGitIgnored_60", { fg = "#c2cfd5" })
 hi(0, "NeoTreeGitIgnored_68", { fg = "#bdccd3" })
+-- hi(0, "NeoTreeGitModified", { fg = "#bdccd3" })
 hi(0, "NeoTreeMessage", { fg = "#c5d1d8", italic = true })
 hi(0, "NeoTreeModified", { fg = "#4a4701" })
 hi(0, "NeoTreeTabActive", { bold = true })
@@ -528,7 +532,8 @@ hi(0, "Statement", { ctermfg = 10, fg = "#4d8aa3" })
 hi(0, "StatusLine", { bg = "#ffffff", bold = true, fg = "#c5c7cd" })
 hi(0, "StatusLineNC", { bg = "#ffffff", bold = true, fg = "#2e2e34" })
 hi(0, "StorageClass", { fg = "#4d8aa3" })
-hi(0, "String", { ctermfg = 10, fg = "#558476" })
+-- hi(0, "String", { ctermfg = 10, fg = "#558476" })
+hi(0, "String", { ctermfg = 10, fg = "#3A9A7D" })
 hi(0, "Symbol", { ctermfg = 9, fg = "#452321" })
 hi(0, "TabLine", { bg = "#dadcdd", fg = "#6e6e6e" })
 hi(0, "TabLineFill", { bg = "#dadcdd", fg = "#dadcdd" })
