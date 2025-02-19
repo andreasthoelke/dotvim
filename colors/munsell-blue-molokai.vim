@@ -1250,6 +1250,8 @@ hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A666E" })
 -- just to highlight in lila!
 -- hi(0, "@lsp.typemod.variable.readonly.typescript", { fg = "#3A006E" })
 
+hi(0, "@keyword.return.typescript", { bg = "#122830", fg = "#122830" })
+
 -- hi(0, "@lsp.typemod.variable.local.typescript", { fg = "#0A6600" })
 
 -- defaultLibrary methods

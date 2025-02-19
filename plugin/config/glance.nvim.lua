@@ -2,8 +2,9 @@
 local glance = require('glance')
 local actions = glance.actions
 
+
 glance.setup({
-  height = 38, -- Height of the window
+  height = 48, -- Height of the window
   zindex = 45,
 
   -- When enabled, adds virtual lines behind the preview window to maintain context in the parent window

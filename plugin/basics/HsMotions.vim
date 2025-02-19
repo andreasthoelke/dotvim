@@ -1532,6 +1532,7 @@ func! MoveBackIfOpeningPairIsNext()
 endfunc
 " Test: abc [ ade ] [abc abc] \"abc \" abc
 
+
 " Test if the first pattern matches earlier in the file
 func! PttnIsFirst( pttn1, pttn2, flags )
   let [l1, c1] = searchpos( a:pttn1, 'nW'.a:flags)

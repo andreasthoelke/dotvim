@@ -44,11 +44,17 @@ func! JS_bufferMaps()
 " ─   Motions                                           ──
 " are these consistent with scala?
 
-  nnoremap <silent><buffer> <c-p>         :call JS_BindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-p>         :call JS_BindingBackw()<cr>
   " nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_TopLevBindingForw()<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <c-n>         :call JS_BindingForw()<cr>:call ScrollOff(25)<cr>
+  nnoremap <silent><buffer> <c-n>         :call JS_BindingForw()<cr>
+  nnoremap <silent><buffer> ,<c-n>        :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> g]            :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> ]g            :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> g<c-n>        :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> g[            :call JS_GoBackReturn()<cr>
+  nnoremap <silent><buffer> [g            :call JS_GoBackReturn()<cr>
   " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
@@ -590,8 +596,61 @@ func! JS_TopLevPattern()
   return '(' . join(patterns, '|') . ')'
 endfunc
 
+func! JS_SkipTypeSign()
+  let c = col('.')
+  " Skip the type signature e.i. this pattern: }: {
+  " echo getline('.')[c+2] 
+  " if getline('.')[c+2] == '{' 
+  if LastChar(getline('.')) == '{' 
+    call search('\s\zs{', 'W')
+    call FlipToPairChar('')
+  endif
+endfunc
+
+" keepjumps doesn't seem to work.
+func! JS_GoReturn()
+  let oLine = line('.')
+  let oCol = virtcol('.')  " Get visible column position
+  " execute "normal m'"
+  keepjumps call search('\s\zs{', 'W')
+  keepjumps call FlipToPairChar('')
+  keepjumps call JS_SkipTypeSign()
+  let patterns = [
+        \ '\s\zsreturn',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  keepjumps call search(combined_pattern, 'bW')
+  let nLine = line('.')
+  if nLine < oLine + 1
+    keepjumps call cursor(oLine, oCol)  " Use cursor() instead of setpos()
+    echo 'no return'
+  endif
+endfunc
+
+func! JS_GoBackReturn()
+  let patterns = [
+        \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
+        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
+        \ 'static\sasync\s\zs\i',
+        \ 'private\sasync\s\zs\i',
+        \ '\s\zsreturn',
+        \ 'async\sfunction\s\zs\i',
+        \ 'async\s\zs\i',
+        \ '\sprivate\s\zs\i*(\(|\<)',
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'bW')
+  call ScrollOff(10)
+endfunc
+
+
 func! JS_TopLevBindingForw()
   let patterns = [
+        \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
+        \ '^\s\s(async\s)?function\s\zs\i',
         \ '^enum',
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
@@ -604,6 +663,9 @@ endfunc
 
 func! JS_TopLevBindingBackw()
   let patterns = [
+        \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
+        \ '^\s\s(async\s)?function\s\zs\i',
         \ '^enum',
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
@@ -621,7 +683,6 @@ func! JS_BindingForw()
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ 'async\s\zs\i',
         \ 'static\sasync\s\zs\i',
         \ 'private\sasync\s\zs\i',
         \ '^enum',
@@ -629,12 +690,14 @@ func! JS_BindingForw()
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
-        \ '^export\s\zs\i',
+        \ 'async\sfunction\s\zs\i',
+        \ 'async\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
         \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
         \]
   let combined_pattern = '\v' . join(patterns, '|')
   call search(combined_pattern, 'W')
+  call ScrollOff(25)
 endfunc
 
 func! JS_BindingBackw()
@@ -643,7 +706,6 @@ func! JS_BindingBackw()
         \ '^\s\s\zs\i.*\=\s\(',
         \ '^\s\s\zs\i.*\<\{',
         \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ 'async\s\zs\i',
         \ 'static\sasync\s\zs\i',
         \ 'private\sasync\s\zs\i',
         \ '^enum',
@@ -651,12 +713,14 @@ func! JS_BindingBackw()
         \ '^(export\s)?type\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
-        \ '^export\s\zs\i',
+        \ 'async\sfunction\s\zs\i',
+        \ 'async\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
         \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
         \]
   let combined_pattern = '\v' . join(patterns, '|')
   call search(combined_pattern, 'bW')
+  call ScrollOff(10)
 endfunc
 
 

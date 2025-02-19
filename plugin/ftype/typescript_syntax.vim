@@ -92,8 +92,10 @@ func! TsSyntaxAdditions ()
   syntax match Normal "^export\ze\s" conceal cchar=∷
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "sql`" conceal cchar=▵
-  syntax match Normal "return\ze\s" conceal cchar=←
-  syntax match Normal "return\zeA" conceal cchar=←
+  syntax match Normal "return" conceal cchar=▂
+  " syntax match Normal "return" conceal cchar=🮏
+  " syntax match Normal "eturn" conceal
+  " syntax match Normal "return\zeA" conceal cchar=←
   syntax match Normal "async\ze\s" conceal cchar=•
   syntax match Normal "Async\ze\W" conceal cchar=•
   syntax match Normal "await\ze\s" conceal cchar=≀
