@@ -1,11 +1,12 @@
 
+vim.opt.linespace = 5
 
 if not vim.g.neovide then
   return
 end
 
 -- vim.g.neovide_scale_factor = 1.0
-vim.g.neovide_scale_factor = 1.015
+vim.g.neovide_scale_factor = 1.01
 local change_scale_factor = function(delta)
   -- vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
   vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + delta
@@ -13,11 +14,11 @@ local change_scale_factor = function(delta)
 end
 vim.keymap.set( "n", "<C-=>", function()
   -- change_scale_factor( 1.01 )
-  change_scale_factor( 0.005 )
+  change_scale_factor( 0.0025 )
 end )
 vim.keymap.set("n", "<C-->", function()
   -- change_scale_factor( 1/1.01 )
-  change_scale_factor( -0.005 )
+  change_scale_factor( -0.0025 )
 end)
 
 -- vim.o.guifont = "Source Code Pro:h10.5" -- text below applies for VimScript

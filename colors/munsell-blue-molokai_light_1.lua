@@ -603,13 +603,15 @@ hi(0, "htmlStrike", { strikethrough = true })
 hi(0, "htmlUnderline", { underline = true })
 hi(0, "htmlUnderlineItalic", { italic = true, underline = true })
 
+-- ─   Markdown                                         ──
 -- + readability of light theme
 -- hi(0, "@spell.markdown", { fg = "#557680" })
 hi(0, "@spell.markdown", { fg = "#28383D" })
 hi(0, "markdownH1", { bg = "#CDE8F0", bold = true, fg = "#28383D" })
+hi(0, "markdownH2", { bg = "#CDE8F0", bold = true, fg = "#28383D" })
 -- hi(0, "markdownH2", { bg = "#DBECF0", bold = true, fg = "#28383D" })
-hi(0, "markdownH2", { bg = "#D5DEE6", bold = true, fg = "#28383D" })
-hi(0, "markdownH3", { bold = true, fg = "#28383D" })
+hi(0, "markdownH3", { bg = "#D5DEE6", bold = true, fg = "#28383D" })
+hi(0, "markdownH4", { bold = true, fg = "#28383D" })
 
 hi(0, "@markup.heading", { link = "Title" })
 hi(0, "@markup.heading.1.markdown", { link = "htmlBold" })

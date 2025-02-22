@@ -103,7 +103,7 @@ require("outline").setup(
 
     -- Options for outline guides which help show tree hierarchy of symbols
     guides = {
-      enabled = true,
+      enabled = false,
       markers = {
         -- It is recommended for bottom and middle markers to use the same number
         -- of characters to align all child nodes vertically.
@@ -125,6 +125,7 @@ require("outline").setup(
         only = true,
       },
       markers = { '', '' },
+      -- markers = { '̌' , '̂' },
     },
 
     preview_window = {
@@ -169,9 +170,9 @@ require("outline").setup(
       -- Jump to symbol under cursor.
       -- It can auto close the outline window when triggered, see
       -- 'auto_close' option above.
-      goto_location = '<Cr>',
+      goto_location = {'<Cr>', 'o'},
       -- Jump to symbol under cursor but keep focus on outline window.
-      peek_location = 'o',
+      peek_location = 'p',
       -- Visit location in code and close outline immediately
       goto_and_close = '<S-Cr>',
       -- Change cursor position of outline window to match current location in code.
@@ -180,7 +181,7 @@ require("outline").setup(
       -- Open LSP/provider-dependent symbol hover information
       hover_symbol = '<C-space>',
       -- Preview location code of the symbol under cursor
-      toggle_preview = 'K',
+      toggle_preview = 'P',
       rename_symbol = 'r',
       code_actions = 'a',
       -- These fold actions are collapsing tree nodes, not code folding
@@ -228,7 +229,7 @@ require("outline").setup(
       --   filter = { 'Package', 'Module', 'Function' }
       -- See more examples below.
       -- filter = nil,
-      filter = { 'Constant', exclude = true },
+      -- filter = { 'Constant', exclude = true },
 
       -- You can use a custom function that returns the icon for each symbol kind.
       -- This function takes a kind (string) as parameter and should return an
@@ -260,7 +261,8 @@ require("outline").setup(
         Interface = { icon = '󰜰', hl = 'Type' },
         Function = { icon = '', hl = 'Function' },
         Variable = { icon = '', hl = 'Constant' },
-        Constant = { icon = '', hl = 'Constant' },
+        -- Constant = { icon = '', hl = 'Constant' },
+        Constant = { icon = '⁝', hl = 'Constant' },
         String = { icon = '𝓐', hl = 'String' },
         Number = { icon = '#', hl = 'Number' },
         Boolean = { icon = '⊨', hl = 'Boolean' },

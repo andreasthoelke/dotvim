@@ -400,6 +400,18 @@ end
 
 -- ─   Render                                           ──
 
+
+-- Replace '' with one of these:
+local right_separator = '' -- or '' for a softer look
+local left_separator = '' -- or '' for a softer look
+
+-- Try these variants:
+local right_separator = require("nvim-web-devicons").get_icon("")
+-- or
+local right_separator = ""  -- powerline symbol
+-- or
+local right_separator = ""  -- slightly different powerline
+
 function _G.Tab_render( tab, line )
 
   local isHidden = f.contains( tab.id, Tabs_hidden )
@@ -430,11 +442,13 @@ function _G.Tab_render( tab, line )
 
   return {
     line.sep('', Hl_Tab_ac_inac, Normal),
+    -- line.sep( left_separator, Hl_Tab_ac_inac, Normal),
 
     colorIcon,
     labelRest,
 
     line.sep('', Hl_Tab_ac_inac, Normal),
+    -- line.sep( right_separator, Hl_Tab_ac_inac, Normal),
 
     hl = Hl_Tab_ac_inac,
     margin = " ",

@@ -262,7 +262,8 @@ local lualine_config = {
     lualine_a = {
       {
         custom_ftype,
-        separator = { left = '', right = '' },
+        -- separator = { left = '', right = '' },
+        separator = { left = '', right = '' },
       }
     },
     lualine_b = {
@@ -302,7 +303,8 @@ local lualine_config = {
     lualine_a = {
       {
         custom_ftype,
-        separator = { left = '', right = '' },
+        -- separator = { left = '', right = '' },
+        separator = { left = '', right = ' ' },
       }
     },
     lualine_b = {

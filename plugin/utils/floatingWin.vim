@@ -117,6 +117,8 @@ endfunc
 
 lua << EOF
 function FloatWin_close ()
+  if vim.g.zen_mode == true then return end
+
   ReverseColors_clear()
   require("neo-tree.sources.common.preview").hide()
 

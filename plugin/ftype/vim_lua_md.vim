@@ -5,8 +5,30 @@
 let g:rgx_main_symbol_vimLua = '^(func|local\sfunction|command!|-- ─ |" ─ |#).*'
 
 
+func! MD_BoldNext()
+  let patterns = [
+        \ '\*\zs\i',
+        \ '\*\*\zs\i',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'W')
+endfunc
+
+func! MD_BoldPrev()
+  let patterns = [
+        \ '\*\zs\i',
+        \ '\*\*\zs\i',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'bW')
+endfunc
+
+
 func! MarkdownBufferMaps()
   call VScriptToolsBufferMaps()
+
+  nnoremap <silent><buffer>]b :call MD_BoldNext()<cr>
+  nnoremap <silent><buffer>[b :call MD_BoldPrev()<cr>
 
   nnoremap <silent><buffer><leader>ot :Outline<cr>
   " nnoremap <silent><buffer>gdi :lua require("follow-md-links").follow_link()<cr>

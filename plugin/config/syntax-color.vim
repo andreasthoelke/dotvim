@@ -1,4 +1,6 @@
 
+nnoremap <leader><leader>tc :ColorPicker<cr>
+
 func! GetLangCommentStr()
 
   if &filetype == 'rescript'

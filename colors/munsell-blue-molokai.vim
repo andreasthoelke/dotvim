@@ -590,7 +590,13 @@ hi! FocusedSymbol guifg=#A2AEB0
 " CSS SASS LESS
 hi! def link @character.special.scss CommentMinusMinus
 
-" Markdown colors
+
+" ─   Markdown colors                                    ■
+
+
+" hi! def link @spell.markdown Comment
+" hi! def link @spell.markdown Comment
+
 " hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! Title gui=none guifg=#1A85A5 "munsell blue"
 hi! Highlight1 guifg=#F6DC69
@@ -619,9 +625,59 @@ hi! def link htmlH2 Function
 hi! def link htmlH3 Function
 hi! def link htmlH4 Function
 
+" use ll ts/S
+
+" hi! @spell.markdown    guifg=#294B54
+
+
+
 " hi! def link htmlH1 SpGreen51
 " hi! def link htmlH2 SpGreen51
 " hi! def link htmlH3 SpGreen51
+
+lua << EOF
+local hi = vim.api.nvim_set_hl
+-- hi(0, "@spell.markdown", { fg = "#557680" })
+-- hi(0, "@spell.markdown", { fg = "#435E66" })
+--hi(0, "@spell.markdown", { fg = "#36636F" })
+---- hi(0, "@spell.markdown", { fg = "#435E66" })
+--hi(0, "@markup.italic.markdown_inline", { italic = true, fg = "#557680" })
+--hi(0, "@markup.strong.markdown_inline", { bold = true, fg = "#557680" })
+---- hi(0, "@spell.markdown", { link = "Comment" })
+--hi(0, "markdownH1", { bg = "#122830", bold = true, fg = "#28383D" })
+--hi(0, "markdownH2", { bg = "#CDE8F0", bold = true, fg = "#28383D" })
+---- hi(0, "markdownH2", { bg = "#DBECF0", bold = true, fg = "#28383D" })
+--hi(0, "markdownH3", { bg = "#D5DEE6", bold = true, fg = "#28383D" })
+--hi(0, "markdownH4", { bold = true, fg = "#28383D" })
+----
+--hi(0, "@markup.heading", { link = "Title" })
+--hi(0, "@markup.heading.1.markdown", { link = "htmlBold" })
+----
+---- make bold markdown to have a background
+---- hi(0, "@markup.strong.markdown_inline", { bg = "#D5DEE6", bold = true, fg = "#28383D" })
+--hi(0, "@markup.link", { link = "Underlined" })
+----
+--hi(0, "markdownError", { link = "Comment" })
+--hi(0, "markdownLinkText", { link = "mdLink" })
+--hi(0, "mdLink", { fg = "#35758a" })
+--hi(0, "mdNormHiBG", { fg = "#a4b4b9" })
+--hi(0, "mdNormHiBGReverse", { bg = "#dde3e3", fg = "#5a8e9b" })
+EOF
+
+hi! markdownBold    guifg=#427A88 gui=bold
+hi! markdownItalic    guifg=#427A88 gui=italic
+hi! @markup.link.label.markdown_inline    guifg=#5AA6BA
+
+hi! htmlBold    guifg=#508DA0
+" hi! @spell.markdown    guifg=#557680
+hi! link markdownH2 Function
+" hi! markdownItalic guifg=#508DA0
+" hi! link mdLink htmlLink
+" hi! mdLink guifg=#7FE0FE
+
+
+" ─^  Markdown colors                                    ▲
+
 
 hi! SpGreen1 guifg=#1BB994
 hi! SpGreen2 guifg=#B4FFF4
@@ -918,20 +974,6 @@ hi! link markdownLinkText mdLink
 hi! link markdownError Comment
 " ─^  Hpon                                               ▲
 
-
-" Treesitter
-"   - @spell.markdown links to @spell markdown
-"   - @markup.strong.markdown_inline links to @markup.strong markdown_inline
-" Syntax
-"   - markdownBold links to htmlBold 
-  " - @spell.markdown links to @spell markdown
-
-hi! htmlBold    guifg=#508DA0
-" hi! @spell.markdown    guifg=#557680
-hi! link markdownH2 Function
-" hi! markdownItalic guifg=#508DA0
-" hi! link mdLink htmlLink
-hi! mdLink guifg=#508DA0
 " run: RedirMessagesBuf hi Folded
 " to get:
 " guifg=#4B5B61 guibg=#0B0B0B

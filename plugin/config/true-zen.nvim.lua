@@ -10,6 +10,7 @@ local keymap = vim.keymap
 
 -- ─   ZenMode                                          ──
 
+-- https://github.com/folke/zen-mode.nvim
 
 require("zen-mode").setup({
   window = {
@@ -90,8 +91,12 @@ local fillchars = function()
   vim.opt.fillchars = { vert = '│' }  -- Using unicode vertical line
 end
 
-keymap.set('n', '<leader>zz', function()
+vim.g.zen_mode = false
+
+keymap.set('n', '<leader>zm', function()
   vim.cmd('ZenMode')
+  -- toggle global var
+  vim.g.zen_mode = not vim.g.zen_mode
 end, { noremap = true })
 
 
@@ -109,13 +114,14 @@ keymap.set('v', '<leader>zn', function()
   -- cancel the visual selection
   vim.wo.foldmethod = 'manual'
   vim.cmd('ZenMode')
+  vim.g.zen_mode = not vim.g.zen_mode
   truezen.narrow(first, last)
 end, { noremap = true })
 
 
-keymap.set('n', '<leader>zf', truezen.focus, { noremap = true })
-keymap.set('n', '<leader>zm', truezen.minimalist, { noremap = true })
-keymap.set('n', '<leader>za', truezen.ataraxis, { noremap = true })
+-- keymap.set('n', '<leader>zf', truezen.focus, { noremap = true })
+-- keymap.set('n', '<leader>zm', truezen.minimalist, { noremap = true })
+-- keymap.set('n', '<leader>za', truezen.ataraxis, { noremap = true })
 
 
 
