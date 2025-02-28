@@ -653,6 +653,7 @@ func! JS_TopLevBindingForw()
         \ '^\s\s(async\s)?function\s\zs\i',
         \ '^enum',
         \ '^(export\s)?type\s\zs\i',
+        \ 'interface\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
         \ '^export\s\zs\i',
@@ -668,6 +669,7 @@ func! JS_TopLevBindingBackw()
         \ '^\s\s(async\s)?function\s\zs\i',
         \ '^enum',
         \ '^(export\s)?type\s\zs\i',
+        \ 'interface\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
         \ '^export\s\zs\i',
@@ -688,12 +690,14 @@ func! JS_BindingForw()
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
+        \ 'interface\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
         \ 'async\sfunction\s\zs\i',
         \ 'async\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
-        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)',
+        \ '^export\s.*function\s\zs\i',
         \]
   let combined_pattern = '\v' . join(patterns, '|')
   call search(combined_pattern, 'W')
@@ -711,12 +715,14 @@ func! JS_BindingBackw()
         \ '^enum',
         \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
         \ '^(export\s)?type\s\zs\i',
+        \ 'interface\s\zs\i',
         \ '^object\s\zs\i',
         \ '^(export\s)?class\s\zs\i',
         \ 'async\sfunction\s\zs\i',
         \ 'async\s\zs\i',
         \ '\sprivate\s\zs\i*(\(|\<)',
-        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)',
+        \ '^export\s.*function\s\zs\i',
         \]
   let combined_pattern = '\v' . join(patterns, '|')
   call search(combined_pattern, 'bW')

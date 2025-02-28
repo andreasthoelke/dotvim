@@ -46,6 +46,7 @@ end
 vim.api.nvim_create_user_command('DiffClipboard', CompareWithClipboard, {})
 
 vim.api.nvim_set_keymap('n', ',dp', ':DiffClipboard<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', ',do', ':diffoff!<CR>:q<CR>', { noremap = true, silent = true })
 
 
 

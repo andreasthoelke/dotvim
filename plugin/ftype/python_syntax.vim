@@ -79,7 +79,8 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal "\s\zs:\ze(" conceal cchar=˃
 
   syntax match Normal "\v\-\>" conceal cchar=➔
-  syntax match Normal "return\ze\s" conceal cchar=←
+  " syntax match Normal "return\ze\s" conceal cchar=←
+  syntax match Normal "return" conceal cchar=▂
 
   syntax match Normal "\v\S\zs:" conceal
 

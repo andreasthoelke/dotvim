@@ -235,7 +235,7 @@ func! Py_GetPackageName()
   " Replace file separators with dots and remove the file extension
   let l:module_path = substitute(l:relative_path, '/', '.', 'g')
   let l:module_path = substitute(l:module_path, '\.py$', '', '')
-  let l:module_path = substitute(l:module_path, 'm.', '', '')
+  " let l:module_path = substitute(l:module_path, 'm.', '', '')
 
   return l:module_path
 endfunc
@@ -282,15 +282,20 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let typeStr = ""
 
   if getline(hostLn ) =~ "async"
-    let _printEval = "    valu = await symToEval()"
+    let _printEval = "        valu = await symToEval()"
     let identifCol = 11
     let typeDisp = "≀"
     let identif = matchstr( getline(hostLn ), '^async def\s\zs\i*\ze\=' )
-  else
-    let _printEval = "    valu = symToEval()"
+  elseif getline(hostLn ) =~ "def"
+    let _printEval = "        valu = symToEval()"
     let identifCol = 5
     let typeMode = ""
     let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
+  else 
+    let _printEval = "        valu = symToEval()"
+    let identifCol = 5
+    let typeMode = ""
+    let identif = matchstr( getline(hostLn ), '^\i*\ze\=' )
   endif
 
   " echo identif hostLn identifCol
@@ -373,7 +378,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " let plns[4] = _print_type
 
-  let plns[6] = _printEval
+  let plns[7] = _printEval
 
   " let plns[7] = _print_info
   " let plns[8] = _printSetting
@@ -436,7 +441,8 @@ func! Py_showInFloat( data )
   endif
   " let resLines = functional#foldr( function("Py_filterCliLine") , [], lines )
   let resLines = lines
-  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  " silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines, "otherWinColumn" )
 
   " if resLines[0][0] == "{" || resLines[0][0] == "["
   "   silent! exec "%!jq"

@@ -148,7 +148,9 @@ endfunc
 
 
 func! GitCommitViaAider()
-  echo system( "aider --commit" )
+  " echo system( "aider --commit" )
+  " echo system( "aider --weak-model haiku --35turbo --commit" )
+  echo system( "aider --weak-model 35turbo --35turbo --commit" )
 endfunc
 
 

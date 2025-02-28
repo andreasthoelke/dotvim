@@ -210,7 +210,6 @@ else
    hi SpecialKey      guifg=#465457
 end
 
-set fillchars+=vert:│
 " hi VertSplit ctermbg=NONE guibg=NONE
 
 " Copied from https://github.com/dim13/smyck.vim ----------------------------------------------------------------------

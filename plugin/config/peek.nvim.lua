@@ -25,3 +25,16 @@ require('peek').setup({
 
 vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
 vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+
+vim.keymap.set( 'n',
+  '<leader>owm', function() require( 'peek' )
+  .open()
+  end )
+
+vim.keymap.set( 'n',
+  '<leader>owc', function() require( 'peek' )
+  .close()
+  end )
+
+
+

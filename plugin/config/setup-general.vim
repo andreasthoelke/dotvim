@@ -394,7 +394,8 @@ set nonumber
 " set fillchars+=vert:\
 " This is to allow a <Space> at the end of an expression
 " Note that the \ to escape the ' ' also needs to be escaped, hence the \\
-exec "set fillchars+=vert:\\ "
+" exec "set fillchars+=vert:\\|"
+" exec "set fillchars+=vert:\\ "
 "hsl(348, 100%, 83%) Could also use the "VertSplit" highlight group
 
 " Trailing Whitespace:
