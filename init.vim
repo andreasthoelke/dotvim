@@ -15,10 +15,14 @@ Plug 'junegunn/vim-plug'
 " Plug 'derekthecool/luafun_neovim'
 Plug 'github/copilot.vim'
 
-Plug 'robitx/gp.nvim'
+" Plug 'robitx/gp.nvim'
 " Plug 'pasky/claude.vim'
 " https://github.com/jondkinney/aider.nvim
 Plug 'jondkinney/aider.nvim'
+
+Plug 'frankroeder/parrot.nvim'
+
+" Plug 'pieces-app/plugin_neovim'
 
 " https://github.com/dlants/magenta.nvim
 " Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }

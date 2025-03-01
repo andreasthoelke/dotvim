@@ -100,6 +100,18 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
+vim.lsp.handlers["$/progress"] = function(_, result, ctx)
+  local client = vim.lsp.get_client_by_id(ctx.client_id)
+  if not client or client.name == "pyright" then
+    return
+  end
+  local val = result.value
+  if val.kind == "begin" or val.percentage == 100 then
+    vim.api.nvim_out_write(string.format("\r%s: %s (%s%%)", 
+      client.name, val.title, val.percentage))
+  end
+end
+
 -- vim.cmd [[autocmd ColorScheme * highlight NormalFloat guibg=#1f2335]]
 -- vim.cmd [[autocmd ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
 

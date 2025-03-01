@@ -74,6 +74,12 @@ augroup DefaultToBash
   autocmd BufWinEnter,BufRead * if &filetype=='conf' | setfiletype bash | endif
 augroup END
 
+augroup PythonComment
+    autocmd!
+    autocmd FileType python setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,b:>,fb:-
+    autocmd FileType python setlocal formatoptions+=cro
+augroup END
+
 augroup track_window
    autocmd!
 
