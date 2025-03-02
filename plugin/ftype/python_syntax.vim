@@ -59,6 +59,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal '\W\zsstr\:' conceal cchar=s
   syntax match Normal '\vint\ze(\,|\]|\))' conceal cchar=ɪ
   syntax match Normal '\vint\ze\s\=' conceal cchar=ɪ
+  " syntax match Normal '\vint\:' conceal cchar=ɪ
   syntax match Normal '\vfloat\ze(\,|\]|\)|\:)' conceal cchar=𝑓
 
   syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃

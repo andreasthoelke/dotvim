@@ -544,9 +544,7 @@ augroup END
 " Issue: This is throwing an error in Command history window
 
 set noswapfile
-if has('nvim')
-  set cursorline
-endif
+set cursorline
 
 
 " augroup CursorLine
@@ -910,8 +908,8 @@ set termguicolors
 " now using ~/.config/nvim/plugin/config/true-zen.nvim.lua‖/keymap.set('n',ˍ'<leader>z
 " nnoremap <silent> <leader>oz :Goyo<cr>
 " nnoremap <silent> <leader>z :Goyo<cr>
-let g:goyo_width = '80%'
-let g:goyo_height = '80%'
+" let g:goyo_width = '80%'
+" let g:goyo_height = '80%'
 
 let g:Goyo_active = 0
 
@@ -1099,12 +1097,12 @@ let g:targets_argClosing = '[]})]'
 
 " ─   Sneak Code Navigation                             ──
 " 1-character enhanced 'f'
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-xmap f <Plug>Sneak_f
-xmap F <Plug>Sneak_F
-omap f <Plug>Sneak_f
-omap F <Plug>Sneak_F
+" nmap f <Plug>Sneak_f
+" nmap F <Plug>Sneak_F
+" xmap f <Plug>Sneak_f
+" xmap F <Plug>Sneak_F
+" omap f <Plug>Sneak_f
+" omap F <Plug>Sneak_F
 
 " 1-character enhanced 't'
 " nmap ,t <Plug>Sneak_t
@@ -1146,6 +1144,17 @@ require'hop'.setup()
 vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
 vim.api.nvim_set_keymap('n', ',k', "<cmd>HopLineStartBC<cr>", {noremap=true})
 
+vim.api.nvim_set_keymap('n', 'f', "<cmd>HopChar1CurrentLineAC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('x', 'f', "<cmd>HopChar1CurrentLineAC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('o', 'f', "<cmd>HopChar1CurrentLineAC<cr>", {noremap=true})
+
+vim.api.nvim_set_keymap('n', 'F', "<cmd>HopChar1CurrentLineBC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('x', 'F', "<cmd>HopChar1CurrentLineBC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('o', 'F', "<cmd>HopChar1CurrentLineBC<cr>", {noremap=true})
+
+vim.api.nvim_set_keymap('n', ',f', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
+vim.api.nvim_set_keymap('n', ',F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
+
 vim.keymap.set('o', ',j', function()
     -- Set operator as linewise
     vim.cmd('normal! V')
@@ -1174,9 +1183,9 @@ map ,h <Plug>(easymotion-linebackward)
 " xmap <localleader>f <Plug>(easymotion-bd-f)
 " omap <localleader>f <Plug>(easymotion-bd-f)
 
-nmap ,f <Plug>(easymotion-bd-f)
-xmap ,f <Plug>(easymotion-bd-f)
-omap ,f <Plug>(easymotion-bd-f)
+" nmap ,f <Plug>(easymotion-bd-f)
+" xmap ,f <Plug>(easymotion-bd-f)
+" omap ,f <Plug>(easymotion-bd-f)
 
 " map t <Plug>(easymotion-tl)
 " Search replacement
