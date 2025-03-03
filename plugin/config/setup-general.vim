@@ -1109,11 +1109,11 @@ let g:targets_argClosing = '[]})]'
 " nmap ,T <Plug>Sneak_T
 " xmap t <Plug>Sneak_t
 " xmap ,T <Plug>Sneak_T
-omap t <Plug>Sneak_t
+" omap t <Plug>Sneak_t
 " omap ,T <Plug>Sneak_T
 " Use L/H for next so ";" and "," can be used elsewhere
-map L <Plug>Sneak_;
-map H <Plug>Sneak_,
+" map L <Plug>Sneak_;
+" map H <Plug>Sneak_,
 " let g:sneak#label = 1
 " let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
 let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
@@ -1126,7 +1126,7 @@ augroup colsneak
   autocmd ColorScheme * hi! link Sneak Cursor
 augroup END
 " Disables default s-map
-nmap <Plug>(go_away_sneak) <Plug>Sneak_s
+" nmap <Plug>(go_away_sneak) <Plug>Sneak_s
 " Sneak Code Navigation: ------------------------------------------------
 
 

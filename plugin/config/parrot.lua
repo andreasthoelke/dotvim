@@ -4,6 +4,7 @@
 -- https://github.com/frankroeder/parrot.nvim?tab=readme-ov-file#commands
 
 -- example hooks / prompts: https://github.com/jackfranklin/dotfiles/blob/90a88677f197705ac3381fd07d2d4772a5e2b92d/nvim/lua/jack/plugins/parrot-ai.lua#L4
+-- Full default config: ~/.config/nvim/plugged/parrot.nvim/lua/parrot/config.lua
 
 -- os.getenv("OPENAI_API_KEY")
 -- os.getenv("ANTHROPIC_API_KEY")

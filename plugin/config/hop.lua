@@ -26,5 +26,26 @@ vim.keymap.set('o', 'd', function()
         current_line_only = false
     })
 end, {remap=true})
+-- Operator pending map: equivalent to Sneak's t mapping
+vim.keymap.set('o', 't', function()
+    require'hop'.hint_char1({
+        multi_windows = false,
+        hint_position = require'hop.hint'.HintPosition.BEGIN,
+        direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+        current_line_only = true,
+        hint_offset = -1  -- Jump one character before the target
+    })
+end, {remap=true})
+
+-- Operator pending map: similar to 't' but works across multiple lines
+vim.keymap.set('o', ',t', function()
+    require'hop'.hint_char1({
+        multi_windows = false,
+        hint_position = require'hop.hint'.HintPosition.BEGIN,
+        direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+        current_line_only = false,
+        hint_offset = -1  -- Jump one character before the target
+    })
+end, {remap=true})
 
 

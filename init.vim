@@ -579,6 +579,8 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 " compliant with brittany
 Plug 'sbdchd/neoformat'
 
+Plug 'stevearc/conform.nvim'
+
 
 " coc nvim:
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
