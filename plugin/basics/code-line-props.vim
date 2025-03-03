@@ -354,7 +354,7 @@ func! GetLongestWord_inLine()
   elseif filereadable( path )
     return path
   else
-    let abspath = fnamemodify( getline('.'), ':p' )
+    let abspath = fnamemodify( path, ':p' )
     if filereadable(abspath) || isdirectory(abspath)
       return abspath
     else
