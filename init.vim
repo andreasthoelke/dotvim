@@ -467,10 +467,15 @@ Plug 'aklt/plantuml-syntax'
 Plug 'andreasthoelke/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'phaazon/hop.nvim'
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
+Plug 'kylechui/nvim-surround'
 Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'joereynolds/place.vim'
+
+Plug 'windwp/nvim-autopairs'
+" Plug 'windwp/nvim-ts-autotag'
+Plug 'tronikelis/ts-autotag.nvim'
 
 " Plug 'bkad/camelcasemotion'
 Plug 'chaoren/vim-wordmotion'
@@ -509,6 +514,8 @@ Plug 'jakewvincent/mkdnflow.nvim'
 
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 Plug 'euclio/vim-markdown-composer'
+" https://github.com/MeanderingProgrammer/render-markdown.nvim?tab=readme-ov-file
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'ellisonleao/glow.nvim'
 

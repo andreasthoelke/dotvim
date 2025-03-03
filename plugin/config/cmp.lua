@@ -15,6 +15,7 @@ vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 -- luasnip setup
 -- local luasnip = require 'luasnip'
 
+
 local cmp = require 'cmp'
 cmp.setup {
   completion = {
@@ -227,4 +228,13 @@ require("tailwind-tools").setup({
     custom_filetypes = {} -- see the extension section to learn how it works
   }
 })
+
+
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 

@@ -138,6 +138,22 @@ require("parrot").setup(
         prt.Prompt(params, prt.ui.Target.append, model_obj, nil, template)
       end,
 
+      ImplementWithFileCtx = function(parrot, params)
+        local template = [[
+        Consider the following content from {{filename}}:
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Please rewrite this according to the contained instructions.
+        Respond exclusively with the snippet that should replace the selection above.
+        ]]
+        local model_obj = parrot.get_model("command")
+        parrot.logger.info("Implementing selection with model: " .. model_obj.name)
+        parrot.Prompt(params, parrot.ui.Target.rewrite, model_obj, nil, template)
+      end,
+
       SpellCheck1 = function(prt, params)
         local chat_prompt = [[
           Your task is to take the text provided and rewrite it into a clear,

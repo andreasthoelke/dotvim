@@ -329,4 +329,15 @@ function _G.Hpon_rerender()
   vim.cmd('wincmd p')
 end
 
+function _G.Hpon_filePaths()                                        
+  local harpoon_list = require("harpoon"):list()
+  local file_paths = {}
+  for _, item in ipairs(harpoon_list.items) do
+    local value = item.value
+    table.insert(file_paths, value)
+  end
+  return file_paths
+end
+-- Hpon_filePaths()
+
 
