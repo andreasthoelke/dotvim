@@ -170,7 +170,9 @@ function _G.Hpon_update_file_item(file_path, links)
     }
   }                                                                     
   require("harpoon"):list():add(list_item)                              
-  -- require("harpoon"):list():addplus(list_item)                              
+  vim.defer_fn(function()
+    require("harpoon").ui:refresh()
+  end, 100) -- 100ms delay
 end                                                                       
 -- Hpon_add_file("path/to/file.txt")                       
 -- Hpon_add_file("path/to/bb.txt", {row = 10, col = 5})  
