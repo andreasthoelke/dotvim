@@ -442,7 +442,8 @@ func! Py_showInFloat( data )
   " let resLines = functional#foldr( function("Py_filterCliLine") , [], lines )
   let resLines = lines
   " silent let g:floatWin_win = FloatingSmallNew ( resLines )
-  silent let g:floatWin_win = FloatingSmallNew ( resLines, "otherWinColumn" )
+  " silent let g:floatWin_win = FloatingSmallNew ( resLines, "otherWinColumn" )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines, "cursor" )
 
   " if resLines[0][0] == "{" || resLines[0][0] == "["
   "   silent! exec "%!jq"

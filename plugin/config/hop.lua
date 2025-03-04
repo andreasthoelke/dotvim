@@ -2,6 +2,9 @@
 require'hop'.setup()
 
 vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('x', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+vim.api.nvim_set_keymap('o', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+
 vim.api.nvim_set_keymap('n', ',k', "<cmd>HopLineStartBC<cr>", {noremap=true})
 
 vim.api.nvim_set_keymap('n', 'f', "<cmd>HopChar1CurrentLineAC<cr>", {noremap=true})

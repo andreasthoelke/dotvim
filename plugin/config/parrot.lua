@@ -9,7 +9,16 @@
 -- os.getenv("OPENAI_API_KEY")
 -- os.getenv("ANTHROPIC_API_KEY")
 
-vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<c-g>c', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with file context" })
+
+vim.keymap.set('n', '<c-g>C', ':PrtChatWithAllBuffers<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithAllBuffers<cr>", { desc = "Chat with all buffers" })
+
+vim.keymap.set("v", "<c-g>r", ":<c-u>'<,'>PrtRewriteFullContext<cr>", { desc = "Chat with file context" })
+vim.keymap.set("v", "<c-g>a", ":<c-u>'<,'>PrtRewriteFullContext<cr>", { desc = "Chat with file context" })
 
 
 require("parrot").setup(
@@ -103,13 +112,81 @@ require("parrot").setup(
     -- Available options: "dots", "line", "star", "bouncing_bar", "bouncing_ball"
     spinner_type = "star",
 
+-- ─      Hooks                                        ──
     hooks = {
+
+      ChatWithFileContext = function(prt, params)
+        local chat_prompt = [[
+        Let us talk about this code in file {{filename}}
+        ```{{filetype}}
+        {{filecontent}}
+        ```
+        ]]
+        prt.ChatNew(params, chat_prompt)
+      end,
+
+      ChatWithAllBuffers = function(prt, params)
+        local chat_prompt = [[
+        For this conversation, I have the following context.
+
+        These are the files I currently have open.
+
+        {{multifilecontent}}
+
+        I'm currently in file {{filename}}
+        ]]
+        prt.ChatNew(params, chat_prompt)
+      end,
+
+      RewriteFullContext = function(prt, params)
+        local chat_prompt = [[
+        I have the following selection from {{filename}}:
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        This is the full file for context:
+
+        ```{{filetype}}
+        {{filecontent}}
+        ```
+
+        {{command}}
+        Respond exclusively with the snippet that should replace the selection above.
+        DO NOT RESPOND WITH ANY TYPE OF COMMENTS, JUST THE CODE!!!
+        ]]
+        local model_obj = prt.get_model("command")
+        prt.Prompt(params, prt.ui.Target.rewrite, model_obj, "☼: ", chat_prompt)
+      end,
+
+      AppendFullContext = function(prt, params)
+        local chat_prompt = [[
+        I have the following selection from {{filename}}:
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        This is the full file for context:
+
+        ```{{filetype}}
+        {{filecontent}}
+        ```
+
+        {{command}}
+        Respond exclusively with the snippet that should appended the selection above.
+        DO NOT RESPOND WITH ANY TYPE OF COMMENTS, JUST THE CODE!!!
+        ]]
+        local model_obj = prt.get_model("command")
+        prt.Prompt(params, prt.ui.Target.rewrite, model_obj, "☼: ", chat_prompt)
+      end,
+
 
       CodeConsultant = function(prt, params)
         local chat_prompt = [[
           Your task is to analyze the provided {{filetype}} code and suggest
           improvements.
-          I generally prefer a functional style of programming.
 
           Here is the code
           ```{{filetype}}
@@ -117,6 +194,21 @@ require("parrot").setup(
           ```
         ]]
         prt.ChatNew(params, chat_prompt)
+      end,
+
+      Complete = function(prt, params)
+        local template = [[
+        I have the following code from {{filename}}:
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Please finish the code above carefully and logically.
+        Respond just with the snippet of code that should be inserted."
+        ]]
+        local model_obj = prt.get_model "command"
+        prt.Prompt(params, prt.ui.Target.append, model_obj, nil, template)
       end,
 
       CompleteFullContext = function(prt, params)
@@ -137,6 +229,81 @@ require("parrot").setup(
         ]]
         local model_obj = prt.get_model("command")
         prt.Prompt(params, prt.ui.Target.append, model_obj, nil, template)
+      end,
+
+      CompleteMultiContext = function(prt, params)
+        local template = [[
+        I have the following code from {{filename}} and other realted files:
+
+        ```{{filetype}}
+        {{multifilecontent}}
+        ```
+
+        Please look at the following section specifically:
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Please finish the code above carefully and logically.
+        Respond just with the snippet of code that should be inserted.
+        ]]
+        local model_obj = prt.get_model "command"
+        prt.Prompt(params, prt.ui.Target.append, model_obj, nil, template)
+      end,
+
+      Explain = function(prt, params)
+        local template = [[
+        Your task is to take the code snippet from {{filename}} and explain it with gradually increasing complexity.
+        Break down the code's functionality, purpose, and key components.
+        The goal is to help the reader understand what the code does and how it works.
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Use the markdown format with codeblocks and inline code.
+        Explanation of the code above:
+        ]]
+        local model = prt.get_model "command"
+        prt.logger.info("Explaining selection with model: " .. model.name)
+        prt.Prompt(params, prt.ui.Target.new, model, nil, template)
+      end,
+
+      FixBugs = function(prt, params)
+        local template = [[
+        You are an expert in {{filetype}}.
+        Fix bugs in the below code from {{filename}} carefully and logically:
+        Your task is to analyze the provided {{filetype}} code snippet, identify
+        any bugs or errors present, and provide a corrected version of the code
+        that resolves these issues. Explain the problems you found in the
+        original code and how your fixes address them. The corrected code should
+        be functional, efficient, and adhere to best practices in
+        {{filetype}} programming.
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Fixed code:
+        ]]
+        local model_obj = prt.get_model "command"
+        prt.logger.info("Fixing bugs in selection with model: " .. model_obj.name)
+        prt.Prompt(params, prt.ui.Target.new, model_obj, nil, template)
+      end,
+
+      UnitTests = function(prt, params)
+        local template = [[
+        I have the following code from {{filename}}:
+
+        ```{{filetype}}
+        {{selection}}
+        ```
+
+        Please respond by writing table driven unit tests for the code above.
+        ]]
+        local model_obj = prt.get_model "command"
+        prt.logger.info("Creating unit tests for selection with model: " .. model_obj.name)
+        prt.Prompt(params, prt.ui.Target.enew, model_obj, nil, template)
       end,
 
       ImplementWithFileCtx = function(parrot, params)
@@ -254,6 +421,36 @@ require("parrot").setup(
           local model_obj = prt.get_model("command")
           prt.Prompt(params, prt.ui.Target.rewrite, model_obj, nil, template)
         end
+      end,
+
+      ProofReader = function(prt, params)
+        local chat_prompt = [[
+        I want you to act as a proofreader. I will provide you with texts and
+        I would like you to review them for any spelling, grammar, or
+        punctuation errors. Once you have finished reviewing the text,
+        provide me with any necessary corrections or suggestions to improve the
+        text. Highlight the corrected fragments (if any) using markdown backticks.
+
+        When you have done that subsequently provide me with a slightly better
+        version of the text, but keep close to the original text.
+
+        Finally provide me with an ideal version of the text.
+
+        Whenever I provide you with text, you reply in this format directly:
+
+        ## Corrected text:
+
+        {corrected text, or say "NO_CORRECTIONS_NEEDED" instead if there are no corrections made}
+
+        ## Slightly better text
+
+        {slightly better text}
+
+        ## Ideal text
+
+        {ideal text}
+        ]]
+        prt.ChatNew(params, chat_prompt)
       end,
 
     }
