@@ -334,7 +334,11 @@ Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in 
 " https://github.com/okuuva/auto-save.nvim
 " Plug 'okuuva/auto-save.nvim'
 " https://github.com/0x00-ketsu/autosave.nvim
+
+" https://github.com/0x00-ketsu/autosave.nvim
+" NOTE:  ~/.config/nvim/plugin/config/autosave.lua‖*InsertˍstartˍmarkˍFiX
 Plug '0x00-ketsu/autosave.nvim'
+
 " Plug 'skywind3000/quickmenu.vim'
 " This fork allows to define letter shortcuts per menu-item
 Plug 'CharlesGueunet/quickmenu.vim'

@@ -1,4 +1,7 @@
 
+-- Issue: when a file has multiple links, jumping via index doesn't work
+-- also in this file jumping to a function link doesn't work, just the file
+
 -- Note: the plugin is updated: ~/.config/nvim/plugged/harpoon/README.md
 -- see the commits. persistence is working in 
 -- ~/.local/share/nvim/harpoon/
@@ -12,12 +15,15 @@
 
 local harpoon = require("harpoon")
 -- https://github.com/ThePrimeagen/harpoon/tree/harpoon2
+-- NOTE: the logs work! 
 -- require("harpoon.logger"):show()
+-- DATAFOLDER: containing the JSON
 -- del ~/.local/share/nvim/harpoon/
 -- -- could use this ]a [a to keep win closed or close other haroon win.
 -- vim.g["harpoon_win_id"]
 -- vim.g["harpoon_bufnr"]
 
+-- require("harpoon.data"); local filepath = vim.fn.expand("~/.local/share/nvim/harpoon/e0004d269748d1517cd913798536e799acaf561b0b7488a8345648687eb6ab02.json"); local json_data = data.load_harpoon_file(filepath); print(vim.inspect(json_data))
 
 harpoon:setup({
   settings = {
@@ -28,19 +34,27 @@ harpoon:setup({
 
 vim.keymap.set("n", "<leader>ah", function() 
   Hpon_add_file_linkPath()
-  Hpon_rerender()
+  Hpon_refresh()
 end)
 vim.keymap.set("n", "<leader>aa", function() Hpon_add_file_linkPath() end)
 vim.keymap.set("n", "<leader>ad", function() 
   Hpon_remove_current_file() 
-  Hpon_rerender()
+  Hpon_refresh()
 end)
 vim.keymap.set("n", "<leader>aD", function() Hpon_clearList() end)
+vim.keymap.set("n", "<leader>al", function() 
+  local data = require("harpoon.data")
+  local filepath = vim.fn.expand("~/.local/share/nvim/harpoon/e0004d269748d1517cd913798536e799acaf561b0b7488a8345648687eb6ab02.json")
+  local json_data = data:load_harpoon_file(filepath)
+  print(vim.inspect(json_data))
+  -- require("harpoon"):reload() 
+end)
 
 vim.keymap.set("n", "<leader>af", function() 
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 end)
 vim.keymap.set("n", "<leader>oh", function() 
+  Hpon_load( 'ExampleLinks.md' )
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 end)
 
@@ -53,7 +67,7 @@ end)
 
 vim.keymap.set("n", ",1", function() 
   harpoon:list():select(1) 
-  Hpon_rerender()
+  Hpon_refresh()
 end)
 vim.keymap.set("n", ",2", function() 
   harpoon:list():select(2) 
@@ -317,7 +331,55 @@ function _G.Hpon_highlighFolderName(line)
   -- local folderPattern = _G.Hpon_parentFolderName(line) .. "\\ze\\/"
 end
 
-function _G.Hpon_rerender()                                        
+
+
+function _G.FileReadLines( file_path )                                        
+  local lines = {}
+  local file = io.open(file_path, "r")
+  if not file then
+    vim.notify("Could not open file: " .. file_path, vim.log.levels.ERROR)
+    return lines
+  end
+  for line in file:lines() do
+    table.insert(lines, line)
+  end
+  file:close()
+  return lines
+end
+-- FileReadLines( 'ExampleLinks.md' )
+
+
+
+function _G.Hpon_load( filePath )                                        
+  local lines = FileReadLines( filePath )
+  require("harpoon"):list():recreate( lines )
+end
+-- Hpon_load( 'ExampleLinks.md' )
+
+-- plugin/config/neo-tree.lua‖/filesystemˍ=ˍ{
+-- plugin/config/harpoon.lua‖/functionˍ_G.Hpon_add_curre
+-- ~/Documents/Notes/MCP.md‖/#ˍharpoon
+-- plugin/config/harpoon.lua‖/TODO:ˍbringˍbackˍuiˍupdate
+
+-- -- This iterates through filenames and adds a line per link extension
+-- TODO: an item might just be a link (not a path).
+-- require("harpoon"):list():display()
+
+function _G.Hpon_save()                                        
+  local path = "ExampleLinks.md"
+  local lines = require("harpoon"):list():display()
+  -- save lines to path
+  local file = io.open(path, "w")
+  for _, line in ipairs(lines) do
+    file:write(line .. "\n")
+  end
+  file:close()
+  -- print( "saved!" )
+end
+-- Hpon_save()
+-- ExampleLinks.md
+
+function _G.Hpon_refresh()                                        
   local old_winid = vim.g["harpoon_win_id"]
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 

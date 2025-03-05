@@ -1,9 +1,7 @@
 
 -- https://github.com/frankroeder/parrot.nvim
--- Commands:
--- https://github.com/frankroeder/parrot.nvim?tab=readme-ov-file#commands
-
--- example hooks / prompts: https://github.com/jackfranklin/dotfiles/blob/90a88677f197705ac3381fd07d2d4772a5e2b92d/nvim/lua/jack/plugins/parrot-ai.lua#L4
+-- Commands:jj
+-- example eins hooks / prompts: https://github.com/jackfranklin/dotfiles/blob/90a88677f197705ac3381fd07d2d4772a5e2b92d/nvim/lua/jack/plugins/parrot-ai.lua#L4
 -- Full default config: ~/.config/nvim/plugged/parrot.nvim/lua/parrot/config.lua
 
 -- os.getenv("OPENAI_API_KEY")
@@ -11,13 +9,16 @@
 
 -- vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', '<c-g>c', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
-vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with file context" })
+vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })
 
-vim.keymap.set('n', '<c-g>C', ':PrtChatWithAllBuffers<CR>', { noremap = true, silent = true })
-vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithAllBuffers<cr>", { desc = "Chat with all buffers" })
+vim.keymap.set('n', '<c-g>C', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with all buffers" })
 
-vim.keymap.set("v", "<c-g>r", ":<c-u>'<,'>PrtRewriteFullContext<cr>", { desc = "Chat with file context" })
+vim.keymap.set('n', '<c-g><leader>C', ':PrtChatWithAllBuffers<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g><leader>C", ":<c-u>'<,'>PrtChatWithAllBuffers<cr>", { desc = "Chat with all buffers" })
+
+vim.keymap.set("v", "<c-g><leader>r", ":<c-u>'<,'>PrtRewriteFullContext<cr>", { desc = "Chat with file context" })
 vim.keymap.set("v", "<c-g>a", ":<c-u>'<,'>PrtRewriteFullContext<cr>", { desc = "Chat with file context" })
 
 

@@ -767,19 +767,20 @@ lua vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = t
 " Note: adding to the jumplist on insert Enter/Leave does not seem to work?!
 " Now go to insert start/end explicitly
 
-" nnoremap g[ `[
-" nnoremap g] `]
-" nnoremap g[ `[
-" nnoremap g] `]
-" currently used for coc.nvim diagnostics
 
-func! InsertEnter()
+" NOTE: i'm now using [g to go to the insert start pos. 
+" nnoremap g[ `[
+" nnoremap g] `]
+" nnoremap g[ `[
+" nnoremap g] `]
+
+" func! InsertEnter()
   " echo 'hi'
   " call feedkeys( '<c-[', 'x' )
   " normal! m'
-endfunc
+" endfunc
 
-func! InsertLeave()
+" func! InsertLeave()
   " Put end of inserted text into jumplist, then go to the beginning of the insert
   " normal! `[h
   " normal! m'
@@ -789,7 +790,7 @@ func! InsertLeave()
   "   normal! w
   " endif
   " call JumpsToQuickfix()
-endfunc
+" endfunc
 
 
 " Example autocmd timeout jumplist: ■
