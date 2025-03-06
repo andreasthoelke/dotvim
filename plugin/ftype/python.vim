@@ -35,6 +35,10 @@ func! Py_bufferMaps()
   " nnoremap <silent><buffer>,gwj :call Py_RunCli( "termFloat" )<cr>
   " nnoremap <silent><buffer><leader>gwj :call Py_RunCli( "termSplit" )<cr>
 
+
+" ─   Motions                                           ──
+" ~/.config/nvim/plugin/ftype/typescript.vim‖*Motions
+
   nnoremap <silent><buffer> <leader>(     :call Py_MvStartOfBlock()<cr>
   onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
   vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
@@ -57,6 +61,9 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
+
+  nnoremap <silent><buffer> ]r            :keepjumps call Py_GoReturn()<cr>
+  nnoremap <silent><buffer> [r            :call Py_GoBackReturn()<cr>
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
@@ -581,6 +588,41 @@ func! Py_ColumnBackw()
   normal w
 endfunc
 
+
+func! Py_GoReturn()
+  let oLine = line('.')
+  let oCol = virtcol('.')  " Get visible column position
+  " using treesitter textobjects! ~/.config/nvim/plugin/config/treesitter.lua
+  normal ]M
+  let patterns = [
+        \ '\s\zsreturn',
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  keepjumps call search(combined_pattern, 'bW')
+  let nLine = line('.')
+  if nLine < oLine + 1
+    keepjumps call cursor(oLine, oCol)  " Use cursor() instead of setpos()
+    echo 'no return'
+  endif
+endfunc
+
+func! Py_GoBackReturn()
+  let patterns = [
+        \ '^\s\s\zs\i.*\=\s\(',
+        \ '^\s\s\zs\i.*\<\{',
+        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
+        \ 'static\sasync\s\zs\i',
+        \ 'private\sasync\s\zs\i',
+        \ '\s\zsreturn',
+        \ 'async\sfunction\s\zs\i',
+        \ 'async\s\zs\i',
+        \ '\sprivate\s\zs\i*(\(|\<)',
+        \ '^(\s\s)?\s\s\zs\i*(\(|\<)'
+        \]
+  let combined_pattern = '\v' . join(patterns, '|')
+  call search(combined_pattern, 'bW')
+  call ScrollOff(10)
+endfunc
 
 
 

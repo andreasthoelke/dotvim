@@ -42,19 +42,17 @@ func! JS_bufferMaps()
 
 
 " ─   Motions                                           ──
-" are these consistent with scala?
+" ~/.config/nvim/plugin/ftype/python.vim‖*Motions
 
   nnoremap <silent><buffer> <c-p>         :call JS_BindingBackw()<cr>
   " nnoremap <silent><buffer> <leader><c-n> :call JS_MvEndOfBlock()<cr>
   nnoremap <silent><buffer> <leader><c-n> :call JS_TopLevBindingForw()<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <c-n>         :call JS_BindingForw()<cr>
-  nnoremap <silent><buffer> ,<c-n>        :keepjumps call JS_GoReturn()<cr>
-  nnoremap <silent><buffer> g]            :keepjumps call JS_GoReturn()<cr>
-  nnoremap <silent><buffer> ]g            :keepjumps call JS_GoReturn()<cr>
-  nnoremap <silent><buffer> g<c-n>        :keepjumps call JS_GoReturn()<cr>
-  nnoremap <silent><buffer> g[            :call JS_GoBackReturn()<cr>
-  nnoremap <silent><buffer> [g            :call JS_GoBackReturn()<cr>
+
+  " GO RETURN motions
+  nnoremap <silent><buffer> ]r            :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> [r            :call JS_GoBackReturn()<cr>
   " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_TopLevBindingBackw()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
