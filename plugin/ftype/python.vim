@@ -6,7 +6,7 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer>         gew :call Py_SetPrinterIdentif( "plain" )<cr>
   nnoremap <silent><buffer>         get :call Py_SetPrinterIdentif( "table" )<cr>
   nnoremap <silent><buffer>         gef :call Py_SetPrinterIdentif( "file1" )<cr>
-  nnoremap <silent><buffer>         geW :call Py_SetPrinterIdentif( "plain json" )<cr>
+  nnoremap <silent><buffer>         geW :call Py_SetPrinterIdentif( "image" )<cr>
   nnoremap <silent><buffer>         gee :call Py_SetPrinterIdentif( "effect" )<cr>
   nnoremap <silent><buffer>         gegj :call Py_SetPrinterIdentif( "gallia" )<cr>
   nnoremap <silent><buffer>         gegs :call Py_SetPrinterIdentif( "gallias" )<cr>
@@ -330,6 +330,14 @@ func! Py_SetPrinterIdentif( keyCmdMode )
     let typeMode = "plain"
   endif
 
+  " _setPrintMapArg & keyCmdMode
+  if a:keyCmdMode =~ "image"
+    let typeDisp = "󱁊"
+    let typeMode = "image"
+    let _setPrintMapArg = "PrintMapParam = 'image'"
+  else
+    let _setPrintMapArg = "PrintMapParam = ''"
+  endif
 
   " echo "Printer: " . identif . " - " . typeStr . " - " . typeMode
   call VirtualRadioLabel_lineNum( "« " . typeDisp . " " . typeMode, hostLn )
@@ -373,6 +381,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let printerFilePath = Py_GetPrinterPath()
   let plns = readfile( printerFilePath, '\n' )
 
+  let plns[0] = _setPrintMapArg
   let plns[1] = _import
 
 
