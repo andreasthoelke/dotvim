@@ -21,6 +21,7 @@ Plug 'github/copilot.vim'
 Plug 'jondkinney/aider.nvim'
 
 Plug 'frankroeder/parrot.nvim'
+" Plug 'frankroeder/parrot.nvim', { 'branch': 'feat/completion' }
 
 " Plug 'pieces-app/plugin_neovim'
 

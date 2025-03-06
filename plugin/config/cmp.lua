@@ -106,6 +106,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'vsnip' },
     { name = 'mkdnflow' },
+    -- { name = "parrot_completion" }
     -- { name = 'graphql' },
     -- { name = 'luasnip' }, -- For luasnip users.
   }, {
