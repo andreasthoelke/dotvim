@@ -163,6 +163,8 @@ nnoremap <silent><leader>os :call Path_Float( '/Users/at/Documents/Notes/scratch
 
 nnoremap <silent><leader>oe :call Path_Float( 'ExampleLog.md' )<cr>
 
+nnoremap <silent><leader>oc :call Path_Float( '~/.local/share/nvim/parrot/chats' )<cr>:call DirvishSortByModified()<cr>
+
 
 
 

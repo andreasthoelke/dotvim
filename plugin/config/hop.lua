@@ -3,7 +3,7 @@ require'hop'.setup()
 
 vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
 vim.api.nvim_set_keymap('x', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
-vim.api.nvim_set_keymap('o', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+-- vim.api.nvim_set_keymap('o', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
 
 vim.api.nvim_set_keymap('n', ',k', "<cmd>HopLineStartBC<cr>", {noremap=true})
 
@@ -29,6 +29,19 @@ vim.keymap.set('o', 'd', function()
         current_line_only = false
     })
 end, {remap=true})
+
+-- Operator pending map: alternative to the above 'd' map. works with delete 'd,j'. note I remaped 'd'.
+vim.keymap.set('o', ',j', function()
+    -- Set operator as linewise
+    vim.cmd('normal! V')
+    require'hop'.hint_lines({
+        multi_windows = false,
+        hint_position = require'hop.hint'.HintPosition.BEGIN,
+        direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+        current_line_only = false
+    })
+end, {remap=true})
+
 -- Operator pending map: equivalent to Sneak's t mapping
 vim.keymap.set('o', 't', function()
     require'hop'.hint_char1({

@@ -69,8 +69,6 @@ function _G.Ntree_find_directory()
   })
 end
 
-vim.keymap.set( 'n', '<leader>fd', Ntree_find_directory )
-
 function _G.Ntree_close( state, winid )
   winid = winid or vim.api.nvim_get_current_win()
   state = state ~= nil and state or manager.get_state_for_window( winid )

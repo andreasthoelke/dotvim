@@ -80,9 +80,49 @@ nnoremap gS <cmd>Telescope spell_suggest<cr>
 
 nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
 
+" ─   Folder search maps 2025-03                         ■
+" COLLECTION search: ,cp then l p  - to set search folder
 " nnoremap ,scr <cmd>Telescope live_grep search_dirs=/Users/at/Documents/Notes<cr>
 nnoremap ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
+
+" AI CHATS
+nnoremap <leader>sfc <cmd>lua require('utils.general').Search_folder('~/.local/share/nvim/parrot/chats', '# topic:.*')<cr>
+nnoremap <leader>sfC <cmd>lua require('utils.general').Search_folder('~/.local/share/nvim/parrot/chats', '')<cr>
+
+" NOTES
+nnoremap <leader>sfn <cmd>lua require('utils.general').Search_folder('~/Documents/Notes', '# .*')<cr>
+nnoremap <leader>sfN <cmd>lua require('utils.general').Search_folder('~/Documents/Notes', '')<cr>
+
+" LOCAL HEADERS
+nnoremap <leader>slh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+" LOCAL COMMENTS
+nnoremap <leader>slc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
+
+lua << EOF
+-- Create a Vim command to call this function
+vim.api.nvim_create_user_command(
+  'SearchFolder',
+  function(opts)
+    require('utils.general').Search_folder(opts.args)
+  end,
+  {
+    nargs = 1,
+    complete = 'dir',
+    desc = 'Search file contents in a specified folder with preview'
+  }
+)
+
+vim.keymap.set('n', '<leader>sfb', ':SearchFolder ~/Documents/Proj/', { noremap = true, desc = 'Search in folder' })
+-- ISSUE: as of 2025-03 this is no longer revealing the neotree folder, but a dirvish folder.
+-- vim.keymap.set( 'n', '<leader>fd', Ntree_find_directory )
+vim.keymap.set( 'n', '<leader>sff', Ntree_find_directory )
+
+EOF
+
+
+" ─^  Folder search maps 2025-03                         ▲
+
 
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>

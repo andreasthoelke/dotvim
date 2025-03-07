@@ -352,17 +352,102 @@ local scala_interest_files = {
   'AZioHttp/*.scala',
 }
 
+-- function M.Search_collection_full()
+--   require('telescope.builtin').live_grep({
+--     cwd = vim.g.FolderSearch_Path,
+--   } )
+-- end
+
+-- function M.Search_collection_md_headers()
+--   require('telescope.builtin').live_grep({
+--     default_text = "# .*" ,
+--     cwd = vim.g.FolderSearch_Path,
+--   } )
+-- end
+
+
 function M.Search_collection_full()
-  require('telescope.builtin').live_grep({
+  local opts = {
     cwd = vim.g.FolderSearch_Path,
-  } )
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
 end
 
+
 function M.Search_collection_md_headers()
-  require('telescope.builtin').live_grep({
+  local opts = {
     default_text = "# .*" ,
     cwd = vim.g.FolderSearch_Path,
-  } )
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
+end
+
+function M.Search_collection_aichat_topics()
+  local opts = {
+    default_text = "# topic:.*" ,
+    cwd = "~/.local/share/nvim/parrot/chats",
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
+end
+
+function M.Search_folder(folder_path, default_text)
+  local opts = {
+    -- default_text = "# topic:.*" ,
+    default_text = default_text,
+    cwd = folder_path,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
+end
+
+-- vim.bo.commentstring
+-- vim.bo.comments
+
+function GetCommentPatterns()
+  -- Get the comment strings for the current buffer
+  local commentstring = vim.bo.commentstring
+  local comments = vim.bo.comments
+  
+  -- Initialize patterns table
+  local patterns = {}
+  
+  -- Add the commentstring pattern (handles single-line comments)
+  if commentstring and commentstring ~= "" then
+    local pattern = commentstring:gsub("%%s", ".*")
+    -- pattern = vim.fn.escape(pattern, "[]^$.*\\")
+    table.insert(patterns, pattern)
+  end
+
+  if #patterns > 0 then
+    return table.concat(patterns, "\\|")
+  else
+    return ""
+  end
+end
+
+function M.Search_folder_comments(folder_path)
+  local comment_patterns = GetCommentPatterns()
+  local opts = {
+    -- default_text = "# topic:.*" ,
+    -- default_text = [[".*|#.*]],
+    default_text = comment_patterns,
+    cwd = folder_path,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
 end
 
 

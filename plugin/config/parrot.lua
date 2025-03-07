@@ -9,6 +9,12 @@
 -- os.getenv("OPENAI_API_KEY")
 -- os.getenv("ANTHROPIC_API_KEY")
 
+-- Search in aichats folder: ~/.local/share/nvim/parrot/chats
+-- Rather use ,scc ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ,sccˍ<cmd>luaˍreq
+-- vim.keymap.set('n', '<leader>gsP', ':PrtChatFinder<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<c-g>p', ':PrtProvider<CR>', { noremap = true, silent = true })
+
 vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
 vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })
 
@@ -104,7 +110,7 @@ require("parrot").setup(
     -- fzf_lua options for PrtModel and PrtChatFinder when plugin is installed
     fzf_lua_opts = {
       ["--ansi"] = true,
-      ["--sort"] = "",
+      ["--sort"] = true,
       ["--info"] = "inline",
       ["--layout"] = "reverse",
       ["--preview-window"] = "nohidden:right:75%",
