@@ -14,6 +14,7 @@
 -- vim.keymap.set('n', '<leader>gsP', ':PrtChatFinder<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g>p', ':PrtProvider<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>m', ':PrtModel<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
 vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })

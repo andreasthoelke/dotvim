@@ -197,5 +197,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 vim.treesitter.language.register("bash", "zsh")
 vim.treesitter.language.register("css", "sass")
+-- Add a mapping to select the entire buffer in visual mode
+vim.keymap.set('n', '<leader>vab', 'ggVG', { noremap = true, silent = true, desc = "Select entire buffer" })
 
 

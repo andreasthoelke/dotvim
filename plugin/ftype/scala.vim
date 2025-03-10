@@ -139,8 +139,9 @@ func! Scala_bufferMaps_shared()
   " nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file', g:Scala_MainStartPattern )<cr>
   " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global', g:Scala_TopLevPattern )<cr>
 
+  " TODO this needs cleanup. could just use ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Search_folder(f
   nnoremap <silent><buffer> gs;  :call v:lua.Search_mainPatterns( 'file' )<cr>
-  nnoremap <silent><buffer> gs:  :call v:lua.Search_mainPatterns( 'global' )<cr>
+  nnoremap <silent><buffer> gs:  :call v:lua.Search_mainPatterns( 'cwd' )<cr>
 
   " nnoremap <silent><buffer> gsf  :Telescope current_buffer_fuzzy_find<cr>
   " nnoremap <silent><buffer> gsg  :Telescope live_grep<cr>
@@ -160,6 +161,16 @@ func! Scala_bufferMaps_shared()
 
 
 " ─^  Regex search maps                                  ▲
+
+  " Folder search
+  " ~/.config/nvim/plugin/config/telescope.vim‖*Folderˍsearchˍmapsˍ2025-03
+  " LOCAL HEADERS
+  " nnoremap <leader>slh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+  nnoremap <silent><buffer>gsh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+  " LOCAL COMMENTS
+  " nnoremap <leader>slc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
+  nnoremap <silent><buffer>gsc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
+
 
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>

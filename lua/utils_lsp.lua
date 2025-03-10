@@ -39,7 +39,13 @@ function M.hover()
   -- return params
   return vim.lsp.buf_request_sync(0, "textDocument/hover", params, 2000)
 end
--- put( require'utils_lsp'.hover() )
+-- lua putt( require'utils_lsp'.hover() )
+
+      -- contents = {
+      --   kind = "markdown",
+      --   value = "```python\n(function) def tool_calling_llm(state: MessagesState) -> dict[str, list[BaseMessage]]\n```"
+      -- },
+
 
 -- not supported for scala
 -- function M.type()
@@ -68,7 +74,9 @@ function M.LspType()
   -- put( utilsg.Tablelength( split ) )
   local slen = utilsg.Tablelength( split )
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, [[\v:\s\zs.*\ze\n]] } )
-  local retval = vim.api.nvim_call_function( "matchstr", { split[2], [[\v:\s\zs.*]] } )
+  -- local retval = vim.api.nvim_call_function( "matchstr", { split[2], [[\v:\s\zs.*]] } )
+  local retval = vim.api.nvim_call_function( "matchstr", { split[2], [[\v\)\s\zs.*]] } )
+  -- 2025-03 for python returns: "def tool_calling_llm(state: MessagesState) -> dict[str, list[BaseMessage]]"
 
   if retval == "" then
     retval = vim.api.nvim_call_function( "matchstr", { split[slen-1], [[\v:\s\zs.*]] } )
@@ -84,7 +92,7 @@ function M.LspType()
   -- local retval = vim.api.nvim_call_function( "matchstr", { typeString, ":\\s\\zs.*\\ze`" } )
   return retval
 end
--- putt( require'utils_lsp'.LspType() )
+-- lua putt( require'utils_lsp'.LspType() )
 -- vim.api.nvim_call_function( "matchstr", { "abcdef eins ", [[\v(def|val)\s\zseins]] } )
 -- vim.api.nvim_call_function( "matchstr", { "lazy val e1_sql: HeadZ\n", [[\v:\s\zs\w*]] } )
 

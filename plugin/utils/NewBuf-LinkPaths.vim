@@ -81,7 +81,8 @@ func! ClipBoard_LinkPath_linesearch( shorten )
   let lineStr = getline('.')
   if lineStr =~ '─'
     let searchStr = GetHeadingTextFromHeadingLine( line('.') )
-    call ClipBoard_LinkPath( filePath, "*" . searchStr, a:shorten )
+    " NOTE: i use the 3 whitespace placeholders to have the link point to the header start, not the end which has an additional ^
+    call ClipBoard_LinkPath( filePath, "*ˍˍˍ" . searchStr, a:shorten )
   else
     let searchStr = lineStr->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
     call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )

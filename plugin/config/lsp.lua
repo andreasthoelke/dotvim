@@ -663,28 +663,28 @@ lspconfig.jsonls.setup({
 
 
 -- TODO: lua_ls works nicely as is. however there are a lot of warnings in my config which spam the trouble list which i don't know how to filter.
--- lspconfig.lua_ls.setup {
---   capabilities = capabilities,
---   on_attach = function(client, bufnr)
---     on_attach(client, bufnr)
---   end,
---   settings = {
---     Lua = {
---       diagnostics = {
---         -- Get the language server to recognize the `vim` global
---         globals = { 'vim' },
---       },
---       workspace = {
---         -- Make the server aware of Neovim runtime files
---         library = vim.api.nvim_get_runtime_file("", true),
---         checkThirdParty = true,
---       },
---       window = {
---         progressBar = false
---       },
---     },
---   },
--- }
+lspconfig.lua_ls.setup {
+  capabilities = capabilities,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
+  settings = {
+    Lua = {
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' },
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+        checkThirdParty = true,
+      },
+      window = {
+        progressBar = false
+      },
+    },
+  },
+}
 
   -- settings = {
   --   Lua = {

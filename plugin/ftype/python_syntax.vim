@@ -54,6 +54,8 @@ func! PythonSyntaxAdditions() " ■
 
   " syntax match Normal '\vlist\ze(\W|\_$)' conceal cchar=˄
   syntax match Normal '\vlist\ze(\W|\_$)' conceal cchar=⟬
+  syntax match Normal '\vdict\ze(\W|\_$)' conceal cchar=ʺ
+  " syntax match Normal 'Map\ze\W' conceal cchar=ʺ
   syntax match Normal '\vset\ze(\W|\_$)' conceal cchar=ᴺ
   syntax match Normal '\vtuple\ze\[' conceal cchar=T
   syntax match Normal '\W\zsstr\ze\W' conceal cchar=s
@@ -61,7 +63,9 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal '\vint\ze(\,|\]|\))' conceal cchar=ɪ
   syntax match Normal '\vint\ze\s\=' conceal cchar=ɪ
   " syntax match Normal '\vint\:' conceal cchar=ɪ
-  syntax match Normal '\vfloat\ze(\,|\]|\)|\:)' conceal cchar=𝑓
+  " syntax match Normal '\vfloat\ze(\,|\]|\)|\:)' conceal cchar=𝑓
+  syntax match Normal '\vfloat\ze(\,|\]|\))' conceal cchar=ɪ
+  syntax match Normal '\vfloat\ze\s\=' conceal cchar=ɪ
 
   syntax match Normal '\s\zswith\ze\s' conceal cchar=⊃
   syntax match Normal '\s\zsas\ze\s' conceal cchar=⊂

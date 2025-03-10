@@ -116,8 +116,7 @@ vim.api.nvim_create_user_command(
 vim.keymap.set('n', '<leader>sfb', ':SearchFolder ~/Documents/Proj/', { noremap = true, desc = 'Search in folder' })
 -- ISSUE: as of 2025-03 this is no longer revealing the neotree folder, but a dirvish folder.
 -- vim.keymap.set( 'n', '<leader>fd', Ntree_find_directory )
-vim.keymap.set( 'n', '<leader>sff', Ntree_find_directory )
-
+-- vim.keymap.set( 'n', '<leader>sff', Ntree_find_directory )
 EOF
 
 

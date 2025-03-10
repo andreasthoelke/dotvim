@@ -414,7 +414,7 @@ end
 -- vim.bo.commentstring
 -- vim.bo.comments
 
-function GetCommentPatterns()
+function _G.GetCommentPatterns()
   -- Get the comment strings for the current buffer
   local commentstring = vim.bo.commentstring
   local comments = vim.bo.comments
@@ -425,6 +425,8 @@ function GetCommentPatterns()
   -- Add the commentstring pattern (handles single-line comments)
   if commentstring and commentstring ~= "" then
     local pattern = commentstring:gsub("%%s", ".*")
+    -- Remove any leading whitespace from the pattern
+    pattern = pattern:gsub("^%s+", "")
     -- pattern = vim.fn.escape(pattern, "[]^$.*\\")
     table.insert(patterns, pattern)
   end
@@ -435,6 +437,7 @@ function GetCommentPatterns()
     return ""
   end
 end
+-- GetCommentPatterns()
 
 function M.Search_folder_comments(folder_path)
   local comment_patterns = GetCommentPatterns()
@@ -531,8 +534,22 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
       pattern = [[^(#|function|m|f\.|local\s|-- ─ ).*]]
     elseif vim.fn.expand("%:e") == "vim" then
       pattern = [[^(#|.*\*|func|comma|" ─ ).*]]
+      -- TODO this needs cleanup. could just use ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Search_folder(f
     elseif vim.fn.expand("%:e") == "ts" then
       pattern = vim.fn.JS_TopLevPattern()
+      if searchScope == 'cwd' then
+        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+      end
+    elseif vim.fn.expand("%:e") == "js" then
+      pattern = vim.fn.JS_TopLevPattern()
+      if searchScope == 'cwd' then
+        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+      end
+    elseif vim.fn.expand("%:e") == "py" then
+      pattern = [[(class|def)\s]]
+      if searchScope == 'cwd' then
+        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+      end
     else
       pattern = [[(^#|\*).*]]
     end

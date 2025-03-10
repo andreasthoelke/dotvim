@@ -20,6 +20,9 @@ Plug 'github/copilot.vim'
 " https://github.com/jondkinney/aider.nvim
 Plug 'jondkinney/aider.nvim'
 
+
+" ~/.config/nvim/plugged/parrot.nvim/CHANGELOG.md
+" ~/.config/nvim/plugged/parrot.nvim
 Plug 'frankroeder/parrot.nvim'
 " Plug 'frankroeder/parrot.nvim', { 'branch': 'feat/completion' }
 
@@ -519,7 +522,7 @@ Plug 'jakewvincent/mkdnflow.nvim'
 
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 Plug 'euclio/vim-markdown-composer'
-" https://github.com/MeanderingProgrammer/render-markdown.nvim?tab=readme-ov-file
+" https://github.com/MeanderingProgrammer/render-markdown.nvim?tab=readme-ov-file#commands
 Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'ellisonleao/glow.nvim'

@@ -370,7 +370,7 @@ vim.keymap.set( 'n',
 
 -- search in VIM_HELP:
 vim.keymap.set( 'n',
-  'gsH', function()
+  '<leader>gsH', function()
   Telesc_launch( 'help_tags', {
     default_text = vim.fn.expand '<cword>',
     initial_mode = 'normal',
@@ -391,7 +391,7 @@ end
 
 
 vim.keymap.set( 'v',
-  'gsh', function()
+  '<leader>gsh', function()
   Telesc_launch( 'help_tags', {
     default_text = vim.getVisualSelection(),
     initial_mode = 'normal',

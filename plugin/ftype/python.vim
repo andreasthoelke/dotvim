@@ -67,33 +67,72 @@ func! Py_bufferMaps()
 
   nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
 
-" ─     Lsp maps                                        ──
+
+  " OLD LSP
 " -- also at:
 " ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Lsp%20maps
+  " nnoremap <silent><buffer> <leader>gek :call Py_LspTopLevelHover()<cr>
+  " nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
+  " nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
+  " " this works super nice. there's another (default?) mapping for leader ?
+  " nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  " " nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
+  " nnoremap <silent><buffer> <leader>ot  :Outline<cr>
+  " nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
+  " " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
+  " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+  " " TODO: works as of 2025-03
+  " nnoremap <silent><buffer> <leader>ca :lua require("lspimport").import()<cr>
+  " " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
+  " " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
+  " nnoremap <silent><buffer> ,ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
+  " nnoremap <silent><buffer> geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
+  " nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
 
-  nnoremap <silent><buffer> <leader>gek :call Py_LspTopLevelHover()<cr>
-  nnoremap <silent><buffer>         gek :lua vim.lsp.buf.hover()<cr>
-  nnoremap <silent><buffer>         geK :lua vim.lsp.buf.signature_help()<cr>
-  " this works super nice. there's another (default?) mapping for leader ?
-  nnoremap <silent><buffer> <leader>/   :lua require('telescope.builtin').lsp_document_symbols()<cr>
-  " nnoremap <silent><buffer> <leader>ot  :Vista nvim_lsp<cr>
-  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
+  " OLD LSP
+
+" ─   LSP                                                ■
+
+  " nnoremap <silent><buffer> <leader>ca :lua require("lspimport").import()<cr>
+
+  " copied from typescript! ->
+
   nnoremap <silent><buffer> ,sl :lua require('telescope.builtin').lsp_document_symbols()<cr>
   " nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({layout_config={vertical={sorting_strategy="ascending"}}})<cr>
-  nnoremap <silent><buffer> gel :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
-
-  " TODO: doesn't work
-  nnoremap <silent><buffer> <leader>ca :lua require("lspimport").import()<cr>
+  " " TODO: gsl seems more consistent
+  nnoremap <silent><buffer> gel :echo 'use gsl'<cr>
+  nnoremap <silent><buffer> geL :echo 'use gsL'<cr>
+  " nnoremap <silent><buffer> gsl :lua require('telescope.builtin').lsp_document_symbols({initial_mode='insert'})<cr>
+  " nnoremap <silent><buffer> gsL <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+  nnoremap <silent><buffer> gsl :call v:lua.Telesc_launch('lsp_document_symbols')<cr>
+  nnoremap <silent><buffer> gsL :call v:lua.Telesc_launch('lsp_dynamic_workspace_symbols')<cr>
 
   " Todo: make these maps general per language and put them here or ~/.config/nvim/plugin/general-setup.lua#/--%20Todo.%20make
   " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
-  nnoremap <silent><buffer> ,ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
-  nnoremap <silent><buffer> geR <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
-  nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
-  nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
+  " nnoremap <silent><buffer> ged :TroubleToggle workspace_diagnostics<cr>
+  " TS diagnostics
+  nnoremap <silent><buffer> <leader>ged :Telescope diagnostics initial_mode=normal<cr>
+  nnoremap <silent><buffer> ged :Trouble diagnostics toggle focus=false filter.buf=0<cr>
+  nnoremap <silent><buffer> geD :Trouble diagnostics toggle focus=false<cr>
+  " nice using a qf list view and a preview. preview only shows up when cursor is in the qf list. else i can navigate with ]q [q
+  nnoremap <silent><buffer> geR :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  " " this is small and local
+  " nnoremap <silent><buffer> ger :lua require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor({initial_mode='normal', layout_config={width=0.95, height=25}}))<cr>
+  nnoremap <silent><buffer> ,ger <cmd>TroubleToggle lsp_references<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
+  nnoremap <silent><buffer> ger <cmd>Glance references<cr>
+  " doesn't seem to work properly. using ]d for now
+  " nnoremap <silent><buffer> ge] :lua require("trouble").next({skip_groups = true, jump = true})<cr>
+  " nnoremap <silent><buffer> ge[ :lua require("trouble").previous({skip_groups = true, jump = true})<cr>
+  nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
 
-  " Stubs and inline tests
+
+" ─^  LSP                                                ▲
+
+
+
+" ─   Stubs and inline tests                            ──
   nnoremap <silent><buffer> <leader>et :call Py_InlineTestDec()<cr>
   nnoremap <silent><buffer> ,et :call Py_InlineTestDec()<cr>
 
@@ -248,13 +287,35 @@ func! Py_GetPackageName()
 endfunc
 
 
-func! Py_AddSignature()
 
+func! Py_AddSignature()
   let hostLn = line('.')
   let identifCol = 5
-
   let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
 
+  " def tool_calling_llm(state: MessagesState) -> dict[str, list[BaseMessage]]
+  let typeStr = Py_LspTypeAtPos(hostLn, identifCol)
+  if typeStr == "timeout"
+    echo "Lsp timeout .. try again"
+    return
+  endif
+
+  let lineStr = typeStr . ":"
+
+  normal! "_dd
+  call append( hostLn -1, lineStr )
+  normal! k
+  call setpos('.', [0, hostLn, 0, 0] )
+endfunc
+
+
+
+func! Py_AddSignature_bak()
+  let hostLn = line('.')
+  let identifCol = 5
+  let identif = matchstr( getline(hostLn ), '^def\s\zs\i*\ze\=' )
+
+  " (function) def tool_calling_llm(state: MessagesState) -> dict[str, list[BaseMessage]]
   let typeStr = Py_LspTypeAtPos(hostLn, identifCol)
   if typeStr == "timeout"
     echo "Lsp timeout .. try again"
@@ -278,8 +339,9 @@ func! Py_AddSignature()
   normal! k
   call setpos('.', [0, hostLn, 0, 0] )
   " call search('=')
-
 endfunc
+
+
 
 
 func! Py_SetPrinterIdentif( keyCmdMode )
@@ -485,7 +547,7 @@ endfunc
 
 func! Py_MainStartBindingBackw()
   " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
-  call search( g:Scala_MainStartPattern, 'bW' )
+  call search( g:Py_MainStartPattern, 'bW' )
   " normal! {
   normal! kk
   call search( g:Py_MainStartPattern, 'W' )
