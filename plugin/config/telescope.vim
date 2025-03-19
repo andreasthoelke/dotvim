@@ -60,9 +60,9 @@ nnoremap <silent>gsb :call v:lua.Telesc_launch('vim_bookmarks')<cr>
 
 " Would like to have the full width just in this case to be able to read longer URLs
 " nnoremap <silent>gsc <cmd>Telescope bookmarks layout_strategy=horizontal<cr>
-nnoremap <silent>gsc :call v:lua.Telesc_launch('bookmarks')<cr>
+nnoremap <silent><leader>gsc :call v:lua.Telesc_launch('bookmarks')<cr>
 
-nnoremap <silent>gssi :call v:lua.Telesc_launch('scaladex')<cr>
+" nnoremap <silent>gssi :call v:lua.Telesc_launch('scaladex')<cr>
 
 nnoremap <leader><leader>ts <cmd>Telescope highlights<cr>
 nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
@@ -70,11 +70,12 @@ nnoremap <leader><leader>tS <cmd>TSHighlightCapturesUnderCursor<cr>
 " Find files using Telescope command-line sugar.
 nnoremap <leader>fR <cmd>Telescope lsp_references<cr>
 
-nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
-nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
-nnoremap <leader>fF <cmd>Telescope file_browser<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+" not using these. new approach: ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Search_files(fo
+" nnoremap <leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+" nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
+" nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
+" nnoremap <leader>fF <cmd>Telescope file_browser<cr>
+" nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 
 nnoremap gS <cmd>Telescope spell_suggest<cr>
 
@@ -87,24 +88,24 @@ nnoremap ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
 
 " AI CHATS
-nnoremap <leader>sfc <cmd>lua require('utils.general').Search_folder('~/.local/share/nvim/parrot/chats', '# topic:.*')<cr>
-nnoremap <leader>sfC <cmd>lua require('utils.general').Search_folder('~/.local/share/nvim/parrot/chats', '')<cr>
+nnoremap <leader>sfc <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '# topic:.*')<cr>
+nnoremap <leader>sfC <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '')<cr>
 
 " NOTES
-nnoremap <leader>sfn <cmd>lua require('utils.general').Search_folder('~/Documents/Notes', '# .*')<cr>
-nnoremap <leader>sfN <cmd>lua require('utils.general').Search_folder('~/Documents/Notes', '')<cr>
+nnoremap <leader>sfn <cmd>lua require('utils.general').Search_in_folder('~/Documents/Notes', '# .*')<cr>
+nnoremap <leader>sfN <cmd>lua require('utils.general').Search_in_folder('~/Documents/Notes', '')<cr>
 
 " LOCAL HEADERS
-nnoremap <leader>slh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+nnoremap <leader>slh <cmd>lua require('utils.general').Search_in_folder('.', '─.*')<cr>
 " LOCAL COMMENTS
-nnoremap <leader>slc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
+nnoremap <leader>slc <cmd>lua require('utils.general').Search_in_folder('.')<cr>
 
 lua << EOF
 -- Create a Vim command to call this function
 vim.api.nvim_create_user_command(
   'SearchFolder',
   function(opts)
-    require('utils.general').Search_folder(opts.args)
+    require('utils.general').Search_in_folder(opts.args)
   end,
   {
     nargs = 1,
@@ -123,23 +124,50 @@ EOF
 " ─^  Folder search maps 2025-03                         ▲
 
 
+
+" ─   File search maps 2025-03                           ■
+" Note the regex maps are still file type dependent: 
+" ~/.config/nvim/plugin/ftype/scala.vim‖*ˍˍˍRegexˍsearchˍmaps
+
+" SEARCH FILES
+" in cwd
+nnoremap <leader>gsf <cmd>lua require('utils.general').Search_files('.', '')<cr>
+" The approach here seems to fuzzy match chars, regex is not supporte?
+" nnoremap gsf <cmd>lua require('utils.general').Search_files('.', '.lua')<cr>
+
+" FREQUENT RECENT FILES
+nnoremap gsf <cmd>lua require('utils.general').Search_frequent_recent_files('.', 'CWD')<cr>
+nnoremap gsF <cmd>lua require('utils.general').Search_frequent_recent_files('.', '')<cr>
+" previously: nnoremap <silent> go  <cmd>Telescope frecency workspace=CWD<cr>
+
+" SEARCH FOR DIRECTORY / FOLDER names
+nnoremap gsd <cmd>lua require('utils.general').Search_folders('.', '')<cr>
+nnoremap gsD <cmd>lua require('utils.general').Search_file_browser('.', '')<cr>
+
+nnoremap <silent>gsv  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+nnoremap <silent>gsg  :call v:lua.Telesc_launch('live_grep')<cr>
+
+
+" ─^  File search maps 2025-03                           ▲
+
+
+
+" ─   File search open classic map                      ──
+
 " nnoremap ,,sr       <cmd>Telescope grep_string<cr>
 " nnoremap <leader>fg <cmd>Telescope live_grep layout_strategy=vertical<cr>
 " nnoremap <leader>fb <cmd>Telescope buffers<cr>
 " this is now used for chrome bookmarksearch, use 'go' instead
-
 " Telescope find_files layout_strategy=vertical
 
-" ─   File openers                                      ──
-
-nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
-nnoremap <silent> gP         <cmd>Telescope frecency<cr>
+" see: ~/.config/nvim/plugin/config/telescope.vim‖*ˍˍˍFileˍsearchˍmapsˍ2025-03
+" nnoremap <silent> gp         <cmd>Telescope oldfiles<cr>
+" nnoremap <silent> gP         <cmd>Telescope frecency<cr>
 " nnoremap <silent> g,p        <cmd>Telescope frecency workspace=CWD<cr>
 nnoremap <silent> g,P        <cmd>Telescope frecency workspace=LSP<cr>
 nnoremap <silent> <leader>gp :call MRU_show()<cr>
 
-nnoremap <silent> g,p <cmd>Telescope find_files hidden=true<cr>
-nnoremap <silent> go  <cmd>Telescope frecency workspace=CWD<cr>
+" nnoremap <silent> g,p <cmd>Telescope find_files hidden=true<cr>
 
 " nnoremap <silent> <leader>go <cmd>Neotree show left toggle<cr>
 

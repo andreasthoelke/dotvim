@@ -133,18 +133,19 @@ func! Py_bufferMaps()
 
 
 " ─   Stubs and inline tests                            ──
-  nnoremap <silent><buffer> <leader>et :call Py_InlineTestDec()<cr>
-  nnoremap <silent><buffer> ,et :call Py_InlineTestDec()<cr>
+  nnoremap <silent><buffer> <leader>et :call Py_InlineTestDec("normal")<cr>
+  nnoremap <silent><buffer> <leader>eT :call Py_InlineTestDec("async")<cr>
+  " nnoremap <silent><buffer> ,et :call Py_InlineTestDec()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
 endfunc
 
 
-func! Py_InlineTestDec()
+func! Py_InlineTestDec( type )
   let func_ln = searchpos( 'def\s\(e\d_\)\@!', 'cnb' )[0]
 
-  if getline( func_ln ) =~ "async"
+  if getline( func_ln ) =~ "async" || a:type =~ "async"
     let async = v:true
   else
     let async = v:false
@@ -530,6 +531,7 @@ func! Py_showInFloat( data )
 
   call PythonSyntaxAdditions() 
   silent call FloatWin_FitWidthHeight()
+  normal! zM
   silent wincmd p
 endfun
 

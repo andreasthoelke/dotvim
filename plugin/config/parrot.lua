@@ -9,7 +9,11 @@
 -- os.getenv("OPENAI_API_KEY")
 -- os.getenv("ANTHROPIC_API_KEY")
 
+-- MAPS:
 -- Search in aichats folder: ~/.local/share/nvim/parrot/chats
+-- l sfc   - AI Chats topics
+-- l sfC   - full text
+-- old:
 -- Rather use ,scc ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ,sccˍ<cmd>luaˍreq
 -- vim.keymap.set('n', '<leader>gsP', ':PrtChatFinder<CR>', { noremap = true, silent = true })
 

@@ -11,6 +11,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match ConcealQuotes '"' conceal
   " call CodeMarkupSyntaxHighlights()
 
+  " Quotes
   syntax match Normal '""' conceal cchar=∅
   syntax match Normal '"""' conceal cchar=❞
   syntax match Normal 'f"' conceal cchar=❞
@@ -28,6 +29,7 @@ func! PythonSyntaxAdditions() " ■
   syntax match Normal 'flow' conceal cchar=
   syntax match Normal 'workflow' conceal cchar=
   syntax match Normal 'graph_builder' conceal cchar=
+  syntax match Normal 'builder' conceal cchar=
   syntax match Normal 'add_node' conceal cchar=❇
   syntax match Normal 'add_edge' conceal cchar=󰔰
   syntax match Normal 'add_conditional_edges' conceal cchar=⭄
@@ -72,7 +74,7 @@ func! PythonSyntaxAdditions() " ■
 
   syntax match Normal 'from' conceal cchar=⊃
   syntax match Normal 'import\s' conceal cchar=⁝
-  syntax match Normal 'class' conceal cchar=□
+  syntax match Normal 'class\ze\s' conceal cchar=□
   syntax match Normal 'self' conceal cchar=∝
   syntax match Normal 'lambda' conceal cchar=→
 
@@ -97,6 +99,9 @@ func! PythonSyntaxAdditions() " ■
   " This is effective in preventing the conceal unicode in normal comments
   syntax match Comment '\v#\s\zs.*'
   syntax match Normal '\.\ze\S' conceal cchar=ˍ
+
+  " syntax match Normal '\.strip' conceal cchar=≣
+  syntax match Normal '\.strip' conceal
 
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs#\s', 12, -1, {'conceal': ''})

@@ -11,6 +11,8 @@ local easypick = require("easypick")
 local f = require 'utils.functional'
 local s = require 'utils.string'
 
+local fb_actions = require "telescope".extensions.file_browser.actions
+
 -- -- NOTE: getting some additional state details:
 -- local prompt_title = action_state.get_current_picker( pbn ).prompt_title
 -- { "__cycle_layout_list", "__scrolling_limit", "_selection_row", "_on_lines", "tiebreak", "window", "original_win_id", "get_status_text", "file_ignore_patterns", "prompt_bufnr", "_original_mode", "stats", "_multi", "preview_win", "push_cursor_on_edit", "preview_border", "layout_strategy", "prompt_win", "max_results", "manager", "scroller", "prompt_title", "layout", "_selection_entry", "initial_mode", "highlighter", "get_window_options", "prompt_border", "results_border", "sorting_strategy", "previewer", "push_tagstack_on_edit", "selection_strategy", "cache_picker", "scroll_strategy", "results_win", "results_bufnr", "create_layout", "preview_bufnr", "layout_config", "get_selection_window", "sorter", "results_title", "attach_mappings", "wrap_results", "multi_icon", "prompt_prefix", "_finder_attached", "preview_title", "selection_caret", "_on_input_filter_cb", "entry_prefix", "finder", "all_previewers", "current_previewer_index", "_find_id", "_completion_callbacks", "track" }
@@ -804,6 +806,30 @@ require('telescope').setup{
     -- bookmarks = {
     --   selected_browser = 'chrome',
     -- },
+
+    file_browser = {
+      mappings = {
+        ["i"] = {
+          -- remap to going to home directory
+          -- ["<C-x>"] = function(prompt_bufnr)
+          -- this doesn't work:
+          ["<C-j>"] = function(prompt_bufnr)
+            require("telescope.actions").move_selection_next(prompt_bufnr)
+          end,
+          ["<C-k>"] = function(prompt_bufnr)
+            require("telescope.actions").move_selection_previous(prompt_bufnr)
+          end,
+        },
+        ["n"] = {
+          ["<C-h>"] = fb_actions.goto_home_dir,
+          -- Map j/k to use standard telescope navigation actions
+          ["j"] = actions.move_selection_next,
+          ["k"] = actions.move_selection_previous,
+          ["<C-j>"] = actions.move_selection_next,
+          ["<C-k>"] = actions.move_selection_previous,
+        },
+      },
+    },
 
     -- See: https://github.com/cljoly/telescope-repo.nvim
     repo = {

@@ -399,7 +399,7 @@ function M.Search_collection_aichat_topics()
   require('telescope.builtin').live_grep(opts)
 end
 
-function M.Search_folder(folder_path, default_text)
+function M.Search_in_folder(folder_path, default_text)
   local opts = {
     -- default_text = "# topic:.*" ,
     default_text = default_text,
@@ -410,6 +410,54 @@ function M.Search_folder(folder_path, default_text)
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
   require('telescope.builtin').live_grep(opts)
 end
+
+function M.Search_files(folder_path, default_text)
+  local opts = {
+    -- default_text = "# topic:.*" ,
+    default_text = default_text,
+    cwd = folder_path,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').find_files(opts)
+end
+
+function M.Search_folders(folder_path, default_text)
+  local opts = {
+    default_text = default_text,
+    cwd = folder_path,
+    find_command = { "fd", "--type", "directory", "--hidden", "--exclude", ".git/*" },
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').find_files(opts)
+end
+
+function M.Search_file_browser(folder_path, default_text)
+  local opts = {
+    default_text = default_text,
+    cwd = folder_path,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require("telescope").extensions.file_browser.file_browser(opts)
+end
+
+function M.Search_frequent_recent_files(folder_path, workspace)
+  local opts = {
+    default_text = default_text,
+    workspace = workspace
+    -- cwd = folder_path,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require("telescope").extensions.frecency.frecency(opts)
+end
+
 
 -- vim.bo.commentstring
 -- vim.bo.comments

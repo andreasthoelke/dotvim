@@ -17,9 +17,19 @@ Plug 'github/copilot.vim'
 
 " Plug 'robitx/gp.nvim'
 " Plug 'pasky/claude.vim'
-" https://github.com/jondkinney/aider.nvim
-Plug 'jondkinney/aider.nvim'
 
+" https://github.com/jondkinney/aider.nvim
+" modified:
+" - ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
+" Plug 'jondkinney/aider.nvim'
+
+" The plugged *claude_code* folder is a patch of aider.nvim!
+" ~/.config/nvim/plugged/claude_code
+Plug 'andreasthoelke/claude_code'
+
+" too simplistic using a patch of aider for claude_code
+" claude-code.nvim: https://github.com/greggh/claude-code.nvim
+" Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/claude-code.nvim/'
 
 " ~/.config/nvim/plugged/parrot.nvim/CHANGELOG.md
 " ~/.config/nvim/plugged/parrot.nvim
@@ -36,6 +46,7 @@ Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --
 " })
 
 Plug 'olimorris/codecompanion.nvim'
+
 
 " https://github.com/piersolenski/wtf.nvim
 Plug 'piersolenski/wtf.nvim'

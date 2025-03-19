@@ -21,7 +21,7 @@ end, {
 
 
 -- note: help aider
-require('aider').setup({
+require('claude_code').setup({
   auto_manage_context = false,
   default_bindings = false,
   debug = false,
@@ -42,7 +42,13 @@ function _G.Aider_open()
   vim.cmd('AiderOpen')
 end
 
-vim.keymap.set( 'n', '<c-g>v', Aider_open )
+function _G.ClaudeCode_open()
+  vim.cmd('ClaudeCodeOpen')
+end
+
+
+-- vim.keymap.set( 'n', '<c-g>v', Aider_open )
+vim.keymap.set( 'n', '<c-g>v', ClaudeCode_open )
 
 -- write a function _G.Aider_updateAiderIgnore() using _G.Ntree_getOpenFolders()
 -- this is an example output: { "/Users/at/.config/nvim", "lua", "lua/utils", "plugin/config" }
