@@ -649,8 +649,9 @@ set termguicolors
 if !exists('g:colors_name')
   " && g:colors_name != 'munsell-blue-molokai'
   set background=dark
-  colorscheme munsell-blue-molokai
-  " colorscheme munsell-blue-molokai_light_1
+  " colorscheme munsell-blue-molokai
+  " The startup color theme - light during time
+  colorscheme munsell-blue-molokai_light_1
   " colorscheme munsell-blue-molokai_20250214_180417
 endif
 

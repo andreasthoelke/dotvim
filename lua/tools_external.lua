@@ -3,6 +3,132 @@ local M = {}
 local loop = vim.loop
 local api = vim.api
 
+
+-- ─   Json                                              ■
+
+-- Function to update a key in a JSON file
+-- file_path: Path to the JSON file
+-- host_key: First-level object key that contains the value to update
+-- key: Key to be updated within the host_key object
+-- value: New value to set (as a JSON string)
+function M.JsonFileUpdateKey(file_path, host_key, key, value)
+    -- Expand tilde to home directory if present
+    if file_path:sub(1,1) == "~" then
+        local home = os.getenv("HOME")
+        file_path = home .. file_path:sub(2)
+    end
+    
+    -- Use jq to handle the JSON manipulation
+    -- This approach is robust for any JSON structure
+    
+    -- Parse the value string to ensure it's valid JSON
+    local parsed_value = value
+    
+    -- Build the jq filter:
+    -- 1. If the host_key doesn't exist, create it as an empty object
+    -- 2. Set the specific key within the host_key to the provided value
+    local jq_filter = string.format(
+        'if .%s | type != "object" then . + {"%s": {}} else . end | .%s.%s = %s', 
+        host_key, host_key, host_key, key, parsed_value
+    )
+    
+    -- Create file with an empty JSON object if it doesn't exist
+    local file = io.open(file_path, "r")
+    if not file then
+        file = io.open(file_path, "w")
+        if file then
+            file:write("{}")
+            file:close()
+        else
+            error("Failed to create file: " .. file_path)
+            return
+        end
+    else
+        file:close()
+    end
+    
+    -- Execute jq to update the JSON file
+    local cmd = string.format('jq \'%s\' %s > %s.tmp && mv %s.tmp %s', 
+        jq_filter, file_path, file_path, file_path, file_path)
+    
+    local result = os.execute(cmd)
+    
+    if not result then
+        error("Failed to update JSON file: " .. file_path)
+    end
+end
+
+
+-- Function to remove a key from a JSON file
+-- file_path: Path to the JSON file
+-- host_key: First-level object key that contains the key to remove
+-- key: Key to be removed within the host_key object
+function M.JsonFileRemoveKey(file_path, host_key, key)
+    -- Expand tilde to home directory if present
+    if file_path:sub(1,1) == "~" then
+        local home = os.getenv("HOME")
+        file_path = home .. file_path:sub(2)
+    end
+    
+    -- Check if the file exists
+    local file = io.open(file_path, "r")
+    if not file then
+        error("File does not exist: " .. file_path)
+        return
+    end
+    file:close()
+    
+    -- Use jq to handle the JSON manipulation
+    -- Build the jq filter:
+    -- 1. Check if the host_key exists and is an object
+    -- 2. If it exists, delete the specified key from it
+    local jq_filter = string.format(
+        'if .%s | type == "object" then .%s |= del(.%s) else . end', 
+        host_key, host_key, key
+    )
+    
+    -- Execute jq to update the JSON file
+    local cmd = string.format('jq \'%s\' %s > %s.tmp && mv %s.tmp %s', 
+        jq_filter, file_path, file_path, file_path, file_path)
+    
+    local result = os.execute(cmd)
+    
+    if not result then
+        error("Failed to update JSON file: " .. file_path)
+    end
+end
+
+
+-- require'tools_external'.JsonFileUpdateKey( '~/.config/claude-desktop/test.json', 'mcpServers', 'abc', '{ "ab": 123, "cd": [2, 3]}')
+-- require'tools_external'.JsonFileRemoveKey( '~/.config/claude-desktop/test.json', 'mcpServers', 'abc' )
+
+
+-- Function to read and pretty-print JSON file content
+function M.get_json_content(file_path)
+    -- Expand tilde to home directory if present
+    if file_path:sub(1,1) == "~" then
+        local home = os.getenv("HOME")
+        file_path = home .. file_path:sub(2)
+    end
+    
+    -- Use jq to format the JSON nicely
+    local cmd = string.format('jq . %s', file_path)
+    local handle = io.popen(cmd)
+    if not handle then
+        return {"Error: Could not read JSON file"}
+    end
+    
+    local json_content = handle:read("*a")
+    handle:close()
+    
+    return json_content
+end
+
+
+-- ─^  Json                                              ▲
+
+
+
 -- ─   Pandoc                                           ──
 -- from https://teukka.tech/posts/2020-01-07-vimloop/
 

@@ -67,7 +67,9 @@ nnoremap <silent><leader>ogc <cmd>Git commit<cr>
 " nnoremap ,,w :w<cr><c-w>c
 nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr><c-w>c' : ':call BufferInnerBracket()<cr>'
 
-nnoremap <silent><leader>ogg :G<cr>
+command! Gcwd execute 'let b:git_dir = ""' | call FugitiveDetect(getcwd()) | Git
+nnoremap <silent><leader>ogg :Gcwd<cr>
+" nnoremap <silent><leader>ogg :G<cr>
 
 nnoremap <silent> <leader><leader>ga :<c-u>call Dirvish_git_add( getline('.') )<cr>
 nnoremap <silent> <leader><leader>gA :<c-u>call Dirvish_git_unstage( getline('.') )<cr>

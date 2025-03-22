@@ -135,7 +135,7 @@ hi! TermCursorNC guibg=grey guifg=white
 func! System_Float( cmd )
   let resLines = systemlist( a:cmd )
   let resLines = RemoveTermCodes( resLines )
-  silent let g:floatWin_win = FloatingSmallNew ( resLines )
+  silent let g:floatWin_win = FloatingSmallNew ( resLines, "cursor" )
   silent call FloatWin_FitWidthHeight()
   silent wincmd p
 endfunc

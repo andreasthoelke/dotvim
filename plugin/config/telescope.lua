@@ -812,13 +812,6 @@ require('telescope').setup{
         ["i"] = {
           -- remap to going to home directory
           -- ["<C-x>"] = function(prompt_bufnr)
-          -- this doesn't work:
-          ["<C-j>"] = function(prompt_bufnr)
-            require("telescope.actions").move_selection_next(prompt_bufnr)
-          end,
-          ["<C-k>"] = function(prompt_bufnr)
-            require("telescope.actions").move_selection_previous(prompt_bufnr)
-          end,
         },
         ["n"] = {
           ["<C-h>"] = fb_actions.goto_home_dir,
