@@ -7,7 +7,7 @@ require('magenta').setup()
 -- ~/Documents/Proj/k_mindgraph/h_mcp/b_mga/lua/magenta/init.lua
 
 vim.keymap.set( 'n',
-  ',sm', function() 
+  ',sm', function()
     require( 'plenary.reload' ).reload_module(
       'magenta.nvim'
     )
