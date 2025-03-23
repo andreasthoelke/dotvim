@@ -29,7 +29,7 @@ vim.keymap.set( 'n',
   end )
 
 vim.keymap.set( 'n',
-  '<c-g>i', function()
+  '<c-g><cr>', function()
     -- OTHER_EVENTS:
     -- Trigger other commands in the claude repl:
     -- Send escape: (\<Esc> in vimscript)
@@ -134,6 +134,140 @@ function PrintVisualSelection()
   -- Do something with the selected lines, e.g., print them
   print(vim.inspect(selected_lines))
 end
+
+
+-- vim.keymap.set('n', '<c-g>o', function()
+--   local old_func = vim.go.operatorfunc
+--   _G.Claude_operator_func = function()
+--     local start_pos = vim.api.nvim_buf_get_mark(0, '[')
+--     local end_pos = vim.api.nvim_buf_get_mark(0, ']')
+--     local lines = vim.api.nvim_buf_get_text(0, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
+--     local selected_text = table.concat(lines, '\n')
+--     Claude_send(selected_text)
+--   end
+--   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+--   return 'g@'
+-- end, { expr = true, desc = "Operator to send text to Claude" })
+
+-- vim.keymap.set('n', '<c-g>o', function()
+--   local old_func = vim.go.operatorfunc
+  
+--   _G.Claude_operator_func = function()
+--     -- Save current register contents
+--     local old_reg = vim.fn.getreg('"')
+--     local old_reg_type = vim.fn.getregtype('"')
+    
+--     -- Yank the selection
+--     vim.cmd('normal! `[v`]y')
+    
+--     -- Get the yanked text
+--     local selected_text = vim.fn.getreg('"')
+    
+--     -- Send to Claude
+--     Claude_send(selected_text)
+    
+--     -- Restore register
+--     vim.fn.setreg('"', old_reg, old_reg_type)
+--   end
+  
+--   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+--   return 'g@'
+-- end, { expr = true, desc = "Operator to send text to Claude" })
+
+-- vim.keymap.set('n', '<c-g>o', function()
+--   -- print('hi')
+--   local old_func = vim.go.operatorfunc
+--   _G.Claude_operator_func = function()
+--     local start_pos = vim.api.nvim_buf_get_mark(0, '[')
+--     local end_pos = vim.api.nvim_buf_get_mark(0, ']')
+    
+--     -- Get the mode of the last selection
+--     local mode = vim.fn.visualmode()
+    
+--     local selected_text
+    
+--     if mode == 'V' or (end_pos[2] == 2147483647) then
+--       -- Linewise selection - get full lines
+--       -- Get lines including the entire last line
+--       local lines = vim.api.nvim_buf_get_lines(0, start_pos[1]-1, end_pos[1], false)
+--       selected_text = table.concat(lines, '\n')
+--     else
+--       -- Characterwise selection
+--       local lines = vim.api.nvim_buf_get_text(0, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
+--       selected_text = table.concat(lines, '\n')
+--     end
+    
+--     Claude_send(selected_text)
+--   end
+  
+--   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+--   return 'g@'
+-- end, { expr = true, desc = "Operator to send text to Claude" })
+
+
+vim.keymap.set('n', '<c-g>i', function()
+  local old_func = vim.go.operatorfunc
+
+  _G.Claude_operator_func = function()
+    -- Store the current register content
+    local old_unnamed_reg = vim.fn.getreg('"')
+    local old_unnamed_reg_type = vim.fn.getregtype('"')
+    
+    -- Use a temporary register to avoid conflicts
+    local temp_reg = 'z'
+    local old_temp_reg = vim.fn.getreg(temp_reg)
+    local old_temp_reg_type = vim.fn.getregtype(temp_reg)
+    
+    -- Execute the yank operation using the temporary register
+    vim.cmd(string.format('normal! `[' .. '"' .. temp_reg .. 'y`]'))
+    
+    -- Get the yanked text and its type
+    local selected_text = vim.fn.getreg(temp_reg)
+    local reg_type = vim.fn.getregtype(temp_reg)
+    
+    -- Send to Claude
+    Claude_send(selected_text)
+    
+    -- Restore registers
+    vim.fn.setreg(temp_reg, old_temp_reg, old_temp_reg_type)
+    vim.fn.setreg('"', old_unnamed_reg, old_unnamed_reg_type)
+  end
+  
+  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude" })
+
+
+vim.keymap.set('n', '<c-g>o', function()
+  local old_func = vim.go.operatorfunc
+  
+  _G.Claude_operator_func = function()
+    -- Store registers
+    local old_reg = vim.fn.getreg('z')
+    local old_reg_type = vim.fn.getregtype('z')
+    
+    -- Get the exact position details
+    local start_pos = vim.fn.getpos("'[")
+    local end_pos = vim.fn.getpos("']")
+    local start_line = start_pos[2]
+    local end_line = end_pos[2]
+    
+    -- Use linewise visual mode to ensure we get complete lines
+    vim.cmd(string.format('normal! %dGV%dG"zy', start_line, end_line))
+    
+    -- Get the yanked text
+    local selected_text = vim.fn.getreg('z')
+    
+    -- Send to Claude
+    Claude_send(selected_text)
+    
+    -- Restore register
+    vim.fn.setreg('z', old_reg, old_reg_type)
+  end
+  
+  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude" })
 
 
 
