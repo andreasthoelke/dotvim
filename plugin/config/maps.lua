@@ -443,11 +443,13 @@ vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_
 vim.keymap.set( 'n',
   ',,cl', function()
     vim.cmd'colorscheme munsell-blue-molokai_light_1'
+    os.execute("claude config set -g theme light")
   end )
 
 vim.keymap.set( 'n',
   ',,cd', function()
     vim.cmd'colorscheme munsell-blue-molokai'
+    os.execute("claude config set -g theme dark")
   end )
 
 

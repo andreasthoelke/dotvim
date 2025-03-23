@@ -34,9 +34,6 @@ Plug 'andreasthoelke/claude_code'
 " ~/.config/nvim/plugged/parrot.nvim/CHANGELOG.md
 " ~/.config/nvim/plugged/parrot.nvim
 Plug 'frankroeder/parrot.nvim'
-" Plug 'frankroeder/parrot.nvim', { 'branch': 'feat/completion' }
-
-" Plug 'pieces-app/plugin_neovim'
 
 " https://github.com/dlants/magenta.nvim
 " Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }
@@ -49,7 +46,7 @@ Plug 'olimorris/codecompanion.nvim'
 
 
 " https://github.com/piersolenski/wtf.nvim
-Plug 'piersolenski/wtf.nvim'
+" Plug 'piersolenski/wtf.nvim'
 
 " File Selectors Browsers: ------------------------------------------
 " Plug 'nvim-tree/nvim-tree.lua'
@@ -649,9 +646,9 @@ set termguicolors
 if !exists('g:colors_name')
   " && g:colors_name != 'munsell-blue-molokai'
   set background=dark
-  " colorscheme munsell-blue-molokai
+  colorscheme munsell-blue-molokai
   " The startup color theme - light during time
-  colorscheme munsell-blue-molokai_light_1
+  " colorscheme munsell-blue-molokai_light_1
   " colorscheme munsell-blue-molokai_20250214_180417
 endif
 

@@ -65,10 +65,11 @@ require('nvim-treesitter.configs').setup {
     enable = true,
     keymaps = {
       -- init_selection = 'gnn',
-      init_selection = 'yst',
-      node_incremental = 'ysn',
+      -- init_selection = 'yst',
+      -- i think in visual mode these maps would slow the normal "y" yank to copy?
+      -- node_incremental = 'ysn',
       scope_incremental = 'grc',
-      node_decremental = 'ysd',
+      -- node_decremental = 'ysd',
     },
   },
   indent = {

@@ -1,6 +1,14 @@
 local Utils = require("magenta.utils")
 local M = {}
 
+-- NOTE
+-- These maps ( ~/.config/nvim/lua/config/mga_m.lua ) are analogous to:
+-- ~/Documents/Proj/k_mindgraph/h_mcp/b_mga/lua/magenta/init.lua
+-- They call the simplified / alt version of magenta "mga_m" (for mini)
+-- ~/Documents/Proj/k_mindgraph/h_mcp/b_mga/node/mga-m.ts
+--
+-- Could also put maps here: ~/.config/nvim/plugin/config/magenta.nvim.lua
+
 M.defaults = {
   provider = "anthropic",
   openai = {

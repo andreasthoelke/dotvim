@@ -17,7 +17,13 @@
 -- Rather use ,scc ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ,sccˍ<cmd>luaˍreq
 -- vim.keymap.set('n', '<leader>gsP', ':PrtChatFinder<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', '<c-g>p', ':PrtProvider<CR>', { noremap = true, silent = true })
+-- Lines breaks in claude-code and terminal buffers!
+vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
+-- See ~/.local/share/nvim/parrot/chats/2025-03-23.17-25-57.276.md
+
+vim.keymap.set('v', '<c-g>p', ':Mga paste-selection_claude<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<c-g><leader>p', ':PrtProvider<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>m', ':PrtModel<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
