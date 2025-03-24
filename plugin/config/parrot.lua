@@ -20,8 +20,10 @@
 vim.keymap.set('n', '<c-g><leader>p', ':PrtProvider<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>m', ':PrtModel<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', '<c-g>c', ':PrtChatNew<CR>', { noremap = true, silent = true })
-vim.keymap.set("v", "<c-g>c", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })
+vim.keymap.set('n', '<c-g>n', ':PrtChatNew<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>N', ':PrtChatNew split<CR>', { noremap = true, silent = true })
+vim.keymap.set("v", "<c-g>n", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })
+vim.keymap.set("v", "<c-g>N", ":<c-u>'<,'>PrtChatNew split<cr>", { desc = "Chat with file context" })
 
 vim.keymap.set('n', '<c-g>C', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
 vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with all buffers" })

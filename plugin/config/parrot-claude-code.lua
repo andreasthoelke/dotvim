@@ -79,13 +79,16 @@ vim.keymap.set( 'n',
   end )
 
 vim.keymap.set( 'n',
-  '<c-g>d', function()
+  '<c-g>c', function()
     Claude_send(string.char(3))
   end )
 
 vim.keymap.set( 'n',
   '<c-g>mc', function()
     Claude_send("Make a commit.")
+    vim.defer_fn(function()
+      Claude_send( "\r" )
+    end, 100)
   end )
 
 
