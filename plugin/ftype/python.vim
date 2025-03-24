@@ -531,7 +531,9 @@ func! Py_showInFloat( data )
 
   call PythonSyntaxAdditions() 
   silent call FloatWin_FitWidthHeight()
-  normal! zM
+  if len( resLines ) > 10
+    normal! zM
+  endif
   silent wincmd p
 endfun
 

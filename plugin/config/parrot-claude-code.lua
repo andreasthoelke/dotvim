@@ -7,26 +7,54 @@ vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
 -- vim.keymap.set('v', '<c-g>p', ':Mga paste-selection_claude<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('x', '<leader><leader>bn', ':<C-u>lua PrintVisualSelection()<CR>', {noremap = true, silent = true})
 
+-- Helper function to handle sending text to Claude with optional CodeBlockMarkup
+local function claude_send_handler(text, use_markup)
+  if use_markup then
+    Claude_send(CodeBlockMarkup(text))
+  else
+    Claude_send(text)
+  end
+end
 
-vim.keymap.set( 'n',
-  '<c-g>p', function()
-    local lines = GetParagraphLines()
-    local lines_joined = table.concat(lines, "\n")
-    Claude_send( lines_joined )
-  end )
+-- PARAGRAPHS
+vim.keymap.set('n', '<c-g>p', function()
+  local lines = GetParagraphLines()
+  local lines_joined = table.concat(lines, "\n")
+  claude_send_handler(lines_joined, false)
+end)
 
-vim.keymap.set( 'v',
-  '<c-g>p', function()
-    local lines = GetVisualSelection()
-    local lines_joined = table.concat(lines, "\n")
-    Claude_send( lines_joined )
-  end )
+-- PARAGRAPHS with markup
+vim.keymap.set('n', '<leader><c-g>p', function()
+  local lines = GetParagraphLines()
+  local lines_joined = table.concat(lines, "\n")
+  claude_send_handler(lines_joined, true)
+end)
 
-vim.keymap.set( 'n',
-  "<c-g>'", function()
-    local clipboard_text = vim.fn.getreg('"')
-    Claude_send( clipboard_text )
-  end )
+-- VISUAL SELECTIONS
+vim.keymap.set('v', '<c-g>p', function()
+  local lines = GetVisualSelection()
+  local lines_joined = table.concat(lines, "\n")
+  claude_send_handler(lines_joined, false)
+end)
+
+-- VISUAL SELECTIONS with markup
+vim.keymap.set('v', '<leader><c-g>p', function()
+  local lines = GetVisualSelection()
+  local lines_joined = table.concat(lines, "\n")
+  claude_send_handler(lines_joined, true)
+end)
+
+-- CLIPBOARD
+vim.keymap.set('n', "<c-g>'", function()
+  local clipboard_text = vim.fn.getreg('"')
+  claude_send_handler(clipboard_text, false)
+end)
+
+-- CLIPBOARD with markup
+vim.keymap.set('n', "<leader><c-g>'", function()
+  local clipboard_text = vim.fn.getreg('"')
+  claude_send_handler(clipboard_text, true)
+end)
 
 vim.keymap.set( 'n',
   '<c-g><cr>', function()
@@ -37,6 +65,17 @@ vim.keymap.set( 'n',
     -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
     -- Claude_send( "i" )
     Claude_send( "\r" )
+  end )
+
+vim.keymap.set( 'n',
+  '<c-g>d', function()
+    -- OTHER_EVENTS:
+    -- Trigger other commands in the claude repl:
+    -- Send escape: (\<Esc> in vimscript)
+    -- Claude_send(string.char(27))
+    -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
+    -- Claude_send( "i" )
+    Claude_send(string.char(3))
   end )
 
 
@@ -62,8 +101,13 @@ end
 
 -- Claude_send("hi there")
 
--- c-g i   - run / execute current buffer
--- c-g p   - paste paragraphppj
+function _G.CodeBlockMarkup( inputStr )
+  local filePathRelToCWD = vim.fn.expand('%')
+  local fileType = vim.bo.filetype
+  local wrapped = "```" .. fileType .. "\n" .. inputStr .. "\n```\n"
+  return "\nHere is a snipped from " .. filePathRelToCWD .. ":\n" .. wrapped
+end
+-- CodeBlockMarkup( "function abc( cd ) return cd end")
 
 
 function _G.GetParagraphLines()
@@ -135,139 +179,89 @@ function PrintVisualSelection()
   print(vim.inspect(selected_lines))
 end
 
-
--- vim.keymap.set('n', '<c-g>o', function()
---   local old_func = vim.go.operatorfunc
---   _G.Claude_operator_func = function()
---     local start_pos = vim.api.nvim_buf_get_mark(0, '[')
---     local end_pos = vim.api.nvim_buf_get_mark(0, ']')
---     local lines = vim.api.nvim_buf_get_text(0, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
---     local selected_text = table.concat(lines, '\n')
---     Claude_send(selected_text)
---   end
---   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
---   return 'g@'
--- end, { expr = true, desc = "Operator to send text to Claude" })
-
--- vim.keymap.set('n', '<c-g>o', function()
---   local old_func = vim.go.operatorfunc
-  
---   _G.Claude_operator_func = function()
---     -- Save current register contents
---     local old_reg = vim.fn.getreg('"')
---     local old_reg_type = vim.fn.getregtype('"')
-    
---     -- Yank the selection
---     vim.cmd('normal! `[v`]y')
-    
---     -- Get the yanked text
---     local selected_text = vim.fn.getreg('"')
-    
---     -- Send to Claude
---     Claude_send(selected_text)
-    
---     -- Restore register
---     vim.fn.setreg('"', old_reg, old_reg_type)
---   end
-  
---   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
---   return 'g@'
--- end, { expr = true, desc = "Operator to send text to Claude" })
-
--- vim.keymap.set('n', '<c-g>o', function()
---   -- print('hi')
---   local old_func = vim.go.operatorfunc
---   _G.Claude_operator_func = function()
---     local start_pos = vim.api.nvim_buf_get_mark(0, '[')
---     local end_pos = vim.api.nvim_buf_get_mark(0, ']')
-    
---     -- Get the mode of the last selection
---     local mode = vim.fn.visualmode()
-    
---     local selected_text
-    
---     if mode == 'V' or (end_pos[2] == 2147483647) then
---       -- Linewise selection - get full lines
---       -- Get lines including the entire last line
---       local lines = vim.api.nvim_buf_get_lines(0, start_pos[1]-1, end_pos[1], false)
---       selected_text = table.concat(lines, '\n')
---     else
---       -- Characterwise selection
---       local lines = vim.api.nvim_buf_get_text(0, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
---       selected_text = table.concat(lines, '\n')
---     end
-    
---     Claude_send(selected_text)
---   end
-  
---   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
---   return 'g@'
--- end, { expr = true, desc = "Operator to send text to Claude" })
-
-
-vim.keymap.set('n', '<c-g>i', function()
-  local old_func = vim.go.operatorfunc
-
-  _G.Claude_operator_func = function()
+-- Helper function for operator-based Claude selections
+local function create_operator_func(use_markup)
+  return function()
     -- Store the current register content
     local old_unnamed_reg = vim.fn.getreg('"')
     local old_unnamed_reg_type = vim.fn.getregtype('"')
-    
+
     -- Use a temporary register to avoid conflicts
     local temp_reg = 'z'
     local old_temp_reg = vim.fn.getreg(temp_reg)
     local old_temp_reg_type = vim.fn.getregtype(temp_reg)
-    
+
     -- Execute the yank operation using the temporary register
     vim.cmd(string.format('normal! `[' .. '"' .. temp_reg .. 'y`]'))
-    
+
     -- Get the yanked text and its type
     local selected_text = vim.fn.getreg(temp_reg)
     local reg_type = vim.fn.getregtype(temp_reg)
     
-    -- Send to Claude
-    Claude_send(selected_text)
-    
+    -- Send to Claude with optional markup
+    claude_send_handler(selected_text, use_markup)
+
     -- Restore registers
     vim.fn.setreg(temp_reg, old_temp_reg, old_temp_reg_type)
     vim.fn.setreg('"', old_unnamed_reg, old_unnamed_reg_type)
   end
-  
+end
+
+-- INNER SELECTIONS
+vim.keymap.set('n', '<c-g>i', function()
+  _G.Claude_operator_func = create_operator_func(false)
   vim.go.operatorfunc = 'v:lua.Claude_operator_func'
   return 'g@'
 end, { expr = true, desc = "Operator to send text to Claude" })
 
+-- INNER SELECTIONS with markup
+vim.keymap.set('n', '<leader><c-g>i', function()
+  _G.Claude_operator_func = create_operator_func(true)
+  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
-vim.keymap.set('n', '<c-g>o', function()
-  local old_func = vim.go.operatorfunc
-  
-  _G.Claude_operator_func = function()
+
+-- Helper function for linewise operator-based Claude selections
+local function create_linewise_func(use_markup)
+  return function()
     -- Store registers
     local old_reg = vim.fn.getreg('z')
     local old_reg_type = vim.fn.getregtype('z')
-    
+
     -- Get the exact position details
     local start_pos = vim.fn.getpos("'[")
     local end_pos = vim.fn.getpos("']")
     local start_line = start_pos[2]
     local end_line = end_pos[2]
-    
+
     -- Use linewise visual mode to ensure we get complete lines
     vim.cmd(string.format('normal! %dGV%dG"zy', start_line, end_line))
-    
+
     -- Get the yanked text
     local selected_text = vim.fn.getreg('z')
     
-    -- Send to Claude
-    Claude_send(selected_text)
-    
+    -- Send to Claude with optional markup
+    claude_send_handler(selected_text, use_markup)
+
     -- Restore register
     vim.fn.setreg('z', old_reg, old_reg_type)
   end
-  
-  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
+end
+
+-- LINEWISE SELECTIONS
+vim.keymap.set('n', '<c-g>o', function()
+  _G.Claude_linewise_func = create_linewise_func(false)
+  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
   return 'g@'
 end, { expr = true, desc = "Operator to send text to Claude" })
+
+-- LINEWISE SELECTIONS with markup
+vim.keymap.set('n', '<leader><c-g>o', function()
+  _G.Claude_linewise_func = create_linewise_func(true)
+  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 
 
