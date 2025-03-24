@@ -7,14 +7,19 @@
 " l cs/S
 " l ct   - transform absolute > local or local to absolute
 
-nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "shorten" )<cr>
+" nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "global" )<cr>
+" nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "local" )<cr>
+
+nnoremap <silent> <leader>cp  :call CopyRelativePathToClipboard()<cr>
+nnoremap <silent> <leader>cP  :call CopyGlobalPathToClipboard()<cr>
+
 " nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
-nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "local" )<cr>
 nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
 " nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "full" )<cr>
 nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
 nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
 
+" what is this for? ..
 nnoremap <silent> <leader>ct                  :call ClipBoard_LinkPath_makeLocal()<cr>
 nnoremap <silent> <leader>cl                  :call ClipBoard_LinkPath_makeLocal()<cr>
 nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsolute( "shorten" )<cr>
@@ -34,9 +39,61 @@ func! ClipBoard_LinkPath_makeAbsolute( shorten )
   call ClipBoard_LinkPath( relPath, linkExt, a:shorten )
 endfunc
 
-func! ClipBoard_LinkPath_plain( shorten )
-  call ClipBoard_LinkPath( expand('%:p'), "", a:shorten )
+func! CopyGlobalPathToClipboard()
+    " Get the full path of the current buffer
+    let l:full_path = expand('%:p')
+    
+    " Convert to ~ path if it's in the home directory
+    let l:shortened_path = fnamemodify(l:full_path, ':~')
+    
+    " Put in clipboard registers (both vim's internal and system)
+    let @* = l:shortened_path
+    let @+ = l:shortened_path
+    
+    " For macOS, also use the system() command as a fallback
+    if has('macunix')
+        call system('echo -n ' . shellescape(l:shortened_path) . ' | pbcopy')
+    endif
+    
+    echo "path: " . l:shortened_path
 endfunc
+
+
+func! CopyRelativePathToClipboard()
+    " Get the current working directory of the window
+    let l:cwd = getcwd(-1, 0)
+    
+    " Get the full path of the current buffer
+    let l:full_path = expand('%:p')
+    
+    " Make the path relative to the cwd
+    let l:relative_path = fnamemodify(l:full_path, ':~:.')
+    
+    " Handle case where buffer isn't in the cwd
+    if l:relative_path =~# '^/' || l:relative_path =~# '^\~/'
+        let l:relative_path = fnamemodify(l:full_path, ':t')
+    endif
+    
+    " Put in clipboard registers (both vim's internal and system)
+    let @* = l:relative_path
+    let @+ = l:relative_path
+    
+    " For macOS, also use the system() command as a fallback
+    if has('macunix')
+        call system('echo -n ' . shellescape(l:relative_path) . ' | pbcopy')
+    endif
+    
+    echo "path: " . l:relative_path
+endfunc
+
+
+" func! ClipBoard_LinkPath_plain( scope )
+"   call ClipBoard_LinkPath( expand('%:p'), "", a:shorten )
+"   let @+ = cp
+"   let @* = cp
+"   let @" = cp
+"   echom 'path:' path
+" endfunc
 
 func! ClipBoard_LinkPath_linepos( shorten )
   let linkExtension = ":" . line('.') . ":" . col('.')

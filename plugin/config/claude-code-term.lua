@@ -1,4 +1,5 @@
 
+-- This was previously the aider.lua config
 
 -- Note there are two aider plugins:
 -- 1. the code below (copied from github) which allows to only focus aider on the visually selected text
@@ -19,11 +20,14 @@ end, {
     desc = "Write LSP warnings to the local .lsp_warn file"
 })
 
+-- require('claude_code').aider_buf
+
 
 -- note: help aider
 require('claude_code').setup({
   auto_manage_context = false,
   default_bindings = false,
+  -- NOTE this works and is useful!
   debug = false,
   -- test this. this was to double make sure that its not loaded. but still written.
   restore_history = false,
@@ -42,13 +46,13 @@ function _G.Aider_open()
   vim.cmd('AiderOpen')
 end
 
-function _G.ClaudeCode_open()
-  vim.cmd('ClaudeCodeOpen')
-end
+-- function _G.ClaudeCode_open()
+--   vim.cmd('ClaudeCodeOpen')
+-- end
 
 
 -- vim.keymap.set( 'n', '<c-g>v', Aider_open )
-vim.keymap.set( 'n', '<c-g>v', ClaudeCode_open )
+-- vim.keymap.set( 'n', '<c-g>v', ClaudeCode_open )
 
 -- write a function _G.Aider_updateAiderIgnore() using _G.Ntree_getOpenFolders()
 -- this is an example output: { "/Users/at/.config/nvim", "lua", "lua/utils", "plugin/config" }

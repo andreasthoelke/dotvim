@@ -23,7 +23,7 @@ Plug 'github/copilot.vim'
 " - ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
 " Plug 'jondkinney/aider.nvim'
 
-" The plugged *claude_code* folder is a patch of aider.nvim!
+" The plugged claude_code folder is a patch of aider.nvim!
 " ~/.config/nvim/plugged/claude_code
 Plug 'andreasthoelke/claude_code'
 
@@ -174,9 +174,12 @@ Plug 'skywind3000/vim-preview'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
 " " Changes: Add every yank position to the jumplist, comment out 'repeat#invalidate()' as it seems to cause jump to the top of the file
-if !exists('g:vscode')
-  Plug 'andreasthoelke/vim-easyclip'
-endif
+" if !exists('g:vscode')
+"   Plug 'andreasthoelke/vim-easyclip'
+" endif
+
+Plug 'gbprod/substitute.nvim'
+
 " TODO replace with smaller plugins
 " Briefly highlight the yanked region
 " Plug 'machakann/vim-highlightedyank'

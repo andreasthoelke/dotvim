@@ -1555,66 +1555,67 @@ nnoremap <leader>" :Telescope registers<cr>
 " A yank in vim writes to the system clipboard, and a system copy is available to paste in vim. but gets overwritten at the first yank.
 set clipboard=unnamed
 
-if !exists('g:vscode')
+" if !exists('g:vscode')
 
-" Easyclip: ----------------------------------------
-let g:EasyClipUseYankDefaults = 1
-let g:EasyClipUseCutDefaults = 0
-let g:EasyClipUsePasteDefaults = 1
-
-let g:EasyClipEnableBlackHoleRedirect = 1
-let g:EasyClipEnableBlackHoleRedirectForSelectOperator = 0
-
-let g:EasyClipUsePasteToggleDefaults = 0
-let g:EasyClipUseSubstituteDefaults = 0
-
-" Paste features
-let g:EasyClipAutoFormat = 1
-nmap <leader>cf <plug>EasyClipToggleFormattedPaste
-imap <c-v> <plug>EasyClipInsertModePaste
-cmap <c-v> <plug>EasyClipCommandModePaste
-" Also use
-
-" This keeps the cursor at the position where the paste occured
-" nmap p <Plug>G_EasyClipPasteAfter`[
-" nmap P <Plug>G_EasyClipPasteBefore`[
-nmap p <Plug>G_EasyClipPasteUnformattedAfter`[
-nmap P <Plug>G_EasyClipPasteUnformattedBefore`[
-
-" Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
-xmap p <Plug>XEasyClipPaste`[
-xmap P <Plug>XEasyClipPaste`[
-" xmap S <Plug>XEasyClipPaste`[
-" Subtitute motion
-nmap S <Plug>G_SubstituteOverMotionMap
-" nmap S <Plug>G_SubstituteToEndOfLine
-nmap SS <Plug>SubstituteLine
-
-" Cut Move:
-nmap <silent><leader>d <Plug>MoveMotionPlug
-xmap <silent><leader>dd <Plug>MoveMotionXPlug
-nmap <silent><leader>dd <Plug>MoveMotionLinePlug
-
-" Yank Buffer History: Save yank history to file - allows to paste in other vim instance
-let g:EasyClipShareYanks = 1
-" Prefer to have a clean view in the visual menu
-let g:EasyClipYankHistorySize = 6
-" Use a menu to select from the yank buffer
-" Note: use <leader>"<regnumber> instead
-" nnoremap <leader>P :IPasteBefore<cr>
-
-nmap ,p <plug>EasyClipPasteUnformattedAfter
-nmap ,P <plug>EasyClipPasteUnformattedBefore
-
-let g:EasyClipEnableBlackHoleRedirectForChangeOperator = 1
-
-" ~/.config/nvim/plugged/vim-easyclip/autoload/EasyClip/BlackHole.vim#/function.%20EasyClip#BlackHole#AddChangeBindings..
-" if g:EasyClipEnableBlackHoleRedirectForChangeOperator
-" call EasyClip#BlackHole#AddChangeBindings()
+" REPLACED: Easyclip configuration replaced by substitute.nvim (see plugin/config/substitute.lua)
+" ----------------------------------------
+" let g:EasyClipUseYankDefaults = 1
+" let g:EasyClipUseCutDefaults = 0
+" let g:EasyClipUsePasteDefaults = 1
+"
+" let g:EasyClipEnableBlackHoleRedirect = 1
+" let g:EasyClipEnableBlackHoleRedirectForSelectOperator = 0
+"
+" let g:EasyClipUsePasteToggleDefaults = 0
+" let g:EasyClipUseSubstituteDefaults = 0
+"
+" " Paste features
+" let g:EasyClipAutoFormat = 1
+" nmap <leader>cf <plug>EasyClipToggleFormattedPaste
+" imap <c-v> <plug>EasyClipInsertModePaste
+" cmap <c-v> <plug>EasyClipCommandModePaste
+" " Also use
+"
+" " This keeps the cursor at the position where the paste occured
+" " nmap p <Plug>G_EasyClipPasteAfter`[
+" " nmap P <Plug>G_EasyClipPasteBefore`[
+" nmap p <Plug>G_EasyClipPasteUnformattedAfter`[
+" nmap P <Plug>G_EasyClipPasteUnformattedBefore`[
+"
+" " Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
+" xmap p <Plug>XEasyClipPaste`[
+" xmap P <Plug>XEasyClipPaste`[
+" " xmap S <Plug>XEasyClipPaste`[
+" " Subtitute motion
+" nmap S <Plug>G_SubstituteOverMotionMap
+" " nmap S <Plug>G_SubstituteToEndOfLine
+" nmap SS <Plug>SubstituteLine
+"
+" " Cut Move:
+" nmap <silent><leader>d <Plug>MoveMotionPlug
+" xmap <silent><leader>dd <Plug>MoveMotionXPlug
+" nmap <silent><leader>dd <Plug>MoveMotionLinePlug
+"
+" " Yank Buffer History: Save yank history to file - allows to paste in other vim instance
+" let g:EasyClipShareYanks = 1
+" " Prefer to have a clean view in the visual menu
+" let g:EasyClipYankHistorySize = 6
+" " Use a menu to select from the yank buffer
+" " Note: use <leader>"<regnumber> instead
+" " nnoremap <leader>P :IPasteBefore<cr>
+"
+" nmap ,p <plug>EasyClipPasteUnformattedAfter
+" nmap ,P <plug>EasyClipPasteUnformattedBefore
+"
+" let g:EasyClipEnableBlackHoleRedirectForChangeOperator = 1
+"
+" " ~/.config/nvim/plugged/vim-easyclip/autoload/EasyClip/BlackHole.vim#/function.%20EasyClip#BlackHole#AddChangeBindings..
+" " if g:EasyClipEnableBlackHoleRedirectForChangeOperator
+" " call EasyClip#BlackHole#AddChangeBindings()
+" " endif
+"
+" " Easyclip: ----------------------------------------
 " endif
-
-" Easyclip: ----------------------------------------
-endif
 
 " Vim Highlighedhank:
 let g:highlightedyank_highlight_duration = 700

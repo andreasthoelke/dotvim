@@ -36,6 +36,21 @@ vim.keymap.set('x', '<c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(false)<C
 -- VISUAL SELECTIONS with markup
 vim.keymap.set('x', '<leader><c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(true)<CR>", { noremap = true, silent = true })
 
+-- LINEWISE SELECTIONS
+vim.keymap.set('n', '<c-g>o', function()
+  _G.Claude_linewise_func = Create_linewise_func(false)
+  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude" })
+
+-- LINEWISE SELECTIONS with markup
+vim.keymap.set('n', '<leader><c-g>o', function()
+  _G.Claude_linewise_func = Create_linewise_func(true)
+  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to Claude with markup" })
+
+
 -- Function to handle sending visual selection to Claude
 function _G.SendVisualSelectionToClaude(use_markup)
   -- Store the current register content
@@ -85,6 +100,7 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<c-g>mc', function()
+    print("Prefer ll gc!")
     Claude_send("Make a commit.")
     vim.defer_fn(function()
       Claude_send( "\r" )
@@ -93,6 +109,19 @@ vim.keymap.set( 'n',
 
 
 function _G.Claude_send(text)
+
+  local parrot_win = ParrotChat_InThisTab_id()
+
+  if parrot_win then
+    local lines = vim.fn.split(text, "\n")
+    local current_win = vim.api.nvim_get_current_win()
+    -- jump to parrot_win id
+    vim.api.nvim_set_current_win(parrot_win)
+    vim.api.nvim_put(lines, "l", false, false)
+    vim.api.nvim_set_current_win(current_win)
+    return
+  end
+
   -- Get the Claude job ID from the global Vim variable
   local job_id = vim.g.claude_job_id
   -- echo b:terminal_job_id
@@ -106,8 +135,7 @@ function _G.Claude_send(text)
     }}, true, {})
     return false
   end
-  
-  -- Send the text on the channel
+
   vim.fn.chansend(job_id, text)
   return true
 end
@@ -235,8 +263,11 @@ vim.keymap.set('n', '<leader><c-g>i', function()
 end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 
+
+-- ─   Helpers                                          ──
+
 -- Helper function for linewise operator-based Claude selections
-local function create_linewise_func(use_markup)
+function Create_linewise_func(use_markup)
   return function()
     -- Store registers
     local old_reg = vim.fn.getreg('z')
@@ -262,20 +293,29 @@ local function create_linewise_func(use_markup)
   end
 end
 
--- LINEWISE SELECTIONS
-vim.keymap.set('n', '<c-g>o', function()
-  _G.Claude_linewise_func = create_linewise_func(false)
-  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude" })
 
--- LINEWISE SELECTIONS with markup
-vim.keymap.set('n', '<leader><c-g>o', function()
-  _G.Claude_linewise_func = create_linewise_func(true)
-  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude with markup" })
+function _G.ParrotChat_InThisTab_id()
+  -- Get all windows in the current tab
+  local windows = vim.api.nvim_tabpage_list_wins(0)
 
+  -- Check each window
+  for _, win in ipairs(windows) do
+    -- Get the buffer for this window
+    local buf = vim.api.nvim_win_get_buf(win)
+    
+    -- Get the buffer name
+    local bufname = vim.api.nvim_buf_get_name(buf)
+    
+    -- Check if buffer name contains "parrot/chats"
+    if bufname:match("parrot/chats") then
+      return win
+    end
+  end
+
+  -- No matching window found
+  return false
+end
+-- ParrotChat_InThisTab_id()
 
 
 
