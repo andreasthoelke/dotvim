@@ -31,18 +31,29 @@ vim.keymap.set('n', '<leader><c-g>p', function()
 end)
 
 -- VISUAL SELECTIONS
-vim.keymap.set('v', '<c-g>p', function()
-  local lines = GetVisualSelection()
-  local lines_joined = table.concat(lines, "\n")
-  claude_send_handler(lines_joined, false)
-end)
+vim.keymap.set('x', '<c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(false)<CR>", { noremap = true, silent = true })
 
 -- VISUAL SELECTIONS with markup
-vim.keymap.set('v', '<leader><c-g>p', function()
-  local lines = GetVisualSelection()
-  local lines_joined = table.concat(lines, "\n")
-  claude_send_handler(lines_joined, true)
-end)
+vim.keymap.set('x', '<leader><c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(true)<CR>", { noremap = true, silent = true })
+
+-- Function to handle sending visual selection to Claude
+function _G.SendVisualSelectionToClaude(use_markup)
+  -- Store the current register content
+  local old_reg = vim.fn.getreg('z')
+  local old_reg_type = vim.fn.getregtype('z')
+  
+  -- Yank the current visual selection into the z register
+  vim.cmd('normal! gv"zy')
+  
+  -- Get the text from the register
+  local selected_text = vim.fn.getreg('z')
+  
+  -- Send to Claude with optional markup
+  claude_send_handler(selected_text, use_markup)
+  
+  -- Restore register
+  vim.fn.setreg('z', old_reg, old_reg_type)
+end
 
 -- CLIPBOARD
 vim.keymap.set('n', "<c-g>'", function()
@@ -69,13 +80,12 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<c-g>d', function()
-    -- OTHER_EVENTS:
-    -- Trigger other commands in the claude repl:
-    -- Send escape: (\<Esc> in vimscript)
-    -- Claude_send(string.char(27))
-    -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
-    -- Claude_send( "i" )
     Claude_send(string.char(3))
+  end )
+
+vim.keymap.set( 'n',
+  '<c-g>mc', function()
+    Claude_send("Make a commit.")
   end )
 
 
