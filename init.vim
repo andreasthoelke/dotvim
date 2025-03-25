@@ -405,6 +405,9 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 
+" https://github.com/petertriho/cmp-git
+Plug 'petertriho/cmp-git'
+
 Plug 'onsails/lspkind.nvim'
 
 Plug 'phenax/cmp-graphql'

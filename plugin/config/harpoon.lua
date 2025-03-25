@@ -53,10 +53,15 @@ end)
 vim.keymap.set("n", "<leader>af", function() 
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 end)
+
 vim.keymap.set("n", "<leader>oh", function() 
   Hpon_load( 'ExampleLinks.md' )
   harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })
 end)
+
+vim.keymap.set("n", "<leader>oH", function() vim.fn.Path_Float( 'ExampleLinks.md' ) end)
+vim.keymap.set("n", "<leader>oE", function() vim.fn.Path_Float( 'ExampleLinks.md' ) end)
+
 
 -- vim.keymap.set("n", ",1", function() 
 --     harpoon.ui:toggle_quick_menu(harpoon:list(), { title = "" })

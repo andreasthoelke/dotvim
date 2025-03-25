@@ -7,14 +7,27 @@ function _G.ParrotBuf_GetMessages()
 end
 
 function _G.ParrotBuf_GetLatestUserMessage()
+  local result = ParrotBuf_GetMessages()
+  local latest_user_msg = nil
 
-
+  -- Iterate through messages in reverse order to find the most recent significant user message
+  for i = #result.messages, 1, -1 do
+    local msg = result.messages[i]
+    if msg.role == "user" then
+      -- Strip newlines and check if content is not empty
+      local stripped_content = msg.content:gsub("^\n+", ""):gsub("\n+$", "")
+      if stripped_content ~= "" then
+        latest_user_msg = stripped_content
+        break
+      end
+    end
+  end
+  return latest_user_msg
 end
 
 vim.keymap.set('n', '<c-g><c-j>', function()
-  local msgs = ParrotBuf_GetMessages()
-  putt( msgs )
-  -- Claude_send(text)
+  local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
+  Claude_send(user_msg_content_str)
 end)
 
 
@@ -99,6 +112,8 @@ vim.keymap.set('n', "<leader><c-g>'", function()
   local clipboard_text = vim.fn.getreg('"')
   claude_send_handler(clipboard_text, true)
 end)
+
+-- ─   Claude code action maps                          ──
 
 -- RUN claude code text field buffer
 vim.keymap.set( 'n',
