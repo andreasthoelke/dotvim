@@ -4,13 +4,13 @@
 -- See: https://github.com/gbprod/substitute.nvim
 
 -- Main substitution mappings (replaces EasyClip's substitute functionality)
-vim.keymap.set("n", "s", require('substitute').operator, { noremap = true })
-vim.keymap.set("n", "ss", require('substitute').line, { noremap = true })
-vim.keymap.set("n", "S", require('substitute').eol, { noremap = true })
-vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
+-- vim.keymap.set("n", "s", require('substitute').operator, { noremap = true })
+-- vim.keymap.set("n", "ss", require('substitute').line, { noremap = true })
+-- vim.keymap.set("n", "S", require('substitute').eol, { noremap = true })
+-- vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
 
 -- Mimic EasyClip's SS mapping
-vim.keymap.set("n", "SS", require('substitute').line, { noremap = true })
+-- vim.keymap.set("n", "SS", require('substitute').line, { noremap = true })
 
 require('substitute').setup({
   on_substitute = nil,

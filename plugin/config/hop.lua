@@ -3,7 +3,11 @@ require'hop'.setup()
 
 vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
 vim.api.nvim_set_keymap('x', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+
+-- These select only the first char of the last line - see the versions below
 -- vim.api.nvim_set_keymap('o', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+-- vim.api.nvim_set_keymap('o', 'q', "<cmd>HopLineStartAC<cr>", {noremap=true})
+-- vim.api.nvim_set_keymap('o', 'Q', "<cmd>HopLineStartBC<cr>", {noremap=true})
 
 vim.api.nvim_set_keymap('n', ',k', "<cmd>HopLineStartBC<cr>", {noremap=true})
 
@@ -18,8 +22,8 @@ vim.api.nvim_set_keymap('o', 'F', "<cmd>HopChar1CurrentLineBC<cr>", {noremap=tru
 vim.api.nvim_set_keymap('n', ',f', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
 vim.api.nvim_set_keymap('n', ',F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
 
--- Operator pending map: yd "yank down"
-vim.keymap.set('o', 'd', function()
+-- Operator pending map: "yank down"
+vim.keymap.set('o', 'q', function()
     -- Set operator as linewise
     vim.cmd('normal! V')
     require'hop'.hint_lines({
@@ -30,17 +34,18 @@ vim.keymap.set('o', 'd', function()
     })
 end, {remap=true})
 
--- Operator pending map: alternative to the above 'd' map. works with delete 'd,j'. note I remaped 'd'.
-vim.keymap.set('o', ',j', function()
+-- Operator pending map: "yank up"
+vim.keymap.set('o', 'Q', function()
     -- Set operator as linewise
     vim.cmd('normal! V')
     require'hop'.hint_lines({
         multi_windows = false,
         hint_position = require'hop.hint'.HintPosition.BEGIN,
-        direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+        direction = require'hop.hint'.HintDirection.BEFORE_CURSOR,
         current_line_only = false
     })
 end, {remap=true})
+
 
 -- Operator pending map: equivalent to Sneak's t mapping
 vim.keymap.set('o', 't', function()

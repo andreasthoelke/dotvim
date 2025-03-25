@@ -77,6 +77,7 @@ func! CopyRelativePathToClipboard()
     " Put in clipboard registers (both vim's internal and system)
     let @* = l:relative_path
     let @+ = l:relative_path
+    let @" = l:relative_path
     
     " For macOS, also use the system() command as a fallback
     if has('macunix')

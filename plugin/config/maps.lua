@@ -1,10 +1,31 @@
 
 
+-- ─   General maps                                      ■
+
+-- Replace ~/.config/nvim/plugin/config/setup-general.vim‖/nmapˍpˍ<Plug>G_EasyClipPas
+vim.keymap.set('n', 'p', function()
+  local cursor_pos = vim.fn.getpos('.')
+  vim.cmd('normal! p')
+  vim.fn.setpos('.', cursor_pos)
+end, { noremap = true, silent = true })
+
+vim.keymap.set('n', 'P', function()
+  local cursor_pos = vim.fn.getpos('.')
+  vim.cmd('normal! P')
+  vim.fn.setpos('.', cursor_pos)
+end, { noremap = true, silent = true })
+
+
+-- ─^  General maps                                      ▲
+
+
+
 local opts_1 = { initial_mode = 'normal' }
 local opts_2 = {
   sorting_strategy = 'ascending',
   -- default_text = [[(Seq|List)]],
 }
+
 
 local dir_a_scala3 = '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/'
 local dir_nvim = [[/Users/at/.config/nvim/plugin]]

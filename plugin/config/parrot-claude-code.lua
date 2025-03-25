@@ -1,5 +1,23 @@
 
 
+function _G.ParrotBuf_GetMessages()
+  local chat_utils = require("parrot.chat_utils")
+  local result = chat_utils.get_chat_messages()
+  return result
+end
+
+function _G.ParrotBuf_GetLatestUserMessage()
+
+
+end
+
+vim.keymap.set('n', '<c-g><c-j>', function()
+  local msgs = ParrotBuf_GetMessages()
+  putt( msgs )
+  -- Claude_send(text)
+end)
+
+
 -- Lines breaks in claude-code and terminal buffers!
 vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
 -- See ~/.local/share/nvim/parrot/chats/2025-03-23.17-25-57.276.md
@@ -82,6 +100,7 @@ vim.keymap.set('n', "<leader><c-g>'", function()
   claude_send_handler(clipboard_text, true)
 end)
 
+-- RUN claude code text field buffer
 vim.keymap.set( 'n',
   '<c-g><cr>', function()
     -- OTHER_EVENTS:
@@ -93,11 +112,13 @@ vim.keymap.set( 'n',
     Claude_send( "\r" )
   end )
 
+-- CLEAR text field buffer
 vim.keymap.set( 'n',
   '<c-g>c', function()
     Claude_send(string.char(3))
   end )
 
+-- MAKE COMMIT .. thorrow commit messages
 vim.keymap.set( 'n',
   '<c-g>mc', function()
     print("Prefer ll gc!")
@@ -108,13 +129,14 @@ vim.keymap.set( 'n',
   end )
 
 
+-- Send to claude code terminal or parrot window if visible.
 function _G.Claude_send(text)
-
   local parrot_win = ParrotChat_InThisTab_id()
+  local current_win = vim.api.nvim_get_current_win()
+  local not_in_parrot_win = current_win ~= parrot_win
 
-  if parrot_win then
+  if parrot_win and not_in_parrot_win then
     local lines = vim.fn.split(text, "\n")
-    local current_win = vim.api.nvim_get_current_win()
     -- jump to parrot_win id
     vim.api.nvim_set_current_win(parrot_win)
     vim.api.nvim_put(lines, "l", false, false)
@@ -317,6 +339,85 @@ function _G.ParrotChat_InThisTab_id()
 end
 -- ParrotChat_InThisTab_id()
 
+-- ─   Range param usage examples                       ──
+-- ⏺ The range parameter in the get_chat_messages function allows you to limit which part of a chat
+--   file is parsed for messages. Here are some examples of how to use it:
+
+--   1. Basic usage to extract messages from a specific range of lines:
+
+--   local chat_utils = require("parrot.chat_utils")
+
+--   -- Extract messages from lines 10-20 only
+--   local result = chat_utils.get_chat_messages(0, nil, {
+--     range = 2,  -- Indicates a range is being used
+--     line1 = 10, -- Start line (1-based index)
+--     line2 = 20  -- End line (1-based index)
+--   })
+
+--   2. Using it with Neovim's range commands:
+
+--   -- In a Vim command that receives range parameters
+--   vim.api.nvim_create_user_command("ChatExtract", function(params)
+--     local chat_utils = require("parrot.chat_utils")
+
+--     -- Pass the range info directly from the command
+--     local result = chat_utils.get_chat_messages(0, nil, {
+--       range = params.range,
+--       line1 = params.line1,
+--       line2 = params.line2
+--     })
+
+--     -- Do something with the extracted messages
+--     print("Extracted " .. #result.messages .. " messages")
+--   end, { range = true })
+
+--   3. Extracting only the last few messages:
+
+--   local function get_last_messages(count)
+--     local chat_utils = require("parrot.chat_utils")
+--     local buf = vim.api.nvim_get_current_buf()
+--     local line_count = vim.api.nvim_buf_line_count(buf)
+
+--     -- Get all messages first to find header end
+--     local all_result = chat_utils.get_chat_messages(buf)
+
+--     -- Calculate approx. lines needed per message (rough estimate)
+--     local header_end = all_result.metadata.start_line - 1
+--     local content_lines = line_count - header_end
+--     local avg_lines_per_msg = content_lines / #all_result.messages
+
+--     -- Extract only the last X messages by estimating line range
+--     local start_line = math.max(header_end + 1, line_count - (count * avg_lines_per_msg))
+--     local result = chat_utils.get_chat_messages(buf, nil, {
+--       range = 2,
+--       line1 = start_line,
+--       line2 = line_count
+--     })
+
+--     return result.messages
+--   end
+
+--   -- Get approximately the last 3 messages
+--   local last_messages = get_last_messages(3)
+
+--   4. Using it with visual selection:
+
+--   -- In a mapping that works on visual selection
+--   vim.keymap.set('v', '<leader>ce', function()
+--     -- Get visual selection range
+--     local start_line = vim.fn.line("'<")
+--     local end_line = vim.fn.line("'>")
+
+--     local chat_utils = require("parrot.chat_utils")
+--     local result = chat_utils.get_chat_messages(0, nil, {
+--       range = 2,
+--       line1 = start_line,
+--       line2 = end_line
+--     })
+
+--     -- Now you have just the messages from the selected range
+--     vim.notify("Selected messages: " .. vim.inspect(result.messages))
+--   end, { noremap = true, desc = "Extract chat messages from selection" })
 
 
 

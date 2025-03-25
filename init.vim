@@ -174,9 +174,9 @@ Plug 'skywind3000/vim-preview'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
 " " Changes: Add every yank position to the jumplist, comment out 'repeat#invalidate()' as it seems to cause jump to the top of the file
-" if !exists('g:vscode')
-"   Plug 'andreasthoelke/vim-easyclip'
-" endif
+if !exists('g:vscode')
+  Plug 'andreasthoelke/vim-easyclip'
+endif
 
 Plug 'gbprod/substitute.nvim'
 
