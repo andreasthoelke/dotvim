@@ -230,6 +230,8 @@ Plug 'lewis6991/gitsigns.nvim'
 " https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-diff.md
 Plug 'echasnovski/mini.diff'
 
+Plug 'echasnovski/mini.pick'
+
 " No longer supported
 " Plug 'gregsexton/gitv', {'on': ['Gitv']}
 Plug 'rbong/vim-flog'
@@ -564,7 +566,7 @@ Plug 'rescript-lang/vim-rescript'
 
 " ─   Repl IDE features                               ■
 
-Plug 'sillybun/vim-repl'
+" Plug 'sillybun/vim-repl'
 Plug 'is0n/jaq-nvim'
 " Plug 'jbyuki/dash.nvim'
 " Plug 'metakirby5/codi.vim'

@@ -1482,7 +1482,8 @@ let g:vista_blink = [0, 0]
 " this doesn't seem to work?
 " autocmd! FileType vista,vista_kind nnoremap <buffer> <silent> <leader>k :<c-u>call VistaJumpToLineButStayInBar()<CR>
 
-nnoremap <silent> <leader>k :<c-u>call VistaJumpToLineButStayInBar()<CR>
+" TODO this should be a vista buffer map
+" nnoremap <silent> <leader>k :<c-u>call VistaJumpToLineButStayInBar()<CR>
 
 func! VistaJumpToLineButStayInBar ()
   let g:oldLine = line('.')
