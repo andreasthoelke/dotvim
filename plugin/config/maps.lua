@@ -19,6 +19,25 @@ end, { noremap = true, silent = true })
 -- ─^  General maps                                      ▲
 
 
+-- ─   Lsp defaults                                      ■
+
+-- for lua files for some reason this doesn't seem to work as buffer maps.
+vim.keymap.set('n', 'gel', function()
+  Telesc_launch('lsp_document_symbols')
+end, { noremap = true, silent = true })
+
+vim.keymap.set('n', 'geL', function()
+  Telesc_launch('lsp_dynamic_workspace_symbols')
+end, { noremap = true, silent = true })
+
+
+-- nnoremap <silent><buffer> gsl :call v:lua.Telesc_launch('lsp_document_symbols')<cr>
+
+
+-- ─^  Lsp defaults                                      ▲
+
+
+
 
 local opts_1 = { initial_mode = 'normal' }
 local opts_2 = {

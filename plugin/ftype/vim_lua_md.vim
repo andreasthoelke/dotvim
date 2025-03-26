@@ -68,6 +68,8 @@ func! VScriptToolsBufferMaps()
 
   " the below should overwrite the default/scala maps
 
+  " This only seems to work as a global map?!
+  " nnoremap <silent><buffer> gsL :call v:lua.Telesc_launch('lsp_dynamic_workspace_symbols')<cr>
   nnoremap <silent><buffer> <leader>ot  :Outline<cr>
   nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
 

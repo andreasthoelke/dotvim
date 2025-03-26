@@ -1,14 +1,51 @@
--- CodeCompanion configuration - Sets up the AI assistant with custom adapters, slash commands, and layouts
 
+-- https://github.com/olimorris/codecompanion.nvim
+
+-- #buffer is the origin (opened from) buffer, vs /buffer let's you select (multiple!! using 'm') via telescope.
+-- 'gd' shows the current settings
+-- CodeCompanionActions shows a palette: https://codecompanion.olimorris.dev/usage/action-palette.html 
 -- /files /buffer allows to share multiple files using 'm' in telescope.
 -- #buffer and #viewport autocomplete .. check if viewport considers window layout .. might be super useful
 -- @cmd_runner looks interesting. NOTE: the confirmation dialog requires TWO taps: 'Y' & <cr>!  https://codecompanion.olimorris.dev/usage/chat-buffer/agents.html#cmd-runner
+-- @editor actually works! use /buffer, after it's loaded you can 'gw' on the xml tag to 'watch' it: 👀 <buf>plugin/config/codecompanion.lua</buf>
+-- => diff view: 'dp' in the left window, in the right / middle window: ',do' for 'diff-off'. this keeps the prev buffer.
+-- maps } and ]] are working
+
+
+-- DEFAULT CONFIG
+-- ~/.config/nvim/plugged/codecompanion.nvim/lua/codecompanion/config.lua
+
 
 local config = {
+
+  opts = {
+    system_prompt = function(opts)
+      return "You are an AI assistant."
+    end,
+  },
+
+  diff = {
+    enabled = false,
+    close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
+    layout = "vertical", -- vertical|horizontal split for default provider
+    opts = { "internal", "filler", "closeoff", "algorithm:patience", "followwrap", "linematch:120" },
+    provider = "default", -- default|mini_diff
+  },
+
+  display = {
+    chat = {
+      window = {
+        layout = "vertical", -- float|vertical|horizontal|buffer
+        width = 0.3, -- Width for vertical split
+        height = 0.3, -- Height for horizontal split
+      },
+    },
+  },
+
   strategies = {
     chat = {
       adapter = "anthropic",
-
+      openai = "openai",
       slash_commands = {
         ["buffer"] = {
           callback = "strategies.chat.slash_commands.buffer",
@@ -80,19 +117,11 @@ local config = {
       adapter = "anthropic",
     },
   },
-  display = {
-    chat = {
-      window = {
-        layout = "vertical", -- float|vertical|horizontal|buffer
-        width = 0.3, -- Width for vertical split
-        height = 0.3, -- Height for horizontal split
-      },
-    },
-  },
 }
 
 require("codecompanion").setup( config )
 
+-- require("plugins.codecompanion.fidget-spinner"):init()
 
 vim.keymap.set('n', '<leader>kv', function()
   local update = { display = { chat = { window = { layout = "vertical" } } } }
@@ -101,6 +130,8 @@ vim.keymap.set('n', '<leader>kv', function()
   require("codecompanion").chat()
 end, { noremap = true, silent = true })
 
+-- Open codecompanion chat with horizontal layout
+-- This keybinding changes the window layout configuration before opening the chat
 vim.keymap.set('n', '<leader>ks', function()
   local update = { display = { chat = { window = { layout = "horizontal" } } } }
   local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
