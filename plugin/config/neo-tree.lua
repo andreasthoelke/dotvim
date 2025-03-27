@@ -926,6 +926,7 @@ require("neo-tree").setup({
 
   filesystem = {
 
+-- ─   Commands                                          ■
     commands = {
       print_me = function(state)
         local node = state.tree:get_node()
@@ -958,9 +959,30 @@ require("neo-tree").setup({
         end
         vim.cmd("Magenta remove-context-files " .. table.concat(paths, " "))
         vim.cmd("normal! j^")
-      end
+      end,
+
+      avante_add_files = function(state)
+        local node = state.tree:get_node()
+        local filepath = node:get_id()
+        local relative_path = require('avante.utils').relative_path(filepath)
+        local sidebar = require('avante').get()
+        local open = sidebar:is_open()
+        -- ensure avante sidebar is open
+        if not open then
+          require('avante.api').ask()
+          sidebar = require('avante').get()
+        end
+        sidebar.file_selector:add_selected_file(relative_path)
+        -- remove neo tree buffer
+        if not open then
+          sidebar.file_selector:remove_selected_file('neo-tree filesystem [1]')
+        end
+      end,
 
     },
+
+
+-- ─^  Commands                                          ▲
 
     components = {
 
@@ -1161,6 +1183,8 @@ require("neo-tree").setup({
 
         ["m"] = "magenta_context_add",
         ["M"] = "magenta_context_remove",
+
+        ["<c-g>m"] = "avante_add_files",
 
         -- ["m"] = Ntree_get_selected_nodes,
 

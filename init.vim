@@ -44,6 +44,16 @@ Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --
 
 Plug 'olimorris/codecompanion.nvim'
 
+" https://github.com/yetone/avante.nvim
+" Plug 'yetone/avante.nvim'
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
+
+" optional deps:
+Plug 'stevearc/dressing.nvim'
+Plug 'HakonHarnes/img-clip.nvim'
+Plug 'zbirenbaum/copilot.lua'
+
+Plug 'ravitemer/mcphub.nvim'
 
 " https://github.com/piersolenski/wtf.nvim
 " Plug 'piersolenski/wtf.nvim'

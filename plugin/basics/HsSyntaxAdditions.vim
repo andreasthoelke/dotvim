@@ -49,6 +49,8 @@ au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 " au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufWinEnter *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
+" TODO migrate to using FileType?
+" au ag FileType python call PythonSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.yaml call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
@@ -57,7 +59,7 @@ au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptTools
 
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
-au ag FileType markdown             call MarkdownBufferMaps()
+au ag FileType markdown,codecompanion call MarkdownBufferMaps()
 
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
