@@ -496,23 +496,6 @@ require("codecompanion").setup( config )
 
 -- require("plugins.codecompanion.fidget-spinner"):init()
 
--- ─   Keymaps                                          ──
-vim.keymap.set('n', '<leader>kv', function()
-  local update = { display = { chat = { window = { layout = "vertical" } } } }
-  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
-  require("codecompanion").setup( config_updated )
-  require("codecompanion").chat()
-end, { noremap = true, silent = true })
-
--- Open codecompanion chat with horizontal layout
--- This keybinding changes the window layout configuration before opening the chat
-vim.keymap.set('n', '<leader>ks', function()
-  local update = { display = { chat = { window = { layout = "horizontal" } } } }
-  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
-  require("codecompanion").setup( config_updated )
-  require("codecompanion").chat()
-end, { noremap = true, silent = true })
-
 
 
 

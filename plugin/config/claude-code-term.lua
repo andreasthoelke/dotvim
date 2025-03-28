@@ -429,7 +429,7 @@ end
 
 -- vim.keymap.set("v", "<C-g>c", ":<C-u>'<,'>GpChatNew split<cr>", keymapOptions("Visual Chat New"))
 -- AiderEdit
-vim.keymap.set({'v', 'n'}, '<C-g>o', ':AiderEdit<CR>', { noremap = true, silent = true })
+-- vim.keymap.set({'v', 'n'}, '<C-g>o', ':AiderEdit<CR>', { noremap = true, silent = true })
 
 M.setup({
     command = 'aider',           -- Path to aider command

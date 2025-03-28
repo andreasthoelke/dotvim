@@ -25,123 +25,6 @@ function _G.ParrotBuf_GetLatestUserMessage()
   return latest_user_msg
 end
 
-vim.keymap.set('n', '<c-g><c-j>', function()
-  local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
-  Claude_send(user_msg_content_str)
-end)
-
-
--- Lines breaks in claude-code and terminal buffers!
-vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
--- See ~/.local/share/nvim/parrot/chats/2025-03-23.17-25-57.276.md
-
--- vim.keymap.set('v', '<c-g>p', ':Mga paste-selection_claude<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('x', '<leader><leader>bn', ':<C-u>lua PrintVisualSelection()<CR>', {noremap = true, silent = true})
-
--- Helper function to handle sending text to Claude with optional CodeBlockMarkup
-local function claude_send_handler(text, use_markup)
-  if use_markup then
-    Claude_send(CodeBlockMarkup(text))
-  else
-    Claude_send(text)
-  end
-end
-
--- PARAGRAPHS
-vim.keymap.set('n', '<c-g>p', function()
-  local lines = GetParagraphLines()
-  local lines_joined = table.concat(lines, "\n")
-  claude_send_handler(lines_joined, false)
-end)
-
--- PARAGRAPHS with markup
-vim.keymap.set('n', '<leader><c-g>p', function()
-  local lines = GetParagraphLines()
-  local lines_joined = table.concat(lines, "\n")
-  claude_send_handler(lines_joined, true)
-end)
-
--- VISUAL SELECTIONS
-vim.keymap.set('x', '<c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(false)<CR>", { noremap = true, silent = true })
-
--- VISUAL SELECTIONS with markup
-vim.keymap.set('x', '<leader><c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(true)<CR>", { noremap = true, silent = true })
-
--- LINEWISE SELECTIONS
-vim.keymap.set('n', '<c-g>o', function()
-  _G.Claude_linewise_func = Create_linewise_func(false)
-  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude" })
-
--- LINEWISE SELECTIONS with markup
-vim.keymap.set('n', '<leader><c-g>o', function()
-  _G.Claude_linewise_func = Create_linewise_func(true)
-  vim.go.operatorfunc = 'v:lua.Claude_linewise_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude with markup" })
-
-
--- Function to handle sending visual selection to Claude
-function _G.SendVisualSelectionToClaude(use_markup)
-  -- Store the current register content
-  local old_reg = vim.fn.getreg('z')
-  local old_reg_type = vim.fn.getregtype('z')
-  
-  -- Yank the current visual selection into the z register
-  vim.cmd('normal! gv"zy')
-  
-  -- Get the text from the register
-  local selected_text = vim.fn.getreg('z')
-  
-  -- Send to Claude with optional markup
-  claude_send_handler(selected_text, use_markup)
-  
-  -- Restore register
-  vim.fn.setreg('z', old_reg, old_reg_type)
-end
-
--- CLIPBOARD
-vim.keymap.set('n', "<c-g>'", function()
-  local clipboard_text = vim.fn.getreg('"')
-  claude_send_handler(clipboard_text, false)
-end)
-
--- CLIPBOARD with markup
-vim.keymap.set('n', "<leader><c-g>'", function()
-  local clipboard_text = vim.fn.getreg('"')
-  claude_send_handler(clipboard_text, true)
-end)
-
--- ─   Claude code action maps                          ──
-
--- RUN claude code text field buffer
-vim.keymap.set( 'n',
-  '<c-g><cr>', function()
-    -- OTHER_EVENTS:
-    -- Trigger other commands in the claude repl:
-    -- Send escape: (\<Esc> in vimscript)
-    -- Claude_send(string.char(27))
-    -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
-    -- Claude_send( "i" )
-    Claude_send( "\r" )
-  end )
-
--- CLEAR text field buffer
-vim.keymap.set( 'n',
-  '<c-g>c', function()
-    Claude_send(string.char(3))
-  end )
-
--- MAKE COMMIT .. thorrow commit messages
-vim.keymap.set( 'n',
-  '<c-g>mc', function()
-    print("Prefer ll gc!")
-    Claude_send("Make a commit.")
-    vim.defer_fn(function()
-      Claude_send( "\r" )
-    end, 100)
-  end )
 
 
 -- Send to claude code terminal or parrot window if visible.
@@ -285,23 +168,29 @@ local function create_operator_func(use_markup)
   end
 end
 
--- INNER SELECTIONS
-vim.keymap.set('n', '<c-g>i', function()
-  _G.Claude_operator_func = create_operator_func(false)
-  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude" })
-
--- INNER SELECTIONS with markup
-vim.keymap.set('n', '<leader><c-g>i', function()
-  _G.Claude_operator_func = create_operator_func(true)
-  vim.go.operatorfunc = 'v:lua.Claude_operator_func'
-  return 'g@'
-end, { expr = true, desc = "Operator to send text to Claude with markup" })
-
-
 
 -- ─   Helpers                                          ──
+
+-- Function to handle sending visual selection to Claude
+function _G.SendVisualSelectionToClaude(use_markup)
+  -- Store the current register content
+  local old_reg = vim.fn.getreg('z')
+  local old_reg_type = vim.fn.getregtype('z')
+  
+  -- Yank the current visual selection into the z register
+  vim.cmd('normal! gv"zy')
+  
+  -- Get the text from the register
+  local selected_text = vim.fn.getreg('z')
+  
+  -- Send to Claude with optional markup
+  claude_send_handler(selected_text, use_markup)
+  
+  -- Restore register
+  vim.fn.setreg('z', old_reg, old_reg_type)
+end
+
+
 
 -- Helper function for linewise operator-based Claude selections
 function Create_linewise_func(use_markup)

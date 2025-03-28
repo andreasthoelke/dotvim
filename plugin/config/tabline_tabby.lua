@@ -299,6 +299,8 @@ local utils = require("neo-tree.utils")
 -- ↑ show local cwd if window has one
 -- ↗ outer repo: show local repo root folder if file is outside of cwd
 -- ↘ inner repo: show local repo root folder if file is inside of cwd and inside of an inner repo
+-- vim.fn.getcwd( -1, -1 )
+-- vim.fn.getcwd()
 
 function _G.Tab_GenLabel( tabid )
   local tabFiles = FilesInTab( tabid )

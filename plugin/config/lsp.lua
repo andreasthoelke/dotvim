@@ -208,6 +208,7 @@ end
 
 -- help vim.diagnostic.config()
 vim.diagnostic.config({
+  virtual_lines = false,
   virtual_text = {
     source = "if_many",
     -- prefix = '■',
@@ -221,6 +222,14 @@ vim.diagnostic.config({
   underline = false,
   update_in_insert = false,
   severity_sort = false,
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function()
+    vim.diagnostic.config({
+      virtual_lines = false,
+    })
+  end,
 })
 
 local signs = { Error = "•", Warn = "⚠", Hint = "➤", Info = "ℹ" }
@@ -778,9 +787,9 @@ null_ls.setup({
       filetypes = { "html", "json", "yaml" },
     }),
     -- sh/bash
-    d.shellcheck.with({
-      diagnostics_format = diagnostics_format,
-    }),
+    -- d.shellcheck.with({
+    --   diagnostics_format = diagnostics_format,
+    -- }),
     f.shfmt.with({
       diagnostics_format = diagnostics_format,
       extra_args = { "-i", "2" },
@@ -791,9 +800,9 @@ null_ls.setup({
       extra_args = { "--indent-type", "Spaces" },
     }),
     -- json
-    f.fixjson.with({
-      diagnostics_format = diagnostics_format,
-    }),
+    -- f.fixjson.with({
+    --   diagnostics_format = diagnostics_format,
+    -- }),
     -- yaml
     d.yamllint.with({
       diagnostics_format = diagnostics_format,
@@ -804,9 +813,9 @@ null_ls.setup({
       diagnostics_format = diagnostics_format,
     }),
     -- toml
-    f.taplo.with({
-      diagnostics_format = diagnostics_format,
-    }),
+    -- f.taplo.with({
+    --   diagnostics_format = diagnostics_format,
+    -- }),
     -- css/scss/sass/less
     f.stylelint.with({
       diagnostics_format = diagnostics_format,

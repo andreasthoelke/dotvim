@@ -1,27 +1,7 @@
 
--- require('avante').setup()
 
--- clipboard!
-    -- keys = {
-    --   {
-    --     "<leader>ip",
-    --     function()
-    --       return vim.bo.filetype == "AvanteInput" and require("avante.clipboard").paste_image()
-    --         or require("img-clip").paste_image()
-    --     end,
-    --     desc = "clip: paste image",
-    --   },
-    -- }
+-- ~/.config/nvim/plugged/avante.nvim/lua/avante/config.lua
 
-
-_G.AvanteConflicts_convert_to_qf = function()
-  require('avante.diff').conflicts_to_qf_items(function(items)
-    if #items > 0 then
-      vim.fn.setqflist(items, "r")
-      vim.cmd('copen')
-    end
-  end)
-end
 
 require('avante').setup(
   {
@@ -34,9 +14,10 @@ require('avante').setup(
     cursor_applying_provider = nil, -- The provider used in the applying phase of Cursor Planning Mode, defaults to nil, when nil uses Config.provider as the provider for the applying phase
     claude = {
       endpoint = "https://api.anthropic.com",
-      model = "claude-3-5-sonnet-20241022",
+      model = "claude-3-7-sonnet-20250219",
+      timeout = 30000, -- Timeout in milliseconds
       temperature = 0,
-      max_tokens = 4096,
+      max_tokens = 20480,
     },
     ---Specify the special dual_boost mode
     ---1. enabled: Whether to enable dual_boost mode. Default to false.
@@ -62,8 +43,8 @@ require('avante').setup(
       support_paste_from_clipboard = true,
       minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
       enable_token_counting = true, -- Whether to enable token counting. Default to true.
-      enable_cursor_planning_mode = true, -- Whether to enable Cursor Planning Mode. Default to false.
-      enable_claude_text_editor_tool_mode = true, -- Whether to enable Claude Text Editor Tool Mode.
+      enable_cursor_planning_mode = false, -- Whether to enable Cursor Planning Mode. Default to false.
+      enable_claude_text_editor_tool_mode = false, -- Whether to enable Claude Text Editor Tool Mode.
     },
 
     rag_service = {
@@ -116,7 +97,7 @@ require('avante').setup(
         prev = "[[",
       },
       submit = {
-        normal = "<CR>",
+        normal = "<c-g><cr>",
         insert = "<C-s>",
       },
       cancel = {
@@ -139,7 +120,7 @@ require('avante').setup(
 
 -- ─^  Keymaps                                           ▲
 
-    hints = { enabled = true },
+    hints = { enabled = false },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
       position = "right", -- the position of the sidebar
