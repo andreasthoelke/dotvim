@@ -52,7 +52,7 @@ function M.GetCommitLines()
   local lines = {}
   local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n 10")
   if not handle then return lines end
-  
+
   local result = handle:read("*a")
   handle:close()
   
@@ -61,11 +61,16 @@ function M.GetCommitLines()
     if hash and time_ago and message then
       -- Get number of files affected by this commit
       local files_handle = io.popen("git show --pretty='' --name-only " .. hash .. " | wc -l")
-      local files_count = "0 files"
+      local files_count = "0 f"
       if files_handle then
-        files_count = files_handle:read("*n") .. " files"
+        files_count = files_handle:read("*n") .. " f"
         files_handle:close()
       end
+      
+      -- Abbreviate time
+      time_ago = time_ago:gsub("minutes?", "m"):gsub("hours?", "h"):gsub("days?", "d"):gsub("weeks?", "w"):gsub("months?", "mo"):gsub("years?", "y"):gsub("ago", "")
+      time_ago = time_ago:gsub("seconds?", "s"):gsub("hours?", "h"):gsub("days?", "d"):gsub("weeks?", "w"):gsub("months?", "mo"):gsub("years?", "y"):gsub("ago", "")
+      time_ago = time_ago:gsub("%s+$", "") -- Trim trailing spaces
       
       -- Format the line
       table.insert(lines, string.format("%s | %s | %s | %s", hash, time_ago, files_count, message))

@@ -180,11 +180,20 @@ vim.keymap.set( 'n',
     Claude_send(string.char(3))
   end )
 
--- MAKE COMMIT .. thorrow commit messages
+-- MAKE COMMIT .. thorough commit messages
 vim.keymap.set( 'n',
   '<c-g>mc', function()
     print("Prefer ll gc!")
     Claude_send("Make a commit.")
+    vim.defer_fn(function()
+      Claude_send( "\r" )
+    end, 100)
+  end )
+
+-- Clear chat
+vim.keymap.set( 'n',
+  '<c-g>,c', function()
+    Claude_send("/clear")
     vim.defer_fn(function()
       Claude_send( "\r" )
     end, 100)
