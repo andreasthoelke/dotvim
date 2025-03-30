@@ -1,6 +1,9 @@
 
 local M = {}
 
+-- Maps
+-- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gL',ˍfunction()
+
 function M.Show()
   -- First check if buffers already exist and delete them
   local function buffer_exists(name)
@@ -20,14 +23,16 @@ function M.Show()
   -- Show a disposable / temp buffer in a vertical split
   vim.cmd('vsplit')
   local main_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_win_set_buf(0, main_buf)
+  local main_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_win_set_buf(main_win, main_buf)
   vim.api.nvim_buf_set_name(main_buf, details_buf_name)
   
   -- Show another disposable / temp buffer in a normal split below that buffer. Height 10 lines.
   vim.cmd('split')
   vim.cmd('resize 10')
   local commits_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_win_set_buf(0, commits_buf)
+  local commits_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_win_set_buf(commits_win, commits_buf)
   vim.api.nvim_buf_set_name(commits_buf, commits_buf_name)
   
   -- Use GetCommitLines() to insert max 20 lines into the lower buffer
@@ -40,6 +45,22 @@ function M.Show()
   vim.api.nvim_buf_set_option(commits_buf, 'bufhidden', 'wipe')
   vim.api.nvim_buf_set_option(main_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(main_buf, 'bufhidden', 'wipe')
+  
+  -- Add autocmd to close both windows when either is closed
+  local augroup = vim.api.nvim_create_augroup('GitCommitViewerGroup', { clear = true })
+  vim.api.nvim_create_autocmd('WinClosed', {
+    group = augroup,
+    pattern = tostring(main_win) .. ',' .. tostring(commits_win),
+    callback = function()
+      if vim.api.nvim_win_is_valid(main_win) then
+        vim.api.nvim_win_close(main_win, true)
+      end
+      if vim.api.nvim_win_is_valid(commits_win) then
+        vim.api.nvim_win_close(commits_win, true)
+      end
+    end,
+    once = true
+  })
 end
 -- require'git_commits_viewer'.Show()
 

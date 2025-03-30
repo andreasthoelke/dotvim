@@ -277,10 +277,17 @@ vim.keymap.set( 'n',
   .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
   end )
 
+-- vim.keymap.set( 'n',
+--   '<leader>ogL', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_gitstat )
+--   end )
+
 vim.keymap.set( 'n',
-  '<leader>ogL', function() require( 'utils.general' )
-  .Git_commits_picker( opts_gitstat )
+  '<leader>ogL', function()
+    require'git_commits_viewer'.Show()
   end )
+
+
 
 -- NOTE: gg.. maps conflict with gg - go to top of page!
 -- vim.keymap.set( 'n',

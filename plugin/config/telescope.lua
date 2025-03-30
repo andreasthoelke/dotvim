@@ -25,44 +25,6 @@ local add_to_trouble = require("trouble.sources.telescope").add
 
 -- ─   Helpers                                          ──
 
-local scroll_previewer_down = function(prompt_bufnr)
-  local picker = action_state.get_current_picker(prompt_bufnr)
-  local previewer = picker.previewer
-
-  -- Check if it's a terminal previewer
-  if previewer and previewer.terminal_bufnr then
-    -- For terminal previewers
-    local win_id = picker.preview_win
-    if win_id and vim.api.nvim_win_is_valid(win_id) then
-      vim.api.nvim_win_call(win_id, function()
-        vim.cmd('normal! 5<C-e>')  -- Scroll down 5 lines
-      end)
-    end
-  elseif previewer and previewer.scroll_fn then
-    -- For buffer previewers
-    previewer:scroll_fn(5)
-  end
-end
-
-local scroll_previewer_up = function(prompt_bufnr)
-  local picker = action_state.get_current_picker(prompt_bufnr)
-  local previewer = picker.previewer
-
-  -- Check if it's a terminal previewer
-  if previewer and previewer.terminal_bufnr then
-    -- For terminal previewers
-    local win_id = picker.preview_win
-    if win_id and vim.api.nvim_win_is_valid(win_id) then
-      vim.api.nvim_win_call(win_id, function()
-        vim.cmd('normal! 5<C-y>')  -- Scroll up 5 lines
-      end)
-    end
-  elseif previewer and previewer.scroll_fn then
-    -- For buffer previewers
-    previewer:scroll_fn(-5)
-  end
-end
-
 local append_to_history = function(prompt_bufnr)
   action_state
     .get_current_history()
@@ -767,23 +729,8 @@ require('telescope').setup{
         -- ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
 
 -- ─   View                                             ──
-        -- ["<c-y>"] = scroll_previewer_up,
-        -- ["<c-e>"] = scroll_previewer_down,
-
-        ["<C-e>"] = function(prompt_bufnr)
-          -- Get the current picker
-          local picker = action_state.get_current_picker(prompt_bufnr)
-          -- Send 'j' key to the terminal to scroll down
-          vim.api.nvim_chan_send(picker.previewer.termopen_id, 'j')
-        end,
-        ["<C-y>"] = function(prompt_bufnr)
-          local picker = action_state.get_current_picker(prompt_bufnr)
-          -- Send 'k' key to the terminal to scroll up
-          vim.api.nvim_chan_send(picker.previewer.termopen_id, 'k')
-        end,
-        -- Didn't work with terminal buffers
-        -- ["<c-y>"] = actions.preview_scrolling_up,
-        -- ["<c-e>"] = actions.preview_scrolling_down,
+        ["<c-y>"] = actions.preview_scrolling_up,
+        ["<c-e>"] = actions.preview_scrolling_down,
 
         ["n"]     = preview 'next' 'normal',
         ["p"]     = preview 'previous' 'normal',
