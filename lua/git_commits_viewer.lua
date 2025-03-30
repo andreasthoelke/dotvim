@@ -15,7 +15,9 @@ end
 --  M  4 files | 66    12 | 24ad3c1f feat: Add LSP document and workspace symbol mappings Andreas Thoelke, 4 days ago
 -- ..
 function M.GetCommitLines()
+
 end
+-- require'git_commits_viewer''.GetCommitLines()'
 
 
 return M

@@ -47,7 +47,7 @@ vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 -- ─   CODECOMPANION                                     ■
 -- ~/.config/nvim/plugin/config/codecompanion.lua‖*ˍˍˍChatˍkeymaps
 
-vim.keymap.set('n', '<leader>kv', function()
+vim.keymap.set('n', '<c-g><leader>V', function()
   local update = { display = { chat = { window = { layout = "vertical" } } } }
   local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
   require("codecompanion").setup( config_updated )
@@ -56,7 +56,7 @@ end, { noremap = true, silent = true })
 
 -- Open codecompanion chat with horizontal layout
 -- This keybinding changes the window layout configuration before opening the chat
-vim.keymap.set('n', '<leader>ks', function()
+vim.keymap.set('n', '<c-g><leader>C', function()
   local update = { display = { chat = { window = { layout = "horizontal" } } } }
   local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
   require("codecompanion").setup( config_updated )
