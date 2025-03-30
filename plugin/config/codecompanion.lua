@@ -16,7 +16,7 @@
 -- ~/.config/nvim/plugged/codecompanion.nvim/lua/codecompanion/config.lua
 
 
-local config = {
+_G.CodeCompanion_config = {
 
 -- ─   GENERAL OPTIONS                                  ──
   opts = {
@@ -319,7 +319,7 @@ You have access to specialized tools that empower you to assist users with speci
       },
       send = {
         modes = {
-          n = { "<c-g><c-g>" },
+          n = { "<c-w><cr>" },
           -- n = { "<CR>", "<C-s>" },
           -- i = "<C-s>",
         },
@@ -346,7 +346,7 @@ You have access to specialized tools that empower you to assist users with speci
       },
       stop = {
         modes = {
-          n = "<c-c>",
+          n = "<c-g>c>",
         },
         index = 5,
         callback = "keymaps.stop",
@@ -354,7 +354,7 @@ You have access to specialized tools that empower you to assist users with speci
       },
       clear = {
         modes = {
-          n = "<c-g>c",
+          n = "<c-g>C",
         },
         index = 6,
         callback = "keymaps.clear",
@@ -502,7 +502,7 @@ You have access to specialized tools that empower you to assist users with speci
 
 }
 
-require("codecompanion").setup( config )
+require("codecompanion").setup( CodeCompanion_config )
 
 -- require("plugins.codecompanion.fidget-spinner"):init()
 

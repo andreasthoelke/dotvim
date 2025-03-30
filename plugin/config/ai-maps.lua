@@ -28,8 +28,9 @@
 -- vim.keymap.set('n', '<c-g>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteChat<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>C', ':AvanteClear<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>c', ':AvanteClear<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
@@ -49,7 +50,7 @@ vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g><leader>V', function()
   local update = { display = { chat = { window = { layout = "vertical" } } } }
-  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
+  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( CodeCompanion_config ), update )
   require("codecompanion").setup( config_updated )
   require("codecompanion").chat()
 end, { noremap = true, silent = true })
@@ -58,7 +59,7 @@ end, { noremap = true, silent = true })
 -- This keybinding changes the window layout configuration before opening the chat
 vim.keymap.set('n', '<c-g><leader>C', function()
   local update = { display = { chat = { window = { layout = "horizontal" } } } }
-  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( config ), update )
+  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( CodeCompanion_config ), update )
   require("codecompanion").setup( config_updated )
   require("codecompanion").chat()
 end, { noremap = true, silent = true })
@@ -209,8 +210,8 @@ vim.keymap.set("v", "<c-g>s", ":<c-u>'<,'>PrtChatNew split<cr>", { desc = "Chat 
 
 
 
-vim.keymap.set('n', '<c-g>C', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
-vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with all buffers" })
+-- vim.keymap.set('n', '<c-g>C', ':PrtChatWithFileContext<CR>', { noremap = true, silent = true })
+-- vim.keymap.set("v", "<c-g>C", ":<c-u>'<,'>PrtChatWithFileContext<cr>", { desc = "Chat with all buffers" })
 
 vim.keymap.set('n', '<c-g><leader>C', ':PrtChatWithAllBuffers<CR>', { noremap = true, silent = true })
 vim.keymap.set("v", "<c-g><leader>C", ":<c-u>'<,'>PrtChatWithAllBuffers<cr>", { desc = "Chat with all buffers" })
