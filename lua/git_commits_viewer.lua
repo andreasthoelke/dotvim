@@ -43,14 +43,36 @@ function M.Show()
 end
 -- require'git_commits_viewer'.Show()
 
--- Return one line per commit in the cwd. limit this to 20 lines.
+-- Return one line per commit in the cwd. limit this to 10 lines.
 -- line format:
 -- commithash | time ago | files affected | commit message
 -- line example:
--- 24ad3c1f | changed something | 3 files | 4 days ago
--- ..
+-- 24ad3c1f | 4 days ago | 3 files | changed something 
 function M.GetCommitLines()
-
+  local lines = {}
+  local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n 10")
+  if not handle then return lines end
+  
+  local result = handle:read("*a")
+  handle:close()
+  
+  for line in result:gmatch("[^\n]+") do
+    local hash, time_ago, message = line:match("([^|]+)|([^|]+)|(.+)")
+    if hash and time_ago and message then
+      -- Get number of files affected by this commit
+      local files_handle = io.popen("git show --pretty='' --name-only " .. hash .. " | wc -l")
+      local files_count = "0 files"
+      if files_handle then
+        files_count = files_handle:read("*n") .. " files"
+        files_handle:close()
+      end
+      
+      -- Format the line
+      table.insert(lines, string.format("%s | %s | %s | %s", hash, time_ago, files_count, message))
+    end
+  end
+  
+  return lines
 end
 -- require'git_commits_viewer'.GetCommitLines()
 
