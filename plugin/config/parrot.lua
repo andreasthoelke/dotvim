@@ -41,6 +41,10 @@ require("parrot").setup(
       pplx = {
         api_key = os.getenv "PERPLEXITY_API_KEY",
       },
+      gemini = {
+        api_key = os.getenv "GEMINI_API_KEY",
+      },
+
     },
 
     system_prompt = {
@@ -57,10 +61,12 @@ require("parrot").setup(
     chat_confirm_delete = false,
     online_model_selection = true,
 
-    -- chat_shortcut_respond = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g><C-g>" },
-    -- chat_shortcut_delete = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>d" },
-    -- chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>s" },
-    -- chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
+-- ─   Keymaps buffer                                   ──
+    chat_shortcut_respond = { modes = { "n", "i", "v", "x" }, shortcut = "<c-w><cr>" },
+    chat_shortcut_delete = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>d" },
+    chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
+    -- Chat clear
+    chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>C" },
 
     chat_free_cursor = true,
 

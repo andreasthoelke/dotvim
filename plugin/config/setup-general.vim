@@ -1273,7 +1273,8 @@ nnoremap <leader>ewd :echo getcwd()<cr>
 " nnoremap <silent><leader>cdpt :tcd %:p:h<cr>:echo getcwd(winnr())<cr>
 " nnoremap <silent><leader>cdpg :cd %:p:h<cr>:echo getcwd(winnr())<cr>
 
-nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>
+" nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>
+nnoremap <silent><leader>cdG :exec 'cd' getcwd()<cr>
 nnoremap <silent><leader>cdpl :lcd %:p:h<cr>
 nnoremap <silent><leader>cdpt :tcd %:p:h<cr>
 nnoremap <silent><leader>cdpg :cd %:p:h<cr>

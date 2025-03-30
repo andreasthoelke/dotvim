@@ -1059,6 +1059,9 @@ vim.keymap.set( 'n',
 
 -- ─   Git commits picker                               ──
 
+
+
+
 -- Copies an old version of the file into the project folder using a new unique file name!
 -- PATTERN: example of running a shell command on a filename or git commit id.
 -- also an example of overriding/replacing an actions that is defined for a default picker.
@@ -1095,7 +1098,8 @@ function M.Git_commits_picker( opts, filepath )
     previewers.new_termopen_previewer {
 
       get_command = function(entry)
-        return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', filepath }
+        -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!', filepath }
+        return { 'git', 'diff', entry.value .. '^!', filepath }
       end,
 
       dyn_title = function(_, entry)
@@ -1378,7 +1382,8 @@ function M.Git_status_picker(opts)
       elseif entry.status == "??" then
         return { "bat", "--style=plain", entry.value }
       end
-      return { "git", "-C", opts.cwd, "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "HEAD", entry.path }
+      -- return { "git", "-C", opts.cwd, "-c", "core.pager=delta", "-c", "delta.pager=less -R", "diff", "HEAD", entry.path }
+      return { "git", "-C", opts.cwd, "diff", "HEAD", entry.path }
       -- return { "bat", entry.path }
       -- return { "bash", "-c", "ls -ls | bat" }
       -- return { "bash", "-c", "echo " .. entry.path .. "&& echo hi" }

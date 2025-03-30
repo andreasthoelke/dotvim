@@ -296,7 +296,7 @@ vim.keymap.set( 'n',
 
 -- DiffviewFileHistory shows new code blocks in the normal editor with normal syntax highlight.
 vim.keymap.set('n', '<leader><leader>ogl', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Open Git log for current file" })
-vim.keymap.set('n', '<leader><leader>ogL', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
+vim.keymap.set('n', '<leader><leader>ogL', ':DiffviewFileHistory -C .<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
 
 
 -- vim.keymap.set( 'n',

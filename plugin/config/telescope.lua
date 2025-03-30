@@ -25,6 +25,44 @@ local add_to_trouble = require("trouble.sources.telescope").add
 
 -- ─   Helpers                                          ──
 
+local scroll_previewer_down = function(prompt_bufnr)
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  local previewer = picker.previewer
+
+  -- Check if it's a terminal previewer
+  if previewer and previewer.terminal_bufnr then
+    -- For terminal previewers
+    local win_id = picker.preview_win
+    if win_id and vim.api.nvim_win_is_valid(win_id) then
+      vim.api.nvim_win_call(win_id, function()
+        vim.cmd('normal! 5<C-e>')  -- Scroll down 5 lines
+      end)
+    end
+  elseif previewer and previewer.scroll_fn then
+    -- For buffer previewers
+    previewer:scroll_fn(5)
+  end
+end
+
+local scroll_previewer_up = function(prompt_bufnr)
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  local previewer = picker.previewer
+
+  -- Check if it's a terminal previewer
+  if previewer and previewer.terminal_bufnr then
+    -- For terminal previewers
+    local win_id = picker.preview_win
+    if win_id and vim.api.nvim_win_is_valid(win_id) then
+      vim.api.nvim_win_call(win_id, function()
+        vim.cmd('normal! 5<C-y>')  -- Scroll up 5 lines
+      end)
+    end
+  elseif previewer and previewer.scroll_fn then
+    -- For buffer previewers
+    previewer:scroll_fn(-5)
+  end
+end
+
 local append_to_history = function(prompt_bufnr)
   action_state
     .get_current_history()
@@ -327,8 +365,19 @@ local NewBuf = f.curry( function( adirection, pbn )
   -- 5. FOCUS & HIGHLIGHT LINE & KEYWORD
   if     maybeLink ~= nil and vim.tbl_get( maybeLink, 'col' ) then
     local col_offset = vim.api.nvim_get_mode().mode == 'i' and 1 or 0
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, maybeLink.col + col_offset})
-    vim.cmd 'normal zz'
+    -- Ensure we have valid lnum and col values before setting cursor
+    if type(maybeLink.lnum) == "number" and type(maybeLink.col) == "number" then
+      -- Ensure lnum is within buffer line count
+      local line_count = vim.api.nvim_buf_line_count(0)
+      local lnum = math.min(math.max(1, maybeLink.lnum), line_count)
+      -- Ensure col is valid (at least 0)
+      local col = math.max(0, maybeLink.col + col_offset)
+
+      vim.api.nvim_win_set_cursor(0, {lnum, col})
+      vim.cmd 'normal zz'
+    else
+      -- vim.notify("Invalid cursor position: lnum=" .. tostring(maybeLink.lnum) .. ", col=" .. tostring(maybeLink.col), vim.log.levels.WARN)
+    end
 
     -- HighlightRange( 'Search', maybeLink.lnum -1, maybeLink.col or 1, maybeLink.col_end or maybeLink.col or 1 )
     if search_term ~= nil then
@@ -338,7 +387,16 @@ local NewBuf = f.curry( function( adirection, pbn )
     end
 
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'lnum' ) then
-    vim.api.nvim_win_set_cursor( 0, {maybeLink.lnum, 1})
+    -- Ensure we have a valid lnum value before setting cursor
+    if type(maybeLink.lnum) == "number" then
+      -- Ensure lnum is within buffer line count
+      local line_count = vim.api.nvim_buf_line_count(0)
+      local lnum = math.min(math.max(1, maybeLink.lnum), line_count)
+
+      vim.api.nvim_win_set_cursor(0, {lnum, 1})
+    else
+      -- vim.notify("Invalid cursor position: lnum=" .. tostring(maybeLink.lnum), vim.log.levels.WARN)
+    end
 
   elseif maybeLink ~= nil and vim.tbl_get( maybeLink, 'searchTerm' ) then
     vim.fn.search( s.tail( maybeLink.searchTerm ), "cw" )
@@ -382,6 +440,8 @@ end)
 function _G.HighlightRange(HlGroup, lineNumber, startColumn, endColumn)
   local buf = vim.api.nvim_get_current_buf()
   local ns_id = vim.api.nvim_create_namespace('reverseColors')
+  startColumn = math.max(1, startColumn or 1)
+  endColumn = math.max(startColumn, endColumn or startColumn)
   local opts = {
     end_col = endColumn + 1,
     hl_group = HlGroup,
@@ -707,8 +767,23 @@ require('telescope').setup{
         -- ["uu"] = { "<cmd>echo \"Hello, World!\"<cr>", type = "command" },
 
 -- ─   View                                             ──
-        ["<c-y>"] = actions.preview_scrolling_up,
-        ["<c-e>"] = actions.preview_scrolling_down,
+        -- ["<c-y>"] = scroll_previewer_up,
+        -- ["<c-e>"] = scroll_previewer_down,
+
+        ["<C-e>"] = function(prompt_bufnr)
+          -- Get the current picker
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          -- Send 'j' key to the terminal to scroll down
+          vim.api.nvim_chan_send(picker.previewer.termopen_id, 'j')
+        end,
+        ["<C-y>"] = function(prompt_bufnr)
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          -- Send 'k' key to the terminal to scroll up
+          vim.api.nvim_chan_send(picker.previewer.termopen_id, 'k')
+        end,
+        -- Didn't work with terminal buffers
+        -- ["<c-y>"] = actions.preview_scrolling_up,
+        -- ["<c-e>"] = actions.preview_scrolling_down,
 
         ["n"]     = preview 'next' 'normal',
         ["p"]     = preview 'previous' 'normal',

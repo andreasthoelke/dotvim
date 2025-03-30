@@ -53,7 +53,8 @@ Plug 'stevearc/dressing.nvim'
 Plug 'HakonHarnes/img-clip.nvim'
 Plug 'zbirenbaum/copilot.lua'
 
-Plug 'ravitemer/mcphub.nvim'
+" Plug 'ravitemer/mcphub.nvim'
+Plug 'ravitemer/mcphub.nvim', { 'branch': 'native-servers' }
 
 " https://github.com/piersolenski/wtf.nvim
 " Plug 'piersolenski/wtf.nvim'

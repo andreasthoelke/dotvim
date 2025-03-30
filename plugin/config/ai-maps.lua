@@ -25,9 +25,20 @@
 -- AvanteModels`                    | Show model list                                                                                             | |
 
 
-vim.keymap.set('n', '<c-g>v', ':AvanteChat<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>c', ':AvanteClear<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>v', ':AvanteChat<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>C', ':AvanteClear<CR>', { noremap = true, silent = true })
 
+vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
+
+-- Avante_is_open()
+
+-- HIGHLIGHTS
+-- local hi = vim.api.nvim_set_hl
+-- ~/.config/nvim/colors/munsell-blue-molokai_light_1.lua‖/hi(0,ˍ"NormalFloat",ˍ{ˍbgˍ=ˍ"#E
+-- ~/.config/nvim/plugged/avante.nvim/lua/avante/highlights.lua‖/localˍHighlightsˍ=ˍ{
 
 -- ─^  AVANTE                                            ▲
 
@@ -164,7 +175,7 @@ vim.keymap.set( 'n',
 
 -- CLEAR text field buffer
 vim.keymap.set( 'n',
-  '<c-g>c', function()
+  '<c-g>C', function()
     Claude_send(string.char(3))
   end )
 
@@ -184,7 +195,8 @@ vim.keymap.set( 'n',
 
 
 -- ─   PARROT                                            ■
--- ~/.config/nvim/plugin/config/parrot.lua‖*ˍˍˍKeymaps
+
+-- In buffer maps: ~/.config/nvim/plugin/config/parrot.lua‖/chat_shortcut_respondˍ=ˍ{ˍ
 
 vim.keymap.set('n', '<c-g><leader>p', ':PrtProvider<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>m', ':PrtModel<CR>', { noremap = true, silent = true })

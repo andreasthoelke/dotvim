@@ -30,13 +30,25 @@ end
 -- Send to claude code terminal or parrot window if visible.
 function _G.Claude_send(text)
   local parrot_win = ParrotChat_InThisTab_id()
+  local avante_win = Avante_InThisTab_id()
   local current_win = vim.api.nvim_get_current_win()
   local not_in_parrot_win = current_win ~= parrot_win
+  local not_in_avante_win = current_win ~= avante_win
 
   if parrot_win and not_in_parrot_win then
     local lines = vim.fn.split(text, "\n")
     -- jump to parrot_win id
     vim.api.nvim_set_current_win(parrot_win)
+    vim.api.nvim_put(lines, "l", false, false)
+    vim.api.nvim_set_current_win(current_win)
+    return
+  end
+
+  if avante_win and not_in_avante_win then
+    local lines = vim.fn.split(text, "\n")
+    -- jump to parrot_win id
+    vim.cmd'AvanteFocus'
+    -- vim.api.nvim_set_current_win(avante_win)
     vim.api.nvim_put(lines, "l", false, false)
     vim.api.nvim_set_current_win(current_win)
     return
@@ -171,6 +183,16 @@ end
 
 -- ─   Helpers                                          ──
 
+-- Helper function to handle sending text to Claude with optional CodeBlockMarkup
+local function claude_send_handler(text, use_markup)
+  if use_markup then
+    Claude_send(CodeBlockMarkup(text))
+  else
+    Claude_send(text)
+  end
+end
+
+
 -- Function to handle sending visual selection to Claude
 function _G.SendVisualSelectionToClaude(use_markup)
   -- Store the current register content
@@ -228,10 +250,10 @@ function _G.ParrotChat_InThisTab_id()
   for _, win in ipairs(windows) do
     -- Get the buffer for this window
     local buf = vim.api.nvim_win_get_buf(win)
-    
+
     -- Get the buffer name
     local bufname = vim.api.nvim_buf_get_name(buf)
-    
+
     -- Check if buffer name contains "parrot/chats"
     if bufname:match("parrot/chats") then
       return win
@@ -242,6 +264,15 @@ function _G.ParrotChat_InThisTab_id()
   return false
 end
 -- ParrotChat_InThisTab_id()
+
+function _G.Avante_InThisTab_id()
+  local sidebar = require("avante").get()
+  if not sidebar then return end
+  if not sidebar:is_open() then return end
+  return sidebar.input_container.winid
+end
+-- Avante_is_open()
+
 
 -- ─   Range param usage examples                       ──
 -- ⏺ The range parameter in the get_chat_messages function allows you to limit which part of a chat

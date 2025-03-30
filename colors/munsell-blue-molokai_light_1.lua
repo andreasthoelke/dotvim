@@ -342,7 +342,8 @@ hi(0, "NoiceHiddenCursor", { blend = 100, nocombine = true })
 hi(0, "NonText", { fg = "#93a2a5" })
 
 hi(0, "Normal", { bg = "#E3E6E9", fg = "#819ea9" })
-hi(0, "NormalFloat", { bg = "#eef1f9" })
+-- hi(0, "NormalFloat", { bg = "#eef1f9" })
+hi(0, "NormalFloat", { bg = "#E3E6E9" })
 
 hi(0, "NotifyBackground", { bg = "#e3e6e9", fg = "#819ea9" })
 hi(0, "NotifyDEBUGBody", { link = "Comment" })

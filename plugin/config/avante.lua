@@ -97,7 +97,7 @@ require('avante').setup(
         prev = "[[",
       },
       submit = {
-        normal = "<c-g><cr>",
+        normal = "<c-w><cr>",
         insert = "<C-s>",
       },
       cancel = {

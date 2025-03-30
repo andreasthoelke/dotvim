@@ -353,6 +353,11 @@ func! GetLongestWord_inLine()
     return path
   elseif filereadable( path )
     return path
+  elseif path =~ ':'
+    " Support popular line link format: /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
+    " TODO this should be in a different function
+    let [path_sub; line_num] = path->split( ":" )
+    return path_sub . "‖:" . line_num[0]
   else
     let abspath = fnamemodify( path, ':p' )
     if filereadable(abspath) || isdirectory(abspath)
@@ -363,6 +368,8 @@ func! GetLongestWord_inLine()
   endif
 endfunc
 " split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')
+" /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
+
 
 " Return the character under the cursor
 func! GetCharAtCursor()

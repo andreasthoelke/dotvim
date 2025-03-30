@@ -1,5 +1,10 @@
 
 
+local original_make_position_params = vim.lsp.util.make_position_params
+vim.lsp.util.make_position_params = function(window, offset_encoding)
+  -- If offset_encoding is not provided, use utf-8 as default
+  return original_make_position_params(window, offset_encoding or 'utf-8')
+end
 
 -- from https://github.com/matsui54/denite-nvim-lsp/blob/bee2eb082f54f4a77ecf34c624afa363902f2c73/lua/lsp_denite.lua
 -- also maybe https://github.com/amirrezaask/fuzzy.nvim/blob/d98135c8a30c517f085eede5810b73a62060b016/lua/fuzzy/lsp.lua
@@ -34,8 +39,8 @@ local function get_available_client(method)
 end
 
 function M.hover()
-  local params = util.make_position_params()
-  -- todo: set these params: see ~/.config/nvim/plugin/tools_js.vim#/Workaround.%20The%20type
+  -- local params = util.make_position_params()
+  local params = util.make_position_params(nil, nil, "utf-16")
   -- return params
   return vim.lsp.buf_request_sync(0, "textDocument/hover", params, 2000)
 end

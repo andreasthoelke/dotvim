@@ -166,6 +166,16 @@ local config = {
             },
           },
         },
+
+        ["mcp"] = {
+          -- calling it in a function would prevent mcphub from being loaded before it's needed
+          callback = function() return require("mcphub.extensions.codecompanion") end,
+          description = "Call tools and resources from the MCP Servers",
+          opts = {
+            requires_approval = true,
+          }
+        },
+
         ["cmd_runner"] = {
           callback = "strategies.chat.agents.tools.cmd_runner",
           description = "Run shell commands initiated by the LLM",
