@@ -543,7 +543,7 @@ func! InlineTestDeclBackwLine()
   " return searchpos( '\v^e\d_', 'cnbW')[0]
   return searchpos( '\v(const\s|let\s)=[e|a]\d_', 'cnbW')[0]
 endfunc
-" echo InlineTestDeclBackwLine()
+" InlineTestDeclBackwLine()
 
 func! InlineTestAssertionBackwLine()
   return searchpos( '\v^a\d\d_', 'cnbW')[0]

@@ -272,20 +272,20 @@ opts_gitstat = {
 
 -- A benefit of using Github-style Delta based diffs is that small changes within lines
 -- are highlighted using green and red bg-colors. But in some cases I still prefer DiffviewFileHistory 
-vim.keymap.set( 'n',
-  '<leader>ogl', function() require( 'utils.general' )
-  .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
-  end )
+-- vim.keymap.set( 'n',
+--   '<leader>ogL', function() require( 'utils.general' )
+--   .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
+--   end )
 
 -- vim.keymap.set( 'n',
 --   '<leader>ogL', function() require( 'utils.general' )
 --   .Git_commits_picker( opts_gitstat )
 --   end )
 
-vim.keymap.set( 'n',
-  '<leader>ogL', function()
-    require'git_commits_viewer'.Show()
-  end )
+-- vim.keymap.set( 'n',
+--   '<leader>ogl', function()
+--     require'git_commits_viewer'.Show()
+--   end )
 
 
 

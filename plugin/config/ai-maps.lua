@@ -27,10 +27,10 @@
 
 -- vim.keymap.set('n', '<c-g>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteChat<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>c', ':AvanteClear<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>c', ':AvanteClear<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
@@ -211,7 +211,8 @@ vim.keymap.set( 'n',
 vim.keymap.set('n', '<c-g><leader>p', ':PrtProvider<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>m', ':PrtModel<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', '<c-g><leader>v', ':PrtChatNew<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g><leader>v', ':PrtChatNew<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>v', ':PrtChatNew<CR>', { noremap = true, silent = true })
 -- NOTE 15split is hardcoded here ~/.config/nvim/plugged/parrot.nvim/lua/parrot/chat_handler.lua‖/vim.api.nvim_command("15sp
 vim.keymap.set('n', '<c-g>s', ':PrtChatNew split<CR>', { noremap = true, silent = true })
 vim.keymap.set("v", "<c-g>v", ":<c-u>'<,'>PrtChatNew<cr>", { desc = "Chat with file context" })
