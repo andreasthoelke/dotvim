@@ -4,38 +4,43 @@ local M = {}
 -- Maps
 -- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gL',ˍfunction()
 
-function M.Show()
-  -- First check if buffers already exist and delete them
-  local function buffer_exists(name)
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_buf_get_name(buf):match(name) then
-        return buf
-      end
-    end
-    return nil
+-- Store terminal buffer ID for cleanup
+local term_job_id = nil
+
+function M.UpdateDiffView(commit_hash)
+  -- Kill previous terminal job if it exists
+  if term_job_id then
+    vim.fn.jobstop(term_job_id)
+    term_job_id = nil
   end
-  
-  -- Generate unique buffer names based on cwd and timestamp
-  local timestamp = os.time()
-  local details_buf_name = string.format('GitCommitDetails_%d', timestamp)
-  local commits_buf_name = string.format('GitCommits_%d', timestamp)
-  
-  -- Show a disposable / temp buffer in a vertical split
+
+  local current_win = vim.api.nvim_get_current_win()
+  -- go to M.diff_win
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
+  -- return to current_win
+  vim.api.nvim_set_current_win(current_win)
+end
+
+function M.Show()
+  -- Create temporary window for diff view
   vim.cmd('vsplit')
-  local main_buf = vim.api.nvim_create_buf(false, true)
-  local main_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(main_win, main_buf)
-  vim.api.nvim_buf_set_name(main_buf, details_buf_name)
+  local diff_win = vim.api.nvim_get_current_win()
+  local diff_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_win_set_buf(diff_win, diff_buf)
   
-  -- Show another disposable / temp buffer in a normal split below that buffer. Height 10 lines.
+  -- Store window reference for later use
+  M.diff_win = diff_win
+  
+  -- Show another temp buffer below for commits list
   vim.cmd('split')
   vim.cmd('resize 10')
   local commits_buf = vim.api.nvim_create_buf(false, true)
   local commits_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(commits_win, commits_buf)
-  vim.api.nvim_buf_set_name(commits_buf, commits_buf_name)
   
-  -- Use GetCommitLines() to insert max 20 lines into the lower buffer
+  -- Use GetCommitLines() to insert commit history into the lower buffer
   local commit_lines = M.GetCommitLines()
   vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)
   
@@ -43,20 +48,36 @@ function M.Show()
   vim.api.nvim_buf_set_option(commits_buf, 'modifiable', false)
   vim.api.nvim_buf_set_option(commits_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(commits_buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(main_buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(main_buf, 'bufhidden', 'wipe')
+  
+  -- Set up mapping for 'p' to show diff for commit hash
+  vim.api.nvim_buf_set_keymap(commits_buf, 'n', 'p', '', {
+    noremap = true,
+    callback = function()
+      local line = vim.api.nvim_get_current_line()
+      local commit_hash = line:match("^(%w+)")
+      if commit_hash then
+        M.UpdateDiffView(commit_hash)
+      end
+    end
+  })
   
   -- Add autocmd to close both windows when either is closed
   local augroup = vim.api.nvim_create_augroup('GitCommitViewerGroup', { clear = true })
   vim.api.nvim_create_autocmd('WinClosed', {
     group = augroup,
-    pattern = tostring(main_win) .. ',' .. tostring(commits_win),
+    pattern = tostring(diff_win) .. ',' .. tostring(commits_win),
     callback = function()
-      if vim.api.nvim_win_is_valid(main_win) then
-        vim.api.nvim_win_close(main_win, true)
+      if vim.api.nvim_win_is_valid(diff_win) then
+        vim.api.nvim_win_close(diff_win, true)
       end
       if vim.api.nvim_win_is_valid(commits_win) then
         vim.api.nvim_win_close(commits_win, true)
+      end
+      
+      -- Clean up terminal job if it exists
+      if term_job_id then
+        vim.fn.jobstop(term_job_id)
+        term_job_id = nil
       end
     end,
     once = true
