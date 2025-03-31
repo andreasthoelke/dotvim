@@ -6,6 +6,7 @@ local M = {}
 
 -- Store terminal buffer ID for cleanup
 local term_job_id = nil
+local prev_term_buf = nil
 
 function M.UpdateDiffView(commit_hash)
   -- Kill previous terminal job if it exists
@@ -18,10 +19,31 @@ function M.UpdateDiffView(commit_hash)
   -- go to M.diff_win
   vim.api.nvim_set_current_win(M.diff_win)
   vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
   term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
-  -- return to current_win
+  if prev_term_buf then
+    -- delete prev_term_buf
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
+
+function M.GetFilesInCommit(commit_hash)
+  local files = {}
+  local handle = io.popen("git show --pretty='' --name-only " .. commit_hash)
+  if not handle then return files end
+  
+  local result = handle:read("*a")
+  handle:close()
+  
+  for file in result:gmatch("[^\n]+") do
+    table.insert(files, "  " .. file)
+  end
+  
+  return files
+end
+-- require'git_commits_viewer'.GetFilesInCommit('424ee27')
 
 function M.Show()
   -- Create temporary window for diff view
@@ -39,7 +61,7 @@ function M.Show()
   local commits_buf = vim.api.nvim_create_buf(false, true)
   local commits_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(commits_win, commits_buf)
-  
+  vim.api.nvim_win_set_option(commits_win, 'wrap', false)
   -- Use GetCommitLines() to insert commit history into the lower buffer
   local commit_lines = M.GetCommitLines()
   vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)

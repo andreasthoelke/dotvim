@@ -717,6 +717,7 @@ require('telescope').setup{
 -- ─   Exchange                                         ──
 
         ["<leader>dd"] = actions.delete_buffer,
+        ["<c-d>"] = actions.delete_buffer,
         -- This was causing "No a picker found error!"
         -- ["<leader><c-o>"] = require("trouble.sources.telescope").open(),
 
