@@ -33,10 +33,10 @@ function M.GetFilesInCommit(commit_hash)
   local files = {}
   local handle = io.popen("git show --pretty='' --name-only " .. commit_hash)
   if not handle then return files end
-  
+
   local result = handle:read("*a")
   handle:close()
-  
+
   for file in result:gmatch("[^\n]+") do
     table.insert(files, "  " .. file)
   end
@@ -109,9 +109,9 @@ end
 
 -- Return one line per commit in the cwd. limit this to 10 lines.
 -- line format:
--- commithash | time ago | files affected | commit message
+-- commithash | time ago | author abbrev | commit message
 -- line example:
--- 24ad3c1f | 4 days ago | 3 files | changed something 
+-- 24ad3c1f | 4 days ago | AT | changed something 
 function M.GetCommitLines()
   local lines = {}
   local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n 10")
@@ -119,28 +119,39 @@ function M.GetCommitLines()
 
   local result = handle:read("*a")
   handle:close()
-  
+
   for line in result:gmatch("[^\n]+") do
     local hash, time_ago, message = line:match("([^|]+)|([^|]+)|(.+)")
     if hash and time_ago and message then
       -- Get number of files affected by this commit
-      local files_handle = io.popen("git show --pretty='' --name-only " .. hash .. " | wc -l")
-      local files_count = "0 f"
-      if files_handle then
-        files_count = files_handle:read("*n") .. " f"
-        files_handle:close()
+      -- local files_handle = io.popen("git show --pretty='' --name-only " .. hash .. " | wc -l")
+      -- local files_count = "0 f"
+      -- if files_handle then
+      --   files_count = files_handle:read("*n") .. " f"
+      --   files_handle:close()
+      -- end
+
+      local author_abbrev = ""
+      local author_handle = io.popen("git show -s --format='%an' " .. hash)
+      if author_handle then
+        author_abbrev = author_handle:read("*a")
+        author_handle:close()
       end
-      
+
       -- Abbreviate time
       time_ago = time_ago:gsub("minutes?", "m"):gsub("hours?", "h"):gsub("days?", "d"):gsub("weeks?", "w"):gsub("months?", "mo"):gsub("years?", "y"):gsub("ago", "")
       time_ago = time_ago:gsub("seconds?", "s"):gsub("hours?", "h"):gsub("days?", "d"):gsub("weeks?", "w"):gsub("months?", "mo"):gsub("years?", "y"):gsub("ago", "")
       time_ago = time_ago:gsub("%s+$", "") -- Trim trailing spaces
-      
+
       -- Format the line
-      table.insert(lines, string.format("%s | %s | %s | %s", hash, time_ago, files_count, message))
+      table.insert(lines, string.format("%s | %s | %s | %s", hash, time_ago, author_abbrev, message))
+      local additional_lines = M.GetFilesInCommit( hash )
+      for _, file in ipairs(additional_lines) do
+        table.insert(lines, file)
+      end
     end
   end
-  
+
   return lines
 end
 -- require'git_commits_viewer'.GetCommitLines()
