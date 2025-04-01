@@ -109,7 +109,7 @@ fun! OpenVSCode()
   exec 'silent !code .'
 endfun
 
-nnoremap <silent><leader>Oc :call OpenFilePathInVSCode( GetLongestWord_inLine() )<cr>
+nnoremap <silent><leader>Oc :call OpenFilePathInVSCode( GetPath_fromLine() )<cr>
 
 fun! OpenFilePathInVSCode( filePath )
   let path = len( a:filePath ) ? a:filePath : "."
@@ -123,7 +123,7 @@ func! OpenCurrentFileInSystemEditor()
   exec 'silent !open %'
 endfun
 
-nnoremap <silent><leader>Os :call OpenFilePathInSystemEditor( GetLongestWord_inLine() )<cr>
+nnoremap <silent><leader>Os :call OpenFilePathInSystemEditor( GetPath_fromLine() )<cr>
 
 func! OpenFilePathInSystemEditor( filePath )
   exec 'silent !open ' . a:filePath

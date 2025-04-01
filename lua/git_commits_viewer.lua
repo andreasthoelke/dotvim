@@ -16,7 +16,6 @@ vim.keymap.set( 'n',
   end )
 
 
-
 -- Store terminal buffer ID for cleanup
 local term_job_id = nil
 local prev_term_buf = nil

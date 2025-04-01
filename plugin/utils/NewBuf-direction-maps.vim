@@ -247,7 +247,7 @@ endfunc
 
 func! Browse_FolderLinePath( direction )
   let [direction; maybeBg ] = a:direction->split('_')
-  let [path; _maybeLinkExt] = GetLongestWord_inLine()->split('‖')
+  let [path; _maybeLinkExt] = GetPath_fromLine()->split('‖')
   let cmd = NewBufCmds( path )[ direction ] 
   exec cmd
   let path = expand( path )
@@ -318,7 +318,7 @@ func! NewBuf_fromCursorLinkPath( direction, ... )
      \   [ a:0 ? a:1 : v:lua.Ntree_currentNode().linepath ] :
      \ &filetype == 'NvimTree' ?
      \   [ v:lua.Tree_cursorPath() ] :
-     \   GetLongestWord_inLine()->split('‖')
+     \   GetPath_fromLine()->split('‖')
 
   if &filetype == 'NvimTree' || &filetype == 'neo-tree'
     let [direction; maybe_back ] = a:direction->split('_')
@@ -380,7 +380,7 @@ func! NewBuf_fromClipPath( direction )
 endfunc
 
 func! NewBuf_fromLinePath( direction )
-  let [path; maybeLinkExt] = GetLongestWord_inLine()->split('‖')
+  let [path; maybeLinkExt] = GetPath_fromLine()->split('‖')
   let cmd = NewBufCmds( path )[ a:direction ] 
   " echo cmd
   " return

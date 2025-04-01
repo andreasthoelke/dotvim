@@ -342,33 +342,49 @@ func! GetFullLine_OrFromCursor()
   endif
 endfunc
 
-" An abs path or url is often the longest word in a line
-func! GetLongestWord_inLine()
-  let has_chars = len( substitute( getline('.'), ' ', '', 'g' ) )
-  let path = ""
-  if has_chars
-    let path = getline('.')->split()->sort('CompareLength')[-1]
-  endif
+" A path or url is often the longest word in a line
+func! GetPath_fromLine()
+  let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
+  " return line_words
+  let path = line_words->split()->sort('CompareLength')[-1]
+  " return path
+
+  " SIMPLE: This link was created by a l cs map or is a plain path
   if path =~ '‖'
     return path
-  elseif filereadable( path )
+  endif
+
+  if filereadable( path ) || isdirectory(path)
     return path
-  elseif path =~ ':'
-    " Support popular line link format: /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
-    " TODO this should be in a different function
+  endif
+
+  let abspath = fnamemodify( path, ':p' )
+  if filereadable(abspath) || isdirectory(abspath)
+    return abspath
+  endif
+
+  " LINE NUM AFTER COLLON
+  " Support popular line link format: /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
+  if path =~ ':'
     let [path_sub; line_num] = path->split( ":" )
-    return path_sub . "‖:" . line_num[0]
-  else
-    let abspath = fnamemodify( path, ':p' )
-    if filereadable(abspath) || isdirectory(abspath)
-      return abspath
-    else
-      echo "Error. Not readable: " . abspath
+    if filereadable( path_sub )
+      return path_sub . "‖:" . line_num[0]
     endif
   endif
+
+  let current_folder = fnamemodify( expand('%:p'), ':h' )
+  let folder_rel_path = current_folder . '/' . path
+
+  if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
+    return folder_rel_path
+  endif
+
+  echo 'Path is not readable: ' . path
+  return path
 endfunc
 " split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')
 " /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
+    " -   [Getting Started for New Coders](getting-started-new-coders/README.md)
 
 
 " Return the character under the cursor
