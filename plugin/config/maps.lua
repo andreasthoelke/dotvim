@@ -254,6 +254,11 @@ vim.keymap.set( 'n',
 -- NOTE these maps: ~/.config/nvim/plugin/utils/utils-git.vim‖*GitˍTools
 
 vim.keymap.set( 'n',
+  '<leader>ogs', function()
+    require'git_commits_viewer'.Show(5)
+  end )
+
+vim.keymap.set( 'n',
   '<leader>ogl', function()
     require'git_commits_viewer'.Show(10)
   end )
@@ -324,10 +329,10 @@ vim.keymap.set('n', '<leader><leader>ogL', ':DiffviewFileHistory -C .<CR>',   { 
 --   end )
 
 
-vim.keymap.set( 'n',
-  '<leader>ogs', function() require( 'utils.general' )
-  .Git_status_picker( opts_gitstat )
-  end )
+-- vim.keymap.set( 'n',
+--   '<leader>ogs', function() require( 'utils.general' )
+--   .Git_status_picker( opts_gitstat )
+--   end )
 
 -- vim.keymap.set( 'n',
 --   'ggs', function() require( 'utils.general' )
@@ -359,16 +364,22 @@ vim.keymap.set( 'n',
 -- l g1    - Gitsigns change_base ~1
 -- l g2    - Gitsigns change_base ~2
 -- l g3    - Gitsigns change_base ~3
--- l g4    - Gitsigns change_base ~4
 
 vim.keymap.set( 'n',
   '<leader>gd', function()
     MiniDiff.toggle_overlay()
     vim.cmd 'Gitsigns toggle_signs'
-    -- potential alterative:
+    -- potential alterative: ?
     -- vim.cmd 'set number'
     -- vim.cmd 'set nonumber'
   end )
+
+-- alternative map for ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
+vim.keymap.set( 'n',
+  ',gd', function()
+   require'git_commits_viewer'.Show(5)
+  end )
+
 
 vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true })

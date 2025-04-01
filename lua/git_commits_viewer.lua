@@ -181,8 +181,31 @@ function M.Show(num_of_commits)
     -- set cursor to diff window
     vim.api.nvim_set_current_win(M.diff_win)
   end, { buffer = commits_buf, noremap = true })
+  
+  -- Add 'q' mapping to close both windows
+  vim.keymap.set('n', 'q', function()
+    -- Close both windows
+    if vim.api.nvim_win_is_valid(diff_win) then
+      vim.api.nvim_win_close(diff_win, true)
+    end
+    if vim.api.nvim_win_is_valid(commits_win) then
+      vim.api.nvim_win_close(commits_win, true)
+    end
+    
+    -- Clean up terminal job if it exists
+    if term_job_id then
+      vim.fn.jobstop(term_job_id)
+      term_job_id = nil
+    end
+  end, { buffer = commits_buf, noremap = true })
 
   M.set_highlights( commits_buf )
+  
+  -- Initially show untracked changes if there are any
+  local untracked_files = M.GetUntrackedChanges()
+  if #untracked_files > 0 then
+    M.UpdateDiffView_Untracked()
+  end
 
   -- Add autocmd to close both windows when either is closed
   local augroup = vim.api.nvim_create_augroup('GitCommitViewerGroup', { clear = true })
