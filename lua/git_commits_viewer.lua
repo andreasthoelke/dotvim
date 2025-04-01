@@ -64,6 +64,34 @@ function M.UpdateDiffView(commit_hash, filepath)
   vim.api.nvim_set_current_win(current_win)
 end
 
+function M.UpdateDiffView_Untracked(filepath)
+  -- Kill previous terminal job if it exists
+  if term_job_id then
+    vim.fn.jobstop(term_job_id)
+    term_job_id = nil
+  end
+
+  local current_win = vim.api.nvim_get_current_win()
+  -- go to M.diff_win
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  -- set a custom filetype of 'gitdiff'
+  vim.bo.filetype = 'gitdiff'
+  if filepath then
+    term_job_id = vim.fn.termopen('git diff -- ' .. filepath)
+  else
+    term_job_id = vim.fn.termopen('git diff')
+  end
+  M.GitDiff_BufferMaps()
+  if prev_term_buf then
+    -- delete prev_term_buf
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
 function M.GetFilesInCommit(commit_hash)
   local files = {}
   local handle = io.popen("git show --pretty='' --name-only " .. commit_hash)
@@ -82,15 +110,30 @@ end
 
 local function update_view_from_lines()
   local line = vim.api.nvim_get_current_line()
-  -- if first 2 chars of line are spaces
+  
+  -- Handle untracked changes header line
+  if line:match("^untracked changes") then
+    M.UpdateDiffView_Untracked()
+    return
+  end
+  
+  -- Handle indented file lines
   if line:match("^%s") then
     local filepath = line:match("^%s+(.+)")
-    -- Find commit hash by searching backwards for the next unindented line, and take the first word of that line.
-    local commit_hash = M.get_prev_line_commit_hash()
-    if commit_hash then
-      M.UpdateDiffView(commit_hash, filepath)
+    -- Find commit hash or untracked by searching backwards for the next unindented line
+    local prev_word = M.get_prev_line_first_word()
+    
+    if prev_word == "untracked" then
+      -- For untracked changes, run git diff without commit hash
+      M.UpdateDiffView_Untracked(filepath)
+    elseif prev_word then 
+      -- For regular commits
+      M.UpdateDiffView(prev_word, filepath)
     end
+    return
   end
+  
+  -- Handle commit hash lines
   local commit_hash = line:match("^(%w+)")
   if commit_hash then
     M.UpdateDiffView(commit_hash)
@@ -170,8 +213,37 @@ end
 -- commithash | time ago | author abbrev | commit message
 -- line example:
 -- 24ad3c1f | 4 days ago | AT | changed something 
+function M.GetUntrackedChanges()
+  local files = {}
+  local handle = io.popen("git status --short")
+  if not handle then return files end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  for line in result:gmatch("[^\n]+") do
+    -- Extract the file path from git status output
+    local file = line:match("^.. (.+)$")
+    if file then
+      table.insert(files, "    " .. file)
+    end
+  end
+
+  return files
+end
+
 function M.GetCommitLines(num_of_commits)
   local lines = {}
+  
+  -- Add untracked changes as a special first entry
+  local untracked_files = M.GetUntrackedChanges()
+  if #untracked_files > 0 then
+    table.insert(lines, "untracked changes")
+    for _, file in ipairs(untracked_files) do
+      table.insert(lines, file)
+    end
+  end
+  
   local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n " .. num_of_commits)
   if not handle then return lines end
 
@@ -240,6 +312,14 @@ function M.get_prev_line_commit_hash()
   -- search backwards for an unindented line
   local lineNum = vim.fn.searchpos( [[^\S]], 'bnW' )[1]
   local firstWord = vim.api.nvim_buf_get_lines(0, lineNum - 1, lineNum, false)[1]:match( [[^%w+]] )
+  return firstWord
+end
+
+function M.get_prev_line_first_word()
+  -- search backwards for an unindented line
+  local lineNum = vim.fn.searchpos( [[^\S]], 'bnW' )[1]
+  local line = vim.api.nvim_buf_get_lines(0, lineNum - 1, lineNum, false)[1]
+  local firstWord = line:match("^(%S+)")
   return firstWord
 end
   -- eins (uncomment these lines to test)
