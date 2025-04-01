@@ -253,6 +253,18 @@ vim.keymap.set( 'n',
 -- ─   Git picker maps                                  ──
 -- NOTE these maps: ~/.config/nvim/plugin/utils/utils-git.vim‖*GitˍTools
 
+vim.keymap.set( 'n',
+  '<leader>ogl', function()
+    require'git_commits_viewer'.Show(10)
+  end )
+
+vim.keymap.set( 'n',
+  '<leader>ogL', function()
+    require'git_commits_viewer'.Show(40)
+  end )
+
+
+
 -- These work well!
 
 opts_gitstat = {

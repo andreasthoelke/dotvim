@@ -7,6 +7,9 @@ augroup end
 au ag BufRead,BufNewFile * if &ft == "" && expand('%:t') !~ '\.' | set filetype=markdown | endif
 au ag BufRead,BufNewFile *.txt set filetype=markdown
 
+" au ag BufWinEnter,BufRead * if expand('%:t') =~ 'git' | setfiletype gitdiff | endif
+" au ag BufWinEnter,BufRead * if 1 | echoe expand('%') | endif
+
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call Edb_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
@@ -69,12 +72,12 @@ let g:Winid_previous = 0
 let g:Ntree_prevWinid = 0
 
 " Temp hack to fix the treesitter error "no parser for buffer" e.g. in gp.nvim :GpFindChat
-augroup DefaultToBash
-  autocmd!
-  autocmd BufWinEnter,BufRead * if empty(&filetype) | setfiletype bash | endif
-  " IMPORTANT: this works: ".conf" files don't have a treesitter parser, this just uses bash. 2025-01. not perfect though as the other filetype might trigger e.g. lsp.
-  autocmd BufWinEnter,BufRead * if &filetype=='conf' | setfiletype bash | endif
-augroup END
+" augroup DefaultToBash
+"   autocmd!
+"   autocmd BufWinEnter,BufRead * if empty(&filetype) | setfiletype bash | endif
+"   " IMPORTANT: this works: ".conf" files don't have a treesitter parser, this just uses bash. 2025-01. not perfect though as the other filetype might trigger e.g. lsp.
+"   autocmd BufWinEnter,BufRead * if &filetype=='conf' | setfiletype bash | endif
+" augroup END
 
 augroup PythonComment
     autocmd!

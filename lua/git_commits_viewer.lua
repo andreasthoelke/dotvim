@@ -5,15 +5,31 @@ local M = {}
 -- old telescope Git_commits_picker maps
 -- ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 
-vim.keymap.set( 'n',
-  '<leader>ogl', function()
-    require'git_commits_viewer'.Show(10)
-  end )
+function M.GitDiff_BufferMaps()
+  vim.keymap.set('n', '<leader><c-p>', function() M.TopLevBindingBackw() end, { silent = true, buffer = true })
+  vim.keymap.set('n', '<c-p>', function() M.TopLevBindingBackw() end, { silent = true, buffer = true })
+  vim.keymap.set('n', '<leader><c-n>', function() M.TopLevBindingForw() end, { silent = true, buffer = true })
+  vim.keymap.set('n', '<c-n>', function() M.TopLevBindingForw() end, { silent = true, buffer = true })
+end
 
-vim.keymap.set( 'n',
-  '<leader>ogL', function()
-    require'git_commits_viewer'.Show(40)
-  end )
+local top_level_patterns = {
+  "•",
+  "-----"
+}
+
+local top_level_patterns_str = '\\v' .. table.concat(top_level_patterns, "|")
+
+function M.TopLevBindingForw()
+  -- print(top_level_patterns_str)
+  vim.fn.search( top_level_patterns_str, 'W' )
+  vim.fn.ScrollOff(25)
+end
+-- vim.fn.search( 'local', 'W' )
+
+function M.TopLevBindingBackw()
+  vim.fn.search( top_level_patterns_str, 'bW' )
+  vim.fn.ScrollOff(10)
+end
 
 
 -- Store terminal buffer ID for cleanup
@@ -32,11 +48,14 @@ function M.UpdateDiffView(commit_hash, filepath)
   vim.api.nvim_set_current_win(M.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
+  -- set a custom filetype of 'gitdiff'
+  vim.bo.filetype = 'gitdiff'
   if filepath then
     term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. filepath)
   else
     term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
   end
+  M.GitDiff_BufferMaps()
   if prev_term_buf then
     -- delete prev_term_buf
     vim.api.nvim_buf_delete(prev_term_buf, { force = true })
@@ -60,6 +79,24 @@ function M.GetFilesInCommit(commit_hash)
   return files
 end
 -- require'git_commits_viewer'.GetFilesInCommit('424ee27')
+
+local function update_view_from_lines()
+  local line = vim.api.nvim_get_current_line()
+  -- if first 2 chars of line are spaces
+  if line:match("^%s") then
+    local filepath = line:match("^%s+(.+)")
+    -- Find commit hash by searching backwards for the next unindented line, and take the first word of that line.
+    local commit_hash = M.get_prev_line_commit_hash()
+    if commit_hash then
+      M.UpdateDiffView(commit_hash, filepath)
+    end
+  end
+  local commit_hash = line:match("^(%w+)")
+  if commit_hash then
+    M.UpdateDiffView(commit_hash)
+  end
+end
+
 
 function M.Show(num_of_commits)
   -- Create temporary window for diff view
@@ -92,25 +129,15 @@ function M.Show(num_of_commits)
   vim.api.nvim_buf_set_option(commits_buf, 'bufhidden', 'wipe')
 
   -- Set up mapping for 'p' to show diff for commit hash
-  vim.api.nvim_buf_set_keymap(commits_buf, 'n', 'p', '', {
-    noremap = true,
-    callback = function()
-      local line = vim.api.nvim_get_current_line()
-      -- if first 2 chars of line are spaces
-      if line:match("^%s") then
-        local filepath = line:match("^%s+(.+)")
-        -- Find commit hash by searching backwards for the next unindented line, and take the first word of that line.
-        local commit_hash = M.get_prev_line_commit_hash()
-        if commit_hash then
-          M.UpdateDiffView(commit_hash, filepath)
-        end
-      end
-      local commit_hash = line:match("^(%w+)")
-      if commit_hash then
-        M.UpdateDiffView(commit_hash)
-      end
-    end
-  })
+  vim.keymap.set('n', 'P', function()
+    update_view_from_lines()
+  end, { buffer = commits_buf, noremap = true })
+
+  vim.keymap.set('n', 'p', function()
+    update_view_from_lines()
+    -- set cursor to diff window
+    vim.api.nvim_set_current_win(M.diff_win)
+  end, { buffer = commits_buf, noremap = true })
 
   M.set_highlights( commits_buf )
 
