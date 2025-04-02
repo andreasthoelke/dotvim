@@ -144,7 +144,8 @@ nnoremap gsF <cmd>lua require('utils.general').Search_frequent_recent_files('.',
 nnoremap gsd <cmd>lua require('utils.general').Search_folders('.', '')<cr>
 nnoremap gsD <cmd>lua require('utils.general').Search_file_browser('.', '')<cr>
 
-nnoremap <silent>gsv  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+" nnoremap <silent>gsv  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+nnoremap <silent>gsc  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
 nnoremap <silent>gsg  :call v:lua.Telesc_launch('live_grep')<cr>
 
 

@@ -473,10 +473,10 @@ set matchpairs+=<:>
 
 
 " General Settings: ------------------------
-set cmdheight=3
+" set cmdheight=3
 set ignorecase
-set fileencoding=utf-8
-set encoding=utf-8
+" set fileencoding=utf-8
+" set encoding=utf-8
 " set backspace=indent,eol,start
 
 " Use only spaces for indentation
@@ -1275,6 +1275,7 @@ nnoremap <leader>ewd :echo getcwd()<cr>
 
 " nnoremap <silent><leader>cdG :exec 'cd' getcwd(-1, -1)<cr>
 nnoremap <silent><leader>cdG :exec 'cd' getcwd()<cr>
+nnoremap <silent><leader>cdg :exec 'cd' getcwd()<cr>
 nnoremap <silent><leader>cdpl :lcd %:p:h<cr>
 nnoremap <silent><leader>cdpt :tcd %:p:h<cr>
 nnoremap <silent><leader>cdpg :cd %:p:h<cr>

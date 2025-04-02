@@ -170,7 +170,7 @@ func! Scala_bufferMaps_shared()
   nnoremap <silent><buffer>gsh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
   " LOCAL COMMENTS
   " nnoremap <leader>slc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
-  nnoremap <silent><buffer>gsc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
+  " nnoremap <silent><buffer>gsc <cmd>lua require('utils.general').Search_folder_comments('.')<cr>
 
 
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
