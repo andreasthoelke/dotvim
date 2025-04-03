@@ -10,6 +10,7 @@ function M.GitDiff_BufferMaps()
   vim.keymap.set('n', '<c-p>', function() M.TopLevBindingBackw() end, { silent = true, buffer = true })
   vim.keymap.set('n', '<leader><c-n>', function() M.TopLevBindingForw() end, { silent = true, buffer = true })
   vim.keymap.set('n', '<c-n>', function() M.TopLevBindingForw() end, { silent = true, buffer = true })
+  vim.keymap.set('n', 'q', function() M.close_cleanup() end, { silent = true, buffer = true })
 end
 
 local top_level_patterns = {
@@ -158,6 +159,9 @@ function M.Show(num_of_commits)
   local commits_buf = vim.api.nvim_create_buf(false, true)
   local commits_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(commits_win, commits_buf)
+  
+  -- Store window reference for later use
+  M.commits_win = commits_win
   vim.api.nvim_win_set_option(commits_win, 'wrap', false)
   -- Use GetCommitLines() to insert commit history into the lower buffer
   local commit_lines = M.GetCommitLines(num_of_commits)
@@ -181,26 +185,14 @@ function M.Show(num_of_commits)
     -- set cursor to diff window
     vim.api.nvim_set_current_win(M.diff_win)
   end, { buffer = commits_buf, noremap = true })
-  
+
   -- Add 'q' mapping to close both windows
   vim.keymap.set('n', 'q', function()
-    -- Close both windows
-    if vim.api.nvim_win_is_valid(diff_win) then
-      vim.api.nvim_win_close(diff_win, true)
-    end
-    if vim.api.nvim_win_is_valid(commits_win) then
-      vim.api.nvim_win_close(commits_win, true)
-    end
-    
-    -- Clean up terminal job if it exists
-    if term_job_id then
-      vim.fn.jobstop(term_job_id)
-      term_job_id = nil
-    end
+    M.close_cleanup()
   end, { buffer = commits_buf, noremap = true })
 
-  M.set_highlights( commits_buf )
-  
+  M.set_highlights()
+
   -- Initially show untracked changes if there are any
   local untracked_files = M.GetUntrackedChanges()
   if #untracked_files > 0 then
@@ -213,18 +205,7 @@ function M.Show(num_of_commits)
     group = augroup,
     pattern = tostring(diff_win) .. ',' .. tostring(commits_win),
     callback = function()
-      if vim.api.nvim_win_is_valid(diff_win) then
-        vim.api.nvim_win_close(diff_win, true)
-      end
-      if vim.api.nvim_win_is_valid(commits_win) then
-        vim.api.nvim_win_close(commits_win, true)
-      end
-
-      -- Clean up terminal job if it exists
-      if term_job_id then
-        vim.fn.jobstop(term_job_id)
-        term_job_id = nil
-      end
+      M.close_cleanup()
     end,
     once = true
   })
@@ -314,12 +295,35 @@ end
 
 -- ─   Helpers                                          ──
 
-function M.set_highlights(bufnr)
+function M.close_cleanup()
+  -- Close both windows
+  if vim.api.nvim_win_is_valid(M.diff_win) then
+    vim.api.nvim_win_close(M.diff_win, true)
+  end
+  if vim.api.nvim_win_is_valid(M.commits_win) then
+    vim.api.nvim_win_close(M.commits_win, true)
+  end
+
+  -- Clean up terminal job if it exists
+  if term_job_id then
+    vim.fn.jobstop(term_job_id)
+    term_job_id = nil
+  end
+end
+
+function M.set_highlights()
   local curr_filepath = vim.g["curr_main_buffer"]
   local curr_filename = vim.fn.fnamemodify(curr_filepath, ":t:r")
   local curr_folder   = vim.fn.fnamemodify(curr_filepath, ":h:t")
   -- Indented lines
   -- vim.fn.matchadd('Comment', '^    .\\+$', 11, -1)
+  vim.fn.matchadd('Comment', '.\\+$', 11, -1)
+  -- Text after a |
+  vim.fn.matchadd('NeoTreeDirectoryName', '| .\\+$', 11, -1)
+  vim.fn.matchadd('HponFolderSel', curr_folder .. "\\ze\\/", 11, -1)
+  vim.fn.matchadd('HponFileSel', curr_filename .. "\\ze\\.", 11, -1)
+
+  -- File lines are lighlighted as comments
   vim.fn.matchadd('Comment', '.\\+$', 11, -1)
   -- Text after a |
   vim.fn.matchadd('NeoTreeDirectoryName', '| .\\+$', 11, -1)
@@ -349,26 +353,6 @@ end
 -- zwei vier
   -- drei
 -- require'git_commits_viewer'.get_prev_line_commit_hash()
-
--- function M.set_highlights_bak(bufnr) ■
---     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
---     for i = 0, #lines - 1 do
---         vim.api.nvim_buf_add_highlight(bufnr, -1, "HponLine", i, 0, -1)
---         local path = vim.split(lines[i + 1], "‖")[1]
---         local folder = vim.fn.fnamemodify(path, ":h:t")
---         local file = vim.fn.fnamemodify(path, ":t:r")
---         vim.fn.matchadd('HponFolder', folder .. "\\ze\\/", 11, -1)
---         vim.fn.matchadd('HponFile', file .. "\\ze\\.", 11, -1)
---     end
---     local curr_filepath = vim.g["curr_main_buffer"]
---     local curr_filename = vim.fn.fnamemodify(curr_filepath, ":t:r")
---     local curr_folder   = vim.fn.fnamemodify(curr_filepath, ":h:t")
---     vim.fn.matchadd('HponFolderSel', curr_folder .. "\\ze\\/", 11, -1)
---     vim.fn.matchadd('HponFileSel', curr_filename .. "\\ze\\.", 11, -1)
---     vim.cmd([[
---       syntax match Normal '/' conceal cchar= 
---     ]])
--- end ▲
 
 
 return M
