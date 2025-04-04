@@ -45,10 +45,11 @@ func! CopyGlobalPathToClipboard()
     
     " Convert to ~ path if it's in the home directory
     let l:shortened_path = fnamemodify(l:full_path, ':~')
-    
+
     " Put in clipboard registers (both vim's internal and system)
     let @* = l:shortened_path
     let @+ = l:shortened_path
+    let @" = l:shortened_path
     
     " For macOS, also use the system() command as a fallback
     if has('macunix')
@@ -73,12 +74,12 @@ func! CopyRelativePathToClipboard()
     if l:relative_path =~# '^/' || l:relative_path =~# '^\~/'
         let l:relative_path = fnamemodify(l:full_path, ':t')
     endif
-    
+
     " Put in clipboard registers (both vim's internal and system)
     let @* = l:relative_path
     let @+ = l:relative_path
     let @" = l:relative_path
-    
+
     " For macOS, also use the system() command as a fallback
     if has('macunix')
         call system('echo -n ' . shellescape(l:relative_path) . ' | pbcopy')

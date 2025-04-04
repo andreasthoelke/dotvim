@@ -93,6 +93,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "sql`" conceal cchar=▵
   syntax match Normal "return" conceal cchar=▂
+  syntax match Normal "yield" conceal cchar=⊂
   " syntax match Normal "return" conceal cchar=🮏
   " syntax match Normal "eturn" conceal
   " syntax match Normal "return\zeA" conceal cchar=←
@@ -129,6 +130,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'type' conceal cchar=◇
   syntax match Normal 'typeof' conceal cchar=◇
   syntax match Normal 'class' conceal cchar=□
+  syntax match Normal 'implements' conceal cchar=⟔
   syntax match Normal 'constructor' conceal cchar=≈
   syntax match Normal 'enum\ze\\s' conceal cchar=|
 

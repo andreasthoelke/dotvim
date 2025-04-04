@@ -402,10 +402,16 @@ end)
 function _G.HighlightRange(HlGroup, lineNumber, startColumn, endColumn)
   local buf = vim.api.nvim_get_current_buf()
   local ns_id = vim.api.nvim_create_namespace('reverseColors')
-  startColumn = math.max(1, startColumn or 1)
-  endColumn = math.max(startColumn, endColumn or startColumn)
+  
+  -- Get the line content to check its length
+  local line = vim.api.nvim_buf_get_lines(buf, lineNumber, lineNumber + 1, false)[1] or ""
+  local line_length = #line
+  
+  startColumn = math.max(0, (startColumn or 1) - 1)
+  endColumn = math.min(line_length, ((endColumn or startColumn + 1) - 1))
+  
   local opts = {
-    end_col = endColumn + 1,
+    end_col = math.min(line_length, endColumn),
     hl_group = HlGroup,
     -- hl_group = 'Search',
     priority = 100
@@ -413,7 +419,6 @@ function _G.HighlightRange(HlGroup, lineNumber, startColumn, endColumn)
   vim.api.nvim_buf_set_extmark(buf, ns_id, lineNumber, startColumn, opts)
   vim.cmd('redraw')
 end
-
 -- ReverseColors( 139, 14, 26 )
 
 function _G.ReverseColors_clear()

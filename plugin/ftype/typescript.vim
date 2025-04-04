@@ -677,56 +677,36 @@ func! JS_TopLevBindingBackw()
 endfunc
 
 
+let g:JS_patterns = [
+      \ '\scase\s\zs\S',
+      \ '^\s\s\zs\i.*\=\s\(',
+      \ '^\s\s\zs\i.*\<\{',
+      \ '^\s\s(private\s)?async\sfunction\s\zs\i',
+      \ 'static\sasync\s\zs\i',
+      \ 'private\sasync\s\zs\i',
+      \ '^enum',
+      \ '^export const\s\zs\i',
+      \ '^const\s\zs\i',
+      \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
+      \ '^(export\s)?type\s\zs\i',
+      \ 'interface\s\zs\i',
+      \ '^object\s\zs\i',
+      \ 'class\s\zs\i',
+      \ 'async\sfunction\s\zs\i',
+      \ 'async\s\zs\i',
+      \ '\sprivate\s\zs\i*(\(|\<)',
+      \ '^(\s\s)?\s\s\zs\i*(\(|\<)',
+      \ '^export\s.*function\s\zs\i',
+      \]
+
 func! JS_BindingForw()
-  let patterns = [
-        \ '\scase\s\zs\S',
-        \ '^\s\s\zs\i.*\=\s\(',
-        \ '^\s\s\zs\i.*\<\{',
-        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ 'static\sasync\s\zs\i',
-        \ 'private\sasync\s\zs\i',
-        \ '^enum',
-        \ '^export const\s\zs\i',
-        \ '^const\s\zs\i',
-        \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
-        \ '^(export\s)?type\s\zs\i',
-        \ 'interface\s\zs\i',
-        \ '^object\s\zs\i',
-        \ '^(export\s)?class\s\zs\i',
-        \ 'async\sfunction\s\zs\i',
-        \ 'async\s\zs\i',
-        \ '\sprivate\s\zs\i*(\(|\<)',
-        \ '^(\s\s)?\s\s\zs\i*(\(|\<)',
-        \ '^export\s.*function\s\zs\i',
-        \]
-  let combined_pattern = '\v' . join(patterns, '|')
+  let combined_pattern = '\v' . join(g:JS_patterns, '|')
   call search(combined_pattern, 'W')
   call ScrollOff(25)
 endfunc
 
 func! JS_BindingBackw()
-  let patterns = [
-        \ '\scase\s\zs\S',
-        \ '^\s\s\zs\i.*\=\s\(',
-        \ '^\s\s\zs\i.*\<\{',
-        \ '^\s\s(private\s)?async\sfunction\s\zs\i',
-        \ 'static\sasync\s\zs\i',
-        \ 'private\sasync\s\zs\i',
-        \ '^enum',
-        \ '^export const\s\zs\i',
-        \ '^const\s\zs\i',
-        \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
-        \ '^(export\s)?type\s\zs\i',
-        \ 'interface\s\zs\i',
-        \ '^object\s\zs\i',
-        \ '^(export\s)?class\s\zs\i',
-        \ 'async\sfunction\s\zs\i',
-        \ 'async\s\zs\i',
-        \ '\sprivate\s\zs\i*(\(|\<)',
-        \ '^(\s\s)?\s\s\zs\i*(\(|\<)',
-        \ '^export\s.*function\s\zs\i',
-        \]
-  let combined_pattern = '\v' . join(patterns, '|')
+  let combined_pattern = '\v' . join(g:JS_patterns, '|')
   call search(combined_pattern, 'bW')
   call ScrollOff(10)
 endfunc
