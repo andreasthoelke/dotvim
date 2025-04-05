@@ -354,6 +354,23 @@ func! GetPath_fromLine()
     return path
   endif
 
+  " Check for backtick-enclosed paths
+  let backtick_match = matchstr(getline('.'), '`\zs[^`]*\ze`')
+  if !empty(backtick_match)
+    let path = backtick_match
+    
+    if filereadable(path) || isdirectory(path)
+      return path
+    endif
+    
+    let current_folder = fnamemodify(expand('%:p'), ':h')
+    let folder_rel_path = current_folder . '/' . path
+    
+    if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
+      return folder_rel_path
+    endif
+  endif
+
   if filereadable( path ) || isdirectory(path)
     return path
   endif
