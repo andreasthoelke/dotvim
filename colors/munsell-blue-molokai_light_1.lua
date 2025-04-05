@@ -295,7 +295,22 @@ hi(0, "LuLine_z_i", { bg = "#e3e6e9", fg = "#92a0a7" })
 hi(0, "Macro", { fg = "#3f3900", italic = true })
 hi(0, "MatchParen", { bg = "#8d5001", bold = true, fg = "#ffffff" })
 hi(0, "Method", { ctermfg = 15, fg = "#030303" })
-hi(0, "MiniDiffOverChange", { bg = "#213f25" })
+
+-- hi(0, "MiniDiffOverChange", { bg = "#213f25" })
+-- ~/.config/nvim/plugged/mini.diff/doc/mini-diff.txt‖/#ˍHighlightˍgroupsˍ~
+-- hi(0, "MiniDiffSignAdd", { bg = "#D4EED8" })
+-- hi(0, "MiniDiffSignChange", { bg = "#EEEECF" })
+-- hi(0, "MiniDiffSignDelete", { bg = "#EED1CF" })
+
+hi(0, "MiniDiffOverAdd", { bg = "#D4EED8" })
+-- The original text that was changed (also context line is white)
+hi(0, "MiniDiffOverChange", { bg = "#EEE2CF" })
+-- what it was changed to (also context is grey)
+hi(0, "MiniDiffOverChangeBuf", { bg = "#EEEECF" })
+hi(0, "MiniDiffOverDelete", { bg = "#EED1CF" })
+
+-- hi(0, "MiniDiffOverContext", { bg = "#D4EEEE" })
+
 hi(0, "ModeMsg", { ctermfg = 10, fg = "#5a5201" })
 hi(0, "MoreMsg", { ctermfg = 14, fg = "#5a5201" })
 hi(0, "MsgArea", { fg = "#3e7478" })

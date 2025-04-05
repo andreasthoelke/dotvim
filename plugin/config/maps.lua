@@ -386,7 +386,7 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   ',gd', function()
     MiniDiff.toggle_overlay()
-    vim.cmd 'Gitsigns toggle_signs'
+    -- vim.cmd 'Gitsigns toggle_signs'
     -- potential alterative: ?
     -- vim.cmd 'set number'
     -- vim.cmd 'set nonumber'
