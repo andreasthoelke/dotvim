@@ -1,5 +1,0 @@
-Currently when i'm typing in insert mode and i see the suggested items in the completion menu and I hit <cr>, then the
-first item of the completion menu will be put into the buffer, even thouhg i didn't *select* the item. I would prefer a
-different handling: Only when an item is *selected* in the completion menu will [not sure about the gramma at this
-stage] that item be put into the buffer. If on the other hand no item is selected <cr> will cause a line-feed / line
-break in the buffer, not input any suggestion.
