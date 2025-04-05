@@ -2,6 +2,7 @@
 
 -- ─   General maps                                      ■
 
+-- PUT CLIPBOARD and jump back to put start cursor position.
 -- Replace ~/.config/nvim/plugin/config/setup-general.vim‖/nmapˍpˍ<Plug>G_EasyClipPas
 vim.keymap.set('n', 'p', function()
   local cursor_pos = vim.fn.getpos('.')
@@ -14,6 +15,23 @@ vim.keymap.set('n', 'P', function()
   vim.cmd('normal! P')
   vim.fn.setpos('.', cursor_pos)
 end, { noremap = true, silent = true })
+
+
+-- CLEAR SPACES. Delete spaces are the end of the line. Also delete spaces if spaces are the only characters in a line.
+vim.api.nvim_create_user_command(
+  'ClearSpaces',
+  function()
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    -- Remove trailing whitespace at the end of lines
+    vim.cmd([[%s/\s\+$//e]])
+    -- Remove lines containing only whitespace
+    vim.cmd([[%s/^\s\+$//e]])
+    pcall(vim.api.nvim_win_set_cursor, 0, cursor_pos)
+    print("Spaces cleared")
+  end,
+  { desc = 'Remove trailing spaces and lines with only spaces' }
+)
+
 
 
 -- ─^  General maps                                      ▲

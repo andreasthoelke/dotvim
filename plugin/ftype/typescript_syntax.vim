@@ -159,7 +159,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
   syntax match Normal 'combine' conceal cchar=◇
-  syntax match Normal 'try\ze\s{' conceal cchar=⟑
+  syntax match Normal '\s\zstry\ze\s{' conceal cchar=⟑
   syntax match Normal 'catch\s\ze' conceal cchar=↓
   syntax match Normal 'finally\s\ze' conceal cchar=ᐶ
   syntax match Normal 'Error' conceal cchar=⊡
