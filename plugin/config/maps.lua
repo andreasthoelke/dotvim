@@ -16,8 +16,13 @@ vim.keymap.set('n', 'P', function()
   vim.fn.setpos('.', cursor_pos)
 end, { noremap = true, silent = true })
 
+vim.keymap.set('n', '<leader><leader>c<leader>', function()
+  local cursor_pos = vim.fn.getpos('.')
+  vim.cmd('ClearSpaces')
+  vim.fn.setpos('.', cursor_pos)
+end, { noremap = true, silent = true })
 
--- CLEAR SPACES. Delete spaces are the end of the line. Also delete spaces if spaces are the only characters in a line.
+-- CLEAR SPACES. Delete spaces at the end of the line. Also delete spaces if spaces are the only characters in a line.
 vim.api.nvim_create_user_command(
   'ClearSpaces',
   function()
@@ -292,7 +297,7 @@ vim.keymap.set( 'n',
 
 opts_gitstat = {
   layout_config = {
-    height=0.99, 
+    height=0.99,
     width=0.82,
     horizontal = {
       preview_width = 0.6,  -- Takes up 60% of the window width
@@ -306,7 +311,7 @@ opts_gitstat = {
 
 
 -- A benefit of using Github-style Delta based diffs is that small changes within lines
--- are highlighted using green and red bg-colors. But in some cases I still prefer DiffviewFileHistory 
+-- are highlighted using green and red bg-colors. But in some cases I still prefer DiffviewFileHistory
 -- vim.keymap.set( 'n',
 --   '<leader>ogL', function() require( 'utils.general' )
 --   .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
@@ -569,8 +574,8 @@ vim.keymap.set( 'n',
 
 -- this uses Plug 'stevanmilic/nvim-lspimport' specifically for pyright
 vim.keymap.set( 'n',
-  '<leader>ca', 
-  require("lspimport").import 
+  '<leader>ca',
+  require("lspimport").import
 )
 
 

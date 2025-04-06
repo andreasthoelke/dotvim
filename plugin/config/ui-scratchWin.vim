@@ -116,6 +116,11 @@ func! GetRandNumberString ()
 endfunc
 " GetRandNumberString()
 
+func! GetRandNumberString4 ()
+  return string(reltime()[1])[3:][:3]
+endfunc
+" reltime()
+" GetRandNumberString4()
 
 
 

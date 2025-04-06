@@ -122,8 +122,8 @@ endfunc
 
 command! -range=% StripSemicolon call StripSemicolon( <line1>, <line2> )
 
-nnoremap <leader>s;      :let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap <leader>s; :<c-u>let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+nnoremap <leader><leader>s;      :let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader><leader>s; :<c-u>let g:opContFn='StripSemicolon'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! StripSemicolonLine(line)
   let startLine = a:line

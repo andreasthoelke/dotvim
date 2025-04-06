@@ -5,6 +5,8 @@
 -- 1. the code below (copied from github) which allows to only focus aider on the visually selected text
 -- 2. aider.nvim: ~/.config/nvim/plugged/aider.nvim/lua/aider.lua
 -- This is modified! 
+-- ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/functionˍM.AiderOpen(args,
+-- old aider code:
 -- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(
 -- WriteLspWarnings  ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍ_G
 -- ~/Documents/Notes/Mindmap_app.md‖/##ˍaider.nv
