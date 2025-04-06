@@ -29,3 +29,11 @@
 - Plugin configs in `plugin/config/`
 - Utilities in `lua/utils/`
 - Language settings in `plugin/ftype/`
+
+## Tool Usage Optimizations
+- **Always use BatchTool** for multiple operations to improve efficiency and avoid file modification errors
+- **Limit file reads** with offset/limit parameters when only portions of files are needed
+- **Use GrepTool/GlobTool** for searching instead of reading entire files
+- **Include expected_replacements** when editing files with potential multiple matches
+- **Use dispatch_agent** for complex search patterns across multiple files
+- **Prefer concise responses** with minimal preamble or explanation unless explicitly requested

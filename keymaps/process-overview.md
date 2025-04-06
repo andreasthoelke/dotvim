@@ -42,7 +42,7 @@ One obvious general rule might be that:
 - I use a classic (typewriter) 10 fingers touch typing technique, so fingers correspond with specific keys.
 - The keys for 'g' and 'b' are covered by the index finger of the left hand.
 - The keys 'asdfg' (left hand) and 'hjkl;' (right hand) are on the 'base row/position' and are generally very easy to type/reach since fingers don't have to move much.
-- Keys like '`', '1', '-', '\', '=' are far from the fingers' base position and are harder to type.
+- Keys like 'backtick', '1', '-', '\', '=' are far from the fingers' base position and are harder to type.
 
 ### Classic Vim Maps
 
@@ -107,14 +107,24 @@ Given we have identified a strategy to improve the status quo of the maps we mig
 
 ### Exercises and Tests
 
-AI could set up "KEYMAPS_exercise_<label>.md" buffers. This would be focused training runs I would walk through. This might also double down as *Tests* for these maps.
+I've started creating focused exercise files to help practice specific keymap categories:
+
+- `keymaps/exercises/basic_navigation.md` - Core navigation exercises
+- `keymaps/exercises/search_operations.md` - Practicing various search techniques 
+- `keymaps/exercises/file_operations.md` - File and window management practice
+
+These exercises serve as both training tools and informal tests for my keymap system. Each exercise includes specific goals, steps to follow, and success metrics to measure improvement.
 
 Btw, I'm not sure and have made no efforts to have integration tests for all my vim processes. I'm not sure this would add a lot of value in my case, since the costs of me discovering a 'bug' in my usual 'work flow' are not too high.
 
 ### Cheat Sheets
 
-This is what I currently have in ~/Documents/Notes/scratch2023.md.
-I usually search in this file using 'gs;' (inside headings) and 'gsc' (full text).
+I have now copied my current notes about my vim processes from my scratch notes:
+```
+cp ~/Documents/Notes/scratch2023.md keymaps/vim-cheat-sheet_2025-05.md
+```
+
+This vim-cheat-sheet_2025-05.md file serves as a comprehensive reference for my current vim workflows, keymaps, and processes. I usually search in this file using 'gs;' (inside headings) and 'gsc' (full text) to quickly find specific commands or workflows.
 
 ### Hint Strategies and Tools
 
@@ -128,6 +138,13 @@ There are popular vim hint tools. E.g. when I pause typing they would show me po
 4. Practicing the map in the given task/workflow
 
 ## Next Steps
+
+Let's make one more step in the process described in KEYMAPS_GUIDE.md. 
+I have now copied my curent notes about my vim processes:
+cp ~/Documents/Notes/scratch2023.md keymaps/vim-cheat-sheet_2025-05.md
+This is so we can improve and update this file in our process. It might also be worth for AI to check in the git log of
+the file what updates I made during my usage of vim.
+I think that the concept of this keymaps/vim-cheat-sheet_2025-05.md would need to be mentioned in KEYMAPS_GUIDE.md.
 
 - Create a comprehensive inventory of all existing keymaps
 - Evaluate ergonomics of most frequently used operations

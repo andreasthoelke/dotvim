@@ -159,7 +159,7 @@ nnoremap <silent> ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call D
 " Path_Float( '/Users/at/Documents/Notes' )
 
 nnoremap ,cS :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
-nnoremap <silent><leader>os :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
+nnoremap <silent><leader>os :call Path_Float( '~/.config/nvim/keymaps/vim-cheat-sheet_2025-05.md' )<cr>
 
 nnoremap <silent><leader>oe :call Path_Float( 'ExampleLog.md' )<cr>
 

@@ -15,11 +15,6 @@ This exercise helps practice the most common navigation keymaps in your Neovim s
 3. Use `gsF` to search for and open a file outside the current project
 4. Return to the original file using your preferred method
 
-**Success Metrics**:
-- Complete the cycle in under 15 seconds
-- Use the minimum number of keystrokes
-- Maintain orientation throughout the process
-
 ## Exercise 2: Buffer Search
 
 **Goal**: Practice searching within buffers effectively

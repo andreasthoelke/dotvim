@@ -354,6 +354,68 @@ func! GetPath_fromLine()
     return path
   endif
 
+  " Check for Markdown links: [text](path/to/file#heading) or [text](#heading) for in-document refs
+  let markdown_match = matchlist(getline('.'), '\[[^]]*\](\([^)#]*\)\(#[^)]*\)\?)')
+  if !empty(markdown_match)
+    let filepath = markdown_match[1]
+    let heading = get(markdown_match, 2, '')
+    
+    " Remove the # from the heading
+    if !empty(heading)
+      let heading = heading[1:]
+    endif
+    
+    " Get current directory for relative paths
+    let current_folder = fnamemodify(expand('%:p'), ':h')
+    let current_file = expand('%:p')
+    
+    " Check if this is an in-document reference (empty filepath)
+    if empty(filepath)
+      " Handle in-document link references like [text](#heading)
+      let heading_parts = split(heading, '-')
+      
+      " For headings with special characters like 'search-operations-gs', 
+      " just look for the main text part ('Search Operations')
+      if len(heading_parts) >= 3 && len(heading_parts[-1]) <= 2  " Added test comment
+        let heading_parts = heading_parts[:-2]
+      endif
+      
+      let heading_text = map(heading_parts, 'toupper(v:val[0]) . v:val[1:]')
+      let heading_text = join(heading_text, ' ')
+      
+      " Search for the heading text pattern
+      return current_file . '‖/# ' . heading_text
+    endif
+    
+    " Check if it's a direct file reference
+    if filereadable(filepath)
+      let path = filepath
+    elseif filepath[0] != '/' && filereadable(current_folder . '/' . filepath)
+      let path = current_folder . '/' . filepath
+    else
+      " Not a direct file reference - don't try to be clever with README.md
+      " Just pass the path through 
+      let path = filepath[0] == '/' ? filepath : current_folder . '/' . filepath
+    endif
+    
+    if !empty(heading)
+      " For file#heading references, convert heading-id to heading text
+      let heading_parts = split(heading, '-')
+      
+      " For headings with special characters like 'search-operations-gs', 
+      " just look for the main text part ('Search Operations')
+      if len(heading_parts) >= 3 && len(heading_parts[-1]) <= 2  " Added test comment
+        let heading_parts = heading_parts[:-2]
+      endif
+      
+      let heading_text = map(heading_parts, 'toupper(v:val[0]) . v:val[1:]')
+      let heading_text = join(heading_text, ' ')
+      return path . '‖/# ' . heading_text
+    else
+      return path
+    endif
+  endif
+
   " Check for backtick-enclosed paths
   let backtick_match = matchstr(getline('.'), '`\zs[^`]*\ze`')
   if !empty(backtick_match)
