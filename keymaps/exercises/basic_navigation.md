@@ -36,7 +36,7 @@ This exercise helps practice the most common navigation keymaps in your Neovim s
 1. Use `l os` to open your scratch2023 file
 2. Use `gs;` to find a specific heading
 3. Use `gsc` to find content related to a keymapping you want to explore
-4. Use `gsf` to find the implementation of that keymapping
+4. find the implementation of that keymapping might use l vm
 5. Use keyboard shortcuts to split the window and view both files
 6. Navigate back to the scratch file without using the mouse
 
