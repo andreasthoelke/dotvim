@@ -213,6 +213,7 @@ endfunc
 
 nnoremap <silent><leader>st :Startify<cr>
 nnoremap <silent><leader>sT :tabnew<cr>:Startify<cr>
+nnoremap <silent><leader><leader>st :%bdelete!<bar>Startify<cr>
 " nnoremap <silent><leader>Ls :call SessionLoadForCWDStartify()<cr>
 " nnoremap <silent><leader>ls :PossessionLoad<cr>
 nnoremap <silent><leader>ls :call PossessionLoadForCWD()<cr>

@@ -57,7 +57,7 @@ function M.UpdateDiffView(commit_hash, filepath)
     term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
   end
   M.GitDiff_BufferMaps()
-  if prev_term_buf then
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
     -- delete prev_term_buf
     vim.api.nvim_buf_delete(prev_term_buf, { force = true })
   end
@@ -85,7 +85,7 @@ function M.UpdateDiffView_Untracked(filepath)
     term_job_id = vim.fn.termopen('git diff')
   end
   M.GitDiff_BufferMaps()
-  if prev_term_buf then
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
     -- delete prev_term_buf
     vim.api.nvim_buf_delete(prev_term_buf, { force = true })
   end
@@ -201,10 +201,23 @@ function M.Show(num_of_commits)
 
   -- Add autocmd to close both windows when either is closed
   local augroup = vim.api.nvim_create_augroup('GitCommitViewerGroup', { clear = true })
+  
+  -- Monitor window closed events for either window
   vim.api.nvim_create_autocmd('WinClosed', {
     group = augroup,
-    pattern = tostring(diff_win) .. ',' .. tostring(commits_win),
+    pattern = tostring(diff_win),
     callback = function()
+      -- If the diff window was closed, close everything else
+      M.close_cleanup()
+    end,
+    once = true
+  })
+  
+  vim.api.nvim_create_autocmd('WinClosed', {
+    group = augroup,
+    pattern = tostring(commits_win),
+    callback = function()
+      -- If the commits window was closed, close everything else
       M.close_cleanup()
     end,
     once = true
