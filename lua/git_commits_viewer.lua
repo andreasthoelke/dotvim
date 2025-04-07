@@ -2,7 +2,7 @@
 local M = {}
 
 -- ─   -- Maps                                          ──
--- old telescope Git_commits_picker maps
+-- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gd',ˍfunction()
 -- ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 
 function M.GitDiff_BufferMaps()
@@ -12,6 +12,24 @@ function M.GitDiff_BufferMaps()
   vim.keymap.set('n', '<c-n>', function() M.TopLevBindingForw() end, { silent = true, buffer = true })
   vim.keymap.set('n', 'q', function() M.close_cleanup() end, { silent = true, buffer = true })
 end
+
+-- A command for GitDiffBufferMaps
+vim.api.nvim_create_user_command('GitDiffBufferMaps', function()
+  M.GitDiff_BufferMaps()
+end, { force = true })
+
+vim.api.nvim_create_user_command('GitDiffFiles', function(args)
+  if #args.fargs ~= 2 then
+    vim.notify("GitDiffFiles requires exactly 2 arguments", vim.log.levels.ERROR)
+    return
+  end
+  M.Show( { diff_file1 = args.fargs[1], diff_file2 = args.fargs[2] } )
+end, {
+  force = true,
+  nargs = '+',
+  desc = "Compare two files with git diff"
+})
+
 
 local top_level_patterns = {
   "•",
@@ -38,11 +56,6 @@ local term_job_id = nil
 local prev_term_buf = nil
 
 function M.UpdateDiffView(commit_hash, filepath)
-  -- Kill previous terminal job if it exists
-  if term_job_id then
-    vim.fn.jobstop(term_job_id)
-    term_job_id = nil
-  end
 
   local current_win = vim.api.nvim_get_current_win()
   -- go to M.diff_win
@@ -66,11 +79,6 @@ function M.UpdateDiffView(commit_hash, filepath)
 end
 
 function M.UpdateDiffView_Untracked(filepath)
-  -- Kill previous terminal job if it exists
-  if term_job_id then
-    vim.fn.jobstop(term_job_id)
-    term_job_id = nil
-  end
 
   local current_win = vim.api.nvim_get_current_win()
   -- go to M.diff_win
@@ -109,31 +117,67 @@ function M.GetFilesInCommit(commit_hash)
 end
 -- require'git_commits_viewer'.GetFilesInCommit('424ee27')
 
-local function update_view_from_lines()
+
+function M.UpdateDiffView_FilesDiff(opts)
+
+  local current_win = vim.api.nvim_get_current_win()
+  -- go to M.diff_win
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  -- set a custom filetype of 'gitdiff'
+  vim.bo.filetype = 'gitdiff'
+
+  term_job_id = vim.fn.termopen('git diff --no-index -- ' .. opts.diff_file1 .. ' ' .. opts.diff_file2)
+
+  M.GitDiff_BufferMaps()
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+    -- delete prev_term_buf
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
+
+local function update_view_from_lines(opts)
+
+  -- Kill previous terminal job if it exists
+  if term_job_id then
+    vim.fn.jobstop(term_job_id)
+    term_job_id = nil
+  end
+
+
+  if opts.diff_file1 then
+    M.UpdateDiffView_FilesDiff(opts)
+    return
+  end
+
   local line = vim.api.nvim_get_current_line()
-  
+
   -- Handle untracked changes header line
   if line:match("^untracked changes") then
     M.UpdateDiffView_Untracked()
     return
   end
-  
+
   -- Handle indented file lines
   if line:match("^%s") then
     local filepath = line:match("^%s+(.+)")
     -- Find commit hash or untracked by searching backwards for the next unindented line
     local prev_word = M.get_prev_line_first_word()
-    
+
     if prev_word == "untracked" then
       -- For untracked changes, run git diff without commit hash
       M.UpdateDiffView_Untracked(filepath)
-    elseif prev_word then 
+    elseif prev_word then
       -- For regular commits
       M.UpdateDiffView(prev_word, filepath)
     end
     return
   end
-  
+
   -- Handle commit hash lines
   local commit_hash = line:match("^(%w+)")
   if commit_hash then
@@ -142,7 +186,8 @@ local function update_view_from_lines()
 end
 
 
-function M.Show(num_of_commits)
+-- function M.Show(num_of_commits, diff_file1, diff_file2)
+function M.Show( opts )
   -- Create temporary window for diff view
   vim.g["curr_main_buffer"] = vim.fn.expand('%:p')
   vim.cmd('vsplit')
@@ -159,13 +204,19 @@ function M.Show(num_of_commits)
   local commits_buf = vim.api.nvim_create_buf(false, true)
   local commits_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(commits_win, commits_buf)
-  
+
   -- Store window reference for later use
   M.commits_win = commits_win
   vim.api.nvim_win_set_option(commits_win, 'wrap', false)
-  -- Use GetCommitLines() to insert commit history into the lower buffer
-  local commit_lines = M.GetCommitLines(num_of_commits)
-  vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)
+
+  if opts.diff_file1 then
+    local info_lines = { opts.diff_file1, opts.diff_file2 }
+    vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, info_lines)
+  else
+    -- Use GetCommitLines() to insert commit history into the lower buffer
+    local commit_lines = M.GetCommitLines(opts.num_of_commits)
+    vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)
+  end
 
   -- Set a custom filetype
   vim.api.nvim_buf_set_option(commits_buf, 'filetype', 'markdown')
@@ -177,11 +228,11 @@ function M.Show(num_of_commits)
 
   -- Set up mapping for 'p' to show diff for commit hash
   vim.keymap.set('n', 'P', function()
-    update_view_from_lines()
+    update_view_from_lines(opts)
   end, { buffer = commits_buf, noremap = true })
 
   vim.keymap.set('n', 'p', function()
-    update_view_from_lines()
+    update_view_from_lines(opts)
     -- set cursor to diff window
     vim.api.nvim_set_current_win(M.diff_win)
   end, { buffer = commits_buf, noremap = true })
@@ -194,14 +245,16 @@ function M.Show(num_of_commits)
   M.set_highlights()
 
   -- Initially show untracked changes if there are any
-  local untracked_files = M.GetUntrackedChanges()
-  if #untracked_files > 0 then
-    M.UpdateDiffView_Untracked()
-  end
+  -- local untracked_files = M.GetUntrackedChanges()
+  -- if #untracked_files > 0 then
+    -- M.UpdateDiffView_Untracked()
+  -- end
+
+  update_view_from_lines(opts)
 
   -- Add autocmd to close both windows when either is closed
   local augroup = vim.api.nvim_create_augroup('GitCommitViewerGroup', { clear = true })
-  
+
   -- Monitor window closed events for either window
   vim.api.nvim_create_autocmd('WinClosed', {
     group = augroup,
@@ -212,7 +265,7 @@ function M.Show(num_of_commits)
     end,
     once = true
   })
-  
+
   vim.api.nvim_create_autocmd('WinClosed', {
     group = augroup,
     pattern = tostring(commits_win),
@@ -223,13 +276,13 @@ function M.Show(num_of_commits)
     once = true
   })
 end
--- require'git_commits_viewer'.Show()
+-- require'git_commits_viewer'.Show(2, 0, 0)
 
 -- Return one line per commit in the cwd. limit this to 10 lines.
 -- line format:
 -- commithash | time ago | author abbrev | commit message
 -- line example:
--- 24ad3c1f | 4 days ago | AT | changed something 
+-- 24ad3c1f | 4 days ago | AT | changed something
 function M.GetUntrackedChanges()
   local files = {}
   local handle = io.popen("git status --short")
@@ -251,7 +304,7 @@ end
 
 function M.GetCommitLines(num_of_commits)
   local lines = {}
-  
+
   -- Add untracked changes as a special first entry
   local untracked_files = M.GetUntrackedChanges()
   if #untracked_files > 0 then
@@ -260,7 +313,7 @@ function M.GetCommitLines(num_of_commits)
       table.insert(lines, file)
     end
   end
-  
+
   local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n " .. num_of_commits)
   if not handle then return lines end
 
@@ -343,6 +396,7 @@ function M.set_highlights()
   vim.fn.matchadd('HponFolderSel', curr_folder .. "\\ze\\/", 11, -1)
   vim.fn.matchadd('HponFileSel', curr_filename .. "\\ze\\.", 11, -1)
 
+  -- NOTE: caution! this cmd needs " " at the end! so don't run "ll c l" ClearSpaces in this file!!
   vim.cmd([[
       syntax match Normal '/' conceal cchar= 
       ]])

@@ -288,7 +288,7 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<leader>ogL', function()
-    require'git_commits_viewer'.Show(40)
+    require'git_commits_viewer'.Show( { num_of_commits = 40 } )
   end )
 
 
@@ -400,8 +400,20 @@ vim.keymap.set( 'n',
 -- alternative map for ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 vim.keymap.set( 'n',
   '<leader>gd', function()
-   require'git_commits_viewer'.Show(5)
+   require'git_commits_viewer'.Show({ num_of_commits = 5 })
   end )
+
+
+vim.keymap.set( 'n',
+  '<leader><leader>gd', function()
+    local opts = {}
+    opts.diff_file1 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]  --  text before pipe
+    vim.cmd'normal! j'
+    opts.diff_file2 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]  --  text before pipe
+    vim.cmd'normal! k'
+   require'git_commits_viewer'.Show(opts)
+  end )
+
 
 
 vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })

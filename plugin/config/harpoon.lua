@@ -1,4 +1,11 @@
 
+-- ISSUES 2025-04
+-- "line if not unique warning" -> just add the path.
+-- neo tree should show indicators
+-- neo tree should allow adding just paths
+-- clear all map
+-- clear from neo tree map
+
 -- Issue: when a file has multiple links, jumping via index doesn't work
 -- also in this file jumping to a function link doesn't work, just the file
 
