@@ -538,7 +538,7 @@ func! MarkdownSyntaxAdditions()
   call matchadd('Conceal', '^\`\`\`\i\i', 12, -1, {'conceal': '˻'})
   call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
-  set foldmethod=marker
+  " set foldmethod=marker
 endfunc
 
 func! VimScriptSyntaxAdditions ()

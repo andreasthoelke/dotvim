@@ -27,6 +27,17 @@ endfunc
 func! MarkdownBufferMaps()
   call VScriptToolsBufferMaps()
 
+  " echo 'hi'
+  " onoremap <buffer> S <cmd>echom "Treesitter section selection triggered" | lua require('nvim-treesitter.textobjects.select').select_textobject('@section.outer')<CR>
+
+  " onoremap <buffer> S :lua require('nvim-treesitter.textobjects.select').select_textobject('@section.outer')<CR>
+
+  onoremap <silent><buffer> ah :echo "'h' is for 'hunk', use 'H' for 'heading'"<cr>
+  onoremap <silent><buffer> aH :<c-u>call Markdown_Heading_VisSel_AroundContent('outer')<cr>
+  vnoremap <silent><buffer> aH :<c-u>call Markdown_Heading_VisSel_AroundContent('outer')<cr>o
+  onoremap <silent><buffer> iH :<c-u>call Markdown_Heading_VisSel_AroundContent('inner')<cr>
+  vnoremap <silent><buffer> iH :<c-u>call Markdown_Heading_VisSel_AroundContent('inner')<cr>o
+
   nnoremap <silent><buffer>]b :call MD_BoldNext()<cr>
   nnoremap <silent><buffer>[b :call MD_BoldPrev()<cr>
 

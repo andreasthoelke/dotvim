@@ -1,9 +1,22 @@
 
 
+-- Enable treesitter folding
+vim.api.nvim_create_autocmd({"FileType"}, {
+  pattern = {"markdown"},
+  callback = function()
+    vim.wo.foldmethod = "expr"
+    vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    -- Optional: start with all folds open
+    vim.wo.foldenable = true
+    vim.wo.foldlevel = 99
+  end
+})
+
 -- Treesitter configuration
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
 
+  fold = { enable = true },
 
   -- A list of parser names, or "all". These parsers should always be installed.
   -- ensure_installed = { "scala", "typescript", "python", "sql", "bash", "just" },
@@ -91,6 +104,13 @@ require('nvim-treesitter.configs').setup {
         -- Temp: disabled this in favour of vim-targets (which works for function args)
         -- ['aa'] = '@parameter.outer',
         -- ['ia'] = '@parameter.inner',
+
+        -- Add markdown heading textobjects
+        -- ['aH'] = '@section.outer', -- This corresponds to a heading and its content
+        -- ['iH'] = '@section.inner', -- This might capture just the heading text
+        -- These don't seem to work. See this alternative approach
+        -- ~/.config/nvim/plugin/basics/CodeMarkup.vim‖/Markdown_Heading_VisSel_AroundContent(scope)
+
       },
     },
     lsp_interop = {
@@ -201,4 +221,5 @@ vim.treesitter.language.register("css", "sass")
 -- Add a mapping to select the entire buffer in visual mode
 vim.keymap.set('n', '<leader>vab', 'ggVG', { noremap = true, silent = true, desc = "Select entire buffer" })
 
+-- require("plugins.markdown-fold")
 

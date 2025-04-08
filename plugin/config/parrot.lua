@@ -66,7 +66,7 @@ require("parrot").setup(
     chat_shortcut_delete = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>d" },
     chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
     -- Chat clear
-    chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>C" },
+    -- chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>C" },
 
     chat_free_cursor = true,
 

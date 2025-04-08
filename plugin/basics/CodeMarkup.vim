@@ -167,6 +167,37 @@ func! LabelAndHeading_VisSel_Content()
   normal! gv
 endfunc
 
+
+" Selects the current heading content section (up to / not inclusing inner headings)
+" including the heading itself.
+" buffer maps: ~/.config/nvim/plugin/ftype/vim_lua_md.vim‖/onoremapˍ<silent><buffer>ˍ
+func! Markdown_Heading_VisSel_AroundContent(scope)
+  normal! m'll
+  call search( '\v^#', 'cbW' )
+  normal! ^
+  " let heading_level_markup = matchstr(getline('.'), '^#\+')
+  " when scope is "inner"
+  echo 'hi'
+  if a:scope == 'inner'
+    normal! j
+  endif
+  let [sLine, sCol] = getpos('.')[1:2]
+
+  if a:scope == 'outer'
+    normal! j
+  endif
+
+  " jumping to the next same level doesn't make sense as termination might be different.
+  " call search( heading_level_markup, 'cW' )
+  call search( '\v^#', 'cW' )
+  normal! k
+  " return
+  let [eLine, eCol] = getpos('.')[1:2]
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal! gv
+endfunc
+
 func! Heading_VisSel_AroundContent()
   normal! m'll
   call search( g:headingPttn, 'cbW' )
@@ -194,6 +225,8 @@ vnoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>o
 onoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>
 vnoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>o
 
+" onoremap <silent><buffer> ah :<c-u>call Markdown_Heading_VisSel_AroundContent()<cr>
+" vnoremap <silent><buffer> ah :<c-u>call Markdown_Heading_VisSel_AroundContent()<cr>o
 
 func! Heading_VisSel_Name()
   " call search( g:headingPttn, 'cbW' )

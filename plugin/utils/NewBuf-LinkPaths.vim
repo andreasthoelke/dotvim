@@ -10,7 +10,7 @@
 " nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "global" )<cr>
 " nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "local" )<cr>
 
-nnoremap <silent> <leader>cp  :call CopyRelativePathToClipboard()<cr>
+nnoremap <silent> <leader>cp  :call CopyRelativePathToClipboard('')<cr>
 nnoremap <silent> <leader>cP  :call CopyGlobalPathToClipboard()<cr>
 
 " nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
@@ -60,12 +60,16 @@ func! CopyGlobalPathToClipboard()
 endfunc
 
 
-func! CopyRelativePathToClipboard()
+func! CopyRelativePathToClipboard(path)
     " Get the current working directory of the window
     let l:cwd = getcwd(-1, 0)
     
-    " Get the full path of the current buffer
-    let l:full_path = expand('%:p')
+    if len( a:path )
+      let l:full_path = a:path
+    else
+      " Get the full path of the current buffer
+      let l:full_path = expand('%:p')
+    endif
     
     " Make the path relative to the cwd
     let l:relative_path = fnamemodify(l:full_path, ':~:.')

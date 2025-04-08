@@ -19,6 +19,7 @@ end, { noremap = true, silent = true })
 vim.keymap.set('n', '<leader><leader>c<leader>', function()
   local cursor_pos = vim.fn.getpos('.')
   vim.cmd('ClearSpaces')
+  vim.cmd('%s/\r//g')
   vim.fn.setpos('.', cursor_pos)
 end, { noremap = true, silent = true })
 
@@ -37,6 +38,11 @@ vim.api.nvim_create_user_command(
   { desc = 'Remove trailing spaces and lines with only spaces' }
 )
 
+vim.keymap.set('o', '<leader>BG', function()
+  print('Testing section selection')
+  require('nvim-treesitter.textobjects.select').select_textobject('@heading.inner')
+  -- require('nvim-treesitter.textobjects.select').select_textobject('@section.outer')
+end, { buffer = false, desc = 'Test section selection' })
 
 
 -- ─^  General maps                                      ▲

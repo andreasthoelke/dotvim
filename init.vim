@@ -546,7 +546,7 @@ Plug 'navicore/vissort.vim'
 " Plug 'jghauser/follow-md-links.nvim'
 
 " https://github.com/jakewvincent/mkdnflow.nvim
-Plug 'jakewvincent/mkdnflow.nvim'
+" Plug 'jakewvincent/mkdnflow.nvim'
 
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 Plug 'euclio/vim-markdown-composer'
@@ -567,7 +567,7 @@ Plug 'aklt/rel.vim'
 
 Plug 'jceb/vim-orgmode'
 
-Plug 'purescript-contrib/purescript-vim'
+" Plug 'purescript-contrib/purescript-vim'
 " TODO this was causing a mapping for 'w' and "e" that would jump across ":" and "."
 " it't not clear why I would need the plugin - it's also unmaintained
 " Plug 'andreasthoelke/purescript-vim'

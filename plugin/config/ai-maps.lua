@@ -201,7 +201,8 @@ vim.keymap.set( 'n',
 -- CLEAR text field buffer
 vim.keymap.set( 'n',
   '<c-g>C', function()
-    Claude_send(string.char(3))
+    vim.fn.chansend(vim.g.claude_job_id, string.char(3))
+    -- Claude_send(string.char(3))
   end )
 
 -- MAKE COMMIT .. thorough commit messages
