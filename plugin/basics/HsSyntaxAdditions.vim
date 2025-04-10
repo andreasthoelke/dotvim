@@ -10,8 +10,8 @@ au ag BufRead,BufNewFile *.txt set filetype=markdown
 " au ag BufWinEnter,BufRead * if expand('%:t') =~ 'git' | setfiletype gitdiff | endif
 " au ag BufWinEnter,BufRead * if 1 | echoe expand('%') | endif
 
-au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call Edb_bufferMaps()
-au ag BufNewFile,BufRead,WinNew *.edgeql,*.esdl call EdgeQLSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call Edb_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
@@ -101,7 +101,7 @@ augroup track_window
    " autocmd FileType scss set filetype=css | set syntax=scss
 
    " This is needed because of a treesitter "no parser for 'edgeql' language, see :help treesitter-parsers" error.
-   autocmd FileType edgeql,esdl set filetype=graphql
+   " autocmd FileType edgeql,esdl set filetype=graphql
    " NOTE: this treesitter setting actually works! but the parser still needs to be installed
    " so I could just use some other language i dont use. use it's filetype but deactivate it in treesitter.
    " disable = {"graphql"},
@@ -528,14 +528,14 @@ func! LuaSyntaxAdditions() " ■
 endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
-  set syntax=markdown
+  " set syntax=markdown
   " temp fix bc/ underscores are hidden with markdown syntax e.g. in ~/Documents/Proj/k_mindgraph/_plan/a_graph_sql/schema_.sql
   " set syntax=js
   call clearmatches()
   " syntax match Normal '\`\`\`' conceal cchar=⊃
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
   call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
-  call matchadd('Conceal', '^\`\`\`\i\i', 12, -1, {'conceal': '˻'})
+  call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
   call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
   " set foldmethod=marker

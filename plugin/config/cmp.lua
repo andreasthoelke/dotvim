@@ -118,7 +118,7 @@ cmp.setup({
     { name = "buffer", keyword_length = 3 },
     { name = "treesitter", keyword_length = 3 },
     { name = "async_path" },
-    { name = "parrot_completion" },
+    { name = "parrot" },
   }, {
       { name = 'buffer' },
     })

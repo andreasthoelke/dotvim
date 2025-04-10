@@ -303,7 +303,7 @@ func! CreateInlineTestDec()
   elseif &filetype == 'purescript'
     call CreateInlineTestDec_hs()
   else
-    call CreateInlineTestDec_js()
+    call CreateInlineTestDec_js('normal')
   endif
 endfun
 
@@ -342,7 +342,7 @@ func! CreateInlineTestDec_rescript ()
 endfunc
 
 
-func! CreateInlineTestDec_js()
+func! CreateInlineTestDec_js(mode)
   " const greeter = (person: Person) => {
 
   let hostLn1 = searchpos( '^const\s\w\(e\d_\)\@!', 'cnbW' )[0]
@@ -370,10 +370,14 @@ func! CreateInlineTestDec_js()
   let lineText = hostDecName
   " TODO: this doesn't work
   let nextIndex = GetNextTestDeclIndex( hostLn )
-  let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = () => ' . lineText
+  if a:mode == 'async'
+    let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = async () => ' . lineText
+  else
+    let lineText = 'export const e' . nextIndex . '_' . hostDecName . ' = () => ' . lineText
+  endif
   call append( '.', lineText )
   normal dd
-  normal ^wwwwww
+  normal $b
 endfunc
 " Tests:
 " def mult(aa, bb):

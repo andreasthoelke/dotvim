@@ -56,6 +56,16 @@ lua vim.api.nvim_set_hl(0, 'DiffDelete', { bg='#0E0E0E' })
 " MiniDiffOverContext - context of changed text shown in overlay.
 " MiniDiffOverDelete  - deleted text shown in overlay.
 
+lua << EOF
+local hi = vim.api.nvim_set_hl
+hi(0, "MiniDiffOverAdd", { bg = "#AEC4B2" })
+-- The original text that was changed (also context line is white)
+hi(0, "MiniDiffOverChange", { bg = "#C5BCAC" })
+-- what it was changed to (also context is grey)
+hi(0, "MiniDiffOverChangeBuf", { bg = "#C0C0A7" })
+hi(0, "MiniDiffOverDelete", { bg = "#C1A9A8" })
+EOF
+
 " :hi MiniDiffSignAdd
 " :hi Added
 " :hi NvimLightGreen

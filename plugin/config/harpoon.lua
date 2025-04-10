@@ -1,5 +1,7 @@
 
 -- ISSUES 2025-04
+-- the neo-tree indicators are initialized after close-reopen. then ,d1/2 does update the view.
+-- ,d1/2 does delete, but the update of the file only occurs after ,1/2. if right after ,d1 i do l oh, the old state is loaded
 -- "line if not unique warning" -> just add the path.
 -- neo tree should show indicators
 -- neo tree should allow adding just paths

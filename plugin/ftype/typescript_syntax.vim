@@ -28,7 +28,8 @@ func! TsSyntaxAdditions ()
   " syntax match Normal "\s\zs\>\=\ze\s" conceal cchar=≥
   syntax match Normal "\v\+\+" conceal cchar=⧺
   syntax match Normal "\v\|\|" conceal cchar=‖
-  syntax match Normal "\v\&\&" conceal cchar=﹠
+  " syntax match Normal "\v\&\&" conceal cchar=﹠
+  syntax match Normal "\v\&\&" conceal cchar=&
 
   syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=N
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S

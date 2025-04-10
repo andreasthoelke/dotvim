@@ -1,4 +1,5 @@
 
+vim.opt.foldlevel = 99     -- High value ensures all folds are open
 
 -- Enable treesitter folding
 vim.api.nvim_create_autocmd({"FileType"}, {

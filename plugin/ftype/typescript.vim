@@ -67,8 +67,8 @@ func! JS_bufferMaps()
   " nnoremap geM :Glance implementations<CR>
 
   " Stubs and inline tests
-  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js()<cr>
-  nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js_function()<cr>
+  nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js('normal')<cr>
+  nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js('async')<cr>
   nnoremap <silent><buffer> <leader>ev :call CreateInlineTestDec_js_nvim()<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
