@@ -451,7 +451,10 @@ Plug 'dnlhc/glance.nvim'
 " Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
 
 " Language Support: -----------------------------------------------------
-Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+" deprecated
+" Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+" might consider https://github.com/yioneko/vtsls 
+
 Plug 'b0o/SchemaStore.nvim'
 
 Plug 'scalameta/nvim-metals'

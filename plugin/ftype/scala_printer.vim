@@ -188,11 +188,13 @@ func! Example_AddIdentif()
   let identif = Sc_PackagePrefix() . Sc_ObjectPrefix(hostLn) . identif
 
   let lnStr = getline('.')
-  if split( lnStr )[0] =~ '\v(#|//)'
-    let comment = matchstr( getline( hostLn ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
-  else
-    let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
-  endif
+  let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+
+  " if split( lnStr )[0] =~ '\v(#|//)'
+  "   let comment = matchstr( getline( hostLn ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+  " else
+  "   let comment = matchstr( getline( hostLn -1 ), '\v(\s*)?(\/\/\s|\#\s)?\zs.*' )
+  " endif
 
   let linkPath = LinkPath_get()
 
@@ -203,7 +205,7 @@ func! Example_AddIdentif()
   endif
 
   if len(comment)
-    call writefile( [comment] + linkLines, g:ExamplesPath, "a" )
+    call writefile( ['## ' . comment] + linkLines, g:ExamplesPath, "a" )
     echo 'Added line: ' . comment
   else
     call writefile( linkLines, g:ExamplesPath, "a" )

@@ -65,7 +65,9 @@ function M.UpdateDiffView(commit_hash, filepath)
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
   if filepath then
-    term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. filepath)
+    -- Escape filepath for shell to handle brackets and special characters
+    local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+    term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. escaped_filepath)
   else
     term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
   end
@@ -88,7 +90,9 @@ function M.UpdateDiffView_Untracked(filepath)
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
   if filepath then
-    term_job_id = vim.fn.termopen('git diff -- ' .. filepath)
+    -- Escape filepath for shell to handle brackets and special characters
+    local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+    term_job_id = vim.fn.termopen('git diff -- ' .. escaped_filepath)
   else
     term_job_id = vim.fn.termopen('git diff')
   end
@@ -110,7 +114,8 @@ function M.GetFilesInCommit(commit_hash)
   handle:close()
 
   for file in result:gmatch("[^\n]+") do
-    table.insert(files, "    " .. file)
+    local line_count = M.get_changed_lines_count(file, commit_hash)
+    table.insert(files, string.format("    %s %s", file, line_count))
   end
 
   return files
@@ -128,7 +133,10 @@ function M.UpdateDiffView_FilesDiff(opts)
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
 
-  term_job_id = vim.fn.termopen('git diff --no-index -- ' .. opts.diff_file1 .. ' ' .. opts.diff_file2)
+  -- Escape filepaths for shell to handle brackets and special characters
+  local escaped_file1 = "'" .. opts.diff_file1:gsub("'", "'\\'''") .. "'"
+  local escaped_file2 = "'" .. opts.diff_file2:gsub("'", "'\\'''") .. "'"
+  term_job_id = vim.fn.termopen('git diff --no-index -- ' .. escaped_file1 .. ' ' .. escaped_file2)
 
   M.GitDiff_BufferMaps()
   if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
@@ -164,16 +172,21 @@ local function update_view_from_lines(opts)
 
   -- Handle indented file lines
   if line:match("^%s") then
-    local filepath = line:match("^%s+(.+)")
-    -- Find commit hash or untracked by searching backwards for the next unindented line
-    local prev_word = M.get_prev_line_first_word()
+    -- Extract filepath without the line count at the end
+    local filepath = line:match("^%s+([^%d]+)")
+    if filepath then
+      -- Remove trailing whitespace
+      filepath = filepath:match("^(.-)%s*$")
+      -- Find commit hash or untracked by searching backwards for the next unindented line
+      local prev_word = M.get_prev_line_first_word()
 
-    if prev_word == "untracked" then
-      -- For untracked changes, run git diff without commit hash
-      M.UpdateDiffView_Untracked(filepath)
-    elseif prev_word then
-      -- For regular commits
-      M.UpdateDiffView(prev_word, filepath)
+      if prev_word == "untracked" then
+        -- For untracked changes, run git diff without commit hash
+        M.UpdateDiffView_Untracked(filepath)
+      elseif prev_word then
+        -- For regular commits
+        M.UpdateDiffView(prev_word, filepath)
+      end
     end
     return
   end
@@ -292,10 +305,17 @@ function M.GetUntrackedChanges()
   handle:close()
 
   for line in result:gmatch("[^\n]+") do
-    -- Extract the file path from git status output
-    local file = line:match("^.. (.+)$")
+    -- Extract the status and file path from git status output
+    local status, file = line:match("^(..) (.+)$")
     if file then
-      table.insert(files, "    " .. file)
+      local line_count
+      -- If status starts with '??', it's a new untracked file
+      if status and status:match("^%?%?") then
+        line_count = "N"
+      else
+        line_count = M.get_changed_lines_count(file, "untracked")
+      end
+      table.insert(files, string.format("    %s %s", file, line_count))
     end
   end
 
@@ -360,6 +380,35 @@ end
 -- require'git_commits_viewer'.GetCommitLines(2)
 
 -- ─   Helpers                                          ──
+
+function M.get_changed_lines_count(filepath, githash)
+  -- Escape filepath for shell to handle brackets and special characters
+  local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+  
+  local cmd
+  if githash and githash ~= "untracked" then
+    -- For regular commits
+    cmd = string.format("git diff --numstat %s^ %s -- %s", githash, githash, escaped_filepath)
+  else
+    -- For untracked changes
+    cmd = string.format("git diff --numstat -- %s", escaped_filepath)
+  end
+  
+  local handle = io.popen(cmd)
+  if not handle then return "0" end
+  
+  local result = handle:read("*a")
+  handle:close()
+  
+  -- Parse the numstat output: <added>\t<deleted>\t<file>
+  local added, deleted = result:match("(%d+)%s+(%d+)")
+  if added and deleted then
+    -- Return sum of added and deleted lines
+    return tostring(tonumber(added) + tonumber(deleted))
+  end
+  
+  return "0"
+end
 
 function M.close_cleanup()
   -- Close both windows

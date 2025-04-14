@@ -398,15 +398,18 @@ endfunc
 
 
 func! NewBuf_fromScratchBuffer( direction )
-  let path = '~/Documents/Notes/scratch/' . GetRandNumberString()
+  let path = '~/Documents/Notes/scratch/' . GetRandNumberString() . '.md'
   if a:direction == 'float'
     call v:lua.FloatBuf_inOtherWinColumn( path )
+    exec 'edit ' . path
+    exec 'write'
   else
     let cmd = NewBufCmds( path )[ a:direction ]
     " if IsInFloatWin() | wincmd c | endif
     exec cmd
+    exec 'write'
   endif
-  exec "set filetype=markdown" 
+  " exec "set filetype=markdown" 
 endfunc
 
 func! NewBuf_fromStartifyBuffer( direction )

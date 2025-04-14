@@ -7,8 +7,14 @@ nnoremap <silent> gee :call T_Menu()<cr>
 func! JS_bufferMaps()
   call Scala_bufferMaps_shared()
 
-  nnoremap <silent><buffer> <leader>ca :TSLspImportCurrent<cr>
-  nnoremap <silent><buffer> <leader>cA :TSLspImportAll<cr>
+  " nnoremap <silent><buffer> <leader>ca :TSLspImportCurrent<cr>
+  " nnoremap <silent><buffer> <leader>cA :TSLspImportAll<cr>
+
+  " nnoremap <silent><buffer> <leader>ca :TSLspImportCurrent<cr>
+  nnoremap <silent><buffer> <leader>ca :LspCodeAction<cr>
+  " not working
+  " nnoremap <silent><buffer> <leader>,ci <cmd>lua vim.lsp.buf.code_action({ apply = true, context = { only = { "source.addMissingImports.ts" } } })<CR>
+  " nnoremap <silent><buffer> <leader>ci :lua vim.lsp.buf.code_action({ apply = true, context = { only = { "source.addMissingImports.ts", "source.fixAll.ts" } } })<CR>
 
   " nnoremap <silent><buffer> gew :call T_DoSetImport()<cr>
   nnoremap <silent><buffer> gew :call JS_SetPrinterIdentif()<cr>

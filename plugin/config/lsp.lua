@@ -373,14 +373,17 @@ lspconfig.tsserver.setup({
     local bufopts = { noremap=true, silent=true, buffer=bufnr }
     client.server_capabilities.document_formatting = false
     client.server_capabilities.document_range_formatting = false
-    local ts_utils = require("nvim-lsp-ts-utils")
-    ts_utils.setup({})
-    ts_utils.setup_client(client)
-    buf_map(bufnr, "n", "gts", ":TSLspOrganize<CR>")
-    buf_map(bufnr, "n", "gtf", ":TSLspRenameFile<CR>")
-    buf_map(bufnr, "n", "gti", ":TSLspImportCurrent<CR>")
-    buf_map(bufnr, "n", "gto", ":TSLspImportAll<CR>")
-    vim.keymap.set('n', 'gtg', function() vim.lsp.buf_request(0, 'textDocument/implementation', vim.lsp.util.make_position_params(), custom_handler_filter_interfaceDefs) end, bufopts)
+    -- local ts_utils = require("nvim-lsp-ts-utils")
+    -- ts_utils.setup({})
+    -- ts_utils.setup_client(client)
+    -- buf_map(bufnr, "n", "gts", ":TSLspOrganize<CR>")
+    -- buf_map(bufnr, "n", "gtf", ":TSLspRenameFile<CR>")
+    -- buf_map(bufnr, "n", "gti", ":TSLspImportCurrent<CR>")
+    -- buf_map(bufnr, "n", "gto", ":TSLspImportAll<CR>")
+    -- vim.keymap.set('n', 'gtg', function() vim.lsp.buf_request(0, 'textDocument/implementation', vim.lsp.util.make_position_params(), custom_handler_filter_interfaceDefs) end, bufopts)
+
+
+
     on_attach(client, bufnr)
   end,
   -- handlers = handlers2,
@@ -742,486 +745,88 @@ lspconfig.smithy_ls.setup ({
 --   flags = flags,
 -- }
 
--- ─   null-ls                                          ──
+-- -- ─   null-ls                                          ──
 
--- vim.g.null_ls_disable = true
-local null_ls = require("null-ls")
-
-
--- https://github.com/jose-elias-alvarez/null-ls.nvim
--- local diagnostics_format = "[#{c}] #{m} (#{s})"
-local f = null_ls.builtins.formatting
-local d = null_ls.builtins.diagnostics
-null_ls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  flags = flags,
-  sources = {
-    -- codepell
-    -- d.codespell.with({
-    --   -- handlers = handlers,
-    --   diagnostics_format = diagnostics_format,
-    --   extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
-    -- }),
-    -- python 2
-    -- d.flake8.with({
-    --   diagnostics_format = diagnostics_format,
-    --   prefer_local = ".venv/bin",
-    -- }),
-    f.isort.with({
-      diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
-      extra_args = { "--profile", "black" },
-    }),
-    f.black.with({
-      diagnostics_format = diagnostics_format,
-      prefer_local = ".venv/bin",
-      extra_args = { "--fast" },
-    }),
-    -- javascript/typescript
-    -- d.eslint_d.with({
-    --   diagnostics_format = diagnostics_format,
-    -- }),
-    f.prettier.with({
-      diagnostics_format = diagnostics_format,
-      filetypes = { "html", "json", "yaml" },
-    }),
-    -- sh/bash
-    -- d.shellcheck.with({
-    --   diagnostics_format = diagnostics_format,
-    -- }),
-    f.shfmt.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "-i", "2" },
-    }),
-    -- lua
-    f.stylua.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "--indent-type", "Spaces" },
-    }),
-    -- json
-    -- f.fixjson.with({
-    --   diagnostics_format = diagnostics_format,
-    -- }),
-    -- yaml
-    d.yamllint.with({
-      diagnostics_format = diagnostics_format,
-      extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
-    }),
-    -- sql
-    f.sqlformat.with({
-      diagnostics_format = diagnostics_format,
-    }),
-    -- toml
-    -- f.taplo.with({
-    --   diagnostics_format = diagnostics_format,
-    -- }),
-    -- css/scss/sass/less
-    f.stylelint.with({
-      diagnostics_format = diagnostics_format,
-    }),
-  },
-})
+-- -- vim.g.null_ls_disable = true
+-- local null_ls = require("null-ls")
 
 
-
+-- -- https://github.com/jose-elias-alvarez/null-ls.nvim
+-- -- local diagnostics_format = "[#{c}] #{m} (#{s})"
+-- local f = null_ls.builtins.formatting
+-- local d = null_ls.builtins.diagnostics
 -- null_ls.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   flags = flags,
 --   sources = {
---     null_ls.builtins.diagnostics.eslint_d,
---     null_ls.builtins.code_actions.eslint_d,
---     null_ls.builtins.formatting.prettier,
---     null_ls.builtins.completion.spell,
---     null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+--     -- codepell
+--     -- d.codespell.with({
+--     --   -- handlers = handlers,
+--     --   diagnostics_format = diagnostics_format,
+--     --   extra_args = { "--ignore-words=~/.config/nvim/spell/codespell-ignore.txt" },
+--     -- }),
+--     -- python 2
+--     -- d.flake8.with({
+--     --   diagnostics_format = diagnostics_format,
+--     --   prefer_local = ".venv/bin",
+--     -- }),
+--     f.isort.with({
+--       diagnostics_format = diagnostics_format,
+--       prefer_local = ".venv/bin",
+--       extra_args = { "--profile", "black" },
+--     }),
+--     f.black.with({
+--       diagnostics_format = diagnostics_format,
+--       prefer_local = ".venv/bin",
+--       extra_args = { "--fast" },
+--     }),
+--     -- javascript/typescript
+--     -- d.eslint_d.with({
+--     --   diagnostics_format = diagnostics_format,
+--     -- }),
+--     f.prettier.with({
+--       diagnostics_format = diagnostics_format,
+--       filetypes = { "html", "json", "yaml" },
+--     }),
+--     -- sh/bash
+--     -- d.shellcheck.with({
+--     --   diagnostics_format = diagnostics_format,
+--     -- }),
+--     f.shfmt.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "-i", "2" },
+--     }),
+--     -- lua
+--     f.stylua.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "--indent-type", "Spaces" },
+--     }),
+--     -- json
+--     -- f.fixjson.with({
+--     --   diagnostics_format = diagnostics_format,
+--     -- }),
+--     -- yaml
+--     d.yamllint.with({
+--       diagnostics_format = diagnostics_format,
+--       extra_args = { "-d", "{extends: default, rules: {line-length: {max: 100}}}" },
+--     }),
+--     -- sql
+--     f.sqlformat.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
+--     -- toml
+--     -- f.taplo.with({
+--     --   diagnostics_format = diagnostics_format,
+--     -- }),
+--     -- css/scss/sass/less
+--     f.stylelint.with({
+--       diagnostics_format = diagnostics_format,
+--     }),
 --   },
---   on_attach = on_attach
 -- })
 
 
--- ─   nvim-cmp setup                                    ■
 
--- -- Set completeopt to have a better completion experience
--- -- vim.o.completeopt = 'noinsert,menuone,noselect'
--- -- vim.o.completeopt = 'menuone,noselect'
--- -- vim.o.completeopt = 'menu,menuone,noselect'
--- -- vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
--- vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
-
--- -- help completeopt
-
--- -- luasnip setup
--- -- local luasnip = require 'luasnip'
-
--- -- WARNING - TODO: need to clean up the duplication ~/.config/nvim/plugin/config/cmp.lua‖*nvim-cmpˍsetup
--- local cmp = require 'cmp'
--- cmp.setup {
---   completion = {
---     -- autocomplete = false, -- disable auto-completion.
---   },
-
---   -- window = {
---   --   completion = {
---   --     winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
---   --     col_offset = -3,
---   --     side_padding = 0,
---   --   },
---   -- },
-
---   view = {
---     selection_order = 'bottom_up', -- This will start the completion menu from the bottom
---   },
-
---   sorting = {
---      comparators = {
---       -- cmp.config.compare.order, -- This will sort by the order in which they were added
---       cmp.config.compare.score, -- This will sort by the match score
---       -- cmp.config.compare.kind, -- This will sort by the kind of the completion item
---       -- cmp.config.compare.sort_text, -- This will sort by the sort text provided by the LSP
---       -- cmp.config.compare.length, -- This will sort by the length of the completion item
---       -- cmp.config.compare.offset, -- This will sort by the offset of the completion item
-    
---       -- -- cmp.config.compare.offset,
---       -- -- cmp.config.compare.exact,
---       -- -- cmp.config.compare.score,
---       -- -- cmp.config.compare.kind,
---       -- -- -- cmp.config.compare.sort_text, -- Commented out to disable LSP's sort_text sorting
---       -- -- cmp.config.compare.length,
---       -- -- cmp.config.compare.order,
-
---      }
---    },
-
---   formatting = {
---     format = function(entry, vim_item)
---       -- if vim.tbl_contains({ 'path' }, entry.source.name) then
---       --   local icon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
---       --   if icon then
---       --     vim_item.kind = icon
---       --     vim_item.kind_hl_group = hl_group
---       --     return vim_item
---       --   end
---       -- end
---       return require('lspkind').cmp_format({ 
---         with_text = false,
---         -- WORKS! with ~/Documents/Proj/l_local_fst/m/js_simple/esbuild/index.html‖/<divˍclass=
---         before = require("tailwind-tools.cmp").lspkind_format,
---         -- mode = "symbol_text",
---         menu = ({
---           buffer = "B",
---           -- nvim_lsp = "[LSP]",
---           luasnip = "snip",
---         })
---       })(entry, vim_item)
---     end
---   },
-
---   -- formatting = {
---   --   fields = { "kind", "abbr", "menu" },
---   --   format = function(entry, vim_item)
---   --     local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
---   --     local strings = vim.split(kind.kind, "%s", { trimempty = true })
---   --     kind.kind = " " .. (strings[1] or "") .. " "
---   --     kind.menu = "    (" .. (strings[2] or "") .. ")"
---   --     return kind
---   --   end,
---   -- },
-
---   snippet = {
---     expand = function(args)
---       -- luasnip.lsp_expand(args.body)
---       vim.fn["vsnip#anonymous"](args.body)
---     end,
---   },
---   mapping = {
---     ['<C-p>'] = cmp.mapping.select_prev_item(),
---     ['<C-n>'] = cmp.mapping.select_next_item(),
---     ['<C-y>'] = cmp.mapping.scroll_docs(-2),
---     ['<C-e>'] = cmp.mapping.scroll_docs(2),
---     ['<C-Space>'] = cmp.mapping.complete(),
---     ['<C-c>'] = cmp.mapping.close(),
---     ['<CR>'] = cmp.mapping.confirm {
---       -- behavior = cmp.ConfirmBehavior.Replace,
---       select = true,
---     },
---     -- ['<c-n>'] = function(fallback)
---     --   if cmp.visible() then
---     --     cmp.select_next_item()
---     --   elseif luasnip.expand_or_jumpable() then
---     --     luasnip.expand_or_jump()
---     --   else
---     --     fallback()
---     --   end
---     -- end,
---     -- ['<c-o>'] = function(fallback)
---     --   if cmp.visible() then
---     --     cmp.select_prev_item()
---     --   elseif luasnip.jumpable(-1) then
---     --     luasnip.jump(-1)
---     --   else
---     --     fallback()
---     --   end
---     -- end,
---   },
---   sources = cmp.config.sources({
---     { name = 'nvim_lsp' },
---     { name = 'vsnip' },
---     { name = 'graphql' },
---     -- { name = 'luasnip' }, -- For luasnip users.
---   }, {
---       {
---         name = 'buffer',
---         -- NOTE: this prevents long url-code strings to spam the completion suggestion. effectively they are shorter now
---         option = {
---           keyword_pattern = [[\k\+]],
---         },
-
---         -- note tested yet. 
---         -- entry_filter = function(entry, ctx)
---         --   return require('cmp.types').lsp.CompletionItemKind[ctx:get_kind()] ~= 'Text'
---         -- end
-
---       },
---     })
---   -- sources = {
---   --   { name = 'nvim_lsp' },
---   --   { name = 'luasnip' },
---   -- },
--- }
-
--- -- require('cmp-graphql').setup({
--- --   schema_path = 'graphql.schema.json', -- Path to generated json schema file in project
--- -- })
-
-
-
--- -- Set configuration for specific filetype.
--- cmp.setup.filetype('markdown', {
---   sources = cmp.config.sources({
---     { name = 'nvim_lsp' },
---     { name = 'vsnip' },
---     { name = 'mkdnflow' },
---     { name = "parrot_completion" }
---   }, {
---     -- { name = 'buffer' },
---   })
--- })
-
--- -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
--- -- cmp.setup.cmdline('/', {
--- --   sources = {
--- --     { name = 'buffer' }
--- --   }
--- -- })
-
--- -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
--- -- cmp.setup.cmdline(':', {
--- --   sources = cmp.config.sources({
--- --     { name = 'path' }
--- --   }, {
--- --       { name = 'cmdline' }
--- --     })
--- -- })
-
--- _G.vimrc = _G.vimrc or {}
--- _G.vimrc.cmp = _G.vimrc.cmp or {}
--- _G.vimrc.cmp.lsp = function()
---   cmp.complete({
---     config = {
---       sources = {
---         { name = 'nvim_lsp' }
---       }
---     }
---   })
--- end
-
--- _G.vimrc.cmp.snippet = function()
---   cmp.complete({
---     config = {
---       sources = {
---         { name = 'vsnip' }
---       }
---     }
---   })
--- end
-
--- -- inoremap <C-i> <Cmd>lua vimrc.cmp.lsp()<CR>
-
--- vim.cmd([[
--- inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
--- inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
--- ]])
-
--- -- Other setup example: ~/.config/nvim.cam/lua/user/cmp.lua#/cmp.setup%20{
-
--- ─^  nvim-cmp setup                                    ▲
-
-
--- ─   Scala                                            ──
-
-local api = vim.api
--- local cmd = vim.cmd
-
--- local function map(mode, lhs, rhs, opts)
---   local options = { noremap = true }
---   if opts then
---     options = vim.tbl_extend("force", options, opts)
---   end
---   api.nvim_set_keymap(mode, lhs, rhs, options)
--- end
-
-
-----------------------------------
--- OPTIONS -----------------------
-----------------------------------
--- global
--- vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
--- vim.opt_global.shortmess:remove("F"):append("c")
-
--- LSP mappings
--- map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
--- map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
--- map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
--- map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
--- map("n", "gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
--- map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
--- map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
--- map("n", "<leader>sh", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
--- map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
--- map("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>")
--- map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
--- map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
--- map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
--- map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]]) -- all workspace errors
--- map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]]) -- all workspace warnings
--- map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>") -- buffer diagnostics only
--- map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
--- map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
-
--- -- Example mappings for usage with nvim-dap. If you don't use that, you can
--- -- skip these
--- map("n", "<leader>dc", [[<cmd>lua require"dap".continue()<CR>]])
--- map("n", "<leader>dr", [[<cmd>lua require"dap".repl.toggle()<CR>]])
--- map("n", "<leader>dK", [[<cmd>lua require"dap.ui.widgets".hover()<CR>]])
--- map("n", "<leader>dt", [[<cmd>lua require"dap".toggle_breakpoint()<CR>]])
--- map("n", "<leader>dso", [[<cmd>lua require"dap".step_over()<CR>]])
--- map("n", "<leader>dsi", [[<cmd>lua require"dap".step_into()<CR>]])
--- map("n", "<leader>dl", [[<cmd>lua require"dap".run_last()<CR>]])
-
--- completion related settings
--- This is almost a duplicate from above.
--- local cmp = require("cmp")
--- cmp.setup({
---   sources = {
---     { name = "nvim_lsp" },
---     { name = "vsnip" },
---   },
---   snippet = {
---     expand = function(args)
---       -- Comes from vsnip
---       vim.fn["vsnip#anonymous"](args.body)
---     end,
---   },
---   mapping = cmp.mapping.preset.insert({
---     -- None of this made sense to me when first looking into this since there
---     -- is no vim docs, but you can't have select = true here _unless_ you are
---     -- also using the snippet stuff. So keep in mind that if you remove
---     -- snippets you need to remove this select
---     ["<CR>"] = cmp.mapping.confirm({ select = true }),
---     -- I use tabs... some say you should stick to ins-completion but this is just here as an example
---     ["<Tab>"] = function(fallback)
---       if cmp.visible() then
---         cmp.select_next_item()
---       else
---         fallback()
---       end
---     end,
---     ["<S-Tab>"] = function(fallback)
---       if cmp.visible() then
---         cmp.select_prev_item()
---       else
---         fallback()
---       end
---     end,
---   }),
--- })
-
-----------------------------------
--- LSP Setup ---------------------
-----------------------------------
-local metals_config = require("metals").bare_config()
-
--- Example of settings
-metals_config.settings = {
-  -- TODO 12-23: test these
-  showImplicitArguments = false,
-  showImplicitConversionsAndClasses = false,
-  showInferredType = true,
-  superMethodLensesEnabled = true,
-  enableSemanticHighlighting = true,
-  excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
-}
-
--- codeLens issue 2024-05: method textDocument/codeLens is not supported by any of the servers registered
--- similar to https://github.com/elixir-tools/elixir-tools.nvim/issues/211
--- ~/.config/nvim/plugged/nvim-metals/lua/metals/handlers.lua‖/lsp.codelen
-
--- metals_config.settings = {
---     superMethodLensesEnabled = false,  -- Disable navigation to parent classes
---     showImplicitArguments = false,     -- Disable implicit arguments
---     showInferredType = false,          -- Disable inferred types
---     enableSemanticHighlighting = true,
---   }
-
--- metals_config.init_options = {
---   statusBarProvider = "on",
---   isHttpEnabled = true,
---   compilerOptions = {
---     completion = {
---       enable = true
---     }
---   }
--- }
-
-
--- this doesn't exist, delete
-vim.g['metals_autoImport'] = false
-
--- vim.highlight.priorities.semantic_tokens
-vim.highlight.priorities.semantic_tokens = 125
--- vim.highlight.priorities.semantic_tokens = 22
-
-metals_config.init_options.statusBarProvider = "on"
--- metals_config.init_options.statusBarProvider = "off"
-
--- Example if you are using cmp how to make sure the correct capabilities for snippets are set
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
-
--- DEACTIVATED: COQ
--- it only needs this line to work, even together with nvim-cmp.
--- capabilities = require('coq').lsp_ensure_capabilities( capabilities )
-
-
-metals_config.capabilities = capabilities
-
-metals_config.on_attach = function(client, bufnr)
-  if client.server_capabilities.documentSymbolProvider then
-    local navic = require "nvim-navic"
-    navic.attach(client, bufnr)
-  end
-end
-
-
--- Autocmd that will actually be in charge of starting the whole thing
-local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
-api.nvim_create_autocmd("FileType", {
-  pattern = { "scala", "sbt", "java" },
-  callback = function()
-    require("metals").initialize_or_attach(metals_config)
-  end,
-  group = nvim_metals_group,
-})
-
--- lua vim.lsp.handlers["textDocument/codeLens"] = function() end
 
 

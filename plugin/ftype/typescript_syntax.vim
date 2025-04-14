@@ -166,7 +166,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'Error' conceal cchar=⊡
   syntax match Normal 'throw' conceal cchar=⊖
   syntax match Normal 'JSON' conceal cchar=❉
-  syntax match Normal 'new' conceal cchar=≈
+  syntax match Normal 'json()' conceal cchar=❉
+  syntax match Normal 'new\ze\s' conceal cchar=≈
 
   syntax match Normal 'i => {i' conceal cchar=_
   syntax match Normal 'x => x\ze\s' conceal cchar=_

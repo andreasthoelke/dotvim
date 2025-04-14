@@ -97,6 +97,10 @@ function _G.Ntree_cmdInOriginWin( cmd )
   vim.cmd( cmd )
 end
 
+-- In the current tab find the neo-tree
+function _G.MainWinId()
+end
+
 function _G.Ntree_winIds( tabid )
   return vim.iter( vim.api.nvim_tabpage_list_wins( tabid ) )
     :map( function(winid)
@@ -819,7 +823,8 @@ require("neo-tree").setup({
           fs.navigate(state, vim.fn.getcwd(), current_path, nil, false)
         end,
 
-        ["p"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'preview_back', s.tree:get_node().path ) end,
+        -- works for quick previews if the cursor actually came from the main win (not a touch new file dialog)
+        ["P"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'preview_back', s.tree:get_node().path ) end,
         ["o"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'float', s.tree:get_node().path ) end,
         ["tn"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab', s.tree:get_node().path ) end,
         ["Tn"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'tab_bg', s.tree:get_node().path ) end,
@@ -831,6 +836,13 @@ require("neo-tree").setup({
         ["U"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'up_back', s.tree:get_node().path ) end,
         ["s"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down', s.tree:get_node().path ) end,
         ["S"] = function(s) vim.fn.NewBuf_fromCursorLinkPath( 'down_back', s.tree:get_node().path ) end,
+
+        ["p"] = function(s)
+          local path = s.tree:get_node().path
+          vim.cmd("wincmd l")
+          vim.cmd("edit " .. path)
+        end,
+
 
         ["<localleader>v"] = function(s)
           local path = s.tree:get_node().path

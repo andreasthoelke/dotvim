@@ -67,6 +67,8 @@ func! ScratchWinNext_Show( linesToShow, resize )
   endif
   exec ('resize ' . l:height)
   exec 'normal! gg0'
+  " save the buffer
+  exec 'write'
 endfunc
 " ScratchWinNext_Show(['eins zwei', 'drei'], 8)
 

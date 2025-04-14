@@ -54,6 +54,12 @@ cmp.setup({
     end,
   },
 
+  -- Enable auto-import
+  -- experimental = {
+  --   ghost_text = true,
+  -- },
+
+
   formatting = {
     format = function(entry, vim_item)
       -- Base kind determination on more specific properties

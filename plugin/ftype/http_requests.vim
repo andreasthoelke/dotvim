@@ -32,6 +32,7 @@ endfunc
 
 " E.g. this: (use geh on the following line)
 " Andreas post -p town 'Berlin'
+" api/get-completions post -p town '[]'
 " will be turned into (use gwj on the following line)
 " httpx http://localhost:9001/thisstr -m post -p town 'Berlin'
 

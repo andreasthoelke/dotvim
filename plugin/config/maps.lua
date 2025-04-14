@@ -1,5 +1,27 @@
 
 
+vim.defer_fn(function()
+
+  vim.diagnostic.config({
+    virtual_text = {
+      -- prefix = 'ᐤ',
+      prefix = '•',
+      format = function(diagnostic)
+
+        local message = diagnostic.message
+
+        if message:match("is assigned a value but never used") then return "" end
+        if message:match("Line with spaces only.") then return "" end
+     
+        return message
+      end
+    }
+  })
+
+end, 1000)
+
+
+
 -- ─   General maps                                      ■
 
 -- PUT CLIPBOARD and jump back to put start cursor position.
@@ -61,6 +83,9 @@ end, { noremap = true, silent = true })
 
 
 -- nnoremap <silent><buffer> gsl :call v:lua.Telesc_launch('lsp_document_symbols')<cr>
+
+
+
 
 
 -- ─^  Lsp defaults                                      ▲

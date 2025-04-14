@@ -6,7 +6,9 @@ if not vim.g.neovide then
 end
 
 -- vim.g.neovide_scale_factor = 1.0
-vim.g.neovide_scale_factor = 1.01
+vim.g.neovide_scale_factor = 0.97
+-- vim.g.neovide_scale_factor = 1.01
+-- vim.g.neovide_scale_factor = 1.035
 local change_scale_factor = function(delta)
   -- vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
   vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + delta
@@ -22,7 +24,8 @@ vim.keymap.set("n", "<C-->", function()
 end)
 
 -- vim.o.guifont = "Source Code Pro:h10.5" -- text below applies for VimScript
-vim.o.guifont = "MonoLisa Nerd Font:h10.5" -- text below applies for VimScript
+-- vim.o.guifont = "MonoLisa Nerd Font:h10.5" -- text below applies for VimScript
+vim.o.guifont = "MonoLisa Nerd Font:h11" -- text below applies for VimScript
 
 -- vim.g.neovide_text_gamma = 0.0
 -- vim.g.neovide_text_contrast = 0.5
