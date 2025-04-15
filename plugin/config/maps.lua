@@ -12,6 +12,8 @@ vim.defer_fn(function()
 
         if message:match("is assigned a value but never used") then return "" end
         if message:match("Line with spaces only.") then return "" end
+        if message:match("is of type 'unknown'") then return "" end
+        if message:match("implicitly has an 'any' type") then return "" end
      
         return message
       end

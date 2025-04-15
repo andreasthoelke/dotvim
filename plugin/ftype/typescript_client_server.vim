@@ -358,6 +358,8 @@ func! JS_RunPrinter( termType )
   " let Cmd = 'node '
   " let Cmd = 'npx ts-node '
 
+  let reset_needed = JS_ensure_type_modules()
+
   if     a:termType == 'float'
     let resLines = systemlist( Cmd . JsPrinterPath() )
     silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
@@ -370,10 +372,33 @@ func! JS_RunPrinter( termType )
     silent wincmd c
   elseif a:termType == 'term_float'
     call TermOneShot_FloatBuffer( Cmd . JsPrinterPath() )
-
   endif
 
+  if reset_needed
+    call JS_reset_type_modules()
+  endif
 endfunc
+
+func! JS_ensure_type_modules()
+  let packagejson_lines = readfile( "./package.json", '\n' )
+  " return packagejson_lines[2]
+  let line3 = packagejson_lines[2]
+  if line3 =~ '"type": "module"'
+    return v:false
+  endif
+  let lineToInsert = '  "type": "module",'
+  " Insert the line at position 2 in packagejson_lines
+  call insert( packagejson_lines, lineToInsert, 2 )
+  call writefile( packagejson_lines, './package.json' )
+  return v:true
+endfunc
+
+func! JS_reset_type_modules()
+  let packagejson_lines = readfile( "./package.json", '\n' )
+  call remove( packagejson_lines, 2 )
+  call writefile( packagejson_lines, './package.json' )
+endfunc
+
 
 func! JS_RunPrinterAppBundle()
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
