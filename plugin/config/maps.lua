@@ -43,7 +43,7 @@ end, { noremap = true, silent = true })
 vim.keymap.set('n', '<leader><leader>c<leader>', function()
   local cursor_pos = vim.fn.getpos('.')
   vim.cmd('ClearSpaces')
-  vim.cmd('%s/\r//g')
+  -- vim.cmd('%s/\r//g')
   vim.fn.setpos('.', cursor_pos)
 end, { noremap = true, silent = true })
 
@@ -56,6 +56,9 @@ vim.api.nvim_create_user_command(
     vim.cmd([[%s/\s\+$//e]])
     -- Remove lines containing only whitespace
     vim.cmd([[%s/^\s\+$//e]])
+
+    vim.cmd('%s/\r//g')
+
     pcall(vim.api.nvim_win_set_cursor, 0, cursor_pos)
     print("Spaces cleared")
   end,

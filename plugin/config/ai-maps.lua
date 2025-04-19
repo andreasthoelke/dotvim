@@ -70,11 +70,40 @@ end, { noremap = true, silent = true })
 
 
 -- ─   CLAUDE CODE                                       ■
--- ~/.config/nvim/plugin/config/parrot-claude-code.lua‖*ˍˍˍkeymaps
--- ~/.config/nvim/plugin/config/parrot-claude-code.lua‖*ˍˍˍClaudeˍcodeˍactionˍmaps
+-- ~/.config/nvim/plugin/config/parrot-claude-code.lua
+-- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(args,
 
-vim.keymap.set( 'n', '<c-g>V', function() vim.cmd('ClaudeCodeOpen') end )
-vim.keymap.set( 'n', '<c-g>S', function() vim.cmd(require('claude_code').AiderOpen("", "hsplit")) end )
+vim.g.codex_cmd = "claude "
+
+vim.keymap.set('n', '<c-g><c-g>o', function()
+  local options = {
+    "claude ",
+    "codex --approval-mode full-auto ",
+    "codex --full-auto --notify ",
+    "aider ",
+  }
+  
+  -- Create a UI selection using vim.ui.select (available in Neovim 0.6+)
+  vim.ui.select(options, {
+    prompt = "Select command:",
+    format_item = function(item)
+      return item
+    end
+  }, function(choice)
+    if choice then
+      -- Set the selected string to g:codex_cmd
+      vim.g.codex_cmd = choice
+      print("Selected: " .. choice)
+    else
+      print("No selection made")
+    end
+  end)
+
+end)
+
+
+vim.keymap.set( 'n', '<c-g>V', function() vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd']) end )
+vim.keymap.set( 'n', '<c-g>S', function() vim.cmd(require('claude_code').AiderOpen( vim.g['codex_cmd'], "hsplit")) end )
 
 vim.keymap.set('n', '<c-g><c-j>', function()
   local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
