@@ -62,7 +62,7 @@ au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptTools
 
 au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
-au ag FileType markdown,codecompanion call MarkdownBufferMaps()
+au ag FileType markdown,codecompanion,mcphub call MarkdownBufferMaps()
 
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()

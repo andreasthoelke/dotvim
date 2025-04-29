@@ -6,7 +6,7 @@
 require('avante').setup(
   {
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
-    provider = "claude", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
+    provider = "gemini", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
     -- WARNING: Since auto-suggestions are a high-frequency operation and therefore expensive,
     -- currently designating it as `copilot` provider is dangerous because: https://github.com/yetone/avante.nvim/issues/1048
     -- Of course, you can reduce the request frequency by increasing `suggestion.debounce`.
@@ -18,6 +18,12 @@ require('avante').setup(
       timeout = 30000, -- Timeout in milliseconds
       temperature = 0,
       max_tokens = 20480,
+    },
+    gemini = {
+      model = "gemini-2.5-pro-exp-03-25",
+    },
+    openai = {
+      model = "o3",
     },
     ---Specify the special dual_boost mode
     ---1. enabled: Whether to enable dual_boost mode. Default to false.

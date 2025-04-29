@@ -25,12 +25,22 @@
 -- AvanteModels`                    | Show model list                                                                                             | |
 
 
--- vim.keymap.set('n', '<c-g>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<c-g>v', ':AvanteChat<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g><leader>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>v', ':AvanteChat<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<c-g>c', ':AvanteClear<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>c', ':AvanteClear<CR>', { noremap = true, silent = true })
+-- TODO it would be nice to also feed 'c-i' to the cmd prompt to open the dropdown selection
+-- vim.keymap.set('n', '<c-g><leader>P', ':AvanteSwitchProvider ', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<c-g><leader>P', function()
+  local feed    = vim.api.nvim_feedkeys
+  local t       = vim.api.nvim_replace_termcodes
+  feed(t(':AvanteSwitchProvider ', true, false, true), 'n', false)
+  feed(t("<Tab>", true, false, true), 't', false)
+end, { noremap = true, silent = true })
+
 
 vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
@@ -79,7 +89,10 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "claude ",
     "codex --approval-mode full-auto ",
-    "codex --full-auto --notify ",
+    "codex --full-auto ",
+    "codex --full-auto --model gpt-4.1 ",
+    "codex --full-auto --model o3 ",
+    "node ~/Documents/Proj/k_mindgraph/h_mcp/_gh/c_codex/codex-cli/dist/cli.js --full-auto --model o3 ",
     "aider ",
   }
   

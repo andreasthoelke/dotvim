@@ -123,19 +123,20 @@ endfunc
 
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Vim_MainStartPattern = '\v^(\#|---|☼\:|⌘\:|.*─|function|func\!|\i.*function\(|local\sfunction\s|.{-}\*\S{-}\*)'
+" let g:Vim_MainStartPattern = '\v(\#\s|\d\)\s|\d\.\s|---|☼\:|⌘\:|.*─|function|func\!|\i.*function\(|local\sfunction\s|.{-}\*\S{-}\*)'
+let g:Vim_MainStartPattern = '\v(\#\s|\d\)\s|\d\.\s|---|☼\:|⌘\:|.*─|function|func\!|\i.*function\(|local\sfunction\s)'
 " the *\S{-}\* patterns is searching vim help headlines
 let g:Vim_TopLevelPattern = '\v^(\=\=|\#\s|.*─|☼\:|⌘\:)'
 
 
 func! Vim_MainStartBindingForw()
-  normal! j
+  normal! jj
   call search( g:Vim_MainStartPattern, 'W' )
   call Vim_goFistWord()
 endfunc
 
 func! Vim_MainStartBindingBackw()
-  normal! ^
+  normal! ^kk
   call search( g:Vim_MainStartPattern, 'bW' )
   normal! kk
   call search( g:Vim_MainStartPattern, 'W' )
@@ -169,8 +170,14 @@ func! Vim_goFistWord()
       normal! b
     endif
 
-  elseif &ft == 'markdown'
-    normal! w
+  elseif &ft == 'markdown' || &ft == 'mcphub'
+    let char = GetCharAtCursor()
+    if char == '#' 
+      normal! w
+    elseif char =~ '\d' 
+      normal! ww
+    endif
+
   endif
 endfunc
 

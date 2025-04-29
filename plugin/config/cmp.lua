@@ -151,6 +151,45 @@ cmp.setup.filetype('gitcommit', {
 require("cmp_git").setup()
 
 
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline({
+    -- You NEED to map the key you want to trigger completion.
+    -- Since manual <Tab> works, let's explicitly map it here.
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        -- If menu is visible, Tab cycles forward
+        cmp.select_next_item()
+      else
+        -- If menu is not visible, trigger completion
+        -- You might potentially check args.reason == cmp.ContextReason.Manual here
+        -- but cmp.complete() should generally work.
+        cmp.complete()
+      end
+    end, { "i", "c" }), -- Important: handle in insert AND command-line mode
+
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+            -- If menu is visible, Shift-Tab cycles backward
+            cmp.select_prev_item()
+        else
+            -- Potentially could trigger something else, or just fallback
+            fallback() -- Or cmp.complete() if you want S-Tab to also trigger
+        end
+    end, { "i", "c" }),
+
+    ['<C-Space>'] = cmp.mapping.complete(), -- Good alternative trigger
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Confirm selection on Enter
+    ['<C-e>'] = cmp.mapping.abort(), -- Close completion on Ctrl-e
+  }),
+  sources = cmp.config.sources({
+    { name = 'path' }, -- Command line often needs path completion
+  }, {
+    -- CRITICAL: You MUST include the cmdline source itself!
+    { name = 'cmdline', keyword_length = 1 } -- Triggers after 1 char typically
+  })
+})
+
+
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 -- cmp.setup.cmdline({ '/', '?' }, {
 --   mapping = cmp.mapping.preset.cmdline(),

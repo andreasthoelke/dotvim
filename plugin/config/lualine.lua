@@ -191,9 +191,9 @@ local lualine_config = {
     always_divide_middle = true,
     globalstatus = false,
     refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
+      statusline = 50,
+      tabline = 50,
+      winbar = 50,
     },
     theme = Theme_grbox2,
     -- theme = 'auto',
@@ -285,6 +285,10 @@ local lualine_config = {
 
     lualine_z = {
       {
+        require('mcphub.extensions.lualine'),
+        cond = function() return vim.bo.filetype == 'codecompanion' end
+      },
+      {
         'Magenta_model()',
         color = 'LuLine_Winbar_b_in',
       }
@@ -319,6 +323,10 @@ local lualine_config = {
 
     lualine_z = {
       {
+        require('mcphub.extensions.lualine'),
+        cond = function() return vim.bo.filetype == 'codecompanion' end
+      },
+      {
         'Magenta_model()',
         color = inactiveWinbarColor,
       }
@@ -337,4 +345,11 @@ local lualine_config = {
 
 require('lualine').setup( lualine_config )
 
+-- This shouldn't be needed. But sometimes the winbar update didn't happen. 
+-- Add autocmd to refresh winbar on window focus change
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
+  callback = function()
+    require('lualine').refresh()
+  end
+})
 

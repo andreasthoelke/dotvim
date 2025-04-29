@@ -42,19 +42,22 @@ Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --
 "   ['do'] = 'npm install --frozen-lockfile',
 " })
 
-Plug 'olimorris/codecompanion.nvim'
+" Plug 'olimorris/codecompanion.nvim'
+Plug 'olimorris/codecompanion.nvim', { 'branch': 'feat/move-to-function-calling' }
+" move-to-function-calling
 
 " https://github.com/yetone/avante.nvim
 " Plug 'yetone/avante.nvim'
-Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
+" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
 " optional deps:
 Plug 'stevearc/dressing.nvim'
 Plug 'HakonHarnes/img-clip.nvim'
 Plug 'zbirenbaum/copilot.lua'
 
-" Plug 'ravitemer/mcphub.nvim'
-Plug 'ravitemer/mcphub.nvim', { 'branch': 'native-servers' }
+Plug 'ravitemer/mcphub.nvim'
+" Plug 'ravitemer/mcphub.nvim', { 'branch': 'native-servers' }
 
 " https://github.com/piersolenski/wtf.nvim
 " Plug 'piersolenski/wtf.nvim'
@@ -169,7 +172,7 @@ Plug 'kevinhwang91/nvim-bqf'
 " Plug 'ludovicchabant/vim-gutentags'
 " Make the preview window more convienient to use. use in quickfix via 'p'
 
-" Plug 'stevearc/aerial.nvim'
+Plug 'stevearc/aerial.nvim'
 Plug 'hedyhli/outline.nvim'
 
 " Old:
@@ -559,6 +562,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'ellisonleao/glow.nvim'
 
 Plug 'toppair/peek.nvim', { 'do': 'deno task --quiet build:fast' }
+
+Plug 'davidmh/mdx.nvim'
 
 " Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
