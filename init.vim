@@ -42,9 +42,12 @@ Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --
 "   ['do'] = 'npm install --frozen-lockfile',
 " })
 
-" Plug 'olimorris/codecompanion.nvim'
-Plug 'olimorris/codecompanion.nvim', { 'branch': 'feat/move-to-function-calling' }
+Plug 'olimorris/codecompanion.nvim'
+" Plug 'olimorris/codecompanion.nvim', { 'branch': 'feat/move-to-function-calling' }
 " move-to-function-calling
+
+Plug 'ravitemer/codecompanion-history.nvim'
+Plug 'Davidyz/VectorCode'
 
 " https://github.com/yetone/avante.nvim
 " Plug 'yetone/avante.nvim'
@@ -130,6 +133,7 @@ Plug 'folke/noice.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'rcarriga/nvim-notify'
 " this is for lsp loading progress like in lua_ls. 
+" note this is active below!
 " Plug 'j-hui/fidget.nvim'
 
 " Plug 'rmagatti/auto-session'
@@ -243,12 +247,14 @@ Plug 'lewis6991/gitsigns.nvim'
 
 " https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-diff.md
 Plug 'echasnovski/mini.diff'
-
 Plug 'echasnovski/mini.pick'
 
 " No longer supported
 " Plug 'gregsexton/gitv', {'on': ['Gitv']}
 Plug 'rbong/vim-flog'
+
+Plug 'akinsho/git-conflict.nvim'
+
 
 " Search: -----------------------------------------------
 " Currently using this via "Find"

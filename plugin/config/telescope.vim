@@ -90,6 +90,7 @@ nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<c
 " AI CHATS
 nnoremap <leader>sfc <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '# topic:.*')<cr>
 nnoremap <leader>sfC <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '')<cr>
+nnoremap <leader>sfa <cmd>AvanteHistory<cr>
 
 " NOTES
 nnoremap <leader>sfn <cmd>lua require('utils.general').Search_in_folder('~/Documents/Notes', '# .*')<cr>

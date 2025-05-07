@@ -20,7 +20,9 @@ require('avante').setup(
       max_tokens = 20480,
     },
     gemini = {
-      model = "gemini-2.5-pro-exp-03-25",
+      -- model = "gemini-2.5-pro-exp-03-25",
+      model = "gemini-2.5-pro-preview-05-06",
+      -- model = "gemini-2.5-pro-preview-03-25",
     },
     openai = {
       model = "o3",
@@ -36,7 +38,7 @@ require('avante').setup(
     ---Note: This is an experimental feature and may not work as expected.
     dual_boost = {
       enabled = false,
-      first_provider = "openai",
+      first_provider = "gemini",
       second_provider = "claude",
       prompt = "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
       timeout = 60000, -- Timeout in milliseconds
@@ -48,7 +50,7 @@ require('avante').setup(
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = true,
       minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
-      enable_token_counting = true, -- Whether to enable token counting. Default to true.
+      enable_token_counting = false, -- Whether to enable token counting. Default to true.
       enable_cursor_planning_mode = false, -- Whether to enable Cursor Planning Mode. Default to false.
       enable_claude_text_editor_tool_mode = false, -- Whether to enable Claude Text Editor Tool Mode.
     },
@@ -84,13 +86,13 @@ require('avante').setup(
     mappings = {
       --- @class AvanteConflictMappings
       diff = {
-        ours = "co",
-        theirs = "ct",
-        all_theirs = "ca",
-        both = "cb",
-        cursor = "cc",
-        next = "]x",
-        prev = "[x",
+        ours = "<leader>co",
+        theirs = "<leader>ci",
+        all_theirs = "<leader>ca",
+        both = "<leader>cb",
+        cursor = "<leader>cc",
+        next = "<leader>]x",
+        prev = "<leader>[x",
       },
       suggestion = {
         accept = "<M-l>",
@@ -119,7 +121,7 @@ require('avante').setup(
         reverse_switch_windows = "<S-Tab>",
         remove_file = "dd",
         add_file = "@",
-        close = { "<Esc>", "q" },
+        close = { "q" },
         close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
       },
     },

@@ -253,7 +253,7 @@ endfunc
 " Method 2: Change the name in multiple consecutive lines in place
 nnoremap <leader>hcn :call BindgingChangeName()<cr>
 " This overwrites "cib" textobj above! because this approach allows to change multiple lines
-nnoremap cib :call BindingChangeName()<cr>
+" nnoremap cib :call BindingChangeName()<cr>
 func! BindingChangeName()
   normal! m'll
   call BindingBackw()

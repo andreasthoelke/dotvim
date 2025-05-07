@@ -950,7 +950,7 @@ autocmd! User GoyoEnter nested call <SID>goyo_enter()
 
 " Disable certain unimpaired maps!:
 " let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
-let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': ''}
+let g:nremap = { '[t': '', ']t': '', '[T': '', ']T': '', ']b': '', '[b': '', '[x': '', ']x': ''}
 
 " " hmm, i can't make this 'silent'
 " nnoremap <silent> ]<Space> :call LinesAdd1()<cr>
@@ -1008,7 +1008,7 @@ nnoremap D "_d
 set foldenable
 set foldmethod=marker
 set foldmarker=\ ■,\ ▲
-set foldlevelstart=1
+set foldlevelstart=5
 
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
 " au ag Syntax git set foldlevel=1

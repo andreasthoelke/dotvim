@@ -369,7 +369,8 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 func! ShowLocalWebFile( path )
   let pathAbs = fnamemodify( a:path, ':p' )
   " for some reason this doesn't have a small tool window (though sometimes it does) and doesn't remember the previously set size and pos.
-  call LaunchChromium2( 'file:///' . pathAbs )
+  " call LaunchChromium2( 'file:///' . pathAbs )
+  call LaunchChrome( 'file:///' . pathAbs )
   " call LaunchChromium( 'file:///' . a:path )
 endfunc
 " call ShowLocalWebFile( '/tmp/giphy2.gif' )

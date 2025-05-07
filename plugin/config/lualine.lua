@@ -191,9 +191,9 @@ local lualine_config = {
     always_divide_middle = true,
     globalstatus = false,
     refresh = {
-      statusline = 50,
-      tabline = 50,
-      winbar = 50,
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
     },
     theme = Theme_grbox2,
     -- theme = 'auto',

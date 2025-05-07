@@ -33,11 +33,16 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal '\vnumber\ze(\W|\_$)' conceal cchar=N
   syntax match Normal '\vstring\ze(\W|\_$)' conceal cchar=S
+  syntax match Normal '\vstring\(\)' conceal cchar=S
+  syntax match Normal '\vz\.string\(\)' conceal cchar=S
   syntax match Normal 'String\.' conceal cchar=S
   syntax match Normal 'String' conceal cchar=S
   syntax match Normal 'Number\.' conceal cchar=N
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
   syntax match Normal 'array\ze\W' conceal cchar=⟦
+  " syntax match Normal 'object\ze\W' conceal cchar=⁑
+  syntax match Normal 'object\ze\W' conceal cchar=⠃
+  syntax match Normal '\vz\.object\ze\W' conceal cchar=⠃
 
   syntax match Normal 'i\zsdentity' conceal cchar=d
 
@@ -174,6 +179,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'x => x\ze\.' conceal cchar=_
 
   syntax match Normal 'JSX.Element' conceal cchar=⊃
+  syntax match Normal 'useCallback' conceal cchar=⫕
+  syntax match Normal 'useMemo' conceal cchar=⫕
   syntax match Normal 'className=' conceal cchar=◇
 
   " Effect TS Plus ᴈ ᴇ ᴱ ᴲ ᵉ

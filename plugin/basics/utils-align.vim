@@ -206,7 +206,8 @@ endfunc
 " BreakLineAtLoc( line('.'), col('.')-2 )
 
 
-nnoremap <silent> cis :call SignatureRemovePrep()<cr>hi
+" not used? conflict with avante map ci
+" nnoremap <silent> cis :call SignatureRemovePrep()<cr>hi
 nnoremap <silent> das :call SignatureRemovePrep()<cr>:undojoin<cr>hhh2xl
 
 func! SignatureRemovePrep()

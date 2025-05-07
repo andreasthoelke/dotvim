@@ -26,7 +26,8 @@
 
 
 -- vim.keymap.set('n', '<c-g><leader>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g><leader>v', ':AvanteChat<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>v', ':AvanteChatNew<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
@@ -88,6 +89,7 @@ vim.g.codex_cmd = "claude "
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "claude ",
+    "claude --resume ",
     "codex --approval-mode full-auto ",
     "codex --full-auto ",
     "codex --full-auto --model gpt-4.1 ",
