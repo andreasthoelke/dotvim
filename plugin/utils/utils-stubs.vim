@@ -347,8 +347,10 @@ func! CreateInlineTestDec_js(mode)
 
   let hostLn1 = searchpos( '^const\s\w\(e\d_\)\@!', 'cnbW' )[0]
   let hostLn2 = searchpos( '^export\sconst\s\(e\d_\)\@!', 'cnbW' )[0]
-  let hostLn3 = searchpos( '\v^(async\s)?function', 'cnbW' )[0]
+" export async function runExample(): Promise<EvalResult<string, string>[]> {
+  let hostLn3 = searchpos( '\v^(export\s)?(async\s)?function', 'cnbW' )[0]
 
+  " echo( [hostLn1, hostLn2, hostLn3] )
   let hostLn = max( [hostLn1, hostLn2, hostLn3] )
   let hostDecName = matchstr( getline(hostLn ), '\v(const|function)\s\zs\i*\ze\W' )
 

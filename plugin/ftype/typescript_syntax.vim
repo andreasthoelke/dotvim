@@ -95,7 +95,7 @@ func! TsSyntaxAdditions ()
   " TODO: can't match "export" twice? ~/Documents/Server-Dev/d_gql_edb/src/b_ramda_pipe_async_examples.ts#/export%20function%20ac
   " syntax match Normal "export\s\zsfunction\ze\s" conceal cchar=→
   syntax match Normal "function\ze\s" conceal cchar=→
-  syntax match Normal "^export\ze\s" conceal cchar=∷
+  syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "sql`" conceal cchar=▵
   syntax match Normal "return" conceal cchar=▂
@@ -137,6 +137,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'typeof' conceal cchar=◇
   syntax match Normal 'class' conceal cchar=□
   syntax match Normal 'implements' conceal cchar=⟔
+  syntax match Normal 'extends' conceal cchar=⟔
   syntax match Normal 'constructor' conceal cchar=≈
   syntax match Normal 'enum\ze\\s' conceal cchar=|
 

@@ -106,7 +106,8 @@ require('avante').setup(
       },
       submit = {
         normal = "<c-w><cr>",
-        insert = "<C-s>",
+        insert = "<c-w><cr>",
+        -- insert = "<C-s>",
       },
       cancel = {
         normal = { "<C-c>", "<Esc>", "q" },

@@ -4,9 +4,13 @@
 " ─   Markdown-Preview                                   ■
 
 " nnoremap glm :call StopChromium()<cr>:MarkdownPreview<cr>
-nnoremap <leader>glm :Markdown<cr>
-nnoremap glm :Markdown<cr>
+" nnoremap <leader>glm :Markdown<cr>
+" nnoremap glm :Markdown<cr>
 " nnoremap gsm :call StopChromium()<cr>
+
+nnoremap <leader>glm :PeekOpen<cr>
+nnoremap <leader>glM :PeekClose<cr>
+
 
 " call OpenMarkdownPreview()
 let g:mkdp_auto_start = 0

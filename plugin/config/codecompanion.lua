@@ -41,12 +41,14 @@ _G.CodeCompanion_config = {
         ---The header name for the LLM's messages
         ---@type string|fun(adapter: CodeCompanion.Adapter): string
         llm = function(adapter)
-          return "(" .. adapter.formatted_name .. ")"
+          -- putt( adapter )
+          -- return "(" .. adapter.formatted_name .. ")"
+          return "(" .. adapter.parameters.model .. ")"
         end,
 
         ---The header name for your messages
         ---@type string
-        user = "Me",
+        user = "☼",
       },
 
     },

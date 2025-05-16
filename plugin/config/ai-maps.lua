@@ -27,6 +27,9 @@
 
 -- vim.keymap.set('n', '<c-g><leader>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>v', ':AvanteChatNew<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>M', ':AvanteModel<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>h', ':AvanteHistory<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>H', ':CodeCompanionHistory<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })

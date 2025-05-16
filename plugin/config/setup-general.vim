@@ -1290,7 +1290,8 @@ nnoremap <silent><leader>cdpg :cd %:p:h<cr>
 " nnoremap <expr><leader>cdsl ":lcd " . FindGitRootFolderOfCurrentFile() . "<cr>"
 nnoremap <silent><expr><leader>cdsl ":lcd " . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
 nnoremap <silent><expr><leader>cdst ":tcd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
-nnoremap <silent><expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+" nnoremap <silent><expr><leader>cdsg ":cd "  . FindGitRootFolderOfCurrentFile() . "<cr>"
+nnoremap <silent><expr><leader>cdsg ":cd "  . FindYarnPackageRootFolderOfCurrentBuffer() . "<cr>"
 
 func! FindGitRootFolderOfCurrentFile()
   return finddir('.git/..', expand('%:p:h').';')
