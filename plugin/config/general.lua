@@ -3,8 +3,8 @@
 -- tempoary!
 _G.vim.deprecate = function() end
 
-
-
+-- lua/plugin-update-infos.lua
+require('plugin-update-infos').setup()
 
 
 -- https://github.com/nvim-tree/nvim-tree.lua

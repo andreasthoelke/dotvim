@@ -352,6 +352,7 @@ func! JS_RunPrinter( termType )
   " https://tsx.is/typescript
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
   let Cmd = 'npx tsx --no-deprecation '
+  let Cmd = Cmd . JsPrinterPath()
   " let Cmd = 'NODE_NO_WARNINGS=1 ts-node '
   " let Cmd = 'bun '
   " let Cmd = 'npx ts-node --transpile-only '
@@ -361,17 +362,17 @@ func! JS_RunPrinter( termType )
   let reset_needed = JS_ensure_type_modules()
 
   if     a:termType == 'float'
-    let resLines = systemlist( Cmd . JsPrinterPath() )
+    let resLines = systemlist( Cmd )
     silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
     silent call FloatWin_FitWidthHeight()
     silent wincmd p
   elseif a:termType == 'term'
-    call TermOneShot( Cmd . JsPrinterPath() )
+    call TermOneShot( Cmd )
   elseif a:termType == 'term_hidden'
-    call TermOneShot( Cmd . JsPrinterPath() )
+    call TermOneShot( Cmd )
     silent wincmd c
   elseif a:termType == 'term_float'
-    call TermOneShot_FloatBuffer( Cmd . JsPrinterPath() )
+    call TermOneShot_FloatBuffer( Cmd )
   endif
 
   if reset_needed

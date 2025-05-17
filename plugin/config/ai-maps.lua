@@ -27,6 +27,7 @@
 
 -- vim.keymap.set('n', '<c-g><leader>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>v', ':AvanteChatNew<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g><leader>v', ':AvanteChat<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>M', ':AvanteModel<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>h', ':AvanteHistory<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>H', ':CodeCompanionHistory<CR>', { noremap = true, silent = true })
@@ -35,7 +36,6 @@ vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = tru
 vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>c', ':AvanteClear<CR>', { noremap = true, silent = true })
--- TODO it would be nice to also feed 'c-i' to the cmd prompt to open the dropdown selection
 -- vim.keymap.set('n', '<c-g><leader>P', ':AvanteSwitchProvider ', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<c-g><leader>P', function()
@@ -97,6 +97,7 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     "codex --full-auto ",
     "codex --full-auto --model gpt-4.1 ",
     "codex --full-auto --model o3 ",
+    "codex --full-auto --model codex-mini-latest ",
     "node ~/Documents/Proj/k_mindgraph/h_mcp/_gh/c_codex/codex-cli/dist/cli.js --full-auto --model o3 ",
     "aider ",
   }
