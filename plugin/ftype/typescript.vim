@@ -618,6 +618,15 @@ func! JS_GoReturn()
   " execute "normal m'"
   keepjumps call search('\s\zs{', 'W')
   keepjumps call FlipToPairChar('')
+
+  " let nLine = line('.')
+  " echo oLine
+  " echo nLine
+  " if nLine == oLine
+  "   echo 'no'
+  "   return
+  " endif
+
   keepjumps call JS_SkipTypeSign()
   let patterns = [
         \ '\s\zsreturn',
@@ -626,8 +635,15 @@ func! JS_GoReturn()
   keepjumps call search(combined_pattern, 'bW')
   let nLine = line('.')
   if nLine < oLine + 1
+    " Go to the end of the block and try one more time
     keepjumps call cursor(oLine, oCol)  " Use cursor() instead of setpos()
-    echo 'no return'
+    call JS_MvEndOfBlock()
+    keepjumps call search(combined_pattern, 'bW')
+    let nLine = line('.')
+    if nLine < oLine + 1
+      keepjumps call cursor(oLine, oCol)  " Use cursor() instead of setpos()
+      echo 'no return'
+    endif
   endif
 endfunc
 
