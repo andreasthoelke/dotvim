@@ -134,6 +134,7 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal 'interface' conceal cchar=◈
   syntax match Normal 'type' conceal cchar=◇
+  syntax match Normal 'types:' conceal cchar=◇
   syntax match Normal 'typeof' conceal cchar=◇
   syntax match Normal 'class' conceal cchar=□
   syntax match Normal 'implements' conceal cchar=⟔
@@ -179,10 +180,33 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'x => x\ze\s' conceal cchar=_
   syntax match Normal 'x => x\ze\.' conceal cchar=_
 
+  " EdgeDB query builder object: e.select() or event in DOM e.target.value
+  syntax match Normal "\s\zse\." conceal cchar=᛫
+  syntax match Normal "\s\zstrue" conceal cchar=᛫
+  " syntax match Normal "ilike" conceal cchar=∼
+  " syntax match Normal "like" conceal cchar=∼
+  syntax match Normal "order_by\:" conceal cchar=ꜛ
+  syntax match Normal "filter\:" conceal cchar=≚
+  syntax match Normal "\.\.\." conceal cchar=…
+  syntax match Normal "\*\/" conceal
+
+
   syntax match Normal 'JSX.Element' conceal cchar=⊃
   syntax match Normal 'useCallback' conceal cchar=⫕
   syntax match Normal 'useMemo' conceal cchar=⫕
   syntax match Normal 'className=' conceal cchar=◇
+  syntax match Normal 'e\.target\.value' conceal cchar=⊍
+
+  " XState
+  syntax match Normal 'states\:' conceal cchar=Ⲷ
+  syntax match Normal '\s\zson\:' conceal cchar=󰑫
+  syntax match Normal 'events\:' conceal cchar=󰖩
+  syntax match Normal 'target\:' conceal cchar=→
+  syntax match Normal 'context\:' conceal cchar=
+  syntax match Normal 'initial\:' conceal cchar=⟣
+  syntax match Normal 'actions\:' conceal cchar=⪾
+  syntax match Normal 'actors\:' conceal cchar=♺
+  syntax match Normal 'assign' conceal cchar=↗
 
   " Effect TS Plus ᴈ ᴇ ᴱ ᴲ ᵉ
   " syntax match Normal 'Effect' conceal cchar=⁝
@@ -217,16 +241,6 @@ func! TsSyntaxAdditions ()
   " syntax match Normal '\v\(\ze\s' conceal
   " TODO use a lookaround
   " syntax match Normal '\v\$@!.*\zs\)$' conceal cchar=᛫
-
-  " EdgeDB query builder object: e.select()
-  syntax match Normal "\s\zse\." conceal cchar=᛫
-  syntax match Normal "\s\zstrue" conceal cchar=᛫
-  " syntax match Normal "ilike" conceal cchar=∼
-  " syntax match Normal "like" conceal cchar=∼
-  syntax match Normal "order_by\:" conceal cchar=ꜛ
-  syntax match Normal "filter\:" conceal cchar=≚
-  syntax match Normal "\.\.\." conceal cchar=…
-  syntax match Normal "\*\/" conceal
 
 
   syntax match InlineTestDeclaration '\v^const\se\d_\i{-}\s\=' conceal cchar=‥

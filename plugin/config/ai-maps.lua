@@ -60,7 +60,6 @@ vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
 
 -- ─   CODECOMPANION                                     ■
--- ~/.config/nvim/plugin/config/codecompanion.lua‖*ˍˍˍChatˍkeymaps
 
 vim.keymap.set('n', '<c-g><leader>V', function()
   local update = { display = { chat = { window = { layout = "vertical" } } } }

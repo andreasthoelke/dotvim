@@ -43,6 +43,7 @@ end
 -- vim.fn.strftime("%d:%H:%M", vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim"))
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").mtime.sec
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/functional.vim").size
+-- vim.loop.fs_stat("~/Documents/Proj/k_mindgraph/h_mcp/_gh/d_typescribe/langgraph.json").size
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/syntax")
 -- vim.loop.fs_stat("/Users/at/.config/nvim/plugin/")
 -- vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim")
@@ -79,12 +80,13 @@ function _G.DirvishShowSize()
     local msg = ""
     if not vim.fn.PathInfoSkip( fp ) then
       local linesCount = vim.fn.LinesCountOfPath( fp )
+      local fileSize = FileSizeStr( fp )
       local isDir = vim.loop.fs_stat( fp ).type == "directory"
       if isDir then
         local filesCount = vim.fn.FilesCountOfFolder( fp )
         msg = linesCount .. " l " .. filesCount .. " f"
       else
-        msg = linesCount .. " l"
+        msg = linesCount .. " l - " .. fileSize
       end
     end
     VirtualTxShow( ln -1, '  ' .. msg )
@@ -147,6 +149,33 @@ end
 -- TimeAgoStr( vim.fn.getftime("/Users/at/.config/nvim/plugin/functional.vim") )
 
 
+function _G.FileSizeStr( filepath )
+
+  -- Check if file exists and is readable
+  if filepath == '' or vim.fn.filereadable(filepath) == 0 then
+    return ''
+  end
+
+  local stat = vim.loop.fs_stat(filepath)
+  if not stat then
+    return ''
+  end
+
+  local size = stat.size
+  local units = {' B', ' K', ' M', ' G', ' T'}
+  local unit_index = 1
+
+  while size >= 1024 and unit_index < #units do
+    size = size / 1024
+    unit_index = unit_index + 1
+  end
+
+  if unit_index == 1 then
+    return string.format('%d%s', size, units[unit_index])
+  else
+    return string.format('%.1f%s', size, units[unit_index])
+  end
+end
 
 
 

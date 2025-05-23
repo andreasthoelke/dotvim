@@ -209,6 +209,8 @@ endfunc
 func! Compare_file_size(f1, f2)
   return getfsize(a:f1) < getfsize(a:f2) ? 1 : -1
 endfunc
+" ~/Documents/Proj/k_mindgraph/h_mcp/_gh/d_typescribe/langgraph.json
+" getfsize('/Users/at/Documents/Proj/k_mindgraph/h_mcp/_gh/d_typescribe/langgraph.json')
 
 func! Compare_path_size(f1, f2)
   if PathInfoSkip( a:f1 ) | return 1 | endif

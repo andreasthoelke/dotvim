@@ -13,7 +13,7 @@ nmap <silent><buffer> <leader>mv <Plug>(dovish_move)
 
 nnoremap <buffer> <leader><leader>om :call DirvishSortByModified()<cr>
 nnoremap <buffer> <leader><leader>os :call DirvishSortBySize()<cr>
-" nnoremap <buffer> ,,is :lua DirvishShowSize()<cr>
+nnoremap <buffer> ,,is :lua DirvishShowSize()<cr>
 
 nnoremap <silent><buffer> - <Plug>(dirvish_up)
 

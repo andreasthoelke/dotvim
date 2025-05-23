@@ -36,7 +36,7 @@ _G.CodeCompanion_config = {
 
   strategies = {
     chat = {
-      adapter = "gemini",
+      adapter = "anthropic",
       roles = {
         ---The header name for the LLM's messages
         ---@type string|fun(adapter: CodeCompanion.Adapter): string
@@ -50,6 +50,7 @@ _G.CodeCompanion_config = {
         ---@type string
         user = "☼",
       },
+
 
     },
     inline = {
@@ -87,7 +88,8 @@ _G.CodeCompanion_config = {
       return require("codecompanion.adapters").extend("anthropic", {
         schema = {
           model = {
-            default = "claude-3-7-sonnet-20250219",
+            -- default = "claude-3-7-sonnet-20250219",
+            default = "claude-sonnet-4-20250514",
           },
         },
       })
