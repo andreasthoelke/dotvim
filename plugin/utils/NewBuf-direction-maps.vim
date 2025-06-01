@@ -381,6 +381,8 @@ endfunc
 
 func! NewBuf_fromLinePath( direction )
   let [path; maybeLinkExt] = GetPath_fromLine()->split('‖')
+  " echo path
+  " echo maybeLinkExt
   let cmd = NewBufCmds( path )[ a:direction ] 
   " echo cmd
   " return

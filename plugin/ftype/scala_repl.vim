@@ -139,8 +139,8 @@ endfunc
 
 " ─   SBT Reloader                                       ■
 
-nnoremap <silent> <leader><leader>sr :call SbtReloaderStart()<cr>
-nnoremap <silent> <leader><leader>sR :call SbtReloaderStop()<cr>
+" nnoremap <silent> <leader><leader>sr :call SbtReloaderStart()<cr>
+" nnoremap <silent> <leader><leader>sR :call SbtReloaderStop()<cr>
 
 " ### sbt revolver reStart
 " in project/plugins.sbt add this line:

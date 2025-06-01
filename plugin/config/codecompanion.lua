@@ -51,13 +51,179 @@ _G.CodeCompanion_config = {
         user = "☼",
       },
 
+      keymaps = {
+        options = {
+          modes = {
+            n = "?",
+          },
+          callback = "keymaps.options",
+          description = "Options",
+          hide = true,
+        },
+        completion = {
+          modes = {
+            i = "<C-_>",
+          },
+          index = 1,
+          callback = "keymaps.completion",
+          description = "Completion Menu",
+        },
+        send = {
+          modes = {
+            n = { "<c-w><CR>" },
+            i = "<c-w><CR>",
+          },
+          index = 2,
+          callback = "keymaps.send",
+          description = "Send",
+        },
+        regenerate = {
+          modes = {
+            n = "<leader>R",
+          },
+          index = 3,
+          callback = "keymaps.regenerate",
+          description = "Regenerate the last response",
+        },
+        close = {
+          modes = {
+            n = "q",
+          },
+          index = 4,
+          callback = "keymaps.close",
+          description = "Close Chat",
+        },
+        stop = {
+          modes = {
+            n = "<c-g>c",
+            i = "<c-g>c",
+          },
+          index = 5,
+          callback = "keymaps.stop",
+          description = "Stop Request",
+        },
+        clear = {
+          modes = {
+            -- NOTE consistent with claude code ~/.config/nvim/plugin/config/ai-maps.lua‖/CLEARˍtextˍfieldˍbuffer
+            n = "<c-g>C",
+          },
+          index = 6,
+          callback = "keymaps.clear",
+          description = "Clear Chat",
+        },
+        codeblock = {
+          modes = {
+            n = "<leader>gc",
+          },
+          index = 7,
+          callback = "keymaps.codeblock",
+          description = "Insert Codeblock",
+        },
+        yank_code = {
+          modes = {
+            n = "<leader>gy",
+          },
+          index = 8,
+          callback = "keymaps.yank_code",
+          description = "Yank Code",
+        },
+        pin = {
+          modes = {
+            n = "<leader>gp",
+          },
+          index = 9,
+          callback = "keymaps.pin_reference",
+          description = "Pin Reference",
+        },
+        watch = {
+          modes = {
+            n = "<leader>gw",
+          },
+          index = 10,
+          callback = "keymaps.toggle_watch",
+          description = "Watch Buffer",
+        },
+        next_chat = {
+          modes = {
+            n = "<leader>}",
+          },
+          index = 11,
+          callback = "keymaps.next_chat",
+          description = "Next Chat",
+        },
+        previous_chat = {
+          modes = {
+            n = "<leader>{",
+          },
+          index = 12,
+          callback = "keymaps.previous_chat",
+          description = "Previous Chat",
+        },
+        next_header = {
+          modes = {
+            n = "<leader>]",
+          },
+          index = 13,
+          callback = "keymaps.next_header",
+          description = "Next Header",
+        },
+        previous_header = {
+          modes = {
+            n = "<leader>[",
+          },
+          index = 14,
+          callback = "keymaps.previous_header",
+          description = "Previous Header",
+        },
+        change_adapter = {
+          modes = {
+            n = "<leader>ga",
+          },
+          index = 15,
+          callback = "keymaps.change_adapter",
+          description = "Change adapter",
+        },
+        fold_code = {
+          modes = {
+            n = "<leader>gf",
+          },
+          index = 15,
+          callback = "keymaps.fold_code",
+          description = "Fold code",
+        },
+        debug = {
+          modes = {
+            n = "<leader>gd",
+          },
+          index = 16,
+          callback = "keymaps.debug",
+          description = "View debug info",
+        },
+        system_prompt = {
+          modes = {
+            n = "<leader>gs",
+          },
+          index = 17,
+          callback = "keymaps.toggle_system_prompt",
+          description = "Toggle the system prompt",
+        },
+        auto_tool_mode = {
+          modes = {
+            n = "gta",
+          },
+          index = 18,
+          callback = "keymaps.auto_tool_mode",
+          description = "Toggle automatic tool mode",
+        },
+      },
+
 
     },
     inline = {
       adapter = "anthropic",
     },
     cmd = {
-      adapter = "gemini",
+      adapter = "anthropic",
     }
   },
 

@@ -114,7 +114,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal "null\ze\s" conceal cchar=⨆
   syntax match Normal "\v\(\)\s\=\>" conceal cchar=ˍ
   syntax match Normal "\v_\s\=\>" conceal cchar=ˍ
-  syntax match Normal "void" conceal cchar=✴
+  syntax match Normal "void" conceal cchar=☀
 
   syntax match Normal '<' conceal cchar=⁽
   syntax match Normal '>' conceal cchar=⁾

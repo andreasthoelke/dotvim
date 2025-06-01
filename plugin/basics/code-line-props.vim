@@ -344,15 +344,17 @@ endfunc
 
 " A path or url is often the longest word in a line
 func! GetPath_fromLine()
+  let full_line = trim(getline('.'))
+  
+  " SIMPLE: If line contains ‖, return the full line (handles spaces in paths)
+  if full_line =~ '‖'
+    return expand(full_line)
+  endif
+  
   let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
   " return line_words
   let path = line_words->split()->sort('CompareLength')[-1]
   " return path
-
-  " SIMPLE: This link was created by a l cs map or is a plain path
-  if path =~ '‖'
-    return path
-  endif
 
   " Check for Markdown links: [text](path/to/file#heading) or [text](#heading) for in-document refs
   let markdown_match = matchlist(getline('.'), '\[[^]]*\](\([^)#]*\)\(#[^)]*\)\?)')
@@ -458,6 +460,13 @@ func! GetPath_fromLine()
     return folder_rel_path
   endif
 
+  " Fallback: if path is not readable, try the full line (handles paths with spaces)
+  let fallback_full_line = trim(getline('.'))
+  let expanded_fallback_line = expand(fallback_full_line)
+  if filereadable(expanded_fallback_line) || isdirectory(expanded_fallback_line)
+    return expanded_fallback_line
+  endif
+  
   echo 'Path is not readable: ' . path
   return path
 endfunc

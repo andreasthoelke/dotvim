@@ -34,6 +34,8 @@ nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
 
 nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
+nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
+nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
 func! RunTerm_showFloat()
  " echo "Running terminal command .."
@@ -54,16 +56,37 @@ func! RunTerm_showTerm()
 endfunc
 
 func! StartDevServer()
- let cmdline = 'pnpm run dev'
- " echo "running cmd: " . cmdline
- exec "5new"
- let opts = { 'cwd': getcwd( winnr() ) }
- let g:TermID = termopen( cmdline, opts )
- normal G
- " close the window withougt closing the terminal buffer
- silent wincmd c
- " call LaunchChromium( "http://localhost:5173/" )
- call LaunchChrome( "http://localhost:5173/" )
+  if exists('g:Vite1TermID')
+    echo 'Vite1TermID is already running'
+    return
+  endif
+  let cmdline = 'pnpm run dev'
+  " echo "running cmd: " . cmdline
+  exec "5new"
+  let opts = { 'cwd': getcwd( winnr() ) }
+  let g:Vite1TermID = termopen( cmdline, opts )
+  normal G
+  " close the window withougt closing the terminal buffer
+  silent wincmd c
+  " call LaunchChromium( "http://localhost:5173/" )
+  call LaunchChrome( "http://localhost:5173/" )
+endfunc
+
+func! StopDevServer ()
+  if !exists('g:Vite1TermID')
+    echo 'Vite1TermID is not running'
+    return
+  endif
+  call jobstop( g:Vite1TermID )
+  unlet g:Vite1TermID
+  echo 'Vite1TermID closed!'
+endfunc
+
+func! RestartDevServer ()
+  if exists('g:Vite1TermID')
+    call StopDevServer()
+  endif
+  call StartDevServer()
 endfunc
 
 
