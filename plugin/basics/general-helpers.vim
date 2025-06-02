@@ -161,11 +161,12 @@ nnoremap <silent> ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call D
 nnoremap ,cS :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
 nnoremap <silent><leader>os :call Path_Float( '~/.config/nvim/keymaps/vim-cheat-sheet.md' )<cr>
 
-nnoremap <silent><leader>oe :call Path_Float( 'ExampleLog.md' )<cr>
-nnoremap <silent><leader>ol :call Path_Float( 'ExampleLinks.md' )<cr>
+nnoremap <silent><leader>oex :call Path_Float( 'ExampleLog.md' )<cr>
+nnoremap <silent><leader>oel :call Path_Float( 'ExampleLinks.md' )<cr>
 nnoremap <silent><leader>op :call Path_Float( 'package.json' )<cr>
 nnoremap <silent><leader>oi :call Path_Float( '.gitignore' )<cr>
 nnoremap <silent><leader>or :call Path_Float( 'README.md' )<cr>
+nnoremap <silent><leader>oev :call Path_Float( '.env' )<cr>
 
 nnoremap <silent><leader>oc :call Path_Float( '~/.local/share/nvim/parrot/chats' )<cr>:call DirvishSortByModified()<cr>
 
