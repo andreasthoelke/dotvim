@@ -77,7 +77,7 @@ func! Scala_ServerClientRequest_x()
   if len( resultLines ) && !(resultLines[0] =~ 'error') && !(resultLines[0] =~ 'html')
     if jsonStartLine != -1
       silent exec "%!jq"
-      call Edb_addObjCountToBuffer()
+      call Gel_addObjCountToBuffer()
     endif
   endif
 

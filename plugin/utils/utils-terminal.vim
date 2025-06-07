@@ -29,6 +29,7 @@ vnoremap gwt :<c-u>call ShellReturn( GetVisSel() )<cr>
 nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor() )) )<cr>
 
 nnoremap <silent>gwj :call RunTerm_showFloat()<cr>
+nnoremap <silent>gwJ :call RunTerm_parag_showFloat()<cr>
 nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
 " nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
@@ -38,13 +39,20 @@ nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
 func! RunTerm_showFloat()
- " echo "Running terminal command .."
- " call T_DelayedCmd( "echo ''", 2000 )
  let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
  " echo line
  " return
  call System_Float( line )
 endfunc
+
+func! RunTerm_parag_showFloat()
+ let [startLine, endLine] = ParagraphStartEndLines()
+ let lines = getline(startLine, endLine)
+ let concat_cmd = join( lines, ' ' )
+ " let concat_cmd = join( lines, '\n' )
+ call System_Float( concat_cmd )
+endfunc
+
 
 func! RunTerm_showTerm()
  let cmdline = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
@@ -69,6 +77,8 @@ func! StartDevServer()
   " close the window withougt closing the terminal buffer
   silent wincmd c
   " call LaunchChromium( "http://localhost:5173/" )
+  let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
+
   call LaunchChrome( "http://localhost:5173/" )
 endfunc
 

@@ -12,23 +12,27 @@ require('avante').setup(
     -- Of course, you can reduce the request frequency by increasing `suggestion.debounce`.
     auto_suggestions_provider = "claude",
     cursor_applying_provider = nil, -- The provider used in the applying phase of Cursor Planning Mode, defaults to nil, when nil uses Config.provider as the provider for the applying phase
-    claude = {
-      endpoint = "https://api.anthropic.com",
-      -- model = "claude-3-7-sonnet-20250219",
-      model = "claude-sonnet-4-20250514",
-      -- model = "claude-opus-4-20250514",
-      timeout = 30000, -- Timeout in milliseconds
-      temperature = 0,
-      max_tokens = 20480,
-    },
-    gemini = {
-      -- model = "gemini-2.5-pro-exp-03-25",
-      model = "gemini-2.5-pro-preview-05-06",
-      -- model = "gemini-2.5-pro-preview-03-25",
-    },
-    openai = {
-      model = "o3",
-    },
+      providers = {
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          -- model = "claude-3-7-sonnet-20250219",
+          model = "claude-sonnet-4-20250514",
+          -- model = "claude-opus-4-20250514",
+          timeout = 30000, -- Timeout in milliseconds
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 20480,
+          },
+        },
+        gemini = {
+          -- model = "gemini-2.5-pro-exp-03-25",
+          model = "gemini-2.5-pro-preview-05-06",
+          -- model = "gemini-2.5-pro-preview-03-25",
+        },
+        openai = {
+          model = "o3",
+        },
+      },
     ---Specify the special dual_boost mode
     ---1. enabled: Whether to enable dual_boost mode. Default to false.
     ---2. first_provider: The first provider to generate response. Default to "openai".

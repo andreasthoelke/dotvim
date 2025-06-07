@@ -10,7 +10,7 @@ au ag BufRead,BufNewFile *.txt set filetype=markdown
 " au ag BufWinEnter,BufRead * if expand('%:t') =~ 'git' | setfiletype gitdiff | endif
 " au ag BufWinEnter,BufRead * if 1 | echoe expand('%') | endif
 
-au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call Edb_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call Gel_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
