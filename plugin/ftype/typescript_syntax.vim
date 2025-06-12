@@ -1,4 +1,54 @@
 
+" A collection of nice looking Unicode symbols to be considered for new conceals:
+
+"                   ﰟ   ⁜ ⁘ ⁗   ⁞ ⁑
+" ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩ → ⍊  ⌄
+" ɪ и ᵓᵔ ᵛ     ->    ⃣     ›
+" ➔  » ⇒ ⇾  →  ˃ ➟ ⇢ ˲ ↗  ➚ ⇗ ➚  ➶  ➹  ⤢ ⇗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘 ⲽⲼⲴⲷⲶⰻⰺⰸⰷⰲ ⰷ
+" ⇤  ⇠  ⇜  ⇐  ↙  ↢  ↤  ⇠  ⇽                               
+" ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻◻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
+" ∿ ∾  ≀ ≁ ➳  ➺  ➽ ↷ ⇛  ⭄   ⇨ ⇵ ➢ ⥈ ⇒ ⇛ ⊢ ⟹  ⟾   ⧐  ⤇  ⥸  ⭃
+" ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↑ ↓ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
+" ➳  ➽  ⟀ ↑ 🡹 🡲 🡩 🡡 🡕 🡑 ⊃ ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
+" ⑂ ⑃ ⑄ ⫙ ⫗ ⫕󱁊 ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
+"  ᶩ 𝑡 𝑙 ˍ  ▴ ˼ ▾ ˷ ⌄ ᐪ  ˹ ˼ ˺
+" ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗ 
+" ⊟  ⊡ | ⊖  ▥ ▤ ╹ ╴ ╳ ⒜  ⊙ ▲ ʲ ʳ ʺ ʽʹ ˂ ˄ ˆ ˌ ˓ ₊˖⁺﹢+ ˠ ˡ ˣ ˶ ˽  ᴺ ᵀ ᵈ ᵑ ᵓ ʺ 
+" ”  ⍘ ’ ⍞  ⍣ ⍤⍦⍪⍳ ⍽ ⍿ ⎅ ⎇  ⎎ ⎚
+" ◠ ⟒ ❯ ❋ ❊ ❇ ✚ ✙ ✖ ✕
+" ⇛   ⎇ ⎇  ⊩  ◫  ⫖ ⫐ ⪾ ⫗  𝍉  ⋘  ⋙  ⋞ ⋟ ⋉ ⊻ ⋲ ⋺ ⋻ ⋿ ⌲ ⍦ ⎅
+" ▣ ⟒ ▯  ▭ ◌ ☍ ☌  ☳ ☶ ♁ ⚎ ≣  ∘
+" ∧ ⋑ ⋇ ⧺  · ˙ ̇ ⟒  ⊛ ⏺
+
+" ➔  ⇾  →  ⬿ ˃ ➟ ⇢ ˲ ↗ → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘
+" « » « ˝ ˚ ˙ ⧧˖͜ ͝˘˟ˢˡˤ˳ ╎𝑎 α β  ⟯⟯⟮⟦╌ ∥,a͡,b, e ͢ e  װ ∗ ⇣ ⇨ ⇢ 
+"  ⋮  ┆  ⫾ ‖  󰇙  ║ | ╵ ┆┇╷│ ╹ ╻ ╽ ▏   ░ ▒ ▓  ▕
+"  ╴
+" ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟  e⃨  ⊍ ⊐ ⊔ ⊝ ⊟
+" ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
+" ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱〈  < ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
+" ⋋  ⌾ ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩ ∪      𝑟S  ʀS
+" ˃ ˲  ˲ ˿  ͐ ͢  ⃗  ⃯  →   ◥ ↘  ⇓ ↗   ↣  ➙ ⇧ ⇡ ⇑ ↥↥  ➔ ➚  ➟  ➢ ➝  ➩  ➲  𝇋
+" ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
+" ◌  ● ⊚ ⌾ ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖ ∎ ☉  •⋆• ▪
+" ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷ ✴  ⌘ ✱ ❂ ❈  ♽
+" 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳
+"  索  󰑫  直  直  󰖩 ⋺  ⋻  Ѱ ѱ
+"   פּ  󰺔   󱘎   ⇶  󱏒   󱁉     ▃     󰁎
+
+" ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
+"   ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪  🮏 🮎 🮌🮇🭰🮀 🮙 🮞🮟 🮣🮢 🮨 🮬 🮺🮻 🯸 🯴
+"  ❖ ✼ ❃  ❇  ❉  ❋  ◈ ⟐  ⟡ ⬖ ⬙  ⬥  ⬧  ◆
+
+" 1. `⚿` (die face-6) - represents uniqueness/identification
+" 2. `⊕` (circled plus) - mathematical symbol for primary/main operation
+" 3. `◉` (fisheye) - represents a focal point/primary element
+" 4. `⟐` (white diamond with centered dot) - indicates primary/central importance
+" 5. `⬢` (black large hexagon) - geometric shape suggesting structure/key element
+
+
+
+
 func! TsSyntaxAdditions ()
 
   call clearmatches()
@@ -53,6 +103,34 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'Tuple' conceal cchar=T
   syntax match Normal 'tuple\:\s' conceal cchar=T
   syntax match Normal 'tuple\:\[' conceal cchar=T
+
+" ─   Drizzle                                            ■
+
+  syntax match Normal 'integer' conceal cchar=I
+  syntax match Normal 'integer()' conceal cchar=I
+  syntax match Normal 'text' conceal cchar=T
+  syntax match Normal 'text()' conceal cchar=T
+  syntax match Normal 'varchar()' conceal cchar=S
+  syntax match Normal 'notNull()' conceal cchar=!
+  syntax match Normal 'primaryKey' conceal cchar=◉
+  syntax match Normal 'primaryKey()' conceal cchar=◉
+  syntax match Normal 'from' conceal cchar=⊚
+  " syntax match Normal 'fields' conceal cchar=⊚
+  syntax match Normal 'fields' conceal cchar=◈
+  syntax match Normal 'references' conceal cchar=⟹
+  syntax match Normal 'relations' conceal cchar=⟹
+  syntax match Normal 'one\ze(' conceal cchar=⊃
+  syntax match Normal 'many\ze(' conceal cchar=⫖
+  syntax match Normal 'table\ze\.' conceal cchar=
+  syntax match Normal 'table\ze(' conceal cchar=
+  syntax match Normal 'pgTable\ze\.' conceal cchar=
+  syntax match Normal 'pgTable\ze(' conceal cchar=
+  syntax match Normal 'table' conceal cchar=
+  syntax match Normal 'index' conceal cchar=Ⲷ
+  syntax match Normal 'unique().on' conceal cchar=Ⲵ
+
+
+" ─^  Drizzle                                            ▲
 
   syntax match Normal '({' conceal cchar=⟨
   syntax match Normal '})' conceal cchar=⟩

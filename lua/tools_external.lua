@@ -124,6 +124,84 @@ function M.get_json_content(file_path)
     return json_content
 end
 
+-- Get_json_keyval(file_path, key_path)
+-- Get_json_keyval('package.json', 'license')
+-- Get_json_keyval('package.json', 'dependencies.react')
+
+function _G.Get_json_keyval(file_path, key_path)
+  -- Check if file exists
+  local file = io.open(file_path, "r")
+  if not file then
+    return nil, "File not found: " .. file_path
+  end
+  
+  -- Read file content
+  local content = file:read("*all")
+  file:close()
+  
+  if not content or content == "" then
+    return nil, "File is empty or unreadable"
+  end
+  
+  -- Parse JSON
+  local ok, json_data = pcall(vim.fn.json_decode, content)
+  if not ok then
+    return nil, "Invalid JSON format"
+  end
+  
+  -- Navigate through key path
+  local current = json_data
+  
+  -- Split key_path by dots to handle nested keys
+  for key in string.gmatch(key_path, "[^%.]+") do
+    -- Handle array indices (numeric keys)
+    local numeric_key = tonumber(key)
+    if numeric_key then
+      key = numeric_key
+    end
+    
+    if type(current) == "table" and current[key] ~= nil then
+      current = current[key]
+    else
+      return nil, "Key path not found: " .. key_path
+    end
+  end
+  
+  return current
+end
+-- 
+
+-- Get_keyval('vite.config.ts', 'port')
+
+function _G.Get_keyval(file_path, key)
+  local file = io.open(file_path, "r")
+  if not file then
+    return nil
+  end
+
+  for line in file:lines() do
+    -- Escape special pattern characters in the key
+    local escaped_key = key:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+
+    -- Pattern to match the key with optional quotes and extract value
+    local pattern = '[\'"]?' .. escaped_key .. '[\'"]?%s*:%s*(.-)%s*[,}]?%s*$'
+    local value = line:match(pattern)
+
+    if value then
+      -- Clean up the value
+      value = value:gsub("^%s+", ""):gsub("%s+$", "") -- trim whitespace
+      value = value:gsub(",$", "") -- remove trailing comma
+      value = value:gsub('^[\'"]', ''):gsub('[\'"]$', '') -- remove quotes
+      file:close()
+      return value
+    end
+  end
+
+  file:close()
+  return nil
+end
+
+
 
 -- ─^  Json                                              ▲
 

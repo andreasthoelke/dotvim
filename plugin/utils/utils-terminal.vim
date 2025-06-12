@@ -68,18 +68,20 @@ func! StartDevServer()
     echo 'Vite1TermID is already running'
     return
   endif
-  let cmdline = 'pnpm run dev'
+  let cmdline = 'npm run dev'
   " echo "running cmd: " . cmdline
   exec "5new"
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:Vite1TermID = termopen( cmdline, opts )
   normal G
-  " close the window withougt closing the terminal buffer
-  silent wincmd c
+  " close the window without closing the terminal buffer
+  " silent wincmd c
   " call LaunchChromium( "http://localhost:5173/" )
   let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
 
-  call LaunchChrome( "http://localhost:5173/" )
+  let port = v:lua.Get_keyval('vite.config.ts', 'port')
+
+  call LaunchChrome( "http://localhost:" . port )
 endfunc
 
 func! StopDevServer ()
