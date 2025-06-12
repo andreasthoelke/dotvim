@@ -75,14 +75,15 @@ func! StartDevServer()
   let g:Vite1TermID = termopen( cmdline, opts )
   normal G
   " close the window without closing the terminal buffer
-  " silent wincmd c
+  silent wincmd c
   " call LaunchChromium( "http://localhost:5173/" )
   let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
 
-  let port = v:lua.Get_keyval('vite.config.ts', 'port')
+  let port = v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
 
   call LaunchChrome( "http://localhost:" . port )
 endfunc
+" v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
 
 func! StopDevServer ()
   if !exists('g:Vite1TermID')

@@ -172,8 +172,9 @@ end
 -- 
 
 -- Get_keyval('vite.config.ts', 'port')
+-- require'tools_external'.Get_keyval( 'vite.config.ts', 'port' )
 
-function _G.Get_keyval(file_path, key)
+function M.Get_keyval(file_path, key)
   local file = io.open(file_path, "r")
   if not file then
     return nil
