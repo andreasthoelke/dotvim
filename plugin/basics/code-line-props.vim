@@ -348,7 +348,9 @@ func! GetPath_fromLine()
   
   " SIMPLE: If line contains ‖, return the full line (handles spaces in paths)
   if full_line =~ '‖'
-    return expand(full_line)
+    if filereadable(full_line)
+      return expand(full_line)
+    endif
   endif
   
   let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
@@ -467,7 +469,7 @@ func! GetPath_fromLine()
     return expanded_fallback_line
   endif
   
-  echo 'Path is not readable: ' . path
+  " echo 'Path is not readable: ' . path
   return path
 endfunc
 " split( "ea bbbb ccccccc dfddfdfdfdf we" )->sort('CompareLength')

@@ -376,7 +376,7 @@ func! JS_RunPrinter( termType )
   endif
 
   if reset_needed
-    call T_DelayedCmd( "call JS_reset_type_modules()", 2000 )
+    call T_DelayedCmd( "call JS_reset_type_modules()", 4000 )
     " call JS_reset_type_modules()
   endif
 endfunc

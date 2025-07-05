@@ -93,7 +93,9 @@ vim.g.codex_cmd = "claude "
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "claude ",
+    "claude update ",
     "claude --resume ",
+    "gemini ",
     "codex --approval-mode full-auto ",
     "codex --full-auto ",
     "codex --full-auto --model gpt-4.1 ",

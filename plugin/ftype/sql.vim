@@ -1,5 +1,6 @@
 
-" db-ui connections can be defined here: ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
+" db-ui connections can be defined here:
+" ~/.config/db_ui/connections.json#/[{"url".%20"mysql.//root.PW@127.0.0.1.3306/pets",%20"name".
 
 func! Sql_bufferMaps()
 

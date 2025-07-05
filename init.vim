@@ -51,8 +51,8 @@ Plug 'Davidyz/VectorCode'
 
 " https://github.com/yetone/avante.nvim
 " Plug 'yetone/avante.nvim'
-" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
-Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
+" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
 " optional deps:
 Plug 'stevearc/dressing.nvim'
@@ -234,7 +234,7 @@ Plug 'nanotee/sqls.nvim'
 " Plug 'memgraph/cypher.vim'
 " Plug 'neo4j-contrib/cypher-vim-syntax'
 Plug 'edgedb/edgedb-vim'
-
+Plug 'typedb-osi/typeql.vim'
 
 " ─   Git related plugins                               ──
 

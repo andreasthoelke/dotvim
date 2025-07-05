@@ -13,6 +13,9 @@ au ag BufRead,BufNewFile *.txt set filetype=markdown
 au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call Gel_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
+au ag BufNewFile,BufRead,WinNew *.tql,*.tqls call TypeDB_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.tql,*.tqls call TypeQLSyntaxAdditions()
+
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()

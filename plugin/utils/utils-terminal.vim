@@ -38,6 +38,10 @@ nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
 nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
+nnoremap <silent><leader>glt :call StartTypeDBServer()<cr>
+nnoremap <silent><leader>glT :call StopTypeDBServer()<cr>
+
+
 func! RunTerm_showFloat()
  let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
  " echo line
@@ -70,20 +74,54 @@ func! StartDevServer()
   endif
   let cmdline = 'npm run dev'
   " echo "running cmd: " . cmdline
-  exec "5new"
+  exec "20new"
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:Vite1TermID = termopen( cmdline, opts )
+
+  call T_DelayedCmd( "call StartDevServer_resume()", 2000 )
+endfunc
+" v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
+
+
+func! StartDevServer_resume()
+
+  " get the current buffer text
+  let currentBufferText = getline(1, '$')
+  " echo currentBufferText
+  " ['', '> next-openai@0.0.0 dev', '> next dev', '', '   ▲ Next.js 15.3.3', '   - Local:        http://localhost:3000',
+  " '   - Network:      http://192.168.2.124:3000', '   - Environments: .env.local', '', ' ✓ Starting...', '']
+
+  let port = ''
+  " let currentBufferText = ['', '> next-openai@0.0.0 dev', '> next dev', '', '   ▲ Next.js 15.3.3', '   - Local: http://localhost:3000', "   - Network:      http://192.168.2.124:3000", '   - Environments: .env.local', '', ' ✓ Starting...', '']
+
+  for line in currentBufferText
+    let localhost_pos = stridx(line, 'localhost:')
+    if localhost_pos != -1
+      let port_start = localhost_pos + len('localhost:')
+      let port = strpart(line, port_start)
+      " Remove any trailing characters that aren't part of the port
+      let port = matchstr(port, '\d\+')
+      break
+    endif
+  endfor
+
+  if port == ''
+    echo 'port not found in term buffer'
+    return
+  endif
+  " echo port
+
   normal G
   " close the window without closing the terminal buffer
   silent wincmd c
   " call LaunchChromium( "http://localhost:5173/" )
-  let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
+  " let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
 
-  let port = v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
+  " let port = v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
 
   call LaunchChrome( "http://localhost:" . port )
 endfunc
-" v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
+
 
 func! StopDevServer ()
   if !exists('g:Vite1TermID')
@@ -101,6 +139,44 @@ func! RestartDevServer ()
   endif
   call StartDevServer()
 endfunc
+
+" ─   TypeDB                                            ──
+
+func! StartTypeDBServer()
+  if exists('g:TypeDBTermID')
+    echo 'TypeDB server is already running'
+    return
+  endif
+  let cmdline = 'typedb server'
+  exec "20new"
+  let opts = { 'cwd': getcwd( winnr() ) }
+  let g:TypeDBTermID = termopen( cmdline, opts )
+
+  silent wincmd c
+  call LaunchChrome( "https://studio.typedb.com/schema" )
+
+  echo 'TypeDB server started'
+endfunc
+
+func! StopTypeDBServer ()
+  if !exists('g:TypeDBTermID')
+    echo 'TypeDB server is not running'
+    return
+  endif
+  call jobstop( g:TypeDBTermID )
+  unlet g:TypeDBTermID
+  echo 'TypeDB server closed!'
+endfunc
+
+
+func! RestartTypeDBServer ()
+  if exists('g:TypeDBTermID')
+    call StopDevServer()
+  endif
+  call StartDevServer()
+endfunc
+
+
 
 
 " ─   One shot async Terminal                            ■

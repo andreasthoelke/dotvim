@@ -366,6 +366,14 @@ _G.CodeCompanion_config = {
         dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
       }
     },
+    mcphub = {
+      callback = "mcphub.extensions.codecompanion",
+      opts = {
+        show_result_in_chat = true,  -- Show mcp tool results in chat
+        make_vars = true,            -- Convert resources to #variables
+        make_slash_commands = true,  -- Add prompts as /slash commands
+      }
+    },
     -- todo: try out
     vectorcode = {
       opts = { add_tool = true, add_slash_command = true, tool_opts = {} },

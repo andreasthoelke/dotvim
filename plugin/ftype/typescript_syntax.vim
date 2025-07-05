@@ -108,7 +108,10 @@ func! TsSyntaxAdditions ()
 
   syntax match Normal 'integer' conceal cchar=I
   syntax match Normal 'integer()' conceal cchar=I
-  syntax match Normal 'text' conceal cchar=T
+  " NOTE this seems to prevent the conceal in words like "Context" / requires a Non-word char (.) before the match
+  " while it also overrides the syntax conceal for the dot!
+  call matchadd('Conceal', '\W\zstext', 12, -1, {'conceal': 'T'})
+  " syntax match Normal '\W\zstext' conceal cchar=T
   syntax match Normal 'text()' conceal cchar=T
   syntax match Normal 'varchar()' conceal cchar=S
   syntax match Normal 'notNull()' conceal cchar=!
@@ -151,7 +154,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal "const\s" conceal cchar=⁝
   syntax match Normal "readonly\s" conceal cchar=‧
   " syntax match Normal "let\ze\s" conceal cchar=╴
-  syntax match Normal "let\ze\s" conceal cchar=𝇊
+  syntax match Normal "\s\zslet\ze\s" conceal cchar=𝇊
   " syntax match Normal "let\s" conceal cchar=╸
   syntax match Normal 'private' conceal cchar=ˌ
   syntax match Normal 'public' conceal cchar=∘
@@ -174,6 +177,7 @@ func! TsSyntaxAdditions ()
   " syntax match Normal "export\s\zsfunction\ze\s" conceal cchar=→
   syntax match Normal "function\ze\s" conceal cchar=→
   syntax match Normal "export\ze\s" conceal cchar=∷
+  syntax match Normal "default\ze\s" conceal cchar=⁘
   syntax match Normal "gql`" conceal cchar=▵
   syntax match Normal "sql`" conceal cchar=▵
   syntax match Normal "return" conceal cchar=▂
@@ -340,6 +344,9 @@ func! TsSyntaxAdditions ()
   " Hide comments
   call matchadd('Conceal', '\v^\s*\zs\/\/\s', 12, -1, {'conceal': ''})
   call matchadd('Conceal', '\s\zs\\/\/\ze\s', 12, -1, {'conceal': ''})
+
+  " call matchadd('Conceal', '\W\zstext', 12, -1, {'conceal': 'T'})
+  " syntax match Normal '\W\zstext' conceal cchar=T
 
   " Conceal "%20" which is used for "h rel.txt" with space
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
