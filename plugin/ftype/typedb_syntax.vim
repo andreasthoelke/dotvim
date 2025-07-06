@@ -7,6 +7,7 @@ func! TypeQLSyntaxAdditions() " ■
 
   call clearmatches()
   set syntax=typeql
+  set filetype=typeql
 
   " Dim end of line / end of statement separators.
   call matchadd('CommentMinusMinus', '\v\zs,', 11, -1)
@@ -14,9 +15,13 @@ func! TypeQLSyntaxAdditions() " ■
   call matchadd('CommentMinusMinus', '\v\zs:', 11, -1)
 
   " This is effective in preventing the conceal unicode in normal comments
-  syntax match CommentMinus '\v#\s\zs.*'
+  syntax match CommentMinus '\v#\s\zs.*' contains=BoldComment
   " IMPORTANT: this line would prevent the above effect!
   " syntax match Normal "\#\s" conceal
+
+  " Bold text within comments (text wrapped with asterisks)
+  syntax match BoldComment '\v\*[^*]+\*' contained
+  syntax match Conceal '\*' contained containedin=BoldComment conceal
 
   " IMPORTANT: Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
@@ -89,6 +94,9 @@ func! TypeQLSyntaxAdditions() " ■
     HiLink typeqlDate          Number
     HiLink typeqlString        String
     HiLink typeqlVariable      Identifier
+    
+    " Define bold style for comments with asterisks
+    hi BoldComment gui=bold guifg=#48666b
 
     delcommand HiLink
   endif
