@@ -57,7 +57,8 @@ hi(0, "@lsp.typemod.method.definition", { link = "Function" })
 -- hi(0, "@lsp.typemod.variable.readonly.typescript", { link = "purescriptOperator" })
 -- hi(0, "@lsp.typemod.variable.local.typescript", { link = "Special" })
 
--- ─   New Colors                                       ──
+-- ─   New Colors                                        ■
+-- NOTE: the corresponding *dark* highlight groups in colors/munsell-blue-molokai.vim-- 
 -- just a nice color! { fg = "#B8766E" })
 -- gold! fg = "#898861" })
 -- below is a darker pale derivative
@@ -86,6 +87,20 @@ hi(0, "@keyword.return.typescript", { bg = "#C0DCD8", fg = "#C0DCD8" })
 
 -- defaultLibrary methods
 hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
+
+
+-- ─   TypeDB                                            ■
+
+hi(0, "TdbEntity", { fg = "#f0706E" })
+hi(0, "TdbRelation", { fg = "#B076fE" })
+hi(0, "TdbAttribute", { fg = "#08760E" })
+
+
+-- ─^  TypeDB                                            ▲
+
+
+
+-- ─^  New Colors                                        ▲
 
 hi(0, "@module.builtin", { link = "Special" })
 hi(0, "@number.float", { link = "Float" })

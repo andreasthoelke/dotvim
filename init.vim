@@ -234,7 +234,7 @@ Plug 'nanotee/sqls.nvim'
 " Plug 'memgraph/cypher.vim'
 " Plug 'neo4j-contrib/cypher-vim-syntax'
 Plug 'edgedb/edgedb-vim'
-Plug 'typedb-osi/typeql.vim'
+" Plug 'typedb-osi/typeql.vim'
 
 " ─   Git related plugins                               ──
 

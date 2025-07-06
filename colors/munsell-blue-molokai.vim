@@ -119,7 +119,7 @@ hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
 hi Label           guifg=#3A768C               gui=none
 hi Macro           guifg=#C4BE89               gui=italic
-hi SpecialKey      guifg=#66D9EF               gui=italic
+hi! SpecialKey      guifg=#66D9EF               gui=italic
 
 hi MatchParen      guifg=#000000 guibg=#FD971F gui=bold
 hi ModeMsg         guifg=#E6DB74
@@ -824,7 +824,7 @@ hi! CursorLine                    guibg=#181C1C
 hi CursorLineNr    guifg=#FD971F               gui=none
 hi LineNr          guifg=#303030
 hi NonText         guifg=#465457
-hi SpecialKey      guifg=#465457
+" hi SpecialKey      guifg=#465457
 
 " Seach
 " hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
@@ -1276,10 +1276,11 @@ hi! def link @lsp.typemod.variable.definition VarDec
 hi! def link @lsp.typemod.variable.declaration VarDec
 
 
+" ─   New Colors                                         ■
+-- NOTE: the corresponding *light* highlight groups in colors/munsell-blue-molokai_light_1.lua 
 
 lua << EOF
 
--- ─   New Colors                                       ──
 local hi = vim.api.nvim_set_hl
 -- just a nice color! { fg = "#B8766E" })
 -- gold! fg = "#898861" })
@@ -1309,8 +1310,27 @@ hi(0, "@keyword.return.typescript", { bg = "#122830", fg = "#122830" })
 -- defaultLibrary methods
 hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
 
-
 EOF
+
+
+" ─   TypeDB                                             ■
+
+hi! TdbEntity            guifg=#f0706E
+hi! TdbRelation          guifg=#B076fE
+hi! TdbAttribute         guifg=#08760E
+
+hi! SpecialKey      guifg=#66D9EF               gui=italic
+
+  " #FAB1AB
+  " #717050
+  " #00666E
+  " #F7F7F7
+
+
+" ─^  TypeDB                                             ▲
+
+
+" ─^  New Colors                                         ▲
 
 
 " @lsp.type.class         Structure

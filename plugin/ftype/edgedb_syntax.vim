@@ -39,7 +39,6 @@ func! EdgeQLSyntaxAdditions() " ■
   call matchadd('Trait', '\vabstract\stype\s\zs\u\w*', 11, -1)
 
   call matchadd('FunctionDec', '\v[is\s(\w*::)?\zs\u\w*', 11, -1)
-
   call matchadd('FunctionDec', '\v::\u\w*', 11, -1)
 
   call matchadd('Keyword', 'Resolved\. Schema is up to date now\.', 11, -1)
