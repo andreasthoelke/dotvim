@@ -1277,7 +1277,7 @@ hi! def link @lsp.typemod.variable.declaration VarDec
 
 
 " ─   New Colors                                         ■
--- NOTE: the corresponding *light* highlight groups in colors/munsell-blue-molokai_light_1.lua 
+" NOTE: the corresponding *light* highlight groups in colors/munsell-blue-molokai_light_1.lua 
 
 lua << EOF
 
