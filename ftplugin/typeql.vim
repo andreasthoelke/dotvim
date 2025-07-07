@@ -4,7 +4,6 @@ setlocal tabstop=2
 setlocal softtabstop=2
 setlocal expandtab
 
-echo "hi there"
 " Custom formatoptions for TypeQL
 setlocal formatoptions=tcqln
 

@@ -14,45 +14,69 @@ func! TypeQLSyntaxAdditions() " ■
   call matchadd('CommentMinusMinus', '\v\zs;', 11, -1)
   call matchadd('CommentMinusMinus', '\v\zs:', 11, -1)
 
+  " ─   Comment markup                                     ■
   " This is effective in preventing the conceal unicode in normal comments
-  syntax match CommentMinus '\v#\s\zs.*' contains=BoldComment
+  syntax match Comment '\v#\s\zs.*' contains=BoldComment,ItalicComment
   " IMPORTANT: this line would prevent the above effect!
   " syntax match Normal "\#\s" conceal
 
   " Bold text within comments (text wrapped with asterisks)
   syntax match BoldComment '\v\*[^*]+\*' contained
   syntax match Conceal '\*' contained containedin=BoldComment conceal
+  " Italic text within quotes (text wrapped with ")
+  syntax match ItalicComment '\v\"[^"]+\"' contained
+  " syntax match Conceal '\"' contained containedin=ItalicComment conceal
 
   " IMPORTANT: Only matchadd can coneal the comment chars when those are already match by the above syntax match!
   call matchadd('Conceal', '\#\s', 12, -1, {'conceal': ''})
 
-  " syntax match FunctionDec '\:\zs\w*'
-  " This was the only way to match Identifiers that include "-" / dashes.
-  syntax match ModeMsg '\:\zs[a-zA-Z0-9_-]\+'
+  " ─^  Comment markup                                     ▲
 
-  syntax match Identifier '[a-zA-Z0-9_-]\+\ze\:'
+  " New type get a default highlight of Indentifier. This will be overridded in the coming lines in case we know the base type entity, relation or attribute.
   syntax match Identifier '[a-zA-Z0-9_-]\+\ze\ssub\s'
-  syntax match Identifier '[a-zA-Z0-9_-]\+\ze\splays\s'
 
+  " This was the only way to match Identifiers that include "-" / dashes.
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\ssub\sentity'
-  syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\ssub\srelation'
-  " syntax match ParamDec '[a-zA-Z0-9_-]\+\ze\ssub\sattribute'
-  syntax match TdbAttribute '[a-zA-Z0-9_-]\+\ze\ssub\sattribute'
+  syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\splays\s'
 
+  syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\ssub\srelation'
+  syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\:\w'
+  syntax match TdbRelationRole '\:\zs[a-zA-Z0-9_-]\+'
+
+  " EXAMPLE:
+  " commit sub relation,
+  "   relates repository,
+  syntax match TdbEntity '\<relates\>' nextgroup=TdbEntity skipwhite conceal cchar=🡲
+  syntax match TdbEntity '[a-zA-Z0-9_-]\+' contained
+
+  " EXAMPLE: user owns username;
+  syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\sowns'
+  " Note that we don't know if the attribute is owned by an entity, it's perhaps more common. also rate to have a one
+  " line statement like this: user owns username;
+  " EXAMPLE:
+  " user sub entity,
+  "   owns username,
+  syntax match TdbOwns '\<owns\>' nextgroup=TdbAttribute skipwhite conceal cchar=☼
+  syntax match TdbAttribute '[a-zA-Z0-9_-]\+' contained
+
+
+
+  " ─   Other keywords                                    ──
   syn keyword typeqlKeyword    match get fetch define undefine insert delete
   syn keyword typeqlKeyword    rule offset limit sort asc desc
 
 
-  " ─   Keywords                                           ■
+  " ─   Keyword conceals                                   ■
 
   " syntax match Normal 'sub' conceal cchar=⟀
   syntax match Normal 'sub\ze\s' conceal cchar=󰁂
   syntax match Normal 'plays\ze\s' conceal cchar=
   syntax match Normal 'entity' conceal cchar=
   syntax match Normal 'relation' conceal cchar=⪾ 
-  syntax match Normal 'relates' conceal cchar=🡲 
+  " syntax match Normal 'relates' conceal cchar=🡲 
   syntax match Normal 'attribute' conceal cchar=● 
-  syntax match Normal 'owns' conceal cchar=☼ 
+  " see above
+  " syntax match Normal 'owns' conceal cchar=☼ 
 
   syntax match Normal 'as\ze\s' conceal cchar=« 
   syntax match Normal 'value' conceal cchar=⫐ 
@@ -60,8 +84,8 @@ func! TypeQLSyntaxAdditions() " ■
   syntax match Normal 'boolean' conceal cchar=B 
   syntax match Normal 'string' conceal cchar=S 
 
-  " ─^  Keywords                                           ▲
 
+  " ─^  Keyword conceals                                   ▲
 
 
 
@@ -97,6 +121,7 @@ func! TypeQLSyntaxAdditions() " ■
     
     " Define bold style for comments with asterisks
     hi BoldComment gui=bold guifg=#48666b
+    hi ItalicComment gui=italic guifg=#54757D
 
     delcommand HiLink
   endif

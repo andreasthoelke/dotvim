@@ -41,22 +41,17 @@ func! TypeDB_bufferMaps()
 
   nnoremap <silent><buffer> gsK :call Tdb_showObjectFields( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> gsk :call Tdb_showObjectFieldsWT( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> gsf :call Tdb_queryAllObjectFieldsTablePermMulti( expand('<cWORD>') )<cr>
-
-  nnoremap <silent><buffer> gef :let g:withId=0<cr>:call Tdb_queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> <leader>gsf :let g:withId=0<cr>:call Tdb_queryAllObjectFields( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> ,gef :let g:withId=1<cr>:call Tdb_queryAllObjectFields_withInnerObjs( expand('<cWORD>') )<cr>
-  nnoremap <silent><buffer> ,gsf :let g:withId=1<cr>:call Tdb_queryAllObjectFields( expand('<cWORD>') )<cr>
 
   nnoremap <silent><buffer> ,,gsd :call Tdb_queryDeleteObject( expand('<cWORD>') )<cr>
 
-  nnoremap <silent><buffer> <leader>gsF :call Tdb_queryAllObjectFields_InnerFields( expand('<cWORD>') )<cr>
-
   " nnoremap <silent><buffer> gsK :silent call TdbReplPost( '\d object ' . expand('<cWORD>') )<cr>
 
-  " Copied from Tools_Scala  
   nnoremap <silent><buffer> <leader><c-p> :call Tdb_TopLevBindingBackw()<cr>
+  nnoremap <silent><buffer> <leader><c-n> :call Tdb_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+
   nnoremap <silent><buffer> <c-p>         :call Tdb_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-n>         :call Tdb_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
+
   " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
   " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
 
@@ -77,8 +72,6 @@ func! TypeDB_bufferMaps()
   nnoremap <silent><buffer> Y :call Tdb_ColonBackw()<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
-  nnoremap <silent><buffer> <leader><c-n> :call Tdb_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-n>         :call Tdb_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
   " " find a new map if I actually use this:
   " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
@@ -302,39 +295,42 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(select|insert|SELECT|INSERT|type|TYPE)'
-let g:Tdb_TopLevPattern = '\v^(select|insert|SELECT|INSERT|type|TYPE)'
+let g:Tdb_MainStartPattern = '\v(sub|plays)'
+let g:Tdb_TopLevPattern = '\v^(define)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )
 endfunc
 
-func! Tdb_MainStartBindingForw()
-  " normal! }
-  normal! jj
-  call search( g:Tdb_MainStartPattern, 'W' )
-endfunc
-
 func! Tdb_TopLevBindingBackw()
-  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
   call search( g:Tdb_TopLevPattern, 'bW' )
-  " normal! {
-  " normal! kk
-  " call search( g:Tdb_TopLevPattern, 'W' )
-  " call search( '\v^(export|function|const|let)\s', 'W' )
 endfunc
 
+
+func! Tdb_skipcomment()
+  let curCar = GetCharAtCursor()
+  if curCar == '#'
+    normal! j
+    call Tdb_skipcomment()
+  endif
+endfunc
+
+func! Tdb_MainStartBindingForw()
+  normal! }
+  call search( g:Tdb_MainStartPattern, 'W' )
+  normal! {
+  normal! j
+  call Tdb_skipcomment()
+endfunc
 
 func! Tdb_MainStartBindingBackw()
-  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  normal! {
   call search( g:Tdb_MainStartPattern, 'bW' )
-  " normal! {
-  normal! kk
-  call search( g:Tdb_MainStartPattern, 'W' )
-  " call search( '\v^(export|function|const|let)\s', 'W' )
+  normal! {
+  normal! j
+  call Tdb_skipcomment()
 endfunc
 
-" call search('\v^(\s*)?call', 'W')
 
 func! Tdb_MvStartOfBlock()
   normal! k

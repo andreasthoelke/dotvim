@@ -91,9 +91,15 @@ hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
 
 -- ─   TypeDB                                            ■
 
-hi(0, "TdbEntity", { fg = "#f0706E" })
-hi(0, "TdbRelation", { fg = "#B076fE" })
-hi(0, "TdbAttribute", { fg = "#08760E" })
+-- hi(0, "TdbEntity", { fg = "#DE7D7B" })
+-- hi(0, "TdbRelationRole", { fg = "#5B9AC4" })
+-- hi(0, "TdbRelation", { fg = "#62B082" })
+hi(0, "TdbAttribute", { fg = "#B6995C" })
+
+hi(0, "TdbEntity", { fg = "#AD6068" })
+hi(0, "TdbRelationRole", { fg = "#BE8C9D" })
+hi(0, "TdbRelation", { fg = "#359184" })
+-- hi(0, "TdbAttribute", { fg = "#524722" })
 
 
 -- ─^  TypeDB                                            ▲
@@ -167,7 +173,13 @@ hi(0, "CocInfoSign", { link = "purescriptIdentifier" })
 hi(0, "CocWarningFloat", { link = "purescriptIdentifier" })
 hi(0, "CocWarningSign", { link = "purescriptIdentifier" })
 hi(0, "ColorColumn", { bg = "#999ea5" })
-hi(0, "Comment", { fg = "#95afb8" })
+
+-- ─   Comment                                           ■
+-- hi Comment         guifg=#344B53
+-- hi CommentMinus    guifg=#273A40
+-- hi CommentMinusCursive    guifg=#273A40 gui=italic
+-- hi CommentMinusMinus guifg=#1D2B2F
+
 hi(0, "CommentLabel", { bg = "#f7f7f7", fg = "#7a9aa6" })
 hi(0, "CommentMarkup", { bg = "#e8ebed", fg = "#aec3ca" })
 -- hi(0, "CommentMinus", { fg = "#acc1c9" })
@@ -176,8 +188,14 @@ hi(0, "CommentMinusMinus", { fg = "#bfd1d6" })
 hi(0, "CommentSection", { bg = "#ebebeb", fg = "#7a9aa6" })
 
 -- + readability of light theme
-hi(0, "CommentMinus", { fg = "#809CA7" })
+hi(0, "CommentMinus", { fg = "#6D858F" })
+-- hi(0, "Comment", { fg = "#95afb8" })
+hi(0, "Comment", { fg = "#86A3AE" })
+
 -- hi(0, "CommentMinus", { fg = "#2A3437" })
+
+
+-- ─^  Comment                                           ▲
 
 hi(0, "Conceal", { fg = "#88adbd" })
 hi(0, "ConcealOne", { fg = "#96b6c3" })

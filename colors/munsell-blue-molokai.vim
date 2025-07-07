@@ -765,12 +765,15 @@ hi Normal          guifg=#3F5C66 guibg=#121416
 " I made the Normal color a 'default grey' - similar to how Comment was before
 " to distinguish I dimmed down the comment brightness
 
+" ─   Comment                                           ──
 " hi Comment         guifg=#3D5862
 hi Comment         guifg=#344B53
 hi CommentMinus    guifg=#273A40
 hi CommentMinusCursive    guifg=#273A40 gui=italic
 hi CommentMinusMinus guifg=#1D2B2F
 " hi CommentPlus     guifg=#38595E
+
+
 " hi! ConcealOne  guifg=#2D505E
 " This is now used for all concealed cchars
 hi! ConcealOne  guifg=#2A4651
@@ -1310,14 +1313,22 @@ hi(0, "@keyword.return.typescript", { bg = "#122830", fg = "#122830" })
 -- defaultLibrary methods
 hi(0, "@lsp.typemod.member.defaultLibrary.typescript", { fg = "#61777B" })
 
+-- ─   TypeDB                                             ■
+
+hi(0, "TdbEntity", { fg = "#AD607A" })
+hi(0, "TdbRelation", { fg = "#297066" })
+hi(0, "TdbRelationRole", { fg = "#946977" })
+hi(0, "TdbAttribute", { fg = "#524722" })
+
+-- ─^  TypeDB                                             ▲
+
 EOF
 
 
-" ─   TypeDB                                             ■
 
-hi! TdbEntity            guifg=#f0706E
-hi! TdbRelation          guifg=#B076fE
-hi! TdbAttribute         guifg=#08760E
+" hi! TdbEntity            guifg=#f0706E
+" hi! TdbRelation          guifg=#B076fE
+" hi! TdbAttribute         guifg=#08760E
 
 hi! SpecialKey      guifg=#66D9EF               gui=italic
 
@@ -1327,7 +1338,6 @@ hi! SpecialKey      guifg=#66D9EF               gui=italic
   " #F7F7F7
 
 
-" ─^  TypeDB                                             ▲
 
 
 " ─^  New Colors                                         ▲
