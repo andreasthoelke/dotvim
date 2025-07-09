@@ -1,15 +1,5 @@
 
-let g:gel_branch = 'main'
-" let g:gel_branch = 'edgedb'
-" let g:edgedb_db = 'edgedb'
-" let g:edgedb_db = 'dracula'
-" let g:edgedb_db = 'dracula1'
-" let g:edgedb_db = 'dracula4'
-" let g:edgedb_db = 'ch20_1'
-
-" let g:edgedb_instance = 'a_gel_dzl_book'
-" let g:edgedb_instance = '_1playground_2'
-
+" Note plugin/ftype/typedb.lua
 
 " ─   Maps                                              ──
 
@@ -18,10 +8,10 @@ func! TypeDB_bufferMaps()
 
   nnoremap <silent><buffer> <leader>es :call EdgeQLSyntaxAdditions()<cr>
 
-  nnoremap <silent><buffer> gej :let g:withId=0<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> gei :let g:withId=0<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> ,gej :let g:withId=1<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> ,gei :let g:withId=1<cr>:call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> gej :let g:cmdAltMode=0<cr>:call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> gei :let g:cmdAltMode=0<cr>:call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> ,gej :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> ,gei :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
 
   nnoremap gq    m':let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
   vnoremap gq :<c-u>let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
@@ -118,18 +108,29 @@ func! Tdb_eval_range ( ... )
 endfunc
 
 
+" EXAMPLE transaction:
+" transaction schema my_test_db
+" define
+"   entity user, owns username;
+"   attribute username, value string;
 
+" commit
+
+func! Tdb_withTransactionLines( query_lines )
+  let firstLn = ["transaction schema " . g:typedb_active_schema]
+  let commitLns = ["", "commit"]
+  return firstLn + a:query_lines + commitLns
+endfunc
 
 let g:typedb_cmd_base = "typedb console --tls-disabled --address http://0.0.0.0:1729 --username admin --password password "
 
 func! Tdb_runQuery( query_lines )
-  " echo a:query_lines
-  " return
-  " let filenameSource = expand('%:p:h') . '/.rs_' . expand('%:t:r') . '.edgeql'
-  let filenameSource = 'temp/lastQuery.tqls'
-  call writefile( a:query_lines, filenameSource )
+  let transaction_lines = Tdb_withTransactionLines( a:query_lines )
+  " return transaction_lines
 
-  " let resLines = systemlist( 'cat ' . filenameSource . ' | edgedb -d ' . g:gel_branch )
+  let filenameSource = 'temp/lastQuery.tqls'
+  call writefile( transaction_lines, filenameSource )
+
 
   let cmd = g:typedb_cmd_base . "--script " . filenameSource
   let resLines = systemlist( cmd )
@@ -196,7 +197,8 @@ endfunc
 func! Tdb_runQueryShow ( query_lines )
 
   let resLines = Tdb_runQuery( a:query_lines )
-  " echoe resLines
+  " echo resLines
+  " return
 
   let resLines = RemoveTermCodes( resLines )
   let resLines = SubstituteInLines( resLines, ';', '' )
@@ -234,12 +236,12 @@ func! Tdb_runQueryShow ( query_lines )
   if resLines[0] =~ '\v(function|t_off_ype)'
     let synt = 'edgeql'
   elseif !(resLines[0] =~ "error") && len(resLines) > 1
-    silent! exec "%!jq"
-    if !g:withId
+    " silent! exec "%!jq"
+    if !g:cmdAltMode
       silent! exec "silent! g/\"id\"\:/d _"
     endif
   elseif resLines[0][0] == "{" || resLines[0][0] == "["
-    silent! exec "%!jq"
+    " silent! exec "%!jq"
     let synt = 'json'
   endif
 
@@ -247,7 +249,7 @@ func! Tdb_runQueryShow ( query_lines )
 
   normal gg
 
-  call Tdb_bufferMaps()
+  " call Tdb_bufferMaps()
   if synt == 'json'
     set syntax=json
     set ft=json
@@ -295,7 +297,7 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(sub|plays)'
+let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation)'
 let g:Tdb_TopLevPattern = '\v^(define)'
 
 func! Tdb_TopLevBindingForw()

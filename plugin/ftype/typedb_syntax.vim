@@ -13,10 +13,14 @@ func! TypeQLSyntaxAdditions() " ■
   call matchadd('CommentMinusMinus', '\v\zs,', 11, -1)
   call matchadd('CommentMinusMinus', '\v\zs;', 11, -1)
   call matchadd('CommentMinusMinus', '\v\zs:', 11, -1)
+  call matchadd('CommentMinusMinus', '\v\zs\(', 11, -1)
+  call matchadd('CommentMinusMinus', '\v\zs\)', 11, -1)
 
   " ─   Comment markup                                     ■
+  " Define comment syntax first with higher priority
+  syntax region Comment start="#" end="$" contains=BoldComment,ItalicComment,BlackBG keepend
   " This is effective in preventing the conceal unicode in normal comments
-  syntax match Comment '\v#\s\zs.*' contains=BoldComment,ItalicComment
+  " syntax match Comment '\v#\s\zs.*' contains=BoldComment,ItalicComment
   " IMPORTANT: this line would prevent the above effect!
   " syntax match Normal "\#\s" conceal
 
@@ -35,13 +39,16 @@ func! TypeQLSyntaxAdditions() " ■
   " New type get a default highlight of Indentifier. This will be overridded in the coming lines in case we know the base type entity, relation or attribute.
   syntax match Identifier '[a-zA-Z0-9_-]\+\ze\ssub\s'
 
-  " This was the only way to match Identifiers that include "-" / dashes.
+  syntax match TdbEntity '^entity\s\zs[a-zA-Z0-9_-]\+'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\ssub\sentity'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\splays\s'
 
+  " syntax match TdbRelation '^relation\s\zs[a-zA-Z0-9_-]\+'
   syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\ssub\srelation'
   syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\:\w'
   syntax match TdbRelationRole '\:\zs[a-zA-Z0-9_-]\+'
+
+  " syntax match ItalicComment 'datetime'
 
   " EXAMPLE:
   " commit sub relation,
@@ -56,14 +63,20 @@ func! TypeQLSyntaxAdditions() " ■
   " EXAMPLE:
   " user sub entity,
   "   owns username,
-  syntax match TdbOwns '\<owns\>' nextgroup=TdbAttribute skipwhite conceal cchar=☼
+  syntax match TdbOwns '\<owns\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
   syntax match TdbAttribute '[a-zA-Z0-9_-]\+' contained
 
+  syntax match TdbEntityWord '\<entity\>' nextgroup=TdbEntity skipwhite conceal cchar=▢
+  syntax match TdbRelationWord '\<relation\>' nextgroup=TdbRelation skipwhite conceal cchar=⊃
+  syntax match TdbRelation '[a-zA-Z0-9_-]\+' contained
+
+  syntax match TdbAttributeWord '\<attribute\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
 
 
   " ─   Other keywords                                    ──
   syn keyword typeqlKeyword    match get fetch define undefine insert delete
   syn keyword typeqlKeyword    rule offset limit sort asc desc
+  " syn keyword typeqlDate    datetime
 
 
   " ─   Keyword conceals                                   ■
@@ -71,18 +84,29 @@ func! TypeQLSyntaxAdditions() " ■
   " syntax match Normal 'sub' conceal cchar=⟀
   syntax match Normal 'sub\ze\s' conceal cchar=󰁂
   syntax match Normal 'plays\ze\s' conceal cchar=
-  syntax match Normal 'entity' conceal cchar=
-  syntax match Normal 'relation' conceal cchar=⪾ 
+  " syntax match Normal 'entity' conceal cchar=▢
+  " syntax match Normal 'relation' conceal cchar=⊃ 
+
+  syntax match Normal '@card' conceal cchar=⁝ 
+  syntax match Normal '@key' conceal cchar=✱
+  syntax match Normal '@unique' conceal cchar=Ⲵ
+  syntax match Normal '@regex' conceal cchar=⋳
+  syntax match Normal '@abstract' conceal cchar=◈
+  syntax match Normal '@independent' conceal cchar=∪
+
+  syntax match Normal 'datetime' conceal cchar=⏲
+
   " syntax match Normal 'relates' conceal cchar=🡲 
-  syntax match Normal 'attribute' conceal cchar=● 
+  " syntax match Normal 'attribute' conceal cchar=⬥ 
   " see above
-  " syntax match Normal 'owns' conceal cchar=☼ 
+  " syntax match Normal 'owns' conceal cchar=◦ 
 
   syntax match Normal 'as\ze\s' conceal cchar=« 
   syntax match Normal 'value' conceal cchar=⫐ 
   syntax match Normal 'abstract' conceal cchar=◈ 
   syntax match Normal 'boolean' conceal cchar=B 
   syntax match Normal 'string' conceal cchar=S 
+  syntax match Normal 'integer' conceal cchar=I 
 
 
   " ─^  Keyword conceals                                   ▲
@@ -98,8 +122,8 @@ func! TypeQLSyntaxAdditions() " ■
   set commentstring=\#%s
 
   " CodeMarkup Header
-  syntax match BlackBG '\v─\s.*'
-  syntax match BlackBG '\v─\^.*'
+  syntax match BlackBG '\v─\s.*' contained
+  syntax match BlackBG '\v─\^.*' contained
 
   if version >= 508 || !exists("did_typeql_syn_inits")
     if version < 508
@@ -115,7 +139,7 @@ func! TypeQLSyntaxAdditions() " ■
     HiLink typeqlType          Type
     HiLink typeqlNumber        Number
     HiLink typeqlBoolean       Number
-    HiLink typeqlDate          Number
+    HiLink typeqlDate          ItalicComment
     HiLink typeqlString        String
     HiLink typeqlVariable      Identifier
     
