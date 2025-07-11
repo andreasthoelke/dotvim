@@ -99,6 +99,9 @@ hi(0, "TdbAttribute", { fg = "#B6995C" })
 hi(0, "TdbEntity", { fg = "#AD6068" })
 hi(0, "TdbRelationRole", { fg = "#BE8C9D" })
 hi(0, "TdbRelation", { fg = "#359184" })
+-- hi(0, "TdbVar", { bg = "#E4EEEE", fg = "#7A979A", italic = true })
+hi(0, "TdbVar", { bg = "#EAEDF0", fg = "#7A979A", italic = true })
+-- hi(0, "TdbVar", { fg = "#7A979A", italic = true })
 -- hi(0, "TdbAttribute", { fg = "#524722" })
 
 

@@ -13,8 +13,8 @@ func! TypeQLSyntaxAdditions() " ■
   call matchadd('CommentMinusMinus', '\v\zs,', 11, -1)
   call matchadd('CommentMinusMinus', '\v\zs;', 11, -1)
   call matchadd('CommentMinusMinus', '\v\zs:', 11, -1)
-  call matchadd('CommentMinusMinus', '\v\zs\(', 11, -1)
-  call matchadd('CommentMinusMinus', '\v\zs\)', 11, -1)
+  " call matchadd('CommentMinusMinus', '\v\zs\(', 11, -1)
+  " call matchadd('CommentMinusMinus', '\v\zs\)', 11, -1)
 
   " ─   Comment markup                                     ■
   " Define comment syntax first with higher priority
@@ -36,17 +36,32 @@ func! TypeQLSyntaxAdditions() " ■
 
   " ─^  Comment markup                                     ▲
 
+  syntax match String '\v\"[^"]+\"'
+  syntax match Conceal '\"' contained containedin=String conceal
+
   " New type get a default highlight of Indentifier. This will be overridded in the coming lines in case we know the base type entity, relation or attribute.
   syntax match Identifier '[a-zA-Z0-9_-]\+\ze\ssub\s'
 
   syntax match TdbEntity '^entity\s\zs[a-zA-Z0-9_-]\+'
+  syntax match TdbEntity 'isa\s\zs[a-zA-Z0-9_-]\+'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\ssub\sentity'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\splays\s'
 
   " syntax match TdbRelation '^relation\s\zs[a-zA-Z0-9_-]\+'
   syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\ssub\srelation'
   syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\:\w'
+  syntax match TdbRelation '[a-zA-Z0-9_-]\+\ze\s*('
   syntax match TdbRelationRole '\:\zs[a-zA-Z0-9_-]\+'
+  syntax match TdbRelationRole '(\s*\zs[a-zA-Z0-9_-]\+\ze\s*:'
+  syntax match TdbRelationRole ',\s*\zs[a-zA-Z0-9_-]\+\ze\s*:'
+
+  " Variables starting with $
+  syntax match TdbVar '\$[a-zA-Z0-9_-]\+' contains=TdbVariableDollar
+  syntax match TdbVariableDollar '\$' contained conceal
+
+  " Numbers
+  syntax match Number '\<\d\+\>'
+  syntax match Number '\<\d\+\.\d\+\>'
 
   " syntax match ItalicComment 'datetime'
 
@@ -63,23 +78,43 @@ func! TypeQLSyntaxAdditions() " ■
   " EXAMPLE:
   " user sub entity,
   "   owns username,
-  syntax match TdbOwns '\<owns\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
+  syntax match TdbOwns '\<\(owns\|has\)\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
   syntax match TdbAttribute '[a-zA-Z0-9_-]\+' contained
 
-  syntax match TdbEntityWord '\<entity\>' nextgroup=TdbEntity skipwhite conceal cchar=▢
+  syntax match TdbEntityWord '\<\(entity\|isa\)\>' nextgroup=TdbEntity skipwhite conceal cchar=▢
   syntax match TdbRelationWord '\<relation\>' nextgroup=TdbRelation skipwhite conceal cchar=⊃
   syntax match TdbRelation '[a-zA-Z0-9_-]\+' contained
 
   syntax match TdbAttributeWord '\<attribute\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
 
 
-  " ─   Other keywords                                    ──
-  syn keyword typeqlKeyword    match get fetch define undefine insert delete
-  syn keyword typeqlKeyword    rule offset limit sort asc desc
+  " syn keyword typeqlKeyword    match get fetch define undefine insert delete
+  " syn keyword typeqlKeyword    rule offset limit sort asc desc
   " syn keyword typeqlDate    datetime
 
 
   " ─   Keyword conceals                                   ■
+
+  " syntax match Normal 'match' conceal cchar=❙
+  syntax match Normal 'match' conceal cchar=❙
+  syntax match Normal 'select' conceal cchar=▣
+  syntax match Normal 'insert' conceal cchar=◢
+  syntax match Normal 'update' conceal cchar=◪
+  syntax match Normal 'put' conceal cchar=▼
+  syntax match Normal 'delete' conceal cchar=◙
+  syntax match Normal 'fetch' conceal cchar=↑
+  syntax match Normal 'reduce' conceal cchar=▬
+  syntax match Normal 'groupby' conceal cchar=⊔
+  syntax match Normal "label\ze\s" conceal cchar=◆
+
+  syntax match Normal "\s\zslet\ze\s" conceal cchar=𝇊
+  syntax match Normal "\s\zswith\ze\s" conceal cchar=𝇊
+  syntax match Normal "fun\ze\s" conceal cchar=→
+  syntax match Normal "return" conceal cchar=▂
+
+  syntax match Normal 'like\ze\s' conceal cchar=≈
+  syntax match Normal 'and' conceal cchar=&
+  syntax match Normal '\s\zsor\ze\s' conceal cchar=‖
 
   " syntax match Normal 'sub' conceal cchar=⟀
   syntax match Normal 'sub\ze\s' conceal cchar=󰁂
@@ -101,12 +136,13 @@ func! TypeQLSyntaxAdditions() " ■
   " see above
   " syntax match Normal 'owns' conceal cchar=◦ 
 
-  syntax match Normal 'as\ze\s' conceal cchar=« 
+  syntax match Normal '\s\zsas\ze\s' conceal cchar=« 
   syntax match Normal 'value' conceal cchar=⫐ 
   syntax match Normal 'abstract' conceal cchar=◈ 
   syntax match Normal 'boolean' conceal cchar=B 
   syntax match Normal 'string' conceal cchar=S 
   syntax match Normal 'integer' conceal cchar=I 
+  syntax match Normal 'double' conceal cchar=I 
 
 
   " ─^  Keyword conceals                                   ▲
@@ -120,6 +156,32 @@ func! TypeQLSyntaxAdditions() " ■
   set foldmethod=marker
 
   set commentstring=\#%s
+
+  " Auto-continue comments on new lines
+  setlocal formatoptions+=ro           
+  setlocal comments=:#
+  
+  " Set up custom indentation for TypeQL
+  setlocal indentexpr=TypeQLIndentExpr()
+  
+  function! TypeQLIndentExpr()
+    " echo 'hi'
+    let prev_line = getline(v:lnum - 1)
+    let curr_line = getline(v:lnum)
+    
+    " If previous line is a single word (like "match", "insert", etc), indent the following lines
+    if prev_line =~ '^\s*\w\+\s*$'
+      return indent(v:lnum - 1) + &shiftwidth
+    endif
+    
+    " If previous line ends with comma, indent the next line
+    if prev_line =~ ',$'
+      return indent(v:lnum - 1) + &shiftwidth
+    endif
+    
+    " For other cases, use default behavior
+    return -1
+  endfunction                 
 
   " CodeMarkup Header
   syntax match BlackBG '\v─\s.*' contained

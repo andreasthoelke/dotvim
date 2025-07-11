@@ -88,6 +88,7 @@ endfunc
 " functional#findP( ['aa', 'bb', 'aea', 'dd', 'de'], {x-> x =~ 'Y'} )
 " functional#findP( ['aea', 'bbe', 'aea', 'dd', 'de'], {x-> x !~# 'e'} )
 " functional#findP( ['aa', 'bb', 'aa', 'dd', 'de', 'ee'], {x-> x !~# '\v(a|b|d)'} )
+" functional#findP( ['ac', 'bc', 'ak', 'bb', 'de', 'ee'], {x-> x =~ '\v(aa|bb)'} )
 
 func! functional#find(list, str)
   for idx in range(0, len(a:list)-1)
@@ -100,6 +101,7 @@ endfunc
 
 " functional#find(['eins', 'zwei', 'aber'], 'be')
 " functional#find(['eins', 'zwei', 'aber'], 'eins')
+" functional#find(['eins', 'zwei', 'aber'], 'zwei')
 " functional#find(['eins', 'zwei', 'aber'], 'ns')
 " functional#find(['eins', 'zwei', 'aber'], 'bei')
 " functional#find(['eins', 'zwei', 'aber'], 'be') != -1 ? 'yes' : 'no'

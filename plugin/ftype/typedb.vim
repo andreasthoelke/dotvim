@@ -108,7 +108,7 @@ func! Tdb_eval_range ( ... )
 endfunc
 
 
-" EXAMPLE transaction:
+" EXAMPLE schema transaction:
 " transaction schema my_test_db
 " define
 "   entity user, owns username;
@@ -116,10 +116,26 @@ endfunc
 
 " commit
 
+" EXAMPLE write transaction:
+" transaction write my_test_db
+" insert $x isa user, has username "user_0";
+
+" commit
+
+
 func! Tdb_withTransactionLines( query_lines )
-  let firstLn = ["transaction schema " . g:typedb_active_schema]
+  let isRWTrans = functional#findP( a:query_lines, {x-> x =~ '\v(match|insert|update|put|delete|reduce)'} )
+  " echo isRWTrans
+  if isRWTrans < 0
+    " echo 'schema'
+    let leadUpLns = ["transaction schema " . g:typedb_active_schema]
+    let leadUpLns = leadUpLns + ['define']
+  else
+    " echo 'RW'
+    let leadUpLns = ["transaction write " . g:typedb_active_schema]
+  endif
   let commitLns = ["", "commit"]
-  return firstLn + a:query_lines + commitLns
+  return leadUpLns + a:query_lines + commitLns
 endfunc
 
 let g:typedb_cmd_base = "typedb console --tls-disabled --address http://0.0.0.0:1729 --username admin --password password "
@@ -200,65 +216,66 @@ func! Tdb_runQueryShow ( query_lines )
   " echo resLines
   " return
 
-  let resLines = RemoveTermCodes( resLines )
-  let resLines = SubstituteInLines( resLines, ';', '' )
-  let resLines = SubstituteInLines( resLines, 'property ', '' )
+  " let resLines = RemoveTermCodes( resLines )
+  " let resLines = SubstituteInLines( resLines, ';', '' )
+  " let resLines = SubstituteInLines( resLines, 'property ', '' )
 
   if len( resLines ) == 0
     echo "query completed!"
     return
   endif
 
-  if len( resLines ) == 1
-    if len( resLines[0] ) > 10
-      " let resLines = split( resLines[0][1:-2], '\\n' )
-      let resLines = split( resLines[0], '\\n' )
-      " echoe resLines
-      " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
-    endif
-    let synt = 'edgeql'
-    " let synt = 'json'
-  else
-    let synt = 'json'
-  endif
+  " if len( resLines ) == 1
+  "   if len( resLines[0] ) > 10
+  "     " let resLines = split( resLines[0][1:-2], '\\n' )
+  "     let resLines = split( resLines[0], '\\n' )
+  "     " echoe resLines
+  "     " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
+  "   endif
+  "   let synt = 'edgeql'
+  "   " let synt = 'json'
+  " else
+  "   let synt = 'json'
+  " endif
 
 
 
-  if resLines[0] =~ '\v(function|t_off_ype)'
-    let resLines[0] = resLines[0][1:]
-    let resLines[-1] = resLines[-1][:-2]
-
-    let resLines = Tdb_filterProp( resLines, "link __type__" )
-    let resLines = Tdb_filterProp( resLines, " id: std::uuid" )
-  endif
+  " if resLines[0] =~ '\v(function|t_off_ype)'
+  "   let resLines[0] = resLines[0][1:]
+  "   let resLines[-1] = resLines[-1][:-2]
+  "   let resLines = Tdb_filterProp( resLines, "link __type__" )
+  "   let resLines = Tdb_filterProp( resLines, " id: std::uuid" )
+  " endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
-  if resLines[0] =~ '\v(function|t_off_ype)'
-    let synt = 'edgeql'
-  elseif !(resLines[0] =~ "error") && len(resLines) > 1
-    " silent! exec "%!jq"
-    if !g:cmdAltMode
-      silent! exec "silent! g/\"id\"\:/d _"
-    endif
-  elseif resLines[0][0] == "{" || resLines[0][0] == "["
-    " silent! exec "%!jq"
-    let synt = 'json'
-  endif
 
-  call Tdb_addObjCountToBuffer()
+  " if resLines[0] =~ '\v(function|t_off_ype)'
+  "   let synt = 'edgeql'
+  " elseif !(resLines[0] =~ "error") && len(resLines) > 1
+  "   " silent! exec "%!jq"
+  "   if !g:cmdAltMode
+  "     silent! exec "silent! g/\"id\"\:/d _"
+  "   endif
+  " elseif resLines[0][0] == "{" || resLines[0][0] == "["
+  "   " silent! exec "%!jq"
+  "   let synt = 'json'
+  " endif
+
+  " call Tdb_addObjCountToBuffer()
 
   normal gg
 
   " call Tdb_bufferMaps()
-  if synt == 'json'
-    set syntax=json
-    set ft=json
-  else
-    set syntax=edgeql
-    set ft=edgeql
+  " if synt == 'json'
+  "   set syntax=json
+  "   set ft=json
+  " else
+  "   set syntax=edgeql
+  "   set ft=edgeql
+  "   call EdgeQLSyntaxAdditions()
+  " endif
 
-    call EdgeQLSyntaxAdditions()
-  endif
+  call TypeQLSyntaxAdditions()
 
   call FloatWin_FitWidthHeight()
   wincmd p
@@ -285,7 +302,8 @@ func! Tdb_addObjCountToBuffer()
   elseif len(objStartLinesOuterInArray)
     call append( 0, len(objStartLinesOuterInArray) . " outer obj in array"  )
   elseif len( bufferLines )
-    call append( 0, len(bufferLines) - 0 . " lines" )
+    " TOREVIEW: ommitting the lines count for now.
+    " call append( 0, len(bufferLines) - 0 . " lines" )
   endif
 endfunc
 

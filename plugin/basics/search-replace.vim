@@ -27,6 +27,9 @@ endfun
 
 " To remove ^M characters (windows line breaks?) use exec "%s/\r//g"
 
+command! RemoveWindowsCR %s/\r//g
+command! StripWindowsCR %s/\r//g
+
 func! RemoveTermCodes (lines)
   if type(a:lines) != v:t_list
     return []
