@@ -124,9 +124,9 @@ endfunc
 
 
 func! Tdb_withTransactionLines( query_lines )
-  let isRWTrans = functional#findP( a:query_lines, {x-> x =~ '\v(match|insert|update|put|delete|reduce)'} )
-  " echo isRWTrans
-  if isRWTrans < 0
+  let g:isRWTrans = functional#findP( a:query_lines, {x-> x =~ '\v(match|insert|update|put|delete|reduce)'} )
+  " echo g:isRWTrans
+  if g:isRWTrans < 0
     " echo 'schema'
     let leadUpLns = ["transaction schema " . g:typedb_active_schema]
     let leadUpLns = leadUpLns + ['define']
@@ -150,60 +150,15 @@ func! Tdb_runQuery( query_lines )
 
   let cmd = g:typedb_cmd_base . "--script " . filenameSource
   let resLines = systemlist( cmd )
-
   return resLines
 endfunc
 
-
-func! Tdb_showAligned (resLines, plain)
-  if a:plain
-    let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
-
-    " We have reveived a printed nd_array if the first line starts with [[ and has no commas!
-  elseif a:resLines[0][0:1] == "[[" && !(a:resLines[0] =~ ",")
-    " if 0
-    " echo "ndarray"
-    let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
-
-    call FloatWin_FocusFirst()
-    exec "%s/\\[//ge"
-    exec "%s/]//ge"
-    " exec "%s/'//ge"
-    call easy_align#easyAlign( 1, line('$'), ',')
-    call FloatWin_FitWidthHeight()
-    wincmd p
-
-    " Collection returned:
-  elseif a:resLines[-1] =~ "[\[|\{|\(]"
-  " elseif 0
-    let expResult = a:resLines[-1]
-    " echoe expResult
-
-    if len( expResult ) > 3
-      call v:lua.VirtualTxShow( expResult[:20] . ' ..' )
-      let linesResult = repl_py#splitToLines( expResult )
-      " echoe linesResult
-      " call FloatWin_ShowLines_old ( linesResult )
-      let g:floatWin_win = FloatingSmallNew ( linesResult, 'cursor' )
-
-      " call FloatWin_ShowLines ( repl_py#splitToLines( expResult ) )
-      if len(linesResult) > 2
-        call repl_py#alignInFloatWin()
-      endif
-    else
-      call v:lua.VirtualTxShow( expResult )
-    endif
-
-  else
-    " Printed object:
-    let g:floatWin_win = FloatingSmallNew ( a:resLines, 'cursor' )
-
-    if len(a:resLines) > 2
-      call repl_py#alignInFloatWin()
-    endif
-  endif
+func! Tdb_getSchema()
+  let cmd = g:typedb_cmd_base . "--command 'database schema " . g:typedb_active_schema . "'"
+  let resLines = systemlist( cmd )
+  return resLines
 endfunc
-
+" echo Tdb_getSchema()
 
 " ─^  Run queries                                        ▲
 
@@ -213,75 +168,25 @@ endfunc
 func! Tdb_runQueryShow ( query_lines )
 
   let resLines = Tdb_runQuery( a:query_lines )
-  " echo resLines
-  " return
-
   let resLines = RemoveTermCodes( resLines )
-  " let resLines = SubstituteInLines( resLines, ';', '' )
-  " let resLines = SubstituteInLines( resLines, 'property ', '' )
 
-  if len( resLines ) == 0
-    echo "query completed!"
-    return
+  " Show schema on schema updates
+  if g:isRWTrans < 0
+    let schemaLines = Tdb_getSchema()
+    let resLines = resLines + [''] + schemaLines
   endif
-
-  " if len( resLines ) == 1
-  "   if len( resLines[0] ) > 10
-  "     " let resLines = split( resLines[0][1:-2], '\\n' )
-  "     let resLines = split( resLines[0], '\\n' )
-  "     " echoe resLines
-  "     " Note this is a hack to deal with "describe type Movie" return: ['"create type default::MinorVampire extending default::Person {\n    create required link master -> default::Vampire;\n};"']
-  "   endif
-  "   let synt = 'edgeql'
-  "   " let synt = 'json'
-  " else
-  "   let synt = 'json'
-  " endif
-
-
-
-  " if resLines[0] =~ '\v(function|t_off_ype)'
-  "   let resLines[0] = resLines[0][1:]
-  "   let resLines[-1] = resLines[-1][:-2]
-  "   let resLines = Tdb_filterProp( resLines, "link __type__" )
-  "   let resLines = Tdb_filterProp( resLines, " id: std::uuid" )
-  " endif
 
   let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
 
-  " if resLines[0] =~ '\v(function|t_off_ype)'
-  "   let synt = 'edgeql'
-  " elseif !(resLines[0] =~ "error") && len(resLines) > 1
-  "   " silent! exec "%!jq"
-  "   if !g:cmdAltMode
-  "     silent! exec "silent! g/\"id\"\:/d _"
-  "   endif
-  " elseif resLines[0][0] == "{" || resLines[0][0] == "["
-  "   " silent! exec "%!jq"
-  "   let synt = 'json'
-  " endif
-
-  " call Tdb_addObjCountToBuffer()
 
   normal gg
-
-  " call Tdb_bufferMaps()
-  " if synt == 'json'
-  "   set syntax=json
-  "   set ft=json
-  " else
-  "   set syntax=edgeql
-  "   set ft=edgeql
-  "   call EdgeQLSyntaxAdditions()
-  " endif
 
   call TypeQLSyntaxAdditions()
 
   call FloatWin_FitWidthHeight()
   wincmd p
-
-  " call tools_db#alignInFloatWin()
 endfunc
+
 
 " relies of jq json formatting
 func! Tdb_addObjCountToBuffer()

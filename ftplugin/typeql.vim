@@ -16,7 +16,7 @@ setlocal indentexpr=TypeQLIndent()
 setlocal indentkeys=o,O,*<Return>,<>>,{,},0#,!^F
 
 func! TypeQLIndent()
-  let keywordpattern = '\v^\s*(match|insert|reduce|delete|fetch)>'
+  let keywordpattern = '\v^\s*(match|insert|reduce|put|update|delete|fetch)>'
   
   " Current line is keyword or first line = no indent
   if v:lnum == 1 || getline(v:lnum) =~# keywordpattern

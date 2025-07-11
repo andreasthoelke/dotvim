@@ -3,27 +3,58 @@
 
 # When you type "match" and press Enter, the next line will be indented:
 match
-$p isa person;
-$p has name "John";
-$p has age 30;
+  $p isa person;
+  $p has name "John";
+  $p has age 30;
 
 one
-two
-three
+  two
+  three
 
 
 Lets focus on just this file ftplugin/typeql.vim
-and write TypeQLIndent()
+  and write TypeQLIndent()
 
 I want a paragraph based logic:
-the first line of a paragraph should have no indention.
-the second and all following lines should have a 2 spaces indention.
+  the first line of a paragraph should have no indention.
+  the second and all following lines should have a 2 spaces indention.
 
 given the examples lines below TypeQLIndent() should produce the "Intented formatting".
 
+
+Wrong. Only the "match" lines and the first line should have no indent. all other lines in the paragraph should still be indented
+
+When a comment line is not the first lines of a paragraph, then that comment lines should have no effect of the
+  indentation of the following lines.
+
 Current formatting:
 
+# a comment
+  two three;
+  four five
+
+match
+  two three;
+  # comment
+  four five
+
+Intended formatting:
+
+# a comment
+  two three;
+  four five
+
+match
+  two three;
+  # comment
+  four five
+
+
+
 one1
+  two three
+  four
+match
   two three
   four
 
@@ -34,6 +65,9 @@ one2
 Intended formatting:
 
 one1
+  two three
+  four
+match
   two three
   four
 
