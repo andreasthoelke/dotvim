@@ -1,37 +1,43 @@
 # TypeQL Indentation Demo
-# This file demonstrates the fixed indentation behavior
+
 
 # When you type "match" and press Enter, the next line will be indented:
 match
-  $p isa person;
-  $p has name "John";
-  $p has age 30;
+$p isa person;
+$p has name "John";
+$p has age 30;
 
-# The indentation is maintained after semicolons and commas:
-define
-  person sub entity,
-    owns name,
-    owns age,
-    plays friendship:friend;
-  
-  friendship sub relation,
-    relates friend;
+one
+two
+three
 
-# Complex queries maintain proper indentation:
-match
-  $p isa person,
-    has name $n,
-    has age $a;
-  $a > 20;
-  $f (friend: $p, friend: $p2) isa friendship;
-fetch
-  $p: name, age;
 
-# Rules with when/then blocks:
-rule
-  when
-    $p isa person;
-    $p has age $a;
-    $a > 65;
-  then
-    $p has category "senior";
+Lets focus on just this file ftplugin/typeql.vim
+and write TypeQLIndent()
+
+I want a paragraph based logic:
+the first line of a paragraph should have no indention.
+the second and all following lines should have a 2 spaces indention.
+
+given the examples lines below TypeQLIndent() should produce the "Intented formatting".
+
+Current formatting:
+
+one1
+  two three
+  four
+
+one2
+  two three
+  four
+
+Intended formatting:
+
+one1
+  two three
+  four
+
+one2
+  two three
+  four
+

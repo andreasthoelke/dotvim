@@ -161,69 +161,6 @@ func! TypeQLSyntaxAdditions() " ■
   setlocal formatoptions+=ro           
   setlocal comments=:#
   
-  " Set up custom indentation for TypeQL
-  setlocal autoindent
-  setlocal smartindent
-  setlocal indentexpr=TypeQLIndentExpr()
-  setlocal indentkeys=o,O,*<Return>,<>>,{,},0#,!^F
-  
-  function! TypeQLIndentExpr()
-    let prev_line = getline(v:lnum - 1)
-    let curr_line = getline(v:lnum)
-    let prev_indent = indent(v:lnum - 1)
-    
-    " Skip empty lines - find the last non-empty line
-    if prev_line =~ '^\s*$'
-      let lnum = v:lnum - 2
-      while lnum > 0 && getline(lnum) =~ '^\s*$'
-        let lnum = lnum - 1
-      endwhile
-      if lnum > 0
-        let prev_line = getline(lnum)
-        let prev_indent = indent(lnum)
-      endif
-    endif
-    
-    " If previous line is a comment, maintain same indentation
-    if prev_line =~ '^\s*#'
-      return prev_indent
-    endif
-    
-    " If previous line is a TypeQL keyword alone, indent the following lines
-    if prev_line =~ '^\s*\(match\|insert\|define\|update\|delete\|fetch\|get\|rule\|when\|then\)\s*$'
-      return prev_indent + &shiftwidth
-    endif
-    
-    " If previous line ends with comma OR semicolon, maintain current indentation
-    " This ensures continuation lines stay aligned
-    if prev_line =~ '[,;]\s*$' && prev_indent > 0
-      return prev_indent
-    endif
-    
-    " If current line starts with a closing bracket, decrease indent
-    if curr_line =~ '^\s*[}\])]'
-      return prev_indent - &shiftwidth
-    endif
-    
-    " If previous line opens a bracket, increase indent
-    if prev_line =~ '[{\[(]\s*$'
-      return prev_indent + &shiftwidth
-    endif
-    
-    " If we're in an indented block, maintain indentation
-    " unless current line starts a new top-level statement
-    if prev_indent > 0
-      " Check if current line starts a new top-level statement
-      if curr_line =~ '^\s*\(match\|insert\|define\|update\|delete\|fetch\|get\|rule\)\s*$'
-        return 0
-      endif
-      " Otherwise maintain the indentation
-      return prev_indent
-    endif
-    
-    " Default: start at beginning of line
-    return 0
-  endfunction                 
 
   " CodeMarkup Header
   syntax match BlackBG '\v─\s.*' contained

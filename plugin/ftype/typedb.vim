@@ -216,7 +216,7 @@ func! Tdb_runQueryShow ( query_lines )
   " echo resLines
   " return
 
-  " let resLines = RemoveTermCodes( resLines )
+  let resLines = RemoveTermCodes( resLines )
   " let resLines = SubstituteInLines( resLines, ';', '' )
   " let resLines = SubstituteInLines( resLines, 'property ', '' )
 
