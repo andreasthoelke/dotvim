@@ -15,60 +15,36 @@ setlocal smartindent
 setlocal indentexpr=TypeQLIndent()
 setlocal indentkeys=o,O,*<Return>,<>>,{,},0#,!^F
 
-func! s:PrevNonBlankNonComment(lnum)
-  let i = a:lnum - 1
-  while i > 0
-    if getline(i) !~# '^\s*$' && getline(i) !~# '^\s*#'
-      return i
-    endif
-    let i -= 1
-  endwhile
-  return 0
-endfunc
-
 func! TypeQLIndent()
   let lnum = v:lnum
   let prevlnum = prevnonblank(lnum - 1)
   let keywordpattern = '\v^\s*(match|insert|reduce|delete|fetch)>'
   
-  " First line or line starts with keywords = no indent
+  " First line, no previous line, or keyword line = no indent
   if lnum == 1 || prevlnum == 0 || getline(lnum) =~# keywordpattern
     return 0
   endif
   
-  " Get previous non-blank, non-comment line
-  let prev_content_lnum = s:PrevNonBlankNonComment(lnum)
+  let prev_line = getline(prevlnum)
   
-  " No previous content line = first line of file
-  if prev_content_lnum == 0
-    return 0
-  endif
-  
-  " Check if there's a gap (blank or comment lines) before current line
-  let last_non_blank = prevnonblank(lnum - 1)
-  if last_non_blank != prev_content_lnum && getline(last_non_blank) =~# '^\s*#'
-    " Previous non-blank is comment, new paragraph
-    return 0
-  endif
-  
-  " After blank line = new paragraph, no indent
-  if lnum - 1 != prevlnum
+  " Previous line is comment or after blank = new paragraph
+  if prev_line =~# '^\s*#' || lnum - 1 != prevlnum
     return 0
   endif
   
   " Previous line ends with semicolon = keep same indent
-  let prev_line = getline(prevlnum)
   if prev_line =~# ';\s*$'
     return indent(prevlnum)
   endif
   
-  " Previous line is comment = skip it
-  if prev_line =~# '^\s*#'
-    return 0
+  " Check if previous line starts a paragraph
+  if prevlnum == 1 || prev_line =~# keywordpattern
+    return 2
   endif
   
-  " Previous line is paragraph start = indent
-  if prevlnum == 1 || prev_line =~# keywordpattern || prevlnum - 1 != prevnonblank(prevlnum - 1)
+  " Check if line before previous was blank/comment (paragraph start)
+  let prevprevlnum = prevnonblank(prevlnum - 1)
+  if prevprevlnum == 0 || prevlnum - 1 != prevprevlnum || getline(prevprevlnum) =~# '^\s*#'
     return 2
   endif
   
