@@ -173,6 +173,18 @@ local function claude_send_handler(text, use_markup)
   end
 end
 
+-- BUFFER
+vim.keymap.set('n', '<c-g>b', function()
+  -- 0 means "current buffer"
+  -- 0      -> first line (0-indexed)
+  -- -1     -> last line   (end index is *exclusive*)
+  -- false  -> don't error if the range is out of bounds
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local lines_joined = table.concat(lines, "\n")
+  claude_send_handler(lines_joined, false)
+end)
+
+
 -- PARAGRAPHS
 vim.keymap.set('n', '<c-g>p', function()
   local lines = GetParagraphLines()

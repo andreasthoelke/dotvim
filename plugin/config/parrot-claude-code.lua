@@ -83,6 +83,7 @@ end
 -- CodeBlockMarkup( "function abc( cd ) return cd end")
 
 
+
 function _G.GetParagraphLines()
   -- Save cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)

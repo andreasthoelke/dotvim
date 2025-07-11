@@ -1,0 +1,37 @@
+# TypeQL Indentation Demo
+# This file demonstrates the fixed indentation behavior
+
+# When you type "match" and press Enter, the next line will be indented:
+match
+  $p isa person;
+  $p has name "John";
+  $p has age 30;
+
+# The indentation is maintained after semicolons and commas:
+define
+  person sub entity,
+    owns name,
+    owns age,
+    plays friendship:friend;
+  
+  friendship sub relation,
+    relates friend;
+
+# Complex queries maintain proper indentation:
+match
+  $p isa person,
+    has name $n,
+    has age $a;
+  $a > 20;
+  $f (friend: $p, friend: $p2) isa friendship;
+fetch
+  $p: name, age;
+
+# Rules with when/then blocks:
+rule
+  when
+    $p isa person;
+    $p has age $a;
+    $a > 65;
+  then
+    $p has category "senior";
