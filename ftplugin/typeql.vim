@@ -25,26 +25,37 @@ func! TypeQLIndent()
     return 0
   endif
   
-  let prev_line = getline(prevlnum)
-  
-  " Previous line is comment or after blank = new paragraph
-  if prev_line =~# '^\s*#' || lnum - 1 != prevlnum
+  " After blank line = new paragraph
+  if lnum - 1 != prevlnum
     return 0
   endif
   
-  " Previous line ends with semicolon = keep same indent
-  if prev_line =~# ';\s*$'
-    return indent(prevlnum)
+  " Find previous non-comment line
+  let contentlnum = prevlnum
+  while contentlnum > 0 && getline(contentlnum) =~# '^\s*#'
+    let contentlnum = prevnonblank(contentlnum - 1)
+  endwhile
+  
+  " No non-comment line found = new paragraph
+  if contentlnum == 0
+    return 0
   endif
   
-  " Check if previous line starts a paragraph
-  if prevlnum == 1 || prev_line =~# keywordpattern
+  let content_line = getline(contentlnum)
+  
+  " Previous non-comment line ends with semicolon = keep same indent
+  if content_line =~# ';\s*$'
+    return indent(contentlnum)
+  endif
+  
+  " Check if content line starts a paragraph
+  if contentlnum == 1 || content_line =~# keywordpattern
     return 2
   endif
   
-  " Check if line before previous was blank/comment (paragraph start)
-  let prevprevlnum = prevnonblank(prevlnum - 1)
-  if prevprevlnum == 0 || prevlnum - 1 != prevprevlnum || getline(prevprevlnum) =~# '^\s*#'
+  " Check if line before content was blank (paragraph start)
+  let before_content = prevnonblank(contentlnum - 1)
+  if before_content == 0 || contentlnum - 1 != before_content
     return 2
   endif
   
