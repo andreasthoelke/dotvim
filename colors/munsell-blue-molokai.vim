@@ -1319,6 +1319,7 @@ hi(0, "TdbEntity", { fg = "#AD607A" })
 hi(0, "TdbRelation", { fg = "#297066" })
 hi(0, "TdbRelationRole", { fg = "#946977" })
 hi(0, "TdbAttribute", { fg = "#524722" })
+hi(0, "TdbVar", { bg = "#090A0B", fg = "#698285", italic = true })
 
 -- ─^  TypeDB                                             ▲
 

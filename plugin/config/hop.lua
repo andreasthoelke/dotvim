@@ -23,7 +23,7 @@ vim.api.nvim_set_keymap('n', ',f', "<cmd>lua require'hop'.hint_char1({ direction
 vim.api.nvim_set_keymap('n', ',F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
 
 -- Operator pending map: "yank down"
-vim.keymap.set('o', 'q', function()
+vim.keymap.set('o', 'j', function()
     -- Set operator as linewise
     vim.cmd('normal! V')
     -- Wrap the hop.hint_lines call in pcall to catch errors

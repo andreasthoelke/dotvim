@@ -6,12 +6,20 @@
 func! TypeDB_bufferMaps()
   call Scala_bufferMaps_shared()
 
-  nnoremap <silent><buffer> <leader>es :call EdgeQLSyntaxAdditions()<cr>
+  " nnoremap <silent><buffer> gej :call Tdb_eval_parag()<cr>
+  lua Tdb_create_lineswise_map()
 
-  nnoremap <silent><buffer> gej :let g:cmdAltMode=0<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> gei :let g:cmdAltMode=0<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> ,gej :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
-  nnoremap <silent><buffer> ,gei :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
+
+  nnoremap <silent><c-t>s :call StartTypeDBServer()<cr>
+  nnoremap <silent><c-t>S :call StopTypeDBServer()<cr>
+  nnoremap <silent><c-t>o :lua Tdb_selectSchema()<cr>
+  nnoremap <silent><c-t>D :call Tdb_dropDB()<cr>
+
+  nnoremap <silent><buffer> gep :call Tdb_eval_parag()<cr>
+
+
+  " nnoremap <silent><buffer> ,gej :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
+  " nnoremap <silent><buffer> ,gei :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
 
   nnoremap gq    m':let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
   vnoremap gq :<c-u>let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
@@ -20,10 +28,9 @@ func! TypeDB_bufferMaps()
   " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
   nnoremap <silent><buffer> <leader>geo :call Tdb_eval_buffer( v:true )<cr>
 
+  nnoremap <silent><buffer> <leader>K :call Tdb_show_schema()<cr>
+
   nnoremap <silent><buffer> get :call Tdb_describe_object( expand('<cWORD>') )<cr>
-
-  nnoremap <silent><buffer> <leader>K :call Tdb_describe_schema()<cr>
-
   nnoremap <silent><buffer> gec :call Tdb_query_objCount( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> gea :call Tdb_query_withProp( expand('<cWORD>') )<cr>
 
@@ -129,7 +136,11 @@ func! Tdb_withTransactionLines( query_lines )
   if g:isRWTrans < 0
     " echo 'schema'
     let leadUpLns = ["transaction schema " . g:typedb_active_schema]
-    let leadUpLns = leadUpLns + ['define']
+    if g:cmdAltMode
+      let leadUpLns = leadUpLns + ['undefine']
+    else
+      let leadUpLns = leadUpLns + ['define']
+    endif
   else
     " echo 'RW'
     let leadUpLns = ["transaction write " . g:typedb_active_schema]
@@ -140,18 +151,61 @@ endfunc
 
 let g:typedb_cmd_base = "typedb console --tls-disabled --address http://0.0.0.0:1729 --username admin --password password "
 
+func! Tdb_localPath()
+  let queryPath = 'temp/query.tql'
+  let schemaPath = 'temp/schema_' . g:typedb_active_schema . '.tql'
+  if !isdirectory('temp')
+    call mkdir('temp', 'p')
+  endif
+  if !filereadable(queryPath)
+    call writefile([], queryPath)
+  endif
+  if !filereadable(schemaPath)
+    call writefile([], schemaPath)
+  endif
+  return [queryPath, schemaPath]
+endfunc
+
 func! Tdb_runQuery( query_lines )
   let transaction_lines = Tdb_withTransactionLines( a:query_lines )
-  " return transaction_lines
 
-  let filenameSource = 'temp/lastQuery.tqls'
-  call writefile( transaction_lines, filenameSource )
-
+  let [filePath, _] = Tdb_localPath()
+  call writefile( transaction_lines, filePath )
 
   let cmd = g:typedb_cmd_base . "--script " . filenameSource
   let resLines = systemlist( cmd )
   return resLines
 endfunc
+
+func! Tdb_listSchemaNames()
+  let cmd = g:typedb_cmd_base . "--command 'database list'"
+  let resLines = systemlist( cmd )
+  return resLines[1:]
+endfunc
+" echo Tdb_listSchemaNames()
+
+
+func! Tdb_dropDB()
+  let msg = 'Delete database ' . g:typedb_active_schema . "?"
+  let confirmed = confirm( msg, "&Yes\n&Cancel", 2 )
+  if !(confirmed == 1)
+    echo 'canceled'
+    return
+  endif
+
+  " Delete and recreate DB to clear it.
+  let cmd = g:typedb_cmd_base . "--command 'database delete " . g:typedb_active_schema . "'"
+  let resLines = systemlist( cmd )
+  let cmd = g:typedb_cmd_base . "--command 'database create " . g:typedb_active_schema . "'"
+  let resLines = resLines + systemlist( cmd )
+
+  let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+  call FloatWin_FitWidthHeight()
+  wincmd p
+endfunc
+" echo Tdb_listSchemaNames()
+
+
 
 func! Tdb_getSchema()
   let cmd = g:typedb_cmd_base . "--command 'database schema " . g:typedb_active_schema . "'"
@@ -160,13 +214,21 @@ func! Tdb_getSchema()
 endfunc
 " echo Tdb_getSchema()
 
+func! Tdb_show_schema()
+  let schemaLines = Tdb_getSchema() 
+  let [_, schemaPath] = Tdb_localPath()
+  call writefile( schemaLines, schemaPath )
+  call Path_Float( schemaPath )
+endfunc
+" call Tdb_show_schema()
+
+
 " ─^  Run queries                                        ▲
 
 
 " ─   Show results                                       ■
 
 func! Tdb_runQueryShow ( query_lines )
-
   let resLines = Tdb_runQuery( a:query_lines )
   let resLines = RemoveTermCodes( resLines )
 
@@ -176,13 +238,13 @@ func! Tdb_runQueryShow ( query_lines )
     let resLines = resLines + [''] + schemaLines
   endif
 
-  let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+  call Tdb_showLines( resLines )
+endfunc
 
-
+func! Tdb_showLines ( lines )
+  let g:floatWin_win = FloatingSmallNew ( a:lines, 'cursor' )
   normal gg
-
   call TypeQLSyntaxAdditions()
-
   call FloatWin_FitWidthHeight()
   wincmd p
 endfunc
@@ -289,6 +351,45 @@ endfunc
 
 
 
+" ─   TDB Services                                       ■
+
+func! StartTypeDBServer()
+  if exists('g:TypeDBTermID')
+    echo 'TypeDB server is already running'
+    return
+  endif
+  let cmdline = 'typedb server'
+  exec "20new"
+  let opts = { 'cwd': getcwd( winnr() ) }
+  let g:TypeDBTermID = termopen( cmdline, opts )
+
+  silent wincmd c
+  call LaunchChrome( "https://studio.typedb.com/schema" )
+
+  echo 'TypeDB server started'
+endfunc
+
+func! StopTypeDBServer ()
+  if !exists('g:TypeDBTermID')
+    echo 'TypeDB server is not running'
+    return
+  endif
+  call jobstop( g:TypeDBTermID )
+  unlet g:TypeDBTermID
+  echo 'TypeDB server closed!'
+endfunc
+
+
+func! RestartTypeDBServer ()
+  if exists('g:TypeDBTermID')
+    call StopDevServer()
+  endif
+  call StartDevServer()
+endfunc
+
+
+
+" ─^  TDB Services                                       ▲
 
 
 

@@ -38,9 +38,6 @@ nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
 nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
-nnoremap <silent><leader>glt :call StartTypeDBServer()<cr>
-nnoremap <silent><leader>glT :call StopTypeDBServer()<cr>
-
 
 func! RunTerm_showFloat()
  let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
@@ -139,43 +136,6 @@ func! RestartDevServer ()
   endif
   call StartDevServer()
 endfunc
-
-" ─   TypeDB                                            ──
-
-func! StartTypeDBServer()
-  if exists('g:TypeDBTermID')
-    echo 'TypeDB server is already running'
-    return
-  endif
-  let cmdline = 'typedb server'
-  exec "20new"
-  let opts = { 'cwd': getcwd( winnr() ) }
-  let g:TypeDBTermID = termopen( cmdline, opts )
-
-  silent wincmd c
-  call LaunchChrome( "https://studio.typedb.com/schema" )
-
-  echo 'TypeDB server started'
-endfunc
-
-func! StopTypeDBServer ()
-  if !exists('g:TypeDBTermID')
-    echo 'TypeDB server is not running'
-    return
-  endif
-  call jobstop( g:TypeDBTermID )
-  unlet g:TypeDBTermID
-  echo 'TypeDB server closed!'
-endfunc
-
-
-func! RestartTypeDBServer ()
-  if exists('g:TypeDBTermID')
-    call StopDevServer()
-  endif
-  call StartDevServer()
-endfunc
-
 
 
 
