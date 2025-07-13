@@ -68,7 +68,7 @@ function Tdb_make_linewise_func()
     local end_line = end_pos[2]
 
     -- Use linewise visual mode to ensure we get complete lines
-    vim.cmd(string.format('normal! %dGV%dG"zy', start_line, end_line))
+    vim.cmd(string.format('silent normal! %dGV%dG"zy', start_line, end_line))
 
     -- Get the yanked text
     local selected_text = vim.fn.getreg('z')

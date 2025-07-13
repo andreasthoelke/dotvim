@@ -16,6 +16,8 @@ func! TypeDB_bufferMaps()
 
   " nnoremap <silent><buffer> gej :call Tdb_eval_parag()<cr>
   lua Tdb_create_lineswise_maps()
+  nnoremap <silent><buffer> gee :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_range( line('.'), line('.') )<cr>
+  nnoremap <silent><buffer> ,gee :let g:tdb_schema_mode="undefine"<cr>:call Tdb_eval_range( line('.'), line('.') )<cr>
 
   nnoremap <silent><buffer> gep :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_parag()<cr>
   nnoremap <silent><buffer> ,gep :let g:tdb_schema_mode="undefine"<cr>:call Tdb_eval_parag()<cr>
@@ -108,12 +110,7 @@ command! -range=% TdbEval call Tdb_eval_range( <line1>, <line2> )
 func! Tdb_eval_range ( ... )
   let startLine = a:0 ? a:1 : 1
   let endLine = a:0 ? a:2 : line('$')
-
   let lines = getline(startLine, endLine)
-  " " TODO: wrap in with and the get count of result items?
-  " if split(lines[0])[0] == "select"
-  " endif
-
   call Tdb_runQueryShow( lines )
 endfunc
 
@@ -151,6 +148,14 @@ func! Tdb_withTransactionLines( query_lines )
     " echo 'RW'
     let leadUpLns = ["transaction write " . g:typedb_active_schema]
   endif
+
+  " Be sure to end with a ";" even when a block of 'owns abc,' ends with ","
+  let lastLine_lastChar = matchstr(query_lines[-1], '\S\ze\s*$')
+  " echo "note:" . lastLine_lastChar
+  if lastLine_lastChar != ";" && query_lines[-1] != ''
+    call add( query_lines, ';' )
+  endif
+
   let commitLns = ["", "commit"]
   return leadUpLns + query_lines + commitLns
 endfunc
@@ -286,6 +291,7 @@ endfunc
 
 func! Tdb_show_schema()
   let schemaLines = Tdb_getSchema() 
+  let schemaLines = Tdb_sort_schemaLines( schemaLines )
   let [_, schemaPath] = Tdb_localPath()
   call writefile( schemaLines, schemaPath )
   call Path_Float( schemaPath )
