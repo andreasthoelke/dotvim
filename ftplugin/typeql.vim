@@ -17,9 +17,13 @@ setlocal indentkeys=o,O,*<Return>,<>>,{,},0#,!^F
 
 func! TypeQLIndent()
   let keywordpattern = '\v^\s*(match|insert|reduce|put|update|delete|fetch|fun)>'
+  let schemapattern = '\v^\s*(entity|relation|attribute|rule)>'
+  let commentpattern = '\v^\s*#'
   
-  " Current line is keyword or first line = no indent
-  if v:lnum == 1 || getline(v:lnum) =~# keywordpattern
+  let currline = getline(v:lnum)
+  
+  " Current line is keyword, schema keyword, comment, or first line = no indent
+  if v:lnum == 1 || currline =~# keywordpattern || currline =~# schemapattern || currline =~# commentpattern
     return 0
   endif
   
@@ -30,7 +34,6 @@ func! TypeQLIndent()
   endif
   
   let prevline = getline(prevlnum)
-  let currline = getline(v:lnum)
   
   " If current line contains "}", set indent to 2
   if currline =~# '}'
