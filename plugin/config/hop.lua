@@ -3,6 +3,9 @@ require'hop'.setup()
 
 vim.api.nvim_set_keymap('n', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
 vim.api.nvim_set_keymap('x', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
+-- testing these alternatives - see below
+-- vim.api.nvim_set_keymap('n', ',q', "<cmd>HopLineStartAC<cr>", {noremap=true})
+-- vim.api.nvim_set_keymap('n', ',m', "<cmd>HopLineStartAC<cr>", {noremap=true})
 
 -- These select only the first char of the last line - see the versions below
 -- vim.api.nvim_set_keymap('o', ',j', "<cmd>HopLineStartAC<cr>", {noremap=true})
@@ -23,19 +26,39 @@ vim.api.nvim_set_keymap('n', ',f', "<cmd>lua require'hop'.hint_char1({ direction
 vim.api.nvim_set_keymap('n', ',F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
 
 -- Operator pending map: "yank down"
-vim.keymap.set('o', 'j', function()
+-- vim.keymap.set('o', 'j', function()
+--     -- Set operator as linewise
+--     vim.cmd('normal! V')
+--     -- Wrap the hop.hint_lines call in pcall to catch errors
+--     pcall(function()
+--         require'hop'.hint_lines({
+--             multi_windows = false,
+--             hint_position = require'hop.hint'.HintPosition.BEGIN,
+--             direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+--             current_line_only = false
+--         })
+--     end)
+-- end, {remap=true})
+
+local op_hopdown = function()
     -- Set operator as linewise
     vim.cmd('normal! V')
     -- Wrap the hop.hint_lines call in pcall to catch errors
     pcall(function()
-        require'hop'.hint_lines({
-            multi_windows = false,
-            hint_position = require'hop.hint'.HintPosition.BEGIN,
-            direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
-            current_line_only = false
-        })
-    end)
-end, {remap=true})
+    require'hop'.hint_lines({
+      multi_windows = false,
+      hint_position = require'hop.hint'.HintPosition.BEGIN,
+      direction = require'hop.hint'.HintDirection.AFTER_CURSOR,
+      current_line_only = false
+    })
+  end)
+end
+
+-- yq or gem seem ergonomic. while i can keep j for single line down
+for _, key in ipairs({'q', 'm'}) do
+  vim.keymap.set('o', key, op_hopdown)
+end
+
 
 -- Operator pending map: "yank up"
 vim.keymap.set('o', 'Q', function()

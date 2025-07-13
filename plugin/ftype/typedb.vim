@@ -135,7 +135,8 @@ endfunc
 
 func! Tdb_withTransactionLines( query_lines )
   let query_lines = a:query_lines
-  let g:isRWTrans = functional#findP( a:query_lines, {x-> x =~ '\v(match|insert|update|put|delete|reduce)'} )
+  " If a line is not a comment and contains a keyword its a read-write query. else a schema query.
+  let g:isRWTrans = functional#findP( a:query_lines, {x-> !(x =~ '^# ') && x =~ '\v\s(match|insert|update|put|delete|reduce)\s'} )
   " echo g:isRWTrans
   if g:isRWTrans < 0
     " echo 'schema'
@@ -143,6 +144,7 @@ func! Tdb_withTransactionLines( query_lines )
     let leadUpLns = leadUpLns + [ g:tdb_schema_mode ]
     if g:tdb_schema_mode == 'undefine'
       let query_lines = Tdb_makeUndefineQuery( query_lines )
+      " echo query_lines
     endif
 
   else
@@ -155,11 +157,11 @@ endfunc
 
 func! Tdb_makeUndefineQuery( query_lines )
   let result = []
-  
+
   for line in a:query_lines
     " Trim whitespace
     let trimmed = substitute(line, '^\s*\|\s*$', '', 'g')
-    
+
     if trimmed == ''
       " Keep empty lines
       call add(result, '')
@@ -171,12 +173,29 @@ func! Tdb_makeUndefineQuery( query_lines )
         let name = substitute(parts[1], ',$', '', '')
         call add(result, name . ';')
       endif
+      " the second word is 'plays' or 'owns'
+    elseif trimmed =~ '^\S\+\s\+\(plays\|owns\)\s\+'
+      " Remove any comments (text after #) and trailing semicolon
+      let clean_line = substitute(trimmed, '\s*@.*$', '', '')
+      let clean_line = substitute(clean_line, '\s*#.*$', '', '')
+      let clean_line = substitute(clean_line, ';\s*$', '', '')
+      " Extract parts of the line
+      let parts = split(clean_line, '\s\+')
+      " echo parts
+      if len(parts) >= 3
+        let subject = parts[0]
+        let action = parts[1]  " 'plays' or 'owns'
+        " Join remaining parts (everything after action) and remove trailing comma
+        let object = substitute(join(parts[2:], ' '), ',\s*$', '', '')
+        " Construct the rearranged line
+        call add(result, action . ' ' . object . ' from ' . subject . ';')
+      endif
     else
       " For other lines (like 'owns', 'relates', etc.), output empty line
       call add(result, '')
     endif
   endfor
-  
+
   return result
 endfunc
 
@@ -299,40 +318,58 @@ func! Tdb_update_ShowCurrentSchemaFile()
 endfunc
 
 func! Tdb_sort_schemaLines( input_lines )
-  " Initialize two lists to hold the different types of blocks.
+  let input_lines = a:input_lines
+
+  call filter( input_lines, 'v:val !~ ''^\s*$'' && v:val !~ ''^\s*define\s*$''')
+
+  " Initialize lists to hold the different types of blocks.
   let l:attribute_lines = []
-  let l:other_lines = []
+  let l:entity_lines = []
+  let l:relation_lines = []
 
   " This variable will track which type of block we are currently inside.
-  " It can be 'attribute' or 'other'.
   let l:current_block_type = ''
 
   " Iterate over each line of the input.
   for l:line in a:input_lines
-    " Check if the line is the start of a new block (i.e., it doesn't start
-    " with whitespace).
+    " Check if the line is the start of a new top-level block (i.e., it
+    " doesn't start with whitespace).
     if l:line =~ '^\S'
-      " If it's a new block, determine its type.
+      " Determine the block type based on the content of the line.
       if l:line =~ '^attribute'
         let l:current_block_type = 'attribute'
-      else
-        let l:current_block_type = 'other'
+      elseif l:line =~ 'entity'
+        " It's a new 'entity' block.
+        " If the entity_lines list is not empty, it means this is NOT the
+        " first 'entity' block, so add a blank separator line.
+        if !empty(l:entity_lines)
+          call add(l:entity_lines, '')
+        endif
+        let l:current_block_type = 'entity'
+      elseif l:line =~ 'relation'
+        " It's a new 'relation' block.
+        " If the relation_lines list is not empty, it means this is NOT the
+        " first 'relation' block, so add a blank separator line.
+        if !empty(l:relation_lines)
+          call add(l:relation_lines, '')
+        endif
+        let l:current_block_type = 'relation'
       endif
     endif
 
     " Add the current line to the appropriate list based on the block type.
     if l:current_block_type == 'attribute'
       call add(l:attribute_lines, l:line)
-    else
-      " This handles all non-attribute blocks. It also correctly handles the initial
-      " state before any block type has been explicitly identified.
-      call add(l:other_lines, l:line)
+    elseif l:current_block_type == 'entity'
+      call add(l:entity_lines, l:line)
+    elseif l:current_block_type == 'relation'
+      call add(l:relation_lines, l:line)
     endif
   endfor
 
-  " Combine the lists, with 'other' blocks first, then 'attribute' blocks.
-  return l:other_lines + l:attribute_lines
-
+  " Combine the lists in the desired order: entities, relations, and then attributes,
+  " with a separator comment block before the attributes.
+  return [g:typedb_active_schema, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines
 endfunc
 
 
@@ -377,8 +414,8 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation)'
-let g:Tdb_TopLevPattern = '\v^(define)'
+let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation|attribute)'
+let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )
@@ -391,11 +428,19 @@ endfunc
 
 func! Tdb_skipcomment()
   let curCar = GetCharAtCursor()
-  if curCar == '#'
+  if curCar == '#' || curCar == ''
     normal! j
     call Tdb_skipcomment()
   endif
 endfunc
+
+func! Tdb_skipcommentUp()
+  let curCar = GetCharAtCursor()
+  if curCar == '#'
+    call Tdb_MainStartBindingBackw()
+  endif
+endfunc
+
 
 func! Tdb_MainStartBindingForw()
   normal! }
@@ -410,7 +455,7 @@ func! Tdb_MainStartBindingBackw()
   call search( g:Tdb_MainStartPattern, 'bW' )
   normal! {
   normal! j
-  call Tdb_skipcomment()
+  call Tdb_skipcommentUp()
 endfunc
 
 
