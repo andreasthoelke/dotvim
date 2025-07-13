@@ -31,7 +31,7 @@ func! TypeDB_bufferMaps()
 
   " nnoremap <silent><buffer> <leader>ge :let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
   " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
-  nnoremap <silent><buffer> <leader>geo :call Tdb_eval_buffer()<cr>
+  nnoremap <silent><buffer> <leader>geo :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_buffer()<cr>
 
   nnoremap <silent><buffer> <leader>K :call Tdb_show_schema()<cr>
 
@@ -328,6 +328,17 @@ func! Tdb_sort_schemaLines( input_lines )
 
   call filter( input_lines, 'v:val !~ ''^\s*$'' && v:val !~ ''^\s*define\s*$''')
 
+  " count lines that start with 'entity'
+  let count_lines_start_with_entity = 0
+  " count indented lines where the paragraphs first line started with 'entity'
+  let count_intented_lines_in_entity_paragraph = 0
+  " count lines that start with 'relation'
+  let count_lines_start_with_relation = 0
+  " count indented lines where the paragraphs first line started with 'relation'
+  let count_intented_lines_in_relation = 0
+  " count lines that start with 'attribute'
+  let count_lines_start_with_attribute = 0
+
   " Initialize lists to hold the different types of blocks.
   let l:attribute_lines = []
   let l:entity_lines = []
@@ -375,7 +386,7 @@ func! Tdb_sort_schemaLines( input_lines )
 
   " Combine the lists in the desired order: entities, relations, and then attributes,
   " with a separator comment block before the attributes.
-  return [g:typedb_active_schema, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines
+  return [g:typedb_active_schema, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '']
 endfunc
 
 
