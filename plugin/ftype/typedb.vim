@@ -355,6 +355,7 @@ func! Tdb_sort_schemaLines( input_lines )
       " Determine the block type based on the content of the line.
       if l:line =~ '^attribute'
         let l:current_block_type = 'attribute'
+        let count_lines_start_with_attribute += 1
       elseif l:line =~ 'entity'
         " It's a new 'entity' block.
         " If the entity_lines list is not empty, it means this is NOT the
@@ -363,6 +364,7 @@ func! Tdb_sort_schemaLines( input_lines )
           call add(l:entity_lines, '')
         endif
         let l:current_block_type = 'entity'
+        let count_lines_start_with_entity += 1
       elseif l:line =~ 'relation'
         " It's a new 'relation' block.
         " If the relation_lines list is not empty, it means this is NOT the
@@ -371,6 +373,14 @@ func! Tdb_sort_schemaLines( input_lines )
           call add(l:relation_lines, '')
         endif
         let l:current_block_type = 'relation'
+        let count_lines_start_with_relation += 1
+      endif
+    else
+      " This is an indented line
+      if l:current_block_type == 'entity'
+        let count_intented_lines_in_entity_paragraph += 1
+      elseif l:current_block_type == 'relation'
+        let count_intented_lines_in_relation += 1
       endif
     endif
 
@@ -384,9 +394,13 @@ func! Tdb_sort_schemaLines( input_lines )
     endif
   endfor
 
+  let count_info_e = "# E: " . count_lines_start_with_entity . "|" . count_intented_lines_in_entity_paragraph
+  let count_info_r = "# R: " . count_lines_start_with_relation . "|" . count_intented_lines_in_relation
+  let count_info_a = "# A: " . count_lines_start_with_attribute
+
   " Combine the lists in the desired order: entities, relations, and then attributes,
   " with a separator comment block before the attributes.
-  return [g:typedb_active_schema, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '']
+  return ["# " . g:typedb_active_schema, count_info_e, count_info_r, count_info_a, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '']
 endfunc
 
 
