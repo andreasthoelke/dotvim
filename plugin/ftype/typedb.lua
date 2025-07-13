@@ -16,7 +16,7 @@ function _G.Tdb_selectSchema()
 
   -- Create a UI selection using vim.ui.select (available in Neovim 0.6+)
   vim.ui.select(options, {
-    prompt = "Select TypeDB schema:",
+    prompt = "TypeDB schema |" .. vim.g.typedb_active_schema .. "|:",
     format_item = function(item)
       return item
     end
@@ -26,7 +26,7 @@ function _G.Tdb_selectSchema()
       vim.g.typedb_active_schema = choice
       print("Selected: " .. choice)
     else
-      print("No selection made")
+      -- print("No selection made")
     end
   end)
 
@@ -35,13 +35,23 @@ end
 
 -- ─   Helpers                                          ──
 
-function _G.Tdb_create_lineswise_map()
+function _G.Tdb_create_lineswise_maps()
   vim.keymap.set('n', 'ge', function()
+    vim.g['tdb_schema_mode'] = 'define'
     _G.Tdb_linewise_func = Tdb_make_linewise_func()
     vim.go.operatorfunc = 'v:lua.Tdb_linewise_func'
     return 'g@'
   end, { expr = true, buffer = true, desc = "Operator to select lines for Tdb" })
+
+  vim.keymap.set('n', ',ge', function()
+    vim.g['tdb_schema_mode'] = 'undefine'
+    _G.Tdb_linewise_func = Tdb_make_linewise_func()
+    vim.go.operatorfunc = 'v:lua.Tdb_linewise_func'
+    return 'g@'
+  end, { expr = true, buffer = true, desc = "Operator to select lines for Tdb" })
+
 end
+
 
 
 -- Helper function for linewise operator-based selections

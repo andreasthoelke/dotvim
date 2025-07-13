@@ -1,21 +1,24 @@
 
 " Note plugin/ftype/typedb.lua
 
+nnoremap <silent><c-t>l :call StartTypeDBServer()<cr>
+nnoremap <silent><c-t>L :call StopTypeDBServer()<cr>
+nnoremap <silent><c-t>s :lua Tdb_selectSchema()<cr>
+nnoremap <silent><c-t>c :call Tdb_createDB()<cr>
+nnoremap <silent><c-t>C :call Tdb_clearDB()<cr>
+nnoremap <silent><c-t>D :call Tdb_deleteDB()<cr>
+
+
 " ─   Maps                                              ──
 
 func! TypeDB_bufferMaps()
   call Scala_bufferMaps_shared()
 
   " nnoremap <silent><buffer> gej :call Tdb_eval_parag()<cr>
-  lua Tdb_create_lineswise_map()
+  lua Tdb_create_lineswise_maps()
 
-
-  nnoremap <silent><c-t>s :call StartTypeDBServer()<cr>
-  nnoremap <silent><c-t>S :call StopTypeDBServer()<cr>
-  nnoremap <silent><c-t>o :lua Tdb_selectSchema()<cr>
-  nnoremap <silent><c-t>D :call Tdb_dropDB()<cr>
-
-  nnoremap <silent><buffer> gep :call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> gep :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_parag()<cr>
+  nnoremap <silent><buffer> ,gep :let g:tdb_schema_mode="undefine"<cr>:call Tdb_eval_parag()<cr>
 
 
   " nnoremap <silent><buffer> ,gej :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
@@ -26,7 +29,7 @@ func! TypeDB_bufferMaps()
 
   " nnoremap <silent><buffer> <leader>ge :let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
   " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
-  nnoremap <silent><buffer> <leader>geo :call Tdb_eval_buffer( v:true )<cr>
+  nnoremap <silent><buffer> <leader>geo :call Tdb_eval_buffer()<cr>
 
   nnoremap <silent><buffer> <leader>K :call Tdb_show_schema()<cr>
 
@@ -93,7 +96,7 @@ endfunc
 
 
 
-func! Tdb_eval_buffer( format )
+func! Tdb_eval_buffer()
   let [startLine, endLine] = [1, line('$')]
   call Tdb_eval_range( startLine, endLine )
 endfunc
@@ -131,22 +134,50 @@ endfunc
 
 
 func! Tdb_withTransactionLines( query_lines )
+  let query_lines = a:query_lines
   let g:isRWTrans = functional#findP( a:query_lines, {x-> x =~ '\v(match|insert|update|put|delete|reduce)'} )
   " echo g:isRWTrans
   if g:isRWTrans < 0
     " echo 'schema'
     let leadUpLns = ["transaction schema " . g:typedb_active_schema]
-    if g:cmdAltMode
-      let leadUpLns = leadUpLns + ['undefine']
-    else
-      let leadUpLns = leadUpLns + ['define']
+    let leadUpLns = leadUpLns + [ g:tdb_schema_mode ]
+    if g:tdb_schema_mode == 'undefine'
+      let query_lines = Tdb_makeUndefineQuery( query_lines )
     endif
+
   else
     " echo 'RW'
     let leadUpLns = ["transaction write " . g:typedb_active_schema]
   endif
   let commitLns = ["", "commit"]
-  return leadUpLns + a:query_lines + commitLns
+  return leadUpLns + query_lines + commitLns
+endfunc
+
+func! Tdb_makeUndefineQuery( query_lines )
+  let result = []
+  
+  for line in a:query_lines
+    " Trim whitespace
+    let trimmed = substitute(line, '^\s*\|\s*$', '', 'g')
+    
+    if trimmed == ''
+      " Keep empty lines
+      call add(result, '')
+    elseif trimmed =~ '^\(attribute\|entity\|relation\)\s\+'
+      " Extract the name after attribute/entity/relation keyword
+      let parts = split(trimmed, '\s\+')
+      if len(parts) >= 2
+        " Get the second part and remove any trailing comma
+        let name = substitute(parts[1], ',$', '', '')
+        call add(result, name . ';')
+      endif
+    else
+      " For other lines (like 'owns', 'relates', etc.), output empty line
+      call add(result, '')
+    endif
+  endfor
+  
+  return result
 endfunc
 
 let g:typedb_cmd_base = "typedb console --tls-disabled --address http://0.0.0.0:1729 --username admin --password password "
@@ -172,7 +203,7 @@ func! Tdb_runQuery( query_lines )
   let [filePath, _] = Tdb_localPath()
   call writefile( transaction_lines, filePath )
 
-  let cmd = g:typedb_cmd_base . "--script " . filenameSource
+  let cmd = g:typedb_cmd_base . "--script " . filePath
   let resLines = systemlist( cmd )
   return resLines
 endfunc
@@ -185,25 +216,45 @@ endfunc
 " echo Tdb_listSchemaNames()
 
 
-func! Tdb_dropDB()
+func! Tdb_clearDB()
+  let msg = 'Clear database ' . g:typedb_active_schema . "?"
+  let confirmed = confirm( msg, "&Yes\n&Cancel", 2 )
+  if !(confirmed == 1)
+    echo 'canceled'
+    return
+  endif
+  " Delete and recreate DB to clear it.
+  let cmd = g:typedb_cmd_base . "--command 'database delete " . g:typedb_active_schema . "'"
+  let resLines = systemlist( cmd )
+  let cmd = g:typedb_cmd_base . "--command 'database create " . g:typedb_active_schema . "'"
+  let resLines = resLines + systemlist( cmd )
+  let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+  call FloatWin_FitWidthHeight()
+  wincmd p
+endfunc
+
+func! Tdb_deleteDB()
   let msg = 'Delete database ' . g:typedb_active_schema . "?"
   let confirmed = confirm( msg, "&Yes\n&Cancel", 2 )
   if !(confirmed == 1)
     echo 'canceled'
     return
   endif
-
-  " Delete and recreate DB to clear it.
   let cmd = g:typedb_cmd_base . "--command 'database delete " . g:typedb_active_schema . "'"
   let resLines = systemlist( cmd )
-  let cmd = g:typedb_cmd_base . "--command 'database create " . g:typedb_active_schema . "'"
-  let resLines = resLines + systemlist( cmd )
-
   let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
   call FloatWin_FitWidthHeight()
   wincmd p
 endfunc
-" echo Tdb_listSchemaNames()
+
+func! Tdb_createDB()
+  let g:typedb_active_schema = input( 'New database name: (currently active) ', g:typedb_active_schema )
+  let cmd = g:typedb_cmd_base . "--command 'database create " . g:typedb_active_schema . "'"
+  let resLines = systemlist( cmd )
+  let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+  call FloatWin_FitWidthHeight()
+  wincmd p
+endfunc
 
 
 
@@ -232,14 +283,58 @@ func! Tdb_runQueryShow ( query_lines )
   let resLines = Tdb_runQuery( a:query_lines )
   let resLines = RemoveTermCodes( resLines )
 
-  " Show schema on schema updates
+  " Update show schema on schema updates
   if g:isRWTrans < 0
-    let schemaLines = Tdb_getSchema()
-    let resLines = resLines + [''] + schemaLines
+    call Tdb_update_ShowCurrentSchemaFile()
   endif
 
   call Tdb_showLines( resLines )
 endfunc
+
+func! Tdb_update_ShowCurrentSchemaFile()
+  let schemaLines = Tdb_getSchema()
+  let schemaLines = Tdb_sort_schemaLines( schemaLines )
+  let [_, schemaPath] = Tdb_localPath()
+  call writefile( schemaLines, schemaPath )
+endfunc
+
+func! Tdb_sort_schemaLines( input_lines )
+  " Initialize two lists to hold the different types of blocks.
+  let l:attribute_lines = []
+  let l:other_lines = []
+
+  " This variable will track which type of block we are currently inside.
+  " It can be 'attribute' or 'other'.
+  let l:current_block_type = ''
+
+  " Iterate over each line of the input.
+  for l:line in a:input_lines
+    " Check if the line is the start of a new block (i.e., it doesn't start
+    " with whitespace).
+    if l:line =~ '^\S'
+      " If it's a new block, determine its type.
+      if l:line =~ '^attribute'
+        let l:current_block_type = 'attribute'
+      else
+        let l:current_block_type = 'other'
+      endif
+    endif
+
+    " Add the current line to the appropriate list based on the block type.
+    if l:current_block_type == 'attribute'
+      call add(l:attribute_lines, l:line)
+    else
+      " This handles all non-attribute blocks. It also correctly handles the initial
+      " state before any block type has been explicitly identified.
+      call add(l:other_lines, l:line)
+    endif
+  endfor
+
+  " Combine the lists, with 'other' blocks first, then 'attribute' blocks.
+  return l:other_lines + l:attribute_lines
+
+endfunc
+
 
 func! Tdb_showLines ( lines )
   let g:floatWin_win = FloatingSmallNew ( a:lines, 'cursor' )
@@ -364,7 +459,7 @@ func! StartTypeDBServer()
   let g:TypeDBTermID = termopen( cmdline, opts )
 
   silent wincmd c
-  call LaunchChrome( "https://studio.typedb.com/schema" )
+  " call LaunchChrome( "https://studio.typedb.com/schema" )
 
   echo 'TypeDB server started'
 endfunc
@@ -390,9 +485,5 @@ endfunc
 
 
 " ─^  TDB Services                                       ▲
-
-
-
-
 
 

@@ -25,26 +25,169 @@ require("parrot").setup(
   {
     providers = {
       anthropic = {
-        api_key = os.getenv "ANTHROPIC_API_KEY",
-        topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
+        name = "anthropic",
+        endpoint = "https://api.anthropic.com/v1/messages",
+        model_endpoint = "https://api.anthropic.com/v1/models",
+        params = {
+          chat = { max_tokens = 4096 },
+          command = { max_tokens = 4096 },
+        },
         topic = {
-          -- model = "claude-3-haiku-20240307",
-          -- model = "claude-3-5-haiku-20241022",
           model = "claude-3-5-haiku-latest",
           params = { max_tokens = 32 },
         },
+        headers = function(self)
+          return {
+            ["Content-Type"] = "application/json",
+            ["x-api-key"] = self.api_key,
+            ["anthropic-version"] = "2023-06-01",
+          }
+        end,
+        preprocess_payload = function(payload)
+          for _, message in ipairs(payload.messages) do
+            message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
+          end
+          if payload.messages[1] and payload.messages[1].role == "system" then
+            -- remove the first message that serves as the system prompt as anthropic
+            -- expects the system prompt to be part of the API call body and not the messages
+            payload.system = payload.messages[1].content
+            table.remove(payload.messages, 1)
+          end
+          return payload
+        end,
+
+        api_key = os.getenv "ANTHROPIC_API_KEY",
+        model = "claude-opus-4-20250514",
+        models = {
+          "claude-opus-4-20250514",
+          "claude-sonnet-4-20250514",
+          "claude-3-5-haiku-latest",
+        },
+        topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
       },
       openai = {
+        name = "openai",
         api_key = os.getenv("OPENAI_API_KEY"),
+        endpoint = "https://api.openai.com/v1/chat/completions",
+        model_endpoint = "https://api.openai.com/v1/models",
+        model = "gpt-4o",
+        models = {
+          "gpt-4o",
+          "gpt-4o-mini",
+          "gpt-4-turbo",
+          "gpt-3.5-turbo",
+        },
       },
       github = {
+        name = "github",
         api_key = os.getenv "GITHUB_TOKEN",
+        endpoint = "https://models.inference.ai.azure.com/chat/completions",
+        model = "gpt-4o",
+        models = {
+          "gpt-4o",
+          "gpt-4o-mini",
+          "ai21-jamba-1.5-mini",
+          "ai21-jamba-1.5-large",
+          "cohere-command-r",
+          "cohere-command-r-plus",
+          "meta-llama-3.1-8b-instruct",
+          "meta-llama-3.1-70b-instruct",
+          "meta-llama-3.1-405b-instruct",
+          "mistral-large-2407",
+          "mistral-nemo",
+          "mistral-small",
+          "phi-3.5-mini-128k-instruct",
+          "phi-3.5-moe-128k-instruct",
+          "phi-3-medium-128k-instruct",
+        },
       },
       pplx = {
+        name = "pplx",
         api_key = os.getenv "PERPLEXITY_API_KEY",
+        endpoint = "https://api.perplexity.ai/chat/completions",
+        model = "sonar-medium-online",
+        models = {
+          "sonar-small-online",
+          "sonar-medium-online",
+          "sonar-small-chat",
+          "sonar-medium-chat",
+        },
       },
       gemini = {
+        name = "gemini",
         api_key = os.getenv "GEMINI_API_KEY",
+        model = "gemini-2.5-pro",
+        models = {
+          "gemini-2.5-pro",
+          "gemini-2.5-flash",
+        },
+        endpoint = function(self)
+          return "https://generativelanguage.googleapis.com/v1beta/models/"
+            .. self._model
+            .. ":streamGenerateContent?alt=sse"
+        end,
+        model_endpoint = function(self)
+          return { "https://generativelanguage.googleapis.com/v1beta/models?key=" .. self.api_key }
+        end,
+        params = {
+          chat = { temperature = 1.1, topP = 1, topK = 10, maxOutputTokens = 8192 },
+          command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192 },
+        },
+        topic = {
+          model = "gemini-1.5-flash",
+          params = { maxOutputTokens = 64 },
+        },
+        headers = function(self)
+          return {
+            ["Content-Type"] = "application/json",
+            ["x-goog-api-key"] = self.api_key,
+          }
+        end,
+        preprocess_payload = function(payload)
+          local contents = {}
+          local system_instruction = nil
+          for _, message in ipairs(payload.messages) do
+            if message.role == "system" then
+              system_instruction = { parts = { { text = message.content } } }
+            else
+              local role = message.role == "assistant" and "model" or "user"
+              table.insert(
+                contents,
+                { role = role, parts = { { text = message.content:gsub("^%s*(.-)%s*$", "%1") } } }
+              )
+            end
+          end
+          local gemini_payload = {
+            contents = contents,
+            generationConfig = {
+              temperature = payload.temperature,
+              topP = payload.topP or payload.top_p,
+              maxOutputTokens = payload.max_tokens or payload.maxOutputTokens,
+            },
+          }
+          if system_instruction then
+            gemini_payload.systemInstruction = system_instruction
+          end
+          return gemini_payload
+        end,
+        process_stdout = function(response)
+          if not response or response == "" then
+            return nil
+          end
+          local success, decoded = pcall(vim.json.decode, response)
+          if
+            success
+            and decoded.candidates
+            and decoded.candidates[1]
+            and decoded.candidates[1].content
+            and decoded.candidates[1].content.parts
+            and decoded.candidates[1].content.parts[1]
+          then
+            return decoded.candidates[1].content.parts[1].text
+          end
+          return nil
+        end,
+
       },
 
     },

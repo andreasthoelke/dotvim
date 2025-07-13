@@ -14,7 +14,8 @@ au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call Gel_bufferMaps()
 au ag BufNewFile,BufRead,WinNew *.gel,*.edgeql,*.esdl call EdgeQLSyntaxAdditions()
 
 au ag BufWinEnter *.tql,*.tqls call TypeDB_bufferMaps()
-au ag BufWinEnter *.tql,*.tqls call TypeQLSyntaxAdditions()
+au ag BufWinEnter,BufReadPost *.tql,*.tqls call TypeQLSyntaxAdditions()
+" NOTE: BufReadPost fires when nvim reads the files after it was written with 'writefile'
 
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
