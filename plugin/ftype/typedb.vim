@@ -54,8 +54,8 @@ func! TypeDB_bufferMaps()
   nnoremap <silent><buffer> <c-p>         :call Tdb_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Tdb_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
 
-  " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
-  " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+  nnoremap <silent><buffer> ]r            :keepjumps call JS_GoReturn()<cr>
+  nnoremap <silent><buffer> [r            :call JS_GoBackReturn()<cr>
 
   nnoremap <silent><buffer> <leader>(     :call Tdb_MvStartOfBlock()<cr>
   " onoremap <silent><buffer> <leader>(     :call Tdb_MvStartOfBlock()<cr>
@@ -133,7 +133,12 @@ endfunc
 func! Tdb_withTransactionLines( query_lines )
   let query_lines = a:query_lines
   " If a line is not a comment and contains a keyword its a read-write query. else a schema query.
-  let g:isRWTrans = functional#findP( a:query_lines, {x-> !(x =~ '^# ') && x =~ '\v\s(match|insert|update|put|delete|reduce)\s'} )
+  let g:isRWTrans = functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(match|insert|update|put|delete|reduce)')} )
+  if g:isRWTrans
+    let g:isJsonFetch = functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(fetch)')} )
+  else
+    let g:isJsonFetch = v:false
+  endif
   " echo g:isRWTrans
   if g:isRWTrans < 0
     " echo 'schema'
@@ -159,6 +164,8 @@ func! Tdb_withTransactionLines( query_lines )
   let commitLns = ["", "commit"]
   return leadUpLns + query_lines + commitLns
 endfunc
+" functional#findP( ["# ab fetch", "fetch"], {x-> !(x =~ '^# ') && (x =~ '\v(fetch)')} )
+
 
 func! Tdb_makeUndefineQuery( query_lines )
   let result = []
@@ -291,6 +298,7 @@ endfunc
 
 func! Tdb_show_schema()
   let schemaLines = Tdb_getSchema() 
+  " call Tdb_showLines( schemaLines )
   let schemaLines = Tdb_sort_schemaLines( schemaLines )
   let [_, schemaPath] = Tdb_localPath()
   call writefile( schemaLines, schemaPath )
@@ -302,6 +310,34 @@ endfunc
 " ─^  Run queries                                        ▲
 
 
+func! Tdb_filterResLines( resLines )
+  let resLines = a:resLines
+
+  let dataStart = functional#findP( resLines, {x-> x =~ 'Streaming'} )
+  let resLines = resLines[dataStart+1:]
+
+  " Looking for this line: Finished. Total answers: 2
+  let resCountLn = functional#findP( resLines, {x-> x =~ 'Finished'} )
+  let g:tdb_error = v:false
+  if resCountLn == -1
+    let g:tdb_error = v:true
+    " ERROR
+    return resLines
+  endif
+
+  let resCnt = matchstr( resLines[ resCountLn ], '\v\:\s\zs\S*' )
+
+  let resLines = resLines[:resCountLn-1]
+
+  if g:isJsonFetch > 0
+    let resLines = ["objs: " . resCnt] + resLines
+  else
+    let resLines = ["rows: " . resCnt] + resLines
+  endif
+
+  return resLines
+endfunc
+
 " ─   Show results                                       ■
 
 func! Tdb_runQueryShow ( query_lines )
@@ -312,6 +348,8 @@ func! Tdb_runQueryShow ( query_lines )
   if g:isRWTrans < 0
     call Tdb_update_ShowCurrentSchemaFile()
   endif
+
+  let resLines = Tdb_filterResLines( resLines )
 
   call Tdb_showLines( resLines )
 endfunc
@@ -338,11 +376,14 @@ func! Tdb_sort_schemaLines( input_lines )
   let count_intented_lines_in_relation = 0
   " count lines that start with 'attribute'
   let count_lines_start_with_attribute = 0
+  " count lines that start with 'fun'
+  let count_lines_start_with_fun = 0
 
   " Initialize lists to hold the different types of blocks.
   let l:attribute_lines = []
   let l:entity_lines = []
   let l:relation_lines = []
+  let l:fun_lines = []
 
   " This variable will track which type of block we are currently inside.
   let l:current_block_type = ''
@@ -356,7 +397,7 @@ func! Tdb_sort_schemaLines( input_lines )
       if l:line =~ '^attribute'
         let l:current_block_type = 'attribute'
         let count_lines_start_with_attribute += 1
-      elseif l:line =~ 'entity'
+      elseif l:line =~ '^entity'
         " It's a new 'entity' block.
         " If the entity_lines list is not empty, it means this is NOT the
         " first 'entity' block, so add a blank separator line.
@@ -365,22 +406,30 @@ func! Tdb_sort_schemaLines( input_lines )
         endif
         let l:current_block_type = 'entity'
         let count_lines_start_with_entity += 1
-      elseif l:line =~ 'relation'
-        " It's a new 'relation' block.
-        " If the relation_lines list is not empty, it means this is NOT the
-        " first 'relation' block, so add a blank separator line.
+      elseif l:line =~ '^relation'
         if !empty(l:relation_lines)
           call add(l:relation_lines, '')
         endif
         let l:current_block_type = 'relation'
         let count_lines_start_with_relation += 1
-      endif
-    else
-      " This is an indented line
-      if l:current_block_type == 'entity'
-        let count_intented_lines_in_entity_paragraph += 1
-      elseif l:current_block_type == 'relation'
-        let count_intented_lines_in_relation += 1
+      elseif l:line =~ '^fun'
+        if !empty(l:fun_lines)
+          call add(l:fun_lines, '')
+        endif
+        let l:current_block_type = 'fun'
+        let count_lines_start_with_fun += 1
+      elseif l:line =~ '^match'
+        " still part of fun but not indented
+        let l:current_block_type = 'fun'
+      else
+        " This is an indented line
+        if l:current_block_type == 'entity'
+          let count_intented_lines_in_entity_paragraph += 1
+        elseif l:current_block_type == 'relation'
+          let count_intented_lines_in_relation += 1
+        elseif l:current_block_type == 'fun'
+          " not counting function lines
+        endif
       endif
     endif
 
@@ -391,16 +440,21 @@ func! Tdb_sort_schemaLines( input_lines )
       call add(l:entity_lines, l:line)
     elseif l:current_block_type == 'relation'
       call add(l:relation_lines, l:line)
+    elseif l:current_block_type == 'fun'
+      call add(l:fun_lines, l:line)
+    else
+      " echo "Exception in Tdb_update_ShowCurrentSchemaFile " . l:current_block_type
     endif
   endfor
 
   let count_info_e = "# E: " . count_lines_start_with_entity . "|" . count_intented_lines_in_entity_paragraph
   let count_info_r = "# R: " . count_lines_start_with_relation . "|" . count_intented_lines_in_relation
   let count_info_a = "# A: " . count_lines_start_with_attribute
+  let count_info_f = "# F: " . count_lines_start_with_fun
 
   " Combine the lists in the desired order: entities, relations, and then attributes,
   " with a separator comment block before the attributes.
-  return ["# " . g:typedb_active_schema, count_info_e, count_info_r, count_info_a, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '']
+  return ["# " . g:typedb_active_schema, count_info_e, count_info_r, count_info_a, count_info_f, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '', '# Functions', ''] + l:fun_lines + ['', '']
 endfunc
 
 
@@ -408,6 +462,9 @@ func! Tdb_showLines ( lines )
   let g:floatWin_win = FloatingSmallNew ( a:lines, 'cursor' )
   normal gg
   call TypeQLSyntaxAdditions()
+  if (g:isJsonFetch > 0) && !g:tdb_error
+    set syntax=json
+  endif
   call FloatWin_FitWidthHeight()
   wincmd p
 endfunc
@@ -445,8 +502,8 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation|attribute)'
-let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes)'
+let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation|attribute|fun)'
+let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )
