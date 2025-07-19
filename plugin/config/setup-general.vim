@@ -838,14 +838,14 @@ endfunc
 " Jumplist: --------------------------------------
 
 " Add cursor-rests to jumplist
-augroup JumplistTimeout
-  au!
-  autocmd CursorHold * exec "normal! m'"
+" augroup JumplistTimeout
+"   au!
+  " autocmd CursorHold * exec "normal! m'"
   " Example Debug Jumplist:
   " autocmd CursorHold * call JumpsToQuickfix()
   " autocmd CursorHold * exec "normal! m'" | call JumpsToQuickfix()
   " autocmd CursorHold * exec "normal! m'" | echo localtime()
-augroup END
+" augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
 " set updatetime=300

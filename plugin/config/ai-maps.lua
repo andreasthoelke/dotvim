@@ -93,6 +93,8 @@ vim.g.codex_cmd = "claude "
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "claude ",
+    "claude --dangerously-skip-permissions ",
+    "claude --debug ",
     "claude update ",
     "claude --resume ",
     "gemini ",
@@ -126,6 +128,7 @@ end)
 
 vim.keymap.set( 'n', '<c-g>V', function() vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd']) end )
 vim.keymap.set( 'n', '<c-g>S', function() vim.cmd(require('claude_code').AiderOpen( vim.g['codex_cmd'], "hsplit")) end )
+-- ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/localˍcommandˍ=ˍargs
 
 vim.keymap.set('n', '<c-g><c-j>', function()
   local user_msg_content_str = ParrotBuf_GetLatestUserMessage()

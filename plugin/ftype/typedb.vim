@@ -373,7 +373,7 @@ func! Tdb_sort_schemaLines( input_lines )
   " count lines that start with 'relation'
   let count_lines_start_with_relation = 0
   " count indented lines where the paragraphs first line started with 'relation'
-  let count_intented_lines_in_relation = 0
+  let count_intented_lines_in_relation_paragraph = 0
   " count lines that start with 'attribute'
   let count_lines_start_with_attribute = 0
   " count lines that start with 'fun'
@@ -422,24 +422,21 @@ func! Tdb_sort_schemaLines( input_lines )
         " still part of fun but not indented
         let l:current_block_type = 'fun'
       else
-        " This is an indented line
-        if l:current_block_type == 'entity'
-          let count_intented_lines_in_entity_paragraph += 1
-        elseif l:current_block_type == 'relation'
-          let count_intented_lines_in_relation += 1
-        elseif l:current_block_type == 'fun'
-          " not counting function lines
-        endif
+        " other top-level lines in schema
       endif
     endif
 
-    " Add the current line to the appropriate list based on the block type.
+
+    " Add the current line to the appropriate list based on the block type
+    " and update the prop counts for the object types
     if l:current_block_type == 'attribute'
       call add(l:attribute_lines, l:line)
     elseif l:current_block_type == 'entity'
       call add(l:entity_lines, l:line)
+      let count_intented_lines_in_entity_paragraph += 1
     elseif l:current_block_type == 'relation'
       call add(l:relation_lines, l:line)
+      let count_intented_lines_in_relation_paragraph += 1
     elseif l:current_block_type == 'fun'
       call add(l:fun_lines, l:line)
     else
@@ -447,8 +444,8 @@ func! Tdb_sort_schemaLines( input_lines )
     endif
   endfor
 
-  let count_info_e = "# E: " . count_lines_start_with_entity . "|" . count_intented_lines_in_entity_paragraph
-  let count_info_r = "# R: " . count_lines_start_with_relation . "|" . count_intented_lines_in_relation
+  let count_info_e = "# E: " . count_lines_start_with_entity . " | " . count_intented_lines_in_entity_paragraph
+  let count_info_r = "# R: " . count_lines_start_with_relation . " | " . count_intented_lines_in_relation_paragraph
   let count_info_a = "# A: " . count_lines_start_with_attribute
   let count_info_f = "# F: " . count_lines_start_with_fun
 
@@ -502,7 +499,7 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(sub|plays|entity|relation|attribute|fun)'
+let g:Tdb_MainStartPattern = '\v(plays|entity|relation|attribute|fun)\s\zs\i'
 let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions)'
 
 func! Tdb_TopLevBindingForw()
@@ -536,6 +533,7 @@ func! Tdb_MainStartBindingForw()
   normal! {
   normal! j
   call Tdb_skipcomment()
+  call search( g:Tdb_MainStartPattern, 'W' )
 endfunc
 
 func! Tdb_MainStartBindingBackw()
@@ -544,6 +542,7 @@ func! Tdb_MainStartBindingBackw()
   normal! {
   normal! j
   call Tdb_skipcommentUp()
+  call search( g:Tdb_MainStartPattern, 'W' )
 endfunc
 
 

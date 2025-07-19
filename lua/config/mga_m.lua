@@ -159,6 +159,16 @@ end
 -- to send vim events into the magenta-TS app, which receives the events via its nvim.onNotification(MAGENTA_KEY, (args) => {
 -- handlers.
 M.bridge = function(channelId)
+
+  vim.api.nvim_create_user_command(
+    "SomeEventA",
+    function()
+      vim.rpcnotify(channelId, "some_event_a", {})
+    end,
+    {}
+  )
+
+
   vim.api.nvim_create_user_command(
     "Mga",
     function(opts)

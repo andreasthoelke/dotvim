@@ -125,7 +125,7 @@ func! TsSyntaxAdditions ()
   " syntax match Normal 'fields' conceal cchar=⊚
   syntax match Normal 'fields' conceal cchar=◈
   syntax match Normal 'references' conceal cchar=⟹
-  syntax match Normal 'relations' conceal cchar=⟹
+  syntax match Normal 'relations/ze/s' conceal cchar=⟹
   syntax match Normal 'one\ze(' conceal cchar=⊃
   syntax match Normal 'many\ze(' conceal cchar=⫖
   syntax match Normal 'table\ze\.' conceal cchar=
@@ -222,11 +222,11 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'type' conceal cchar=◇
   syntax match Normal 'types:' conceal cchar=◇
   syntax match Normal 'typeof' conceal cchar=◇
-  syntax match Normal 'class' conceal cchar=□
+  syntax match Normal 'class/ze/s' conceal cchar=□
   syntax match Normal 'implements' conceal cchar=⟔
   syntax match Normal 'extends' conceal cchar=⟔
   syntax match Normal 'constructor' conceal cchar=≈
-  syntax match Normal 'enum\ze\\s' conceal cchar=|
+  syntax match Normal 'enum\ze\s' conceal cchar=|
 
 " ➹  ⤤  ⬀  ⬈  ⧼  ⪦ ⇡ ⇞  ⇾  ~➚
 " ᐣ ᐤ  ᐥ  ᐦᐧ  ᐨ  ᑆ   ᑄ   ᑋ  ᑓ   ᑣ   ᒾ  ᓋ  ᓩ  ᓫ ›

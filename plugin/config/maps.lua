@@ -437,7 +437,7 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   '<leader>gd', function()
    require'git_commits_viewer'.Show({ num_of_commits = 5 })
-  end )
+  end, { desc = "Show last 5 git commits" } )
 
 
 vim.keymap.set( 'n',
@@ -448,7 +448,7 @@ vim.keymap.set( 'n',
     opts.diff_file2 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]  --  text before pipe
     vim.cmd'normal! k'
    require'git_commits_viewer'.Show(opts)
-  end )
+  end, { desc = "Compare two files from consecutive lines" } )
 
 
 
