@@ -1021,6 +1021,31 @@ use case: i could add more predifined patterns?
 ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
 
+### Hard link example
+ln keymaps/vim-cheat-sheet.md ~/Documents/Notes
+~/Documents/Notes
+keymaps/vim-cheat-sheet.md
+
+#### which file is a hardlink or original?
+I ran the following:
+ln keymaps/vim-cheat-sheet.md ~/Documents/Notes
+
+now I see:
+ls -l keymaps/vim-cheat-sheet.md
+    .rw-r--r--@ 67k at 19 Jul 17:39 keymaps/vim-cheat-sheet.md
+stat keymaps/vim-cheat-sheet.md
+    16777233 262981080 -rw-r--r-- 2 at staff 0 67187 "Jul 19 17:39:27 2025" "Jul 19 17:39:35 2025" "Jul 19 17:39:35 2025" "Jul 19 17:07:23 2025" 4096 256 0 keymaps/vim-cheat-sheet.md
+
+ls -l ~/Documents/Notes/vim-cheat-sheet.md
+    .rw-r--r--@ 67k at 19 Jul 17:39 /Users/at/Documents/Notes/vim-cheat-sheet.md
+stat ~/Documents/Notes/vim-cheat-sheet.md
+    16777233 262981080 -rw-r--r-- 2 at staff 0 67455 "Jul 19 17:40:01 2025" "Jul 19 17:40:00 2025" "Jul 19 17:40:00 2025" "Jul 19 17:07:23 2025" 4096 256 0 /Users/at/Documents/Notes/vim-cheat-sheet.md
+
+##### conclusion
+The link count of 2 in the stat output confirms these are hard links to each other. When you
+  create a hard link, there's no concept of "original" vs "link" - they're both equally valid paths
+  to the same file.
+
 ### Collection search: Link files to Bookmark folder & search
 
 I can hardlink any file to a folder in Bookmarks:
