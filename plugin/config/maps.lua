@@ -32,20 +32,20 @@ vim.keymap.set('n', 'p', function()
   local cursor_pos = vim.fn.getpos('.')
   vim.cmd('normal! p')
   vim.fn.setpos('.', cursor_pos)
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Paste without moving cursor' })
 
 vim.keymap.set('n', 'P', function()
   local cursor_pos = vim.fn.getpos('.')
   vim.cmd('normal! P')
   vim.fn.setpos('.', cursor_pos)
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Paste before cursor without moving' })
 
 vim.keymap.set('n', '<leader><leader>c<leader>', function()
   local cursor_pos = vim.fn.getpos('.')
   vim.cmd('ClearSpaces')
   -- vim.cmd('%s/\r//g')
   vim.fn.setpos('.', cursor_pos)
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Clear trailing spaces and empty lines' })
 
 -- CLEAR SPACES. Delete spaces at the end of the line. Also delete spaces if spaces are the only characters in a line.
 vim.api.nvim_create_user_command(
@@ -80,11 +80,11 @@ end, { buffer = false, desc = 'Test section selection' })
 -- for lua files for some reason this doesn't seem to work as buffer maps.
 vim.keymap.set('n', 'gel', function()
   Telesc_launch('lsp_document_symbols')
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'LSP document symbols' })
 
 vim.keymap.set('n', 'geL', function()
   Telesc_launch('lsp_dynamic_workspace_symbols')
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'LSP workspace symbols' })
 
 
 -- nnoremap <silent><buffer> gsl :call v:lua.Telesc_launch('lsp_document_symbols')<cr>
@@ -123,15 +123,15 @@ local rgx_header = [[─.*]]
 local rgx_signature = [[(?:(def\s|extension).*?(\n)?.*?(\n)?.*?(\n)?.*?\s=\s)]]
 local rgx_collection = [[(List|Seq|Iterable)]]
 
-local glb_projs1 = {
-  '-g', '**/AZioHttp/*.scala',
-  '-g', '**/BZioHttp/*.scala'
-}
+-- local glb_projs1 = {
+--   '-g', '**/AZioHttp/*.scala',
+--   '-g', '**/BZioHttp/*.scala'
+-- }
 
-local glb_patterns1 = {
-  '-g', '**/*pattern*.scala',
-  '-g', '**/*utils*.scala',
-}
+-- local glb_patterns1 = {
+--   '-g', '**/*pattern*.scala',
+--   '-g', '**/*utils*.scala',
+-- }
 
 local glb_vim = {
   '-g', '**/plugin/*.vim',
@@ -148,6 +148,8 @@ local paths_patterns1 = {
   '/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/',
 }
 
+
+-- ─   Outdated scala maps                               ■
 
 -- function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
 
@@ -170,77 +172,80 @@ local paths_patterns1 = {
 --     {'/Users/at/Documents/Proj/b_expl_stack/'}
 --     ) end )
 
-vim.keymap.set( 'n',
-  ',sA', function() Telesc_launch( 'live_grep', {
-    initial_mode = 'insert',
-    -- default_text = pattern,
-    search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
-  } )
-  end )
+-- vim.keymap.set( 'n',
+--   ',sA', function() Telesc_launch( 'live_grep', {
+--     initial_mode = 'insert',
+--     -- default_text = pattern,
+--     search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
+--   } )
+--   end, { desc = 'Live grep in stack project' })
 
 
-vim.keymap.set( 'n',
-  ',sA', function() Telesc_launch( 'live_grep', {
-    initial_mode = 'insert',
-    -- default_text = pattern,
-    search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
-  } )
-  end )
+-- vim.keymap.set( 'n',
+--   ',sA', function() Telesc_launch( 'live_grep', {
+--     initial_mode = 'insert',
+--     -- default_text = pattern,
+--     search_dirs = {'/Users/at/Documents/Proj/b_expl_stack/'},
+--   } )
+--   end, { desc = 'Live grep in stack project' })
 
 
--- search in scala [S]ymbols:
--- (also note gel for the lsp symbols in the current file)
-vim.keymap.set( 'n',
-  ',ss', function() require( 'utils.general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    {"-g", "*.scala"},
-    {'.'}
-    ) end )
+-- -- search in scala [S]ymbols:
+-- -- (also note gel for the lsp symbols in the current file)
+-- vim.keymap.set( 'n',
+--   ',ss', function() require( 'utils.general' )
+--   .RgxSelect_Picker( {},
+--     rgx_main_symbol,
+--     {"-g", "*.scala"},
+--     {'.'}
+--     ) end, { desc = 'Search Scala symbols in current dir' })
 
-vim.keymap.set( 'n',
-  ',sS', function() require( 'utils.general' )
-  .RgxSelect_Picker( {},
-    rgx_main_symbol,
-    {"-g", "*.scala"},
-    {'/Users/at/Documents/Proj/b_expl_stack/'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   ',sS', function() require( 'utils.general' )
+--   .RgxSelect_Picker( {},
+--     rgx_main_symbol,
+--     {"-g", "*.scala"},
+--     {'/Users/at/Documents/Proj/b_expl_stack/'}
+--     ) end, { desc = 'Search Scala symbols in stack project' })
 
--- search in [A]ll scala code:
-vim.keymap.set( 'n',
-  'ge;', function() require( 'utils.general' )
-    .RgxSelect_Picker( {},
-      "",
-      {"-g", "*.scala"},
-      {'.'}
-    ) end )
+-- -- search in [A]ll scala code:
+-- vim.keymap.set( 'n',
+--   'ge;', function() require( 'utils.general' )
+--     .RgxSelect_Picker( {},
+--       "",
+--       {"-g", "*.scala"},
+--       {'.'}
+--     ) end, { desc = 'Search all Scala code in current dir' })
 
-vim.keymap.set( 'n',
-  'ge:', function() require( 'utils.general' )
-    .RgxSelect_Picker( {},
-      "",
-      {"-g", "*.scala"},
-      {'/Users/at/Documents/Proj/b_expl_stack/'}
-    ) end )
+-- vim.keymap.set( 'n',
+--   'ge:', function() require( 'utils.general' )
+--     .RgxSelect_Picker( {},
+--       "",
+--       {"-g", "*.scala"},
+--       {'/Users/at/Documents/Proj/b_expl_stack/'}
+--     ) end, { desc = 'Search all Scala code in stack project' })
+
+-- -- search in comment TAGS:
+-- vim.keymap.set( 'n',
+--   ',st', function() require( 'utils.general' )
+--   .RgxSelect_Picker( {},
+--     rgx_caps_tag,
+--     {},
+--     {'.'}
+--     ) end, { desc = 'Search comment tags in current dir' })
+
+-- vim.keymap.set( 'n',
+--   ',sT', function() require( 'utils.general' )
+--   .RgxSelect_Picker( {},
+--     rgx_caps_tag,
+--     glb_projs1,
+--     {'..'}
+--     ) end, { desc = 'Search comment tags in parent dir' })
 
 
+-- ─^  Outdated scala maps                               ▲
 
--- search in comment TAGS:
-vim.keymap.set( 'n',
-  ',st', function() require( 'utils.general' )
-  .RgxSelect_Picker( {},
-    rgx_caps_tag,
-    {},
-    {'.'}
-    ) end )
 
-vim.keymap.set( 'n',
-  ',sT', function() require( 'utils.general' )
-  .RgxSelect_Picker( {},
-    rgx_caps_tag,
-    glb_projs1,
-    {'..'}
-    ) end )
 
 -- search in COMMENTS:
 -- vim.keymap.set( 'n',
@@ -266,7 +271,7 @@ vim.keymap.set( 'n',
     rgx_header,
     {},
     {'.'}
-    ) end )
+    ) end, { desc = 'Search headers in current dir' })
 
 vim.keymap.set( 'n',
   ',sH', function() require( 'utils.general' )
@@ -274,7 +279,7 @@ vim.keymap.set( 'n',
     rgx_header,
     glb_projs1,
     {'..'}
-    ) end )
+    ) end, { desc = 'Search headers in parent dir' })
 
 -- search in SIGNATURES:
 vim.keymap.set( 'n',
@@ -283,7 +288,7 @@ vim.keymap.set( 'n',
     rgx_signature,
     {},
     {'.'}
-    ) end )
+    ) end, { desc = 'Search signatures in current dir' })
 
 vim.keymap.set( 'n',
   ',sG', function() require( 'utils.general' )
@@ -291,7 +296,7 @@ vim.keymap.set( 'n',
     rgx_signature,
     glb_patterns1,
     {'..'}
-    ) end )
+    ) end, { desc = 'Search signatures in patterns' })
 
 vim.keymap.set( 'n',
   ',si', function() require( 'utils.general' )
@@ -299,7 +304,7 @@ vim.keymap.set( 'n',
     rgx_signature .. '.*' .. rgx_collection,
     glb_projs1,
     {'..'}
-    ) end )
+    ) end, { desc = 'Search signatures with collections' })
 
 vim.keymap.set( 'n',
   ',sz', function() require( 'utils.general' )
@@ -307,7 +312,7 @@ vim.keymap.set( 'n',
     rgx_signature .. '.*?' .. [[ZIO]],
     glb_projs1,
     {'..'}
-    ) end )
+    ) end, { desc = 'Search signatures with ZIO' })
 
 -- ─   Git picker maps                                  ──
 -- NOTE these maps: ~/.config/nvim/plugin/utils/utils-git.vim‖*GitˍTools
@@ -325,7 +330,7 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   '<leader>ogL', function()
     require'git_commits_viewer'.Show( { num_of_commits = 40 } )
-  end )
+  end, { desc = 'Show last 40 git commits' })
 
 
 
@@ -356,7 +361,7 @@ opts_gitstat = {
 vim.keymap.set( 'n',
   '<leader>ogl', function() require( 'utils.general' )
   .Git_commits_picker( opts_gitstat )
-  end )
+  end, { desc = 'Show git commits with picker' })
 
 -- vim.keymap.set( 'n',
 --   '<leader>ogl', function()
@@ -405,7 +410,7 @@ vim.keymap.set( 'n',
     initial_mode = 'normal',
     cwd = vim.fn.getcwd( vim.fn.winnr() ),
   } )
-  end )
+  end, { desc = 'Git status with Telescope' })
 
 -- no nice styling of diffs
 -- vim.keymap.set( 'n',
@@ -431,7 +436,7 @@ vim.keymap.set( 'n',
     -- potential alterative: ?
     -- vim.cmd 'set number'
     -- vim.cmd 'set nonumber'
-  end )
+  end, { desc = 'Toggle git diff overlay' })
 
 -- alternative map for ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 vim.keymap.set( 'n',
@@ -452,20 +457,20 @@ vim.keymap.set( 'n',
 
 
 
-vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>g1', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>g2', ':Gitsigns change_base ~2<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>g3', ':Gitsigns change_base ~3<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>g5', ':Gitsigns change_base ~5<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true, desc = 'Git diff with 1 commit ago' })
+vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true, desc = 'Git diff with base' })
+vim.keymap.set('n', '<leader>g1', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true, desc = 'Git diff with 1 commit ago' })
+vim.keymap.set('n', '<leader>g2', ':Gitsigns change_base ~2<CR>', { noremap = true, silent = true, desc = 'Git diff with 2 commits ago' })
+vim.keymap.set('n', '<leader>g3', ':Gitsigns change_base ~3<CR>', { noremap = true, silent = true, desc = 'Git diff with 3 commits ago' })
+vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>', { noremap = true, silent = true, desc = 'Git diff with 4 commits ago' })
+vim.keymap.set('n', '<leader>g5', ':Gitsigns change_base ~5<CR>', { noremap = true, silent = true, desc = 'Git diff with 5 commits ago' })
 
 -- ─^  Gitsigns                                          ▲
 
 vim.keymap.set( 'n',
   '<leader>ogd', function() require( 'utils.general' )
   .Git_diff_to_master( opts_1 )
-  end )
+  end, { desc = 'Git diff to master' })
 
 -- search in VIM_MAIN_SYMBOLS:
 vim.keymap.set( 'n',
@@ -475,7 +480,7 @@ vim.keymap.set( 'n',
     rgx_main_symbol_vimLua,
     {},
     dirs_nvim
-    ) end )
+    ) end, { desc = 'Search Vim/Lua symbols' })
 
 
 -- search in VIM_KEYMAPS:
@@ -486,7 +491,7 @@ vim.keymap.set( 'n',
     rgx_keymap_vim,
     {},
     dirs_nvim
-    ) end )
+    ) end, { desc = 'Search Vim keymaps' })
 
 
 -- search in entire vim code:
@@ -497,7 +502,7 @@ vim.keymap.set( 'n',
     "",
     {},
     dirs_nvim
-    ) end )
+    ) end, { desc = 'Search all Vim config' })
 
 -- search in entire vim headers:
 vim.keymap.set( 'n',
@@ -507,7 +512,7 @@ vim.keymap.set( 'n',
     rgx_header,
     {},
     dirs_nvim
-    ) end )
+    ) end, { desc = 'Search Vim headers' })
 
 -- search in VIM_HELP:
 vim.keymap.set( 'n',
@@ -515,7 +520,7 @@ vim.keymap.set( 'n',
   Telesc_launch( 'help_tags', {
     default_text = vim.fn.expand '<cword>',
     initial_mode = 'normal',
-  } ) end )
+  } ) end, { desc = 'Search help tags for word under cursor' })
 
 
 function vim.getVisualSelection()
@@ -536,7 +541,7 @@ vim.keymap.set( 'v',
   Telesc_launch( 'help_tags', {
     default_text = vim.getVisualSelection(),
     initial_mode = 'normal',
-  } ) end )
+  } ) end, { desc = 'Search help tags for visual selection' })
 
 
 
@@ -575,7 +580,7 @@ local theme_opts = {
   }
 
 -- vim.keymap.set( 'n', 'ger',        function() builtin.lsp_references(themes.get_cursor()) end )
-vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_cursor( theme_opts )) end )
+vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_cursor( theme_opts )) end, { desc = 'Find LSP references' })
 -- require('telescope.builtin').lsp_references(require('telescope.themes').get_cursor())
 
 
@@ -585,13 +590,13 @@ vim.keymap.set( 'n',
   ',,cl', function()
     vim.cmd'colorscheme munsell-blue-molokai_light_1'
     os.execute("claude config set -g theme light")
-  end )
+  end, { desc = 'Switch to light theme' })
 
 vim.keymap.set( 'n',
   ',,cd', function()
     vim.cmd'colorscheme munsell-blue-molokai'
     os.execute("claude config set -g theme dark")
-  end )
+  end, { desc = 'Switch to dark theme' })
 
 
 -- ─   Lsp maps                                         ──
@@ -606,24 +611,25 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   ']d', function()
     vim.diagnostic.goto_next()
-  end )
+  end, { desc = 'Go to next diagnostic' })
 
 vim.keymap.set( 'n',
   '[d', function()
     vim.diagnostic.goto_prev()
-  end )
+  end, { desc = 'Go to previous diagnostic' })
 
 
 -- note I'm overriding this in python.vim to use lspimport
 vim.keymap.set( 'n',
   '<leader>cA', function()
     vim.lsp.buf.code_action()
-  end )
+  end, { desc = 'LSP code action' })
 
 -- this uses Plug 'stevanmilic/nvim-lspimport' specifically for pyright
 vim.keymap.set( 'n',
   '<leader>ca',
-  require("lspimport").import
+  require("lspimport").import,
+  { desc = 'Auto import with lspimport' }
 )
 
 
