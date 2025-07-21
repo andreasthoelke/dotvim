@@ -16,7 +16,7 @@ require('magenta').setup({
     {
       name = "claude-sonnet",
       provider = "anthropic",
-      model = "claude-4-sonnet-latest",
+      model = "claude-sonnet-4-20250514",
       fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },

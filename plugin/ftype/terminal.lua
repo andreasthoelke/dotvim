@@ -4,8 +4,9 @@
 local terminal_keymaps = {
   ["tail.*%-f.*%.logs?"] = {
     -- Log navigation
-    { 'n', '<c-n>', function() vim.fn.search('\v(info|debug|warn)', "W") end, { desc = "Forward to lines starting with info, warn and debug" } },
-    { 'n', '<c-p>', function() vim.fn.search('\v(info|debug|warn)', "bW") end, { desc = "Backwards to lines starting with info, warn and debug" } },
+    { 'n', '<C-n>', function() vim.fn.search([[\v^(info|debug|warn|error)]], 'W') end, { desc = "Next log level (start of line)" } },
+    { 'n', '<C-p>', function() vim.fn.search([[\v^(info|debug|warn|error)]], 'bW') end, { desc = "Previous log level (start of line)" } },
+
   },
   ["docker logs"] = {
   },
@@ -32,8 +33,12 @@ function _G.Get_terminal_command()
   return nil
 end
 
+-- Create an augroup for terminal keymaps
+local augroup = vim.api.nvim_create_augroup("TerminalKeymaps", { clear = true })
+
 -- Set up the autocommand
 vim.api.nvim_create_autocmd("TermOpen", {
+  group = augroup,
   pattern = "*",
   callback = function()
     -- Small delay to ensure the terminal is fully initialized
