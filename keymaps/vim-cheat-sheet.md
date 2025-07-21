@@ -466,6 +466,12 @@ in screen:
     e   - close startify, edit new empty buffer. same as :new ?
     b s v t   - mark recent files, then <cr> to open them in diff windows
 new screen:
+
+<c-w>Go  float
+<c-w>Gv  vnew
+<c-w>Gs  new
+<c-w>Gt  tabnew
+
 <c-w>G v/tn/i - NewBuf startify screen
 <leader>st/T  - old quick map, discontinue?
 

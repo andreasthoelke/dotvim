@@ -6,7 +6,7 @@ if not vim.g.neovide then
 end
 
 -- vim.g.neovide_scale_factor = 1.0
-vim.g.neovide_scale_factor = 0.97
+vim.g.neovide_scale_factor = 0.99
 -- vim.g.neovide_scale_factor = 1.01
 -- vim.g.neovide_scale_factor = 1.035
 local change_scale_factor = function(delta)

@@ -216,11 +216,38 @@ func! Heading_VisSel_AroundContent()
   normal! gv
 endfunc
 
+func! Heading_VisSel_InsideContent()
+  normal! m'll
+  call search( g:headingPttn, 'cbW' )
+  normal! ^
+  if MatchesInLine( line('.'), '─' )
+    normal! j
+    " go to next non empty line
+    call search('\S', 'W' )
+
+    let [sLine, sCol] = getpos('.')[1:2]
+    if !GoSectionEndAbort('') " Go to end of a section or next heading
+      call HeadingForw()
+    endif
+
+    normal! k
+    " go to next non empty line
+    call search('\S', 'bW' )
+
+    let [eLine, eCol] = getpos('.')[1:2]
+  endif
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal! gv
+endfunc
+
 " Address the heading specifically as there may be labels in the way
 " onoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>
 " vnoremap <silent> ihn :<c-u>call Heading_VisSel_Name()<cr>o
-onoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>
-vnoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>o
+" onoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>
+" vnoremap <silent> ih :<c-u>call Heading_VisSel_Content()<cr>o
+onoremap <silent> ih :<c-u>call Heading_VisSel_InsideContent()<cr>
+vnoremap <silent> ih :<c-u>call Heading_VisSel_InsideContent()<cr>o
 
 onoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>
 vnoremap <silent> ah :<c-u>call Heading_VisSel_AroundContent()<cr>o

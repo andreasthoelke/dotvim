@@ -2,6 +2,8 @@
 -- require('magenta').setup({})
 
 
+print("magenta setup called!")
+
 require('magenta').setup({
   profiles = {
     {
@@ -68,7 +70,13 @@ require('magenta').setup({
   mcpServers = {
     mcphub = {
       url = "http://localhost:37373/mcp"
-    }
+    },
+    -- playwright = {
+    --   command = "npx",
+    --   args = {
+    --     "@playwright/mcp@latest"
+    --   }
+    -- }
   },
   -- configure MCP servers for external tool integrations
   -- mcpServers = {

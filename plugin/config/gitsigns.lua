@@ -109,7 +109,8 @@ require('gitsigns').setup {
     map('n', '<leader>td', gs.toggle_deleted)
 
     -- Text object
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    map({'o', 'x'}, 'i<leader>h', ':<C-U>Gitsigns select_hunk<CR>')
+    -- might else conflict with plugin/basics/CodeMarkup.vim
   end
 
 }

@@ -20,6 +20,7 @@ M.defaults = {
 }
 
 M.setup = function(opts)
+  print("Mga setup called")
   M.options = vim.tbl_deep_extend("force", M.defaults, opts or {})
 
   vim.api.nvim_set_keymap(
@@ -160,6 +161,7 @@ end
 -- handlers.
 M.bridge = function(channelId)
 
+  putt("bridge called " .. channelId)
   vim.api.nvim_create_user_command(
     "SomeEventA",
     function()

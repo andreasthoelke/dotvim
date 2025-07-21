@@ -162,6 +162,10 @@ end)
 
 -- Lines breaks in claude-code and terminal buffers!
 vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
+vim.api.nvim_set_keymap('t', '<S-CR>', '<A-CR>', {noremap = true})
+-- vim.api.nvim_set_keymap('t', '<c-CR>', '<C-\\><C-n>i[control-ENTER PRESSED]<C-\\><C-n>a', {noremap = true})
+-- vim.api.nvim_set_keymap('t', '<S-CR>', '<C-\\><C-n>i[SHIFT-ENTER PRESSED]<C-\\><C-n>a', {noremap = true})
+
 -- See ~/.local/share/nvim/parrot/chats/2025-03-23.17-25-57.276.md
 
 -- vim.keymap.set('v', '<c-g>p', ':Mga paste-selection_claude<CR>', { noremap = true, silent = true })
