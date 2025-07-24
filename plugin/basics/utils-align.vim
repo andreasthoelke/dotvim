@@ -18,8 +18,9 @@ let g:pttnsTypeSigs4 = ['/ / {"left_margin": 0, "right_margin": 0}', '/'. Patter
 " contArgs defines other/preceding (optional) args to be applied to the contFn
 " nnoremap ,at      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
 " vnoremap ,at :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
-nnoremap <leader>t      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-vnoremap <leader>t :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfuncAc('', 1)<cr>
+" This was active until 2025-07 but not used.
+" nnoremap <leader>t      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+" vnoremap <leader>t :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! Gen_opfuncAc( _, ...)
   " First arg is sent via op-fn. presence of second arg indicates visual-sel

@@ -2,8 +2,6 @@
 -- require('magenta').setup({})
 
 
-print("magenta setup called!")
-
 require('magenta').setup({
   profiles = {
     {
@@ -50,9 +48,6 @@ require('magenta').setup({
   defaultKeymaps = true,
   -- maximum number of sub-agents that can run concurrently (default: 3)
   maxConcurrentSubagents = 3,
-  -- glob patterns for files that should be auto-approved for getFile tool
-  -- (bypasses user approval for hidden/gitignored files matching these patterns)
-  getFileAutoAllowGlobs = { "node_modules/*" }, -- default includes node_modules
   -- keymaps for the sidebar input buffer
   sidebarKeymaps = {
     normal = { ["<c-w><cr>"] = ":Magenta send<CR>", },
@@ -67,10 +62,41 @@ require('magenta').setup({
       end,
     },
   },
+
+  autoContext = {
+    "context.md",
+    "claude.md",
+    ".magenta/*.md"
+  },
+  commandAllowlist = {
+    "^ls( [^;&|()<>]*)?$",
+    "^pwd$",
+    "^echo( [^;&|()<>]*)?$",
+    "^git (status|log|diff|show|add|commit|push|reset|restore|branch|checkout|switch|fetch|pull|merge|rebase|tag|stash)( [^;&|()<>]*)?$",
+    "^ls [^;&()<>]* | grep [^;&|()<>]*$",
+    "^echo [^;&|()<>]* > [a-zA-Z0-9_\\-.]+$",
+    "^grep( -[A-Za-z]*)? [^;&|()<>]*$"
+  },
+
+  -- glob patterns for files that should be auto-approved for getFile tool
+  -- (bypasses user approval for hidden/gitignored files matching these patterns)
+  getFileAutoAllowGlobs = {
+    "node_modules/**/*",
+  },
+
+
   mcpServers = {
     mcphub = {
       url = "http://localhost:37373/mcp"
     },
+    -- github = {
+    --   command = "npx",
+    --   args = {
+    --     "-y",
+    --     "@modelcontextprotocol/server-github"
+    --   },
+    -- }
+
     -- playwright = {
     --   command = "npx",
     --   args = {

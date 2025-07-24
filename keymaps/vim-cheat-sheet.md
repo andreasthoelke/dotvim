@@ -11,6 +11,10 @@
 ### AI Command Selection
 <c-g><c-g>o          - Select AI command (claude, codex, aider, etc.)
 
+### Magenta
+@ commands:
+~/Documents/Proj/k_mindgraph/h_mcp/d_magenta/README.md‖/Automaticallyˍincludesˍthe
+
 ### Avante
 <c-g><leader>v       - AvanteChatNew
 <c-g><leader>M       - AvanteModel
@@ -290,6 +294,11 @@ gsp + j/k + w     - set cwd to project
 <leader>ls        - load vim session via possession for that project dir.
 
 ## nvim-node / bunvim socket --listen flag
+### update 2025-07-23!
+this actually conflicts with starting 2 + instances of 'nvim'! since the port can only be used once!
+~/.config/hammerspoon/init.lua‖/localˍfunctionˍnvim()
+      "--command", "/bin/zsh", "-c", "-l", "cd ~/Documents/Proj && nvim --listen /tmp/bunvim.nvim.socket"
+
 
 update 2025-07:
 i'm now using "nvim --listen /tmp/nvim"
@@ -2034,7 +2043,7 @@ TODO should this be more consitent with harpoon?
 <leader>oh     - show harpoon win
 <leader>oH     - show ExampleLinks.md file (note both are linked and can be edited)
 <leader>oE     - same as above just to relate to the next map ->
-<leader>oe     - show ExamplesLog.md 
+<leader>oex    - show ExamplesLog.md 
 
 <leader>ah/a   - add current file
 ]a/[a          - next/prev file
