@@ -59,7 +59,7 @@ au ag BufWinEnter *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 " TODO migrate to using FileType?
 " au ag FileType python call PythonSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.yaml call PythonSyntaxAdditions()
+" au ag BufNewFile,BufRead,WinNew *.yaml call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()

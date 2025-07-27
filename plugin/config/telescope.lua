@@ -835,6 +835,10 @@ require('telescope').setup{
     --   selected_browser = 'chrome',
     -- },
 
+    project = {
+      order_by = "recent",  -- This is already the default
+    },
+
     file_browser = {
       mappings = {
         ["i"] = {

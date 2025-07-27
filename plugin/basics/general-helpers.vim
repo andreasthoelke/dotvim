@@ -2,9 +2,9 @@
 
 " A general sleep, pause, delay, timeout function! Default delay = 5ms
 " Lua alternative: vim.defer_fn( function() vim.print( "hi there" ) end, 2000 )
-func! T_DelayedCmd( cmd, ... )
-   call timer_start( a:0 ? a:1 : 5, { tid -> execute( a:cmd, "" )})
-endfunc
+" func! T_DelayedCmd( cmd, ... )
+"    call timer_start( a:0 ? a:1 : 5, { tid -> execute( a:cmd, "" )})
+" endfunc
 " T_DelayedCmd( "echo 'hi there'", 1000 )
 " T_DelayedCmd( "echo 'hi there'" )
 

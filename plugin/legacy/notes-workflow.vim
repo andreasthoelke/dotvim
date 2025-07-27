@@ -631,7 +631,7 @@ command! -nargs=* SomeTest1 call SomeTest1(<f-args>)
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 
 " Expr Maps: right side is an expression, conditional ( <test-exp> ? <exp1> : <exp2> )
-noremap <expr> <leader>sn demo4 == 'ein' ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"
+" noremap <expr> <leader>sn demo4 == 'ein' ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"
 let demo4 = 'eins'
 " calling a function to get a condition:
 " noremap <expr> <leader>aab Demo5() ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"

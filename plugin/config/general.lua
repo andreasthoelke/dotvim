@@ -1,7 +1,7 @@
 
 
 -- tempoary!
-_G.vim.deprecate = function() end
+-- _G.vim.deprecate = function() end
 
 -- lua/plugin-update-infos.lua
 require('plugin-update-infos').setup()
@@ -131,8 +131,22 @@ require('glow').setup({
 -- )
 
 
+function _G.Is_macos_dark_mode()
+    local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
+    local result = handle:read("*a")
+    handle:close()
+    return result:match("Dark") ~= nil
+end
 
 
+function _G.Set_alacritty_bg(color)
+    -- Remove # if present
+    color = color:gsub("^#", "")
+    -- Send OSC 11 sequence directly to stdout
+    io.stdout:write(string.format("\027]11;#%s\007", color))
+    io.stdout:flush()
+end
+-- Set_alacritty_bg("E3E6E9")
 
 
 

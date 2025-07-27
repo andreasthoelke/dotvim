@@ -360,7 +360,7 @@ local function custom_handler_filter_interfaceDefs(err, result, ctx, config)
 end
 
 
-lspconfig.tsserver.setup({
+lspconfig.ts_ls.setup({
   settings = {
     typescript = {
       symbolInfo = {

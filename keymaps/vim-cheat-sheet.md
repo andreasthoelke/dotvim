@@ -1567,6 +1567,20 @@ Key	Description
 <c-r>	find a recently opened file within your project
 <c-f>	find a file within your project (same as <CR>)
 
+#### Telescope projects persist list file
+~/.local/share/nvim/telescope-projects.txt
+run this to clean up the file:
+:g/=0=/d
+
+For your example: d_magenta=/Users/at/Documents/Proj/k_mindgraph/h_mcp/d_magenta=w0=1
+
+  The columns mean:
+  1. title: d_magenta - Project display name
+  2. path: /Users/at/Documents/Proj/k_mindgraph/h_mcp/d_magenta - Full path to project directory
+  3. workspace: w0 - Workspace identifier (defaults to "w0")
+  4. activated: 1 - Whether project is active (1) or deleted/hidden (0)
+  5. last_accessed_time: (missing in your example) - Unix timestamp of last access
+
 ### Gist
 Telescopt gh gist
 

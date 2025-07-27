@@ -4,6 +4,21 @@ func! TsSyntaxAdditions ()
 
   call clearmatches()
 
+  " Clear any existing matches first
+  " syntax clear TsConceal
+
+  " Define your match WITHOUT containedin
+  " syntax match TsConceal 'interface' conceal cchar=◈
+
+  " Make sure strings and comments are defined AFTER your match
+  " This way, they will override your match inside strings/comments
+  syntax region String start=/"/ end=/"/ contains=@Spell
+  syntax region String start=/'/ end=/'/ contains=@Spell
+  syntax region String start=/`/ end=/`/ contains=@Spell,TSInterpolation
+
+  syntax region Comment start=/\/\// end=/$/
+  syntax region Comment start=/\/\*/ end=/\*\//
+
   syntax match Normal 'import\s' conceal cchar=⁝
 
   syntax match Normal 'switch' conceal cchar=⌋
@@ -157,6 +172,8 @@ func! TsSyntaxAdditions ()
   " syntax match Normal '\s\zstype_=' conceal
 
   syntax match Normal 'interface' conceal cchar=◈
+  " syntax match Normal 'interface' conceal cchar=◈ containedin=ALLBUT,*String*,*Comment*
+
   syntax match Normal 'type' conceal cchar=◇
   syntax match Normal 'types:' conceal cchar=◇
   syntax match Normal 'typeof' conceal cchar=◇

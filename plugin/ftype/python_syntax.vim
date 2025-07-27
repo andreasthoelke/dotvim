@@ -7,6 +7,14 @@ func! PythonSyntaxAdditions() " ■
 
   call clearmatches()
 
+  syntax region String start=/"/ end=/"/ contains=@Spell
+  syntax region String start=/'/ end=/'/ contains=@Spell
+  syntax region String start=/`/ end=/`/ contains=@Spell,TSInterpolation
+
+  syntax region Comment start=/\/\// end=/$/
+  syntax region Comment start=/\/\*/ end=/\*\//
+
+
   syntax match ConcealQuotes "'" conceal
   syntax match ConcealQuotes '"' conceal
   " call CodeMarkupSyntaxHighlights()

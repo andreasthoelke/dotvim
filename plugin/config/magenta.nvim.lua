@@ -1,6 +1,8 @@
 
 -- require('magenta').setup({})
 
+-- Default options:
+-- ~/Documents/Proj/k_mindgraph/h_mcp/d_magenta/lua/magenta/options.lua
 
 require('magenta').setup({
   profiles = {

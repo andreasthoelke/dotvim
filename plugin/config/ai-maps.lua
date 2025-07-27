@@ -98,6 +98,8 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     "claude update ",
     "claude --resume ",
     "gemini ",
+    "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm run start ",
+    "opencode ",
     "codex --approval-mode full-auto ",
     "codex --full-auto ",
     "codex --full-auto --model gpt-4.1 ",

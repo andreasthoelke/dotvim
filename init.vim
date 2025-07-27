@@ -680,14 +680,36 @@ let maplocalleader="\\"
 " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 
-if !exists('g:colors_name')
-  " && g:colors_name != 'munsell-blue-molokai'
+" A general sleep, pause, delay, timeout function! Default delay = 5ms
+" Lua alternative: vim.defer_fn( function() vim.print( "hi there" ) end, 2000 )
+func! T_DelayedCmd( cmd, ... )
+   call timer_start( a:0 ? a:1 : 5, { tid -> execute( a:cmd, "" )})
+endfunc
+" T_DelayedCmd( "echo 'hi there'", 1000 )
+" T_DelayedCmd( "echo 'hi there'" )
+
+
+" if !exists('g:colors_name')
+let g:is_dark_mode = system("defaults read -g AppleInterfaceStyle 2>/dev/null") =~ 'Dark'
+" && g:colors_name != 'munsell-blue-molokai'
+if is_dark_mode == 1
   set background=dark
   colorscheme munsell-blue-molokai
+  call system( "claude config set -g theme dark" )
+  call T_DelayedCmd( "lua Set_alacritty_bg('151719')", 50 )
+else
+  " set background=dark
+  colorscheme munsell-blue-molokai_light_1
+  call system( "claude config set -g theme light" )
+  call T_DelayedCmd( "lua Set_alacritty_bg('E3E6E9')", 50 )
+endif
   " The startup color theme - light during time
   " colorscheme munsell-blue-molokai_light_1
   " colorscheme munsell-blue-molokai_20250214_180417
-endif
+" endif
+
+
+
 
 " nnoremap <leader>sc :colorscheme munsell-blue-molokai<cr>
 
