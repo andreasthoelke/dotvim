@@ -691,6 +691,7 @@ endfunc
 
 " if !exists('g:colors_name')
 let g:is_dark_mode = system("defaults read -g AppleInterfaceStyle 2>/dev/null") =~ 'Dark'
+" let g:is_dark_mode = 1
 " && g:colors_name != 'munsell-blue-molokai'
 if is_dark_mode == 1
   set background=dark
