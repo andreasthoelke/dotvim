@@ -70,5 +70,10 @@ local conf = {
 
 minidiff.setup( conf )
 
+vim.api.nvim_create_user_command('MiniDiffAgainst', function(opts)
+  local file = vim.fn.expand('%:~:.')
+  local ref  = vim.fn.systemlist({'git', 'show', opts.args .. ':' .. file})
+  if vim.v.shell_error == 0 then require('mini.diff').set_ref_text(0, ref) end
+end, { nargs = 1 })
 
 

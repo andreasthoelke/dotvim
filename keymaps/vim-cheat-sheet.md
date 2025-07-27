@@ -113,14 +113,17 @@ gej                  - LSP signature help
 ,gd                  - Toggle MiniDiff overlay
 <leader><leader>gd   - Compare two files from consecutive lines
 
-### Gitsigns
-<leader>gh           - Gitsigns change_base ~1
-<leader>gH           - Gitsigns change_base (HEAD)
-<leader>g1           - Gitsigns change_base ~1
-<leader>g2           - Gitsigns change_base ~2
-<leader>g3           - Gitsigns change_base ~3
-<leader>g4           - Gitsigns change_base ~4
-<leader>g5           - Gitsigns change_base ~5
+### Gitsigns & MiniDiff
+<leader>gh           - change_base ~1
+<leader>gH           - change_base (HEAD)
+<leader>g1           - change_base ~1
+<leader>g2           - change_base ~2
+<leader>g3           - change_base ~3
+<leader>g4           - change_base ~4
+<leader>g5           - change_base ~5
+
+MiniDiffAgainst HEAD~2
+MiniDiffAgainst HEAD
 
 ## Search Patterns
 
