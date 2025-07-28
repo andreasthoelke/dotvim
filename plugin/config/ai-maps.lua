@@ -143,23 +143,27 @@ vim.keymap.set('n', '<c-g><c-j>', function()
 end)
 
 vim.keymap.set('n', '<c-g><c-s>', function()
-  local uniqueStr = vim.fn.GetRandNumberString4()
-  local filepath = "/Users/at/.local/share/nvim/parrot/chats/claude_code_" .. uniqueStr .. ".md"
-  local claude_buf = require('claude_code').aider_buf
-  -- Save text of claude buffer
-  local text = vim.api.nvim_buf_get_lines(claude_buf, 0, -1, false)
-  -- create file
-  local file = io.open(filepath, "w")
-  if file then
-    for _, line in ipairs(text) do
-      file:write(line .. "\n")
-    end
-    file:close()
-    print("Saved to " .. filepath)
-  else
-    print("Error saving to " .. filepath)
-  end
+  SaveChatBuffer()
 end)
+
+-- vim.keymap.set('n', '<c-g><c-s>', function()
+--   local uniqueStr = vim.fn.GetRandNumberString4()
+--   local filepath = "/Users/at/.local/share/nvim/parrot/chats/claude_code_" .. uniqueStr .. ".md"
+--   local claude_buf = require('claude_code').aider_buf
+--   -- Save text of claude buffer
+--   local text = vim.api.nvim_buf_get_lines(claude_buf, 0, -1, false)
+--   -- create file
+--   local file = io.open(filepath, "w")
+--   if file then
+--     for _, line in ipairs(text) do
+--       file:write(line .. "\n")
+--     end
+--     file:close()
+--     print("Saved to " .. filepath)
+--   else
+--     print("Error saving to " .. filepath)
+--   end
+-- end)
 -- require('claude_code').aider_buf
 
 -- Lines breaks in claude-code and terminal buffers!

@@ -1,22 +1,29 @@
 
 function _G.SaveChatBuffer()
-  local folder_path = "~/.local/share/nvim/parrot/chats"
-  -- just grab the text from the current buffer. e.g. like:
+  local folder_path = vim.fn.expand("~/.local/share/nvim/parrot/chats")
+  
+  -- Create directory if it doesn't exist
+  vim.fn.mkdir(folder_path, "p")
+  
+  -- Get current buffer content
   local bufnr = vim.api.nvim_get_current_buf()
   local text = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  -- File paths example: /Users/at/.local/share/nvim/parrot/chats/2025-03-02.08-58-38.md
-  local filepath = folder_path .. "/" .. os.date("%Y-%m-%d.%H-%M-%S") .. ".md"
+  
+  -- Generate filename with timestamp
+  local filename = os.date("%Y-%m-%d.%H-%M-%S") .. ".md"
+  local filepath = folder_path .. "/" .. filename
+  
+  -- Write to file
   local file = io.open(filepath, "w")
   if file then
     for _, line in ipairs(text) do
       file:write(line .. "\n")
     end
     file:close()
-    print("Saved to " .. filepath)
+    print("Chat saved to: " .. filename)
   else
-    print("Error saving to " .. filepath)
+    print("Error: Failed to save chat to " .. filepath)
   end
-
 end
 
 
