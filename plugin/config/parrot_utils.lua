@@ -20,54 +20,112 @@ function _G.ShowParrotChatsView()
   -- Sort files by name (which includes timestamp)
   table.sort(files, function(a, b) return a > b end)
 
-  -- Store file paths as buffer variable for later use
-  vim.api.nvim_buf_set_var(bufnr, 'file_paths', files)
-
-  -- Create empty lines for each file
-  local empty_lines = {}
-  for i = 1, #files do
-    table.insert(empty_lines, "")
+  -- Group files by date
+  local groups = {}
+  local group_order = {}
+  
+  for _, filepath in ipairs(files) do
+    local filename = vim.fn.fnamemodify(filepath, ':t')
+    local date = filename:match("^(%d%d%d%d%-%d%d%-%d%d)")
+    
+    if not date then
+      date = "other"  -- Group files without standard date format
+    end
+    
+    if not groups[date] then
+      groups[date] = {}
+      table.insert(group_order, date)
+    end
+    table.insert(groups[date], filepath)
   end
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, empty_lines)
+
+  -- Create buffer lines and store file paths with proper indexing
+  local buffer_lines = {}
+  local file_paths_with_headers = {}
+  local line_index = 0
+  
+  for _, date in ipairs(group_order) do
+    -- Add date header line
+    table.insert(buffer_lines, "")
+    table.insert(file_paths_with_headers, nil)  -- nil for header lines
+    line_index = line_index + 1
+    
+    -- Add file lines for this date
+    for _, filepath in ipairs(groups[date]) do
+      table.insert(buffer_lines, "")
+      table.insert(file_paths_with_headers, filepath)
+      line_index = line_index + 1
+    end
+  end
+  
+  -- Store the modified file paths array
+  vim.api.nvim_buf_set_var(bufnr, 'file_paths', file_paths_with_headers)
+  
+  -- Set buffer lines
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, buffer_lines)
 
   -- Create namespace for virtual text
   local ns_id = vim.api.nvim_create_namespace('parrot_chats_dates')
 
-  -- Extract dates and topics, add virtual text
-  for i, filepath in ipairs(files) do
-    local filename = vim.fn.fnamemodify(filepath, ':t')
-    local display_text = ""
-
-    -- Try to extract date from filename (YYYY-MM-DD)
-    local date = filename:match("^(%d%d%d%d%-%d%d%-%d%d)")
-
-    if date then
-      display_text = date
-    else
-      -- For files like claude_code_9790.md, show the filename without extension
-      display_text = filename:match("^(.+)%.md$") or filename
-    end
-
-    -- Read the first line to get the topic
-    local file = io.open(filepath, "r")
-    if file then
-      local first_line = file:read("*l")
-      file:close()
-      
-      -- Extract topic from the first line (format: # topic: ...)
-      local topic = first_line and first_line:match("^#%s*topic:%s*(.+)$")
-      if topic then
-        -- Trim whitespace
-        topic = topic:gsub("^%s*(.-)%s*$", "%1")
-        display_text = display_text .. " - " .. topic
+  -- Add virtual text for date headers and files
+  line_index = 0
+  for _, date in ipairs(group_order) do
+    -- Add date header virtual text
+    local date_display = date
+    if date ~= "other" then
+      -- Format date nicely (e.g., "2025-03-02" -> "March 2, 2025")
+      local year, month, day = date:match("(%d%d%d%d)%-(%d%d)%-(%d%d)")
+      if year and month and day then
+        local months = {"January", "February", "March", "April", "May", "June", 
+                       "July", "August", "September", "October", "November", "December"}
+        date_display = string.format("%s %d, %s", months[tonumber(month)], tonumber(day), year)
       end
     end
-
-    -- Add virtual text at the beginning of the line
-    vim.api.nvim_buf_set_extmark(bufnr, ns_id, i-1, 0, {
-      virt_text = {{display_text, 'Normal'}},
+    
+    vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_index, 0, {
+      virt_text = {{date_display, 'Title'}},
       virt_text_pos = 'overlay',
     })
+    line_index = line_index + 1
+    
+    -- Add file entries for this date
+    for _, filepath in ipairs(groups[date]) do
+      local filename = vim.fn.fnamemodify(filepath, ':t')
+      local display_text = ""
+      
+      -- Extract time from filename if available
+      local time = filename:match("^%d%d%d%d%-%d%d%-%d%d%.(%d%d%-%d%d%-%d%d)")
+      if time then
+        -- Convert to HH:MM format (without seconds)
+        local hour, minute = time:match("^(%d%d)%-(%d%d)")
+        display_text = "  " .. hour .. ":" .. minute
+      else
+        -- For files like claude_code_9790.md, show the filename without extension
+        display_text = "  " .. (filename:match("^(.+)%.md$") or filename)
+      end
+      
+      -- Read the first line to get the topic
+      local file = io.open(filepath, "r")
+      if file then
+        local first_line = file:read("*l")
+        file:close()
+        
+        -- Extract topic from the first line (format: # topic: ...)
+        local topic = first_line and first_line:match("^#%s*topic:%s*(.+)$")
+        if topic then
+          -- Trim whitespace
+          topic = topic:gsub("^%s*(.-)%s*$", "%1")
+          display_text = display_text .. " - " .. topic
+        end
+      end
+      
+      -- Add virtual text for the file
+      vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_index, 0, {
+        virt_text = {{display_text, 'Normal'}},
+        virt_text_pos = 'overlay',
+      })
+      line_index = line_index + 1
+    end
   end
 
 
