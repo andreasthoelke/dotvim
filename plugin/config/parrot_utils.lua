@@ -12,6 +12,19 @@ function _G.ShowParrotChatsView()
   vim.g['floating_win'] = floating_winId
   vim.api.nvim_set_current_win(floating_winId)
 
+  -- Expand the path and get files
+  local expanded_path = vim.fn.expand(folder_path)
+  local files = vim.fn.glob(expanded_path .. "/*.md", false, true)
+  
+  -- Sort files by name (which includes timestamp)
+  table.sort(files, function(a, b) return a > b end)
+  
+  -- Set the file paths in the buffer
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, files)
+  
+  -- Make buffer modifiable false
+  vim.api.nvim_buf_set_option(bufnr, 'modifiable', false)
+  vim.api.nvim_buf_set_option(bufnr, 'buftype', 'nofile')
 
 end
 

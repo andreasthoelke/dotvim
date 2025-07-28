@@ -1,4 +1,6 @@
 
+-- https://github.com/echasnovski/mini.diff
+-- help MiniDiff
 
 -- NOTE these maps: 
 -- ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns

@@ -466,14 +466,6 @@ vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>:MiniDiffAgainst 
 vim.keymap.set('n', '<leader>g5', ':Gitsigns change_base ~5<CR>:MiniDiffAgainst HEAD~5<cr>', { noremap = true, silent = true, desc = 'Git diff with 5 commits ago' })
 
 
--- vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true, desc = 'Git diff with 1 commit ago' })
--- vim.keymap.set('n', '<leader>gH', ':Gitsigns change_base<CR>', { noremap = true, silent = true, desc = 'Git diff with base' })
--- vim.keymap.set('n', '<leader>g1', ':Gitsigns change_base ~1<CR>', { noremap = true, silent = true, desc = 'Git diff with 1 commit ago' })
--- vim.keymap.set('n', '<leader>g2', ':Gitsigns change_base ~2<CR>', { noremap = true, silent = true, desc = 'Git diff with 2 commits ago' })
--- vim.keymap.set('n', '<leader>g3', ':Gitsigns change_base ~3<CR>', { noremap = true, silent = true, desc = 'Git diff with 3 commits ago' })
--- vim.keymap.set('n', '<leader>g4', ':Gitsigns change_base ~4<CR>', { noremap = true, silent = true, desc = 'Git diff with 4 commits ago' })
--- vim.keymap.set('n', '<leader>g5', ':Gitsigns change_base ~5<CR>', { noremap = true, silent = true, desc = 'Git diff with 5 commits ago' })
-
 -- ─^  Gitsigns                                          ▲
 
 vim.keymap.set( 'n',

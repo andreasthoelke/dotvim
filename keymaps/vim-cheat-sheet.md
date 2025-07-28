@@ -2046,10 +2046,15 @@ TODO: could add/relate "frontend printer" identifiers
 IDEA: could add a vis-sel as selective context for aider.
 
 # ExamplesLog.md
-<leader>oe    - show ExamplesLog.md 
-<leader>ol    - show ExampleLinks.md
-<leader>op    - show package.json
-<leader>oi    - show .gitignore
+<leader>oex   - show ExamplesLog.md 
+<leader>oel   - ExampleLinks.md
+<leader>op    - package.json
+<leader>or    - README.md
+<leader>oc    - claude.md
+<leader>oC    - ~/.claude/claude.md
+<leader>oev   - .env
+<leader>oi    - .gitignore
+<leader><leader>oc    - parrot ai chats
 
 TODO should this be more consitent with harpoon?
 
