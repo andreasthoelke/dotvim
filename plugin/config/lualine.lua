@@ -286,7 +286,9 @@ local lualine_config = {
     lualine_z = {
       {
         require('mcphub.extensions.lualine'),
-        cond = function() return vim.bo.filetype == 'codecompanion' end
+        cond = function() 
+          return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
+        end
       },
       {
         'Magenta_model()',
@@ -324,7 +326,9 @@ local lualine_config = {
     lualine_z = {
       {
         require('mcphub.extensions.lualine'),
-        cond = function() return vim.bo.filetype == 'codecompanion' end
+        cond = function() 
+          return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
+        end
       },
       {
         'Magenta_model()',

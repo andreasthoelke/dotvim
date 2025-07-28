@@ -38,7 +38,7 @@
 - **Use dispatch_agent** for complex search patterns across multiple files
 - **Prefer concise responses** with minimal preamble or explanation unless explicitly requested
 
-# Custom instructions
+# Custom instructions (project local)
 
 - Don't unnecessarily restrict buffer properties unless there's a specific requirement
 
