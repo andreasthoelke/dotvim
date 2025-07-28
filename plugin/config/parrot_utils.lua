@@ -112,6 +112,10 @@ function _G.ShowParrotChatsView()
   -- Create syntax match for the file path portion (after " | ")
   vim.api.nvim_buf_call(bufnr, function()
     vim.cmd([[syntax match ParrotChatFilePath / | .*$/ conceal]])
+    -- Add syntax match for date headers (lines that don't start with spaces)
+    vim.cmd([[syntax match ParrotChatDateHeader /^[^ ].*$/]])
+    -- Link the date header to a highlight group
+    vim.cmd([[highlight link ParrotChatDateHeader Title]])
   end)
 
 end
