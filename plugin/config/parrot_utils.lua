@@ -91,6 +91,9 @@ function _G.ShowParrotChatsView()
         end
       end
       
+      -- Append the file path
+      display_text = display_text .. " | " .. filepath
+      
       table.insert(buffer_lines, display_text)
       table.insert(file_paths_with_headers, filepath)
     end
