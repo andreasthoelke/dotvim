@@ -2,7 +2,7 @@
 function _G.ShowParrotChatsView()
   local folder_path = "~/.local/share/nvim/parrot/chats"
   -- File paths example: /Users/at/.local/share/nvim/parrot/chats/2025-03-02.08-58-38.406.md
-  -- Topics examples:
+  -- Topics examples (this is the first line of the file):
   -- # topic: TypeScript: Types, Tools, Innovation
   -- # topic: Git branch divergence
 
@@ -33,21 +33,36 @@ function _G.ShowParrotChatsView()
   -- Create namespace for virtual text
   local ns_id = vim.api.nvim_create_namespace('parrot_chats_dates')
 
-  -- Extract dates and add virtual text
+  -- Extract dates and topics, add virtual text
   for i, filepath in ipairs(files) do
     local filename = vim.fn.fnamemodify(filepath, ':t')
     local display_text = ""
-    
+
     -- Try to extract date from filename (YYYY-MM-DD)
     local date = filename:match("^(%d%d%d%d%-%d%d%-%d%d)")
-    
+
     if date then
       display_text = date
     else
       -- For files like claude_code_9790.md, show the filename without extension
       display_text = filename:match("^(.+)%.md$") or filename
     end
-    
+
+    -- Read the first line to get the topic
+    local file = io.open(filepath, "r")
+    if file then
+      local first_line = file:read("*l")
+      file:close()
+      
+      -- Extract topic from the first line (format: # topic: ...)
+      local topic = first_line and first_line:match("^#%s*topic:%s*(.+)$")
+      if topic then
+        -- Trim whitespace
+        topic = topic:gsub("^%s*(.-)%s*$", "%1")
+        display_text = display_text .. " - " .. topic
+      end
+    end
+
     -- Add virtual text at the beginning of the line
     vim.api.nvim_buf_set_extmark(bufnr, ns_id, i-1, 0, {
       virt_text = {{display_text, 'Normal'}},
@@ -55,8 +70,6 @@ function _G.ShowParrotChatsView()
     })
   end
 
-  -- Make buffer non-modifiable
-  vim.api.nvim_buf_set_option(bufnr, 'modifiable', false)
 
 end
 

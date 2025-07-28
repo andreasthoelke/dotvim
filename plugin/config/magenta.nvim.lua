@@ -68,6 +68,7 @@ require('magenta').setup({
   autoContext = {
     "context.md",
     "claude.md",
+    "/Users/at/.claude/CLAUDE.md",
     ".magenta/*.md"
   },
   commandAllowlist = {
@@ -88,9 +89,9 @@ require('magenta').setup({
 
 
   mcpServers = {
-    mcphub = {
-      url = "http://localhost:37373/mcp"
-    },
+    -- mcphub = {
+    --   url = "http://localhost:37373/mcp"
+    -- },
     -- github = {
     --   command = "npx",
     --   args = {

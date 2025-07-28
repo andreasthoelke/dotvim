@@ -37,3 +37,8 @@
 - **Include expected_replacements** when editing files with potential multiple matches
 - **Use dispatch_agent** for complex search patterns across multiple files
 - **Prefer concise responses** with minimal preamble or explanation unless explicitly requested
+
+# Custom instructions
+
+- Don't unnecessarily restrict buffer properties unless there's a specific requirement
+
