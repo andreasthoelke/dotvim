@@ -110,8 +110,12 @@ function _G.ShowParrotChatsView()
         local first_line = file:read("*l")
         file:close()
 
-        -- Extract topic from the first line (format: # topic: ...)
-        local topic = first_line and first_line:match("^#%s*topic:%s*(.+)$")
+        -- Extract topic from the first line
+        -- Support both formats: "# topic: ..." and "# ..."
+        local topic = first_line and (
+          first_line:match("^#%s*topic:%s*(.+)$") or  -- Format: # topic: ...
+          first_line:match("^#%s+(.+)$")               -- Format: # ...
+        )
         if topic then
           -- Trim whitespace
           topic = topic:gsub("^%s*(.-)%s*$", "%1")
