@@ -110,16 +110,51 @@ function _G.ShowParrotChatsView()
         local first_line = file:read("*l")
         file:close()
 
-        -- Extract topic from the first line
-        -- Support both formats: "# topic: ..." and "# ..."
-        local topic = first_line and (
-          first_line:match("^#%s*topic:%s*(.+)$") or  -- Format: # topic: ...
-          first_line:match("^#%s+(.+)$")               -- Format: # ...
-        )
+        -- Extract topic from the first line and determine buffer type
+        local buffer_type = ""
+        local topic = nil
+        
+        -- Read first few lines to check for Claude/Gemini
+        local file_for_type = io.open(filepath, "r")
+        local first_few_lines = ""
+        if file_for_type then
+          for i = 1, 3 do
+            local line = file_for_type:read("*l")
+            if not line then break end
+            first_few_lines = first_few_lines .. " " .. line:lower()
+          end
+          file_for_type:close()
+        end
+        -- print(first_few_lines)
+        
+        -- Check for Claude or Gemini in first few lines
+        if first_few_lines:match("claude") then
+          buffer_type = "C: "
+        elseif first_few_lines:match("gemini") then
+          buffer_type = "G: "
+        elseif first_line then
+          -- Check for Parrot format
+          topic = first_line:match("^#%s*topic:%s*(.+)$")
+          if topic then
+            buffer_type = "P: "
+          else
+            -- Check for Magenta format
+            topic = first_line:match("^#%s+(.+)$")
+            if topic then
+              buffer_type = "M: "
+            end
+          end
+        end
+        
+        -- If we haven't found a topic yet, try to extract it
+        if not topic and first_line then
+          topic = first_line:match("^#%s*topic:%s*(.+)$") or first_line:match("^#%s+(.+)$")
+        end
+        
         if topic then
           -- Trim whitespace
           topic = topic:gsub("^%s*(.-)%s*$", "%1")
-          display_text = display_text .. " - " .. topic
+          display_text = display_text .. " - " .. buffer_type .. topic
         end
       end
 
