@@ -23,15 +23,15 @@ function _G.ShowParrotChatsView()
   -- Group files by date
   local groups = {}
   local group_order = {}
-  
+
   for _, filepath in ipairs(files) do
     local filename = vim.fn.fnamemodify(filepath, ':t')
     local date = filename:match("^(%d%d%d%d%-%d%d%-%d%d)")
-    
+
     if not date then
       date = "other"  -- Group files without standard date format
     end
-    
+
     if not groups[date] then
       groups[date] = {}
       table.insert(group_order, date)
@@ -42,7 +42,7 @@ function _G.ShowParrotChatsView()
   -- Create buffer lines and store file paths with proper indexing
   local buffer_lines = {}
   local file_paths_with_headers = {}
-  
+
   for _, date in ipairs(group_order) do
     -- Format date header
     local date_display = date
@@ -50,21 +50,21 @@ function _G.ShowParrotChatsView()
       -- Format date nicely (e.g., "2025-03-02" -> "March 2, 2025")
       local year, month, day = date:match("(%d%d%d%d)%-(%d%d)%-(%d%d)")
       if year and month and day then
-        local months = {"January", "February", "March", "April", "May", "June", 
+        local months = {"January", "February", "March", "April", "May", "June",
                        "July", "August", "September", "October", "November", "December"}
         date_display = string.format("%s %d, %s", months[tonumber(month)], tonumber(day), year)
       end
     end
-    
+
     -- Add date header line
     table.insert(buffer_lines, date_display)
     table.insert(file_paths_with_headers, nil)  -- nil for header lines
-    
+
     -- Add file lines for this date
     for _, filepath in ipairs(groups[date]) do
       local filename = vim.fn.fnamemodify(filepath, ':t')
       local display_text = ""
-      
+
       -- Extract time from filename if available
       local time = filename:match("^%d%d%d%d%-%d%d%-%d%d%.(%d%d%-%d%d%-%d%d)")
       if time then
@@ -75,13 +75,13 @@ function _G.ShowParrotChatsView()
         -- For files like claude_code_9790.md, show the filename without extension
         display_text = "  " .. (filename:match("^(.+)%.md$") or filename)
       end
-      
+
       -- Read the first line to get the topic
       local file = io.open(filepath, "r")
       if file then
         local first_line = file:read("*l")
         file:close()
-        
+
         -- Extract topic from the first line (format: # topic: ...)
         local topic = first_line and first_line:match("^#%s*topic:%s*(.+)$")
         if topic then
@@ -90,21 +90,29 @@ function _G.ShowParrotChatsView()
           display_text = display_text .. " - " .. topic
         end
       end
-      
+
       -- Append the file path
       display_text = display_text .. " | " .. filepath
-      
+
       table.insert(buffer_lines, display_text)
       table.insert(file_paths_with_headers, filepath)
     end
   end
-  
+
   -- Store the modified file paths array
   vim.api.nvim_buf_set_var(bufnr, 'file_paths', file_paths_with_headers)
-  
+
   -- Set buffer lines
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, buffer_lines)
 
+  -- Set up concealment for file paths
+  vim.api.nvim_win_set_option(floating_winId, 'conceallevel', 2)
+  vim.api.nvim_win_set_option(floating_winId, 'concealcursor', 'nc')
+
+  -- Create syntax match for the file path portion (after " | ")
+  vim.api.nvim_buf_call(bufnr, function()
+    vim.cmd([[syntax match ParrotChatFilePath / | .*$/ conceal]])
+  end)
 
 end
 
