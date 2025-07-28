@@ -1,4 +1,25 @@
 
+function _G.SaveChatBuffer()
+  local folder_path = "~/.local/share/nvim/parrot/chats"
+  -- just grab the text from the current buffer. e.g. like:
+  local bufnr = vim.api.nvim_get_current_buf()
+  local text = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  -- File paths example: /Users/at/.local/share/nvim/parrot/chats/2025-03-02.08-58-38.md
+  local filepath = folder_path .. "/" .. os.date("%Y-%m-%d.%H-%M-%S") .. ".md"
+  local file = io.open(filepath, "w")
+  if file then
+    for _, line in ipairs(text) do
+      file:write(line .. "\n")
+    end
+    file:close()
+    print("Saved to " .. filepath)
+  else
+    print("Error saving to " .. filepath)
+  end
+
+end
+
+
 function _G.ShowParrotChatsView()
   local folder_path = "~/.local/share/nvim/parrot/chats"
   -- File paths example: /Users/at/.local/share/nvim/parrot/chats/2025-03-02.08-58-38.406.md
