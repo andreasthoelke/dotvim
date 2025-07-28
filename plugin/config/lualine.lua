@@ -46,16 +46,16 @@ end
 
 local function mcphub_color()
   if not vim.g.loaded_mcphub then
-    return { fg = "#6c7086" } -- Gray for not loaded
+    return { fg = "#6c7086", bg = "none" } -- Gray for not loaded
   end
   
   local status = vim.g.mcphub_status or "stopped"
   if status == "ready" or status == "restarted" then
-    return { fg = "#007091" } -- Blue for connected
+    return { fg = "#007091", bg = "none" } -- Blue for connected
   elseif status == "starting" or status == "restarting" then  
-    return { fg = "#ffb86c" } -- Orange for connecting
+    return { fg = "#ffb86c", bg = "none" } -- Orange for connecting
   else
-    return { fg = "#ff5555" } -- Red for error/stopped
+    return { fg = "#ff5555", bg = "none" } -- Red for error/stopped
   end
 end
 

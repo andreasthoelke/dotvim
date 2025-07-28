@@ -66,7 +66,6 @@ require('magenta').setup({
   },
 
   autoContext = {
-    "context.md",
     "claude.md",
     "/Users/at/.claude/CLAUDE.md",
     ".magenta/*.md"
