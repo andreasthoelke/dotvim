@@ -285,7 +285,8 @@ local lualine_config = {
 
     lualine_z = {
       {
-        require('mcphub.extensions.lualine'),
+        _G.MCPHubLualineComponent[1],
+        color = _G.MCPHubLualineComponent.color,
         cond = function() 
           return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
         end
@@ -325,7 +326,8 @@ local lualine_config = {
 
     lualine_z = {
       {
-        require('mcphub.extensions.lualine'),
+        _G.MCPHubLualineComponent[1],
+        color = _G.MCPHubLualineComponent.color,
         cond = function() 
           return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
         end
