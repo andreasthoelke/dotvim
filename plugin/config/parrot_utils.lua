@@ -42,35 +42,9 @@ function _G.ShowParrotChatsView()
   -- Create buffer lines and store file paths with proper indexing
   local buffer_lines = {}
   local file_paths_with_headers = {}
-  local line_index = 0
   
   for _, date in ipairs(group_order) do
-    -- Add date header line
-    table.insert(buffer_lines, "")
-    table.insert(file_paths_with_headers, nil)  -- nil for header lines
-    line_index = line_index + 1
-    
-    -- Add file lines for this date
-    for _, filepath in ipairs(groups[date]) do
-      table.insert(buffer_lines, "")
-      table.insert(file_paths_with_headers, filepath)
-      line_index = line_index + 1
-    end
-  end
-  
-  -- Store the modified file paths array
-  vim.api.nvim_buf_set_var(bufnr, 'file_paths', file_paths_with_headers)
-  
-  -- Set buffer lines
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, buffer_lines)
-
-  -- Create namespace for virtual text
-  local ns_id = vim.api.nvim_create_namespace('parrot_chats_dates')
-
-  -- Add virtual text for date headers and files
-  line_index = 0
-  for _, date in ipairs(group_order) do
-    -- Add date header virtual text
+    -- Format date header
     local date_display = date
     if date ~= "other" then
       -- Format date nicely (e.g., "2025-03-02" -> "March 2, 2025")
@@ -82,13 +56,11 @@ function _G.ShowParrotChatsView()
       end
     end
     
-    vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_index, 0, {
-      virt_text = {{date_display, 'Title'}},
-      virt_text_pos = 'overlay',
-    })
-    line_index = line_index + 1
+    -- Add date header line
+    table.insert(buffer_lines, date_display)
+    table.insert(file_paths_with_headers, nil)  -- nil for header lines
     
-    -- Add file entries for this date
+    -- Add file lines for this date
     for _, filepath in ipairs(groups[date]) do
       local filename = vim.fn.fnamemodify(filepath, ':t')
       local display_text = ""
@@ -119,14 +91,16 @@ function _G.ShowParrotChatsView()
         end
       end
       
-      -- Add virtual text for the file
-      vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_index, 0, {
-        virt_text = {{display_text, 'Normal'}},
-        virt_text_pos = 'overlay',
-      })
-      line_index = line_index + 1
+      table.insert(buffer_lines, display_text)
+      table.insert(file_paths_with_headers, filepath)
     end
   end
+  
+  -- Store the modified file paths array
+  vim.api.nvim_buf_set_var(bufnr, 'file_paths', file_paths_with_headers)
+  
+  -- Set buffer lines
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, buffer_lines)
 
 
 end
