@@ -1,18 +1,18 @@
 
 function _G.SaveChatBuffer()
   local folder_path = vim.fn.expand("~/.local/share/nvim/parrot/chats")
-  
+
   -- Create directory if it doesn't exist
   vim.fn.mkdir(folder_path, "p")
-  
+
   -- Get current buffer content
   local bufnr = vim.api.nvim_get_current_buf()
   local text = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  
+
   -- Generate filename with timestamp
   local filename = os.date("%Y-%m-%d.%H-%M-%S") .. ".md"
   local filepath = folder_path .. "/" .. filename
-  
+
   -- Write to file
   local file = io.open(filepath, "w")
   if file then
@@ -113,7 +113,7 @@ function _G.ShowParrotChatsView()
         -- Extract topic from the first line and determine buffer type
         local buffer_type = ""
         local topic = nil
-        
+
         -- Read first few lines to check for Claude/Gemini
         local file_for_type = io.open(filepath, "r")
         local first_few_lines = ""
@@ -126,7 +126,7 @@ function _G.ShowParrotChatsView()
           file_for_type:close()
         end
         -- print(first_few_lines)
-        
+
         -- Check for Claude or Gemini in first few lines
         if first_few_lines:match("claude") then
           buffer_type = "C: "
@@ -145,16 +145,19 @@ function _G.ShowParrotChatsView()
             end
           end
         end
-        
+
         -- If we haven't found a topic yet, try to extract it
         if not topic and first_line then
           topic = first_line:match("^#%s*topic:%s*(.+)$") or first_line:match("^#%s+(.+)$")
         end
-        
+
         if topic then
           -- Trim whitespace
           topic = topic:gsub("^%s*(.-)%s*$", "%1")
           display_text = display_text .. " - " .. buffer_type .. topic
+        elseif buffer_type ~= "" then
+          -- If we have a buffer type but no topic, show with placeholder
+          display_text = display_text .. " - " .. buffer_type .. ".."
         end
       end
 
