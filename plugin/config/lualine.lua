@@ -24,23 +24,23 @@ local function mcphub_component()
   if not vim.g.loaded_mcphub then
     return "󰐻 -"
   end
-  
+
   local count = vim.g.mcphub_servers_count or 0
   local status = vim.g.mcphub_status or "stopped"
   local executing = vim.g.mcphub_executing
-  
+
   -- Show "-" when stopped
   if status == "stopped" then
     return "󰐻 -"
   end
-  
+
   -- Show spinner when executing, starting, or restarting
   if executing or status == "starting" or status == "restarting" then
     local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
     local frame = math.floor(vim.loop.now() / 100) % #frames + 1
     return "󰐻 " .. frames[frame]
   end
-  
+
   return "󰐻 " .. count
 end
 
@@ -48,11 +48,11 @@ local function mcphub_color()
   if not vim.g.loaded_mcphub then
     return { fg = "#6c7086", bg = "none" } -- Gray for not loaded
   end
-  
+
   local status = vim.g.mcphub_status or "stopped"
   if status == "ready" or status == "restarted" then
     return { fg = "#007091", bg = "none" } -- Blue for connected
-  elseif status == "starting" or status == "restarting" then  
+  elseif status == "starting" or status == "restarting" then
     return { fg = "#ffb86c", bg = "none" } -- Orange for connecting
   else
     return { fg = "#ff5555", bg = "none" } -- Red for error/stopped
@@ -328,7 +328,7 @@ local lualine_config = {
       {
         mcphub_component,
         color = mcphub_color,
-        cond = function() 
+        cond = function()
           return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
         end
       },
@@ -369,7 +369,7 @@ local lualine_config = {
       {
         mcphub_component,
         color = mcphub_color,
-        cond = function() 
+        cond = function()
           return vim.bo.filetype == 'codecompanion' or vim.fn.expand('%') == '[Magenta Chat]'
         end
       },
@@ -392,7 +392,7 @@ local lualine_config = {
 
 require('lualine').setup( lualine_config )
 
--- This shouldn't be needed. But sometimes the winbar update didn't happen. 
+-- This shouldn't be needed. But sometimes the winbar update didn't happen.
 -- Add autocmd to refresh winbar on window focus change
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
   callback = function()
