@@ -586,17 +586,25 @@ vim.keymap.set( 'n', '<leader>fr', function() builtin.lsp_references(themes.get_
 
 
 -- ─   Style & color maps                               ──
+-- Note: ~/.config/nvim/init.vim‖/is_dark_modeˍ==ˍ1
 
 vim.keymap.set( 'n',
   ',,cl', function()
     vim.cmd'colorscheme munsell-blue-molokai_light_1'
     os.execute("claude config set -g theme light")
+    Set_alacritty_bg('E3E6E9')
+    -- require( 'plenary.reload' ).reload_module( 'tabline_tabby' )
+    vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')
   end, { desc = 'Switch to light theme' })
 
 vim.keymap.set( 'n',
   ',,cd', function()
+    -- TODO: the dark theme seems to miss setting the tabs background
     vim.cmd'colorscheme munsell-blue-molokai'
     os.execute("claude config set -g theme dark")
+    Set_alacritty_bg('151719')
+    -- require( 'plenary.reload' ).reload_module( 'tabline_tabby' )
+    vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')
   end, { desc = 'Switch to dark theme' })
 
 

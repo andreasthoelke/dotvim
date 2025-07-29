@@ -597,6 +597,8 @@ hi(0, "StorageClass", { fg = "#4d8aa3" })
 -- hi(0, "String", { ctermfg = 10, fg = "#558476" })
 hi(0, "String", { ctermfg = 10, fg = "#3A9A7D" })
 hi(0, "Symbol", { ctermfg = 9, fg = "#452321" })
+
+-- ─   Tabs                                              ■
 hi(0, "TabLine", { bg = "#dadcdd", fg = "#6e6e6e" })
 hi(0, "TabLineFill", { bg = "#dadcdd", fg = "#dadcdd" })
 hi(0, "TabbyHL_00618b_2d3237_NONE", { bg = "#2d3237", fg = "#00618b" })
@@ -618,6 +620,9 @@ hi(0, "Tabby_Tabs_ac", { bg = "#bec4ca", fg = "#4d646e" })
 hi(0, "Tabby_Tabs_icon_ac", { bg = "#bec4ca", fg = "#3a5059" })
 hi(0, "Tabby_Tabs_icon_in", { bg = "#e3e6e9", fg = "#7f9fa8" })
 hi(0, "Tabby_Tabs_in", { bg = "#e3e6e9", fg = "#98b2ba" })
+
+-- ─^  Tabs                                              ▲
+
 hi(0, "Tag", { fg = "#93505e", italic = true })
 hi(0, "TailwindConceal", { fg = "#01688e" })
 hi(0, "TermCursorNC", { bg = "#6e6e6e", fg = "#000000" })

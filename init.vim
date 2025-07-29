@@ -689,6 +689,8 @@ endfunc
 " T_DelayedCmd( "echo 'hi there'" )
 
 
+" Note: ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍStyleˍ&ˍcolorˍmaps
+
 " if !exists('g:colors_name')
 let g:is_dark_mode = system("defaults read -g AppleInterfaceStyle 2>/dev/null") =~ 'Dark'
 " let g:is_dark_mode = 1

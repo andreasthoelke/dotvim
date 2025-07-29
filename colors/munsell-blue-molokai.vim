@@ -16,6 +16,8 @@ let g:colors_name="munsell-blue-molokai"
 " set background=light
 set background=dark
 
+" LIGHT VERSION: colors/munsell-blue-molokai_light_1.lua
+
 hi vimString guifg=#009900
 
 hi Boolean         guifg=#AE81FF

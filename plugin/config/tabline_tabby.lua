@@ -461,19 +461,13 @@ end
 -- vim.fn.tabpagebuflist()
 
 local render = function( line )
-
-
   return {
     { " ", hl = hl_tabline_fill },
-
     line.tabs().foreach( function(tab) return Tab_render(tab, line) end ),
-
     line.spacer(),
-
     { " ", hl = hl_tabline_fill },
   }
 end
-
 
 
 require('tabby.tabline').set( render, {} )
