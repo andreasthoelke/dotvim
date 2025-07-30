@@ -485,8 +485,25 @@ function _G.Ntree_openFloat()
   vim.g['floating_win'] = floating_winId
   vim.api.nvim_set_current_win(floating_winId)
   Ntree_launch( reveal_file, cwd )
-  vim.api.nvim_set_current_win( prevWindow )
+  -- vim.api.nvim_set_current_win( prevWindow )
 end
+
+function _G.Ntree_openFloat_parentFolder()
+  local prevWindow = vim.api.nvim_get_current_win()
+  local posOpts = FloatOpts_inOtherWinColumn()
+  posOpts.width = math.floor( posOpts.width / 2.0 )
+  local bufid = vim.api.nvim_create_buf( false, true )
+
+  local reveal_file = vim.fn.expand( "%:p" )
+  local parentFolderPath = vim.fn.ParentFolder( reveal_file )  --  if a directory this will get the parent folder of the directory!
+
+  local floating_winId = vim.api.nvim_open_win( bufid, false, posOpts )
+  vim.g['floating_win'] = floating_winId
+  vim.api.nvim_set_current_win(floating_winId)
+  Ntree_launch( reveal_file, parentFolderPath )
+  -- vim.api.nvim_set_current_win( prevWindow )
+end
+
 
 
 -- vim.api.nvim_get_current_win()
@@ -506,6 +523,7 @@ end
 vim.keymap.set( 'n', '<leader>oa', Ntree_openLeft )
 vim.keymap.set( 'n', '<leader>ov', Ntree_openRight )
 vim.keymap.set( 'n', '<leader>oo', Ntree_openFloat )
+vim.keymap.set( 'n', ',oo', Ntree_openFloat_parentFolder )
 
 -- vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = function() vim.defer_fn( open_startup, 10 ) end })
 

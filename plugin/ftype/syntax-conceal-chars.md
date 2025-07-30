@@ -1,5 +1,8 @@
 A collection of nice looking Unicode symbols to be considered for new conceals:
 
+also note
+~/.cache/nvim/unicode/UnicodeTable.txt
+
                   ﰟ   ⁜ ⁘ ⁗   ⁞ ⁑
 ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩ → ⍊  ⌄
 ɪ и ᵓᵔ ᵛ     ->    ⃣ ▢ ◦   ›
@@ -32,7 +35,7 @@ A collection of nice looking Unicode symbols to be considered for new conceals:
 ⟛   ⟩ ⟫  ⟯  ⟶   ⧵ ⠰ ⠂⠇⁝ ⠃ ⠈ ⠁ ⠌  ﹚ ﹜ ⭡   ￪ ↑ ꜛ ᐨ ☉⊙⊙◎⊖  ⊘ ⫞ 
 ◌  ● ⊚ ⌾ ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖ ∎ ☉  •⋆• ▪
 ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷ ✴  × ✱ ⌘ ✱ ❂ ❈  ♽
-𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳  𝑤  𝑥
+𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳  𝑤  𝑥  𝑚  𝑔
  索  󰑫  直  直  󰖩 ⋺  ⋻  Ѱ ѱ
   פּ  󰺔   󱘎   ⇶  󱏒   󱁉     ▃     󰁎
  ✥  ✠  ✣  ✪  ❙❋ ❄ ✲   ❨

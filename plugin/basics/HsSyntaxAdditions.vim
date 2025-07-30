@@ -69,6 +69,8 @@ au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
 au ag FileType markdown,codecompanion,mcphub call MarkdownBufferMaps()
 
+au ag BufWinEnter * if &ft == "magenta" | call MagentaBufferMaps() | endif
+
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──

@@ -39,7 +39,7 @@ require('magenta').setup({
       model = "claude-3.7-sonnet",
       fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
       -- No apiKeyEnvVar needed - uses existing Copilot authentication
-    }
+    },
   },
   -- open chat sidebar on left or right side
   sidebarPosition = "right",
@@ -53,12 +53,17 @@ require('magenta').setup({
   -- keymaps for the sidebar input buffer
   sidebarKeymaps = {
     normal = { ["<c-w><cr>"] = ":Magenta send<CR>", },
-    insert = { ["<c-w><cr>"] = ":Magenta send<CR>", }
+    insert = { ["<c-w><cr>"] = "<Esc>:Magenta send<CR>", }
   },
   -- keymaps for the inline edit input buffer
   -- if keymap is set to function, it accepts a target_bufnr param
   inlineKeymaps =  {
     normal = {
+      ["<c-w><cr>"] = function(target_bufnr)
+        vim.cmd("Magenta submit-inline-edit " .. target_bufnr)
+      end,
+    },
+    insert = {
       ["<c-w><cr>"] = function(target_bufnr)
         vim.cmd("Magenta submit-inline-edit " .. target_bufnr)
       end,

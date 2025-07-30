@@ -79,7 +79,9 @@ func! VScriptToolsBufferMaps()
   " This only seems to work as a global map?!
   " nnoremap <silent><buffer> gsL :call v:lua.Telesc_launch('lsp_dynamic_workspace_symbols')<cr>
   nnoremap <silent><buffer> <leader>ot  :Outline<cr>
-  nnoremap <silent><buffer> ,ot  :Vista nvim_lsp<cr>
+
+  " NOTE this conflict with ,,o from plugin/utils/NewBuf-direction-maps.vim
+  nnoremap <silent><buffer> ,,ot  :Vista nvim_lsp<cr>
 
   " Untested
   " nnoremap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor

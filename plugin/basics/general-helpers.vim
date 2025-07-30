@@ -161,7 +161,8 @@ nnoremap <silent> ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call D
 " nnoremap ,cS :call Path_Float( '/Users/at/Documents/Notes/scratch2023.md' )<cr>
 nnoremap <silent><leader>os :call Path_Float( '~/.config/nvim/keymaps/vim-cheat-sheet.md' )<cr>
 
-nnoremap <silent><leader>to :call Path_Float( '~/Documents/Notes/todos-global.md' )<cr>
+nnoremap <silent><leader>tO :call Path_Float( '~/Documents/Notes/todos-global.md' )<cr>
+nnoremap <silent><leader>to :call Path_Float( '~/Documents/Notes/todos-workflow.md' )<cr>
 
 nnoremap <silent><leader>oex :call Path_Float( 'ExampleLog.md' )<cr>
 nnoremap <silent><leader>oel :call Path_Float( 'ExampleLinks.md' )<cr>

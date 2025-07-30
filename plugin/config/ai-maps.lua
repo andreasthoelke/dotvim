@@ -307,7 +307,7 @@ vim.keymap.set( 'n',
 
 -- ─   PARROT                                            ■
 
--- In buffer maps: ~/.config/nvim/plugin/config/parrot.lua‖/chat_shortcut_respondˍ=ˍ{ˍ
+-- In buffer maps: ~/.config/nvim/plugin/config/parrot.lua‖/chat_chortcut_respondˍ=ˍ{ˍ
 
 vim.keymap.set('n', '<c-g><leader>p', ':PrtProvider<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>m', ':PrtModel<CR>', { noremap = true, silent = true })

@@ -8,6 +8,13 @@
 
 ## AI & Assistants
 
+### AI Chats list & search
+
+<leader><leader>oc    - AI Chats list view (by date)
+<leader>sfc           - AI Chats topics ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ<leader>sfcˍ<cmd>
+<leader>sfC           - full text
+<leader>sfa           - avanteHistory (deprecate)
+
 ### AI Command Selection
 <c-g><c-g>o          - Select AI command (claude, codex, aider, etc.)
 

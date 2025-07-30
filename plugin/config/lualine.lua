@@ -14,9 +14,32 @@ end
 -- ─   Helpers                                          ──
 
 
-local function fname_noExt()
-  return vim.fn.expand( '%:t:r' )
+
+
+-- MCPHub component functions
+local function magenta_component()
+  if not vim.g.magenta_tokens_count then
+    return "𝑚 -"
+  end
+
+  local count = vim.g.magenta_tokens_count or 0
+  -- local status = vim.g.mcphub_status or "stopped"
+  -- local executing = vim.g.mcphub_executing
+
+  -- if status == "stopped" then
+  --   return "𝑚 -"
+  -- end
+
+  -- Show spinner when executing, starting, or restarting
+  -- if executing or status == "starting" or status == "restarting" then
+  --   local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+  --   local frame = math.floor(vim.loop.now() / 100) % #frames + 1
+  --   return "𝑚 " .. frames[frame]
+  -- end
+
+  return "𝑚 " .. count
 end
+
 
 -- MCPHub component functions
 local function mcphub_component()
@@ -58,6 +81,13 @@ local function mcphub_color()
     return { fg = "#ff5555", bg = "none" } -- Red for error/stopped
   end
 end
+
+
+
+-- local function fname_noExt()
+--   return vim.fn.expand( '%:t:r' )
+-- end
+
 
 -- Return line number only for normal buffer types, else return empty string.
 local function lineNum()
@@ -310,10 +340,17 @@ local lualine_config = {
     lualine_b = {
       {
         'LspSymbolsStack()',
-        color = 'LuLine_Winbar_b_in'
+        color = 'LuLine_Winbar_b_in',
+        cond = function()
+          return not vim.fn.expand('%'):match('Magenta')
+        end
       }
     },
-    lualine_c = {},
+    lualine_c = {
+      {
+        'Magenta_model()',
+      },
+    },
     lualine_x = {},
     lualine_y = {},
     -- lualine_y = {
@@ -333,9 +370,12 @@ local lualine_config = {
         end
       },
       {
-        'Magenta_model()',
-        color = 'LuLine_Winbar_b_in',
-      }
+        magenta_component,
+        color = mcphub_color,
+        cond = function()
+          return vim.fn.expand('%') == '[Magenta Input]'
+        end
+      },
     }
 
     -- lualine_z = {
@@ -352,16 +392,23 @@ local lualine_config = {
       {
         custom_ftype,
         -- separator = { left = '', right = '' },
-        separator = { left = '', right = ' ' },
+        separator = { left = '', right = '' },
       }
     },
     lualine_b = {
       {
         'LspSymbolsStack_inactive()',
-        color = inactiveWinbarColor
+        color = inactiveWinbarColor,
+        cond = function()
+          return not vim.fn.expand('%'):match('Magenta')
+        end
       }
     },
-    lualine_c = {},
+    lualine_c = {
+      {
+        'Magenta_model()',
+      },
+    },
     lualine_x = {},
     lualine_y = {},
 
@@ -374,9 +421,12 @@ local lualine_config = {
         end
       },
       {
-        'Magenta_model()',
-        color = inactiveWinbarColor,
-      }
+        magenta_component,
+        color = mcphub_color,
+        cond = function()
+          return vim.fn.expand('%') == '[Magenta Input]'
+        end
+      },
     },
 
     -- lualine_z = {},

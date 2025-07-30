@@ -90,9 +90,17 @@ function _G.formattedFileInfo()
 end
 
 function _G.Magenta_model()
-  local ok, value = pcall(vim.api.nvim_win_get_var, 0, 'magenta_model')
+  local ok, value = pcall(vim.api.nvim_win_get_var, 0, 'magenta_win_profile')
   if ok then
-    return value
+    if string.find(value, "copilot") then
+      return "sonnet 37"
+    elseif string.find(value, "sonnet") then
+      return "sonnet"
+    elseif string.find(value, "opus") then
+      return "opus"
+    else
+      return value
+    end
   else
     return ""
   end
