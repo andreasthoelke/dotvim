@@ -28,14 +28,13 @@ func! MagentaBufferMaps()
 endfunc
 
 
-let g:Mgn_MainStartPattern = '\v(\#\s|\d\)\s|\d\.\s|---|☼\:|⌘\:|.*─|function|func\!|\i.*function\(|local\sfunction\s)'
+let g:Mgn_MainStartPattern = '# \zs'
 " the *\S{-}\* patterns is searching vim help headlines
-let g:Mgn_TopLevelPattern = '\v^(\=\=|\#\s|.*─|☼\:|⌘\:)'
+let g:Mgn_TopLevelPattern = '# \zs'
 
 func! Mgn_MainStartBindingForw()
   normal! jj
   call search( g:Mgn_MainStartPattern, 'W' )
-  call Mgn_goFistWord()
 endfunc
 
 func! Mgn_MainStartBindingBackw()

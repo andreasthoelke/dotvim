@@ -27,6 +27,7 @@ function _G.FloatBuf_inOtherWinColumn( bufnrOrPath )
   end
 
   local config = FloatOpts_inOtherWinColumn()
+  config.width = math.floor( config.width / 2.0 )
 
   local floating_winId = vim.api.nvim_open_win(bufnr, false, config)
   vim.g['floating_win'] = floating_winId
@@ -92,6 +93,7 @@ function _G.Float_dynAnchorWidth()
   end
   -- width should be at least 70
   width = width > 76 and width or 76
+  -- width = math.floor( width / 2.0 )
   local cursorWinCol = CursorIsInWinColumn()
   local winAnchor = cursorWinCol == 'L' and 'E' or 'W'
   return { anchor = winAnchor, width = width}
