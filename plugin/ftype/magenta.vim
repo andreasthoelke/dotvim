@@ -4,9 +4,11 @@
 " call MagentaBufferMaps()
 
 func! MagentaBufferMaps()
+  " set syntax=markdown
+  " call MarkdownSyntaxAdditions()
 
-  nnoremap <silent><buffer> I :call Vim_ColonForw()<cr>
-  nnoremap <silent><buffer> Y :call Vim_ColonBackw()<cr>
+  nnoremap <silent><buffer> I :call Mgn_ColumnForw()<cr>
+  nnoremap <silent><buffer> Y :call Mgn_ColumnBackw()<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Mgn_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Mgn_MainStartBindingForw()<cr>:call ScrollOff(27)<cr>
@@ -25,6 +27,21 @@ func! MagentaBufferMaps()
   nnoremap <silent><buffer>]b :call MD_BoldNext()<cr>
   nnoremap <silent><buffer>[b :call MD_BoldPrev()<cr>
 
+endfunc
+
+
+let g:Mgn_columnPttn = MakeOrPttn( ['\:', '%', '+', '&', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+
+
+func! Mgn_ColumnForw()
+  call SearchSkipSC( g:Mgn_columnPttn, 'W' )
+  normal w
+endfunc
+
+func! Mgn_ColumnBackw()
+  normal bh
+  call SearchSkipSC( g:Mgn_columnPttn, 'bW' )
+  normal w
 endfunc
 
 
