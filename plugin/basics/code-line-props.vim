@@ -358,7 +358,17 @@ func! GetPath_fromLine()
   let path = line_words->split()->sort('CompareLength')[-1]
   " return path
 
+  " Support for http links
+  let httppattern = '\[\([^\]]*\)\](\(https\?://[^)]*\))'
+  let httpmatches = matchlist(full_line, httppattern)
+  " matches[0] = full match
+  " matches[1] = link text
+  " matches[2] = URL
 
+  if len(httpmatches) >= 3
+    return "http‖" . httpmatches[2]
+  endif
+  
   " Support for github link info .. 
   " and a [system prompt](node/providers/system-prompt.ts#L305) into 
   let ghpattern = '\[\([^\]]*\)\](\([^#)]*\)\%(#L\(\d\+\)\)\?)'

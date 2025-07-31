@@ -384,6 +384,13 @@ endfunc
 
 func! NewBuf_fromLinePath( direction )
   let [path; maybeLinkExt] = GetPath_fromLine()->split('‖')
+
+  if path == 'http'
+    echo "Opening " . maybeLinkExt[0] . " in Chrome."
+    call LaunchChrome( maybeLinkExt[0] )
+    return
+  endif 
+
   " echo path
   " echo maybeLinkExt
   let cmd = NewBufCmds( path )[ a:direction ] 
