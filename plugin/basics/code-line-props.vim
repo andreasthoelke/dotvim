@@ -358,6 +358,22 @@ func! GetPath_fromLine()
   let path = line_words->split()->sort('CompareLength')[-1]
   " return path
 
+
+  " Support for github link info .. 
+  " and a [system prompt](node/providers/system-prompt.ts#L305) into 
+  let ghpattern = '\[\([^\]]*\)\](\([^#)]*\)\%(#L\(\d\+\)\)\?)'
+  let ghmatches = matchlist(full_line, ghpattern)
+  
+  " matches[0] = full match
+  " matches[1] = link text
+  " matches[2] = path
+  " matches[3] = line number (may be empty)
+
+  " echo ghmatches
+  if len(ghmatches) >= 4
+    return ghmatches[2] . "‖:" . ghmatches[3]
+  endif
+
   " Check for Markdown links: [text](path/to/file#heading) or [text](#heading) for in-document refs
   let markdown_match = matchlist(getline('.'), '\[[^]]*\](\([^)#]*\)\(#[^)]*\)\?)')
   if !empty(markdown_match)
