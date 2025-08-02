@@ -387,6 +387,7 @@ vim.keymap.set('n', '<leader><leader>ogl', ':DiffviewFileHistory %<CR>', { norem
 vim.keymap.set('n', '<leader><leader>ogL', ':DiffviewFileHistory -C .<CR>',   { noremap = true, silent = true, desc = "Open Git log: Involved files per commit." })
 
 
+
 -- vim.keymap.set( 'n',
 --   '<leader>ogs', function() require( 'utils.general' )
 --   .Git_status_picker( opts_1 )

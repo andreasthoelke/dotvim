@@ -31,7 +31,7 @@ vim.keymap.set('n', '<c-g><leader>v', ':AvanteChatNew<CR>', { noremap = true, si
 vim.keymap.set('n', '<c-g><leader>M', ':AvanteModel<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>h', ':AvanteHistory<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><leader>H', ':CodeCompanionHistory<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
@@ -277,6 +277,15 @@ vim.keymap.set( 'n',
 -- CLEAR text field buffer
 vim.keymap.set( 'n',
   '<c-g>C', function()
+    local magenta_win = BufName_InThisTab_id("Magenta Input")
+    if magenta_win then
+      local current_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_set_current_win(magenta_win)
+      -- delete all text in the current buffer:
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, {})
+      vim.api.nvim_set_current_win(current_win)
+      return
+    end
     vim.fn.chansend(vim.g.claude_job_id, string.char(3))
     -- Claude_send(string.char(3))
   end )
@@ -303,6 +312,57 @@ vim.keymap.set( 'n',
 
 -- ─^  CLAUDE CODE                                       ▲
 
+
+-- ─   Magenta                                          ──
+
+-- NOTE claude_send consistent maps:
+-- ~/.config/nvim/plugin/config/parrot-claude-code.lua‖/functionˍ_G.Claude_send(te
+
+-- Commands
+  -- "debug-prediction-message",
+  -- "profile",
+  -- "start-inline-edit",
+  -- "replay-inline-edit",
+  -- "toggle",
+  -- "new-thread",
+  -- "threads-overview",
+  -- "predict-edit",
+  -- "accept-prediction",
+  -- "dismiss-prediction",
+  -- local visual_commands = 
+--   "start-inline-edit-selection",
+--   "replay-inline-edit-selection",
+--   "paste-selection",
+
+
+vim.keymap.set('n', '<c-g>l', function()
+  local magenta_win = BufName_InThisTab_id("Magenta Input")
+  if magenta_win then
+    vim.api.nvim_set_current_win(magenta_win)
+  end
+end, { desc = "Focus Magenta input" })
+
+vim.keymap.set('n', '<c-g><c-l><c-l>', function()
+  vim.cmd "Magenta predict-edit"
+end, { desc = "Magenta predict" })
+
+vim.keymap.set('n', '<c-g><c-l><c-g>', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
+vim.keymap.set('n', '<c-g><c-l><c-c>', function()
+  vim.cmd "Magenta dismiss-prediction"
+end, { desc = "Magenta accept" })
+
+
+
+vim.keymap.set( 'n',
+  ',sm', function()
+    require( 'plenary.reload' ).reload_module(
+      'magenta.nvim'
+    )
+    vim.cmd('luafile ~/.config/nvim/plugin/config/magenta.nvim.lua')
+  end )
 
 
 -- ─   PARROT                                            ■

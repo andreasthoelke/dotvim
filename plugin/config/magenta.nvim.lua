@@ -75,15 +75,92 @@ require('magenta').setup({
     "/Users/at/.claude/CLAUDE.md",
     ".magenta/*.md"
   },
+  -- commandAllowlist = {
+  --   "^ls( [^;&|()<>]*)?$",
+  --   "^pwd$",
+  --   "^echo( [^;&|()<>]*)?$",
+  --   "^git (status|log|diff|show|add|commit|push|reset|restore|branch|checkout|switch|fetch|pull|merge|rebase|tag|stash)( [^;&|()<>]*)?$",
+  --   "^ls [^;&()<>]* | grep [^;&|()<>]*$",
+  --   "^echo [^;&|()<>]* > [a-zA-Z0-9_\\-.]+$",
+  --   "^grep( -[A-Za-z]*)? [^;&|()<>]*$"
+  -- },
+
   commandAllowlist = {
-    "^ls( [^;&|()<>]*)?$",
+    -- Basic file operations
+    "^ls.*",
     "^pwd$",
-    "^echo( [^;&|()<>]*)?$",
-    "^git (status|log|diff|show|add|commit|push|reset|restore|branch|checkout|switch|fetch|pull|merge|rebase|tag|stash)( [^;&|()<>]*)?$",
-    "^ls [^;&()<>]* | grep [^;&|()<>]*$",
-    "^echo [^;&|()<>]* > [a-zA-Z0-9_\\-.]+$",
-    "^grep( -[A-Za-z]*)? [^;&|()<>]*$"
+    "^cd .*",
+    "^cat .*",
+    "^head .*",
+    "^tail .*",
+    "^grep .*",
+    "^find .*",
+    "^tree.*",
+
+    -- File manipulation
+    "^cp .*",
+    "^mv .*",
+    "^del .*",
+    "^mkdir .*",
+    "^touch .*",
+    "^echo .*",
+
+    -- Development tools
+    "^git .*",
+    "^npm .*",
+    "^npx .*",
+    "^yarn .*",
+    "^pnpm .*",
+    "^pip .*",
+    "^python .*",
+    "^node .*",
+    "^cargo .*",
+    "^rustc .*",
+    "^go .*",
+
+    -- Shell scripts
+    "^chmod .*",
+
+    -- Testing
+    "^jest.*",
+    "^vitest.*",
+    "^pytest.*",
+    "^cargo test.*",
+
+    -- Build tools
+    "^make.*",
+    "^cmake.*",
+    "^webpack.*",
+    "^vite.*",
+    "^tsc.*",
+
+    -- Text processing
+    "^sed .*",
+    "^awk .*",
+    "^cut .*",
+    "^sort .*",
+    "^uniq .*",
+    "^wc .*",
+    "^jq .*",
+
+    -- Process inspection
+    "^ps .*",
+    "^top$",
+    "^htop$",
+    "^lsof .*",
+
+    -- Network (read-only)
+    "^curl .*",
+    "^wget .*",
+    "^ping .*",
+    "^netstat .*",
+
+    -- Allow piping and redirection
+    ".*\\|.*",  -- Allow pipes
+    ".*>.*",    -- Allow output redirection
+    ".*<.*",    -- Allow input redirection
   },
+
 
   -- glob patterns for files that should be auto-approved for getFile tool
   -- (bypasses user approval for hidden/gitignored files matching these patterns)
@@ -102,7 +179,7 @@ require('magenta').setup({
     --     "-y",
     --     "@modelcontextprotocol/server-github"
     --   },
-    -- }
+    -- },
 
     -- playwright = {
     --   command = "npx",
@@ -181,13 +258,6 @@ require('magenta').setup({
 -- Default maps:
 -- ~/Documents/Proj/k_mindgraph/h_mcp/b_mga/lua/magenta/init.lua
 
-vim.keymap.set( 'n',
-  ',sm', function()
-    require( 'plenary.reload' ).reload_module(
-      'magenta.nvim'
-    )
-    vim.cmd('luafile ~/.config/nvim/plugin/config/magenta.nvim.lua')
-  end )
 
 
 

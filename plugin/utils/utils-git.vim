@@ -61,7 +61,7 @@ nnoremap <silent><leader><leader>gP :call System_Float( 'git push' )<cr>
 " View in Github desktop:
 nnoremap <silent><leader><leader>gV :call OpenRepoInGithubDesktop( GetGitRoot() )<cr>
 
-nnoremap <silent><leader>ogc <cmd>Git commit<cr>
+nnoremap <silent><leader>ogC <cmd>Git commit<cr>
 
 " ease confirming fugitive commit window
 " nnoremap ,,w :w<cr><c-w>c

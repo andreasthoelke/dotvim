@@ -29,11 +29,25 @@ end
 
 -- Send to claude code terminal or parrot window if visible.
 function _G.Claude_send(text)
+  local magenta_win = BufName_InThisTab_id("Magenta Input")
   local parrot_win = ParrotChat_InThisTab_id()
   local avante_win = Avante_InThisTab_id()
   local current_win = vim.api.nvim_get_current_win()
   local not_in_parrot_win = current_win ~= parrot_win
   local not_in_avante_win = current_win ~= avante_win
+
+  if magenta_win then
+    if text == "\r" then
+      vim.cmd'Magenta send'
+      return
+    end
+    local lines = vim.fn.split(text, "\n")
+    -- jump to magenta input id
+    vim.api.nvim_set_current_win(magenta_win)
+    vim.api.nvim_put(lines, "l", false, false)
+    vim.api.nvim_set_current_win(current_win)
+    return
+  end
 
   if parrot_win and not_in_parrot_win then
     local lines = vim.fn.split(text, "\n")
@@ -243,25 +257,30 @@ function Create_linewise_func(use_markup)
 end
 
 
-function _G.ParrotChat_InThisTab_id()
-  -- Get all windows in the current tab
+function _G.BufName_InThisTab_id(bufname_part)
   local windows = vim.api.nvim_tabpage_list_wins(0)
-
-  -- Check each window
   for _, win in ipairs(windows) do
-    -- Get the buffer for this window
     local buf = vim.api.nvim_win_get_buf(win)
-
-    -- Get the buffer name
     local bufname = vim.api.nvim_buf_get_name(buf)
+    if bufname:match(bufname_part) then
+      return win
+    end
+  end
+  return false
+end
+-- BufName_InThisTab_id("parrot/chats")
+-- BufName_InThisTab_id("Magenta Input")
 
-    -- Check if buffer name contains "parrot/chats"
+
+function _G.ParrotChat_InThisTab_id()
+  local windows = vim.api.nvim_tabpage_list_wins(0)
+  for _, win in ipairs(windows) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local bufname = vim.api.nvim_buf_get_name(buf)
     if bufname:match("parrot/chats") then
       return win
     end
   end
-
-  -- No matching window found
   return false
 end
 -- ParrotChat_InThisTab_id()

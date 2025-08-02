@@ -86,8 +86,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'pgTable\ze\.' conceal cchar=
   syntax match Normal 'pgTable\ze(' conceal cchar=
   syntax match Normal 'table' conceal cchar=
-  syntax match Normal 'index' conceal cchar=Ⲷ
-  syntax match Normal 'unique().on' conceal cchar=Ⲵ
+  syntax match Normal 'index' conceal cchar=⊡
+  syntax match Normal 'unique().on' conceal cchar=◆
 
 
 " ─^  Drizzle                                            ▲

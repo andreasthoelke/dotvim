@@ -6,12 +6,12 @@ also note
                   ﰟ   ⁜ ⁘ ⁗   ⁞ ⁑
 ↔ ↕ ⇿ ⟷   ⤒  ↧  ˅  ᐪ  ↓  ↧  ⇓  ⇣  ⇩ → ⍊  ⌄
 ɪ и ᵓᵔ ᵛ     ->    ⃣ ▢ ◦   ›
-➔  » ⇒ ⇾  →  ˃ ➟ ⇢ ˲ ↗  ➚ ⇗ ➚  ➶  ➹  ⤢ ⇗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘 ⲽⲼⲴⲷⲶⰻⰺⰸⰷⰲ ⰷ
+➔  » ⇒ ⇾  →  ˃ ➟ ⇢ ˲ ↗  ➚ ⇗ ➚  ➶  ➹  ⤢ ⇗ → → →   ˷ ˍˍ ˳     ⟣ ◦ פּ ﬘   璘 
 ⇤  ⇠  ⇜  ⇐  ↙  ↢  ↤  ⇠  ⇽                               
 ⇛ ≈ ⊪ ⊩ ⊧ ⇠  ⇠ ⇜ ⇤ ⤎ ⇷ ⫻◻ ⫽‹› ※ ∟ ⧽ ⨞ ⭢   ↤ ↣ ⅎ 𝘧 𝚏 ᶠ
 ∿ ∾  ≀ ≁ ➳  ➺  ➽ ↷ ⇛  ⭄   ⇨ ⇵ ➢ ⥈ ⇒ ⇛ ⊢ ⟹  ⟾   ⧐  ⤇  ⥸  ⭃
 ➔  ⇾  →  ˃ ➟ ⇢ ˲ ↑ ↓ → →   ˷ ˍˍ ˳ Ɛ  𝑓 𝑡ƒ ɱ ᙆ ｔ ᵀᴵᴺ ɴ ɳ ᴟ
-➳  ➽  ⟀ ↑ 🡹 🡲 🡩 🡡 🡕 🡑 ⊃ ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
+➳  ➽  ⟀ ↑  ⟄  ⟃  ⟔  ⟥  ⟣ ⌁  →  ⃯  ˃ ˻˪ ⑆ 𝌅 𝌀 ⋔ ⋕ ⋗ ⋲ ⋳ ⋵ ⋷ ⋺ ⋿ ⌇
 ⑂ ⑃ ⑄ ⫙ ⫗ ⫕󱁊 ⫖ ⫐ ⫴ ⫝ 𝍉  ᴵ
  ᶩ 𝑡 𝑙 ˍ  ▴ ˼ ▾ ˷ ⌄ ᐪ  ˹ ˼ ˺
 ⊎ ˾ ˽ ⊔ ⩅ u  ͭ ͨ  ૧ח  ૰ ˅ ⌄ ˯ ↡ ↧ ≏ ⊽ ⋓ ≗  ⁘
@@ -27,7 +27,7 @@ also note
  ⋮  ┆  ⫾ ‖  󰇙  ║ | ╵ ┆┇╷│ ╹ ╻ ╽ ▏   ░ ▒ ▓  ▕
  ╴
 ⁝ ⁇‼  ⃪ ⁞  ⃩⁽⁵⁾ ⃦ ⃟  e⃨  ⊍ ⊐ ⊔ ⊝ ⊟   ◪  ♻♢☻ ◧◢  ⚞ ⚏ ♽ ⚹ ⚲ ⚨  ⛁  ⛊  ⛛ 
-🞑  🞐  🞏 🞎  🞍   🞉🞈 🞇  🞤🞅 🞜🞛🞚 🞔  🞬 🞫  🡖  🡨  🡯  🡹  🡶  ▱  ⏶  │
+▱  ⏶  │
 ↻  ↶ ↷ ⇵ ⇠ ⇽ |⇾| ⇿ ∩ ∴ ∹  ≀ ∿  ≻  ⊂ ʀ ɢ ᴳ ɍ  ͬr⊃ ᴅ 𝑑 ⊆  ⊇ ≓ 
 ⋮ ⌇ ⌒  ⌔  ⌗ ⌘✱ 〈  < ˻ˌ¨ ⊟  ⊡ | ⊖  ⊙
 ⋋  ⌾ ⋐  ⋘  ⋯  ⌘ ∘   ☾  ♽ ♺   ☷ ☳     ⚐ ⚀   ∟  ∩ ∪      𝑟S  ʀS
@@ -36,15 +36,21 @@ also note
 ◌  ● ⊚ ⌾ ◎  ◘  ◦ ◫  ◯  ▿ ▸ ▭  ▪  ▫  ▬  ▢  □ ▗   ◖ ∎ ☉  •⋆• ▪
 ◆  ◇  ◈  ◻  ◽ ◻ ☀  ☼  ٭  ⋆ ★  ☆  ✷ ✴  × ✱ ⌘ ✱ ❂ ❈  ♽
 𝑑 𝑝 ≀ ⫖ ⫖ ⫕  𝞖  η        󰶡  󰶢 󰔰  ♾  ⋳  𝑤  𝑥  𝑚  𝑔
- 索  󰑫  直  直  󰖩 ⋺  ⋻  Ѱ ѱ
+ 索  󰑫  直  直  󰖩 ⋺  ⋻  Ѱ ѱ ⊃
   פּ  󰺔   󱘎   ⇶  󱏒   󱁉     ▃     󰁎
  ✥  ✠  ✣  ✪  ❙❋ ❄ ✲   ❨
 " ❮ ❯ ❰ ❱  ➜  ➞  ➡  ⟓  ⟫ ⟹  ⠯ ⦁⦄⥹⥸⥤ ⩉ ⩈⩇ ⧓ ⩁⨱⧾⧹ ⧑ ⩣ ⩢ ⩟ ⩋  ⩌  ⩔ ⩎
 " ⪥ ⪧  ╻╹ ❙
 
 ⠃ 𝌃   𝇊 𝇈 𝇇  ʰ  ʳ ʸ ʺ  ⑉  ◻
-  ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪  🮏 🮎 🮌🮇🭰🮀 🮙 🮞🮟 🮣🮢 🮨 🮬 🮺🮻 🯸 🯴
+  ↗* ➚* ➚⋇ ➚  ⇈ ◥ ➚  ↗• ➚▪  
  ❖ ✼ ❃  ❇  ❉  ❋  ◈ ⟐  ⟡ ⬖ ⬙  ⬥  ⬧  ◆  ■ ▨ ▤ ▢
+
+Unsupported with MonoLisa in Alacritty:
+🮏 🮎 🮌🮇🭰🮀 🮙 🮞🮟 🮣🮢 🮨 🮬 🮺🮻 🯸 🯴
+🡹 🡲 🡩 🡡 🡕 🡑 
+ⲽⲼⲴⲷⲶⰻⰺⰸⰷⰲ ⰷ
+🞑  🞐  🞏 🞎  🞍   🞉🞈 🞇  🞤🞅 🞜🞛🞚 🞔  🞬 🞫  🡖  🡨  🡯  🡹  🡶  
 
 1. `⚿` (die face-6) - represents uniqueness/identification
 2. `⊕` (circled plus) - mathematical symbol for primary/main operation
@@ -52,6 +58,25 @@ also note
 4. `⟐` ◈ (white diamond with centered dot) - indicates primary/central importance
 5. `⬢` (black large hexagon) - geometric shape suggesting structure/key element
 
+**For `index`:**
+- `◉` (U+25C9) - Fisheye
+- `⊡` (U+22A1) - Squared Dot
+- `▣` (U+25A3) - White Square Containing Black Small Square
+- `◈` (U+25C8) - White Diamond Containing Black Small Diamond
+- `⟐` (U+27D0) - White Diamond with Centered Dot
+- `⊙` (U+2299) - Circled Dot Operator
+- `⦿` (U+29BF) - Circled Bullet
+- `◎` (U+25CE) - Bullseye
+
+**For `unique().on`:**
+- `⊕` (U+2295) - Circled Plus
+- `⊖` (U+2296) - Circled Minus
+- `⊗` (U+2297) - Circled Times
+- `⊛` (U+229B) - Circled Asterisk
+- `◆` (U+25C6) - Black Diamond
+- `◇` (U+25C7) - White Diamond
+- `⬡` (U+2B21) - White Hexagon
+- `⬢` (U+2B22) - Black Hexagon
 
 
 
