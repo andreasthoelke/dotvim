@@ -342,6 +342,8 @@ vim.keymap.set('n', '<c-g>l', function()
   end
 end, { desc = "Focus Magenta input" })
 
+-- how to make with work with visual mode active?
+
 vim.keymap.set('n', '<c-g><c-l><c-l>', function()
   vim.cmd "Magenta predict-edit"
 end, { desc = "Magenta predict" })
@@ -350,9 +352,25 @@ vim.keymap.set('n', '<c-g><c-l><c-g>', function()
   vim.cmd "Magenta accept-prediction"
 end, { desc = "Magenta accept" })
 
+vim.keymap.set('n', '<c-g><c-l><c-<cr>>', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
 vim.keymap.set('n', '<c-g><c-l><c-c>', function()
   vim.cmd "Magenta dismiss-prediction"
-end, { desc = "Magenta accept" })
+end, { desc = "Magenta dismiss prediction" })
+
+vim.keymap.set('n', '<c-g><c-l><c-d>', function()
+  vim.cmd "Magenta debug-prediction-message"
+end, { desc = "Magenta debug prediction" })
+
+vim.keymap.set('n', '<c-g><c-l><c-c>', function()
+  vim.cmd "Magenta dismiss-prediction"
+end, { desc = "Magenta dismiss prediction" })
+
+vim.keymap.set('n', '<c-g><c-l><c-n>', function()
+  vim.cmd "Magenta next-prediction"
+end, { desc = "Magenta next prediction" })
 
 
 
