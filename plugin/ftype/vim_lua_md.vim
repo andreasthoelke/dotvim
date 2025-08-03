@@ -25,6 +25,8 @@ endfunc
 
 
 func! MarkdownBufferMaps()
+  call MagentaBufferMaps()
+  return
   call VScriptToolsBufferMaps()
 
   " echo 'hi'

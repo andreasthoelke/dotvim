@@ -637,6 +637,8 @@ use gei in .md, .lua and .vim files. use <leader>se on pain vimscript lines in .
 require("neo-tree.command").execute({ action = "show", position = "right" })
 require("neo-tree.command").execute({ action = "close" })
 
+## cleanup strip windows line feeds
+command! StripWindowsCR %s/\r//g
 <leader>sw   - strip whitespace
 
 # tabline tabby

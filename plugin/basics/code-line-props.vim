@@ -381,7 +381,19 @@ func! GetPath_fromLine()
 
   " echo ghmatches
   if len(ghmatches) >= 4
-    return ghmatches[2] . "‖:" . ghmatches[3]
+    let ghpath = ghmatches[2]
+    if ghpath[0:1] == "./"
+      let folderPath_of_currentFile = fnamemodify(expand('%:p'), ':h')
+      let path = folderPath_of_currentFile . ghpath[1:]
+    else
+      let path = ghpath
+    endif
+    " return path
+    if len(ghmatches[3])
+      return path . "‖:" . ghmatches[3]
+    else
+      return path
+    endif
   endif
 
   " Check for Markdown links: [text](path/to/file#heading) or [text](#heading) for in-document refs
