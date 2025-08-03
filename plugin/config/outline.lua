@@ -1,3 +1,4 @@
+-- NOTE i'm no longer using plugin/config/symbols-outline.lua
 
 -- vim.keymap.set('n', '<leader>ot', ':Outline<CR>', { silent = true, desc = 'Toggle outline viewer' })
 -- note the buffer maps!
@@ -252,11 +253,13 @@ require("outline").setup(
         Module = { icon = '󰆧', hl = 'Include' },
         Namespace = { icon = '󰅪', hl = 'Include' },
         Package = { icon = '󰏗', hl = 'Include' },
-        Class = { icon = '𝓒', hl = 'Type' },
+        -- Class = { icon = '𝓒', hl = 'Type' },
+        -- syntax match Normal 'class/ze/s' conceal cchar=□
+        Class = { icon = '□', hl = 'Type' },
         Method = { icon = 'ƒ', hl = 'Function' },
         Property = { icon = '', hl = 'Identifier' },
         Field = { icon = '󰆨', hl = 'Identifier' },
-        Constructor = { icon = '', hl = 'Special' },
+        Constructor = { icon = '≈', hl = 'Special' },
         Enum = { icon = 'ℰ', hl = 'Type' },
         Interface = { icon = '󰜰', hl = 'Type' },
         Function = { icon = '', hl = 'Function' },
@@ -272,7 +275,7 @@ require("outline").setup(
         Null = { icon = 'NULL', hl = 'Type' },
         EnumMember = { icon = '', hl = 'Identifier' },
         Struct = { icon = '𝓢', hl = 'Structure' },
-        Event = { icon = '🗲', hl = 'Type' },
+        Event = { icon = '󰖩', hl = 'Type' },
         Operator = { icon = '+', hl = 'Identifier' },
         TypeParameter = { icon = '𝙏', hl = 'Identifier' },
         Component = { icon = '󰅴', hl = 'Function' },

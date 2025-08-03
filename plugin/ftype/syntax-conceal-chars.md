@@ -51,6 +51,7 @@ Unsupported with MonoLisa in Alacritty:
 🡹 🡲 🡩 🡡 🡕 🡑 
 ⲽⲼⲴⲷⲶⰻⰺⰸⰷⰲ ⰷ
 🞑  🞐  🞏 🞎  🞍   🞉🞈 🞇  🞤🞅 🞜🞛🞚 🞔  🞬 🞫  🡖  🡨  🡯  🡹  🡶  
+🗲
 
 1. `⚿` (die face-6) - represents uniqueness/identification
 2. `⊕` (circled plus) - mathematical symbol for primary/main operation

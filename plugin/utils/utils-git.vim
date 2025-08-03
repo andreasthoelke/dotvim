@@ -27,14 +27,21 @@ endfunc
 
 command!          Gitpush   call ShellReturn( 'git push' )
 command!          Gitstatus call ShellReturn( 'git status' )
-command!          Gitstatus call ShellReturn( 'git status' )
+command!          Gitfetch call ShellReturn( 'git fetch' )
 command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
+
+" git fetch & pull:
+" nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch' )<cr>
+" branch info
+" nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch --verbose && echo "" && git status -sb' )<cr>
+nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch && echo "=== Local vs Remote ===" && git status -sb && echo "" && echo "=== Incoming Changes ===" && git log HEAD..@{u} --oneline 2>/dev/null \|\| echo "No incoming changes"' )<cr>
+nnoremap <silent><leader><leader>gP :call System_Float( 'git pull --rebase' )<cr>
 
 " git status:
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>
 nnoremap <silent><leader><leader>oG         :CocCommand fzf-preview.GitStatus<cr>
-nnoremap <silent><leader><leader>gS :call ShellReturn( 'git status' )<cr>
-nnoremap <silent><leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
+nnoremap <silent><leader><leader>gS :call System_Float( 'git status && echo "" && git diff HEAD --stat' )<cr>
+" nnoremap <silent><leader>ogS :call System_Float( 'git diff HEAD --stat' )<cr>
 " nnoremap <leader>oga :call System_Float( 'git add -A -v' )<cr>
 " nnoremap <silent><leader>oga :call system( 'git add -A -v' )<cr>:Git commit<cr>
 " git add -A:
@@ -66,7 +73,26 @@ nnoremap <silent><leader>ogC <cmd>Git commit<cr>
 " ease confirming fugitive commit window
 " nnoremap ,,w :w<cr><c-w>c
 " nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr><c-w>c' : ':call BufferInnerBracket()<cr>'
-nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>' : ':call BufferInnerBracket()<cr>'
+" nnoremap <silent><expr> ,,w (&ft=='gitcommit') ? ':w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>' : ':call BufferInnerBracket()<cr>'
+" nnoremap <silent><expr> <c-w><cr> (&ft=='gitcommit') ? ':w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>' : ':echo "nothing"'
+
+
+" Function to set up git commit buffer mappings
+function! SetupGitCommitMappings()
+    " Save and close mapping
+    nnoremap <buffer><silent> <c-w><cr> :w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>
+    
+    " You can add other git commit specific mappings here
+    " nnoremap <buffer><silent> <c-w>q :wq<cr>
+    " nnoremap <buffer><silent> <c-c> :q!<cr>
+endfunction
+
+" Auto command for git commit files
+augroup GitCommitSetup
+    autocmd!
+    autocmd FileType gitcommit call SetupGitCommitMappings()
+augroup END
+
 
 command! Gcwd execute 'let b:git_dir = ""' | call FugitiveDetect(getcwd()) | Git
 nnoremap <silent><leader>ogg :Gcwd<cr>
@@ -125,6 +151,8 @@ func! GitCommitAll_visSel()
   let msg = input( 'Commit message: ', GetVisSel() ) 
   let cmd = GitCommitAllCmd( msg )
   echo system( cmd )
+  " refresh neotree
+  doautocmd BufEnter
 endfunc
 
 func! GitCommitAll()
@@ -134,6 +162,8 @@ func! GitCommitAll()
   let msg = input( 'Commit message: ' ) 
   let cmd = GitCommitAllCmd( msg )
   echo system( cmd )
+  " refresh neotree
+  doautocmd BufEnter
 endfunc
 
 
@@ -159,8 +189,9 @@ endfunc
 
 
 func! GitCommitAllCmd( commitMessage )
-  let cmd = 'git commit -a -m "' . a:commitMessage . '"'
-  return cmd
+  let addCmd = 'git add .'
+  let commitCmd = 'git commit -m "' . a:commitMessage . '"'
+  return addCmd . ' && ' . commitCmd
 endfunc
 
 func! GitCommitCmd( commitMessage )
@@ -236,7 +267,8 @@ nnoremap <leader><leader>ogl :FzfBCommits<cr>
 " nnoremap <leader><leader>ga :FzfPreviewGitActions<cr>
 nnoremap <leader>,ga :CocCommand fzf-preview.GitActions<cr>
 " nnoremap <leader><leader>gb :FzfPreviewGitBranches<cr>
-nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
+" nnoremap <leader><leader>gb :CocCommand fzf-preview.GitBranches<cr>
+nnoremap <leader><leader>gb :Telescope git_branches<cr>
 
 " nnoremap <leader><leader>gq :GitGutterQuickFix<cr>:copen<cr>
 

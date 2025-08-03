@@ -2,6 +2,18 @@
 local f = require 'utils.functional'
 
 vim.g.neo_tree_remove_legacy_commands = 1
+-- Override icon for .prettierrc.js
+local has_devicons, devicons = pcall(require, "nvim-web-devicons")
+if has_devicons then
+  devicons.set_icon({
+    [".prettierrc.js"] = {
+      icon = "⚙",  -- Change this to any character that displays well with your font
+      color = "#f1e05a",  -- JavaScript yellow color
+      cterm_color = "185",
+      name = "PrettierConfig"
+    }
+  })
+end
 
 
 
@@ -712,7 +724,7 @@ require("neo-tree").setup({
         modified  = "○",
         renamed   = "󰁕",
         -- Status type
-        untracked = "󰄱",
+        untracked = "*",
         ignored   = "ˍ",
         unstaged  = "",
         staged    = "",

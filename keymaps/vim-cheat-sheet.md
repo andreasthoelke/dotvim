@@ -111,6 +111,9 @@ gej                  - LSP signature help
 <leader>ogL          - Git commits viewer (40 commits)
 <leader>ogS          - Git status (telescope)
 <leader>gd           - Git commits viewer (5 commits)
+<leader><leader>gb   - Telescope git_branches<cr>
+<leader><leader>og   - FzfGFiles?
+<leader><leader>oG   - FzfGFiles?
 
 ### Git File History
 <leader><leader>ogl  - DiffviewFileHistory (current file)

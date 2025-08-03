@@ -1,3 +1,5 @@
+-- NOTE i'm using plugin/config/outline.lua
+
 -- init.lua
 vim.g.symbols_outline = {
     highlight_hovered_item = true,
@@ -31,7 +33,7 @@ vim.g.symbols_outline = {
         Method = {icon = "ƒ", hl = "TSMethod"},
         Property = {icon = "", hl = "TSMethod"},
         Field = {icon = "", hl = "TSField"},
-        Constructor = {icon = "", hl = "TSConstructor"},
+        Constructor = {icon = "≈", hl = "TSConstructor"},
         Enum = {icon = "ℰ", hl = "TSType"},
         Interface = {icon = "ﰮ", hl = "TSType"},
         Function = {icon = "", hl = "TSFunction"},
