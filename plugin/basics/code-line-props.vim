@@ -385,6 +385,9 @@ func! GetPath_fromLine()
     if ghpath[0:1] == "./"
       let folderPath_of_currentFile = fnamemodify(expand('%:p'), ':h')
       let path = folderPath_of_currentFile . ghpath[1:]
+    elseif ghpath[0:1] == ".."
+      let folderPath_of_currentFile = fnamemodify(expand('%:p'), ':h')
+      let path = folderPath_of_currentFile . "/" . ghpath
     else
       let path = ghpath
     endif

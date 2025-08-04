@@ -399,6 +399,30 @@ function M.Search_collection_aichat_topics()
   require('telescope.builtin').live_grep(opts)
 end
 
+function M.Search_current_buffer_md_headers()
+  local opts = {
+    default_text = "# " ,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').current_buffer_fuzzy_find(opts)
+end
+
+
+function M.Search_cwd_md_headers()
+  local opts = {
+    default_text = "# .*" ,
+    cwd = vim.fn.getcwd( vim.fn.winnr() ),
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
+end
+
+
+
 function M.Search_in_folder(folder_path, default_text)
   local opts = {
     -- default_text = "# topic:.*" ,

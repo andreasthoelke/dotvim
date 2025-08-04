@@ -7,6 +7,34 @@ func! MagentaBufferMaps()
   " set syntax=markdown
   " call MarkdownSyntaxAdditions()
 
+  nnoremap <silent><buffer><leader>ot :Outline<cr>
+  " nnoremap <silent><buffer>gdi :lua require("follow-md-links").follow_link()<cr>
+
+" ─   Search                                             ■
+
+  " Note these two are new 2025-08
+  nnoremap <silent><buffer> gs;  :lua require('utils.general').Search_current_buffer_md_headers()<cr>
+  nnoremap <silent><buffer> gs:  :lua require('utils.general').Search_cwd_md_headers()<cr>
+
+  " nnoremap <silent><buffer> gsf  :Telescope current_buffer_fuzzy_find<cr>
+  " nnoremap <silent><buffer> gsg  :Telescope live_grep<cr>
+  " Moved to ~/.config/nvim/plugin/config/telescope.vim‖*ˍˍˍFileˍsearchˍmapsˍ2025-03
+  " nnoremap <silent><buffer> gsf  :call v:lua.Telesc_launch('current_buffer_fuzzy_find')<cr>
+  " nnoremap <silent><buffer> gsg  :call v:lua.Telesc_launch('live_grep')<cr>
+
+  " nnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', expand('<cword>'), "normal" )<cr>
+  " xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
+
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_selection()<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
+
+  nnoremap <silent><buffer> gst  :call v:lua.Search_ast( expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gst  :call v:lua.Search_ast( GetVisSel() )<cr>
+
+
+" ─^  Search                                             ▲
+
+" ─     Motions                                         ──
   nnoremap <silent><buffer> I :call Mgn_ColumnForw()<cr>
   nnoremap <silent><buffer> Y :call Mgn_ColumnBackw()<cr>
 
@@ -26,6 +54,7 @@ func! MagentaBufferMaps()
 
   nnoremap <silent><buffer>]b :call MD_BoldNext()<cr>
   nnoremap <silent><buffer>[b :call MD_BoldPrev()<cr>
+
 
 endfunc
 
