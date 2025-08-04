@@ -369,6 +369,8 @@ func! GetPath_fromLine()
     return "http‖" . httpmatches[2]
   endif
   
+
+" ─   Github markdown links support                      ■
   " Support for github link info .. 
   " and a [system prompt](node/providers/system-prompt.ts#L305) into 
   let ghpattern = '\[\([^\]]*\)\](\([^#)]*\)\%(#L\(\d\+\)\)\?)'
@@ -382,9 +384,13 @@ func! GetPath_fromLine()
   " echo ghmatches
   if len(ghmatches) >= 4
     let ghpath = ghmatches[2]
+    " Relative paths in github markdown
+    " - [Set up your first module container](./tutorial-module-container.md)
+    " ~/Documents/Proj/k_mindgraph/y_fullstack/f_context-modules/docs/getting-started.md
     if ghpath[0:1] == "./"
       let folderPath_of_currentFile = fnamemodify(expand('%:p'), ':h')
       let path = folderPath_of_currentFile . ghpath[1:]
+      " - **[Basic Module Container](../examples/01-module-container/)** - A simple module exposing components
     elseif ghpath[0:1] == ".."
       let folderPath_of_currentFile = fnamemodify(expand('%:p'), ':h')
       let path = folderPath_of_currentFile . "/" . ghpath
@@ -398,6 +404,8 @@ func! GetPath_fromLine()
       return path
     endif
   endif
+
+" ─^  Github markdown links support                      ▲
 
   " Check for Markdown links: [text](path/to/file#heading) or [text](#heading) for in-document refs
   let markdown_match = matchlist(getline('.'), '\[[^]]*\](\([^)#]*\)\(#[^)]*\)\?)')
