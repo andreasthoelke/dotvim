@@ -297,6 +297,36 @@ endfunc
 " ─^  Set import variables                               ▲
 
 
+" ─   Vitest                                            ──
+
+" npx vitest run ./node/inline-edit/inline-edit-app.spec.ts -t "performs inline edit on file"
+func! JS_RunVitest(termType)
+  let path = expand('%:p')
+  let test_ln = searchpos( '\v\sit\(', 'cnb' )[0]
+  let strInParan = matchstr( getline(test_ln), '\v\(\"\zs.{-}\ze\"' )
+  " echo strInParan
+
+  let Cmd = 'npx vitest run ' . path . ' -t "' . strInParan . '"'
+
+  if     a:termType == 'float'
+    let resLines = systemlist( Cmd )
+    silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+    silent call FloatWin_FitWidthHeight()
+    silent wincmd p
+  elseif a:termType == 'term'
+    call TermOneShot( Cmd )
+  elseif a:termType == 'term_hidden'
+    call TermOneShot( Cmd )
+    silent wincmd c
+  elseif a:termType == 'term_float'
+    call TermOneShot_FloatBuffer( Cmd )
+  endif
+
+
+endfunc
+
+
+
 " ─   05-2024 standalone approach                        ■
 
 func! JS_LspTypeAtPos(lineNum, colNum)
@@ -317,14 +347,6 @@ func! JS_SetPrinterIdentif()
   let relPath = '.' . relPath
   call VirtualRadioLabel( '«')
 
-  " compile typescript
-  " skipping this, not sure where it was putting the .js file, using node 23
-  " if relPath[-3:-1] == ".ts"
-  "   let cmd = "cd " . jsWd . " && tsc"
-  "   let _resLines = systemlist( cmd)
-  "   let relPath = relPath[:-4] . ".js"
-  " endif
-
   let [export, altIdentif, identif; _] = split( getline('.') )
   if export != 'export'
     " echo 'identifier needs to be exported'
@@ -333,9 +355,6 @@ func! JS_SetPrinterIdentif()
   else
     let ident = T_RemoveTypeColon( identif )
   endif
-
-  " let identifCol = 15
-  " echo JS_LspTypeAtPos(line('.'), 10)
 
   let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
   let TesterLines = readfile( JsPrinterPath(), '\n' )

@@ -28,9 +28,9 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
   nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
   nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
-  " nnoremap <silent><buffer>         gew :call TsPlus_SetPrinterIdentif()<cr>
-  " nnoremap <silent><buffer>         gep :call TsPlus_RunPrinter()<cr>
-  " nnoremap <silent><buffer>         geP :call TsPlus_RunPrinter_InTerm()<cr>
+
+  nnoremap <silent><buffer>         get :call JS_RunVitest( "float" )<cr>
+  nnoremap <silent><buffer>         geT :call JS_RunVitest( "term" )<cr>
 
 
 " ─   Motions                                           ──
