@@ -538,12 +538,12 @@ func! MarkdownSyntaxAdditions()
   " set syntax=markdown
   " temp fix bc/ underscores are hidden with markdown syntax e.g. in ~/Documents/Proj/k_mindgraph/_plan/a_graph_sql/schema_.sql
   " set syntax=js
-  call clearmatches()
+  " call clearmatches()
   " syntax match Normal '\`\`\`' conceal cchar=⊃
   " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
-  call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
-  call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
-  call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
+  " call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
+  " call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
+  " call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
   " set foldmethod=marker
 endfunc

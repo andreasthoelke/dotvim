@@ -564,15 +564,16 @@ Plug 'navicore/vissort.vim'
 " Plug 'jakewvincent/mkdnflow.nvim'
 
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-Plug 'euclio/vim-markdown-composer'
+" Plug 'euclio/vim-markdown-composer'
 " https://github.com/MeanderingProgrammer/render-markdown.nvim?tab=readme-ov-file#commands
-Plug 'MeanderingProgrammer/render-markdown.nvim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-Plug 'ellisonleao/glow.nvim'
+" Plug 'MeanderingProgrammer/render-markdown.nvim'
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+" Plug 'ellisonleao/glow.nvim'
 
+" using this via l glm/M currently only
 Plug 'toppair/peek.nvim', { 'do': 'deno task --quiet build:fast' }
 
-Plug 'davidmh/mdx.nvim'
+" Plug 'davidmh/mdx.nvim'
 
 " Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " depends on 'godlygeek/tabular' coming first(?)
@@ -580,9 +581,9 @@ Plug 'davidmh/mdx.nvim'
 
 Plug 'jszakmeister/markdown2ctags'
 " NOTE: I modified the souce to stop http link highlighting: ~/.config/nvim/plugged/rel.vim/plugin/rel.vim#/au%20BufWinEnter%20*
-Plug 'aklt/rel.vim'
+" Plug 'aklt/rel.vim'
 
-Plug 'jceb/vim-orgmode'
+" Plug 'jceb/vim-orgmode'
 
 " Plug 'purescript-contrib/purescript-vim'
 " TODO this was causing a mapping for 'w' and "e" that would jump across ":" and "."
@@ -590,7 +591,7 @@ Plug 'jceb/vim-orgmode'
 " Plug 'andreasthoelke/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
 
-Plug 'rescript-lang/vim-rescript'
+" Plug 'rescript-lang/vim-rescript'
 " Plug 'nkrkv/nvim-treesitter-rescript'
 
 " ─   Repl IDE features                               ■

@@ -16,7 +16,7 @@ require('avante').setup(
         claude = {
           endpoint = "https://api.anthropic.com",
           -- model = "claude-3-7-sonnet-20250219",
-          model = "claude-sonnet-4-20250514",
+          model = "claude-opus-4-1-20250805",
           -- model = "claude-opus-4-20250514",
           timeout = 30000, -- Timeout in milliseconds
           extra_request_body = {

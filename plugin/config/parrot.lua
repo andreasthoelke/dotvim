@@ -57,8 +57,10 @@ require("parrot").setup(
         end,
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
-        model = "claude-opus-4-20250514",
+        -- model = "claude-opus-4-20250514",
+        model = "claude-opus-4-1-20250805",
         models = {
+          "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",
           "claude-sonnet-4-20250514",
           "claude-3-5-haiku-latest",

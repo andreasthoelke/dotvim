@@ -90,17 +90,17 @@ end
 
 
 -- use :Glow to preview a markdown file. or rather 'glow' in the terminal for a .md file explorer!
-require('glow').setup({
-  glow_path = "/opt/homebrew/bin/glow", -- will be filled automatically with your glow bin in $PATH, if any
-  -- install_path = "/opt/homebrew/bin/glow", -- default path for installing glow binary
-  border = "shadow", -- floating window border config
-  style = "dark", -- filled automatically with your current editor background, you can override using glow json style
-  pager = false,
-  width = 80,
-  height = 100,
-  width_ratio = 0.7, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
-  height_ratio = 0.7,
-})
+-- require('glow').setup({
+--   glow_path = "/opt/homebrew/bin/glow", -- will be filled automatically with your glow bin in $PATH, if any
+--   -- install_path = "/opt/homebrew/bin/glow", -- default path for installing glow binary
+--   border = "shadow", -- floating window border config
+--   style = "dark", -- filled automatically with your current editor background, you can override using glow json style
+--   pager = false,
+--   width = 80,
+--   height = 100,
+--   width_ratio = 0.7, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
+--   height_ratio = 0.7,
+-- })
 
 
 

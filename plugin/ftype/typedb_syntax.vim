@@ -68,7 +68,7 @@ func! TypeQLSyntaxAdditions() " ■
   " EXAMPLE:
   " commit sub relation,
   "   relates repository,
-  syntax match TdbEntity '\<relates\>' nextgroup=TdbEntity skipwhite conceal cchar=🡲
+  syntax match TdbEntity '\<relates\>' nextgroup=TdbEntity skipwhite conceal cchar=→
   syntax match TdbEntity '[a-zA-Z0-9_-]\+' contained
 
   " EXAMPLE: user owns username;

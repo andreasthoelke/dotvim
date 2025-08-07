@@ -48,7 +48,7 @@ also note
 
 Unsupported with MonoLisa in Alacritty:
 🮏 🮎 🮌🮇🭰🮀 🮙 🮞🮟 🮣🮢 🮨 🮬 🮺🮻 🯸 🯴
-🡹 🡲 🡩 🡡 🡕 🡑 
+🡹 🡲🡲 🡩 🡡 🡕 🡑 
 ⲽⲼⲴⲷⲶⰻⰺⰸⰷⰲ ⰷ
 🞑  🞐  🞏 🞎  🞍   🞉🞈 🞇  🞤🞅 🞜🞛🞚 🞔  🞬 🞫  🡖  🡨  🡯  🡹  🡶  
 🗲

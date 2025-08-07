@@ -34,6 +34,7 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 " nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch' )<cr>
 " branch info
 " nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch --verbose && echo "" && git status -sb' )<cr>
+" nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch && git log HEAD..origin/$(git branch --show-current) --oneline' )<cr>
 nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch && echo "=== Local vs Remote ===" && git status -sb && echo "" && echo "=== Incoming Changes ===" && git log HEAD..@{u} --oneline 2>/dev/null \|\| echo "No incoming changes"' )<cr>
 nnoremap <silent><leader><leader>gP :call System_Float( 'git pull --rebase' )<cr>
 
