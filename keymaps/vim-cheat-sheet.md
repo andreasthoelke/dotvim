@@ -22,19 +22,12 @@
 @ commands:
 ~/Documents/Proj/k_mindgraph/h_mcp/d_magenta/README.md‖/Automaticallyˍincludesˍthe
 
-### Avante
-<c-g><leader>v       - AvanteChatNew
-<c-g><leader>M       - AvanteModel
-<c-g><leader>h       - AvanteHistory
-<c-g><leader>H       - CodeCompanionHistory
-<c-g>l               - AvanteFocus
-<c-g>c               - AvanteStop
-<c-g><leader>c       - AvanteClear
-<c-g><leader>P       - AvanteSwitchProvider (with autocomplete)
+#### NEP edit prediction
+<c-g><c-l>l           - Next edit predict
+<c-g><c-l>g           - Next edit accept
+<c-g><c-l>c           - Next edit cancel
+<c-g><c-l>d           - Next edit debug
 
-### CodeCompanion
-<c-g><leader>V       - CodeCompanion chat (vertical layout)
-<c-g><leader>C       - CodeCompanion chat (horizontal layout)
 
 ### Claude Code
 <c-g>V               - ClaudeCodeOpen
@@ -43,7 +36,7 @@
 <c-g><c-s>           - Save Claude buffer to chat history
 <c-g>b               - Send buffer to Claude
 <c-g>p               - Send paragraph to Claude
-<leader><c-g>p       - Send paragraph to Claude with markup
+<leader><c-g>p       - Send paragraph to Claude with markup (fallback to parrot and magenta)
 <c-g>'               - Send clipboard to Claude
 <leader><c-g>'       - Send clipboard to Claude with markup
 <c-g>o               - Send linewise selection to Claude (operator)
@@ -62,6 +55,7 @@
 <c-g><leader>m       - PrtModel
 <c-g>v               - PrtChatNew
 <c-g>s               - PrtChatNew split
+<leader><c-g>p       - Send paragraph to Claude with markup (fallback to parrot and magenta)
 <c-g><leader>C       - PrtChatWithAllBuffers
 (v) <c-g>v           - PrtChatNew with context
 (v) <c-g>s           - PrtChatNew split with context
@@ -70,6 +64,22 @@
 (v) <c-g>a           - PrtAppend
 (v) <c-g><leader>r   - PrtRewriteFullContext
 (v) <c-g><leader>a   - PrtAppendFullContext
+
+### Avante
+<c-g><leader>v       - AvanteChatNew
+<c-g><leader>M       - AvanteModel
+<c-g><leader>h       - AvanteHistory
+<c-g><leader>H       - CodeCompanionHistory
+<c-g>l               - AvanteFocus
+<c-g>c               - AvanteStop
+<c-g><leader>c       - AvanteClear
+<c-g><leader>P       - AvanteSwitchProvider (with autocomplete)
+
+### CodeCompanion
+<c-g><leader>V       - CodeCompanion chat (vertical layout)
+<c-g><leader>C       - CodeCompanion chat (horizontal layout)
+
+
 
 ### MCP
 <c-g>h               - MCPHub

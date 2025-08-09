@@ -313,7 +313,7 @@ vim.keymap.set( 'n',
 -- ─^  CLAUDE CODE                                       ▲
 
 
--- ─   Magenta                                          ──
+-- ─   Magenta                                           ■
 
 -- NOTE claude_send consistent maps:
 -- ~/.config/nvim/plugin/config/parrot-claude-code.lua‖/functionˍ_G.Claude_send(te
@@ -343,7 +343,12 @@ vim.keymap.set('n', '<c-g>l', function()
 end, { desc = "Focus Magenta input" })
 
 
+-- ─   NEP edit prediction                               ■
 vim.keymap.set({'n', 'v'}, '<c-g><c-l><c-l>', function()
+  vim.cmd "Magenta predict-edit"
+end, { desc = "Magenta predict" })
+
+vim.keymap.set({'n', 'v'}, '<c-g><c-l>l', function()
   vim.cmd "Magenta predict-edit"
 end, { desc = "Magenta predict" })
 
@@ -351,11 +356,15 @@ vim.keymap.set('n', '<c-g><c-l><c-g>', function()
   vim.cmd "Magenta accept-prediction"
 end, { desc = "Magenta accept" })
 
-vim.keymap.set('n', '<c-g><c-l><c-<cr>>', function()
+vim.keymap.set('n', '<c-g><c-l>g', function()
   vim.cmd "Magenta accept-prediction"
 end, { desc = "Magenta accept" })
 
-vim.keymap.set('n', '<c-g><c-l><c-c>', function()
+vim.keymap.set('n', '<c-g><c-l><cr>', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
+vim.keymap.set('n', '<c-g><c-l>c', function()
   vim.cmd "Magenta dismiss-prediction"
 end, { desc = "Magenta dismiss prediction" })
 
@@ -363,15 +372,12 @@ vim.keymap.set('n', '<c-g><c-l><c-d>', function()
   vim.cmd "Magenta debug-prediction-message"
 end, { desc = "Magenta debug prediction" })
 
-vim.keymap.set('n', '<c-g><c-l><c-c>', function()
-  vim.cmd "Magenta dismiss-prediction"
-end, { desc = "Magenta dismiss prediction" })
+vim.keymap.set('n', '<c-g><c-l>d', function()
+  vim.cmd "Magenta debug-prediction-message"
+end, { desc = "Magenta debug prediction" })
 
--- TODO new feature
--- vim.keymap.set({'n', 'v'}, '<c-g><c-l><c-n>', function()
---   vim.cmd "Magenta next-prediction"
--- end, { desc = "Magenta next prediction" })
 
+-- ─^  NEP edit prediction                               ▲
 
 
 vim.keymap.set( 'n',
@@ -381,6 +387,9 @@ vim.keymap.set( 'n',
     )
     vim.cmd('luafile ~/.config/nvim/plugin/config/magenta.nvim.lua')
   end )
+
+
+-- ─^  Magenta                                           ▲
 
 
 -- ─   PARROT                                            ■

@@ -380,12 +380,13 @@ endfunction
 func! FloatingTerm ()
   let opts = {}
   let opts.focusable = v:true
-  let opts.width     = 50
+  let opts.width     = 100
   let opts.height    = 18
   let opts.anchor    = 'NW'
   let opts.relative  = 'cursor'
   let opts.col       = 0
   let opts.row       = 1
+  let opts.border    = 'rounded'
 
   let l:textbuf = nvim_create_buf(v:false, v:true)
   return nvim_open_win( l:textbuf, v:true, opts)
