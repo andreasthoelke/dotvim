@@ -1323,10 +1323,32 @@ can stage/unstage files in dirvish
 git rm -r --cached .bloop/
 git rm -r --cached .metals/
 
+## git commit changes to branch
+Create and switch to backup branch
+git checkout -b cc-fix-attempt
+Add and commit everything (including untracked files)
+git add -A
+git commit -m "WIP: CC fix attempt"
+git checkout main 
+
+
 ## git reset hard roll back
+First, create a new branch to save your current work (including uncommitted changes)
+git stash --include-untracked
+git checkout -b opencode-fix-attempt
+git stash pop
+
+Commit all your changes to this backup branch
+git add -A
+git commit -m "WIP: opencode fix attempt"
+
+Now go back to your original branch (likely main or master)
+git checkout main  # or git checkout master
+
+Reset to the latest commit, discarding all changes
 git reset --hard HEAD
-git clean -nfd
 git clean -fd
+git clean -nfd
 
 
 ### Telescope git_bcommits

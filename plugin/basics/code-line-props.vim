@@ -354,8 +354,11 @@ func! GetPath_fromLine()
   endif
   
   let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
+  let line_words = line_words->split()
+  " Filter to only words that contain a "."
+  let line_words = filter(line_words, 'v:val =~ "\\."')
   " return line_words
-  let path = line_words->split()->sort('CompareLength')[-1]
+  let path = line_words->sort('CompareLength')[-1]
   " return path
 
   " Support for http links
@@ -485,6 +488,24 @@ func! GetPath_fromLine()
       return folder_rel_path
     endif
   endif
+
+  " Check for quotes-enclosed paths
+  let quotes_match = matchstr(getline('.'), '"\zs[^"]*\ze"')
+  if !empty(quotes_match)
+    let path = quotes_match
+    
+    if filereadable(path) || isdirectory(path)
+      return path
+    endif
+    
+    let current_folder = fnamemodify(expand('%:p'), ':h')
+    let folder_rel_path = current_folder . '/' . path
+    
+    if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
+      return folder_rel_path
+    endif
+  endif
+
 
   if filereadable( path ) || isdirectory(path)
     return path

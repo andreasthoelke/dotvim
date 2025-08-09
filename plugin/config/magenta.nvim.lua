@@ -15,6 +15,18 @@ require('magenta').setup({
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },
     {
+      name = "claude-opus-think",
+      provider = "anthropic",
+      -- model = "claude-opus-4-20250514",
+      model = "claude-opus-4-1-20250805",
+      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      apiKeyEnvVar = "ANTHROPIC_API_KEY",
+      thinking = {
+        enabled = true,
+        budgetTokens = 2000,
+      }
+    },
+    {
       name = "claude-sonnet",
       provider = "anthropic",
       model = "claude-sonnet-4-20250514",
@@ -22,10 +34,50 @@ require('magenta').setup({
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },
     {
+      name = "claude-sonnet-think",
+      provider = "anthropic",
+      model = "claude-sonnet-4-20250514",
+      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      apiKeyEnvVar = "ANTHROPIC_API_KEY",
+      thinking = {
+        enabled = true,
+        budgetTokens = 2000,
+      }
+    },
+    {
+      name = "gpt-5",
+      provider = "openai",
+      model = "gpt-5",
+      fastModel = "gpt-5-mini",
+      apiKeyEnvVar = "OPENAI_API_KEY"
+    },
+    {
+      name = "gpt-5-reason",
+      provider = "openai",
+      model = "gpt-5",
+      fastModel = "gpt-5-mini",
+      apiKeyEnvVar = "OPENAI_API_KEY",
+      reasoning = {
+        effort = "medium",
+        summary = "auto"
+      }
+
+    },
+    {
       name = "o3",
       provider = "openai",
       model = "o3",
       apiKeyEnvVar = "OPENAI_API_KEY"
+    },
+    {
+      name = "o3-reason",
+      provider = "openai",
+      model = "o3",
+      apiKeyEnvVar = "OPENAI_API_KEY",
+      reasoning = {
+        effort = "medium",
+        summary = "auto"
+      }
     },
     {
       name = "gpt-4.1",

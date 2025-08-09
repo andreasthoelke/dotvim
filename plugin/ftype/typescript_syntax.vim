@@ -177,9 +177,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'type' conceal cchar=◇
   syntax match Normal 'types:' conceal cchar=◇
   syntax match Normal 'typeof' conceal cchar=◇
-  " syntax match Normal 'class/ze/s' conceal cchar=□
-  " ISSUE: for some reason this doesn't match any more
-  syntax match Normal 'class/ze/s' conceal cchar=𝓒
+  syntax match Normal 'class\ze\s' conceal cchar=□
+  " syntax match Normal 'class\ze\s' conceal cchar=𝓒
   syntax match Normal 'implements' conceal cchar=⟔
   syntax match Normal 'extends' conceal cchar=⟔
   syntax match Normal 'constructor' conceal cchar=≈
