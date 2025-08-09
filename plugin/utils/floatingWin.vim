@@ -390,12 +390,13 @@ func! FloatingTerm (...)
   let opts.row       = 1
   let opts.border    = 'rounded'
 
-  if a:0 && a:0 == 'cursor'
+  if a:0 && a:1 == 'cursor'
     let opts.relative  = 'cursor'
     let opts.col       = 0
     let opts.row       = 1
-  elseif a:0 && a:0 == 'otherWinColumn'
+  elseif a:0 && a:1 == 'otherWinColumn'
     let opts = v:lua.FloatOpts_inOtherWinColumn()
+    let opts.width = float2nr( opts.width / 1.4 )
   else
     let top = ((&lines - opts.height) / 2) - 1
     let left = (&columns - opts.width) / 2

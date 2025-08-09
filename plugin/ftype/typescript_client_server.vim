@@ -308,7 +308,7 @@ func! JS_RunVitest(termType)
 
   let Cmd = 'npx vitest run ' . path . ' -t "' . strInParan . '"'
   let Cmd = Cmd . " && clear && jq -C . /tmp/magenta-test.log"
-  let Cmd = "jq -C . /tmp/magenta-test.log"
+  " let Cmd = "jq -C . /tmp/magenta-test.log"
 
   if     a:termType == 'float'
     let resLines = systemlist( Cmd )
@@ -321,7 +321,16 @@ func! JS_RunVitest(termType)
     call TermOneShot( Cmd )
     silent wincmd c
   elseif a:termType == 'term_float'
-    call TermOneShot_FloatBuffer( Cmd, 'otherWinColumn' )
+    call FloatingTerm( 'otherWinColumn' )
+    let g:TermID = termopen( Cmd )
+    call TsSyntaxAdditions()
+    nnoremap <silent><buffer> <c-n> :call search('message', 'W')<cr>
+    nnoremap <silent><buffer> <c-p> :call search('message', 'bW')<cr>
+
+    " normal G
+    " call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
+
+    " call TermOneShot_FloatBuffer( Cmd, 'otherWinColumn' )
   endif
 
 

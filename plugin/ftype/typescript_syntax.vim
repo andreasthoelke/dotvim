@@ -92,6 +92,7 @@ func! TsSyntaxAdditions ()
 
 " ─^  Drizzle                                            ▲
 
+
   syntax match Normal '({' conceal cchar=⟨
   syntax match Normal '})' conceal cchar=⟩
 
@@ -117,11 +118,19 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'public' conceal cchar=∘
   syntax match Normal '\s\zsas\ze\s' conceal cchar=«
 
+  " QUOTES!
   syntax match Normal "'" conceal
   syntax match Normal ";" conceal
   syntax match Normal "''" conceal cchar=∅
   syntax match Normal '"' conceal
   syntax match Normal '""' conceal cchar=∅
+
+  " NOTE: These work only when run **after** the quotes conceals above!
+  " Test logger
+  syntax match Normal '"message":\s' conceal
+  syntax match Normal '"data":\s' conceal
+  syntax match Normal '^{' conceal
+  syntax match Normal '^}' conceal
 
   " JSDoc comments
   syntax match Normal "\/\*\*" conceal

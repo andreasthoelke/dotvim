@@ -29,7 +29,8 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
   nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
 
-  nnoremap <silent><buffer>         get :call JS_RunVitest( "float" )<cr>
+  " nnoremap <silent><buffer>         get :call JS_RunVitest( "float" )<cr>
+  nnoremap <silent><buffer>         get :call JS_RunVitest( "term_float" )<cr>
   nnoremap <silent><buffer>         geT :call JS_RunVitest( "term" )<cr>
   nnoremap <silent><buffer>         ,get :call JS_RunVitest( "term_float" )<cr>
 
