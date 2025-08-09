@@ -142,7 +142,7 @@ endfunc
 " ─   One shot async Terminal                            ■
 
 nnoremap gwT :call TermOneShot( GetLineFromCursor() )<cr>
-nnoremap ,gwt :call TermOneShot_FloatBuffer( GetLineFromCursor() )<cr>
+nnoremap ,gwt :call TermOneShot_FloatBuffer( GetLineFromCursor(), "otherWinColumn" )<cr>
 
 func! TermOneShot( cmd )
   exec "16new"
@@ -153,8 +153,8 @@ endfunc
 " The following line works (only) without shellescape()
 " echo 'hi'
 
-func! TermOneShotFloat( cmd )
-  silent let g:floatWin_win = FloatingTerm()
+func! TermOneShotFloat( cmd, pos )
+  silent let g:floatWin_win = FloatingTerm(a:pos)
   let g:TermID = termopen( a:cmd )
   " normal G
   call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
@@ -182,11 +182,11 @@ let g:TermOneShotCBs = {
       \ }
 
 " NOTE this one keeps appending lines to a floating buffer. while TermOneShot is a term buffer
-func! TermOneShot_FloatBuffer( cmd )
+func! TermOneShot_FloatBuffer( cmd, pos )
   " echo "Running terminal command .."
   " call T_DelayedCmd( "echo ''", 2000 )
   " silent let g:floatWin_win = FloatingSmallNew ( [ a:cmd . ': ..' ] )
-  silent let g:floatWin_win = FloatingSmallNew ( [] )
+  silent let g:floatWin_win = FloatingSmallNew ( [], a:pos )
   silent call FloatWin_FitWidthHeight()
   let g:TermID = jobstart( a:cmd, g:TermOneShotCBs )
 endfunc

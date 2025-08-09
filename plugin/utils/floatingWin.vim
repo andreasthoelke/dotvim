@@ -376,8 +376,10 @@ function! CreateCenteredFloatingWindow() abort
     return l:textbuf
 endfunction
 
-" echo FloatingTerm()
-func! FloatingTerm ()
+" FloatingTerm()
+" FloatingTerm('cursor')
+" FloatingTerm('otherWinColumn')
+func! FloatingTerm (...)
   let opts = {}
   let opts.focusable = v:true
   let opts.width     = 100
@@ -387,6 +389,21 @@ func! FloatingTerm ()
   let opts.col       = 0
   let opts.row       = 1
   let opts.border    = 'rounded'
+
+  if a:0 && a:0 == 'cursor'
+    let opts.relative  = 'cursor'
+    let opts.col       = 0
+    let opts.row       = 1
+  elseif a:0 && a:0 == 'otherWinColumn'
+    let opts = v:lua.FloatOpts_inOtherWinColumn()
+  else
+    let top = ((&lines - opts.height) / 2) - 1
+    let left = (&columns - opts.width) / 2
+    let opts.relative  = 'editor'
+    let opts.col       = left
+    let opts.row       = top
+  endif
+
 
   let l:textbuf = nvim_create_buf(v:false, v:true)
   return nvim_open_win( l:textbuf, v:true, opts)

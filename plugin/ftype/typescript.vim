@@ -31,6 +31,7 @@ func! JS_bufferMaps()
 
   nnoremap <silent><buffer>         get :call JS_RunVitest( "float" )<cr>
   nnoremap <silent><buffer>         geT :call JS_RunVitest( "term" )<cr>
+  nnoremap <silent><buffer>         ,get :call JS_RunVitest( "term_float" )<cr>
 
 
 " ─   Motions                                           ──

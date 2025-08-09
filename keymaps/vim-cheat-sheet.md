@@ -1335,10 +1335,10 @@ git rm -r --cached .metals/
 
 ## git commit changes to branch
 Create and switch to backup branch
-git checkout -b cc-fix-attempt
+git checkout -b advanced-test-logger
 Add and commit everything (including untracked files)
 git add -A
-git commit -m "WIP: CC fix attempt"
+git commit -m "advanced-test-logger"
 git checkout main 
 
 

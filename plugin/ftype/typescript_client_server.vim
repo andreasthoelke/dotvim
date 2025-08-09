@@ -307,6 +307,8 @@ func! JS_RunVitest(termType)
   " echo strInParan
 
   let Cmd = 'npx vitest run ' . path . ' -t "' . strInParan . '"'
+  let Cmd = Cmd . " && clear && jq -C . /tmp/magenta-test.log"
+  let Cmd = "jq -C . /tmp/magenta-test.log"
 
   if     a:termType == 'float'
     let resLines = systemlist( Cmd )
@@ -319,7 +321,7 @@ func! JS_RunVitest(termType)
     call TermOneShot( Cmd )
     silent wincmd c
   elseif a:termType == 'term_float'
-    call TermOneShot_FloatBuffer( Cmd )
+    call TermOneShot_FloatBuffer( Cmd, 'otherWinColumn' )
   endif
 
 
