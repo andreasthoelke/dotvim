@@ -302,12 +302,14 @@ endfunc
 " npx vitest run ./node/inline-edit/inline-edit-app.spec.ts -t "performs inline edit on file"
 func! JS_RunVitest(termType)
   let path = expand('%:p')
-  let test_ln = searchpos( '\v\sit\(', 'cnb' )[0]
-  let strInParan = matchstr( getline(test_ln), '\v\(\"\zs.{-}\ze\"' )
-  " echo strInParan
+  let test_ln = searchpos( '\vit\(', 'cnb' )[0]
+  let testName = matchstr( getline(test_ln), '\v\(\"\zs.{-}\ze\"' )
+  " echo test_ln
+  " echo testName
 
-  let Cmd = 'npx vitest run ' . path . ' -t "' . strInParan . '"'
-  let Cmd = Cmd . " && clear && jq -C . /tmp/magenta-test.log"
+  let Cmd = 'npx vitest run ' . path . ' -t "' . testName . '"'
+  let Cmd = Cmd . " && clear && echo // " . testName . " && jq -C . /tmp/magenta-test.log"
+  " let Cmd = Cmd . " && jq -C . /tmp/magenta-test.log"
   " let Cmd = "jq -C . /tmp/magenta-test.log"
 
   if     a:termType == 'float'
@@ -374,10 +376,13 @@ func! JS_SetPrinterIdentif()
 endfunc
 
 func! JS_RunPrinter( termType )
-  " compile typescript
-  " let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
-  " let cmd = "cd " . jsWd . " && tsc"
-  " let _resLines = systemlist( cmd)
+  let filepath = expand('%:p')
+  " Check if it's a test file
+  if filepath =~ '\.spec\.ts$' || filepath =~ '\.test\.ts$'
+    " Run Vitest for test files
+    call JS_RunVitest('term_float')
+    return
+  endif
 
   " https://tsx.is/typescript
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '

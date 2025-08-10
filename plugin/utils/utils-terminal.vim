@@ -30,7 +30,7 @@ nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor
 
 nnoremap <silent>gwj :call RunTerm_showFloat()<cr>
 nnoremap <silent>gwJ :call RunTerm_parag_showFloat()<cr>
-nnoremap <silent>,gwj :call TermOneShotFloat( getline('.') )<cr>
+nnoremap <silent>,gwj :call TermOneShotFloat( getline('.'), 'term_float' )<cr>
 " nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
 
@@ -330,6 +330,19 @@ tnoremap <c-w>l <C-\><C-n><c-w>l
 tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
 nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
 tnoremap <c-w>c <C-\><C-n>:bw!<cr>
+
+" tnoremap <c-cr> <a-cr>
+" tnoremap <c-cr> <C-\><C-n>:echo 'got it'<cr>
+tnoremap <c-cr> <C-\><C-n>:echo 'got it'<cr>
+tnoremap <s-cr> <C-\><C-n>:echo 'got shift it'<cr>
+" tnoremap <cr> got_it
+" tnoremap <c-cr> <C-\><C-n>:echo 'got it'<cr>i
+" tnoremap <s-cr> <C-v><C-j>
+" tnoremap <c-cr> <C-v><C-j>
+" silent! tunmap <s-cr>
+" silent! tunmap <c-cr>
+
+
 
 command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
 

@@ -255,7 +255,7 @@ end
 
 
 -- ─   Mappings                                          ■
-vim.keymap.set( 'n', '<leader>ts', Tab_UserSetName )
+vim.keymap.set( 'n', '<leader><leader>ts', Tab_UserSetName )
 vim.keymap.set( 'n', '<leader>tS', persist_reset )
 vim.keymap.set( 'n', '<leader>tu', Tab_toggle_hide )
 vim.keymap.set( 'n', '<leader>tU', Tabs_all_toggle_hide )

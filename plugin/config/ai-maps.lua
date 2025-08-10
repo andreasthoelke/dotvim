@@ -167,8 +167,8 @@ end)
 -- require('claude_code').aider_buf
 
 -- Lines breaks in claude-code and terminal buffers!
-vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
-vim.api.nvim_set_keymap('t', '<S-CR>', '<A-CR>', {noremap = true})
+-- vim.api.nvim_set_keymap('t', '<C-CR>', '<A-CR>', {noremap = true})
+-- vim.api.nvim_set_keymap('t', '<S-CR>', '<A-CR>', {noremap = true})
 -- vim.api.nvim_set_keymap('t', '<c-CR>', '<C-\\><C-n>i[control-ENTER PRESSED]<C-\\><C-n>a', {noremap = true})
 -- vim.api.nvim_set_keymap('t', '<S-CR>', '<C-\\><C-n>i[SHIFT-ENTER PRESSED]<C-\\><C-n>a', {noremap = true})
 

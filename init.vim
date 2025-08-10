@@ -469,7 +469,7 @@ Plug 'dnlhc/glance.nvim'
 
 Plug 'b0o/SchemaStore.nvim'
 
-Plug 'scalameta/nvim-metals'
+" Plug 'scalameta/nvim-metals'
 
 " Plug 'derekwyatt/vim-scala'
 
@@ -493,7 +493,7 @@ Plug 'cuducos/yaml.nvim'
 " Plug 'maxmellon/vim-jsx-pretty'
 
 " Plug 'mityu/vim-applescript'
-Plug 'vmchale/dhall-vim'
+" Plug 'vmchale/dhall-vim'
 " I think tree-sitter is now handling this?
 
 Plug 'inkarkat/vim-SyntaxRange'
@@ -594,6 +594,12 @@ Plug 'jszakmeister/markdown2ctags'
 " Plug 'rescript-lang/vim-rescript'
 " Plug 'nkrkv/nvim-treesitter-rescript'
 
+Plug 'nvim-lua/plenary.nvim'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'nvim-neotest/neotest'
+Plug 'marilari88/neotest-vitest'
+
 " ─   Repl IDE features                               ■
 
 " Plug 'sillybun/vim-repl'
@@ -606,7 +612,7 @@ Plug 'is0n/jaq-nvim'
 " Plug 'andreasthoelke/intero-neovim'
 
 " Plug 'Twinside/vim-hoogle'
-Plug 'andreasthoelke/vim-hoogle'
+" Plug 'andreasthoelke/vim-hoogle'
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " Plug 'goolord/vim2hs'
@@ -621,9 +627,9 @@ Plug 'andreasthoelke/vim-hoogle'
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
 " TODO this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
 " Plug 'enomsg/vim-haskellConcealPlus'
-Plug 'eagletmt/ghcmod-vim', {'for': 'haskell'}
+" Plug 'eagletmt/ghcmod-vim', {'for': 'haskell'}
 " Plug 'eagletmt/ghcmod-vim'
-Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
+" Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plug 'Shougo/vimproc.vim', {'do': 'make'}
 

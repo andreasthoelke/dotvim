@@ -23,13 +23,11 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
 
 
-  " nnoremap <silent><buffer>         gei :call System_Float( JS_EvalParagIdentif_simple() )<cr>
   nnoremap <silent><buffer>         gei :call JS_RunPrinter( "float" )<cr>
   nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
   nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
   nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
 
-  " nnoremap <silent><buffer>         get :call JS_RunVitest( "float" )<cr>
   nnoremap <silent><buffer>         get :call JS_RunVitest( "term_float" )<cr>
   nnoremap <silent><buffer>         geT :call JS_RunVitest( "term" )<cr>
   nnoremap <silent><buffer>         ,get :call JS_RunVitest( "term_float" )<cr>
@@ -203,6 +201,7 @@ endfunc
 " echo 'eiens' =~ '^e' && 'eins' !~ 'a'
 
 
+" only used in search_mainPatterns
 func! JS_TopLevPattern()
   let patterns = [
         \ 'function ',
@@ -321,6 +320,7 @@ let g:JS_patterns = [
       \ 'static\sasync\s\zs\i',
       \ 'private\sasync\s\zs\i',
       \ '^enum',
+      \ 'it\(\"',
       \ '^export const\s\zs\i',
       \ '^const\s\zs\i',
       \ '^(export\s)?(\s\s)?(\s\s)?function\s\zs\i',
