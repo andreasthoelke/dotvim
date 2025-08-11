@@ -336,10 +336,58 @@ func! JS_RunVitest(termType)
 
     " call TermOneShot_FloatBuffer( Cmd, 'otherWinColumn' )
   endif
-
-
 endfunc
 
+func! JsonL_GetField(path, lineKey, lineVal, colKey)
+  " Check if file exists
+  if !filereadable(a:path)
+    return ''
+  endif
+
+  " Read the file line by line
+  let lines = readfile(a:path)
+
+  " Process each line
+  for line in lines
+    try
+      " Parse JSON line
+      let json_obj = json_decode(line)
+
+      " Check if the lineKey exists and matches lineVal
+      if has_key(json_obj, a:lineKey) && json_obj[a:lineKey] == a:lineVal
+        " Return the value of colKey as JSON string if it exists
+        if has_key(json_obj, a:colKey)
+          return json_encode(json_obj[a:colKey])
+        else
+          return ''
+        endif
+      endif
+    catch
+      " Skip lines that can't be parsed as JSON
+      continue
+    endtry
+  endfor
+
+  " Return empty string if no matching line found
+  return ''
+endfunc
+
+
+" insp({ buffer })
+" insp({ "buffer": abc.some })
+
+func! JS_ShowVitestInsp()
+  let path = "/tmp/magenta-test.log"
+  let msgName = matchstr( getline('.'), '\vinsp\(\{\s*"?\zs\i*\ze"?\W' )
+
+  let val = JsonL_GetField(path, 'message', msgName, 'data')
+  silent let g:floatWin_win = FloatingSmallNew ( [val], 'cursor' )
+  exec '%!jq'
+  set syntax=json
+  call TsSyntaxAdditions()
+  silent call FloatWin_FitWidthHeight()
+
+endfunc
 
 
 " ─   05-2024 standalone approach                        ■

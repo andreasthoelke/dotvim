@@ -172,7 +172,7 @@ endfunc
 " InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
 " note the map in git integration
-" nnoremap <silent> ,,w :call BufferInnerBracket()<cr>
+nnoremap <silent> ,,w :call BufferInnerBracket()<cr>
 
 func! BufferInnerBracket()
   let [oLine, oCol] = getpos('.')[1:2]

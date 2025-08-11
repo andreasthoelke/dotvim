@@ -22,10 +22,11 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> gef :call T_Refetch("Client")<cr>
   " nnoremap <silent><buffer> gei :call T_Refetch("Printer")<cr>
 
+  nnoremap <silent><buffer>         gei :call JS_ShowVitestInsp()<cr>
 
-  nnoremap <silent><buffer>         gei :call JS_RunPrinter( "float" )<cr>
-  nnoremap <silent><buffer> <leader>gei :call JS_RunPrinter( "term"  )<cr>
-  nnoremap <silent><buffer>        ,gei :call JS_RunPrinter( "term_float"  )<cr>
+  nnoremap <silent><buffer>         gej :call JS_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer> <leader>gej :call JS_RunPrinter( "term"  )<cr>
+  nnoremap <silent><buffer>        ,gej :call JS_RunPrinter( "term_float"  )<cr>
   nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
 
   nnoremap <silent><buffer>         get :call JS_RunVitest( "term_float" )<cr>
@@ -62,6 +63,9 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <leader>et :call CreateInlineTestDec_js('normal')<cr>
   nnoremap <silent><buffer> <leader>eT :call CreateInlineTestDec_js('async')<cr>
   nnoremap <silent><buffer> <leader>ev :call CreateInlineTestDec_js_nvim()<cr>
+
+  nnoremap <silent><buffer> <leader>ei :call CreateInlineInspect('normal')<cr>
+  nnoremap <silent><buffer> <leader>eI :call CreateInlineInspect('keyed')<cr>
 
   " nnoremap <silent><buffer> gsf :call tools_edgedb#queryAllObjectFieldsTablePermMulti( expand('<cword>') )<cr>
 
