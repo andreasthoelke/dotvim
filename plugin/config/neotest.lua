@@ -3,6 +3,9 @@ vim.keymap.set("n", "<leader>tn", function() require("neotest").run.run() end) -
 vim.keymap.set("n", "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end) -- file
 vim.keymap.set("n", "<leader>ts", function() require("neotest").summary.toggle() end) -- summary window
 
+-- ~/.config/nvim/plugged/neotest-vitest/lua/neotest-vitest/init.lua
+-- plugged/neotest-vitest
+-- plugged/neotest/
 
 require("neotest").setup({
   adapters = {
@@ -10,6 +13,7 @@ require("neotest").setup({
       -- Filter directories when searching for test files. Useful in large projects (see Filter directories notes).
       filter_dir = function(name, rel_path, root)
         return name ~= "node_modules"
+          and name ~= "plugged"
       end,
     },
   },
@@ -57,16 +61,16 @@ require("neotest").setup({
     child_prefix = "├",
     collapsed = "─",
     expanded = "╮",
-    failed = "",
+    failed = "x",
     final_child_indent = " ",
     final_child_prefix = "╰",
     non_collapsible = "─",
     notify = "",
-    passed = "",
+    passed = "•",
     running = "",
     running_animated = { "/", "|", "\\", "-", "/", "|", "\\", "-" },
-    skipped = "",
-    unknown = "",
+    skipped = ".",
+    unknown = "╴",
     watching = ""
   },
   jump = {
@@ -118,10 +122,10 @@ require("neotest").setup({
       clear_target = "T",
       debug = "d",
       debug_marked = "D",
-      expand = { "<CR>", "<2-LeftMouse>" },
+      expand = { "i", "<CR>", "<2-LeftMouse>" },
       expand_all = "e",
       help = "?",
-      jumpto = "i",
+      jumpto = "p",
       mark = "m",
       next_failed = "<leader>J",
       output = "o",

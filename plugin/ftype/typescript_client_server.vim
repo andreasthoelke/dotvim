@@ -307,6 +307,8 @@ func! JS_RunVitest(termType)
   " echo test_ln
   " echo testName
 
+  call system( 'del "/tmp/magenta-test.log"' )
+
   let Cmd = 'npx vitest run ' . path . ' -t "' . testName . '"'
   let Cmd = Cmd . " && clear && echo // " . testName . " && jq -C . /tmp/magenta-test.log"
   " let Cmd = Cmd . " && jq -C . /tmp/magenta-test.log"

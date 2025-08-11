@@ -108,6 +108,33 @@ hi(0, "TdbVar", { bg = "#EAEDF0", fg = "#7A979A", italic = true })
 -- ─^  TypeDB                                            ▲
 
 
+-- ─   Neotest                                           ■
+
+-- NeotestPassed String
+hi(0, "NeotestPassed", { link = "String" })
+-- NeotestFailed @lsp.typemod.variable.local.typescript
+hi(0, "NeotestFailed", { link = "@lsp.typemod.variable.local.typescript" })
+-- NeotestRunning @lsp.type.parameter.typescript
+hi(0, "NeotestRunning", { link = "@lsp.type.parameter.typescript" })
+-- NeotestSkipped Comment
+hi(0, "NeotestSkipped", { link = "Comment" })
+
+-- NeotestAdapterName CommentMinus
+hi(0, "NeotestAdapterName", { link = "CommentMinus" })
+-- NeotestDir Function
+hi(0, "NeotestDir", { link = "Function" })
+-- NeotestFile Function
+hi(0, "NeotestFile", { link = "Trait" })
+-- NeotestNamespace @lsp.typemod.member.async.typescript
+hi(0, "NeotestNamespace", { link = "TdbAttribute" })
+hi(0, "NeotestTest", { link = "Comment" })
+
+
+
+-- ─^  Neotest                                           ▲
+
+
+
 
 -- ─^  New Colors                                        ▲
 
