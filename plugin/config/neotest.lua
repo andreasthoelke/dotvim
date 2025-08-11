@@ -6,6 +6,9 @@ vim.keymap.set("n", "<leader>ts", function() require("neotest").summary.toggle()
 -- ~/.config/nvim/plugged/neotest-vitest/lua/neotest-vitest/init.lua
 -- plugged/neotest-vitest
 -- plugged/neotest/
+-- lua require("neotest").jump.next()
+
+-- lua require("neotest").summary.jumpto()
 
 require("neotest").setup({
   adapters = {
