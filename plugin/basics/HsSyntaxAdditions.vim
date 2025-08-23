@@ -69,7 +69,7 @@ au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
 au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
 au ag FileType markdown,codecompanion,mcphub call MarkdownBufferMaps()
 
-au ag BufWinEnter * if &ft == "neotest-summary" | call NeotestBufferMaps() | endif
+" au ag BufWinEnter * if &ft == "neotest-summary" | call NeotestBufferMaps() | endif
 
 au ag BufWinEnter * if &ft == "magenta" | call MagentaBufferMaps() | endif
 

@@ -132,6 +132,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal '^{' conceal
   syntax match Normal '^}' conceal
 
+  syntax match Normal 'insp' conceal cchar=✱
+
   " JSDoc comments
   syntax match Normal "\/\*\*" conceal
   syntax match Normal "\/\*\*\s" conceal

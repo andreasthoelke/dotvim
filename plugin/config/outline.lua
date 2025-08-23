@@ -20,7 +20,7 @@ require("outline").setup(
       -- outline window. Eg, 'rightbelow vsplit'.
       -- Width can be included (with will override the width setting below):
       -- Eg, `topleft 20vsp` to prevent a flash of windows when resizing.
-      split_command = nil,
+      split_command = "botright 20vsp",
 
       -- Percentage or integer of columns
       width = 22,
@@ -212,7 +212,7 @@ require("outline").setup(
       },
       markdown = {
         -- List of supported ft's to use the markdown provider
-        filetypes = {'markdown'},
+        filetypes = {'markdown', 'magenta'},
       },
     },
 

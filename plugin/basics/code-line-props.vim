@@ -352,7 +352,13 @@ func! GetPath_fromLine()
       return expand(full_line)
     endif
   endif
-  
+
+" ─     Folder paths in md files                        ──
+" notes this a folder path now needs to contain a "/", e.g. 
+" ./plugin
+" or
+" lua/utils
+
   let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
   let line_words = line_words->split()
   " Filter to only words that contain a "." or "/"

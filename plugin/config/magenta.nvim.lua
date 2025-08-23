@@ -58,7 +58,7 @@ require('magenta').setup({
       fastModel = "gpt-5-mini",
       apiKeyEnvVar = "OPENAI_API_KEY",
       reasoning = {
-        effort = "medium",
+        effort = "high",
         summary = "auto"
       }
 
@@ -75,7 +75,7 @@ require('magenta').setup({
       model = "o3",
       apiKeyEnvVar = "OPENAI_API_KEY",
       reasoning = {
-        effort = "medium",
+        effort = "high",
         summary = "auto"
       }
     },
@@ -96,6 +96,30 @@ require('magenta').setup({
   },
   -- open chat sidebar on left or right side
   sidebarPosition = "right",
+
+  sidebarPositionOpts = {
+    above = {
+      displayHeightPercentage = 0.3,
+      inputHeightPercentage = 0.1,
+    },
+    below = {
+      displayHeightPercentage = 0.3,
+      inputHeightPercentage = 0.1,
+    },
+    tab = {
+      displayHeightPercentage = 0.8,
+    },
+    left = {
+      widthPercentage = 0.4,
+      displayHeightPercentage = 0.8,
+    },
+    right = {
+      widthPercentage = 0.25,
+      displayHeightPercentage = 0.8,
+    }
+  },
+
+
   -- can be changed to "telescope" or "snacks"
   -- picker = "fzf-lua",
   picker = "telescope",

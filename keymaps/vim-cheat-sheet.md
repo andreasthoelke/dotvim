@@ -476,8 +476,39 @@ close = { "q" },
 close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
 
 
+# python uv & printer.py setup [2025-08]
 
-# ipython repl
+uv init
+uv run hello.py
+cp ~/Documents/Proj/k_mindgraph/b_yf_n4/a_bnd_py_basic/.gitignore .
+
+git init
+git add *
+git commit -m 'initial commit'
+git add .gitignore
+git commit -m 'gitignore'
+
+gh repo create f_dspy --source=. --private
+git push --set-upstream origin main
+
+mkdir app
+touch app/__init__.py
+
+cp ~/Documents/Proj/k_mindgraph/_temp/langextract/printer.py app
+cp ~/Documents/Proj/k_mindgraph/_temp/langextract/langextract/_scratch/a_basic.py app
+
+Here's a cleaned up (no printer_img.py, was needed for langgrap)
+version of printer.py:
+~/Documents/Proj/k_mindgraph/_temp/langextract/printer.py
+and a basic starter file:
+~/Documents/Proj/k_mindgraph/_temp/langextract/langextract/_scratch/a_basic.py
+note the 
+_scatch/__init__.py
+is needed to allow this import in printer.py
+from langextract._scratch.a_basic import e2_ab as symToEval
+
+
+## ipython repl
 <leader>ro   - open the repl / <leader>gq to quit
 gep          - paste the code paragrah into the repl
 (v)gep       - paste the vis-sel lines into the repl
@@ -556,7 +587,6 @@ geev   - voyager schema explorer
 
 ## printer
 <leader>et  - creates an exported lazy identif (stub)
-gej         - sets an printer identif (and runs it right away) see: ~/Documents/Proj/g_ts_gql/d_typescript_review/scratch/.testPrinter.ts‖:1:1
 gei         - refetches the currentl set identif
 
 ## gql client server

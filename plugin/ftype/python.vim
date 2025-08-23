@@ -23,8 +23,13 @@ func! Py_bufferMaps()
 
   nnoremap <silent><buffer> <leader>es  :call Py_AddSignature()<cr>
 
-  nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
-  nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
+  " nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
+  " nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
+
+  nnoremap <silent><buffer>         gej :call Py_RunPrinter( "float" )<cr>
+  nnoremap <silent><buffer> <leader>gej :call Py_RunPrinter( "term"  )<cr>
+  nnoremap <silent><buffer>        ,gej :call Py_RunPrinter( "term_float"  )<cr>
+  nnoremap <silent><buffer>         geh :call Py_RunPrinter( "term_hidden"  )<cr>
 
   " nnoremap <silent><buffer>         gej :call Py_RunPrinter( "float" )<cr>
   " nnoremap <silent><buffer> <leader>gej :call Py_RunPrinter( "term"  )<cr>
@@ -497,18 +502,50 @@ endfunc
 
 func! Py_RunPrinter( termType )
 
-  let cmd = "python " . Py_GetPrinterPath()
+  let Cmd = "python " . Py_GetPrinterPath()
   let isUVProject = filereadable( getcwd() . '/pyproject.toml' )
-  let cmd = isUVProject ? "uv run " . cmd : cmd
+  let Cmd = isUVProject ? "uv run " . Cmd : Cmd
 
   if     a:termType == 'float'
-    let resLines = systemlist( cmd )
-    call Py_showInFloat( resLines )
+    let resLines = systemlist( Cmd )
+    let resLines = RemoveTermCodes( resLines )
+    if !len( resLines )
+      echo 'done'
+      return
+    endif
+
+    silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
+    call PythonSyntaxAdditions() 
+    silent call FloatWin_FitWidthHeight()
+    if len( resLines ) > 10
+      normal! zM
+    endif
+    silent wincmd p
 
   elseif a:termType == 'term'
-    call TermOneShot( cmd )
+    call TermOneShot( Cmd )
+  elseif a:termType == 'term_hidden'
+    call TermOneShot( Cmd )
+    silent wincmd c
+  elseif a:termType == 'term_float'
+    call FloatingTerm( 'otherWinColumn' )
+    let g:TermID = termopen( Cmd )
+    call PythonSyntaxAdditions() 
+    " TODO more useful result maps
+    nnoremap <silent><buffer> <c-n> :call search('message', 'W')<cr>
+    nnoremap <silent><buffer> <c-p> :call search('message', 'bW')<cr>
 
+    " call TermOneShot_FloatBuffer( Cmd, "otherWinColumn" )
   endif
+
+
+  " if     a:termType == 'float'
+  "   let resLines = systemlist( cmd )
+  "   call Py_showInFloat( resLines )
+  " elseif a:termType == 'term'
+  "   call TermOneShot( cmd )
+  " endif
+
 endfunc
 " filereadable( getcwd() . '/pyproject.toml' )
 " Py_GetPrinterPath()

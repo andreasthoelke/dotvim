@@ -82,6 +82,7 @@ nnoremap <silent><leader>ogC <cmd>Git commit<cr>
 function! SetupGitCommitMappings()
     " Save and close mapping
     nnoremap <buffer><silent> <c-w><cr> :w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>
+    inoremap <buffer><silent> <c-w><cr> <esc>:w<cr>:call T_DelayedCmd("wincmd c", 50)<cr>
     
     " You can add other git commit specific mappings here
     " nnoremap <buffer><silent> <c-w>q :wq<cr>

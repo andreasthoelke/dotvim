@@ -598,6 +598,9 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'nvim-neotest/neotest'
+Plug 'nvim-neotest/neotest-jest'
+" https://github.com/nvim-neotest/neotest-python
+Plug 'nvim-neotest/neotest-python'
 Plug 'marilari88/neotest-vitest'
 
 " ─   Repl IDE features                               ■

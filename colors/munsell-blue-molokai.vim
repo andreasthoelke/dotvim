@@ -1345,6 +1345,7 @@ hi(0, "NeotestFile", { link = "Identifier" })
 -- NeotestNamespace @lsp.typemod.member.async.typescript
 hi(0, "NeotestNamespace", { link = "TdbAttribute" })
 hi(0, "NeotestTest", { link = "Comment" })
+
 hi(0, "NeotestIndent", { link = "CommentMinusMinus" })
 hi(0, "NeotestExpandMarker", { link = "CommentMinusMinus" })
 hi(0, "NeotestUnknown", { link = "CommentMinusMinus" })

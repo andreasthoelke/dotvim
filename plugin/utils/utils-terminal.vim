@@ -181,6 +181,7 @@ let g:TermOneShotCBs = {
       \ 'on_exit': function('TermOneShotCB_exit')
       \ }
 
+" NOTE: Use FloatingTerm() - i seem to prefer this one instead ~/.config/nvim/plugin/utils/floatingWin.vim‖/FloatingTermˍ(...)
 " NOTE this one keeps appending lines to a floating buffer. while TermOneShot is a term buffer
 func! TermOneShot_FloatBuffer( cmd, pos )
   " echo "Running terminal command .."

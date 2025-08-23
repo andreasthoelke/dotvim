@@ -1,7 +1,13 @@
 
 
+augroup NeotestMappings
+  autocmd!
+  autocmd BufWinEnter,FileType * if &ft == "neotest-summary" | call NeotestBufferMaps() | endif
+  autocmd FileType neotest-summary call NeotestBufferMaps()
+augroup END
+
+
 func! NeotestBufferMaps()
-  echo 'ft event'
   nnoremap <silent><buffer> P  :call Neotest_JumpToTestFile_back()<cr>
 endfunc
 

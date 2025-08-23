@@ -129,6 +129,9 @@ hi(0, "NeotestFile", { link = "Trait" })
 hi(0, "NeotestNamespace", { link = "TdbAttribute" })
 hi(0, "NeotestTest", { link = "Comment" })
 
+hi(0, "NeotestIndent", { link = "LightLine" })
+hi(0, "NeotestExpandMarker", { link = "LightLine" })
+hi(0, "NeotestUnknown", { link = "Comment" })
 
 
 -- ─^  Neotest                                           ▲
@@ -221,6 +224,9 @@ hi(0, "CommentSection", { bg = "#ebebeb", fg = "#7a9aa6" })
 hi(0, "CommentMinus", { fg = "#6D858F" })
 -- hi(0, "Comment", { fg = "#95afb8" })
 hi(0, "Comment", { fg = "#86A3AE" })
+hi(0, "CommentLight", { fg = "#9EC0CD" })
+
+hi(0, "LightLine", { fg = "#BDC9CE" })
 
 -- hi(0, "CommentMinus", { fg = "#2A3437" })
 

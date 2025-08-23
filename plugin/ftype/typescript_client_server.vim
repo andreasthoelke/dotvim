@@ -307,10 +307,13 @@ func! JS_RunVitest(termType)
   " echo test_ln
   " echo testName
 
+  " let escapedTestName = substitute(testName, "'", "'\\'", 'g')
+  let escapedTestName = shellescape(testName)
+
   call system( 'del "/tmp/magenta-test.log"' )
 
-  let Cmd = 'npx vitest run ' . path . ' -t "' . testName . '"'
-  let Cmd = Cmd . " && clear && echo // " . testName . " && jq -C . /tmp/magenta-test.log"
+  let Cmd = 'npx vitest run ' . path . ' -t "' . escapedTestName . '"'
+  let Cmd = Cmd . " && clear && echo '\n\n// == output =======' && echo // " . escapedTestName . " && jq -C . /tmp/magenta-test.log"
   " let Cmd = Cmd . " && jq -C . /tmp/magenta-test.log"
   " let Cmd = "jq -C . /tmp/magenta-test.log"
 
@@ -457,7 +460,14 @@ func! JS_RunPrinter( termType )
     call TermOneShot( Cmd )
     silent wincmd c
   elseif a:termType == 'term_float'
-    call TermOneShot_FloatBuffer( Cmd )
+    call FloatingTerm( 'otherWinColumn' )
+    let g:TermID = termopen( Cmd )
+    call TsSyntaxAdditions()
+    " TODO more useful result maps
+    nnoremap <silent><buffer> <c-n> :call search('message', 'W')<cr>
+    nnoremap <silent><buffer> <c-p> :call search('message', 'bW')<cr>
+
+    " call TermOneShot_FloatBuffer( Cmd, "otherWinColumn" )
   endif
 
   if reset_needed
