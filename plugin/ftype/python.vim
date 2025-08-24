@@ -23,6 +23,7 @@ func! Py_bufferMaps()
 
   nnoremap <silent><buffer> <leader>es  :call Py_AddSignature()<cr>
 
+  " TODO: gei should be analogous to the TS vitest features
   " nnoremap <silent><buffer>         gei :call Py_RunPrinter( "float" )<cr>
   " nnoremap <silent><buffer> <leader>gei :call Py_RunPrinter( "term"  )<cr>
 

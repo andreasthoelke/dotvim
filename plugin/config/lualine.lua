@@ -107,6 +107,7 @@ local function inactiveWinbarColor()
 end
 
 
+-- TODO this is outdated since i'm now mostly using uv. 
 local virtual_env = function()
   -- only show virtual env for Python
   if vim.bo.filetype ~= 'python' then
@@ -289,7 +290,7 @@ local lualine_config = {
       },
       -- { "lsp_progress" },
       -- { "g:metals_status" },
-      virtual_env,
+      -- virtual_env,
     },
     lualine_y = { lineNum },
     lualine_z = { 'LightlineScrollbar' },

@@ -2040,10 +2040,11 @@ _
 _
 \t] - TabmoveRight /Left (this works with . repeat command!)
 
-## copy file path and links
-<leader>cp/P   - copy global (un)shortend path
-<leader>cl     - copy cwd local path
-<leader>cs     - copy file link
+## copy file path and links [2025-08]
+<leader>cp/P           - copy filepath local/global
+<leader>cl/L           - copy linkPath local/global
+<leader><leader>cl/L   - copy linkPath linepos local/global
+<leader>cs             - (deprecate)
 
 ## copy, move, delete files / buffers
 <leader>db   - delete the current buffer (:bd<cr>)

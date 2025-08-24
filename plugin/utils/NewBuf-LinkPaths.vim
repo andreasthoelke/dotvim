@@ -10,33 +10,42 @@
 " nnoremap <silent> <leader>cp  :call ClipBoard_LinkPath_plain  ( "global" )<cr>
 " nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "local" )<cr>
 
-nnoremap <silent> <leader>cp  :call CopyRelativePathToClipboard('')<cr>
-nnoremap <silent> <leader>cP  :call CopyGlobalPathToClipboard()<cr>
+" nnoremap <silent> <leader>cp  :call CopyRelativePathToClipboard_old('')<cr>
+" nnoremap <silent> <leader>cP  :call CopyGlobalPathToClipboard()<cr>
+
+nnoremap <silent> <leader>cp  :call ClipBoard_path_new('local')<cr>
+nnoremap <silent> <leader>cP  :call ClipBoard_path_new('glocal')<cr>
+
+nnoremap <silent> <leader>cl  :call ClipBoard_LinkPath_new('local')<cr>
+nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_new('glocal')<cr>
+nnoremap <silent> <leader><leader>cl  :call ClipBoard_LinePos_new('local')<cr>
+nnoremap <silent> <leader><leader>cL  :call ClipBoard_LinePos_new('glocal')<cr>
 
 " nnoremap <silent> <leader>cP  :call ClipBoard_LinkPath_plain  ( "full" )<cr>
-nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
+" nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "shorten" )<cr>
 " nnoremap <silent> <leader>cL  :call ClipBoard_LinkPath_linepos  ( "full" )<cr>
-nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
-nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
 
-" what is this for? ..
-nnoremap <silent> <leader>ct                  :call ClipBoard_LinkPath_makeLocal()<cr>
-nnoremap <silent> <leader>cl                  :call ClipBoard_LinkPath_makeLocal()<cr>
-nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsolute( "shorten" )<cr>
-nnoremap <silent> <leader><leader><leader>ct  :call ClipBoard_LinkPath_makeAbsolute( "full" )<cr>
+" nnoremap <silent> <leader>cs  :call ClipBoard_LinkPath_linesearch  ( "shorten" )<cr>
+" nnoremap <silent> <leader>cS  :call ClipBoard_LinkPath_linesearch  ( "full" )<cr>
+nnoremap <silent> <leader>cs  :echo 'use leader cl'<cr>
+
+" nnoremap <silent> <leader>ct                  :call ClipBoard_LinkPath_makeLocal()<cr>
+" nnoremap <silent> <leader>cl                  :call ClipBoard_LinkPath_makeLocal()<cr>
+" nnoremap <silent> <leader><leader>ct          :call ClipBoard_LinkPath_makeAbsolute( "shorten" )<cr>
+" nnoremap <silent> <leader><leader><leader>ct  :call ClipBoard_LinkPath_makeAbsolute( "full" )<cr>
 
 func! ClipBoard_LinkPath_makeLocal()
   let [path; maybeLinkExt] = @*->split('‖')
   let relPath = fnamemodify( path, ":.")
   let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
-  call ClipBoard_LinkPath( relPath, linkExt, "don't shorten" )
+  call ClipBoard_LinkPath_old( relPath, linkExt, "don't shorten" )
 endfunc
 
 func! ClipBoard_LinkPath_makeAbsolute( shorten )
   let [path; maybeLinkExt] = @*->split('‖')
   let relPath = fnamemodify( path, ":p")
   let linkExt = len( maybeLinkExt ) ? maybeLinkExt[0] : ""
-  call ClipBoard_LinkPath( relPath, linkExt, a:shorten )
+  call ClipBoard_LinkPath_old( relPath, linkExt, a:shorten )
 endfunc
 
 func! CopyGlobalPathToClipboard()
@@ -60,9 +69,11 @@ func! CopyGlobalPathToClipboard()
 endfunc
 
 
-func! CopyRelativePathToClipboard(path)
+
+" deprecated
+func! CopyRelativePathToClipboard_old(path)
     " Get the current working directory of the window
-    let l:cwd = getcwd(-1, 0)
+    " let l:cwd = getcwd(-1, 0)
     
     if len( a:path )
       let l:full_path = a:path
@@ -103,7 +114,7 @@ endfunc
 
 func! ClipBoard_LinkPath_linepos( shorten )
   let linkExtension = ":" . line('.') . ":" . col('.')
-  call ClipBoard_LinkPath( expand('%:p'), linkExtension, a:shorten )
+  call ClipBoard_LinkPath_old( expand('%:p'), linkExtension, a:shorten )
 endfunc
 
 func! LinkPath_linepos()
@@ -138,24 +149,25 @@ func! AlternateFileLoc_info()
 endfunc
 
 
-" TODO why not use: (?) ~/.config/nvim/plugin/utils/NewBuf-LinkPaths.vim‖/LinkPath_get()
-func! ClipBoard_LinkPath_linesearch( shorten )
+
+" deprecated. use ClipBoard_LinkPath_new
+func! ClipBoard_LinkPath_linesearch_old( shorten )
   let filePath = expand('%:p')
   let lineStr = getline('.')
   if lineStr =~ '─'
     let searchStr = GetHeadingTextFromHeadingLine( line('.') )
     " NOTE: i use the 3 whitespace placeholders to have the link point to the header start, not the end which has an additional ^
-    call ClipBoard_LinkPath( filePath, "*ˍˍˍ" . searchStr, a:shorten )
+    call ClipBoard_LinkPath_old( filePath, "*ˍˍˍ" . searchStr, a:shorten )
   else
     let searchStr = lineStr->LineSearchStr_skipLeadingKeywords()->LineSearch_makeShortUnique_orWarn()
-    call ClipBoard_LinkPath( filePath, "/" . searchStr, a:shorten )
+    call ClipBoard_LinkPath_old( filePath, "/" . searchStr, a:shorten )
   endif
 endfunc
 " FOR TESTING GO: ~/.config/nvim/plugin/utils/NewBuf-LinkPaths.vim‖/NOTE:ˍthisˍ
 " ClipBoard_LinkPath_linesearch( 'shorten' )
 " echo ClipBoard_LinkPath_linesearch( 'full' )
 
-func! ClipBoard_LinkPath( path, linkExtension, shorten )
+func! ClipBoard_LinkPath_old( path, linkExtension, shorten )
   set clipboard=unnamedplus
   let path = a:shorten != 'shorten' ? a:path : substitute( a:path, '/Users/at/', '~/', 'g' )
   if len( a:linkExtension )
@@ -171,6 +183,59 @@ func! ClipBoard_LinkPath( path, linkExtension, shorten )
   if len( a:linkExtension ) | echom 'ext:' a:linkExtension | endif
 endfunc
 " ClipBoard_LinkPath( getcwd(), '" ─   Link paths                                        ──', 'shorten')
+
+
+
+func! ClipBoard_LinkPath_new( path_type )
+  let [abs_path, linkExt] = LinkPath_as_tuple()
+  if a:path_type == 'local'
+    let path = GetRelativePathToWindow( abs_path )
+  else
+    let path = abs_path
+  endif
+
+  let linkpath = path . linkExt
+  call SetClipboard(linkpath)
+  echom 'path:' path
+  echom 'ext:' linkExt
+endfunc
+
+func! ClipBoard_path_new( path_type )
+  " Get the full path of the current buffer
+  let l:full_path = expand('%:p')
+  " Convert to ~ path if it's in the home directory
+  let l:shortened_path = fnamemodify(l:full_path, ':~')
+
+  if a:path_type == 'local'
+    let path = GetRelativePathToWindow( l:shortened_path )
+  else
+    let path = l:shortened_path
+  endif
+
+  call SetClipboard(path)
+  echom path
+endfunc
+
+
+func! ClipBoard_LinePos_new( path_type )
+  " Get the full path of the current buffer
+  let l:full_path = expand('%:p')
+  " Convert to ~ path if it's in the home directory
+  let l:shortened_path = fnamemodify(l:full_path, ':~')
+
+  if a:path_type == 'local'
+    let path = GetRelativePathToWindow( l:shortened_path )
+  else
+    let path = l:shortened_path
+  endif
+
+  let linkExt = ":" . line('.') . ":" . col('.')
+
+  let linkpath = path . linkExt
+  call SetClipboard(linkpath)
+  echom 'path:' path
+  echom 'ext:' linkExt
+endfunc
 
 
 func! LinkPath_get()
@@ -319,7 +384,32 @@ endfunc
 
 
 
+" ─   Helpers                                           ──
 
+function! GetRelativePathToWindow(filepath) abort
+    let l:win_cwd = getcwd(winnr())
+    
+    " Default to current buffer if no filepath provided
+    let l:target = empty(a:filepath) ? expand('%') : a:filepath
+    let l:full_path = fnamemodify(l:target, ':p')
+    
+    if stridx(l:full_path, l:win_cwd) == 0
+        let l:relative = strpart(l:full_path, len(l:win_cwd) + 1)
+    else
+        let l:relative = l:full_path
+        let l:relative = fnamemodify(l:relative, ':~')
+    endif
+    
+    return l:relative
+endfunction
+
+function! SetClipboard(text) abort
+    " Set Vim's default register
+    let @" = a:text
+    let @* = a:text  " Primary selection (Linux/X11)
+    let @+ = a:text  " System clipboard
+    call system('pbcopy', a:text)
+endfunction
 
 
 
