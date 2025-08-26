@@ -126,6 +126,7 @@ require('magenta').setup({
   -- enable default keymaps shown below
   defaultKeymaps = true,
   -- maximum number of sub-agents that can run concurrently (default: 3)
+  chimeVolume = 0.0,
   maxConcurrentSubagents = 3,
   -- keymaps for the sidebar input buffer
   sidebarKeymaps = {

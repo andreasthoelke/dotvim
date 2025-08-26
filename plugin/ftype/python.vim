@@ -149,7 +149,8 @@ endfunc
 
 
 func! Py_InlineTestDec( type )
-  let func_ln = searchpos( 'def\s\(e\d_\)\@!', 'cnb' )[0]
+  let func_ln = searchpos( '^def\s\(e\d_\)\@!', 'cnb' )[0]
+  let class_ln = searchpos( 'class\s\(e\d_\)\@!', 'cnb' )[0]
 
   if getline( func_ln ) =~ "async" || a:type =~ "async"
     let async = v:true
@@ -159,6 +160,8 @@ func! Py_InlineTestDec( type )
 
   " echo matchstr( getline('.'), '\vdef\s\zs\i*\ze\(' )
   let funcName = matchstr( getline(func_ln), '\vdef\s\zs\i*\ze\(' )
+  let className = matchstr( getline(class_ln), '\vclass\s\zs\i*\ze\(' )
+  " echo className
   let strInParan = matchstr( getline(func_ln), '\v\(\zs.{-}\ze\)' )
   let paramNames = split( strInParan, ',' )
   if len( paramNames )
@@ -166,11 +169,22 @@ func! Py_InlineTestDec( type )
   endif
   let paramNames = string( paramNames )
   let paramNames = substitute( paramNames, "'", "", 'g' )
-  let paramNames = paramNames[1:-2]
+  let paramNames = paramNames[0:-1]
   let paramNames = '"'. paramNames . '"'
   " let paramNames = '"' . SubstituteInLines( split( strInParan, ',' ), '\s', '' ) . '"'
   " echo "['first', 'sec', 'third']"[1:-2]
+
   let lineText = funcName . '(' . paramNames . ')'
+
+  " echo func_ln class_ln
+  " if func_ln < class_ln then use className in place of funcName
+  if func_ln < class_ln
+    let func_ln = class_ln 
+    let funcName = className
+    let lineText = "'ab'"
+  endif
+
+
   let nextIndex = GetNextTestDeclIndex(func_ln)
   " let lineText = 'e' . nextIndex . '_' . funcName . ' = ' . lineText
   if async

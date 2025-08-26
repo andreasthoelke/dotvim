@@ -200,9 +200,9 @@ func! ClipBoard_LinkPath_new( path_type )
   echom 'ext:' linkExt
 endfunc
 
-func! ClipBoard_path_new( path_type )
+func! ClipBoard_path_new( path_type, ... )
   " Get the full path of the current buffer
-  let l:full_path = expand('%:p')
+  let l:full_path = a:0 > 0 ? a:1 : expand('%:p')
   " Convert to ~ path if it's in the home directory
   let l:shortened_path = fnamemodify(l:full_path, ':~')
 

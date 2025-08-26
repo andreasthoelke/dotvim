@@ -333,8 +333,10 @@ func! TsSyntaxAdditions ()
 
   " syntax match BlackBG '\v─\s{5}\S.*'
   " syntax match BlackBG '\v─\s{4}\S.*'
-  syntax match BlackBG '\v─\s.*'
-  syntax match BlackBG '\v─\^.*'
+  " Use matchadd() for higher priority than syntax regions
+  " Match the entire line containing the box drawing character
+  call matchadd('BlackBG', '.*─\s.*', 10)
+  call matchadd('BlackBG', '.*─\^.*', 10)
 
 endfunc
 

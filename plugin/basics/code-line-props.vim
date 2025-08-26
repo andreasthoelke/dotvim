@@ -359,7 +359,7 @@ func! GetPath_fromLine()
 " or
 " lua/utils
 
-  let line_words = substitute( getline('.'), '[\[\](){}]', ' ', 'g' ) 
+  let line_words = substitute( getline('.'), '[\[\<\>\](){}]', ' ', 'g' ) 
   let line_words = line_words->split()
   " Filter to only words that contain a "." or "/"
   let line_words = filter(line_words, 'v:val =~ "[./]"')

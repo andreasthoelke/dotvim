@@ -1009,6 +1009,20 @@ set foldenable
 set foldmethod=marker
 set foldmarker=\ ■,\ ▲
 set foldlevelstart=5
+set foldlevel=5
+
+nnoremap <leader>ft :call ToggleFoldMethod()<CR>
+
+function! ToggleFoldMethod()
+    if &foldmethod == 'expr'
+        set foldmethod=marker
+        echo "Fold method: marker"
+    else
+        set foldmethod=expr
+        echo "Fold method: expr"
+    endif
+endfunction
+
 
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
 " au ag Syntax git set foldlevel=1

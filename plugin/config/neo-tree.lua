@@ -1185,13 +1185,15 @@ require("neo-tree").setup({
         ["<leader>cp"] = function(state)
           local node = state.tree:get_node()
           local current_path = node:get_id()
-          vim.fn.CopyRelativePathToClipboard(current_path)
+          -- vim.fn.CopyRelativePathToClipboard(current_path)
+          vim.fn.ClipBoard_path_new('local', current_path)
         end,
 
         ["<leader>cP"] = function(state)
           local node = state.tree:get_node()
           local current_path = node:get_id()
-          vim.fn.ClipBoard_LinkPath( current_path, "", 'shorten' )
+          -- vim.fn.ClipBoard_LinkPath( current_path, "", 'shorten' )
+          vim.fn.ClipBoard_path_new('global', current_path)
         end,
 
         -- ["<leader>cP"] = function(state)

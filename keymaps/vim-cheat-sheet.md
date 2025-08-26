@@ -30,6 +30,8 @@
 
 
 ### Claude Code
+<c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
+\<cr>                - backslash + return is an alternative to the above. Also default behavior!
 <c-g>V               - ClaudeCodeOpen
 <c-g>S               - Claude in horizontal split
 <c-g><c-j>           - Send parrot buffer user message to Claude
@@ -277,6 +279,10 @@ gep                  - Paste paragraph to REPL
 gwj                  - Run terminal command (float)
 gwJ                  - Run paragraph as terminal command
 
+<c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
+\<cr>                - backslash + return is an alternative to the above. Also default behavior!
+
+
 ## Startup & Sessions
 ges                  - Open quick menu
 <leader>st/T         - Startify (deprecated)
@@ -478,6 +484,12 @@ close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
 
 # python uv & printer.py setup [2025-08]
 
+current version!!
+~/Documents/Proj/k_mindgraph/h_mcp/f_dspy/printer.py
+older version:
+cp ~/Documents/Proj/k_mindgraph/_temp/langextract/printer.py app
+cp ~/Documents/Proj/k_mindgraph/_temp/langextract/langextract/_scratch/a_basic.py app
+
 uv init
 uv run hello.py
 cp ~/Documents/Proj/k_mindgraph/b_yf_n4/a_bnd_py_basic/.gitignore .
@@ -493,9 +505,6 @@ git push --set-upstream origin main
 
 mkdir app
 touch app/__init__.py
-
-cp ~/Documents/Proj/k_mindgraph/_temp/langextract/printer.py app
-cp ~/Documents/Proj/k_mindgraph/_temp/langextract/langextract/_scratch/a_basic.py app
 
 Here's a cleaned up (no printer_img.py, was needed for langgrap)
 version of printer.py:
@@ -1419,7 +1428,10 @@ not ideal. I keep defining patterns (per column) here: ~/.config/nvim/plugin/uti
 <leader>eai  - add <name>0 to var name
 
 ## Folds, Folding
-i now have autofolding. but a foldlevelstart=3
+<leader>ft   - toggle `set foldermethod?` expr vs marker 
+                ~/.config/nvim/plugin/config/setup-general.vim‖*Foldingˍcode
+
+i now have autofolding. but a foldlevelstart=5
 so most folds should be expaneded when i open a file.
 i can use
 zm   - to generally (over the whole file) close one fold level to get a better overview.

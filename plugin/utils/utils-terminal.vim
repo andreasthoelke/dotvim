@@ -318,6 +318,10 @@ endfunction
 
 
 " TERMINAL MODE: ----------------------------------------------------------
+
+" <c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
+" \<cr>                - backslash + return is an alternative to the above. Also default behavior!
+
 " nnoremap <leader>af ipwd<cr><C-\><C-n>kyy:cd <c-r>"<cr>
 nnoremap <leader>af ipwd<cr><C-\><C-n>yy
 nnoremap <leader>ag :cd <c-r>"<cr>
