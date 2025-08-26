@@ -2134,6 +2134,12 @@ IDEA: could add a vis-sel as selective context for aider.
 
 # ExamplesLog.md
 <leader>oex   - show ExamplesLog.md 
+<leader>ces   - Example_SetStart
+<leader>cea   - Example_AddIdentif
+<leader>cea   - Example_AddVisSel
+
+# Frequent files quick maps
+<leader>oex   - show ExamplesLog.md 
 <leader>oel   - ExampleLinks.md
 <leader>op    - package.json
 <leader>or    - README.md
