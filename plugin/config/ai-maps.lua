@@ -424,5 +424,28 @@ vim.keymap.set("v", "<c-g><leader>a", ":<c-u>'<,'>PrtAppendFullContext<cr>", { d
 -- ─^  PARROT                                            ▲
 
 
+-- ─   LLM Visual Selection Integration                  ──
+-- Quick LLM operations on visual selections using the ai.lua module
+
+-- Main LLM menu (using <c-g>L to avoid conflict with Magenta's <c-g>l)
+vim.keymap.set('v', '<c-g>L', ':LLMMenu<CR>', { desc = 'LLM prompt menu', silent = true })
+
+-- Quick access commands with <c-g>l prefix (two-key combos)
+vim.keymap.set('v', '<c-g>lt', ':LLMTopic<CR>', { desc = 'LLM topic summary', silent = true })
+vim.keymap.set('v', '<c-g>le', ':LLMExplain<CR>', { desc = 'LLM explain code', silent = true })
+vim.keymap.set('v', '<c-g>li', ':LLMImprove<CR>', { desc = 'LLM suggest improvements', silent = true })
+vim.keymap.set('v', '<c-g>lb', ':LLMBugs<CR>', { desc = 'LLM find bugs', silent = true })
+vim.keymap.set('v', '<c-g>ld', ':LLMDocs<CR>', { desc = 'LLM generate docs', silent = true })
+
+-- Custom prompts with provider selection (using <leader><c-g>l prefix)
+vim.keymap.set('v', '<leader><c-g>l', ':LLMVisual<CR>', { desc = 'LLM custom prompt', silent = true })
+vim.keymap.set('v', '<leader><c-g>lg', ':LLMVisualGemini<CR>', { desc = 'LLM Gemini', silent = true })
+vim.keymap.set('v', '<leader><c-g>lc', ':LLMVisualClaude<CR>', { desc = 'LLM Claude', silent = true })
+
+-- Alternative single-key access for your most used operation (topic summary)
+vim.keymap.set('v', '<c-g>T', ':LLMTopic<CR>', { desc = 'Quick topic summary', silent = true })
+
+-- ─^  LLM Visual Selection Integration                  ▲
+
 
 

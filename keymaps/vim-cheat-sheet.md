@@ -67,6 +67,27 @@
 (v) <c-g><leader>r   - PrtRewriteFullContext
 (v) <c-g><leader>a   - PrtAppendFullContext
 
+## LLM Visual Mode
+~/.config/nvim/plugin/config/ai-maps.lua‖*LLMˍVisualˍSelectionˍIntegration
+~/.config/nvim/plugin/utils/ai.lua
+
+### Primary Bindings
+- **`<c-g>L`** - Open LLM prompt menu (capital L to avoid conflict with Magenta's `<c-g>l`)
+- **`<c-g>T`** - Quick topic summary (single key for your main use case)
+
+### Quick Commands (`<c-g>l` + letter)
+- **`<c-g>lt`** - Topic summary
+- **`<c-g>le`** - Explain code
+- **`<c-g>li`** - Suggest improvements
+- **`<c-g>lb`** - Find bugs
+- **`<c-g>ld`** - Generate documentation
+
+### Custom Prompts (`<leader><c-g>l`)
+- **`<leader><c-g>l`** - Custom prompt (interactive)
+- **`<leader><c-g>lg`** - Send to Gemini
+- **`<leader><c-g>lc`** - Send to Claude
+
+
 ### Avante
 <c-g><leader>v       - AvanteChatNew
 <c-g><leader>M       - AvanteModel
@@ -516,6 +537,8 @@ _scatch/__init__.py
 is needed to allow this import in printer.py
 from langextract._scratch.a_basic import e2_ab as symToEval
 
+## uv add / install packages
+~/.local/share/nvim/parrot/chats/2025-08-27.11-21-27.573.md
 
 ## ipython repl
 <leader>ro   - open the repl / <leader>gq to quit

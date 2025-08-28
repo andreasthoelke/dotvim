@@ -52,7 +52,8 @@ nnoremap <silent><leader><leader>gS :call System_Float( 'git status && echo "" &
 " nnoremap <silent><leader><leader>gU :call ShellReturn( "git reset --soft HEAD~1 && git log" )<cr>
 " TODO do i use this map?
 " nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
-nnoremap <silent><leader><leader>gc :call GitCommitViaAider()<cr>
+" nnoremap <silent><leader><leader>gc :call GitCommitViaAider()<cr>
+nnoremap <silent><leader><leader>gc :call GitCommitViaGitSnapLlm()<cr>
 
 
 " COMMIT ALL maps:
@@ -180,6 +181,12 @@ func! GitCommitAll_withDialog()
   echo system( cmd )
   exec 'Git commit'
 endfunc
+
+
+func! GitCommitViaGitSnapLlm()
+    call TermOneShotFloat( 'PROVIDER=anthropic git-snap-cloud', 'term_float' )
+endfunc
+
 
 
 func! GitCommitViaAider()

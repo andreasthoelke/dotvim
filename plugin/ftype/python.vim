@@ -371,6 +371,7 @@ func! Py_SetPrinterIdentif( keyCmdMode )
   let hostLn = line('.')
   let typeStr = ""
 
+  " OBSOLETE: now handled automatically by new printer.py
   if getline(hostLn ) =~ "async"
     let _printEval = "        valu = await symToEval()"
     let identifCol = 11
@@ -477,7 +478,8 @@ func! Py_SetPrinterIdentif( keyCmdMode )
 
   " let plns[4] = _print_type
 
-  let plns[7] = _printEval
+  " now handled automatically by new printer.py
+  " let plns[7] = _printEval
 
   " let plns[7] = _print_info
   " let plns[8] = _printSetting
