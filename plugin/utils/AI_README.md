@@ -94,7 +94,7 @@ vim.keymap.set('v', '<leader><c-g>lc', ':LLMVisualClaude<CR>', { desc = 'LLM Cla
 ### Lua API
 
 ```lua
-local ai = require('plugin.utils.ai')
+local ai = require('ai')
 
 -- Send text directly
 ai.sendToLLM("Hello, world!", "Translate to Spanish", "gemini")
@@ -137,7 +137,7 @@ ai.prompts.review = {
 
 -- Create quick command
 vim.api.nvim_create_user_command("R", function()
-  require('plugin.utils.ai').sendVisualQuick("review")
+  require('ai').sendVisualQuick("review")
 end, { range = true })
 ```
 

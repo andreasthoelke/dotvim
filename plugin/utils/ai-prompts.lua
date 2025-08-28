@@ -1,7 +1,7 @@
 -- ─   AI Prompt Configuration                            ──
 -- Customize and extend your LLM prompts here
 
-local ai = require('plugin.utils.ai')
+local ai = require('ai')
 
 -- ─   Add Custom Prompts                                 ──
 -- Example of adding new prompts:
@@ -57,11 +57,11 @@ end
 -- Create shorter commands for your most used prompts
 
 vim.api.nvim_create_user_command("T", function()
-  require('plugin.utils.ai').sendVisualQuick("topic")
+  require('ai').sendVisualQuick("topic")
 end, { range = true, desc = "Quick topic summary" })
 
 vim.api.nvim_create_user_command("E", function()
-  require('plugin.utils.ai').sendVisualQuick("explain")
+  require('ai').sendVisualQuick("explain")
 end, { range = true, desc = "Quick explain" })
 
 -- ─^  AI Prompt Configuration                            ▲
