@@ -44,11 +44,11 @@ local original_getDefaultPrompt = _G.getDefaultPrompt
 _G.getDefaultPrompt = function()
   local ft = vim.bo.filetype
   local prompt_key = filetype_defaults[ft]
-  
+
   if prompt_key and ai.prompts[prompt_key] then
     return ai.prompts[prompt_key].prompt
   end
-  
+
   -- Fallback to topic summary
   return ai.prompts.topic.prompt
 end

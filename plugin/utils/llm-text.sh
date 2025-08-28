@@ -6,7 +6,7 @@ set -euo pipefail
 : "${PROVIDER:=openai}"
 
 # Models
-: "${OPENAI_MODEL:=gpt-4o-mini}"
+: "${OPENAI_MODEL:=gpt-5-mini}"
 : "${ANTHROPIC_MODEL:=claude-3-5-haiku-latest}"
 : "${GEMINI_MODEL:=gemini-1.5-flash}"
 : "${LITELLM_MODEL:=gpt-4o-mini}"

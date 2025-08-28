@@ -15,7 +15,7 @@ M.prompts = {
     prompt = "Explain what this code does in clear, simple terms.",
     provider = "openai"
   },
-  
+
   -- Code improvement
   improve = {
     name = "Suggest Improvements",
@@ -32,7 +32,7 @@ M.prompts = {
     prompt = "Suggest how to refactor this code for better maintainability and clarity.",
     provider = "openai"
   },
-  
+
   -- Documentation
   docs = {
     name = "Generate Documentation",
@@ -44,7 +44,7 @@ M.prompts = {
     prompt = "Add helpful inline comments explaining complex parts of this code.",
     provider = "openai"
   },
-  
+
   -- Transformation
   translate = {
     name = "Translate Comments",
@@ -52,7 +52,7 @@ M.prompts = {
     provider = "gemini"
   },
   simplify = {
-    name = "Simplify Code", 
+    name = "Simplify Code",
     prompt = "Rewrite this code in a simpler, more readable way while maintaining the same functionality.",
     provider = "openai"
   },
@@ -61,7 +61,7 @@ M.prompts = {
     prompt = "Convert this JavaScript code to TypeScript with appropriate type annotations.",
     provider = "openai"
   },
-  
+
   -- Testing
   tests = {
     name = "Generate Tests",
@@ -73,7 +73,7 @@ M.prompts = {
     prompt = "List test cases that should be covered for this code, including edge cases.",
     provider = "gemini"
   },
-  
+
   -- Analysis
   complexity = {
     name = "Complexity Analysis",
@@ -90,7 +90,7 @@ M.prompts = {
     prompt = "Analyze performance bottlenecks and suggest optimizations.",
     provider = "openai"
   },
-  
+
   -- Custom prompt
   custom = {
     name = "Custom Prompt",
@@ -103,7 +103,7 @@ M.prompts = {
 local function getDefaultPrompt()
   -- You can add logic here to detect file type and suggest appropriate default
   local ft = vim.bo.filetype
-  
+
   -- For now, return topic summary as default
   return M.prompts.topic.prompt
 end
@@ -113,19 +113,19 @@ local function getVisualSelection()
   -- Get visual selection marks
   local start_pos = vim.fn.getpos("'<")
   local end_pos = vim.fn.getpos("'>")
-  
+
   local start_line = start_pos[2]
   local start_col = start_pos[3]
   local end_line = end_pos[2]
   local end_col = end_pos[3]
-  
+
   -- Get lines
   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-  
+
   if #lines == 0 then
     return ""
   end
-  
+
   -- Handle single line selection
   if #lines == 1 then
     lines[1] = string.sub(lines[1], start_col, end_col)
@@ -135,26 +135,26 @@ local function getVisualSelection()
     -- Last line: from beginning to end_col
     lines[#lines] = string.sub(lines[#lines], 1, end_col)
   end
-  
+
   return table.concat(lines, "\n")
 end
 
 -- Send text to LLM with a prompt
 function M.sendToLLM(text, prompt, provider)
   provider = provider or "openai"
-  
+
   -- Path to the llm-text script
   local script_path = vim.fn.expand("~/.config/nvim/plugin/utils/llm-text.sh")
-  
+
   -- Check if script exists
   if vim.fn.filereadable(script_path) == 0 then
     vim.notify("LLM script not found at: " .. script_path, vim.log.levels.ERROR)
     return
   end
-  
+
   -- Make script executable
   vim.fn.system("chmod +x " .. script_path)
-  
+
   -- Build command
   local cmd = string.format(
     "PROVIDER=%s %s %s %s",
@@ -163,10 +163,10 @@ function M.sendToLLM(text, prompt, provider)
     vim.fn.shellescape(text),
     vim.fn.shellescape(prompt)
   )
-  
+
   -- Show loading indicator
   vim.notify("Sending to LLM...", vim.log.levels.INFO)
-  
+
   -- Execute async
   vim.fn.jobstart(cmd, {
     stdout_buffered = true,
@@ -177,7 +177,7 @@ function M.sendToLLM(text, prompt, provider)
         if data[#data] == "" then
           table.remove(data)
         end
-        
+
         if #data > 0 then
           -- Display result in floating window
           vim.g['floatWin_win'] = vim.fn.FloatingSmallNew(data)
@@ -203,24 +203,24 @@ end
 -- Send visual selection to LLM
 function M.sendVisualToLLM(prompt, provider)
   local text = getVisualSelection()
-  
+
   if text == "" then
     vim.notify("No visual selection found", vim.log.levels.WARN)
     return
   end
-  
+
   M.sendToLLM(text, prompt, provider)
 end
 
 -- Interactive version that prompts for input
 function M.sendVisualToLLMInteractive(provider)
   local text = getVisualSelection()
-  
+
   if text == "" then
     vim.notify("No visual selection found", vim.log.levels.WARN)
     return
   end
-  
+
   -- Prompt user for the task/question
   vim.ui.input({
     prompt = "Enter prompt for LLM: ",
@@ -236,7 +236,7 @@ end
 function M.selectPrompt(callback)
   local items = {}
   local prompt_keys = {}
-  
+
   -- Build list of prompts
   for key, prompt_data in pairs(M.prompts) do
     if key ~= "custom" then
@@ -246,16 +246,16 @@ function M.selectPrompt(callback)
   end
   table.insert(items, "[custom] Custom Prompt")
   table.insert(prompt_keys, "custom")
-  
+
   vim.ui.select(items, {
     prompt = "Select LLM Prompt: ",
     format_item = function(item) return item end,
   }, function(choice, idx)
     if not choice then return end
-    
+
     local selected_key = prompt_keys[idx]
     local prompt_data = M.prompts[selected_key]
-    
+
     if selected_key == "custom" then
       -- Ask for custom prompt
       vim.ui.input({
@@ -275,12 +275,12 @@ end
 -- Send visual selection with prompt selection menu
 function M.sendVisualWithMenu()
   local text = getVisualSelection()
-  
+
   if text == "" then
     vim.notify("No visual selection found", vim.log.levels.WARN)
     return
   end
-  
+
   M.selectPrompt(function(prompt, provider)
     if prompt then
       M.sendToLLM(text, prompt, provider)
@@ -291,18 +291,18 @@ end
 -- Quick access functions for common prompts
 function M.sendVisualQuick(prompt_key)
   local text = getVisualSelection()
-  
+
   if text == "" then
     vim.notify("No visual selection found", vim.log.levels.WARN)
     return
   end
-  
+
   local prompt_data = M.prompts[prompt_key]
   if not prompt_data then
     vim.notify("Unknown prompt key: " .. prompt_key, vim.log.levels.ERROR)
     return
   end
-  
+
   M.sendToLLM(text, prompt_data.prompt, prompt_data.provider)
 end
 
