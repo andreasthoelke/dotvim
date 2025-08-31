@@ -1803,6 +1803,10 @@ git show main:m/_printer/Examples.md > m/_printer/Examples_old.md
 consider set scrollbind, set noscrollbind
 
 ## git fetch an update from the remote repo
+<leader><leader>gF  - shows incoming commits
+<leader><leader>gP  - pulls from remote repo using --rebase
+~/.config/nvim/plugin/utils/utils-git.vim‖/gitˍfetchˍ&ˍpull:
+
 git fetch
 git pull
 or
