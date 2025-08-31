@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+# search-chrome-bookmarks
+# Search Chrome bookmarks with fuzzy ripgrep matching
+# Usage: ./search-chrome-bookmarks "search terms"
+
+set -euo pipefail
+
+# Chrome bookmarks file location
+BOOKMARKS_FILE="/Users/at/Library/Application Support/Google/Chrome/Default/Bookmarks"
+
+# Check if bookmarks file exists
+if [[ ! -f "$BOOKMARKS_FILE" ]]; then
+    echo "Error: Chrome bookmarks file not found at: $BOOKMARKS_FILE" >&2
+    exit 1
+fi
+
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "Error: jq is not installed. Install it with: brew install jq" >&2
+    exit 1
+fi
+
+# Get search query from arguments
+SEARCH_QUERY="${1:-}"
+if [[ -z "$SEARCH_QUERY" ]]; then
+    echo "Usage: $0 \"search terms\"" >&2
+    echo "Examples:" >&2
+    echo "  $0 \"Story_Intention_Graph-SIG\"" >&2
+    echo "  $0 \"Story_Intention_Graph-SIG/MovieGraphs\"" >&2
+    echo "  $0 \"Story_Intention_Graph-SIG watch\"" >&2
+    exit 1
+fi
+
+# Create a Python script to parse bookmarks with folder context
+python3 - "$SEARCH_QUERY" << 'PYTHON_SCRIPT'
+import json
+import sys
+import re
+
+bookmarks_file = "/Users/at/Library/Application Support/Google/Chrome/Default/Bookmarks"
+search_query = sys.argv[1] if len(sys.argv) > 1 else ""
+
+# Read bookmarks file
+with open(bookmarks_file, 'r', encoding='utf-8') as f:
+    bookmarks_data = json.load(f)
+
+# Function to recursively extract bookmarks with folder path
+def extract_bookmarks(node, path=""):
+    results = []
+    
+    if isinstance(node, dict):
+        # If it's a folder, add its name to the path
+        if node.get("type") == "folder":
+            folder_name = node.get("name", "")
+            new_path = f"{path}/{folder_name}" if path else folder_name
+            
+            # Process children if they exist
+            if "children" in node:
+                for child in node["children"]:
+                    results.extend(extract_bookmarks(child, new_path))
+        
+        # If it's a URL bookmark
+        elif node.get("type") == "url":
+            name = node.get("name", "")
+            url = node.get("url", "")
+            if name and url:
+                results.append({
+                    "name": name,
+                    "url": url,
+                    "path": path
+                })
+        
+        # Process any nested structures
+        else:
+            for key, value in node.items():
+                if key in ["bookmark_bar", "other", "synced", "mobile"]:
+                    results.extend(extract_bookmarks(value, key))
+                elif isinstance(value, (dict, list)):
+                    results.extend(extract_bookmarks(value, path))
+    
+    elif isinstance(node, list):
+        for item in node:
+            results.extend(extract_bookmarks(item, path))
+    
+    return results
+
+# Extract all bookmarks
+all_bookmarks = extract_bookmarks(bookmarks_data)
+
+# Parse search query - split by spaces and handle special characters
+search_terms = search_query.split()
+
+# Filter bookmarks based on search terms
+def matches_search(bookmark, terms):
+    # Combine all searchable text
+    searchable = f"{bookmark['path']} {bookmark['name']} {bookmark['url']}".lower()
+    
+    # Check if all terms are present (AND logic)
+    for term in terms:
+        term_lower = term.lower()
+        # Handle slash as both literal and path separator
+        if '/' in term_lower:
+            # Try exact match first
+            if term_lower in searchable:
+                continue
+            # Then try with spaces around slash
+            term_spaced = term_lower.replace('/', ' ')
+            if all(part in searchable for part in term_spaced.split()):
+                continue
+            return False
+        elif term_lower not in searchable:
+            return False
+    return True
+
+# Filter bookmarks
+filtered_bookmarks = [b for b in all_bookmarks if matches_search(b, search_terms)]
+
+# Output results
+if not filtered_bookmarks:
+    print(f"No bookmarks found matching: {search_query}")
+else:
+    print(f"## Chrome Bookmarks matching: \"{search_query}\"")
+    print()
+    
+    for i, bookmark in enumerate(filtered_bookmarks, 1):
+        print(f"### {i}. {bookmark['name']}")
+        if bookmark['path']:
+            print(f"- **Path:** {bookmark['path']}")
+        print(f"- **URL:** {bookmark['url']}")
+        print()
+    
+    print("---")
+    print(f"Total bookmarks found: {len(filtered_bookmarks)}")
+
+PYTHON_SCRIPT

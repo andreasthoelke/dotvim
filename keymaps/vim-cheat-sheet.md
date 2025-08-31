@@ -1746,7 +1746,7 @@ sp qa - add cursor pos to quickfix list
 
 ## Chrome browser Bookmark search
 
-gsc    - search chrome bookmarks
+<leader>gsc    - search chrome bookmarks
             <c-w>i or <cr> will open in chrome
             <c-w>u will open in chromium
             <c-w>p to put url at cursor pos!! (can issue multiple times while staying in the prompt)
@@ -1757,6 +1757,7 @@ Telescope bookmarks default_text=caliban
 
 could also search (and edit!?) the (json) file:
 /Users/at/Library/Application Support/Google/Chrome/Default/Bookmarks
+~/Library/Application Support/Google/Chrome/Default/Bookmarks
 
 # open files in chrome browser
 file:///Users/at/Documents/Proj/k_mindgraph/b_yf_n4/yfiles_eval/demos-ts/resources/icons/ylogo.svg
