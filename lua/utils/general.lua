@@ -618,7 +618,7 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
         paths = { vim.fn.getcwd( vim.fn.winnr() ) }
       end
     elseif vim.fn.expand("%:e") == "py" then
-      pattern = [[(class|def)\s]]
+      pattern = [[(class|def|# ─ )\s.*]]
       if searchScope == 'cwd' then
         paths = { vim.fn.getcwd( vim.fn.winnr() ) }
       end

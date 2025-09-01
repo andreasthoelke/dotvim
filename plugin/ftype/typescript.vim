@@ -206,6 +206,7 @@ endfunc
 
 
 " only used in search_mainPatterns
+" consider using plugin/ftype/typescript.vim‖/g:JS_patternsˍ=ˍ[
 func! JS_TopLevPattern()
   let patterns = [
         \ 'function ',

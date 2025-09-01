@@ -149,8 +149,9 @@ endfunc
 
 
 func! Py_InlineTestDec( type )
-  let func_ln = searchpos( '^def\s\(e\d_\)\@!', 'cnb' )[0]
-  let class_ln = searchpos( 'class\s\(e\d_\)\@!', 'cnb' )[0]
+  let func_ln = searchpos( '^def\s\(e\d_\)\@!', 'cnbW' )[0]
+  let class_ln = searchpos( 'class\s\(e\d_\)\@!', 'cnbW' )[0]
+  echo func_ln class_ln
 
   if getline( func_ln ) =~ "async" || a:type =~ "async"
     let async = v:true
