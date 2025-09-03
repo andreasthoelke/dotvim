@@ -248,9 +248,11 @@ require('magenta').setup({
 
 
   mcpServers = {
-    -- mcphub = {
-    --   url = "http://localhost:37373/mcp"
-    -- },
+
+    mcphub = {
+      url = "http://localhost:37373/mcp"
+    },
+
     -- github = {
     --   command = "npx",
     --   args = {

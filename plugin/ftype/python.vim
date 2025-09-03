@@ -60,10 +60,14 @@ func! Py_bufferMaps()
   nnoremap <silent><buffer> I :call Py_ColumnForw()<cr>
   nnoremap <silent><buffer> Y :call Py_ColumnBackw()<cr>
 
+  " nnoremap <silent><buffer> <c-p>         :call Py_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+  " nnoremap <silent><buffer> <c-n>         :call Py_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+
+  nnoremap <silent><buffer> <c-p>         :call Py_BindingBackw()<cr>
+  nnoremap <silent><buffer> <c-n>         :call Py_BindingForw()<cr>
+
   nnoremap <silent><buffer> <leader><c-p> :call Py_MainStartBindingBackw()<cr>
-  nnoremap <silent><buffer> <c-p>         :call Py_TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <leader><c-n> :call Py_MainStartBindingForw()<cr>:call ScrollOff(16)<cr>
-  nnoremap <silent><buffer> <c-n>         :call Py_TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
   nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
@@ -534,6 +538,8 @@ func! Py_RunPrinter( termType )
 
     silent let g:floatWin_win = FloatingSmallNew ( resLines, 'cursor' )
     call PythonSyntaxAdditions() 
+    call Py_bufferMaps()
+    " call TsSyntaxAdditions() 
     silent call FloatWin_FitWidthHeight()
     if len( resLines ) > 10
       normal! zM
@@ -592,10 +598,36 @@ func! Py_showInFloat( data )
   silent wincmd p
 endfun
 
+" ─   New main binding motions                           ■
+
+let g:Py_patterns = [
+      \ 'class\s\zs\i',
+      \ 'def\s\zs\i',
+      \ '╟─\zs',
+      \ '║ ┌─\s\zs',
+      \ '\=\=\=\=\s\zs\i',
+      \]
+
+func! Py_BindingForw()
+  let combined_pattern = '\v' . join(g:Py_patterns, '|')
+  call search(combined_pattern, 'W')
+  call ScrollOff(25)
+endfunc
+
+func! Py_BindingBackw()
+  let combined_pattern = '\v' . join(g:Py_patterns, '|')
+  call search(combined_pattern, 'bW')
+  call ScrollOff(10)
+endfunc
+
+
+" ─^  New main binding motions                           ▲
+
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
 " let g:Py_TopLevPattern = '\v^((\s*)?\zs(inline|given|final|trait|override\sdef|type|val\s|lazy\sval|case\sclass|enum|final|object|class|def)\s|val)'
-let g:Py_TopLevPattern = '\v(class|def)\s\zs\i*'
+" TODO swap naming "TopLev" <> "Main" .. to be consistent with TS/other langs
+let g:Py_TopLevPattern = '\v(class|def|─|────)\s\zs\i*'
 let g:Py_MainStartPattern = '\v(class)\s\zs\i*'
 
 func! Py_MainStartBindingForw()

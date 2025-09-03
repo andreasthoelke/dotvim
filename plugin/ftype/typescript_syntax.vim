@@ -129,8 +129,9 @@ func! TsSyntaxAdditions ()
   " Test logger
   syntax match Normal '"message":\s' conceal
   syntax match Normal '"data":\s' conceal
-  syntax match Normal '^{' conceal
-  syntax match Normal '^}' conceal
+  " would look cleaner, but sometimes confusing:
+  " syntax match Normal '^{' conceal
+  " syntax match Normal '^}' conceal
 
   syntax match Normal 'insp' conceal cchar=✱
 

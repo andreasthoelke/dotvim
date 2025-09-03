@@ -1299,6 +1299,10 @@ DiffviewFileHistory
 
 # git maps
 
+<leader><leader>gF   - git fetch && echo "=== Local vs Remote ===" && git status -sb && echo "" && echo "=== Incoming Changes ===" && git log HEAD..@{u} --oneline 2>/dev/null \|\| echo "No incoming changes"' )<cr>
+<leader><leader>gR   - git pull --rebase
+<leader><leader>gP   - git push
+
 ## git merge conflict diff markers resolving 
 Your Neovim is using git-conflict.nvim to render those merge conflict markers. Here are the keymaps for resolving
   conflicts:
