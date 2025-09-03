@@ -303,6 +303,9 @@ gwJ                  - Run paragraph as terminal command
 <c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
 \<cr>                - backslash + return is an alternative to the above. Also default behavior!
 
+### TypeScript/JavaScript (Buffer-specific)
+gen                  - Run current buffer with npx tsx
+
 
 ## Startup & Sessions
 ges                  - Open quick menu

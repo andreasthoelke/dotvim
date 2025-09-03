@@ -29,6 +29,8 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer>        ,gej :call JS_RunPrinter( "term_float"  )<cr>
   nnoremap <silent><buffer>         geh :call JS_RunPrinter( "term_hidden"  )<cr>
 
+  nnoremap <silent><buffer> <leader>gen :call JS_RunTsx()<cr>
+
   nnoremap <silent><buffer>         get :call JS_RunVitest( "term_float" )<cr>
   nnoremap <silent><buffer>         geT :call JS_RunVitest( "term" )<cr>
   nnoremap <silent><buffer>         ,get :call JS_RunVitest( "term_float" )<cr>
@@ -449,6 +451,13 @@ func! ModulePath_MonoRepo()
 
   let packageName = split( relPath, '/' )[1]
   return [packageName, modulePath]
+endfunc
+
+func! JS_RunTsx()
+  let currentFile = expand('%:p')
+  let relativeFile = fnamemodify(currentFile, ':.')
+  let cmd = 'npx tsx ' . relativeFile
+  call TermOneShot(cmd)
 endfunc
 
 
