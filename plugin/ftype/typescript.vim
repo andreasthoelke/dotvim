@@ -80,6 +80,11 @@ func! JS_bufferMaps()
   " nnoremap <silent><buffer>         ged :TroubleToggle<cr>:call T_DelayedCmd( "wincmd p", 50 )<cr>
   " nnoremap <silent><buffer>         ger :lua vim.lsp.buf.references()<cr>:call T_DelayedCmd( "wincmd p", 200 )<cr>
 
+" ─   Search overrides                                  ──
+
+  nnoremap <silent><buffer> <leader>ot  :Outline<cr>
+
+
 " ─   Lsp                                                ■
 
   " Copied from Scala

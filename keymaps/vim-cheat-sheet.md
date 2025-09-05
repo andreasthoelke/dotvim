@@ -304,7 +304,7 @@ gwJ                  - Run paragraph as terminal command
 \<cr>                - backslash + return is an alternative to the above. Also default behavior!
 
 ### TypeScript/JavaScript (Buffer-specific)
-gen                  - Run current buffer with npx tsx
+<leader>gen          - Run current buffer with npx tsx
 
 
 ## Startup & Sessions
@@ -1117,6 +1117,7 @@ gsD     - file browser
 <leader>sfN   - full text
 
 <leader>slh   - Local code headers
+<leader>slH   - Local md headings
 <leader>slc   - Local comment texts
 
 ## COLLECTION search 

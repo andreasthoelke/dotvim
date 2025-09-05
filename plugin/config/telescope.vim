@@ -98,8 +98,9 @@ nnoremap <leader>sfN <cmd>lua require('utils.general').Search_in_folder('~/Docum
 
 " LOCAL HEADERS
 nnoremap <leader>slh <cmd>lua require('utils.general').Search_in_folder('.', '─.*')<cr>
+nnoremap <leader>slH <cmd>lua require('utils.general').Search_in_folder('.', '# .*')<cr>
 " LOCAL COMMENTS
-nnoremap <leader>slc <cmd>lua require('utils.general').Search_in_folder('.')<cr>
+nnoremap <leader>slc <cmd>lua require('utils.general').Search_in_folder('.', '// .*')<cr>
 
 lua << EOF
 -- Create a Vim command to call this function

@@ -408,6 +408,7 @@ endfunc
 func! JS_SetPrinterIdentif()
   let path = expand('%:p')
   " let jsWd = JS_getRootFolderPath(["package.json"])
+  " TODO: this doesn't seem to support putting JsPrinter.js into a folder like shared/utils
   let jsWd = JS_getRootFolderPath(["JsPrinter.js"])
   let relPath = substitute( path, jsWd, '', '' )
   let relPath = '.' . relPath
@@ -521,9 +522,15 @@ func! ScalajsPrinterPath()
   return JS_getRootFolderPath(["PrinterJs.scala"]) . "/PrinterJs.scala"
 endfunc
 
+
+" search for either:
+" - `JsPrinter.js` (current behavior)
+" - `shared/utils/JsPrinter.js`
+
 func! JsPrinterPath()
   return JS_getRootFolderPath(["JsPrinter.js"]) . "/JsPrinter.js"
 endfunc
+
 
 func! JsPrinterAppBundlePath()
   return JS_getRootFolderPath(["JsPrinterAppBundle.js"]) . "/JsPrinterAppBundle.js"
@@ -541,6 +548,11 @@ func! JS_getRootFolderPath(rootFileNames)
             if filereadable(l:currentDir . '/' . l:rootFileName)
                 " If a root file is found, return the current directory
                 return l:currentDir
+            endif
+            " Also check in shared/utils/ subdirectory
+            if filereadable(l:currentDir . '/shared/utils/' . l:rootFileName)
+                " If found in shared/utils/, return the shared/utils directory
+                return l:currentDir . '/shared/utils'
             endif
         endfor
 
