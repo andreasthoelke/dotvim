@@ -495,10 +495,27 @@ func! GetPath_fromLine()
     endif
   endif
 
-  " Check for quotes-enclosed paths
+  " Check for double-quotes-enclosed paths
   let quotes_match = matchstr(getline('.'), '"\zs[^"]*\ze"')
   if !empty(quotes_match)
     let path = quotes_match
+    
+    if filereadable(path) || isdirectory(path)
+      return path
+    endif
+    
+    let current_folder = fnamemodify(expand('%:p'), ':h')
+    let folder_rel_path = current_folder . '/' . path
+    
+    if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
+      return folder_rel_path
+    endif
+  endif
+
+  " Check for single-quotes-enclosed paths
+  let single_quotes_match = matchstr(getline('.'), "'\\zs[^']*\\ze'")
+  if !empty(single_quotes_match)
+    let path = single_quotes_match
     
     if filereadable(path) || isdirectory(path)
       return path
