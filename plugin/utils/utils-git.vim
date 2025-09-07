@@ -184,7 +184,8 @@ endfunc
 
 
 func! GitCommitViaGitSnapLlm()
-    call TermOneShotFloat( 'PROVIDER=anthropic git-snap-cloud', 'term_float' )
+    call TermOneShotFloat( 'PROVIDER=anthropic git-snap-cloud', 'otherWinColumn' )
+    wincmd p
 endfunc
 
 

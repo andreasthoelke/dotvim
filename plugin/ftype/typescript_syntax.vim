@@ -93,10 +93,17 @@ func! TsSyntaxAdditions ()
 " ─^  Drizzle                                            ▲
 
 
-  syntax match Normal '({' conceal cchar=⟨
-  syntax match Normal '})' conceal cchar=⟩
+  " syntax match Normal '({' conceal cchar=⟨
+  " syntax match Normal '})' conceal cchar=⟩
 
-  syntax match Normal "\v\=\>" conceal cchar=⇒
+  syntax match Normal '({' conceal cchar=❮
+  syntax match Normal '})' conceal cchar=❯
+
+  " syntax match Normal '({' conceal cchar=｟
+  " syntax match Normal '})' conceal cchar=｠
+
+  " syntax match Normal "\v\=\>" conceal cchar=⇒
+  syntax match Normal "\v\=\>" conceal cchar=→
 
   " The collon before a type or an object value
   syntax match Normal "\w\zs:\ze\s" conceal
