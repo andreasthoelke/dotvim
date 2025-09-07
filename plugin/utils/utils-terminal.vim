@@ -157,7 +157,9 @@ func! TermOneShotFloat( cmd, pos )
   silent let g:floatWin_win = FloatingTerm(a:pos)
   let g:TermID = termopen( a:cmd )
   " normal G
-  call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
+  if !(a:pos == 'otherWinColumn')
+    call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
+  endif
 endfunc
 " NOTE: the above works with some httpie requests, where systemlist fails:
 " http -v post localhost:8080/cities city=London country=UK
