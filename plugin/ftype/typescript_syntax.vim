@@ -301,9 +301,14 @@ func! TsSyntaxAdditions ()
 
 " ─   Effect Schema                                     ──
 " Schema.Struct
+" annotations, annotate, optional, customDescription
 
   syntax match Normal 'Schema\.' conceal cchar=⁝
-  syntax match Normal 'Struct' conceal cchar=⊠
+  syntax match Normal 'Struct' conceal cchar=˽
+  syntax match Normal 'annotations' conceal cchar=^
+  syntax match Normal 'annotate' conceal cchar=^
+  syntax match Normal 'optional' conceal cchar=◦
+  syntax match Normal 'customDescription' conceal cchar=𝑑
 
 
 
@@ -314,14 +319,18 @@ func! TsSyntaxAdditions ()
 " State.SQLite.clientDocument
 " materializers
 " makeSchema
+" schema, default, columns
 
-  syntax match Normal 'Events\.' conceal cchar=◢
-  syntax match Normal 'synced' conceal cchar=⇿
-  syntax match Normal 'State\.' conceal cchar=▪
+  " syntax match Normal 'Events\.' conceal cchar=◢
+  syntax match Normal 'Events\.synced' conceal cchar=⇿
+  syntax match Normal 'State\.' conceal cchar=˽
   syntax match Normal 'SQLite\.' conceal
   syntax match Normal 'clientDocument' conceal cchar=▬
   syntax match Normal 'materializers' conceal cchar=⊛
-  syntax match Normal 'makeSchema' conceal cchar=⊡
+  syntax match Normal 'makeSchema' conceal cchar=≈
+  syntax match Normal 'schema:' conceal cchar=⊡
+  syntax match Normal 'default:' conceal cchar=∘
+  syntax match Normal 'columns:' conceal cchar=‖
 
 " ─^  LiveStore                                          ▲
 

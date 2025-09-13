@@ -399,11 +399,13 @@ func! JS_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
   " currently doesn't return "async", but could
-  let l:typeStr = v:lua.require('utils_lsp').type()
+  " let l:typeStr = v:lua.require('utils_lsp').type()
+  let l:typeStr = v:lua.require('utils_lsp').hover()[2].result.contents[0].value
   call setpos('.', [0, oLine, oCol, 0] )
   return l:typeStr
 endfunc
 " echo JS_LspTypeAtPos(111, 10)
+" echo JS_LspTypeAtPos(line('.'), col('.'))
 
 func! JS_SetPrinterIdentif()
   let path = expand('%:p')
@@ -423,8 +425,22 @@ func! JS_SetPrinterIdentif()
     let ident = T_RemoveTypeColon( identif )
   endif
 
-  let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
+  normal (ww
+  let typeStr = JS_LspTypeAtPos(line('.'), col('.'))
+  normal (ww
+
   let TesterLines = readfile( JsPrinterPath(), '\n' )
+  if typeStr =~ 'Effect'
+    if typeStr =~ 'never\>'
+      let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
+    else
+      let importStm = "import { " . ident . " as testIdentif, JsPrinterLayersLive } from '" . relPath . "'"
+    endif
+    let TesterLines[1] = 'import { Effect } from "effect"'
+  else
+    let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
+    let TesterLines[1] = ''
+  endif
   let TesterLines[0] = importStm
   call writefile( TesterLines, JsPrinterPath() )
 endfunc
@@ -440,10 +456,12 @@ func! JS_RunPrinter( termType )
 
   " https://tsx.is/typescript
   " let Cmd = 'NODE_NO_WARNINGS=1 node --experimental-require-module '
+  " TODO detect when to use bun over tsx
   let Cmd = 'npx tsx --no-deprecation '
+  let Cmd = 'bun '
   let Cmd = Cmd . JsPrinterPath()
+  " echo Cmd
   " let Cmd = 'NODE_NO_WARNINGS=1 ts-node '
-  " let Cmd = 'bun '
   " let Cmd = 'npx ts-node --transpile-only '
   " let Cmd = 'node '
   " let Cmd = 'npx ts-node '
