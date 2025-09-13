@@ -175,6 +175,9 @@ require('magenta').setup({
     "^find .*",
     "^tree.*",
 
+    -- Custom search:
+    "^search-chrome-bookmarks .*",
+
     -- File manipulation
     "^cp .*",
     "^mv .*",

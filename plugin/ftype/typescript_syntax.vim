@@ -83,9 +83,9 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'many\ze(' conceal cchar=⫖
   syntax match Normal 'table\ze\.' conceal cchar=
   syntax match Normal 'table\ze(' conceal cchar=
+  syntax match Normal 'table\ze\s' conceal cchar=
   syntax match Normal 'pgTable\ze\.' conceal cchar=
   syntax match Normal 'pgTable\ze(' conceal cchar=
-  syntax match Normal 'table' conceal cchar=
   syntax match Normal 'index' conceal cchar=⊡
   syntax match Normal 'unique().on' conceal cchar=◆
 
@@ -154,10 +154,11 @@ func! TsSyntaxAdditions ()
   syntax match Normal "function\ze\s" conceal cchar=→
   syntax match Normal "export\ze\s" conceal cchar=∷
   syntax match Normal "default\ze\s" conceal cchar=⁘
-  syntax match Normal "gql`" conceal cchar=▵
-  syntax match Normal "sql`" conceal cchar=▵
+  syntax match Normal "gql" conceal cchar=▵
+  syntax match Normal "sql" conceal cchar=▵
   syntax match Normal "return" conceal cchar=▂
   syntax match Normal "yield" conceal cchar=⊂
+  syntax match Normal "yield\*" conceal cchar=⊂
   " syntax match Normal "return" conceal cchar=🮏
   " syntax match Normal "eturn" conceal
   " syntax match Normal "return\zeA" conceal cchar=←
@@ -179,6 +180,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\s\zs>\ze\s' conceal cchar=▷
   syntax match Normal '\s\zs<\ze\s' conceal cchar=◁
 
+  " Vitest
   syntax match Normal 'describe' conceal cchar=⊃
   syntax match Normal '\s\zsit\ze(' conceal cchar=˽
 
@@ -269,7 +271,10 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'actors\:' conceal cchar=♺
   syntax match Normal 'assign' conceal cchar=↗
 
-  " Effect TS Plus ᴈ ᴇ ᴱ ᴲ ᵉ
+
+" ─   Effect                                            ──
+
+  " Effect TS ᴈ ᴇ ᴱ ᴲ ᵉ
   " syntax match Normal 'Effect' conceal cchar=⁝
   syntax match Normal 'Effect\ze<' conceal cchar=ᴱ
   syntax match Normal 'Effect\.' conceal cchar=⁝
@@ -281,20 +286,46 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\s\zs\.' conceal cchar=ˍ
   syntax match Normal '\S\zs\.\ze\S' conceal cchar=ˍ
 
+" ─   Effect AI                                         ──
+" description: 
+" success: 
+" failure: 
+" parameters: 
+" make
+
+" ─   Effect Schema                                     ──
+" Schema.Struct
+
+
+
+
+" ─   LiveStore                                          ■
+
+" Events.synced
+" State.SQLite.clientDocument
+" materializers
+" makeSchema
+
+
+
+" ─^  LiveStore                                          ▲
+
+
+
+
   " Match.tag( exp, {
   syntax match Normal 'Match.tag(' conceal cchar=⊂
 
-
-
   " const v1 = Do(($) => {
-  syntax match Normal 'Do(($) => {' conceal cchar=⊇
-  syntax match Normal '=\s\$(' conceal cchar=⇠
-  syntax match Normal '$(' conceal cchar=ˍ
+  " syntax match Normal 'Do(($) => {' conceal cchar=⊇
+  " syntax match Normal '=\s\$(' conceal cchar=⇠
+  " syntax match Normal '$(' conceal cchar=ˍ
 
   " const v1 = Effect.Do()
-  syntax match Normal 'Effect.Do()' conceal cchar=⊇
-  syntax match Normal '\v.bind(Value)?\(' conceal
-  syntax match Normal '$(' conceal cchar=ˍ
+  " syntax match Normal 'Effect.Do()' conceal cchar=⊇
+  syntax match Normal 'Effect.gen(function\*\s()' conceal cchar=⊇
+  " syntax match Normal '\v.bind(Value)?\(' conceal
+  " syntax match Normal '$(' conceal cchar=ˍ
 
   " syntax match Normal '\v\S\s\zs\)$' conceal
   " syntax match Normal '\v\s\zs\)' conceal

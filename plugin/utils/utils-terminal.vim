@@ -271,10 +271,17 @@ fun! Term(args, count, bang)
   let cmd = "split "
   let count = a:count ? a:count : ''
   let cmd = count . cmd
+  
+  " Set environment variable for theme
+  let theme_env = ''
+  if exists('g:is_dark_mode')
+    let theme_env = 'NVIM_THEME_MODE=' . (g:is_dark_mode ? 'dark' : 'light') . ' '
+  endif
+  
   if a:args == ""
-    let cmd = cmd . 'term://zsh'
+    let cmd = cmd . 'term://' . theme_env . 'zsh'
   else
-    let cmd = cmd . 'term://' . a:args . "&& zsh"
+    let cmd = cmd . 'term://' . theme_env . a:args . "&& zsh"
     " Note that only "&& zsh" allows to use the terminal after the first command has finished.
   endif
   exec cmd
