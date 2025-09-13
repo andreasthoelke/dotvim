@@ -41,6 +41,8 @@ nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
 func! RunTerm_showFloat()
  let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
+ if line =~ 'mono ' | let line = 'direnv exec . ' . line | endif
+
  " echo line
  " return
  call System_Float( line )
@@ -50,6 +52,7 @@ func! RunTerm_parag_showFloat()
  let [startLine, endLine] = ParagraphStartEndLines()
  let lines = getline(startLine, endLine)
  let concat_cmd = join( lines, ' ' )
+ if concat_cmd =~ 'mono ' | let concat_cmd = 'direnv exec . ' . concat_cmd | endif
  " let concat_cmd = join( lines, '\n' )
  call System_Float( concat_cmd )
 endfunc
@@ -57,6 +60,7 @@ endfunc
 
 func! RunTerm_showTerm()
  let cmdline = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
+ if cmdline =~ 'mono ' | let cmdline = 'direnv exec . ' . cmdline | endif
  echo "running cmd: " . cmdline
  exec "26new"
  let opts = { 'cwd': getcwd( winnr() ) }
@@ -154,8 +158,10 @@ endfunc
 " echo 'hi'
 
 func! TermOneShotFloat( cmd, pos )
+  let cmd = a:cmd
+  if cmd =~ 'mono ' | let cmd = 'direnv exec . ' . cmd | endif
   silent let g:floatWin_win = FloatingTerm(a:pos)
-  let g:TermID = termopen( a:cmd )
+  let g:TermID = termopen( cmd )
   " normal G
   if !(a:pos == 'otherWinColumn')
     call T_DelayedCmd( "call FloatWin_FitWidthHeight()", 500 )
