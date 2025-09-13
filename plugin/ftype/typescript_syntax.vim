@@ -293,8 +293,17 @@ func! TsSyntaxAdditions ()
 " parameters: 
 " make
 
+  syntax match Normal 'description:' conceal cchar=⊙
+  syntax match Normal 'success:' conceal cchar=⟐
+  syntax match Normal 'failure:' conceal cchar=⊖
+  syntax match Normal 'parameters:' conceal cchar=⊕
+  syntax match Normal 'make\ze(' conceal cchar=≈
+
 " ─   Effect Schema                                     ──
 " Schema.Struct
+
+  syntax match Normal 'Schema\.' conceal cchar=⁝
+  syntax match Normal 'Struct' conceal cchar=⊠
 
 
 
@@ -306,7 +315,13 @@ func! TsSyntaxAdditions ()
 " materializers
 " makeSchema
 
-
+  syntax match Normal 'Events\.' conceal cchar=◢
+  syntax match Normal 'synced' conceal cchar=⇿
+  syntax match Normal 'State\.' conceal cchar=▪
+  syntax match Normal 'SQLite\.' conceal
+  syntax match Normal 'clientDocument' conceal cchar=▬
+  syntax match Normal 'materializers' conceal cchar=⊛
+  syntax match Normal 'makeSchema' conceal cchar=⊡
 
 " ─^  LiveStore                                          ▲
 
@@ -324,6 +339,7 @@ func! TsSyntaxAdditions ()
   " const v1 = Effect.Do()
   " syntax match Normal 'Effect.Do()' conceal cchar=⊇
   syntax match Normal 'Effect.gen(function\*\s()' conceal cchar=⊇
+  syntax match Normal 'function\*' conceal cchar=⊇
   " syntax match Normal '\v.bind(Value)?\(' conceal
   " syntax match Normal '$(' conceal cchar=ˍ
 
