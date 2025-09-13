@@ -431,7 +431,7 @@ func! JS_SetPrinterIdentif()
 
   let TesterLines = readfile( JsPrinterPath(), '\n' )
   if typeStr =~ 'Effect'
-    if typeStr =~ 'never\>'
+    if typeStr =~ '\vnever\>'
       let importStm = "import { " . ident . " as testIdentif } from '" . relPath . "'"
     else
       let importStm = "import { " . ident . " as testIdentif, JsPrinterLayersLive } from '" . relPath . "'"

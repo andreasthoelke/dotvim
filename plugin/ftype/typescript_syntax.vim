@@ -282,6 +282,10 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'AssociativeIdentity\.' conceal cchar=⁝
   syntax match Normal 'Associative\.' conceal cchar=⁝
   syntax match Normal 'flatMap' conceal cchar=↣
+  syntax match Normal 'Context\.Tag' conceal cchar=⊟
+  syntax match Normal 'succeed\ze(' conceal cchar=ꜜ
+  syntax match Normal 'Layer\.' conceal cchar=⊟
+  syntax match Normal 'mergeAll' conceal
 
   syntax match Normal '\s\zs\.' conceal cchar=ˍ
   syntax match Normal '\S\zs\.\ze\S' conceal cchar=ˍ
