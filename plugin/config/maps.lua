@@ -445,6 +445,11 @@ vim.keymap.set( 'n',
    require'git_commits_viewer'.Show({ num_of_commits = 5 })
   end, { desc = "Show last 5 git commits" } )
 
+vim.keymap.set( 'n',
+  '<leader>gD', function()
+   require'git_commits_viewer'.ShowCurrentFile(5)
+  end, { desc = "Show last 5 git commits of the current file. E.i. the file history of the current file." } )
+
 
 vim.keymap.set( 'n',
   '<leader><leader>gd', function()

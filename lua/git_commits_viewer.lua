@@ -227,7 +227,7 @@ function M.Show( opts )
     vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, info_lines)
   else
     -- Use GetCommitLines() to insert commit history into the lower buffer
-    local commit_lines = M.GetCommitLines(opts.num_of_commits)
+    local commit_lines = M.GetCommitLines(opts.num_of_commits or 5, opts.file)
     vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)
   end
 
@@ -291,6 +291,17 @@ function M.Show( opts )
 end
 -- require'git_commits_viewer'.Show(2, 0, 0)
 
+-- Show the history of the current file
+function M.ShowCurrentFile(num_of_commits)
+  local current_file = vim.fn.expand('%:p')
+  if current_file == '' then
+    vim.notify("No file currently open", vim.log.levels.WARN)
+    return
+  end
+  M.Show({ num_of_commits = num_of_commits or 5, file = current_file })
+end
+-- require'git_commits_viewer'.ShowCurrentFile(5)
+
 -- Return one line per commit in the cwd. limit this to 10 lines.
 -- line format:
 -- commithash | time ago | author abbrev | commit message
@@ -322,7 +333,7 @@ function M.GetUntrackedChanges()
   return files
 end
 
-function M.GetCommitLines(num_of_commits)
+function M.GetCommitLines(num_of_commits, file_filter)
   local lines = {}
 
   -- Add untracked changes as a special first entry
@@ -334,7 +345,12 @@ function M.GetCommitLines(num_of_commits)
     end
   end
 
-  local handle = io.popen("git log --pretty=format:'%h|%cr|%s' -n " .. num_of_commits)
+  local git_cmd = "git log --pretty=format:'%h|%cr|%s' -n " .. num_of_commits
+  if file_filter then
+    -- Add file filter and --follow to track renames
+    git_cmd = git_cmd .. " --follow -- '" .. file_filter:gsub("'", "'\\'''") .. "'"
+  end
+  local handle = io.popen(git_cmd)
   if not handle then return lines end
 
   local result = handle:read("*a")
