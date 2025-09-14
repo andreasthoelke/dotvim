@@ -529,6 +529,24 @@ func! GetPath_fromLine()
     endif
   endif
 
+  " Check for *...* or **...** enclosed paths
+  let star_match = matchstr(getline('.'), '\v(\*{1,2})\zs[^*]+\ze\1')
+  " Alternatively, use '\v(\*{1,2})\zs\f+\ze\1' to rely on 'isfname' chars
+  if !empty(star_match)
+    let path = star_match
+
+    if filereadable(path) || isdirectory(path)
+      return path
+    endif
+
+    let current_folder = fnamemodify(expand('%:p'), ':h')
+    let folder_rel_path = current_folder . '/' . path
+
+    if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
+      return folder_rel_path
+    endif
+  endif
+
 
   if filereadable( path ) || isdirectory(path)
     return path

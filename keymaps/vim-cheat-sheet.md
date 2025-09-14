@@ -1406,9 +1406,11 @@ git rm -r --cached .metals/
 ## git commit changes to branch
 Create and switch to backup branch
 git checkout -b advanced-test-logger
+git checkout -b tutorial-todo-workspace
 Add and commit everything (including untracked files)
 git add -A
 git commit -m "advanced-test-logger"
+git commit -m "tutorial-todo-workspace"
 git checkout main 
 
 
