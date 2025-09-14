@@ -65,9 +65,9 @@ au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
-au ag BufWinEnter *.md          call MarkdownSyntaxAdditions()
-au ag BufWinEnter *.md,*.markdown   call MarkdownBufferMaps()
-au ag FileType markdown,codecompanion,mcphub call MarkdownBufferMaps()
+au ag BufWinEnter *.md,.mdx          call MarkdownSyntaxAdditions()
+au ag BufWinEnter *.md,*.markdown,.mdx   call MarkdownBufferMaps()
+au ag FileType markdown,markdown.mdx,codecompanion,mcphub call MarkdownBufferMaps()
 
 " au ag BufWinEnter * if &ft == "neotest-summary" | call NeotestBufferMaps() | endif
 
