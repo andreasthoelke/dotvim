@@ -491,6 +491,10 @@ set softtabstop=2
 " set isfname+=32
 " set isfname-=32
 
+set isfname+=@-@
+" After this, <C-x><C-f>, gf, and similar file-related motions should handle paths like packages/@local/effect-learning/... correctly.
+" packages/@local/effect-learning/a_scratch.ts
+
 " prevents unnecessary execution when sourcing vimrc
 if !exists("g:syntax_on")
   syntax enable

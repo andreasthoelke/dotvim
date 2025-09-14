@@ -39,9 +39,11 @@ nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 
 
+let g:direnv_keyword_ptn = '\v^(mono|livestore)\s'
+
 func! RunTerm_showFloat()
  let line = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
- if line =~ 'mono ' | let line = 'direnv exec . ' . line | endif
+ if line =~ g:direnv_keyword_ptn | let line = 'direnv exec . ' . line | endif
 
  " echo line
  " return
@@ -52,7 +54,7 @@ func! RunTerm_parag_showFloat()
  let [startLine, endLine] = ParagraphStartEndLines()
  let lines = getline(startLine, endLine)
  let concat_cmd = join( lines, ' ' )
- if concat_cmd =~ 'mono ' | let concat_cmd = 'direnv exec . ' . concat_cmd | endif
+ if concat_cmd =~ g:direnv_keyword_ptn | let concat_cmd = 'direnv exec . ' . concat_cmd | endif
  " let concat_cmd = join( lines, '\n' )
  call System_Float( concat_cmd )
 endfunc
@@ -60,7 +62,7 @@ endfunc
 
 func! RunTerm_showTerm()
  let cmdline = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
- if cmdline =~ 'mono ' | let cmdline = 'direnv exec . ' . cmdline | endif
+ if cmdline =~ g:direnv_keyword_ptn | let cmdline = 'direnv exec . ' . cmdline | endif
  echo "running cmd: " . cmdline
  exec "26new"
  let opts = { 'cwd': getcwd( winnr() ) }
@@ -159,7 +161,7 @@ endfunc
 
 func! TermOneShotFloat( cmd, pos )
   let cmd = a:cmd
-  if cmd =~ 'mono ' | let cmd = 'direnv exec . ' . cmd | endif
+  if cmd =~ g:direnv_keyword_ptn | let cmd = 'direnv exec . ' . cmd | endif
   silent let g:floatWin_win = FloatingTerm(a:pos)
   let g:TermID = termopen( cmd )
   " normal G
