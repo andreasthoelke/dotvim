@@ -28,6 +28,58 @@ vim.api.nvim_set_keymap('o', 'F', "<cmd>HopChar1CurrentLineBC<cr>", {noremap=tru
 -- vim.api.nvim_set_keymap('n', ',f', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
 -- vim.api.nvim_set_keymap('n', ',F', "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
 
+-- Smart hop forward that handles empty lines
+local function smart_hop_forward()
+  local line = vim.api.nvim_get_current_line()
+  if line == '' then
+    -- Find next non-empty line
+    local current_pos = vim.api.nvim_win_get_cursor(0)
+    vim.fn.search([[\S]], 'W')
+    local new_pos = vim.api.nvim_win_get_cursor(0)
+    -- If we didn't move (no non-empty lines found), restore position
+    if new_pos[1] == current_pos[1] then
+      vim.api.nvim_win_set_cursor(0, current_pos)
+      vim.notify('No non-empty lines found ahead', vim.log.levels.INFO)
+      return
+    end
+  end
+  -- Try hop, wrapped in pcall to handle any remaining edge cases
+  local ok, err = pcall(require'hop'.hint_char1, {
+    direction = require'hop.hint'.HintDirection.AFTER_CURSOR
+  })
+  if not ok and line ~= '' then
+    vim.notify('Hop failed: ' .. tostring(err), vim.log.levels.WARN)
+  end
+end
+
+-- Smart hop backward that handles empty lines
+local function smart_hop_backward()
+  local line = vim.api.nvim_get_current_line()
+  if line == '' then
+    -- Find previous non-empty line
+    local current_pos = vim.api.nvim_win_get_cursor(0)
+    vim.fn.search([[\S]], 'bW')
+    local new_pos = vim.api.nvim_win_get_cursor(0)
+    -- If we didn't move (no non-empty lines found), restore position
+    if new_pos[1] == current_pos[1] then
+      vim.api.nvim_win_set_cursor(0, current_pos)
+      vim.notify('No non-empty lines found behind', vim.log.levels.INFO)
+      return
+    end
+  end
+  -- Try hop, wrapped in pcall to handle any remaining edge cases
+  local ok, err = pcall(require'hop'.hint_char1, {
+    direction = require'hop.hint'.HintDirection.BEFORE_CURSOR
+  })
+  if not ok and line ~= '' then
+    vim.notify('Hop failed: ' .. tostring(err), vim.log.levels.WARN)
+  end
+end
+
+-- Set up the keymaps using the smart functions
+vim.keymap.set('n', ',f', smart_hop_forward, { desc = 'Smart hop forward across lines' })
+vim.keymap.set('n', ',F', smart_hop_backward, { desc = 'Smart hop backward across lines' })
+
 
 
 
