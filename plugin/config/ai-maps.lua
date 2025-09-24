@@ -88,7 +88,7 @@ end, { noremap = true, silent = true })
 -- ~/.config/nvim/plugin/config/parrot-claude-code.lua
 -- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(args,
 
-vim.g.codex_cmd = "claude "
+vim.g.codex_cmd = "claude --dangerously-skip-permissions "
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
@@ -100,15 +100,13 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     "gemini ",
     "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm run start ",
     "opencode ",
-    "codex --approval-mode full-auto ",
-    "codex --full-auto ",
-    "codex --full-auto --model gpt-4.1 ",
-    "codex --full-auto --model o3 ",
-    "codex --full-auto --model codex-mini-latest ",
+    "codex --model 'gpt-5-codex' --yolo -c model_reasoning_summary_format=experimental ",
+    "codex ",
+    "codex --dangerously-bypass-approvals-and-sandbox ",
     "node ~/Documents/Proj/k_mindgraph/h_mcp/_gh/c_codex/codex-cli/dist/cli.js --full-auto --model o3 ",
     "aider ",
   }
-  
+
   -- Create a UI selection using vim.ui.select (available in Neovim 0.6+)
   vim.ui.select(options, {
     prompt = "Select command:",

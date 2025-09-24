@@ -144,12 +144,14 @@ gej                  - LSP signature help
 <leader>ogL          - Git commits viewer (40 commits)
 <leader>ogS          - Git status (telescope)
 <leader>gd           - Git commits viewer (5 commits)
+<leader>gD           - Git commits involving current file!
 <leader><leader>gb   - Telescope git_branches<cr>
 <leader><leader>og   - FzfGFiles?
 <leader><leader>oG   - FzfGFiles?
 
 ### Git File History
-<leader><leader>ogl  - DiffviewFileHistory (current file)
+<leader>gD           - git log --follow of the current file! ~/.config/nvim/plugin/config/maps.lua‖/require'git_commits_viewer'.ShowCurrentFile(5)
+<leader><leader>ogl  - Vim-Diffview DiffviewFileHistory (current file)
 <leader><leader>ogL  - DiffviewFileHistory (all files)
 
 ### Git Diff
@@ -636,64 +638,6 @@ pnpm run dev
 glc/b   - on http://localhost:5173/
 <leader>glc   - chromium with http://localhost:5173/
 
-## end of block motion
-J  - when at the beginning of the block, can just use the indent level motions
-<leader>)  - this jumps to the end of the block from any place inside the block. (reversible via <c-o>)
-
-### treesitter textobj motions
-]M   - got_next_end
-~/.config/nvim/plugin/config/treesitter.lua
-
-## go return statement motions
-]r    - (from TS function name) go to 'return' statement
-[r    - previous return statement
-]b    - End of JS block
-~/.config/nvim/plugin/ftype/typescript.vim‖/GOˍRETURNˍmotions
-
-## heading motions
-q/Q    - next / prev
-,q     - current end marker
-<op>ih - inside heading content
-<op>ah - around heading area
-         * yank, delete, cut, visual-sel, change, subsitute
-
-### word motions
-#### forward
-w/W    - beginning of word/Word
-e/E    - end word/Word
-#### backward
-b/B    - beginning of word/Word
-\e     - end of word
-(,ge   - end of word) .. shadowed
-
-
-[op]ii  - inside indent block (linewise delete, change, yank)
-[op]ai  - outer indent block (linewise delete, change, yank)
-
-outdated?
-<leader>od  - open dirvish in float!
-
-## indenting lines
-,,al/j/}    - indent lines to the current cursor horz pos
-
-## pasting from (past) registers
-<leader>"   - show registers in Telescope (basically :reg)
-              then 0/1/2 and <cr> to output a past yank/copy
-"0p         - directly 'puts' the prev, prev yank
-
-## textobject and treesitter motions
-not yet tested, working: 2024-01
-~/.config/nvim/plugin/config/treesitter.lua‖/lsp_interop
-
-## hop / sneak motion commands
-,j/k    - jump to line forward/back (works in visual mode!)
-y/d q/Q - yank/delete/substitute until line forward/back
-f       - one char line motion
-,f/F    - type a char to jump forward/back
-          NOTE: cursor has to be in the paragraph for "F" to work!?
-
-~/.config/nvim/plugin/config/hop.lua
-
 ## browse lsp symbols, navbuddy / vista tag bar outline
 <leader>on - Navbuddy
 <leader>ot - to open vista outline for .md files and lsp
@@ -1000,13 +944,14 @@ now prefer using psql within sql.vim
 let g:dbname = 'zio_skunk_tradeIO'
    or set g:dbconn if e.g. a docker image requires user&pw:
 let g:dbconn = 'postgresql://jimmy:banana@0.0.0.0:5432/world'
+let g:dbconn = 'postgres://user:password@localhost:5430/postgres'
 let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
    set g:dbconn to '' to use g:dbname
 let g:dbconn = ''
 
 2. use gej in .sql file paragraph
 
-/Users/at/.config/nvim/plugin/tools_db.vim|94
+/Users/at/.config/nvim/plugin/tools_db.vim
 
 for DBUI:
 <leader><leader>du   - toggle open the DBUI panel
@@ -1810,6 +1755,8 @@ pnpm install
 
 ## git checkout a single file
 git show main:m/_printer/Examples.md > m/_printer/Examples_old.md
+git show main:db/index.ts > db/index1.ts
+git show origin/main:db/index.ts > db/index2.ts
 
 consider set scrollbind, set noscrollbind
 
