@@ -30,6 +30,7 @@ nnoremap <leader><leader>gwt :call ShellReturn( input('Cmd: ', GetLineFromCursor
 
 nnoremap <silent>gwj :call RunTerm_showFloat()<cr>
 nnoremap <silent>gwJ :call RunTerm_parag_showFloat()<cr>
+nnoremap <silent><leader>gwJ :call RunTerm_parag_showTerm()<cr>
 nnoremap <silent>,gwj :call TermOneShotFloat( getline('.'), 'term_float' )<cr>
 " nnoremap <silent><leader>gwj :call TermOneShot( getline('.') )<cr>
 nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
@@ -59,6 +60,21 @@ func! RunTerm_parag_showFloat()
  call System_Float( concat_cmd )
 endfunc
 
+func! RunTerm_parag_showTerm()
+ let [startLine, endLine] = ParagraphStartEndLines()
+ let lines = getline(startLine, endLine)
+ let concat_cmd = join( lines, ' ' )
+ if concat_cmd =~ g:direnv_keyword_ptn | let concat_cmd = 'direnv exec . ' . concat_cmd | endif
+
+ echo "running cmd: " . concat_cmd
+ exec "26new"
+ let opts = { 'cwd': getcwd( winnr() ) }
+ let g:TermID = termopen( concat_cmd, opts )
+ normal G
+
+endfunc
+
+
 
 func! RunTerm_showTerm()
  let cmdline = matchstr( getline("."), '\v^(\s*)?(\/\/\s|\"\s|#\s|--\s)?\zs\S.*' ) 
@@ -68,6 +84,8 @@ func! RunTerm_showTerm()
  let opts = { 'cwd': getcwd( winnr() ) }
  let g:TermID = termopen( cmdline, opts )
  normal G
+ " close the window without closing the terminal buffer
+ silent wincmd c
 endfunc
 
 func! StartDevServer()

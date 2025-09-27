@@ -382,15 +382,18 @@ endfunc
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 let g:chromeAppPath =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+let g:chromeAppPath_rd =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --remote-debugging-port=9222 "
 " let g:chromiumAppPath = "/Applications/Google\ Chrome.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
+let g:chromiumAppPath3 = "/Applications/Chromium.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 
 func! LaunchChromium( url ) abort
   " if exists('g:launchChromium_job_id')
   "   call jobstop( g:launchChromium_job_id )
   "   unlet g:launchChromium_job_id
   " endif
-  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --no-message-box --app=' . shellescape( a:url ))
+  " let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --no-message-box --app=' . shellescape( a:url ))
+  let g:launchChromium_job_id = jobstart( g:chromiumAppPath3 . ' --no-message-box --app=' . shellescape( a:url ))
 endfunc
 " call LaunchChromium( 'http://purescript.org' )
 " call LaunchChromium( 'file:///private/tmp/giphy2.gif' )
@@ -418,6 +421,12 @@ func! LaunchChrome( url )
   call systemlist( "open " . shellescape( a:url ) )
 endfunc
 " LaunchChrome( 'http://purescript.org' )
+
+
+func! LaunchChrome_remoteDebug( url )
+  let g:launchChrome_job_id = jobstart( g:chromeAppPath_rd . shellescape( a:url ))
+endfunc
+" LaunchChrome_remoteDebug( 'http://purescript.org' )
 
 
 command! -nargs=1 C call LaunchChromium2(<q-args>)
