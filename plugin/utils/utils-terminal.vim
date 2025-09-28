@@ -71,6 +71,9 @@ func! RunTerm_parag_showTerm()
  let opts = { 'cwd': getcwd( winnr() ) }
  let g:TermID = termopen( concat_cmd, opts )
  normal G
+ " close the window without closing the terminal buffer
+ " silent wincmd c
+ call T_DelayedCmd( "silent wincmd c", 2000 )
 
 endfunc
 
@@ -85,7 +88,9 @@ func! RunTerm_showTerm()
  let g:TermID = termopen( cmdline, opts )
  normal G
  " close the window without closing the terminal buffer
- silent wincmd c
+ " silent wincmd c
+ call T_DelayedCmd( "silent wincmd c", 5000 )
+
 endfunc
 
 func! StartDevServer()
