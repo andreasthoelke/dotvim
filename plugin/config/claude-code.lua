@@ -10,16 +10,18 @@ vim.api.nvim_create_user_command('ClaudeCodeMcpAdd', function(opts)
   -- Execute the add command
   local add_cmd = string.format('claude mcp add-json %s -s user "$(jq -c \'.\' ~/.config/mcp/%s.json)"', name, name)
   vim.fn.system(add_cmd)
-  
+
+  print("MCP Server added!")
+
   -- Show confirmation by listing all MCPs
-  print("MCP Servers:")
-  local list_output = vim.fn.system('claude mcp list')
-  print(list_output)
+  -- print("MCP Servers:")
+  -- local list_output = vim.fn.system('claude mcp list')
+  -- print(list_output)
   
   -- Show details of the added MCP
-  print("Added MCP details:")
-  local get_output = vim.fn.system(string.format('claude mcp get %s', name))
-  print(get_output)
+  -- print("Added MCP details:")
+  -- local get_output = vim.fn.system(string.format('claude mcp get %s', name))
+  -- print(get_output)
 end, {
   nargs = 1,
   desc = "Add Claude MCP server configuration"
@@ -37,10 +39,11 @@ vim.api.nvim_create_user_command('ClaudeCodeMcpRemove', function(opts)
   local remove_cmd = string.format('claude mcp remove "%s" -s user', name)
   vim.fn.system(remove_cmd)
   
+  print("MCP Server removed!")
   -- Show confirmation by listing remaining MCPs
-  print("Remaining MCP Servers:")
-  local list_output = vim.fn.system('claude mcp list')
-  print(list_output)
+  -- print("Remaining MCP Servers:")
+  -- local list_output = vim.fn.system('claude mcp list')
+  -- print(list_output)
 end, {
   nargs = 1,
   desc = "Remove Claude MCP server configuration"

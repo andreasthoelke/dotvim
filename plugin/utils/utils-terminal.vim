@@ -89,7 +89,7 @@ func! RunTerm_showTerm()
  normal G
  " close the window without closing the terminal buffer
  " silent wincmd c
- call T_DelayedCmd( "silent wincmd c", 5000 )
+ " call T_DelayedCmd( "silent wincmd c", 5000 )
 
 endfunc
 
@@ -104,7 +104,7 @@ func! StartDevServer()
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:Vite1TermID = termopen( cmdline, opts )
 
-  call T_DelayedCmd( "call StartDevServer_resume()", 2000 )
+  call T_DelayedCmd( "call StartDevServer_resume()", 4000 )
 endfunc
 " v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
 
@@ -145,7 +145,7 @@ func! StartDevServer_resume()
 
   " let port = v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
 
-  call LaunchChrome( "http://localhost:" . port )
+  call LaunchChrome_remoteDebug( "http://localhost:" . port )
 endfunc
 
 
@@ -157,6 +157,12 @@ func! StopDevServer ()
   call jobstop( g:Vite1TermID )
   unlet g:Vite1TermID
   echo 'Vite1TermID closed!'
+
+  " Optionally closing the LaunchChrome_remoteDebug browser
+  if exists('g:Chrome_remoteDebugID')
+    call jobstop( g:Chrome_remoteDebugID )
+    unlet g:Chrome_remoteDebugID
+  endif
 endfunc
 
 func! RestartDevServer ()

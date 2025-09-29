@@ -382,7 +382,9 @@ endfunc
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 let g:chromeAppPath =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-let g:chromeAppPath_rd =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --remote-debugging-port=9222 "
+" let g:chromeAppPath_rd =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --remote-debugging-port=9222 "
+" /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$HOME/.chrome-mcp-profile http://localhost:5173/
+let g:chromeAppPath_rd =  '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$HOME/.chrome-mcp-profile'
 " let g:chromiumAppPath = "/Applications/Google\ Chrome.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 let g:chromiumAppPath3 = "/Applications/Chromium.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
@@ -424,9 +426,13 @@ endfunc
 
 
 func! LaunchChrome_remoteDebug( url )
-  let g:launchChrome_job_id = jobstart( g:chromeAppPath_rd . shellescape( a:url ))
+  exec "20new"
+  let opts = { 'cwd': getcwd( winnr() ) }
+  let g:Chrome_remoteDebugID = termopen( g:chromeAppPath_rd . ' ' . a:url, opts )
+  " close the window without closing the terminal buffer
+  silent wincmd c
 endfunc
-" LaunchChrome_remoteDebug( 'http://purescript.org' )
+" LaunchChrome_remoteDebug( 'http://localhost:5173/' )
 
 
 command! -nargs=1 C call LaunchChromium2(<q-args>)
