@@ -97,10 +97,12 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     "claude --debug ",
     "claude update ",
     "claude --resume ",
+    "cat -v ",
     "gemini ",
-    "gemini -m gemini-flash-latest",
-    "gemini -m gemini-2.5-flash-image-preview",
-    "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm run start ",
+    "gemini -m gemini-flash-latest ",
+    "gemini -m gemini-2.5-flash-image-preview ",
+    "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm start ",
+    "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm start -m gemini-flash-latest ",
     "opencode ",
     "codex --model 'gpt-5-codex' --yolo -c model_reasoning_summary_format=experimental ",
     "codex ",
@@ -128,8 +130,17 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
 end)
 
 
-vim.keymap.set( 'n', '<c-g>V', function() vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd']) end )
-vim.keymap.set( 'n', '<c-g>S', function() vim.cmd(require('claude_code').AiderOpen( vim.g['codex_cmd'], "hsplit")) end )
+vim.keymap.set( 'n', '<c-g>V', function()
+  vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd'])
+  vim.g['gemini_win'] = vim.api.nvim_get_current_win()
+  vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
+end )
+
+vim.keymap.set( 'n', '<c-g>S', function()
+  vim.cmd(require('claude_code').AiderOpen( vim.g['codex_cmd'], "hsplit"))
+  vim.g['gemini_win'] = vim.api.nvim_get_current_win()
+  vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
+end )
 -- ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/localˍcommandˍ=ˍargs
 
 vim.keymap.set('n', '<c-g><c-j>', function()
@@ -271,13 +282,36 @@ vim.keymap.set( 'n',
     -- Claude_send(string.char(27))
     -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
     -- Claude_send( "i" )
+
+    local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
+    if using_gemini_cli then
+      GeminiTerm_sendkey("<CR>")
+      -- vim.api.nvim_echo( {{ "sent to gemini" }}, true, {} )
+      return
+    end
+
     Claude_send( "\r" )
   end )
+
+-- vim.api.nvim_chan_send(vim.g.claude_job_id, "\x1b[200~hello\x1b[201~")
+-- vim.api.nvim_chan_send(vim.g.claude_job_id, "\x1b[200~\r\x1b[201~")
 
 -- CLEAR text field buffer
 vim.keymap.set( 'n',
   '<c-g>C', function()
     local magenta_win = BufName_InThisTab_id("Magenta Input")
+
+    local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
+    if using_gemini_cli then
+      GeminiTerm_sendkey("<Esc>")
+      vim.defer_fn(function()
+        GeminiTerm_sendkey("<Esc>")
+      end, 100)
+
+      -- vim.api.nvim_echo( {{ "sent to gemini" }}, true, {} )
+      return
+    end
+
     if magenta_win then
       local current_win = vim.api.nvim_get_current_win()
       vim.api.nvim_set_current_win(magenta_win)
@@ -286,6 +320,7 @@ vim.keymap.set( 'n',
       vim.api.nvim_set_current_win(current_win)
       return
     end
+
     vim.fn.chansend(vim.g.claude_job_id, string.char(3))
     -- Claude_send(string.char(3))
   end )
@@ -329,7 +364,7 @@ vim.keymap.set( 'n',
   -- "predict-edit",
   -- "accept-prediction",
   -- "dismiss-prediction",
-  -- local visual_commands = 
+  -- local visual_commands =
 --   "start-inline-edit-selection",
 --   "replay-inline-edit-selection",
 --   "paste-selection",

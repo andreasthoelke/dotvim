@@ -25,16 +25,42 @@ function _G.ParrotBuf_GetLatestUserMessage()
   return latest_user_msg
 end
 
+function _G.GeminiTerm_sendkey(keystr)
+  local win = vim.g.gemini_win
+  local buf = vim.g.gemini_buf
 
+  -- Validate and focus
+  if win and vim.api.nvim_win_is_valid(win) then
+    vim.api.nvim_set_current_win(win)
+  end
+
+  if buf and vim.api.nvim_buf_is_valid(buf) then
+    vim.api.nvim_set_current_buf(buf)
+  else
+    -- Optional: reopen buffer if window closed
+    if buf and vim.api.nvim_buf_is_valid(buf) then
+      vim.cmd("botright sbuffer " .. buf)
+    end
+  end
+  -- vim.api.nvim_set_current_win(1168)
+  -- Ensure we’re in Terminal-Job mode (so keys go to the TUI, not to Neovim)
+  vim.cmd("startinsert")  -- in a terminal buffer this enters job mode
+
+  -- Send an actual <CR> “as typed”
+  local CR = vim.api.nvim_replace_termcodes(keystr, true, false, true)
+  vim.api.nvim_feedkeys(CR, "t", false)
+end
+-- GeminiTerm_sendkey("<CR>")
 
 -- Send to claude code terminal or parrot window if visible.
 function _G.Claude_send(text)
   local magenta_win = BufName_InThisTab_id("Magenta Input")
-  local parrot_win = ParrotChat_InThisTab_id()
+  -- local parrot_win = ParrotChat_InThisTab_id()
   local avante_win = Avante_InThisTab_id()
   local current_win = vim.api.nvim_get_current_win()
   local not_in_parrot_win = current_win ~= parrot_win
   local not_in_avante_win = current_win ~= avante_win
+  local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
 
   if magenta_win then
     if text == "\r" then
@@ -82,11 +108,27 @@ function _G.Claude_send(text)
     return false
   end
 
+  -- see ~/.local/share/nvim/parrot/chats/2025-09-29.11-17-22.488.md
+  if using_gemini_cli then
+    local wrapped = "\x1b[200~" .. text .. "\x1b[201~"
+    text = wrapped
+  end
+
+  -- vim.api.nvim_echo( {{ text }}, true, {} )
+
   vim.fn.chansend(job_id, text)
+  -- vim.fn.chansend(job_id, "\x1b[200~\r\n\x1b[201~")
+  -- vim.fn.chansend(job_id, "\r\n")
+  -- vim.defer_fn(function()
+  --   vim.api.nvim_chan_send(vim.g.claude_job_id, "\n")
+  -- end, 50)  -- ms
+
   return true
 end
 
--- Claude_send("hi there")
+-- Claude_send("iab")
+-- Claude_send( "\x1b[200~hi there!\x1b[201~" )
+-- Claude_send( "\x1b[200~hi there!\x1b[201~\r" )
 
 function _G.CodeBlockMarkup( inputStr )
   local filePathRelToCWD = vim.fn.expand('%')
