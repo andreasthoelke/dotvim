@@ -345,7 +345,9 @@ endfunc
 " A path or url is often the longest word in a line
 func! GetPath_fromLine()
   let full_line = trim(getline('.'))
-  
+  " Remove markdown bold/italic markers to avoid matching them
+  let full_line = substitute(full_line, '\*', '', 'g')
+
   " SIMPLE: If line contains ‖, return the full line (handles spaces in paths)
   if full_line =~ '‖'
     if filereadable(full_line)
@@ -479,7 +481,7 @@ func! GetPath_fromLine()
   endif
 
   " Check for backtick-enclosed paths
-  let backtick_match = matchstr(getline('.'), '`\zs[^`]*\ze`')
+  let backtick_match = matchstr(full_line, '`\zs[^`]*\ze`')
   if !empty(backtick_match)
     let path = backtick_match
     
@@ -496,7 +498,7 @@ func! GetPath_fromLine()
   endif
 
   " Check for double-quotes-enclosed paths
-  let quotes_match = matchstr(getline('.'), '"\zs[^"]*\ze"')
+  let quotes_match = matchstr(full_line, '"\zs[^"]*\ze"')
   if !empty(quotes_match)
     let path = quotes_match
     
@@ -513,7 +515,7 @@ func! GetPath_fromLine()
   endif
 
   " Check for single-quotes-enclosed paths
-  let single_quotes_match = matchstr(getline('.'), "'\\zs[^']*\\ze'")
+  let single_quotes_match = matchstr(full_line, "'\\zs[^']*\\ze'")
   if !empty(single_quotes_match)
     let path = single_quotes_match
     
@@ -524,24 +526,6 @@ func! GetPath_fromLine()
     let current_folder = fnamemodify(expand('%:p'), ':h')
     let folder_rel_path = current_folder . '/' . path
     
-    if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
-      return folder_rel_path
-    endif
-  endif
-
-  " Check for *...* or **...** enclosed paths
-  let star_match = matchstr(getline('.'), '\v(\*{1,2})\zs[^*]+\ze\1')
-  " Alternatively, use '\v(\*{1,2})\zs\f+\ze\1' to rely on 'isfname' chars
-  if !empty(star_match)
-    let path = star_match
-
-    if filereadable(path) || isdirectory(path)
-      return path
-    endif
-
-    let current_folder = fnamemodify(expand('%:p'), ':h')
-    let folder_rel_path = current_folder . '/' . path
-
     if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
       return folder_rel_path
     endif

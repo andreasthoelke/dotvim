@@ -88,12 +88,13 @@ end, { noremap = true, silent = true })
 -- ~/.config/nvim/plugin/config/parrot-claude-code.lua
 -- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(args,
 
-vim.g.codex_cmd = "claude --dangerously-skip-permissions "
+vim.g.codex_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "claude ",
     "claude --dangerously-skip-permissions ",
+    "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "claude --debug ",
     "claude update ",
     "claude --resume ",
