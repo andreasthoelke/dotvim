@@ -547,6 +547,25 @@ func! MarkdownSyntaxAdditions()
   " call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
   " call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
+  " Fix: Clear vim-markdown plugin's syntax conceals to prevent corruption when
+  " TypeScript files are open in splits. Since conceallevel is window-scoped (not
+  " buffer-scoped), the markdown plugin's 'concealends' on ** and ` would activate
+  " when TypeScript sets conceallevel=2, causing flickering conceals in markdown.
+  " We clear and recreate the syntax rules without conceal attributes.
+  silent! syntax clear mkdBold
+  silent! syntax clear mkdItalic
+  silent! syntax clear mkdBoldItalic
+  silent! syntax clear mkdCode
+  silent! syntax clear mkdCodeDelimiter
+
+  " Recreate them without conceal
+  syn region htmlItalic start="\%(^\|\s\)\zs\*\ze[^\\\*\t ]\%(\%([^*]\|\\\*\|\n\)*[^\\\*\t ]\)\?\*\_W" end="[^\\\*\t ]\zs\*\ze\_W" keepend contains=@Spell oneline
+  syn region htmlBold start="\%(^\|\s\)\zs\*\*\ze\S" end="\S\zs\*\*" keepend contains=@Spell oneline
+  syn region mkdCode start=/`/ end=/`/
+  syn region mkdCode start=/``/ skip=/[^`]`[^`]/ end=/``/
+
+  setlocal conceallevel=2
+  setlocal concealcursor=ni
   " set foldmethod=marker
 endfunc
 

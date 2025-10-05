@@ -398,9 +398,8 @@ endfunc
 func! JS_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  " currently doesn't return "async", but could
-  " let l:typeStr = v:lua.require('utils_lsp').type()
-  let l:typeStr = v:lua.require('utils_lsp').hover()[2].result.contents[0].value
+  let l:typeStr = v:lua.require('utils_lsp').hover()
+  " let l:typeStr = v:lua.require('utils_lsp').hover()[3].result.contents[0].value
   call setpos('.', [0, oLine, oCol, 0] )
   return l:typeStr
 endfunc

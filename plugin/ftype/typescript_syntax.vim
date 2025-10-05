@@ -392,8 +392,8 @@ func! TsSyntaxAdditions ()
   " call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
   " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
 
-  set conceallevel=2 " ■
-  set concealcursor=ni " ▲
+  setlocal conceallevel=2 " ■
+  setlocal concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
   " set commentstring=\ \/\/%s
