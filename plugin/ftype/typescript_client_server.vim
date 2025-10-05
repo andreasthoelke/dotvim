@@ -398,10 +398,22 @@ endfunc
 func! JS_LspTypeAtPos(lineNum, colNum)
   let [oLine, oCol] = getpos('.')[1:2]
   call setpos('.', [0, a:lineNum, a:colNum, 0] )
-  let l:typeStr = v:lua.require('utils_lsp').hover()
-  " let l:typeStr = v:lua.require('utils_lsp').hover()[3].result.contents[0].value
+  let l:hoverResponse = v:lua.require('utils_lsp').hover()
   call setpos('.', [0, oLine, oCol, 0] )
-  return l:typeStr
+
+  " Find the first non-null element with the expected structure
+  for item in l:hoverResponse
+    if type(item) == type({}) && has_key(item, 'result')
+      if has_key(item.result, 'contents') && len(item.result.contents) > 0
+        if type(item.result.contents[0]) == type({}) && has_key(item.result.contents[0], 'value')
+          return item.result.contents[0].value
+        endif
+      endif
+    endif
+  endfor
+
+  " If no valid structure found, return the full response for debugging
+  return l:hoverResponse
 endfunc
 " echo JS_LspTypeAtPos(111, 10)
 " echo JS_LspTypeAtPos(line('.'), col('.'))
