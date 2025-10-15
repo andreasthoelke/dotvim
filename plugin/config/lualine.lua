@@ -447,7 +447,11 @@ require('lualine').setup( lualine_config )
 -- Add autocmd to refresh winbar on window focus change
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
   callback = function()
-    require('lualine').refresh()
+    -- Skip refresh for floating windows to avoid flash
+    local win_config = vim.api.nvim_win_get_config(0)
+    if win_config.relative == "" then
+      require('lualine').refresh()
+    end
   end
 })
 

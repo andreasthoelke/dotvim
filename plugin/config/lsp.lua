@@ -217,6 +217,7 @@ vim.diagnostic.config({
   float = {
     -- source = "if_many",
     source = "always",
+    border = border,
   },
   signs = false,
   underline = false,
