@@ -610,3 +610,59 @@ require("parrot").setup(
 )
 
 
+      -- openai = {
+      --   name = "openai",
+      --   api_key = os.getenv("OPENAI_API_KEY"),
+      --   endpoint = "https://api.openai.com/v1/chat/completions",
+      --   model_endpoint = "https://api.openai.com/v1/models",
+      --   model = "gpt-5",
+      --   models = {
+      --     "gpt-5",
+      --     "gpt-5-mini",
+      --     "gpt-4o",
+      --   },
+      --   params = {
+      --     chat = { max_completion_tokens = 4096 },
+      --     command = { max_completion_tokens = 4096 },
+      --   },
+      --   --   Claude: .. | /Users/at/.local/share/nvim/parrot/chats/2025-10-07.21-24-16.md
+      --   -- ADD THIS: Custom preprocessing for GPT-5
+      --   preprocess_payload = function(payload)
+      --     for _, message in ipairs(payload.messages) do
+      --       message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
+      --     end
+      --     -- Handle GPT-5 reasoning models (same restrictions as o1/o3/o4)
+      --     if payload.model and string.match(payload.model, "^gpt%-5") then
+      --       -- Remove system prompt (not supported by GPT-5)
+      --       if payload.messages[1] and payload.messages[1].role == "system" then
+      --         table.remove(payload.messages, 1)
+      --       end
+      --       -- Set extended thinking
+      --       payload.reasoning_effort = "high"
+      --       -- Set fixed values for unsupported parameters
+      --       payload.temperature = 1
+      --       payload.top_p = 1
+      --       payload.presence_penalty = 0
+      --       payload.frequency_penalty = 0
+      --       payload.logprobs = nil
+      --       payload.logit_bias = nil
+      --       payload.top_logprobs = nil
+      --     end
+      --     -- Handle o1/o3/o4 models (from plugin defaults)
+      --     if payload.model and string.match(payload.model, "^o[134]") then
+      --       if payload.messages[1] and payload.messages[1].role == "system" then
+      --         table.remove(payload.messages, 1)
+      --       end
+      --       payload.temperature = 1
+      --       payload.top_p = 1
+      --       payload.presence_penalty = 0
+      --       payload.frequency_penalty = 0
+      --       payload.logprobs = nil
+      --       payload.logit_bias = nil
+      --       payload.top_logprobs = nil
+      --     end
+      --     return payload
+      --   end,
+      -- },
+
+

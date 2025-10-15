@@ -430,6 +430,10 @@ Claude code
 <c-g>l p        - provider
 <c-g>l m        - model
 
+  - @buffer:foo.txt - Include open buffer
+  - @file:test.lua - Include file content
+  - @directory:src/ - Include all files from directory
+
 Repo:
 https://github.com/frankroeder/parrot.nvim
 

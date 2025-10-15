@@ -44,7 +44,8 @@ func! TsSyntaxAdditions ()
   syntax match Normal '\vz\.string\(\)' conceal cchar=S
   syntax match Normal 'String\.' conceal cchar=S
   syntax match Normal 'String' conceal cchar=S
-  syntax match Normal 'Number\.' conceal cchar=N
+  " syntax match Normal 'Number\.' conceal cchar=N
+  syntax match Normal 'Number' conceal cchar=N
   syntax match Normal '\vboolean\ze(\W|\_$)' conceal cchar=B
   syntax match Normal 'array\ze\W' conceal cchar=⟦
   " syntax match Normal 'object\ze\W' conceal cchar=⁑
