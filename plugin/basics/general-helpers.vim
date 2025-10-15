@@ -164,7 +164,7 @@ nnoremap <silent><leader>os :call Path_Float( '~/.config/nvim/keymaps/vim-cheat-
 nnoremap <silent><leader>tO :call Path_Float( '~/Documents/Notes/todos-global.md' )<cr>
 nnoremap <silent><leader>to :call Path_Float( '/Users/at/Documents/Notes/todos-workflow.md' )<cr>
 
-nnoremap <silent><leader>oex :call Path_Float( 'ExampleLog.md' )<cr>
+nnoremap <silent><leader>oex :call Path_Float( g:ExamplesPath )<cr>
 nnoremap <silent><leader>oel :call Path_Float( 'ExampleLinks.md' )<cr>
 nnoremap <silent><leader>op :call Path_Float( 'package.json' )<cr>
 nnoremap <silent><leader>oi :call Path_Float( '.gitignore' )<cr>

@@ -4,7 +4,17 @@ nnoremap <silent><leader>ces :call Example_SetStart()<cr>
 nnoremap <silent><leader>cea :call Example_AddIdentif()<cr>
 vnoremap <silent><leader>cea :call Example_AddVisSel()<cr>
 
-let g:ExamplesPath = "ExampleLog.md"
+" Use notes/ folder if it exists (symlink or directory)
+if isdirectory("notes")
+  let g:ExamplesPath = "notes/ExampleLog.md"
+  " Auto-migrate existing ExampleLog.md from root to notes/
+  if filereadable("ExampleLog.md") && !filereadable(g:ExamplesPath)
+    call rename("ExampleLog.md", g:ExamplesPath)
+    echo "Migrated ExampleLog.md to notes/"
+  endif
+else
+  let g:ExamplesPath = "ExampleLog.md"
+endif
 
 func! Example_SetStart()
   if !filereadable( g:ExamplesPath )
