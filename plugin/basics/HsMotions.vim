@@ -834,6 +834,8 @@ endfunc
 " aa bb abc aa
 " aa bb 'abc ' aa
 " aa bb abc aa
+" call SearchSkipSC( '= yield', 'W' )
+" call SearchSkipSC( '= \zsyield', 'W' )
 
 func! SkipBinding()
   let cw = expand('<cword>')

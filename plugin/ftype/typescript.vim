@@ -5,7 +5,66 @@ nnoremap <silent> gee :call T_Menu()<cr>
 
 
 func! JS_bufferMaps()
-  call Scala_bufferMaps_shared()
+  " call Scala_bufferMaps_shared()
+
+" ─   Ex-shared motions                                  ■
+
+  nnoremap <silent><buffer> µ :call HotspotTSFw()<cr>
+  nnoremap <silent><buffer> <tab> :call HotspotTSBw()<cr>
+
+" To be tested!
+  " nnoremap <silent><buffer> ge;  :call v:lua.Search_mainPatterns( 'file', g:TS_MainStartPattern )<cr>
+  " nnoremap <silent><buffer> ge:  :call v:lua.Search_mainPatterns( 'global', g:TS_TopLevPattern )<cr>
+
+  " TODO this needs cleanup. could just use ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Search_folder(f
+  nnoremap <silent><buffer> gs;  :call v:lua.Search_mainPatterns( 'file' )<cr>
+  nnoremap <silent><buffer> gs:  :call v:lua.Search_mainPatterns( 'cwd' )<cr>
+
+  nnoremap <silent><buffer> gsr  :call v:lua.Search_selection()<cr>
+  xnoremap <silent><buffer> gsr  :call v:lua.Search_mainPatterns( 'global', GetVisSel(), "normal" )<cr>
+
+  nnoremap <silent><buffer> gst  :call v:lua.Search_ast( expand('<cword>') )<cr>
+  xnoremap <silent><buffer> gst  :call v:lua.Search_ast( GetVisSel() )<cr>
+
+  " note the other "gs.." maps: ~/.config/nvim/plugin/config/telescope.vim‖/noteˍtheˍot
+
+
+  " Folder search
+  " ~/.config/nvim/plugin/config/telescope.vim‖*Folderˍsearchˍmapsˍ2025-03
+  " LOCAL HEADERS
+  " nnoremap <leader>slh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+  nnoremap <silent><buffer>gsh <cmd>lua require('utils.general').Search_folder('.', '─.*')<cr>
+
+  " nnoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>)     :call JS_MvEndOfBlock()<cr>
+
+  nnoremap <silent><buffer> <leader>(     :call TS_MvStartOfBlock()<cr>
+  " onoremap <silent><buffer> <leader>(     :call TS_MvStartOfBlock()<cr>
+  onoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>(     :<c-u>call BlockStart_VisSel()<cr>
+
+  nnoremap <silent><buffer> <leader>)     :call TS_MvEndOfBlock()<cr>
+  onoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+  vnoremap <silent><buffer> <leader>)     :<c-u>call BlockEnd_VisSel()<cr>
+
+  nnoremap <silent><buffer> * :call MvPrevLineStart()<cr>
+  nnoremap <silent><buffer> ( :call MvLineStart()<cr>
+  nnoremap <silent><buffer> ) :call MvNextLineStart()<cr>
+
+  nnoremap <silent><buffer> I :call TS_ColumnForw()<cr>
+  nnoremap <silent><buffer> Y :call TS_ColumnBackw()<cr>
+
+  nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
+  " " find a new map if I actually use this:
+  " nnoremap <silent><buffer> <leader><c-p> :call JS_MvEndOfPrevBlock()<cr>
+  nnoremap <silent><buffer> ]b            :call JS_MvEndOfBlock()<cr>
+
+  nnoremap <silent><buffer> <leader>yab :call JS_YankCodeBlock()<cr>
+
+
+" ─^  Ex-shared motions                                  ▲
+
+
 
   " nnoremap <silent><buffer> <leader>ca :TSLspImportCurrent<cr>
   " nnoremap <silent><buffer> <leader>cA :TSLspImportAll<cr>
@@ -470,4 +529,186 @@ endfunc
 
 
 
+" ─   Motions                                            ■
+
+" NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
+let g:TS_MainStartPattern = '\v^((\s*)?\zs(sealed|val|operation|service|inline|private|given|final|trait|override\sdef|abstract|type|val\s|lazy\sval|case\sclass|case\sobject|enum|final|object|class|def)\s|val)\zs'
+let g:TS_TopLevPattern = '\v^(object|type|case|final|sealed|inline|class|trait)\s\zs'
+
+func! TS_TopLevBindingForw()
+  call search( g:TS_TopLevPattern, 'W' )
+endfunc
+
+func! TS_MainStartBindingForw()
+  " normal! }
+  normal! jj
+  call search( g:TS_MainStartPattern, 'W' )
+endfunc
+
+func! TS_TopLevBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:TS_TopLevPattern, 'bW' )
+  " normal! {
+  " normal! kk
+  " call search( g:TS_TopLevPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+
+func! TS_MainStartBindingBackw()
+  " NOTE: this works nicely here: ~/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/G_DomainModeling.scala#///%20Variance
+  call search( g:TS_MainStartPattern, 'bW' )
+  " normal! {
+  normal! kk
+  call search( g:TS_MainStartPattern, 'W' )
+  " call search( '\v^(export|function|const|let)\s', 'W' )
+endfunc
+
+" call search('\v^(\s*)?call', 'W')
+
+func! TS_MvStartOfBlock()
+  normal! k
+  exec "silent keepjumps normal! {"
+  normal! j^
+endfunc
+
+
+func! TS_MvEndOfBlock()
+  normal! j
+  exec "silent keepjumps normal! }"
+  normal! k^
+endfunc
+
+func! BlockStart_VisSel()
+  normal! m'
+  normal! V
+  call TS_MvStartOfBlock()
+  normal! o
+endfunc
+
+
+func! BlockEnd_VisSel()
+  normal! m'
+  normal! V
+  call TS_MvEndOfBlock()
+  normal! o
+endfunc
+
+
+" let g:TS_MvStartLine_SkipWords = '\v(val|def|lazy|private|final|override)'
+let g:TS_MvStartLine_SkipWordsL = ['val', 'def', 'lazy', 'private', 'final', 'override', 'const', 'await', 'return']
+" echo "private" =~ g:TS_MvStartLine_SkipWords
+
+func! SkipTSSkipWords()
+  if GetCharAtCursor() == "."
+    normal! l
+    return
+  endif
+  if GetCharAtCursor() == "/" || GetCharAtCursor() == "*"
+    normal! w
+    return
+  endif
+
+  " if expand('<cword>') == "yield"
+  "   normal! W
+  "   return
+  " endif
+
+  let cw = expand('<cword>')
+
+  " if cw =~ g:TS_MvStartLine_SkipWords
+  if count( g:TS_MvStartLine_SkipWordsL, cw )
+    normal! w
+    call SkipTSSkipWords()
+  endif
+endfunc
+"   .mapValues[ Domain.Destination.Issues ] { employeeIssues =>
+
+
+func! MvLineStart()
+  normal! m'
+  normal! ^
+  call SkipTSSkipWords()
+endfunc
+
+func! MvNextLineStart()
+  normal! m'
+  normal! j^
+  call SkipTSSkipWords()
+endfunc
+
+func! MvPrevLineStart()
+  normal! m'
+  normal! k^
+  call SkipTSSkipWords()
+endfunc
+
+func! MakeOrPttn( listOfPatterns )
+  return '\(' . join( a:listOfPatterns, '\|' ) . '\)'
+endfunc
+
+let g:TS_columnPttn = MakeOrPttn( ['\:', '%', '+', '&', '->', '<-', '\#', '\/\/', '*>', 'extends', 'return \zsyield', '= \zsyield', '=', 'if', 'then', 'else', '\$'] )
+
+
+func! TS_ColumnForw()
+  call SearchSkipSC( g:TS_columnPttn, 'W' )
+  normal w
+  call SkipTSSkipWords()
+endfunc
+
+func! TS_ColumnBackw()
+  call search('^.\+', 'bW')
+  call SearchSkipSC( g:TS_columnPttn, 'W' )
+  normal w
+  call SkipTSSkipWords()
+endfunc
+
+" ─^  Motions                                            ▲
+
+
+" ─   Hotspot motions                                    ■
+
+" Note: <c-m> and <c-i> is now unmappable
+" nnoremap <silent> <c-m> :call FnAreaForw()<cr>
+" nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
+" Instead use option-key / alt-key maps that are sent by karabiner. see /Users/at/Documents/Notes/help.md.md#/###%20Mapping%20Alt
+" nnoremap <silent> µ :call HotspotForw()<cr>
+" nnoremap <silent> <tab> :call HotspotBackw()<cr>
+
+" nnoremap <silent> µ :call HotspotTSFw()<cr>
+" nnoremap <silent> <tab> :call HotspotTSBw()<cr>
+
+func! HotspotTSFw()
+  call search('\v(\.|\|)', 'W')
+  normal! w
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    normal! ll
+  endif
+endfunc
+
+func! HotspotTSBw()
+  normal! h
+  call search('\v(\.|\|)', 'bW')
+  normal! l
+  let cw = expand('<cword>')
+  " let cc = GetCharAtCursorAscii()
+  if cw == '$'
+    call HotspotTSBw()
+  endif
+endfunc
+
+func! HotspotForw()
+  call SearchSkipSC( g:lineHotspotsPttn, 'W' )
+  normal w
+endfunc
+
+func! HotspotBackw()
+  normal bh
+  call SearchSkipSC( g:lineHotspotsPttn, 'bW' )
+  normal w
+endfunc
+
+" ─^  Hotspot motions                                    ▲
 
