@@ -11,7 +11,7 @@ local config = {
       name = "sonnet-4.5",
       provider = "anthropic",
       model = "claude-sonnet-4-5",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },
     {
@@ -19,7 +19,7 @@ local config = {
       provider = "anthropic",
       -- model = "claude-opus-4-20250514",
       model = "claude-opus-4-1-20250805",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },
     {
@@ -27,7 +27,7 @@ local config = {
       provider = "anthropic",
       -- model = "claude-opus-4-20250514",
       model = "claude-opus-4-1-20250805",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY",
       thinking = {
         enabled = true,
@@ -38,14 +38,14 @@ local config = {
       name = "claude-sonnet",
       provider = "anthropic",
       model = "claude-sonnet-4-20250514",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY"
     },
     {
       name = "claude-sonnet-think",
       provider = "anthropic",
       model = "claude-sonnet-4-20250514",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       apiKeyEnvVar = "ANTHROPIC_API_KEY",
       thinking = {
         enabled = true,
@@ -98,7 +98,7 @@ local config = {
       name = "copilot-claude",
       provider = "copilot",
       model = "claude-3.7-sonnet",
-      fastModel = "claude-3-5-haiku-latest", -- optional, defaults provided
+      fastModel = "claude-haiku-4-5-20251001", -- optional, defaults provided
       -- No apiKeyEnvVar needed - uses existing Copilot authentication
     },
   },

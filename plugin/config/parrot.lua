@@ -33,7 +33,7 @@ require("parrot").setup(
           command = { max_tokens = 4096 },
         },
         topic = {
-          model = "claude-3-5-haiku-latest",
+          model = "claude-haiku-4-5-20251001",
           params = { max_tokens = 32 },
         },
         headers = function(self)
@@ -63,7 +63,7 @@ require("parrot").setup(
           "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",
           "claude-sonnet-4-20250514",
-          "claude-3-5-haiku-latest",
+          "claude-haiku-4-5-20251001",
         },
         topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
       },

@@ -187,7 +187,7 @@ func! GitCommitViaGitSnapLlm()
     call TermOneShotFloat( 'PROVIDER=anthropic git-snap-cloud', 'otherWinColumn' )
     wincmd p
 endfunc
-
+" using /Users/at/.config/utils_global/git-snap-cloud
 
 
 func! GitCommitViaAider()
