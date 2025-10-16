@@ -430,9 +430,6 @@ Claude code
 <c-g>l p        - provider
 <c-g>l m        - model
 
-  - @buffer:foo.txt - Include open buffer
-  - @file:test.lua - Include file content
-  - @directory:src/ - Include all files from directory
 
 Repo:
 https://github.com/frankroeder/parrot.nvim
@@ -1320,6 +1317,7 @@ workflow 2025-01: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
 ]c[c         - navigate hunks
 <leader>hp   - preview a diff of the hunk inline. 
 <leader>hs/r - stage / reset a hunk. use S / R for the entire buffer
+<leader>hu   - undo stage hunk
 
 ~/.config/nvim/plugin/utils-gitsigns.lua‖*Stagingˍgitˍhunks
 

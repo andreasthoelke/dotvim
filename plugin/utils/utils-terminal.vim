@@ -95,7 +95,8 @@ endfunc
 
 func! StartDevServer()
   if exists('g:Vite1TermID')
-    echo 'Vite1TermID is already running'
+    " echo 'Vite1TermID is already running'
+    call ReopenDevServer()
     return
   endif
   let cmdline = 'npm run dev'
@@ -103,6 +104,7 @@ func! StartDevServer()
   exec "20new"
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:Vite1TermID = termopen( cmdline, opts )
+  let g:Vite1TermBufNr = bufnr('%')  " Store the buffer number
 
   call T_DelayedCmd( "call StartDevServer_resume()", 4000 )
 endfunc
@@ -148,6 +150,35 @@ func! StartDevServer_resume()
   call LaunchChrome_remoteDebug( "http://localhost:" . port )
 endfunc
 
+
+func! ReopenDevServer()
+  if !exists('g:Vite1TermBufNr')
+    echo 'No dev server buffer exists. Run StartDevServer() first.'
+    return
+  endif
+  
+  " Check if buffer still exists
+  if !bufexists(g:Vite1TermBufNr)
+    echo 'Dev server buffer was deleted. Run StartDevServer() again.'
+    unlet g:Vite1TermBufNr
+    if exists('g:Vite1TermID')
+      unlet g:Vite1TermID
+    endif
+    return
+  endif
+  
+  " Check if buffer is already visible in a window
+  let winid = bufwinid(g:Vite1TermBufNr)
+  if winid != -1
+    call win_gotoid(winid)
+    echo 'Dev server window is already open'
+    return
+  endif
+  
+  " Reopen the buffer in a new split
+  exec "20split"
+  exec "buffer " . g:Vite1TermBufNr
+endfunc
 
 func! StopDevServer ()
   if !exists('g:Vite1TermID')
