@@ -131,6 +131,12 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
 end)
 
 
+-- ─   Agents / Claude code terminal                    ──
+-- These namings confusing: i should move to 'agents' as a common term
+-- 1. i use this command to call AiderOpen: ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/vim.api.nvim_create_user_command("ClaudeCodeOpen",ˍfunction(opts)
+--    note this is this plugin ~/.config/nvim/plugged/claude_code
+--    which was copied from ~/.config/nvim/plugged/aider.nvim
+
 vim.keymap.set( 'n', '<c-g>V', function()
   vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd'])
   vim.g['gemini_win'] = vim.api.nvim_get_current_win()

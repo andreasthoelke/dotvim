@@ -1267,6 +1267,8 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
   - ]x - Jump to next conflict
   - [x - Jump to previous conflict
 
+## git commits
+<leader><leader>gc  - commit via /Users/at/.config/utils_global/git-snap-cloud
 
 ## git diff views
 2025-04:
