@@ -138,19 +138,11 @@ end)
 -- Always creates NEW terminal (no resume logic)
 
 vim.keymap.set( 'n', '<c-g>V', function()
-  local buf, job_id = require('agents').open_agent(vim.g['agent_cmd'], 'vsplit')
-  -- Set global variables for backwards compatibility
-  vim.g['claude_job_id'] = job_id
-  vim.g['gemini_win'] = vim.api.nvim_get_current_win()
-  vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
+  require('agents').open_agent(vim.g['agent_cmd'], 'vsplit')
 end )
 
 vim.keymap.set( 'n', '<c-g>S', function()
-  local buf, job_id = require('agents').open_agent(vim.g['agent_cmd'], 'hsplit')
-  -- Set global variables for backwards compatibility
-  vim.g['claude_job_id'] = job_id
-  vim.g['gemini_win'] = vim.api.nvim_get_current_win()
-  vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
+  require('agents').open_agent(vim.g['agent_cmd'], 'hsplit')
 end )
 
 vim.keymap.set('n', '<c-g><c-j>', function()
@@ -283,42 +275,53 @@ end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 
 
--- RUN claude code text field buffer
+-- RUN/ENTER - Send Enter key to agent terminal in current tab
 vim.keymap.set( 'n',
   '<c-g><cr>', function()
-    -- OTHER_EVENTS:
-    -- Trigger other commands in the claude repl:
-    -- Send escape: (\<Esc> in vimscript)
-    -- Claude_send(string.char(27))
-    -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
-    -- Claude_send( "i" )
+    -- Find agent terminal in current tab
+    local current_tab = vim.api.nvim_get_current_tabpage()
+    local windows = vim.api.nvim_tabpage_list_wins(current_tab)
 
-    local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
-    if using_gemini_cli then
-      GeminiTerm_sendkey("<CR>")
-      -- vim.api.nvim_echo( {{ "sent to gemini" }}, true, {} )
+    local agent_win = nil
+    for _, win in ipairs(windows) do
+      if vim.api.nvim_win_is_valid(win) then
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+        local is_agent = vim.b[buf].is_agent_terminal
+
+        if buftype == "terminal" and is_agent then
+          agent_win = win
+          break
+        end
+      end
+    end
+
+    if not agent_win then
+      vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
       return
     end
 
-    Claude_send( "\r" )
-  end )
+    -- Focus the agent terminal window
+    vim.api.nvim_set_current_win(agent_win)
 
--- vim.api.nvim_chan_send(vim.g.claude_job_id, "\x1b[200~hello\x1b[201~")
--- vim.api.nvim_chan_send(vim.g.claude_job_id, "\x1b[200~\r\x1b[201~")
+    -- Enter terminal mode and send Enter key
+    vim.cmd("startinsert")
+    local key_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+    vim.api.nvim_feedkeys(key_code, "t", false)
+  end )
 
 -- CLEAR text field buffer
 vim.keymap.set( 'n',
   '<c-g>C', function()
     local magenta_win = BufName_InThisTab_id("Magenta Input")
 
-    local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
+    -- Check if using gemini (needs special key sending)
+    local using_gemini_cli = vim.g.agent_cmd and vim.g.agent_cmd:match('gemini')
     if using_gemini_cli then
       GeminiTerm_sendkey("<Esc>")
       vim.defer_fn(function()
         GeminiTerm_sendkey("<Esc>")
       end, 100)
-
-      -- vim.api.nvim_echo( {{ "sent to gemini" }}, true, {} )
       return
     end
 
@@ -331,12 +334,12 @@ vim.keymap.set( 'n',
       return
     end
 
-    -- Get job ID from global var or find dynamically
-    local job_id = vim.g.claude_job_id or require('agents').find_agent_terminal_in_tab()
+    -- Find job ID in current tab dynamically
+    local job_id = require('agents').find_agent_terminal_in_tab()
     if job_id then
       vim.fn.chansend(job_id, string.char(3))
     else
-      vim.notify("No agent terminal found", vim.log.levels.WARN)
+      vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
     end
   end )
 

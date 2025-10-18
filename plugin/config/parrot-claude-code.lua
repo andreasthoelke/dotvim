@@ -26,29 +26,38 @@ function _G.ParrotBuf_GetLatestUserMessage()
 end
 
 function _G.GeminiTerm_sendkey(keystr)
-  local win = vim.g.gemini_win
-  local buf = vim.g.gemini_buf
+  -- Find agent terminal in current tab
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  local windows = vim.api.nvim_tabpage_list_wins(current_tab)
 
-  -- Validate and focus
-  if win and vim.api.nvim_win_is_valid(win) then
-    vim.api.nvim_set_current_win(win)
-  end
+  local agent_win = nil
+  for _, win in ipairs(windows) do
+    if vim.api.nvim_win_is_valid(win) then
+      local buf = vim.api.nvim_win_get_buf(win)
+      local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+      local is_agent = vim.b[buf].is_agent_terminal
 
-  if buf and vim.api.nvim_buf_is_valid(buf) then
-    vim.api.nvim_set_current_buf(buf)
-  else
-    -- Optional: reopen buffer if window closed
-    if buf and vim.api.nvim_buf_is_valid(buf) then
-      vim.cmd("botright sbuffer " .. buf)
+      if buftype == "terminal" and is_agent then
+        agent_win = win
+        break
+      end
     end
   end
-  -- vim.api.nvim_set_current_win(1168)
-  -- Ensure we’re in Terminal-Job mode (so keys go to the TUI, not to Neovim)
+
+  if not agent_win then
+    vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
+    return
+  end
+
+  -- Focus the agent terminal window
+  vim.api.nvim_set_current_win(agent_win)
+
+  -- Ensure we're in Terminal-Job mode (so keys go to the TUI, not to Neovim)
   vim.cmd("startinsert")  -- in a terminal buffer this enters job mode
 
-  -- Send an actual <CR> “as typed”
-  local CR = vim.api.nvim_replace_termcodes(keystr, true, false, true)
-  vim.api.nvim_feedkeys(CR, "t", false)
+  -- Send the keystroke
+  local key_code = vim.api.nvim_replace_termcodes(keystr, true, false, true)
+  vim.api.nvim_feedkeys(key_code, "t", false)
 end
 -- GeminiTerm_sendkey("<CR>")
 
@@ -94,13 +103,8 @@ function _G.Claude_send(text)
     return
   end
 
-  -- Get the Claude job ID from the global Vim variable
-  local job_id = vim.g.claude_job_id
-
-  -- If not set, try to find agent terminal in current tab dynamically
-  if not job_id then
-    job_id = require('agents').find_agent_terminal_in_tab()
-  end
+  -- Find agent terminal in current tab dynamically
+  local job_id = require('agents').find_agent_terminal_in_tab()
 
   -- Check if we found a job ID
   if not job_id then
@@ -120,11 +124,6 @@ function _G.Claude_send(text)
   -- vim.api.nvim_echo( {{ text }}, true, {} )
 
   vim.fn.chansend(job_id, text)
-  -- vim.fn.chansend(job_id, "\x1b[200~\r\n\x1b[201~")
-  -- vim.fn.chansend(job_id, "\r\n")
-  -- vim.defer_fn(function()
-  --   vim.api.nvim_chan_send(vim.g.claude_job_id, "\n")
-  -- end, 50)  -- ms
 
   return true
 end
