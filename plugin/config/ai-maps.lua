@@ -278,69 +278,41 @@ end, { expr = true, desc = "Operator to send text to Claude with markup" })
 -- RUN/ENTER - Send Enter key to agent terminal in current tab
 vim.keymap.set( 'n',
   '<c-g><cr>', function()
-    -- Find agent terminal in current tab
-    local current_tab = vim.api.nvim_get_current_tabpage()
-    local windows = vim.api.nvim_tabpage_list_wins(current_tab)
+    -- Find agent terminal job ID in current tab
+    local job_id = require('agents').find_agent_terminal_in_tab()
 
-    local agent_win = nil
-    for _, win in ipairs(windows) do
-      if vim.api.nvim_win_is_valid(win) then
-        local buf = vim.api.nvim_win_get_buf(win)
-        local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
-        local is_agent = vim.b[buf].is_agent_terminal
-
-        if buftype == "terminal" and is_agent then
-          agent_win = win
-          break
-        end
-      end
-    end
-
-    if not agent_win then
+    if not job_id then
       vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
       return
     end
 
-    -- Focus the agent terminal window
-    vim.api.nvim_set_current_win(agent_win)
-
-    -- Enter terminal mode and send Enter key
-    vim.cmd("startinsert")
-    local key_code = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
-    vim.api.nvim_feedkeys(key_code, "t", false)
+    -- Send Enter directly via channel (works for all agents)
+    vim.fn.chansend(job_id, "\r")
   end )
 
--- CLEAR text field buffer
+-- CLEAR/CANCEL - Send Ctrl-C to agent terminal in current tab
 vim.keymap.set( 'n',
   '<c-g>C', function()
     local magenta_win = BufName_InThisTab_id("Magenta Input")
 
-    -- Check if using gemini (needs special key sending)
-    local using_gemini_cli = vim.g.agent_cmd and vim.g.agent_cmd:match('gemini')
-    if using_gemini_cli then
-      GeminiTerm_sendkey("<Esc>")
-      vim.defer_fn(function()
-        GeminiTerm_sendkey("<Esc>")
-      end, 100)
-      return
-    end
-
+    -- Handle Magenta input window separately
     if magenta_win then
       local current_win = vim.api.nvim_get_current_win()
       vim.api.nvim_set_current_win(magenta_win)
-      -- delete all text in the current buffer:
       vim.api.nvim_buf_set_lines(0, 0, -1, false, {})
       vim.api.nvim_set_current_win(current_win)
       return
     end
 
-    -- Find job ID in current tab dynamically
+    -- Find agent terminal job ID in current tab
     local job_id = require('agents').find_agent_terminal_in_tab()
-    if job_id then
-      vim.fn.chansend(job_id, string.char(3))
-    else
+    if not job_id then
       vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
+      return
     end
+
+    -- Send Ctrl-C directly via channel (works for all agents)
+    vim.fn.chansend(job_id, string.char(3))
   end )
 
 -- MAKE COMMIT .. thorough commit messages
