@@ -84,11 +84,11 @@ end, { noremap = true, silent = true })
 
 
 
--- ─   CLAUDE CODE                                       ■
--- ~/.config/nvim/plugin/config/parrot-claude-code.lua
--- ~/.config/nvim/plugged/aider.nvim/lua/aider.lua‖/functionˍM.AiderOpen(args,
+-- ─   AGENTS                                            ■
+-- Agent terminal management using lua/agents.lua
+-- Commands available: claude, codex, gemini, aider, etc.
 
-vim.g.codex_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
+vim.g.agent_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
@@ -114,15 +114,15 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
 
   -- Create a UI selection using vim.ui.select (available in Neovim 0.6+)
   vim.ui.select(options, {
-    prompt = "Select command:",
+    prompt = "Select agent command:",
     format_item = function(item)
       return item
     end
   }, function(choice)
     if choice then
-      -- Set the selected string to g:codex_cmd
-      vim.g.codex_cmd = choice
-      print("Selected: " .. choice)
+      -- Set the selected string to g:agent_cmd
+      vim.g.agent_cmd = choice
+      print("Selected agent: " .. choice)
     else
       print("No selection made")
     end
@@ -131,24 +131,27 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
 end)
 
 
--- ─   Agents / Claude code terminal                    ──
--- These namings confusing: i should move to 'agents' as a common term
--- 1. i use this command to call AiderOpen: ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/vim.api.nvim_create_user_command("ClaudeCodeOpen",ˍfunction(opts)
---    note this is this plugin ~/.config/nvim/plugged/claude_code
---    which was copied from ~/.config/nvim/plugged/aider.nvim
+-- ─   Agents Terminal Management                        ──
+-- Opens terminal buffers for CLI coding agents (Claude Code, Codex, Gemini, etc.)
+-- Uses the unified 'agents' module: lua/agents.lua
+-- Each tab can have one active agent terminal, found dynamically by searching the current tab
+-- Always creates NEW terminal (no resume logic)
 
 vim.keymap.set( 'n', '<c-g>V', function()
-  vim.cmd('ClaudeCodeOpen ' .. vim.g['codex_cmd'])
+  local buf, job_id = require('agents').open_agent(vim.g['agent_cmd'], 'vsplit')
+  -- Set global variables for backwards compatibility
+  vim.g['claude_job_id'] = job_id
   vim.g['gemini_win'] = vim.api.nvim_get_current_win()
   vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
 end )
 
 vim.keymap.set( 'n', '<c-g>S', function()
-  vim.cmd(require('claude_code').AiderOpen( vim.g['codex_cmd'], "hsplit"))
+  local buf, job_id = require('agents').open_agent(vim.g['agent_cmd'], 'hsplit')
+  -- Set global variables for backwards compatibility
+  vim.g['claude_job_id'] = job_id
   vim.g['gemini_win'] = vim.api.nvim_get_current_win()
   vim.g['gemini_buf'] = vim.api.nvim_get_current_buf()
 end )
--- ~/.config/nvim/plugged/claude_code/lua/claude_code.lua‖/localˍcommandˍ=ˍargs
 
 vim.keymap.set('n', '<c-g><c-j>', function()
   local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
@@ -290,7 +293,7 @@ vim.keymap.set( 'n',
     -- Enter insert mode (i actually need to send this before sending text! Rather <esc>i to make sure we were in normal mode)
     -- Claude_send( "i" )
 
-    local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
+    local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
     if using_gemini_cli then
       GeminiTerm_sendkey("<CR>")
       -- vim.api.nvim_echo( {{ "sent to gemini" }}, true, {} )
@@ -308,7 +311,7 @@ vim.keymap.set( 'n',
   '<c-g>C', function()
     local magenta_win = BufName_InThisTab_id("Magenta Input")
 
-    local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
+    local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
     if using_gemini_cli then
       GeminiTerm_sendkey("<Esc>")
       vim.defer_fn(function()
@@ -328,8 +331,13 @@ vim.keymap.set( 'n',
       return
     end
 
-    vim.fn.chansend(vim.g.claude_job_id, string.char(3))
-    -- Claude_send(string.char(3))
+    -- Get job ID from global var or find dynamically
+    local job_id = vim.g.claude_job_id or require('agents').find_agent_terminal_in_tab()
+    if job_id then
+      vim.fn.chansend(job_id, string.char(3))
+    else
+      vim.notify("No agent terminal found", vim.log.levels.WARN)
+    end
   end )
 
 -- MAKE COMMIT .. thorough commit messages
@@ -352,7 +360,7 @@ vim.keymap.set( 'n',
   end )
 
 
--- ─^  CLAUDE CODE                                       ▲
+-- ─^  AGENTS                                            ▲
 
 
 -- ─   Magenta                                           ■

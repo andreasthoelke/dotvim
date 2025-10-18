@@ -52,7 +52,7 @@ function _G.GeminiTerm_sendkey(keystr)
 end
 -- GeminiTerm_sendkey("<CR>")
 
--- Send to claude code terminal or parrot window if visible.
+-- Send text to agent terminal (found dynamically in current tab) or other AI windows (Magenta, Parrot, Avante)
 function _G.Claude_send(text)
   local magenta_win = BufName_InThisTab_id("Magenta Input")
   -- local parrot_win = ParrotChat_InThisTab_id()
@@ -60,7 +60,7 @@ function _G.Claude_send(text)
   local current_win = vim.api.nvim_get_current_win()
   local not_in_parrot_win = current_win ~= parrot_win
   local not_in_avante_win = current_win ~= avante_win
-  local using_gemini_cli = vim.g.codex_cmd ~= 'gemini'
+  local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
 
   if magenta_win then
     if text == "\r" then
@@ -96,13 +96,16 @@ function _G.Claude_send(text)
 
   -- Get the Claude job ID from the global Vim variable
   local job_id = vim.g.claude_job_id
-  -- echo b:terminal_job_id
-  -- local job_id = 116
 
-  -- Check if the job ID exists
+  -- If not set, try to find agent terminal in current tab dynamically
+  if not job_id then
+    job_id = require('agents').find_agent_terminal_in_tab()
+  end
+
+  -- Check if we found a job ID
   if not job_id then
     vim.api.nvim_echo({{
-      "Error: g:claude_job_id is not set. Please start Claude first.",
+      "Error: No agent terminal found. Please start an agent first with <c-g>V",
       "ErrorMsg"
     }}, true, {})
     return false
