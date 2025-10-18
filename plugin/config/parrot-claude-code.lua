@@ -25,41 +25,6 @@ function _G.ParrotBuf_GetLatestUserMessage()
   return latest_user_msg
 end
 
-function _G.GeminiTerm_sendkey(keystr)
-  -- Find agent terminal in current tab
-  local current_tab = vim.api.nvim_get_current_tabpage()
-  local windows = vim.api.nvim_tabpage_list_wins(current_tab)
-
-  local agent_win = nil
-  for _, win in ipairs(windows) do
-    if vim.api.nvim_win_is_valid(win) then
-      local buf = vim.api.nvim_win_get_buf(win)
-      local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
-      local is_agent = vim.b[buf].is_agent_terminal
-
-      if buftype == "terminal" and is_agent then
-        agent_win = win
-        break
-      end
-    end
-  end
-
-  if not agent_win then
-    vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
-    return
-  end
-
-  -- Focus the agent terminal window
-  vim.api.nvim_set_current_win(agent_win)
-
-  -- Ensure we're in Terminal-Job mode (so keys go to the TUI, not to Neovim)
-  vim.cmd("startinsert")  -- in a terminal buffer this enters job mode
-
-  -- Send the keystroke
-  local key_code = vim.api.nvim_replace_termcodes(keystr, true, false, true)
-  vim.api.nvim_feedkeys(key_code, "t", false)
-end
--- GeminiTerm_sendkey("<CR>")
 
 -- Send text to agent terminal (found dynamically in current tab) or other AI windows (Magenta, Parrot, Avante)
 function _G.Claude_send(text)

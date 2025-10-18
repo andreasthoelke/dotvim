@@ -92,12 +92,9 @@ vim.g.agent_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permission
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
-    "claude ",
-    "claude --dangerously-skip-permissions ",
+    "codex --model 'gpt-5-codex' --yolo -c model_reasoning_summary_format=experimental ",
+    "codex --dangerously-bypass-approvals-and-sandbox ",
     "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
-    "claude --debug ",
-    "claude update ",
-    "claude --resume ",
     "cat -v ",
     "gemini ",
     "gemini -m gemini-flash-latest ",
@@ -105,9 +102,6 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm start ",
     "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm start -m gemini-flash-latest ",
     "opencode ",
-    "codex --model 'gpt-5-codex' --yolo -c model_reasoning_summary_format=experimental ",
-    "codex ",
-    "codex --dangerously-bypass-approvals-and-sandbox ",
     "node ~/Documents/Proj/k_mindgraph/h_mcp/_gh/c_codex/codex-cli/dist/cli.js --full-auto --model o3 ",
     "aider ",
   }
