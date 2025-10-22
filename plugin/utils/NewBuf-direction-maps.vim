@@ -69,7 +69,7 @@ nnoremap <silent> <c-w><leader>U  :call NewBuf_fromLinePath( "up_back" )<cr>
 nnoremap <silent> <c-w><leader>s  :call NewBuf_fromLinePath( "down" )<cr>
 nnoremap <silent> <c-w><leader>S  :call NewBuf_fromLinePath( "down_back" )<cr>
 
-" NEOTREE FOLDER PATH FROM LINE
+" (unused?) NEOTREE FOLDER PATH FROM LINE
 nnoremap <silent> <c-w><leader><leader>p  :call Browse_FolderLinePath( "preview" )<cr>
 nnoremap <silent> <c-w><leader><leader>P  :call Browse_FolderLinePath( "preview_back" )<cr>
 nnoremap <silent> <c-w><leader><leader>o  :call Browse_FolderLinePath( "float" )<cr>

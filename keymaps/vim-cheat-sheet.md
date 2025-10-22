@@ -714,6 +714,11 @@ S down_back
            T  - tab_bg   - push to the right
 gd       - CURSOR-LSP-REFERENCE
 
+### project notes
+<c-w>p   - project notes 
+           v - vertica, t - 'touch' / new, d - directory, s - search
+           ~/.config/nvim/plugin/config/maps.lua‖*ProjectˍNotes
+
 ## newBuf from ntree
 \v \s  - split in prev window
     The NewBuf split maps of all non-float tree windows create the split relative to the tree window

@@ -698,23 +698,23 @@ vim.keymap.set( 'n',
 local project_notes = require('utils.project_notes')
 
 -- Open project notes in vertical split
-vim.keymap.set('n', '<leader>pn', project_notes.openNotes,
+vim.keymap.set('n', '<c-w>pv', project_notes.openNotes,
   { desc = 'Open project notes (vsplit)' })
 
 -- Open project notes in new tab
-vim.keymap.set('n', '<leader>pt', project_notes.openNotesTab,
-  { desc = 'Open project notes (tab)' })
+-- vim.keymap.set('n', '<c-w>pt', project_notes.openNotesTab,
+--   { desc = 'Open project notes (tab)' })
 
 -- Open project notes directory
-vim.keymap.set('n', '<leader>pd', project_notes.openNotesDir,
+vim.keymap.set('n', '<c-w>pd', project_notes.openNotesDir,
   { desc = 'Open project notes directory' })
 
--- Create new note in project folder
-vim.keymap.set('n', '<leader>pc', project_notes.createNote,
+-- Create new / "touch" note in project folder
+vim.keymap.set('n', '<c-w>pt', project_notes.createNote,
   { desc = 'Create new project note' })
 
 -- Find notes using telescope
-vim.keymap.set('n', '<leader>pf', project_notes.findNotes,
+vim.keymap.set('n', '<c-w>ps', project_notes.findNotes,
   { desc = 'Find project notes' })
 
 -- ─^  Project Notes                                    ▲
