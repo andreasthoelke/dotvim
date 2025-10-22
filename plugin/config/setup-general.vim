@@ -148,12 +148,7 @@ let g:session_persist_font = 0
 let g:session_persist_colors = 0
 let g:session_autosave_periodic = 0
 
-" let g:startify_session_savevars = [
-"            \ 'g:TabbyTabNames',
-"            \ 'TabbyTabNames',
-"            \ 'Drei',
-"            \ 'g:Einszwei',
-"            \ ]
+" Startify configuration moved to: plugin/config/startify.vim
 
 " ─   Neovim session manager                            ──
 
@@ -210,41 +205,14 @@ endfunc
 
 " Sessions are saved here:
 " /Users/at/.local/share/nvim/sessions1/
+" Startify configuration moved to: plugin/config/startify.vim
 
-nnoremap <silent><leader>st :Startify<cr>
-nnoremap <silent><leader>sT :tabnew<cr>:Startify<cr>
-nnoremap <silent><leader><leader>st :%bdelete!<bar>Startify<cr>
+" Session keymaps (non-startify):
 " nnoremap <silent><leader>Ls :call SessionLoadForCWDStartify()<cr>
 " nnoremap <silent><leader>ls :PossessionLoad<cr>
 nnoremap <silent><leader>ls :call PossessionLoadForCWD()<cr>
 nnoremap <silent><leader>lS :call PossessionSaveForCWD()<cr>
 nnoremap <silent><leader><leader>ls :Telescope possession list initial_mode=normal<cr>
-
-" let g:startify_disable_at_vimenter = v:false
-
-let g:startify_lists = [
-      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-      \ { 'type': 'commands',  'header': ['   Commands']       },
-      \ ]
-
-      " \ { 'type': 'files',     'header': ['   MRU']            },
-      " \ { 'type': 'sessions',  'header': ['   Sessions']       },
-
-let g:startify_custom_header = []
-
-let g:startify_change_to_dir = 0
-
-" let g:startify_session_dir = '~/.local/share/nvim/sessions1'
-" Startify is listing the sessions safed by 'session_manager' (see above)
-let g:startify_session_dir = stdpath('data') . '/sessions'
-" echo $XDG_DATA_HOME
-" stdpath('data')
-
-" note there is also:
-" ~/.config/nvim/plugin/setup-general.vim‖/g:session_autolo
-" ~/.config/nvim/plugin/setup-general.vim‖/autoload_mo
-" let g:startify_session_autoload    = 1
 
 
 " /Users/at/.local/share/nvim/sessions/
