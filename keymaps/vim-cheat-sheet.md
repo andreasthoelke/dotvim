@@ -13,6 +13,11 @@
 <leader><leader>oc    - AI Chats list view (by date)
 <leader>sfc           - AI Chats topics ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ<leader>sfcˍ<cmd>
 <leader>sfC           - full text
+
+                        NOTE that Codex chats contain:
+                            To continue this session, run codex resume 019a081f-c340-7cc2-bc9f-3f9ee53cac17
+                        So one could search for "codex resume"
+
 <leader>sfa           - avanteHistory (deprecate)
 
 ### AI Command Selection

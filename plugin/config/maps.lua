@@ -692,3 +692,30 @@ vim.keymap.set( 'n',
   -- vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
 
 
+-- ─   Project Notes                                    ■
+
+-- Load project notes module
+local project_notes = require('utils.project_notes')
+
+-- Open project notes in vertical split
+vim.keymap.set('n', '<leader>pn', project_notes.openNotes,
+  { desc = 'Open project notes (vsplit)' })
+
+-- Open project notes in new tab
+vim.keymap.set('n', '<leader>pt', project_notes.openNotesTab,
+  { desc = 'Open project notes (tab)' })
+
+-- Open project notes directory
+vim.keymap.set('n', '<leader>pd', project_notes.openNotesDir,
+  { desc = 'Open project notes directory' })
+
+-- Create new note in project folder
+vim.keymap.set('n', '<leader>pc', project_notes.createNote,
+  { desc = 'Create new project note' })
+
+-- Find notes using telescope
+vim.keymap.set('n', '<leader>pf', project_notes.findNotes,
+  { desc = 'Find project notes' })
+
+-- ─^  Project Notes                                    ▲
+
