@@ -42,12 +42,13 @@ function! s:list_project_notes()
   let l:recent_files = l:files_with_time[0:4]
 
   " Build startify entries
+  " Use 'path' instead of 'cmd' to enable multi-selection (v, s, t markers)
   let l:entries = []
   for l:item in l:recent_files
     let l:filename = fnamemodify(l:item.file, ':t')
     let l:entry = {
           \ 'line': l:filename,
-          \ 'cmd': 'edit ' . l:item.file
+          \ 'path': l:item.file
           \ }
     call add(l:entries, l:entry)
   endfor
