@@ -702,12 +702,20 @@ vim.keymap.set('n', '<c-w>pv', project_notes.openNotes,
   { desc = 'Open project notes (vsplit)' })
 
 -- Open project notes in new tab
--- vim.keymap.set('n', '<c-w>pt', project_notes.openNotesTab,
---   { desc = 'Open project notes (tab)' })
+vim.keymap.set('n', '<c-w>pT', project_notes.openNotesTab,
+  { desc = 'Open project notes (tab)' })
 
 -- Open project notes directory
 vim.keymap.set('n', '<c-w>pd', project_notes.openNotesDir,
   { desc = 'Open project notes directory' })
+
+-- Open notes proj directory
+vim.keymap.set('n', '<c-w>pD', project_notes.openNotesProjDir,
+  { desc = 'Open notes proj directory' })
+
+-- Browse notes proj directory
+vim.keymap.set('n', '<c-w>pf', project_notes.browseNotes,
+  { desc = 'Browse notes proj directory' })
 
 -- Create new / "touch" note in project folder
 vim.keymap.set('n', '<c-w>pt', project_notes.createNote,

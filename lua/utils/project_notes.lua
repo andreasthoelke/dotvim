@@ -18,6 +18,11 @@ local function getNotesDir()
   return home .. "/Documents/Notes/proj/" .. projectId
 end
 
+local function getNotesProjDir()
+  local home = vim.fn.expand("~")
+  return home .. "/Documents/Notes/proj/"
+end
+
 -- Ensure notes folder and general.md exist
 -- If project has local notes folder, moves it to global location
 local function ensureNotesFolder()
@@ -77,7 +82,11 @@ end
 -- Open project notes directory in netrw
 function M.openNotesDir()
   local notesDir = ensureNotesFolder()
+  vim.cmd("vsplit " .. notesDir)
+end
 
+function M.openNotesProjDir()
+  local notesDir = getNotesProjDir()
   vim.cmd("vsplit " .. notesDir)
 end
 
@@ -102,7 +111,7 @@ end
 
 -- List all notes for current project using telescope
 function M.findNotes()
-  local notesDir = ensureNotesFolder()
+  local notesDir = getNotesProjDir()
 
   -- Use telescope if available, otherwise use native find
   local has_telescope, telescope = pcall(require, "telescope.builtin")
@@ -116,5 +125,13 @@ function M.findNotes()
     vim.cmd("edit " .. notesDir)
   end
 end
+
+function M.browseNotes()
+  local notesDir = getNotesProjDir()
+
+  require('utils.general').Search_file_browser(notesDir, '')
+
+end
+
 
 return M
