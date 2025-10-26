@@ -86,8 +86,12 @@ function M.openNotesDir()
 end
 
 function M.openNotesProjDir()
-  local notesDir = getNotesProjDir()
-  vim.cmd("vsplit " .. notesDir)
+  local cwd_notes = ensureNotesFolder()
+  local all_proj_notes = "/Users/at/Documents/Notes/proj/"
+  local notes_root = "/Users/at/Documents/Notes/"
+
+  vim.cmd("vsplit")
+  Ntree_launch(notesDir, notesDir)
 end
 
 -- Create a new note file in project notes directory
