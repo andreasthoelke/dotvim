@@ -64,11 +64,9 @@ local function ensureNotesFolder()
 end
 
 -- Open project notes in a split
-function M.openNotes()
+function M.openNotes(split_cmd)
   local notesDir, generalMd = ensureNotesFolder()
-
-  -- Open in vertical split
-  vim.cmd("vsplit " .. generalMd)
+  vim.cmd(split_cmd .. generalMd)
 end
 
 -- Open project notes in a new tab
@@ -86,12 +84,12 @@ function M.openNotesDir()
 end
 
 function M.openNotesProjDir()
-  local cwd_notes = ensureNotesFolder()
+  local cwd_notes, general_md = ensureNotesFolder()
   local all_proj_notes = "/Users/at/Documents/Notes/proj/"
   local notes_root = "/Users/at/Documents/Notes/"
 
   vim.cmd("vsplit")
-  Ntree_launch(notesDir, notesDir)
+  Ntree_launch(general_md, notes_root)
 end
 
 -- Create a new note file in project notes directory
