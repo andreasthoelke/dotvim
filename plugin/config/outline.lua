@@ -23,6 +23,10 @@ function _G.Outline_openFloat()
         posOpts.width = 30
         posOpts.zindex = 100  -- Above ZenMode
 
+        -- Force right alignment
+        local nvim_width = vim.api.nvim_get_option('columns')
+        posOpts.col = nvim_width - posOpts.width
+
         -- Convert the split to a float by changing its config
         vim.api.nvim_win_set_config(win, posOpts)
 

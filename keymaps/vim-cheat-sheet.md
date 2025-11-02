@@ -282,6 +282,8 @@ p/P                  - Paste and return cursor to original position
 
 ### Zen Mode
 <leader>zm           - ZenMode
+<leader>of           - Outline (hovers ZenMode!)
+<leader>oo           - Neotree (hovers ZenMode!)
 <leader>zn           - TZNarrow (visual selection only)
 
 ### Marks & Bookmarks
@@ -396,12 +398,6 @@ gsl/<leader> - search lsp symbols
 ge;/:        - search symbol patterns
 <leader>fs   - find (dynamic workspace) symbols. 
                e.g. "initModel" can find all symbols with this name finds 14 results while gsg would find 34.
-
-# zen mode
-<leader>zm  - :ZenMode  (normal)
-<leader>zn  - TZNarrow - Vis-Sel only!
-
-~/.config/nvim/plugin/config/true-zen.nvim.lua‖/keymap.set('n',ˍ'<leader>z
 
 # vim Plug
 cautiously update plugins selectively, e.g.:
@@ -655,6 +651,8 @@ glc/b   - on http://localhost:5173/
 ## browse lsp symbols, navbuddy / vista tag bar outline
 <leader>on - Navbuddy
 <leader>ot - to open vista outline for .md files and lsp
+             NOTE: config is in outline.lua!
+<leader>of - open outline in float (above ZenMode!)
 <leader>k  - now jumps to the marker while the cursor is staying in the vista window
 
 ~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<silent>%20<leader>k
