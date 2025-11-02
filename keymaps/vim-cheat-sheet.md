@@ -172,6 +172,14 @@ gej                  - LSP signature help
 <leader>g4           - change_base ~4
 <leader>g5           - change_base ~5
 
+### File History Stepping (consecutive commits)
+<leader>g[           - Step back in file change history (older, auto-jumps to first change)
+<leader>g]           - Step forward in file change history (newer, auto-jumps to first change)
+<leader>g0           - Reset to HEAD comparison
+]h/[h                - Jump to next/previous hunk (change)
+]H/[H                - Jump to last/first hunk
+Note: Shows diffs between consecutive commits where file changed, not accumulated from HEAD
+
 MiniDiffAgainst HEAD~2
 MiniDiffAgainst HEAD
 
@@ -1038,11 +1046,11 @@ RenderMarkdown toggle
 
 
 ## info & sort in Dirvish / SortBy Modified and size
-  <leader><leader>im :call DirvishSortByModified()<cr>
-  ,,im :lua DirvishShowModified()<cr>
+  <leader><leader>om :call DirvishSortByModified()<cr>
+  ,,om :lua DirvishShowModified()<cr>
 ## DirvishSortBySize lines count
-  <leader><leader>is :call DirvishSortBySize()<cr>
-  ,,is :lua DirvishShowSize()<cr>
+  <leader><leader>os :call DirvishSortBySize()<cr>
+  ,,os :lua DirvishShowSize()<cr>
 
 
 # Search
@@ -1283,7 +1291,6 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
 ## git diff views
 2025-04:
 <leader>gd  - in buffer diffs
-,gd   - git_commits_viewer.Show(5)
 <leader>ogl - telescope
 <leader>ogL - git_commits_viewer.Show(40)
 
@@ -1628,6 +1635,7 @@ node_decremental = 'ysd',
 
 ### Telescope project maps
 <c-w><cr>   - find files in that project! then open in split.
+R	find a recently opened file within your project
 
 d	delete currently selected project
 r	rename currently selected project

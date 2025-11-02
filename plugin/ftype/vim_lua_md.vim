@@ -26,6 +26,7 @@ endfunc
 
 func! MarkdownBufferMaps()
   call MagentaBufferMaps()
+  " NOTE HACK!
   return
   call VScriptToolsBufferMaps()
 
@@ -109,7 +110,7 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 
-let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+let g:Vim_colonPttn = MakeOrPttn( ['\:', '\;', '\#', '-', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 " let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 
 func! Vim_ColonForw()

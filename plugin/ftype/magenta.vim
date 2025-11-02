@@ -59,7 +59,8 @@ func! MagentaBufferMaps()
 endfunc
 
 
-let g:Mgn_columnPttn = MakeOrPttn( ['\:', '%', '+', '&', '->', '<-', '\#', '\/\/', '*>', '=', 'extends', 'yield', 'if', 'then', 'else', '\$'] )
+" NOTE these are common "columns" in gpt-5 output.
+let g:Mgn_columnPttn = MakeOrPttn( ['\:', '\,', '\.','\;'] )
 
 
 func! Mgn_ColumnForw()

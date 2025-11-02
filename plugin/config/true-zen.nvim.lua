@@ -19,7 +19,17 @@ require("zen-mode").setup({
     -- * an absolute number of cells when > 1
     -- * a percentage of the width / height of the editor when <= 1
     -- * a function that returns the width or the height
-    width = .46, -- width of the Zen window
+    width = function()
+      -- Use 80% width when narrow (< 150 cols), 40% when wider
+      local cols = vim.o.columns
+      if cols < 150 then
+        return math.floor(cols * 0.8)
+      elseif cols < 200 then
+        return math.floor(cols * 0.6)
+      else 
+        return math.floor(cols * 0.5)
+      end
+    end,
     height = .91, -- height of the Zen window
     -- by default, no options are changed for the Zen window
     -- uncomment any of the options below, or add other vim.wo options you want to apply
