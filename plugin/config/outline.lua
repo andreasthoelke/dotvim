@@ -7,6 +7,36 @@
 -- end, { silent = true, desc = 'Toggle outline viewer' })
 
 
+-- ─   Float Outline Function                          ──
+function _G.Outline_openFloat()
+  -- Open outline normally first
+  require('outline').open()
+
+  -- Find the outline window and convert it to float
+  vim.defer_fn(function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local bufname = vim.api.nvim_buf_get_name(buf)
+      if bufname:match('Outline') or vim.bo[buf].filetype == 'Outline' then
+        -- Get float config
+        local posOpts = FloatOpts_inOtherWinColumn()
+        posOpts.width = 30
+        posOpts.zindex = 100  -- Above ZenMode
+
+        -- Convert the split to a float by changing its config
+        vim.api.nvim_win_set_config(win, posOpts)
+
+        -- Focus the float
+        vim.api.nvim_set_current_win(win)
+        break
+      end
+    end
+  end, 50)
+end
+
+-- keymap
+vim.keymap.set('n', '<leader>of', Outline_openFloat, { silent = true, desc = 'Open outline in float' })
+
 require("outline").setup(
   {
     outline_window = {

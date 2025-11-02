@@ -8,8 +8,8 @@ local keymap = vim.keymap
 -- api.nvim_set_keymap("n", "<leader>zm", ":TZMinimalist<CR>", {})
 -- api.nvim_set_keymap("n", "<leader>za", ":TZAtaraxis<CR>", {})
 
--- ─   ZenMode                                          ──
-
+-- ─   ZenMode                                           ■
+-- -- NOTE i'm currently using ZenMode, not TrueZen! .. via the <leader>zm map
 -- https://github.com/folke/zen-mode.nvim
 
 require("zen-mode").setup({
@@ -26,7 +26,7 @@ require("zen-mode").setup({
         return math.floor(cols * 0.8)
       elseif cols < 200 then
         return math.floor(cols * 0.6)
-      else 
+      else
         return math.floor(cols * 0.5)
       end
     end,
@@ -50,7 +50,7 @@ require("zen-mode").setup({
       enabled = true,
       ruler = false, -- disables the ruler text in the cmd line area
       showcmd = false, -- disables the command in the last line of the screen
-      -- you may turn on/off statusline in zen mode by setting 'laststatus' 
+      -- you may turn on/off statusline in zen mode by setting 'laststatus'
       -- statusline will be shown only if 'laststatus' == 3
       laststatus = 0, -- turn off the statusline in zen mode
     },
@@ -90,16 +90,19 @@ require("zen-mode").setup({
 
 
 
-local zen_mode = function() 
+local zen_mode = function()
   vim.cmd('ZenMode')
 end
 
+-- ─^  ZenMode                                           ▲
 
--- ─   TrueZen                                          ──
 
-local fillchars = function() 
+
+local fillchars = function()
   vim.opt.fillchars = { vert = '│' }  -- Using unicode vertical line
 end
+
+-- ─   Mappings                                         ──
 
 vim.g.zen_mode = false
 
@@ -134,6 +137,7 @@ end, { noremap = true })
 -- keymap.set('n', '<leader>za', truezen.ataraxis, { noremap = true })
 
 
+-- ─   TrueZen                                          ──
 
 require'true-zen'.setup(
   {
