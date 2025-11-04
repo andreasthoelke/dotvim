@@ -321,8 +321,24 @@ vim.keymap.set( 'n',
     print("Closing / deleting agent!")
     Claude_send("/exit")
 
-    vim.defer_fn(function() Claude_send( "\r" ) end, 2000)
-    vim.defer_fn(function() Claude_send( "\r" ) end, 6000)
+    vim.defer_fn(function()
+      vim.fn.chansend(jobid, "/exit")
+      vim.defer_fn(function()
+        local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+        vim.fn.chansend(jobid, enter)
+      end, 100)
+
+      -- Wait longer for graceful shutdown, then check if it's still alive
+      vim.defer_fn(function()
+        -- Only force kill if the job is still running after 5 seconds
+        if vim.fn.jobwait({jobid}, 0)[1] == -1 then
+          -- Job still running, something went wrong
+          vim.fn.jobstop(jobid)
+        end
+      end, 5000)
+    end, 5000)
+
+
   end )
 
 
