@@ -115,13 +115,15 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
     if choice then
       -- Set the selected string to g:agent_cmd
       vim.g.agent_cmd = choice
+      require('agents').open_agent(vim.g['agent_cmd'], 'vsplit')
       print("Selected agent: " .. choice)
     else
       print("No selection made")
     end
   end)
-
 end)
+
+
 
 
 -- ─   Agents Terminal Management                        ──
@@ -312,6 +314,17 @@ vim.keymap.set( 'n',
     -- Send Ctrl-C directly via channel (works for all agents)
     vim.fn.chansend(job_id, string.char(3))
   end )
+
+
+vim.keymap.set( 'n',
+  '<c-g>D', function()
+    print("Closing / deleting agent!")
+    Claude_send("/exit")
+
+    vim.defer_fn(function() Claude_send( "\r" ) end, 2000)
+    vim.defer_fn(function() Claude_send( "\r" ) end, 6000)
+  end )
+
 
 -- MAKE COMMIT .. thorough commit messages
 vim.keymap.set( 'n',
