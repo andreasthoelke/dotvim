@@ -14,6 +14,10 @@
 
 local M = {}
 
+-- Global storage for agent terminals per tab
+-- Structure: { [tabnr] = { bufnr = N, job_id = N, command = "..." } }
+M.agent_terminals = {}
+
 -- ─   Terminal Opening                                  ──
 
 -- Opens a new agent terminal buffer
@@ -43,6 +47,10 @@ function M.open_agent(command, window_type)
   local job_id = vim.fn.termopen(command, {
     on_exit = function(job_id, exit_code, event_type)
       vim.schedule(function()
+        -- Clean up global storage
+        local tabnr = vim.api.nvim_get_current_tabpage()
+        M.agent_terminals[tabnr] = nil
+
         if vim.api.nvim_buf_is_valid(buf) then
           local message = exit_code == 0
             and "Agent process completed successfully."
@@ -56,8 +64,16 @@ function M.open_agent(command, window_type)
   -- Mark this buffer as an agent terminal
   vim.b[buf].is_agent_terminal = true
 
-  -- Set buffer options
+  -- Set buffer options (hide instead of delete when window closes)
   vim.api.nvim_buf_set_option(buf, "bufhidden", "hide")
+
+  -- Store globally per tab (fallback if buffer var is lost)
+  local tabnr = vim.api.nvim_get_current_tabpage()
+  M.agent_terminals[tabnr] = {
+    bufnr = buf,
+    job_id = job_id,
+    command = command
+  }
 
   return buf, job_id
 end
@@ -70,6 +86,7 @@ function M.find_agent_terminal_in_tab()
   local current_tab = vim.api.nvim_get_current_tabpage()
   local windows = vim.api.nvim_tabpage_list_wins(current_tab)
 
+  -- First try to find in visible windows
   for _, win in ipairs(windows) do
     if vim.api.nvim_win_is_valid(win) then
       local buf = vim.api.nvim_win_get_buf(win)
@@ -85,6 +102,15 @@ function M.find_agent_terminal_in_tab()
           return job_id
         end
       end
+    end
+  end
+
+  -- Fallback: check global storage
+  local term_info = M.agent_terminals[current_tab]
+  if term_info and term_info.job_id then
+    -- Verify buffer still exists and job is running
+    if vim.api.nvim_buf_is_valid(term_info.bufnr) then
+      return term_info.job_id
     end
   end
 
@@ -125,6 +151,52 @@ end
 -- @return boolean: true if an agent terminal exists
 function M.has_agent_terminal()
   return M.find_agent_terminal_in_tab() ~= nil
+end
+
+-- Restore/show agent terminal window if hidden (buffer exists but no window)
+-- @param window_type string: Window split type ('vsplit', 'hsplit', 'tabnew')
+-- @return boolean: true if restored successfully
+function M.restore_agent_window(window_type)
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  local term_info = M.agent_terminals[current_tab]
+
+  if not term_info then
+    vim.notify("No agent terminal found in this tab", vim.log.levels.WARN)
+    return false
+  end
+
+  -- Check if buffer still exists
+  if not vim.api.nvim_buf_is_valid(term_info.bufnr) then
+    vim.notify("Agent terminal buffer no longer exists", vim.log.levels.ERROR)
+    M.agent_terminals[current_tab] = nil
+    return false
+  end
+
+  -- Check if already visible
+  local windows = vim.api.nvim_tabpage_list_wins(current_tab)
+  for _, win in ipairs(windows) do
+    if vim.api.nvim_win_get_buf(win) == term_info.bufnr then
+      vim.notify("Agent terminal already visible", vim.log.levels.INFO)
+      vim.api.nvim_set_current_win(win)
+      return true
+    end
+  end
+
+  -- Open window with buffer
+  window_type = window_type or "vsplit"
+  if window_type == "vsplit" then
+    vim.cmd("vsplit")
+  elseif window_type == "hsplit" then
+    vim.cmd("split")
+  elseif window_type == "tabnew" then
+    vim.cmd("tabnew")
+  else
+    vim.cmd("vsplit")
+  end
+
+  vim.api.nvim_win_set_buf(0, term_info.bufnr)
+  vim.notify("Agent terminal restored", vim.log.levels.INFO)
+  return true
 end
 
 -- Get list of all agent terminals (for debugging)

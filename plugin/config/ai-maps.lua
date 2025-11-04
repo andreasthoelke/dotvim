@@ -92,7 +92,6 @@ vim.g.agent_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permission
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
-    "codex --model 'gpt-5-codex' --yolo -c model_reasoning_summary_format=experimental ",
     "codex --dangerously-bypass-approvals-and-sandbox ",
     "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "cat -v ",
@@ -137,6 +136,11 @@ end )
 
 vim.keymap.set( 'n', '<c-g>S', function()
   require('agents').open_agent(vim.g['agent_cmd'], 'hsplit')
+end )
+
+-- Restore agent terminal window if accidentally closed
+vim.keymap.set( 'n', '<c-g><c-v>', function()
+  require('agents').restore_agent_window('vsplit')
 end )
 
 vim.keymap.set('n', '<c-g><c-j>', function()

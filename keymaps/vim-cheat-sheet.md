@@ -37,7 +37,8 @@
 ### Claude Code
 <c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
 \<cr>                - backslash + return is an alternative to the above. Also default behavior!
-<c-g>V               - ClaudeCodeOpen
+<c-g>V               - ClaudeCodeOpen agents.lua / codex cli (per tab!)
+<c-g><c-v>           - reopen agents.lua (per tab!)
 <c-g>S               - Claude in horizontal split
 <c-g><c-j>           - Send parrot buffer user message to Claude
 <c-g><c-s>           - Save Claude buffer to chat history
