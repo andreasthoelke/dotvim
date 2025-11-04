@@ -2,7 +2,8 @@
 local M = {}
 
 -- @param agent_key string: Command to run (currently only 'claude', 'codex', 'gemini' are supported)
-function M.open_default_agent_worktree(agent_key)
+-- @param prompt string: The agent prompt to commit
+function M.run_agent_worktree(agent_key, prompt)
 
   local start_agent_cmd = nil
   if agent_key == 'claude' then
@@ -23,7 +24,7 @@ function M.open_default_agent_worktree(agent_key)
   vim.cmd("wincmd p")
 
   vim.defer_fn(function()
-    vim.fn.chansend(jobid, "respond with 'hi'")
+    vim.fn.chansend(jobid, prompt)
     local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
     vim.defer_fn(function() vim.fn.chansend(jobid, enter) end, 200)
   end, 5000)
@@ -31,8 +32,15 @@ function M.open_default_agent_worktree(agent_key)
 
 end
 
--- require('agents-worktrees').open_default_agent_worktree("claude")
--- require('agents-worktrees').open_default_agent_worktree("codex")
+-- require('agents-worktrees').run_agent_worktree("claude", "respond with 'hi'.")
+-- require('agents-worktrees').run_agent_worktree("codex", "respond with 'hi'.")
+
+function M.run_agents_worktrees(prompt)
+  require('agents-worktrees').run_agent_worktree("claude", prompt)
+  require('agents-worktrees').run_agent_worktree("codex", prompt)
+end
+
+
 
 return M
 
