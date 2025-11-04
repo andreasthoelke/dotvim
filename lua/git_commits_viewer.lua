@@ -1,6 +1,9 @@
 
 local M = {}
 
+-- Store last valid refs for fallback
+local last_valid_refs = nil
+
 -- ─   -- Maps                                          ──
 -- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gd',ˍfunction()
 -- ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
@@ -35,7 +38,7 @@ vim.api.nvim_create_user_command('GitDiffBranches', function(args)
     vim.notify("GitDiffBranches requires exactly 2 arguments", vim.log.levels.ERROR)
     return
   end
-  M.Show( { diff_branch1 = args.fargs[1], diff_branch2 = args.fargs[2] } )
+  M.ShowBranches(args.fargs[1], args.fargs[2])
 end, {
   force = true,
   nargs = '+',
@@ -119,15 +122,31 @@ end
 
 function M.GetFilesInCommit(commit_hash)
   local files = {}
-  local handle = io.popen("git show --pretty='' --name-only " .. commit_hash)
+  local handle = io.popen("git show --pretty='' --name-status " .. commit_hash)
   if not handle then return files end
 
   local result = handle:read("*a")
   handle:close()
 
-  for file in result:gmatch("[^\n]+") do
-    local line_count = M.get_changed_lines_count(file, commit_hash)
-    table.insert(files, string.format("    %s %s", file, line_count))
+  for line in result:gmatch("[^\n]+") do
+    local status = line:match("^(%S+)")
+    if status then
+      local filepath, oldpath
+      -- Handle renamed files (R100, R095, etc.)
+      if status:match("^R") then
+        oldpath, filepath = line:match("^%S+%s+(%S+)%s+(%S+)")
+        if filepath and oldpath then
+          local line_count = M.get_changed_lines_count(filepath, commit_hash)
+          table.insert(files, string.format("    %s %s -> %s %s", status, oldpath, filepath, line_count))
+        end
+      else
+        filepath = line:match("^%S+%s+(.+)$")
+        if filepath then
+          local line_count = M.get_changed_lines_count(filepath, commit_hash)
+          table.insert(files, string.format("    %s %s %s", status, filepath, line_count))
+        end
+      end
+    end
   end
 
   return files
@@ -276,11 +295,15 @@ local function update_view_from_lines(opts)
 
   -- Handle indented file lines
   if line:match("^%s") then
-    -- Extract filepath without the line count at the end
-    local filepath = line:match("^%s+([^%d]+)")
+    local filepath
+    -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
+    if line:match("->") then
+      filepath = line:match("->%s+(.-)%s+%d+$")
+    else
+      -- Regular files (format: "    M file.lua 42")
+      filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+    end
     if filepath then
-      -- Remove trailing whitespace
-      filepath = filepath:match("^(.-)%s*$")
       -- Find commit hash or untracked by searching backwards for the next unindented line
       local prev_word = M.get_prev_line_first_word()
 
@@ -302,6 +325,51 @@ local function update_view_from_lines(opts)
   end
 end
 
+
+-- Validate if git refs are valid
+local function validate_refs(ref1, ref2)
+  -- Check if empty or whitespace only
+  if not ref1 or ref1:match("^%s*$") or not ref2 or ref2:match("^%s*$") then
+    return false
+  end
+
+  -- Try running git command to validate refs
+  local handle = io.popen("git rev-parse " .. ref1 .. " " .. ref2 .. " 2>&1")
+  if not handle then return false end
+
+  local result = handle:read("*a")
+  local success = handle:close()
+
+  -- If git command succeeded and output doesn't contain "fatal"
+  return success and not result:match("fatal")
+end
+
+-- Wrapper for branch/ref comparison with fallback
+function M.ShowBranches(branch1, branch2)
+  local using_fallback = false
+
+  -- Validate provided refs
+  if not validate_refs(branch1, branch2) then
+    -- Try fallback to last valid refs
+    if last_valid_refs then
+      branch1 = last_valid_refs.branch1
+      branch2 = last_valid_refs.branch2
+      using_fallback = true
+      vim.notify(
+        string.format("Invalid refs, using fallback: %s..%s", branch1, branch2),
+        vim.log.levels.WARN
+      )
+    else
+      vim.notify("Invalid git refs and no previous refs to fall back to", vim.log.levels.ERROR)
+      return
+    end
+  else
+    -- Store valid refs for future fallback
+    last_valid_refs = { branch1 = branch1, branch2 = branch2 }
+  end
+
+  M.Show({ diff_branch1 = branch1, diff_branch2 = branch2 })
+end
 
 -- function M.Show(num_of_commits, diff_file1, diff_file2)
 function M.Show( opts )

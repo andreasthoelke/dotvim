@@ -463,12 +463,11 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<localleader>gd', function()
-    local opts = {}
-    opts.diff_branch1 = vim.fn.getline('.')
+    local branch1 = vim.fn.getline('.')
     vim.cmd'normal! j'
-    opts.diff_branch2 = vim.fn.getline('.')
+    local branch2 = vim.fn.getline('.')
     vim.cmd'normal! k'
-   require'git_commits_viewer'.Show(opts)
+   require'git_commits_viewer'.ShowBranches(branch1, branch2)
   end, { desc = "Compare two git refs (branches/commits/HEAD~1) from consecutive lines" } )
 
 
