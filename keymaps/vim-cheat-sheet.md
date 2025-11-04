@@ -159,6 +159,9 @@ gej                  - LSP signature help
 <leader><leader>ogl  - Vim-Diffview DiffviewFileHistory (current file)
 <leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
 
+### Git worktrees
+<leader>cdC          - 
+
 ### Git Diff
 ,gd                  - Toggle MiniDiff overlay
 <leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)

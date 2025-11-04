@@ -1267,8 +1267,8 @@ nnoremap <silent><leader>cdpl :lcd %:p:h<cr>
 nnoremap <silent><leader>cdpt :tcd %:p:h<cr>
 nnoremap <silent><leader>cdpg :cd %:p:h<cr>
 
-nnoremap <silent><leader>cdC :tcd ../claude<cr>
-nnoremap <silent><leader>cdO :tcd ../codex<cr>
+" nnoremap <silent><leader>cdC :tcd ../claude<cr>
+" nnoremap <silent><leader>cdO :tcd ../codex<cr>
 
 
 " lcd %:p:h

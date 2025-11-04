@@ -155,6 +155,8 @@ end
 
 function M.GetFilesBetweenBranches(branch1, branch2)
   local files = {}
+
+  -- Get committed differences
   local handle = io.popen("git diff --name-status " .. branch1 .. ".." .. branch2)
   if not handle then return files end
 
@@ -178,6 +180,32 @@ function M.GetFilesBetweenBranches(branch1, branch2)
           local line_count = M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
           table.insert(files, string.format("    %s %s %s", status, filepath, line_count))
         end
+      end
+    end
+  end
+
+  -- Get uncommitted changes from branch1 worktree
+  local worktree1 = M.get_worktree_path(branch1)
+  if worktree1 then
+    local uncommitted1 = M.get_uncommitted_changes_from_worktree(worktree1)
+    if #uncommitted1 > 0 then
+      table.insert(files, "")
+      table.insert(files, "  • uncommitted in " .. branch1 .. ":")
+      for _, change in ipairs(uncommitted1) do
+        table.insert(files, string.format("    %s %s %s", change.status, change.file, change.line_count))
+      end
+    end
+  end
+
+  -- Get uncommitted changes from branch2 worktree
+  local worktree2 = M.get_worktree_path(branch2)
+  if worktree2 then
+    local uncommitted2 = M.get_uncommitted_changes_from_worktree(worktree2)
+    if #uncommitted2 > 0 then
+      table.insert(files, "")
+      table.insert(files, "  • uncommitted in " .. branch2 .. ":")
+      for _, change in ipairs(uncommitted2) do
+        table.insert(files, string.format("    %s %s %s", change.status, change.file, change.line_count))
       end
     end
   end
@@ -246,6 +274,45 @@ function M.UpdateDiffView_BranchAll(branch1, branch2)
   vim.api.nvim_set_current_win(current_win)
 end
 
+function M.UpdateDiffView_WorktreeFile(worktree_path, filepath)
+  local current_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  vim.bo.filetype = 'gitdiff'
+
+  local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+  local cmd = string.format(
+    'git -C %s diff -- %s',
+    vim.fn.shellescape(worktree_path),
+    escaped_filepath
+  )
+  term_job_id = vim.fn.termopen(cmd)
+
+  M.GitDiff_BufferMaps()
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
+
+-- Helper to find the uncommitted branch context by searching backwards
+local function get_uncommitted_context()
+  local current_line_num = vim.fn.line('.')
+  for i = current_line_num - 1, 1, -1 do
+    local line = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+    if line and line:match("^  • uncommitted in (.+):$") then
+      return line:match("^  • uncommitted in (.+):$")
+    end
+    -- Stop if we hit a non-indented line that's not an uncommitted header
+    if line and not line:match("^%s") and not line:match("^$") then
+      break
+    end
+  end
+  return nil
+end
 
 local function update_view_from_lines(opts)
 
@@ -264,7 +331,7 @@ local function update_view_from_lines(opts)
   if opts.diff_branch1 then
     local line = vim.api.nvim_get_current_line()
     -- Handle indented file lines
-    if line:match("^%s") then
+    if line:match("^%s") and not line:match("^  •") then
       local filepath, status
       -- Extract status (first non-whitespace word after indentation)
       status = line:match("^%s+(%S+)")
@@ -276,7 +343,18 @@ local function update_view_from_lines(opts)
         filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
       end
       if filepath then
-        M.UpdateDiffView_BranchFile(opts.diff_branch1, opts.diff_branch2, filepath, status)
+        -- Check if this is an uncommitted change
+        local uncommitted_branch = get_uncommitted_context()
+        if uncommitted_branch then
+          -- This is an uncommitted file, show diff from worktree
+          local worktree_path = M.get_worktree_path(uncommitted_branch)
+          if worktree_path then
+            M.UpdateDiffView_WorktreeFile(worktree_path, filepath)
+          end
+        else
+          -- This is a committed diff between branches
+          M.UpdateDiffView_BranchFile(opts.diff_branch1, opts.diff_branch2, filepath, status)
+        end
       end
       return
     end
@@ -573,6 +651,79 @@ function M.GetCommitLines(num_of_commits, file_filter)
   return lines
 end
 -- require'git_commits_viewer'.GetCommitLines(2)
+
+-- ─   Worktree Helpers                                ──
+
+-- Find the worktree path for a given branch
+function M.get_worktree_path(branch)
+  local handle = io.popen("git worktree list --porcelain")
+  if not handle then return nil end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  local current_worktree = nil
+  for line in result:gmatch("[^\n]+") do
+    if line:match("^worktree ") then
+      current_worktree = line:match("^worktree (.+)$")
+    elseif line:match("^branch ") and current_worktree then
+      local worktree_branch = line:match("^branch refs/heads/(.+)$")
+      if worktree_branch == branch then
+        return current_worktree
+      end
+      current_worktree = nil
+    end
+  end
+
+  return nil
+end
+
+-- Get uncommitted changes from a specific worktree
+function M.get_uncommitted_changes_from_worktree(worktree_path)
+  local files = {}
+  local handle = io.popen("git -C " .. vim.fn.shellescape(worktree_path) .. " status --short")
+  if not handle then return files end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  for line in result:gmatch("[^\n]+") do
+    local status, file = line:match("^(..) (.+)$")
+    if file then
+      local line_count
+      if status and status:match("^%?%?") then
+        line_count = "N"
+      else
+        -- Get line count for modified files
+        local cmd = string.format(
+          "git -C %s diff --numstat -- %s",
+          vim.fn.shellescape(worktree_path),
+          vim.fn.shellescape(file)
+        )
+        local count_handle = io.popen(cmd)
+        if count_handle then
+          local count_result = count_handle:read("*a")
+          count_handle:close()
+          local added, deleted = count_result:match("(%d+)%s+(%d+)")
+          if added and deleted then
+            line_count = tostring(tonumber(added) + tonumber(deleted))
+          else
+            line_count = "0"
+          end
+        else
+          line_count = "0"
+        end
+      end
+      table.insert(files, {
+        status = status:match("^(%S+)"),
+        file = file,
+        line_count = line_count
+      })
+    end
+  end
+
+  return files
+end
 
 -- ─   Helpers                                          ──
 
