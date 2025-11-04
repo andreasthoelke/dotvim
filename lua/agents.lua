@@ -82,6 +82,7 @@ end
 
 -- Finds the agent terminal in the current tab
 -- @return number|nil: job ID of the agent terminal, or nil if not found
+-- @return number|nil: buffer number of the agent terminal, or nil if not found
 function M.find_agent_terminal_in_tab()
   local current_tab = vim.api.nvim_get_current_tabpage()
   local windows = vim.api.nvim_tabpage_list_wins(current_tab)
@@ -99,7 +100,7 @@ function M.find_agent_terminal_in_tab()
         -- Get the job ID from the terminal buffer
         local job_id = vim.b[buf].terminal_job_id
         if job_id then
-          return job_id
+          return job_id, buf
         end
       end
     end
@@ -110,11 +111,11 @@ function M.find_agent_terminal_in_tab()
   if term_info and term_info.job_id then
     -- Verify buffer still exists and job is running
     if vim.api.nvim_buf_is_valid(term_info.bufnr) then
-      return term_info.job_id
+      return term_info.job_id, term_info.bufnr
     end
   end
 
-  return nil
+  return nil, nil
 end
 
 -- ─   Text Sending                                      ──

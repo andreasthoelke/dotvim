@@ -286,8 +286,11 @@ vim.keymap.set( 'n',
       return
     end
 
+    local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+    vim.fn.chansend(job_id, enter)
+
     -- Send Enter directly via channel (works for all agents)
-    vim.fn.chansend(job_id, "\r")
+    -- vim.fn.chansend(job_id, "\r")
   end )
 
 -- CLEAR/CANCEL - Send Ctrl-C to agent terminal in current tab
@@ -319,25 +322,29 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   '<c-g>D', function()
     print("Closing / deleting agent!")
-    Claude_send("/exit")
+    -- Claude_send("/exit")
+
+    local job_id, bufnr = require('agents').find_agent_terminal_in_tab()
+    if not job_id then
+      vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
+      return
+    end
+
+    vim.fn.chansend(job_id, "/exit")
 
     vim.defer_fn(function()
-      vim.fn.chansend(jobid, "/exit")
-      vim.defer_fn(function()
-        local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
-        vim.fn.chansend(jobid, enter)
-      end, 100)
+      local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+      vim.fn.chansend(job_id, enter)
+    end, 100)
 
-      -- Wait longer for graceful shutdown, then check if it's still alive
-      vim.defer_fn(function()
-        -- Only force kill if the job is still running after 5 seconds
-        if vim.fn.jobwait({jobid}, 0)[1] == -1 then
-          -- Job still running, something went wrong
-          vim.fn.jobstop(jobid)
-        end
-      end, 5000)
+    -- Wait longer for graceful shutdown, then check if it's still alive
+    vim.defer_fn(function()
+      -- Only force kill if the job is still running after 5 seconds
+      if vim.fn.jobwait({job_id}, 0)[1] == -1 then
+        -- Job still running, something went wrong
+        vim.fn.jobstop(job_id)
+      end
     end, 5000)
-
 
   end )
 
