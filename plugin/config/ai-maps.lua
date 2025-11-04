@@ -325,7 +325,7 @@ vim.keymap.set( 'n',
     -- Claude_send("/exit")
 
     local job_id, bufnr = require('agents').find_agent_terminal_in_tab()
-    if not job_id then
+    if not job_id or not bufnr then
       vim.notify("No agent terminal found in current tab", vim.log.levels.WARN)
       return
     end
@@ -344,6 +344,13 @@ vim.keymap.set( 'n',
         -- Job still running, something went wrong
         vim.fn.jobstop(job_id)
       end
+
+      -- After job has exited (or been killed), delete the buffer
+      vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          pcall(vim.api.nvim_buf_delete, bufnr, {force = true})
+        end
+      end, 500)
     end, 5000)
 
   end )
