@@ -461,6 +461,16 @@ vim.keymap.set( 'n',
    require'git_commits_viewer'.Show(opts)
   end, { desc = "Compare two files from consecutive lines" } )
 
+vim.keymap.set( 'n',
+  '<localleader>gd', function()
+    local opts = {}
+    opts.diff_branch1 = vim.fn.getline('.')
+    vim.cmd'normal! j'
+    opts.diff_branch2 = vim.fn.getline('.')
+    vim.cmd'normal! k'
+   require'git_commits_viewer'.Show(opts)
+  end, { desc = "Compare two git refs (branches/commits/HEAD~1) from consecutive lines" } )
+
 
 
 vim.keymap.set('n', '<leader>gh', ':Gitsigns change_base ~1<CR>:MiniDiffAgainst HEAD~1<cr>', { noremap = true, silent = true, desc = 'Git diff with 1 commit ago' })

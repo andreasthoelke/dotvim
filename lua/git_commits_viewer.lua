@@ -30,6 +30,18 @@ end, {
   desc = "Compare two files with git diff"
 })
 
+vim.api.nvim_create_user_command('GitDiffBranches', function(args)
+  if #args.fargs ~= 2 then
+    vim.notify("GitDiffBranches requires exactly 2 arguments", vim.log.levels.ERROR)
+    return
+  end
+  M.Show( { diff_branch1 = args.fargs[1], diff_branch2 = args.fargs[2] } )
+end, {
+  force = true,
+  nargs = '+',
+  desc = "Compare two git refs (branches, commits, HEAD, HEAD~1, tags, etc.)"
+})
+
 
 local top_level_patterns = {
   "•",
@@ -122,6 +134,39 @@ function M.GetFilesInCommit(commit_hash)
 end
 -- require'git_commits_viewer'.GetFilesInCommit('424ee27')
 
+function M.GetFilesBetweenBranches(branch1, branch2)
+  local files = {}
+  local handle = io.popen("git diff --name-status " .. branch1 .. ".." .. branch2)
+  if not handle then return files end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  for line in result:gmatch("[^\n]+") do
+    local status = line:match("^(%S+)")
+    if status then
+      local filepath, oldpath
+      -- Handle renamed files (R100, R095, etc.)
+      if status:match("^R") then
+        oldpath, filepath = line:match("^%S+%s+(%S+)%s+(%S+)")
+        if filepath and oldpath then
+          local line_count = M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
+          table.insert(files, string.format("    %s %s -> %s %s", status, oldpath, filepath, line_count))
+        end
+      else
+        filepath = line:match("^%S+%s+(.+)$")
+        if filepath then
+          local line_count = M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
+          table.insert(files, string.format("    %s %s %s", status, filepath, line_count))
+        end
+      end
+    end
+  end
+
+  return files
+end
+-- require'git_commits_viewer'.GetFilesBetweenBranches('main', 'feature-branch')
+
 
 function M.UpdateDiffView_FilesDiff(opts)
 
@@ -147,6 +192,41 @@ function M.UpdateDiffView_FilesDiff(opts)
   vim.api.nvim_set_current_win(current_win)
 end
 
+function M.UpdateDiffView_BranchFile(branch1, branch2, filepath, status)
+  local current_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  vim.bo.filetype = 'gitdiff'
+
+  local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+  term_job_id = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2 .. ' -- ' .. escaped_filepath)
+
+  M.GitDiff_BufferMaps()
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
+function M.UpdateDiffView_BranchAll(branch1, branch2)
+  local current_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(M.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  vim.bo.filetype = 'gitdiff'
+
+  term_job_id = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2)
+
+  M.GitDiff_BufferMaps()
+  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  end
+  prev_term_buf = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
 
 local function update_view_from_lines(opts)
 
@@ -159,6 +239,30 @@ local function update_view_from_lines(opts)
 
   if opts.diff_file1 then
     M.UpdateDiffView_FilesDiff(opts)
+    return
+  end
+
+  if opts.diff_branch1 then
+    local line = vim.api.nvim_get_current_line()
+    -- Handle indented file lines
+    if line:match("^%s") then
+      local filepath, status
+      -- Extract status (first non-whitespace word after indentation)
+      status = line:match("^%s+(%S+)")
+      -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
+      if line:match("->") then
+        filepath = line:match("->%s+(.-)%s+%d+$")
+      else
+        -- Regular files (format: "    M file.lua 42")
+        filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+      end
+      if filepath then
+        M.UpdateDiffView_BranchFile(opts.diff_branch1, opts.diff_branch2, filepath, status)
+      end
+      return
+    end
+    -- Handle branch header line
+    M.UpdateDiffView_BranchAll(opts.diff_branch1, opts.diff_branch2)
     return
   end
 
@@ -225,6 +329,13 @@ function M.Show( opts )
   if opts.diff_file1 then
     local info_lines = { opts.diff_file1, opts.diff_file2 }
     vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, info_lines)
+  elseif opts.diff_branch1 then
+    local branch_lines = { opts.diff_branch1 .. ".." .. opts.diff_branch2 }
+    local files = M.GetFilesBetweenBranches(opts.diff_branch1, opts.diff_branch2)
+    for _, file in ipairs(files) do
+      table.insert(branch_lines, file)
+    end
+    vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, branch_lines)
   else
     -- Use GetCommitLines() to insert commit history into the lower buffer
     local commit_lines = M.GetCommitLines(opts.num_of_commits or 5, opts.file)
@@ -400,7 +511,7 @@ end
 function M.get_changed_lines_count(filepath, githash)
   -- Escape filepath for shell to handle brackets and special characters
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-  
+
   local cmd
   if githash and githash ~= "untracked" then
     -- For regular commits
@@ -409,20 +520,38 @@ function M.get_changed_lines_count(filepath, githash)
     -- For untracked changes
     cmd = string.format("git diff --numstat -- %s", escaped_filepath)
   end
-  
+
   local handle = io.popen(cmd)
   if not handle then return "0" end
-  
+
   local result = handle:read("*a")
   handle:close()
-  
+
   -- Parse the numstat output: <added>\t<deleted>\t<file>
   local added, deleted = result:match("(%d+)%s+(%d+)")
   if added and deleted then
     -- Return sum of added and deleted lines
     return tostring(tonumber(added) + tonumber(deleted))
   end
-  
+
+  return "0"
+end
+
+function M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
+  local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+  local cmd = string.format("git diff --numstat %s..%s -- %s", branch1, branch2, escaped_filepath)
+
+  local handle = io.popen(cmd)
+  if not handle then return "0" end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  local added, deleted = result:match("(%d+)%s+(%d+)")
+  if added and deleted then
+    return tostring(tonumber(added) + tonumber(deleted))
+  end
+
   return "0"
 end
 
