@@ -149,20 +149,27 @@ gej                  - LSP signature help
 <leader>ogl          - Git commits picker (telescope)
 <leader>ogL          - Git commits viewer (40 commits)
 <leader>ogS          - Git status (telescope)
-<leader>gd           - Git commits viewer (5 commits)
-<leader>gD           - Git commits involving current file!
-<leader><leader>gb   - Telescope git_branches<cr>
+<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
+<leader>gD           - Git file history viewer (5 commits for current file with git log --follow)
+<leader><leader>gb   - Telescope git_branches
 <leader><leader>og   - FzfGFiles?
 <leader><leader>oG   - FzfGFiles?
 
 ### Git File History
-<leader>gD           - git log --follow of the current file! ~/.config/nvim/plugin/config/maps.lua‖/require'git_commits_viewer'.ShowCurrentFile(5)
 <leader><leader>ogl  - Vim-Diffview DiffviewFileHistory (current file)
-<leader><leader>ogL  - DiffviewFileHistory (all files)
+<leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
 
 ### Git Diff
 ,gd                  - Toggle MiniDiff overlay
-<leader><leader>gd   - Compare two files from consecutive lines
+<leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)
+                       Place cursor on first file path, press map, uses current + next line
+<localleader>gd      - Compare two git refs from consecutive lines (branches/commits/HEAD~1/tags)
+                       Place cursor on first ref, press map, uses current + next line
+                       Shows file list with status (M/A/D/R100) and line counts
+                       Press 'p' on file to see diff for that file
+                       Press 'p' on header to see all changes between refs
+                       Falls back to last valid refs if empty/invalid lines
+                       Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
 
 ### Gitsigns & MiniDiff
 <leader>gh           - change_base ~1
@@ -1289,13 +1296,24 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
 
 ## git diff views
 2025-04:
-<leader>gd  - in buffer diffs
-<leader>ogl - telescope
-<leader>ogL - git_commits_viewer.Show(40)
+<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
+<leader>gD           - Git file history viewer (current file, 5 commits)
+<leader>ogl          - Git commits picker (telescope)
+<leader>ogL          - Git commits viewer (40 commits)
+<leader><leader>gd   - Compare two files from consecutive lines (git diff --no-index)
+<localleader>gd      - Compare two git refs from consecutive lines (branches/commits/HEAD~1)
+                       Falls back to last valid refs if empty/invalid lines
 
-## git diff two files
-git diff --no-index demos-ts/toolkit/neo4j/Neo4jDemo.ts demos-ts/toolkit/neo4j_03/Neo4jDemo.ts
-GitDiffBufferMaps
+### Git Diff Viewer Keybindings (inside viewer)
+p                    - Show diff for file/commit under cursor (stay in file list)
+P                    - Show diff for file/commit under cursor (jump to diff view)
+q                    - Close git diff viewer
+<c-n>/<c-p>          - Navigate to next/previous commit or file change
+
+### User Commands
+:GitDiffFiles file1 file2           - Compare two files
+:GitDiffBranches ref1 ref2          - Compare two git refs (branches/commits/HEAD~1/tags)
+:GitDiffBufferMaps                  - Set up buffer keymaps for git diff navigation
 
 2024-11:
 ggs      - 'status' by showing diffs of all hunks
