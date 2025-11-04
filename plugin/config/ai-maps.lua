@@ -321,7 +321,7 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   '<c-g>D', function()
-    print("Closing / deleting agent!")
+    -- print("Closing / deleting agent!")
     -- Claude_send("/exit")
 
     local job_id, bufnr = require('agents').find_agent_terminal_in_tab()
@@ -351,7 +351,7 @@ vim.keymap.set( 'n',
           pcall(vim.api.nvim_buf_delete, bufnr, {force = true})
         end
       end, 500)
-    end, 5000)
+    end, 4000)
 
   end )
 
