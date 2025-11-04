@@ -274,6 +274,90 @@ vim.keymap.set('n', '<leader><c-g>i', function()
 end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 
+-- ─   Send to Worktree Agents                          ──
+
+-- Helper function to send text to worktree agents
+local function send_to_worktree_agents(text)
+  require('agents-worktrees').run_agents_worktrees(text)
+end
+
+-- Helper to get visual selection text for worktrees
+function _G.SendVisualSelectionToWorktrees()
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+  local lines = vim.fn.getline(start_pos[2], end_pos[2])
+
+  if #lines == 0 then
+    return
+  end
+
+  -- Adjust first and last line for partial selections
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+  else
+    lines[1] = string.sub(lines[1], start_pos[3])
+    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+  end
+
+  local text = table.concat(lines, "\n")
+  send_to_worktree_agents(text)
+end
+
+-- Helper to create operator function for worktrees
+local function create_worktree_operator_func()
+  return function(type)
+    local start_pos, end_pos
+    if type == 'char' then
+      start_pos = vim.fn.getpos("'[")
+      end_pos = vim.fn.getpos("']")
+    elseif type == 'line' then
+      start_pos = vim.fn.getpos("'[")
+      end_pos = vim.fn.getpos("']")
+    else
+      return
+    end
+
+    local lines = vim.fn.getline(start_pos[2], end_pos[2])
+    if #lines == 0 then
+      return
+    end
+
+    local text = table.concat(lines, "\n")
+    send_to_worktree_agents(text)
+  end
+end
+
+-- PARAGRAPHS to worktree agents
+vim.keymap.set('n', '<c-g>wp', function()
+  local lines = GetParagraphLines()
+  local text = table.concat(lines, "\n")
+  send_to_worktree_agents(text)
+end, { desc = "Send paragraph to worktree agents" })
+
+-- VISUAL SELECTIONS to worktree agents
+vim.keymap.set('x', '<c-g>wp', ":<C-u>lua _G.SendVisualSelectionToWorktrees()<CR>",
+  { noremap = true, silent = true, desc = "Send visual selection to worktree agents" })
+
+-- LINEWISE SELECTIONS to worktree agents
+vim.keymap.set('n', '<c-g>wo', function()
+  _G.Worktree_linewise_func = create_worktree_operator_func()
+  vim.go.operatorfunc = 'v:lua.Worktree_linewise_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to worktree agents" })
+
+-- CLIPBOARD to worktree agents
+vim.keymap.set('n', "<c-g>w'", function()
+  local clipboard_text = vim.fn.getreg('"')
+  send_to_worktree_agents(clipboard_text)
+end, { desc = "Send clipboard to worktree agents" })
+
+-- INNER SELECTIONS to worktree agents
+vim.keymap.set('n', '<c-g>wi', function()
+  _G.Worktree_operator_func = create_worktree_operator_func()
+  vim.go.operatorfunc = 'v:lua.Worktree_operator_func'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to worktree agents" })
+
 
 -- RUN/ENTER - Send Enter key to agent terminal in current tab
 vim.keymap.set( 'n',
