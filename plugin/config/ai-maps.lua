@@ -460,6 +460,35 @@ vim.keymap.set( 'n',
   end )
 
 
+-- ─   Worktree Directory Navigation                     ──
+-- Change tab directory to agent worktree paths
+
+local function tcd_to_worktree(agent_key)
+  local current_cwd = vim.fn.getcwd()
+  local project_name = vim.fn.fnamemodify(current_cwd, ':t')
+  local parent_dir = vim.fn.fnamemodify(current_cwd, ':h')
+  local worktree_path = parent_dir .. '/' .. project_name .. '_' .. agent_key
+
+  if vim.fn.isdirectory(worktree_path) == 0 then
+    vim.notify(string.format("Worktree not found: %s", worktree_path), vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd('tcd ' .. vim.fn.fnameescape(worktree_path))
+  vim.notify(string.format("Changed to %s", worktree_path), vim.log.levels.INFO)
+end
+
+vim.keymap.set('n', '<leader>cdC', function()
+  tcd_to_worktree('claude')
+end, { silent = true, desc = "tcd to claude worktree" })
+
+vim.keymap.set('n', '<leader>cdO', function()
+  tcd_to_worktree('codex')
+end, { silent = true, desc = "tcd to codex worktree" })
+
+-- ─^  Worktree Directory Navigation                     ▲
+
+
 -- ─^  AGENTS                                            ▲
 
 

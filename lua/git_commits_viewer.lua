@@ -583,7 +583,9 @@ function M.GetUntrackedChanges()
       else
         line_count = M.get_changed_lines_count(file, "untracked")
       end
-      table.insert(files, string.format("    %s %s", file, line_count))
+      -- Include status in output to match expected pattern in update_view_from_lines
+      local status_abbrev = status:match("^(%S+)")
+      table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
     end
   end
 
