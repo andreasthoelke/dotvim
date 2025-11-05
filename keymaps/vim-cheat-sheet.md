@@ -146,11 +146,11 @@ gej                  - LSP signature help
 ## Git Operations
 
 ### Git Status & Log
+<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
+<leader>gD           - Git file history viewer (5 commits for current file with git log --follow)
 <leader>ogl          - Git commits picker (telescope)
 <leader>ogL          - Git commits viewer (40 commits)
 <leader>ogS          - Git status (telescope)
-<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
-<leader>gD           - Git file history viewer (5 commits for current file with git log --follow)
 <leader><leader>gb   - Telescope git_branches
 <leader><leader>og   - FzfGFiles?
 <leader><leader>oG   - FzfGFiles?
