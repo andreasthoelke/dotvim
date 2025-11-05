@@ -160,19 +160,32 @@ gej                  - LSP signature help
 <leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
 
 ### Git worktrees
-<leader>cdC          - 
+<leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
+<leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
 
 ### Git Diff
 ,gd                  - Toggle MiniDiff overlay
 <leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)
                        Place cursor on first file path, press map, uses current + next line
-<localleader>gd      - Compare two git refs from consecutive lines (branches/commits/HEAD~1/tags)
+<localleader>gdd     - Compare two git refs from consecutive lines (branches/commits/HEAD~1/tags)
                        Place cursor on first ref, press map, uses current + next line
                        Shows file list with status (M/A/D/R100) and line counts
                        Press 'p' on file to see diff for that file
                        Press 'p' on header to see all changes between refs
                        Falls back to last valid refs if empty/invalid lines
                        Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
+<localleader>gdc     - Compare current branch with agent/claude
+                       In main: shows main..agent/claude
+                       In _claude worktree: shows agent/claude..agent/claude (no diff)
+                       In _codex worktree: shows agent/codex..agent/claude
+<localleader>gdo     - Compare current branch with agent/codex
+                       In main: shows main..agent/codex
+                       In _claude worktree: shows agent/claude..agent/codex
+                       In _codex worktree: shows agent/codex..agent/codex (no diff)
+<localleader>gdm     - Compare current branch with main
+                       In main: shows main..main (no diff)
+                       In _claude worktree: shows agent/claude..main
+                       In _codex worktree: shows agent/codex..main
 
 ### Gitsigns & MiniDiff
 <leader>gh           - change_base ~1

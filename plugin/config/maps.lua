@@ -461,14 +461,46 @@ vim.keymap.set( 'n',
    require'git_commits_viewer'.Show(opts)
   end, { desc = "Compare two files from consecutive lines" } )
 
+-- Helper function to determine current branch based on cwd
+local function get_current_branch_from_cwd()
+  local cwd = vim.fn.getcwd()
+  local project_name = vim.fn.fnamemodify(cwd, ':t')
+
+  if project_name:match('_claude$') then
+    return 'agent/claude'
+  elseif project_name:match('_codex$') then
+    return 'agent/codex'
+  else
+    return 'main'
+  end
+end
+
 vim.keymap.set( 'n',
-  '<localleader>gd', function()
+  '<localleader>gdd', function()
     local branch1 = vim.fn.getline('.')
     vim.cmd'normal! j'
     local branch2 = vim.fn.getline('.')
     vim.cmd'normal! k'
    require'git_commits_viewer'.ShowBranches(branch1, branch2)
   end, { desc = "Compare two git refs (branches/commits/HEAD~1) from consecutive lines" } )
+
+vim.keymap.set( 'n',
+  '<localleader>gdc', function()
+    local current_branch = get_current_branch_from_cwd()
+    require'git_commits_viewer'.ShowBranches(current_branch, 'agent/claude')
+  end, { desc = "Compare current branch with agent/claude" } )
+
+vim.keymap.set( 'n',
+  '<localleader>gdo', function()
+    local current_branch = get_current_branch_from_cwd()
+    require'git_commits_viewer'.ShowBranches(current_branch, 'agent/codex')
+  end, { desc = "Compare current branch with agent/codex" } )
+
+vim.keymap.set( 'n',
+  '<localleader>gdm', function()
+    local current_branch = get_current_branch_from_cwd()
+    require'git_commits_viewer'.ShowBranches(current_branch, 'main')
+  end, { desc = "Compare current branch with main" } )
 
 
 
