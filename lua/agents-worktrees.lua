@@ -1,11 +1,32 @@
 
 local M = {}
 
+
+-- ─   Usage Examples                                   ──
+
+-- Setup worktree only (without running agent):
+-- require('agents-worktrees').setup_worktree("claude")
+
+-- Run single agent:
+-- require('agents-worktrees').run_agent_worktree("claude", "respond with 'hi'.")
+-- require('agents-worktrees').run_agent_worktree("codex", "respond with 'hi'.")
+
+-- Run multiple agents in parallel:
+-- require('agents-worktrees').run_agents_worktrees("respond with 'hi'.")
+
+-- Reset single agent worktree to main (with backup):
+-- require('agents-worktrees').reset_worktree_to_main("claude")
+
+-- Reset all agent worktrees to main (with backup):
+-- require('agents-worktrees').reset_all_worktrees_to_main()
+
+
+
+-- ─   Worktree Setup                                    ■
+
 -- Global storage for worktree agents
 -- Structure: { [agent_key] = { tabnr = N, job_id = N, bufnr = N } }
 M.worktree_agents = {}
-
--- ─   Worktree Setup                                    ──
 
 -- Compute worktree paths for an agent
 -- @param agent_key string: Agent identifier ('claude', 'codex', 'gemini')
@@ -108,6 +129,73 @@ local function rebase_worktree(worktree)
   end
 end
 
+-- Reset worktree to main (backs up current work to a tag first)
+-- @param agent_key string: Agent identifier ('claude', 'codex', 'gemini')
+-- @return boolean: true if successful
+function M.reset_worktree_to_main(agent_key)
+  local worktree = compute_worktree_paths(agent_key)
+
+  if vim.fn.isdirectory(worktree.path) == 0 then
+    vim.notify(string.format("Worktree %s doesn't exist", worktree.name), vim.log.levels.WARN)
+    return false
+  end
+
+  local path = vim.fn.shellescape(worktree.path)
+  local timestamp = os.date("%Y%m%d-%H%M%S")
+  local tag_name = "backup-" .. timestamp
+
+  -- Create backup tag
+  local tag_cmd = string.format("git -C %s tag %s", path, tag_name)
+  vim.fn.system(tag_cmd)
+
+  if vim.v.shell_error ~= 0 then
+    vim.notify(
+      string.format("Warning: Failed to create backup tag in %s", worktree.name),
+      vim.log.levels.WARN
+    )
+  else
+    vim.notify(
+      string.format("Created backup tag '%s' in %s", tag_name, worktree.name),
+      vim.log.levels.INFO
+    )
+  end
+
+  -- Reset hard to main
+  local reset_cmd = string.format("git -C %s reset --hard main", path)
+  local reset_result = vim.fn.system(reset_cmd)
+
+  if vim.v.shell_error ~= 0 then
+    vim.notify(
+      string.format("Error: Failed to reset %s to main:\n%s", worktree.name, reset_result),
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+
+  vim.notify(
+    string.format("Reset %s to main", worktree.name),
+    vim.log.levels.INFO
+  )
+  return true
+end
+
+-- Reset all agent worktrees to main (with backup)
+function M.reset_all_worktrees_to_main()
+  local agents = {"claude", "codex"}
+  local success_count = 0
+
+  for _, agent_key in ipairs(agents) do
+    if M.reset_worktree_to_main(agent_key) then
+      success_count = success_count + 1
+    end
+  end
+
+  vim.notify(
+    string.format("Reset %d/%d agent worktrees to main", success_count, #agents),
+    vim.log.levels.INFO
+  )
+end
+
 -- Setup worktree for an agent (create if needed, rebase against main)
 -- @param agent_key string: Agent identifier ('claude', 'codex', 'gemini')
 -- @return table|nil: Worktree info {name, path, branch} or nil on error
@@ -123,7 +211,11 @@ function M.setup_worktree(agent_key)
   return worktree
 end
 
--- ─   Agent Tracking                                    ──
+
+-- ─^  Worktree Setup                                    ▲
+
+
+-- ─   Agent Tracking                                    ■
 
 -- Check if an agent is currently running
 -- @param agent_key string: Agent identifier
@@ -176,6 +268,11 @@ local function send_to_existing_agent(agent_key, prompt)
 
   return true
 end
+
+
+-- ─^  Agent Tracking                                    ▲
+
+
 
 -- ─   Agent Execution                                   ──
 
@@ -297,17 +394,6 @@ function M.run_agents_worktrees(prompt)
   end
 end
 
--- ─   Usage Examples                                   ──
-
--- Setup worktree only (without running agent):
--- require('agents-worktrees').setup_worktree("claude")
-
--- Run single agent:
--- require('agents-worktrees').run_agent_worktree("claude", "respond with 'hi'.")
--- require('agents-worktrees').run_agent_worktree("codex", "respond with 'hi'.")
-
--- Run multiple agents in parallel:
--- require('agents-worktrees').run_agents_worktrees("respond with 'hi'.")
 
 return M
 
