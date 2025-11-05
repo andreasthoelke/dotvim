@@ -738,30 +738,30 @@ vim.keymap.set( 'n',
 -- Load project notes module
 local project_notes = require('utils.project_notes')
 
-vim.keymap.set('n', '<c-w>pv', function() project_notes.openNotes("vsplit ") end,
+vim.keymap.set('n', '<leader>nv', function() project_notes.openNotes("vsplit ") end,
   { desc = 'Open project notes (vsplit)' })
 
-vim.keymap.set('n', '<c-w>ps', function() project_notes.openNotes("split ") end,
+vim.keymap.set('n', '<leader>ns', function() project_notes.openNotes("split ") end,
   { desc = 'Open project notes (split)' })
 
 -- Open project notes in new tab
-vim.keymap.set('n', '<c-w>pT', project_notes.openNotesTab,
+vim.keymap.set('n', '<leader>nT', project_notes.openNotesTab,
   { desc = 'Open project notes (tab)' })
 
 -- Open project notes directory
-vim.keymap.set('n', '<c-w>pd', project_notes.openNotesProjDir,
+vim.keymap.set('n', '<leader>nd', project_notes.openNotesProjDir,
   { desc = 'Open project notes directory' })
 
 -- Open notes proj directory
-vim.keymap.set('n', '<c-w>pD', project_notes.openNotesProjDir,
+vim.keymap.set('n', '<leader>nD', project_notes.openNotesProjDir,
   { desc = 'Open notes proj directory' })
 
 -- Browse notes proj directory
-vim.keymap.set('n', '<c-w>pf', project_notes.browseNotes,
+vim.keymap.set('n', '<leader>nf', project_notes.browseNotes,
   { desc = 'Browse notes proj directory' })
 
 -- Create new / "touch" note in project folder
-vim.keymap.set('n', '<c-w>pt', project_notes.createNote,
+vim.keymap.set('n', '<leader>nt', project_notes.createNote,
   { desc = 'Create new project note' })
 
 -- Find notes using telescope

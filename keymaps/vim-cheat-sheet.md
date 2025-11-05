@@ -58,6 +58,40 @@
 (v) <c-g>p           - Send visual selection to Claude
 (v) <leader><c-g>p   - Send visual selection to Claude with markup
 
+### Agents Worktrees
+Run Claude and Codex agents in parallel git worktrees with automatic sync.
+~/.config/nvim/lua/agents-worktrees.lua
+~/.config/nvim/plugin/config/ai-maps.lua‖*Worktreeˍagent
+
+#### Sending Text to Worktree Agents
+<c-g>wp              - Send paragraph to worktree agents (creates tabs on first run, reuses after)
+(v) <c-g>wp          - Send visual selection to worktree agents
+<c-g>wo              - Send linewise selection to worktree agents (operator)
+<c-g>w'              - Send clipboard to worktree agents
+<c-g>wi              - Send inner selection to worktree agents (operator)
+
+#### Vim Commands
+:AgentsWorktreesRun <prompt>         - Run both Claude and Codex with prompt
+:AgentsWorktreesRunClaude <prompt>   - Run only Claude worktree agent
+:AgentsWorktreesRunCodex <prompt>    - Run only Codex worktree agent
+
+:AgentsWorktreesResetAll             - Reset both worktrees to main (with backup tag)
+:AgentsWorktreesResetClaude          - Reset Claude worktree to main (with backup)
+:AgentsWorktreesResetCodex           - Reset Codex worktree to main (with backup)
+
+:AgentsWorktreesSetupClaude          - Setup Claude worktree (create/rebase)
+:AgentsWorktreesSetupCodex           - Setup Codex worktree (create/rebase)
+
+#### Directory Navigation
+<leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
+<leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
+
+#### How It Works
+- First <c-g>wp: Creates new tabs with agents, rebases worktrees to main
+- Subsequent <c-g>wp: Sends prompts to existing agents (no tab switching)
+- Auto-commits WIP changes before rebasing on fresh starts
+- Backup tags created before reset (backup-YYYYMMDD-HHMMSS)
+
 ### Parrot
 <c-g><leader>p       - PrtProvider
 <c-g><leader>m       - PrtModel
@@ -160,6 +194,7 @@ gej                  - LSP signature help
 <leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
 
 ### Git worktrees
+See: ### Agents Worktrees (AI & Assistants section) for full worktree agent workflow
 <leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
 <leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
 
@@ -745,8 +780,13 @@ S down_back
 gd       - CURSOR-LSP-REFERENCE
 
 ### project notes
-<c-w>p   - project notes 
-           v - vertica, t - 'touch' / new, d - directory, s - search
+<leader>nv   - Open project notes (vsplit)
+<leader>ns   - Open project notes (split)
+<leader>nT   - Open project notes (tab)
+<leader>nd   - Open project notes directory
+<leader>nD   - Open notes proj directory
+<leader>nf   - Browse notes proj directory
+<leader>nt   - Create new / "touch" note
            ~/.config/nvim/plugin/config/maps.lua‖*ProjectˍNotes
 
 ## newBuf from ntree

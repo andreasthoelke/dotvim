@@ -359,6 +359,58 @@ vim.keymap.set('n', '<c-g>wi', function()
 end, { expr = true, desc = "Operator to send text to worktree agents" })
 
 
+-- ─   Worktree Agent Commands                          ──
+
+-- Run agents with prompt
+vim.api.nvim_create_user_command('AgentsWorktreesRun', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRun <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agents_worktrees(opts.args)
+end, { nargs = '+', desc = "Run all worktree agents with prompt" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunClaude', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaude <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("claude", opts.args)
+end, { nargs = '+', desc = "Run Claude worktree agent with prompt" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunCodex', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodex <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("codex", opts.args)
+end, { nargs = '+', desc = "Run Codex worktree agent with prompt" })
+
+-- Reset worktrees to main
+vim.api.nvim_create_user_command('AgentsWorktreesResetAll', function()
+  require('agents-worktrees').reset_all_worktrees_to_main()
+end, { desc = "Reset all agent worktrees to main (with backup)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesResetClaude', function()
+  require('agents-worktrees').reset_worktree_to_main("claude")
+end, { desc = "Reset Claude worktree to main (with backup)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesResetCodex', function()
+  require('agents-worktrees').reset_worktree_to_main("codex")
+end, { desc = "Reset Codex worktree to main (with backup)" })
+
+-- Setup worktrees (without running agents)
+vim.api.nvim_create_user_command('AgentsWorktreesSetupClaude', function()
+  require('agents-worktrees').setup_worktree("claude")
+end, { desc = "Setup Claude worktree (create if needed, rebase)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesSetupCodex', function()
+  require('agents-worktrees').setup_worktree("codex")
+end, { desc = "Setup Codex worktree (create if needed, rebase)" })
+
+-- ─^  Worktree Agent Commands                          ▲
+
+
 -- RUN/ENTER - Send Enter key to agent terminal in current tab
 vim.keymap.set( 'n',
   '<c-g><cr>', function()
