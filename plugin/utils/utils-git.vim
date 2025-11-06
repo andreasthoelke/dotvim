@@ -54,7 +54,8 @@ nnoremap <silent><leader><leader>gS :call System_Float( 'git status && echo "" &
 " TODO do i use this map?
 " nnoremap <silent><leader><leader>gc :call ShellReturn( GitCommitCmd( input( 'Commit message: ' ) ) )<cr>
 " nnoremap <silent><leader><leader>gc :call GitCommitViaAider()<cr>
-nnoremap <silent><leader><leader>gc :call GitCommitViaGitSnapLlm()<cr>
+nnoremap <silent><leader><leader>gc :call GitCommitViaGitSnapLlm_winCwd()<cr>
+nnoremap <silent>              ,,gc :call GitCommitViaGitSnapLlm_repoOfCurrentFile()<cr>
 
 
 " COMMIT ALL maps:
@@ -184,11 +185,31 @@ func! GitCommitAll_withDialog()
 endfunc
 
 
-func! GitCommitViaGitSnapLlm()
-    call TermOneShotFloat( 'PROVIDER=anthropic git-snap-cloud', 'otherWinColumn' )
+func! GitCommitViaGitSnapLlm_winCwd()
+    " Use the window's current working directory
+    let cwd = getcwd(winnr())
+    " Run git-snap-cloud in that directory
+    call TermOneShotFloat( 'cd ' . shellescape(cwd) . ' && PROVIDER=anthropic git-snap-cloud', 'otherWinColumn' )
     wincmd p
 endfunc
 " using /Users/at/.config/utils_global/git-snap-cloud
+
+func! GitCommitViaGitSnapLlm_repoOfCurrentFile()
+    " Get the directory of the current file
+    let file_dir = expand('%:p:h')
+    " Find the git root from that directory
+    let git_root = systemlist('git -C ' . shellescape(file_dir) . ' rev-parse --show-toplevel 2>/dev/null')[0]
+
+    if empty(git_root) || git_root =~ '^fatal:'
+        echo "Error: Current file is not in a git repository"
+        return
+    endif
+
+    " Run git-snap-cloud in the context of that git repo
+    call TermOneShotFloat( 'cd ' . shellescape(git_root) . ' && PROVIDER=anthropic git-snap-cloud', 'otherWinColumn' )
+    wincmd p
+endfunc
+
 
 
 func! GitCommitViaAider()
