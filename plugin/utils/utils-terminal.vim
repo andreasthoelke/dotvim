@@ -378,6 +378,12 @@ function! OnTermOpen()
   setlocal nonumber norelativenumber colorcolumn=
   nnoremap <silent><buffer> G G{}
   " tnoremap <buffer> <Esc> <C-\><C-n>
+
+  " Activate AgentsBufferMaps for Claude Code and other agent terminals
+  let bufname = expand('%')
+  if bufname =~? '\v(claude|codex|gemini|agent)'
+    call MagentaBufferMaps()
+  endif
 endfunction
 
 command! -range=0 FocusSelection call FocusSelection(<count>)

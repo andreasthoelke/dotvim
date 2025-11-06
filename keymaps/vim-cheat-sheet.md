@@ -1642,7 +1642,7 @@ gsv    - fuzzy buffer search
 gsg    - live grep
 gS     - spell suggest. use yos to toggle error underlines
 
-<leader>fd   - find/search directories / folders in cwd. 
+gsd    - find/search directories / folders in cwd. 
                use <c-i>/<c-n>/<c-p> to reveal the folder in a currently open tree! 
                NewBuf maps show dirvish view
 

@@ -76,9 +76,11 @@ endfunc
 
 
 " let g:Mgn_MainStartPattern = '\v(# \zs|✏️.{-}in\s\`\zs)'
-let g:Mgn_MainStartPattern = '\v(^#{1,3} \zs|✅ \zs)'
+let g:Mgn_MainStartPattern = '\v(^#{1,3} \zs|• \zs|✅ \zs|⏺ \zs)'
 " the *\S{-}\* patterns is searching vim help headlines
-let g:Mgn_TopLevelPattern = '^# \zs'
+
+let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|─ \zs)'
+" let g:Mgn_TopLevelPattern = '^# \zs'
 
 func! Mgn_MainStartBindingForw()
   normal! jj
