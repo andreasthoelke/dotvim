@@ -76,7 +76,8 @@ endfunc
 
 
 " let g:Mgn_MainStartPattern = '\v(# \zs|✏️.{-}in\s\`\zs)'
-let g:Mgn_MainStartPattern = '\v(^#{1,3} \zs|• \zs|✅ \zs|⏺ \zs)'
+" Require blank line before two-space section starts so mid-paragraph indents don't match
+let g:Mgn_MainStartPattern = '\v(^#{1,3} \zs|• \zs|\n\n\zs  \zs\i|✅ \zs|⏺ \zs)'
 " the *\S{-}\* patterns is searching vim help headlines
 
 let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|─ \zs)'
@@ -85,6 +86,9 @@ let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|─ \zs)'
 func! Mgn_MainStartBindingForw()
   normal! jj
   call search( g:Mgn_MainStartPattern, 'W' )
+  " call ScrollUp(5)
+  call ScrollUpFromMiddle( 7 )
+  " normal! <c-e><c-e><c-e>
 endfunc
 
 func! Mgn_MainStartBindingBackw()
@@ -92,6 +96,8 @@ func! Mgn_MainStartBindingBackw()
   call search( g:Mgn_MainStartPattern, 'bW' )
   normal! kk
   call search( g:Mgn_MainStartPattern, 'W' )
+  call ScrollUpFromMiddle( 7 )
+  " call ScrollUp(5)
 endfunc
 
 func! Mgn_TopLevBindingForw()
@@ -105,4 +111,3 @@ func! Mgn_TopLevBindingBackw()
   normal! kk
   call search( g:Mgn_TopLevelPattern, 'W' )
 endfunc
-
