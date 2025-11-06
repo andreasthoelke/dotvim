@@ -313,6 +313,7 @@ endfunc
 
 
 func! ScrollUpFromMiddle( lines )
+  if line('.') < 20 | return | endif
   if winheight('%') >= 40
     normal! zz
     call ScrollUp( a:lines )

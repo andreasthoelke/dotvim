@@ -80,7 +80,8 @@ endfunc
 let g:Mgn_MainStartPattern = '\v(^#{1,3} \zs|• \zs|\n\n\zs  \zs\i|✅ \zs|⏺ \zs)'
 " the *\S{-}\* patterns is searching vim help headlines
 
-let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|─ \zs)'
+let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|---|─ \zs)'
+" let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^─ \zs)'
 " let g:Mgn_TopLevelPattern = '^# \zs'
 
 func! Mgn_MainStartBindingForw()
@@ -108,6 +109,8 @@ endfunc
 func! Mgn_TopLevBindingBackw()
   normal! ^
   call search( g:Mgn_TopLevelPattern, 'bW' )
-  normal! kk
-  call search( g:Mgn_TopLevelPattern, 'W' )
+  if line('.') > 3
+    normal! kk
+    call search( g:Mgn_TopLevelPattern, 'W' )
+  endif
 endfunc
