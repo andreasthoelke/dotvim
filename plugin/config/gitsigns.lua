@@ -31,6 +31,28 @@ vim.opt.signcolumn = "yes"
 
 -- ─   Config                                           ──
 
+-- Resolve symlinks before gitsigns attaches
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = vim.api.nvim_create_augroup('GitsignsSymlinkResolve', { clear = true }),
+  callback = function(args)
+    local filepath = vim.api.nvim_buf_get_name(args.buf)
+
+    -- Skip if buffer is empty or unnamed
+    if filepath == '' then return end
+
+    -- Check if file is a symlink using vim.loop (libuv)
+    local stat = vim.loop.fs_lstat(filepath)
+    if stat and stat.type == 'link' then
+      -- Resolve symlink to actual file
+      local realpath = vim.loop.fs_realpath(filepath)
+      if realpath and realpath ~= filepath then
+        -- Set buffer name to resolved path so gitsigns tracks the real file
+        vim.api.nvim_buf_set_name(args.buf, realpath)
+      end
+    end
+  end,
+})
+
 require('gitsigns').setup {
   signs = {
     add          = { text = '┆' },
@@ -49,25 +71,6 @@ require('gitsigns').setup {
   },
   attach_to_untracked = true,
   current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-
-  -- Handle symlinks by resolving to actual file path
-  _on_attach_pre = function(bufnr, callback)
-    local filepath = vim.api.nvim_buf_get_name(bufnr)
-
-    -- Check if file is a symlink using vim.loop (libuv)
-    local stat = vim.loop.fs_lstat(filepath)
-    if stat and stat.type == 'link' then
-      -- Resolve symlink to actual file
-      local realpath = vim.loop.fs_realpath(filepath)
-      if realpath then
-        -- Update buffer to use resolved path for gitsigns
-        callback({ file = realpath })
-        return
-      end
-    end
-
-    callback()
-  end,
   current_line_blame_opts = {
     virt_text = true,
     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
