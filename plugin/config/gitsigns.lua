@@ -49,6 +49,25 @@ require('gitsigns').setup {
   },
   attach_to_untracked = true,
   current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+
+  -- Handle symlinks by resolving to actual file path
+  _on_attach_pre = function(bufnr, callback)
+    local filepath = vim.api.nvim_buf_get_name(bufnr)
+
+    -- Check if file is a symlink using vim.loop (libuv)
+    local stat = vim.loop.fs_lstat(filepath)
+    if stat and stat.type == 'link' then
+      -- Resolve symlink to actual file
+      local realpath = vim.loop.fs_realpath(filepath)
+      if realpath then
+        -- Update buffer to use resolved path for gitsigns
+        callback({ file = realpath })
+        return
+      end
+    end
+
+    callback()
+  end,
   current_line_blame_opts = {
     virt_text = true,
     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
