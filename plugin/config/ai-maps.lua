@@ -519,7 +519,18 @@ local function tcd_to_worktree(agent_key)
   local current_cwd = vim.fn.getcwd()
   local project_name = vim.fn.fnamemodify(current_cwd, ':t')
   local parent_dir = vim.fn.fnamemodify(current_cwd, ':h')
-  local worktree_path = parent_dir .. '/' .. project_name .. '_' .. agent_key
+
+  -- Handle 'main' as special case - go to project root without suffix
+  local worktree_path
+  if agent_key == 'main' then
+    -- Remove agent suffix if currently in a worktree
+    if project_name:match('_claude$') or project_name:match('_codex$') then
+      project_name = project_name:gsub('_[^_]+$', '')
+    end
+    worktree_path = parent_dir .. '/' .. project_name
+  else
+    worktree_path = parent_dir .. '/' .. project_name .. '_' .. agent_key
+  end
 
   if vim.fn.isdirectory(worktree_path) == 0 then
     vim.notify(string.format("Worktree not found: %s", worktree_path), vim.log.levels.ERROR)
@@ -527,7 +538,7 @@ local function tcd_to_worktree(agent_key)
   end
 
   vim.cmd('tcd ' .. vim.fn.fnameescape(worktree_path))
-  vim.notify(string.format("Changed to %s", worktree_path), vim.log.levels.INFO)
+  vim.notify(string.format("worktree %s", agent_key), vim.log.levels.INFO)
 end
 
 vim.keymap.set('n', '<leader>cdC', function()
@@ -537,6 +548,10 @@ end, { silent = true, desc = "tcd to claude worktree" })
 vim.keymap.set('n', '<leader>cdO', function()
   tcd_to_worktree('codex')
 end, { silent = true, desc = "tcd to codex worktree" })
+
+vim.keymap.set('n', '<leader>cdM', function()
+  tcd_to_worktree('main')
+end, { silent = true, desc = "tcd back to main from agent worktree" })
 
 -- ─^  Worktree Directory Navigation                     ▲
 

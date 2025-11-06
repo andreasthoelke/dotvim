@@ -197,6 +197,7 @@ gej                  - LSP signature help
 See: ### Agents Worktrees (AI & Assistants section) for full worktree agent workflow
 <leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
 <leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
+<leader>cdM          - Change tab directory back to main branch/project root
 
 ### Git Diff
 ,gd                  - Toggle MiniDiff overlay
