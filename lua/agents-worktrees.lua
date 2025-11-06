@@ -403,14 +403,19 @@ function M.run_agents_worktrees(prompt)
   local original_tab = vim.api.nvim_get_current_tabpage()
 
   -- Create agents that aren't running
+  local created_claude = false
   if not claude_running then
     require('agents-worktrees').run_agent_worktree("claude", prompt)
+    created_claude = true
   end
 
   if not codex_running then
     vim.defer_fn(function()
-      -- Switch back to original tab before creating next agent
-      pcall(vim.api.nvim_set_current_tabpage, original_tab)
+      -- If we didn't just create Claude, create Codex next to the original tab
+      -- Otherwise, stay on the Claude tab so Codex is created to its right
+      if not created_claude then
+        pcall(vim.api.nvim_set_current_tabpage, original_tab)
+      end
 
       require('agents-worktrees').run_agent_worktree("codex", prompt)
 
@@ -429,4 +434,3 @@ end
 
 
 return M
-
