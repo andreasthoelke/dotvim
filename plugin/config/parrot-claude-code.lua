@@ -26,6 +26,23 @@ function _G.ParrotBuf_GetLatestUserMessage()
 end
 
 
+-- Helper to detect if in agent worktree and extract agent key
+local function get_current_agent_worktree()
+  local cwd = vim.fn.getcwd()
+  local project_name = vim.fn.fnamemodify(cwd, ':t')
+
+  -- Check if this is an agent worktree
+  if project_name:match('_claude$') then
+    return 'claude'
+  elseif project_name:match('_codex$') then
+    return 'codex'
+  elseif project_name:match('_gemini$') then
+    return 'gemini'
+  end
+
+  return nil
+end
+
 -- Send text to agent terminal (found dynamically in current tab) or other AI windows (Magenta, Parrot, Avante)
 function _G.Claude_send(text)
   local magenta_win = BufName_InThisTab_id("Magenta Input")
@@ -89,6 +106,22 @@ function _G.Claude_send(text)
   -- vim.api.nvim_echo( {{ text }}, true, {} )
 
   vim.fn.chansend(job_id, text)
+
+  -- Log session if in agent worktree
+  local agent_key = get_current_agent_worktree()
+  if agent_key then
+    local cwd = vim.fn.getcwd()
+    local project_name = vim.fn.fnamemodify(cwd, ':t')
+    local parent_dir = vim.fn.fnamemodify(cwd, ':h')
+
+    local worktree = {
+      name = project_name,
+      path = cwd,
+      branch = 'agent/' .. agent_key,
+    }
+
+    require('agents-worktrees').create_session_log(agent_key, text, worktree)
+  end
 
   return true
 end

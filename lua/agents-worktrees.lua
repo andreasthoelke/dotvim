@@ -289,7 +289,10 @@ local function get_agent_command(agent_key)
 end
 
 -- Create session log for agent
-local function create_session_log(agent_key, prompt, worktree)
+-- @param agent_key string: Agent identifier ('claude', 'codex', 'gemini')
+-- @param prompt string: The prompt/text being sent
+-- @param worktree table: Worktree info {name, path, branch}
+function M.create_session_log(agent_key, prompt, worktree)
   local timestamp = os.date("%Y%m%d-%H%M%S")
   local session_file = worktree.path .. "/.agent-work/sessions/"
                        .. agent_key .. "-" .. timestamp .. ".json"
@@ -343,7 +346,7 @@ function M.run_agent_worktree(agent_key, prompt, skip_rebase)
   end
 
   -- Create session log
-  create_session_log(agent_key, prompt, worktree)
+  M.create_session_log(agent_key, prompt, worktree)
 
   -- Create new tab with empty buffer
   vim.fn.NewBuf_self("tab")

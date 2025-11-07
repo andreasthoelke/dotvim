@@ -5,9 +5,17 @@ local M = {}
 
 -- Extract project ID from current working directory
 -- The project ID is the last component of the path
+-- If in an agent worktree (e.g., myproject_claude), strips the agent suffix
+-- to use the main project's notes folder
 local function extractProjectId()
   local cwd = vim.fn.getcwd()
   local projectId = vim.fn.fnamemodify(cwd, ":t")
+
+  -- Strip agent worktree suffixes to use main project notes
+  projectId = projectId:gsub('_claude$', '')
+  projectId = projectId:gsub('_codex$', '')
+  projectId = projectId:gsub('_gemini$', '')
+
   return projectId
 end
 
