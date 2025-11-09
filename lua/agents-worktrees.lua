@@ -314,10 +314,10 @@ function M.create_session_log(agent_key, prompt, worktree)
   if file then
     file:write(session_data)
     file:close()
-    vim.notify(
-      string.format("Created session log for %s", agent_key),
-      vim.log.levels.INFO
-    )
+    -- vim.notify(
+    --   string.format("Created session log for %s", agent_key),
+    --   vim.log.levels.INFO
+    -- )
   end
 end
 
