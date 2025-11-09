@@ -199,26 +199,50 @@ See: ### Agents Worktrees (AI & Assistants section) for full worktree agent work
 <leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
 <leader>cdM          - Change tab directory back to main branch/project root
 
+### Git diff-view changes 2025-11
+  Git Commits & History (new mnemonic pattern):
+  - ,gd → <leader>gc - Git commits viewer (8 commits) — c = commits
+  - Added <leader>gC - Git commits viewer (40 commits) — C = more
+  - <leader>gD → <leader>gf - Git file history (15 commits) — f = file
+  - Added <leader>gF - Git file history (40 commits) — F = more
+
+  Git Diff Operations (clearer, more distinct):
+  - ,gd → <leader>gd - Toggle MiniDiff overlay — d = diff (now main prefix)
+  - <leader><leader>gd → <leader>gdf - Compare two files — df = diff files
+  - <localleader>gdd → <leader>gdb - Compare two refs — db = diff branches
+
+  Branch Comparisons (shorter localleader maps):
+  - <localleader>gdm → <localleader>gm - Compare with main
+  - <localleader>gdc → <localleader>gc - Compare with agent/claude
+  - <localleader>gdo → <localleader>go - Compare with agent/codex
+
+  Legacy/Telescope:
+  - <leader>ogL - Kept as legacy alias (marked to use <leader>gC instead)
+  - <leader>ogl - Kept as Telescope alternative picker
+
 ### Git Diff-view
-,gd                  - Toggle MiniDiff overlay
-<leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)
+Updated 2025-11 for better mnemonics (see also: ## git diff views)
+
+<leader>gd           - Toggle MiniDiff overlay (d = diff)
+<leader>gdf          - Compare two files from consecutive lines (df = diff files)
                        Place cursor on first file path, press map, uses current + next line
-<localleader>gdd     - Compare two git refs from consecutive lines (branches/commits/HEAD~1/tags)
+                       Uses git diff --no-index
+<leader>gdb          - Compare two git refs from consecutive lines (db = diff branches)
                        Place cursor on first ref, press map, uses current + next line
                        Shows file list with status (M/A/D/R100) and line counts
                        Press 'p' on file to see diff for that file
                        Press 'p' on header to see all changes between refs
                        Falls back to last valid refs if empty/invalid lines
                        Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
-<localleader>gdc     - Compare current branch with agent/claude
+<localleader>gc      - Compare current branch with agent/claude
                        In main: shows main..agent/claude
                        In _claude worktree: shows agent/claude..agent/claude (no diff)
                        In _codex worktree: shows agent/codex..agent/claude
-<localleader>gdo     - Compare current branch with agent/codex
+<localleader>go      - Compare current branch with agent/codex
                        In main: shows main..agent/codex
                        In _claude worktree: shows agent/claude..agent/codex
                        In _codex worktree: shows agent/codex..agent/codex (no diff)
-<localleader>gdm     - Compare current branch with main
+<localleader>gm      - Compare current branch with main
                        In main: shows main..main (no diff)
                        In _claude worktree: shows agent/claude..main
                        In _codex worktree: shows agent/codex..main
@@ -1372,14 +1396,30 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
 <leader><leader>gc  - commit via /Users/at/.config/utils_global/git-snap-cloud
 
 ## git diff views
-2025-04:
-<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
-<leader>gD           - Git file history viewer (current file, 5 commits)
-<leader>ogl          - Git commits picker (telescope)
-<leader>ogL          - Git commits viewer (40 commits)
-<leader><leader>gd   - Compare two files from consecutive lines (git diff --no-index)
-<localleader>gd      - Compare two git refs from consecutive lines (branches/commits/HEAD~1)
+2025-11: Reorganized for better mnemonics
+
+### Git Commits & History
+<leader>gc           - Git commits viewer (8 commits) - c = commits
+<leader>gC           - Git commits viewer (40 commits) - C = more commits
+<leader>gf           - Git file history (current file, 15 commits) - f = file
+<leader>gF           - Git file history (current file, 40 commits) - F = more
+
+### Git Diff Operations
+<leader>gd           - Toggle MiniDiff overlay (inline) - d = diff
+<leader>gdf          - Compare two files from consecutive lines (git diff --no-index)
+<leader>gdb          - Compare two git refs from consecutive lines (branches/commits/HEAD~1)
+                       Shows file list with status (M/A/D/R100) and line counts
                        Falls back to last valid refs if empty/invalid lines
+                       Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
+
+### Branch Comparisons (localleader)
+<localleader>gm      - Compare current branch with main
+<localleader>gc      - Compare current branch with agent/claude
+<localleader>go      - Compare current branch with agent/codex
+
+### Telescope Pickers
+<leader>ogl          - Telescope: Git commits picker (alternative picker UI)
+<leader>ogL          - [Legacy] Use <leader>gC instead
 
 ### Git Diff Viewer Keybindings (inside viewer)
 p                    - Show diff for file/commit under cursor (stay in file list)
@@ -1461,6 +1501,7 @@ can stage/unstage files in dirvish
 
 ## git removing files
 git rm -r --cached docs/_archive
+git rm -r --cached .agent-work/
 git commit -m "chore: untrack docs/_archive"
 
 git rm -r --cached .bloop/

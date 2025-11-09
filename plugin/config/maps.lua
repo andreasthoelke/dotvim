@@ -327,15 +327,14 @@ vim.keymap.set( 'n',
 --     require'git_commits_viewer'.Show(10)
 --   end )
 
+-- Note: <leader>ogL is now replaced by <leader>gC (see below)
+-- Keeping it as a legacy alias for muscle memory
 vim.keymap.set( 'n',
   '<leader>ogL', function()
     require'git_commits_viewer'.Show( { num_of_commits = 40 } )
-  end, { desc = 'Show last 40 git commits' })
+  end, { desc = '[Legacy] Use <leader>gC instead - Git commits viewer (40)' })
 
-
-
--- These work well!
-
+-- Telescope-based git commit picker (alternative to git_commits_viewer)
 opts_gitstat = {
   layout_config = {
     height=0.99,
@@ -350,18 +349,10 @@ opts_gitstat = {
   initial_mode='normal',
 }
 
-
--- A benefit of using Github-style Delta based diffs is that small changes within lines
--- are highlighted using green and red bg-colors. But in some cases I still prefer DiffviewFileHistory
--- vim.keymap.set( 'n',
---   '<leader>ogL', function() require( 'utils.general' )
---   .Git_commits_picker( opts_gitstat, vim.fn.expand('%') )
---   end )
-
 vim.keymap.set( 'n',
   '<leader>ogl', function() require( 'utils.general' )
   .Git_commits_picker( opts_gitstat )
-  end, { desc = 'Show git commits with picker' })
+  end, { desc = 'Telescope: Git commits picker' })
 
 -- vim.keymap.set( 'n',
 --   '<leader>ogl', function()
@@ -421,45 +412,66 @@ vim.keymap.set( 'n',
 --   } )
 --   end )
 
--- ─   Gitsigns                                          ■
+-- ─   Git Commits & History                             ■
 
--- Maps:
--- l gh    - Gitsigns change_base ~1
--- l gH    - Gitsigns change_base
--- l g1    - Gitsigns change_base ~1
--- l g2    - Gitsigns change_base ~2
--- l g3    - Gitsigns change_base ~3
+-- Git Commits viewer (c = commits)
+vim.keymap.set( 'n',
+  '<leader>gc', function()
+   require'git_commits_viewer'.Show({ num_of_commits = 8 })
+  end, { desc = "Git commits viewer (8 commits)" } )
 
 vim.keymap.set( 'n',
-  ',gd', function()
-    MiniDiff.toggle_overlay()
-    -- vim.cmd 'Gitsigns toggle_signs'
-    -- potential alterative: ?
-    -- vim.cmd 'set number'
-    -- vim.cmd 'set nonumber'
-  end, { desc = 'Toggle git diff overlay' })
+  '<leader>gC', function()
+   require'git_commits_viewer'.Show({ num_of_commits = 40 })
+  end, { desc = "Git commits viewer (40 commits)" } )
 
--- alternative map for ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
+-- Git File history (f = file)
+vim.keymap.set( 'n',
+  '<leader>gf', function()
+   require'git_commits_viewer'.ShowCurrentFile(15)
+  end, { desc = "Git file history (current file, 15 commits)" } )
+
+vim.keymap.set( 'n',
+  '<leader>gF', function()
+   require'git_commits_viewer'.ShowCurrentFile(40)
+  end, { desc = "Git file history (current file, 40 commits)" } )
+
+-- ─^  Git Commits & History                             ▲
+
+
+-- ─   Git Diff Operations                               ■
+
+-- Toggle diff overlay (d = diff, most common operation)
 vim.keymap.set( 'n',
   '<leader>gd', function()
-   require'git_commits_viewer'.Show({ num_of_commits = 8 })
-  end, { desc = "Show last 5 git commits" } )
+    MiniDiff.toggle_overlay()
+  end, { desc = 'Toggle git diff overlay (inline)' })
 
+-- Compare two files from consecutive lines (df = diff files)
 vim.keymap.set( 'n',
-  '<leader>gD', function()
-   require'git_commits_viewer'.ShowCurrentFile(15)
-  end, { desc = "Show last 15 git commits of the current file. E.i. the file history of the current file." } )
-
-
-vim.keymap.set( 'n',
-  '<leader><leader>gd', function()
+  '<leader>gdf', function()
     local opts = {}
     opts.diff_file1 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]  --  text before pipe
     vim.cmd'normal! j'
     opts.diff_file2 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]  --  text before pipe
     vim.cmd'normal! k'
    require'git_commits_viewer'.Show(opts)
-  end, { desc = "Compare two files from consecutive lines" } )
+  end, { desc = "Compare two files from consecutive lines (git diff --no-index)" } )
+
+-- Compare two refs/branches from consecutive lines (db = diff branches)
+vim.keymap.set( 'n',
+  '<leader>gdb', function()
+    local branch1 = vim.fn.getline('.')
+    vim.cmd'normal! j'
+    local branch2 = vim.fn.getline('.')
+    vim.cmd'normal! k'
+   require'git_commits_viewer'.ShowBranches(branch1, branch2)
+  end, { desc = "Compare two git refs from consecutive lines (branches/commits/HEAD~1)" } )
+
+-- ─^  Git Diff Operations                               ▲
+
+
+-- ─   Branch Comparisons (localleader)                  ■
 
 -- Helper function to determine current branch based on cwd
 local function get_current_branch_from_cwd()
@@ -476,31 +488,34 @@ local function get_current_branch_from_cwd()
 end
 
 vim.keymap.set( 'n',
-  '<localleader>gdd', function()
-    local branch1 = vim.fn.getline('.')
-    vim.cmd'normal! j'
-    local branch2 = vim.fn.getline('.')
-    vim.cmd'normal! k'
-   require'git_commits_viewer'.ShowBranches(branch1, branch2)
-  end, { desc = "Compare two git refs (branches/commits/HEAD~1) from consecutive lines" } )
+  '<localleader>gm', function()
+    local current_branch = get_current_branch_from_cwd()
+    require'git_commits_viewer'.ShowBranches(current_branch, 'main')
+  end, { desc = "Compare current branch with main" } )
 
 vim.keymap.set( 'n',
-  '<localleader>gdc', function()
+  '<localleader>gc', function()
     local current_branch = get_current_branch_from_cwd()
     require'git_commits_viewer'.ShowBranches(current_branch, 'agent/claude')
   end, { desc = "Compare current branch with agent/claude" } )
 
 vim.keymap.set( 'n',
-  '<localleader>gdo', function()
+  '<localleader>go', function()
     local current_branch = get_current_branch_from_cwd()
     require'git_commits_viewer'.ShowBranches(current_branch, 'agent/codex')
   end, { desc = "Compare current branch with agent/codex" } )
 
-vim.keymap.set( 'n',
-  '<localleader>gdm', function()
-    local current_branch = get_current_branch_from_cwd()
-    require'git_commits_viewer'.ShowBranches(current_branch, 'main')
-  end, { desc = "Compare current branch with main" } )
+-- ─^  Branch Comparisons (localleader)                  ▲
+
+
+-- ─   Gitsigns - Diff with N commits ago                ■
+
+-- Maps:
+-- l gh    - Gitsigns change_base ~1
+-- l gH    - Gitsigns change_base
+-- l g1    - Gitsigns change_base ~1
+-- l g2    - Gitsigns change_base ~2
+-- l g3    - Gitsigns change_base ~3
 
 
 
