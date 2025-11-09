@@ -13,11 +13,6 @@
 <leader><leader>oc    - AI Chats list view (by date)
 <leader>sfc           - AI Chats topics ~/.config/nvim/plugin/config/telescope.vim‖/nnoremapˍ<leader>sfcˍ<cmd>
 <leader>sfC           - full text
-
-                        NOTE that Codex chats contain:
-                            To continue this session, run codex resume 019a081f-c340-7cc2-bc9f-3f9ee53cac17
-                        So one could search for "codex resume"
-
 <leader>sfa           - avanteHistory (deprecate)
 
 ### AI Command Selection
@@ -37,8 +32,7 @@
 ### Claude Code
 <c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
 \<cr>                - backslash + return is an alternative to the above. Also default behavior!
-<c-g>V               - ClaudeCodeOpen agents.lua / codex cli (per tab!)
-<c-g><c-v>           - reopen agents.lua (per tab!)
+<c-g>V               - ClaudeCodeOpen
 <c-g>S               - Claude in horizontal split
 <c-g><c-j>           - Send parrot buffer user message to Claude
 <c-g><c-s>           - Save Claude buffer to chat history
@@ -57,40 +51,6 @@
 <c-g>,c              - Clear Claude chat
 (v) <c-g>p           - Send visual selection to Claude
 (v) <leader><c-g>p   - Send visual selection to Claude with markup
-
-### Agents Worktrees
-Run Claude and Codex agents in parallel git worktrees with automatic sync.
-~/.config/nvim/lua/agents-worktrees.lua
-~/.config/nvim/plugin/config/ai-maps.lua‖*Worktreeˍagent
-
-#### Sending Text to Worktree Agents
-<c-g>wp              - Send paragraph to worktree agents (creates tabs on first run, reuses after)
-(v) <c-g>wp          - Send visual selection to worktree agents
-<c-g>wo              - Send linewise selection to worktree agents (operator)
-<c-g>w'              - Send clipboard to worktree agents
-<c-g>wi              - Send inner selection to worktree agents (operator)
-
-#### Vim Commands
-:AgentsWorktreesRun <prompt>         - Run both Claude and Codex with prompt
-:AgentsWorktreesRunClaude <prompt>   - Run only Claude worktree agent
-:AgentsWorktreesRunCodex <prompt>    - Run only Codex worktree agent
-
-:AgentsWorktreesResetAll             - Reset both worktrees to main (with backup tag)
-:AgentsWorktreesResetClaude          - Reset Claude worktree to main (with backup)
-:AgentsWorktreesResetCodex           - Reset Codex worktree to main (with backup)
-
-:AgentsWorktreesSetupClaude          - Setup Claude worktree (create/rebase)
-:AgentsWorktreesSetupCodex           - Setup Codex worktree (create/rebase)
-
-#### Directory Navigation
-<leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
-<leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
-
-#### How It Works
-- First <c-g>wp: Creates new tabs with agents, rebases worktrees to main
-- Subsequent <c-g>wp: Sends prompts to existing agents (no tab switching)
-- Auto-commits WIP changes before rebasing on fresh starts
-- Backup tags created before reset (backup-YYYYMMDD-HHMMSS)
 
 ### Parrot
 <c-g><leader>p       - PrtProvider
@@ -180,48 +140,21 @@ gej                  - LSP signature help
 ## Git Operations
 
 ### Git Status & Log
-<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
-<leader>gD           - Git file history viewer (5 commits for current file with git log --follow)
 <leader>ogl          - Git commits picker (telescope)
 <leader>ogL          - Git commits viewer (40 commits)
 <leader>ogS          - Git status (telescope)
-<leader><leader>gb   - Telescope git_branches
+<leader>gd           - Git commits viewer (5 commits)
+<leader><leader>gb   - Telescope git_branches<cr>
 <leader><leader>og   - FzfGFiles?
 <leader><leader>oG   - FzfGFiles?
 
 ### Git File History
-<leader><leader>ogl  - Vim-Diffview DiffviewFileHistory (current file)
-<leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
-
-### Git worktrees
-See: ### Agents Worktrees (AI & Assistants section) for full worktree agent workflow
-<leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
-<leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
-<leader>cdM          - Change tab directory back to main branch/project root
+<leader><leader>ogl  - DiffviewFileHistory (current file)
+<leader><leader>ogL  - DiffviewFileHistory (all files)
 
 ### Git Diff
 ,gd                  - Toggle MiniDiff overlay
-<leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)
-                       Place cursor on first file path, press map, uses current + next line
-<localleader>gdd     - Compare two git refs from consecutive lines (branches/commits/HEAD~1/tags)
-                       Place cursor on first ref, press map, uses current + next line
-                       Shows file list with status (M/A/D/R100) and line counts
-                       Press 'p' on file to see diff for that file
-                       Press 'p' on header to see all changes between refs
-                       Falls back to last valid refs if empty/invalid lines
-                       Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
-<localleader>gdc     - Compare current branch with agent/claude
-                       In main: shows main..agent/claude
-                       In _claude worktree: shows agent/claude..agent/claude (no diff)
-                       In _codex worktree: shows agent/codex..agent/claude
-<localleader>gdo     - Compare current branch with agent/codex
-                       In main: shows main..agent/codex
-                       In _claude worktree: shows agent/claude..agent/codex
-                       In _codex worktree: shows agent/codex..agent/codex (no diff)
-<localleader>gdm     - Compare current branch with main
-                       In main: shows main..main (no diff)
-                       In _claude worktree: shows agent/claude..main
-                       In _codex worktree: shows agent/codex..main
+<leader><leader>gd   - Compare two files from consecutive lines
 
 ### Gitsigns & MiniDiff
 <leader>gh           - change_base ~1
@@ -231,14 +164,6 @@ See: ### Agents Worktrees (AI & Assistants section) for full worktree agent work
 <leader>g3           - change_base ~3
 <leader>g4           - change_base ~4
 <leader>g5           - change_base ~5
-
-### File History Stepping (consecutive commits)
-<leader>g[           - Step back in file change history (older, auto-jumps to first change)
-<leader>g]           - Step forward in file change history (newer, auto-jumps to first change)
-<leader>g0           - Reset to HEAD comparison
-]h/[h                - Jump to next/previous hunk (change)
-]H/[H                - Jump to last/first hunk
-Note: Shows diffs between consecutive commits where file changed, not accumulated from HEAD
 
 MiniDiffAgainst HEAD~2
 MiniDiffAgainst HEAD
@@ -342,8 +267,6 @@ p/P                  - Paste and return cursor to original position
 
 ### Zen Mode
 <leader>zm           - ZenMode
-<leader>of           - Outline (hovers ZenMode!)
-<leader>oo           - Neotree (hovers ZenMode!)
 <leader>zn           - TZNarrow (visual selection only)
 
 ### Marks & Bookmarks
@@ -379,9 +302,6 @@ gwJ                  - Run paragraph as terminal command
 
 <c-v><c-j>           - insert new line (not running the prompt yet) NOTE this is default terminal behavior!
 \<cr>                - backslash + return is an alternative to the above. Also default behavior!
-
-### TypeScript/JavaScript (Buffer-specific)
-<leader>gen          - Run current buffer with npx tsx
 
 
 ## Startup & Sessions
@@ -459,19 +379,16 @@ ge;/:        - search symbol patterns
 <leader>fs   - find (dynamic workspace) symbols. 
                e.g. "initModel" can find all symbols with this name finds 14 results while gsg would find 34.
 
+# zen mode
+<leader>zm  - :ZenMode  (normal)
+<leader>zn  - TZNarrow - Vis-Sel only!
+
+~/.config/nvim/plugin/config/true-zen.nvim.lua‖/keymap.set('n',ˍ'<leader>z
+
 # vim Plug
 cautiously update plugins selectively, e.g.:
 PlugUpdate neo-tree.nvim
 PlugPreUpdateInfos <autocomplete pluginname>
-
-# Google Docs markdown Sync using gdoc script
-leader><leader>dp   - push markdown to gdocs
-leader><leader>df   - fetch markdown from gdocs (relates to the gdocs id in md frontformatter!)
-leader><leader>dl   - list recent Google Docs
-
-gdoc --help
-gdoc pull 17TkoGbGHX3iyckiUKkly5GvfzIkc9Eb-F6UeTYDT9BQ mvd/agentic-workbench/notes/temp.md
-
 
 # jupyter notebook / google colab navigation
 <c-m>y    - copy cell
@@ -507,7 +424,6 @@ Claude code
 <c-g>r/a        - in visual mode: rewrite / append
 <c-g>l p        - provider
 <c-g>l m        - model
-
 
 Repo:
 https://github.com/frankroeder/parrot.nvim
@@ -599,9 +515,13 @@ uv init
 uv run hello.py
 cp ~/Documents/Proj/k_mindgraph/b_yf_n4/a_bnd_py_basic/.gitignore .
 
+## git init
 git init
 git add *
 git commit -m 'initial commit'
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/d_livest_v4/.gitignore .
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/b_zero_ztunes/.gitignore .
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/d_eff_livest/.gitignore .
 git add .gitignore
 git commit -m 'gitignore'
 
@@ -717,11 +637,67 @@ pnpm run dev
 glc/b   - on http://localhost:5173/
 <leader>glc   - chromium with http://localhost:5173/
 
+## end of block motion
+J  - when at the beginning of the block, can just use the indent level motions
+<leader>)  - this jumps to the end of the block from any place inside the block. (reversible via <c-o>)
+
+### treesitter textobj motions
+]M   - got_next_end
+~/.config/nvim/plugin/config/treesitter.lua
+
+## go return statement motions
+]r    - (from TS function name) go to 'return' statement
+[r    - previous return statement
+]b    - End of JS block
+~/.config/nvim/plugin/ftype/typescript.vim‖/GOˍRETURNˍmotions
+
+## heading motions
+q/Q    - next / prev
+,q     - current end marker
+<op>ih - inside heading content
+<op>ah - around heading area
+         * yank, delete, cut, visual-sel, change, subsitute
+
+### word motions
+#### forward
+w/W    - beginning of word/Word
+e/E    - end word/Word
+#### backward
+b/B    - beginning of word/Word
+\e     - end of word
+(,ge   - end of word) .. shadowed
+
+
+[op]ii  - inside indent block (linewise delete, change, yank)
+[op]ai  - outer indent block (linewise delete, change, yank)
+
+outdated?
+<leader>od  - open dirvish in float!
+
+## indenting lines
+,,al/j/}    - indent lines to the current cursor horz pos
+
+## pasting from (past) registers
+<leader>"   - show registers in Telescope (basically :reg)
+              then 0/1/2 and <cr> to output a past yank/copy
+"0p         - directly 'puts' the prev, prev yank
+
+## textobject and treesitter motions
+not yet tested, working: 2024-01
+~/.config/nvim/plugin/config/treesitter.lua‖/lsp_interop
+
+## hop / sneak motion commands
+,j/k    - jump to line forward/back (works in visual mode!)
+y/d q/Q - yank/delete/substitute until line forward/back
+f       - one char line motion
+,f/F    - type a char to jump forward/back
+          NOTE: cursor has to be in the paragraph for "F" to work!?
+
+~/.config/nvim/plugin/config/hop.lua
+
 ## browse lsp symbols, navbuddy / vista tag bar outline
 <leader>on - Navbuddy
 <leader>ot - to open vista outline for .md files and lsp
-             NOTE: config is in outline.lua!
-<leader>of - open outline in float (above ZenMode!)
 <leader>k  - now jumps to the marker while the cursor is staying in the vista window
 
 ~/.config/nvim/plugin/setup-general.vim#/nnoremap%20<silent>%20<leader>k
@@ -788,16 +764,6 @@ S down_back
            tt - tab_back - go to new tab but keep open
            T  - tab_bg   - push to the right
 gd       - CURSOR-LSP-REFERENCE
-
-### project notes
-<leader>nv   - Open project notes (vsplit)
-<leader>ns   - Open project notes (split)
-<leader>nT   - Open project notes (tab)
-<leader>nd   - Open project notes directory
-<leader>nD   - Open notes proj directory
-<leader>nf   - Browse notes proj directory
-<leader>nt   - Create new / "touch" note
-           ~/.config/nvim/plugin/config/maps.lua‖*ProjectˍNotes
 
 ## newBuf from ntree
 \v \s  - split in prev window
@@ -1035,14 +1001,13 @@ now prefer using psql within sql.vim
 let g:dbname = 'zio_skunk_tradeIO'
    or set g:dbconn if e.g. a docker image requires user&pw:
 let g:dbconn = 'postgresql://jimmy:banana@0.0.0.0:5432/world'
-let g:dbconn = 'postgres://user:password@localhost:5430/postgres'
 let g:dbconn = 'jdbc:at://localhost:5432/realworld1'
    set g:dbconn to '' to use g:dbname
 let g:dbconn = ''
 
 2. use gej in .sql file paragraph
 
-/Users/at/.config/nvim/plugin/tools_db.vim
+/Users/at/.config/nvim/plugin/tools_db.vim|94
 
 for DBUI:
 <leader><leader>du   - toggle open the DBUI panel
@@ -1118,11 +1083,11 @@ RenderMarkdown toggle
 
 
 ## info & sort in Dirvish / SortBy Modified and size
-  <leader><leader>om :call DirvishSortByModified()<cr>
-  ,,om :lua DirvishShowModified()<cr>
+  <leader><leader>im :call DirvishSortByModified()<cr>
+  ,,im :lua DirvishShowModified()<cr>
 ## DirvishSortBySize lines count
-  <leader><leader>os :call DirvishSortBySize()<cr>
-  ,,os :lua DirvishShowSize()<cr>
+  <leader><leader>is :call DirvishSortBySize()<cr>
+  ,,is :lua DirvishShowSize()<cr>
 
 
 # Search
@@ -1153,7 +1118,6 @@ gsD     - file browser
 <leader>sfN   - full text
 
 <leader>slh   - Local code headers
-<leader>slH   - Local md headings
 <leader>slc   - Local comment texts
 
 ## COLLECTION search 
@@ -1357,29 +1321,17 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
   - ]x - Jump to next conflict
   - [x - Jump to previous conflict
 
-## git commits
-<leader><leader>gc  - commit via /Users/at/.config/utils_global/git-snap-cloud
 
 ## git diff views
 2025-04:
-<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
-<leader>gD           - Git file history viewer (current file, 5 commits)
-<leader>ogl          - Git commits picker (telescope)
-<leader>ogL          - Git commits viewer (40 commits)
-<leader><leader>gd   - Compare two files from consecutive lines (git diff --no-index)
-<localleader>gd      - Compare two git refs from consecutive lines (branches/commits/HEAD~1)
-                       Falls back to last valid refs if empty/invalid lines
+<leader>gd  - in buffer diffs
+,gd   - git_commits_viewer.Show(5)
+<leader>ogl - telescope
+<leader>ogL - git_commits_viewer.Show(40)
 
-### Git Diff Viewer Keybindings (inside viewer)
-p                    - Show diff for file/commit under cursor (stay in file list)
-P                    - Show diff for file/commit under cursor (jump to diff view)
-q                    - Close git diff viewer
-<c-n>/<c-p>          - Navigate to next/previous commit or file change
-
-### User Commands
-:GitDiffFiles file1 file2           - Compare two files
-:GitDiffBranches ref1 ref2          - Compare two git refs (branches/commits/HEAD~1/tags)
-:GitDiffBufferMaps                  - Set up buffer keymaps for git diff navigation
+## git diff two files
+git diff --no-index demos-ts/toolkit/neo4j/Neo4jDemo.ts demos-ts/toolkit/neo4j_03/Neo4jDemo.ts
+GitDiffBufferMaps
 
 2024-11:
 ggs      - 'status' by showing diffs of all hunks
@@ -1419,7 +1371,6 @@ workflow 2025-01: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
 ]c[c         - navigate hunks
 <leader>hp   - preview a diff of the hunk inline. 
 <leader>hs/r - stage / reset a hunk. use S / R for the entire buffer
-<leader>hu   - undo stage hunk
 
 ~/.config/nvim/plugin/utils-gitsigns.lua‖*Stagingˍgitˍhunks
 
@@ -1449,17 +1400,18 @@ can stage/unstage files in dirvish
 :set noscrollbind
 
 ## git removing files
+git rm -r --cached docs/_archive
+git commit -m "chore: untrack docs/_archive"
+
 git rm -r --cached .bloop/
 git rm -r --cached .metals/
 
 ## git commit changes to branch
 Create and switch to backup branch
 git checkout -b advanced-test-logger
-git checkout -b tutorial-todo-workspace
 Add and commit everything (including untracked files)
 git add -A
 git commit -m "advanced-test-logger"
-git commit -m "tutorial-todo-workspace"
 git checkout main 
 
 
@@ -1651,7 +1603,7 @@ gsv    - fuzzy buffer search
 gsg    - live grep
 gS     - spell suggest. use yos to toggle error underlines
 
-gsd    - find/search directories / folders in cwd. 
+<leader>fd   - find/search directories / folders in cwd. 
                use <c-i>/<c-n>/<c-p> to reveal the folder in a currently open tree! 
                NewBuf maps show dirvish view
 
@@ -1718,7 +1670,6 @@ node_decremental = 'ysd',
 
 ### Telescope project maps
 <c-w><cr>   - find files in that project! then open in split.
-R	find a recently opened file within your project
 
 d	delete currently selected project
 r	rename currently selected project
@@ -1836,6 +1787,9 @@ git stash
 git checkout main
 git checkout cca8be8
 
+## git checkout a file from prev commit 
+git checkout 4b643a6 -- exercises/JsPrinter.js
+
 ## topic: Git branch management recovery
 ~/.local/share/nvim/parrot/chats/2025-05-04.09-24-13.061.md
 git checkout -b temp-branch
@@ -1860,8 +1814,6 @@ pnpm install
 
 ## git checkout a single file
 git show main:m/_printer/Examples.md > m/_printer/Examples_old.md
-git show main:db/index.ts > db/index1.ts
-git show origin/main:db/index.ts > db/index2.ts
 
 consider set scrollbind, set noscrollbind
 
