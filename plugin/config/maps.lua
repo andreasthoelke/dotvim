@@ -770,3 +770,23 @@ vim.keymap.set('n', '<leader>nt', project_notes.createNote,
 
 -- ─^  Project Notes                                    ▲
 
+
+-- ─   Google Docs sync with markdown                    ■
+
+local gdoc_sync = require('gdoc_sync').setup({
+   push_key = '<leader><leader>dp',
+   pull_key = '<leader><leader>df',
+   list_key = '<leader><leader>dl',
+})
+
+vim.keymap.set('n', '<leader><leader>dl', gdoc_sync.list,
+  { desc = 'List recent Google Docs' })
+
+-- TODO / planned feature:
+-- Fetch recent google docs to a buffer (like in lua/git_commits_viewer.lua)
+-- using keymaps loading docs into the cwd?
+
+-- ─^  Google Docs sync with markdown                    ▲
+
+
+

@@ -1,5 +1,10 @@
 -- Google Docs sync integration for Neovim
 -- Requires: gdoc script in PATH
+-- ~/.config/utils_global/gdoc
+-- Setup README (note this involves Google Auth via rclone): ~/.config/utils_global/gdoc_README.md
+
+-- Keymaps:
+--   plugin/config/maps.lua‖*GoogleˍDocsˍsyncˍwithˍmarkdown
 
 local M = {}
 
@@ -164,46 +169,49 @@ end
 
 -- Setup function to register keymaps
 function M.setup(opts)
-    opts = opts or {}
+  opts = opts or {}
 
-    -- Default keymaps (can be customized)
-    local push_key = opts.push_key or '<leader>gp'
-    local pull_key = opts.pull_key or '<leader>gl'
-    local list_key = opts.list_key or '<leader>gL'
+  -- Default keymaps (can be customized)
+  local push_key = opts.push_key or '<leader><leader>dp'
+  local pull_key = opts.pull_key or '<leader><leader>df'
+  local list_key = opts.list_key or '<leader><leader>dl'
 
-    -- Register keymaps for markdown files
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'markdown',
-        callback = function()
-            vim.keymap.set('n', push_key, M.push, {
-                buffer = true,
-                desc = 'Push to Google Docs'
-            })
+  -- Register keymaps for markdown files
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'markdown',
+    callback = function()
+      vim.keymap.set('n', push_key, M.push, {
+        buffer = true,
+        desc = 'Push to Google Docs'
+      })
 
-            vim.keymap.set('n', pull_key, M.pull, {
-                buffer = true,
-                desc = 'Pull from Google Docs'
-            })
+      vim.keymap.set('n', pull_key, M.pull, {
+        buffer = true,
+        desc = 'Pull from Google Docs'
+      })
 
-            vim.keymap.set('n', list_key, M.list, {
-                buffer = true,
-                desc = 'List Google Docs'
-            })
-        end,
-    })
+      vim.keymap.set('n', list_key, M.list, {
+        buffer = true,
+        desc = 'List Google Docs'
+      })
+    end,
+  })
 
-    -- Create user commands
-    vim.api.nvim_create_user_command('GDocPush', M.push, {
-        desc = 'Push current markdown file to Google Docs'
-    })
+  -- Create user commands
+  vim.api.nvim_create_user_command('GDocPush', M.push, {
+    desc = 'Push current markdown file to Google Docs'
+  })
 
-    vim.api.nvim_create_user_command('GDocPull', M.pull, {
-        desc = 'Pull Google Doc to current file'
-    })
+  vim.api.nvim_create_user_command('GDocPull', M.pull, {
+    desc = 'Pull Google Doc to current file'
+  })
 
-    vim.api.nvim_create_user_command('GDocList', M.list, {
-        desc = 'List recent Google Docs'
-    })
+  vim.api.nvim_create_user_command('GDocList', M.list, {
+    desc = 'List recent Google Docs'
+  })
+
+  return M
 end
+
 
 return M

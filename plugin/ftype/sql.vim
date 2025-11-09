@@ -30,13 +30,14 @@ func! Sql_bufferMaps()
 endfunc
 
 
-nnoremap <silent> <leader><leader>du :DBUIToggle<CR>
-nnoremap <silent> <leader><leader>df :DBUIFindBuffer<CR>
-nnoremap <silent> <leader><leader>dr :DBUIRenameBuffer<CR>
-nnoremap <silent> <leader><leader>dL :DBUILastQueryInfo<CR>
+" NOTE: no longer using DBUI
+" nnoremap <silent> <leader><leader>du :DBUIToggle<CR>
+" nnoremap <silent> <leader><leader>df :DBUIFindBuffer<CR>
+" nnoremap <silent> <leader><leader>dr :DBUIRenameBuffer<CR>
+" nnoremap <silent> <leader><leader>dL :DBUILastQueryInfo<CR>
 
-nnoremap <silent> <leader><leader>DD :DBUIFindBuffer<CR>
-nmap <silent> <leader><leader>dd <Plug>(DBUI_ExecuteQuery)
+" nnoremap <silent> <leader><leader>DD :DBUIFindBuffer<CR>
+" nmap <silent> <leader><leader>dd <Plug>(DBUI_ExecuteQuery)
 
 let g:db_ui_save_location = '~/.config/db_ui'
 let g:db_ui_tmp_query_location = '~/.local/share/db_ui'
