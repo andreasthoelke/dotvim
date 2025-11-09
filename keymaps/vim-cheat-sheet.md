@@ -464,6 +464,12 @@ cautiously update plugins selectively, e.g.:
 PlugUpdate neo-tree.nvim
 PlugPreUpdateInfos <autocomplete pluginname>
 
+# Google Docs markdown Sync
+leader><leader>dp   - push markdown to gdocs
+leader><leader>df   - fetch markdown from gdocs (relates to the gdocs id in md frontformatter!)
+leader><leader>dl   - list recent Google Docs
+
+
 # jupyter notebook / google colab navigation
 <c-m>y    - copy cell
 <c-v>     - past cell

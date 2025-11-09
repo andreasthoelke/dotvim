@@ -6,6 +6,25 @@
 -- Keymaps:
 --   plugin/config/maps.lua‖*GoogleˍDocsˍsyncˍwithˍmarkdown
 
+-- This uses: "frontmatter" or "YAML frontmatter".
+--   It's a standard markdown convention where metadata is placed at the top of the file between
+--    triple dashes:
+
+--   ---
+--   gdoc_id: 1ABC...XYZ
+--   title: My Document
+--   author: Jane Doe
+--   date: 2025-01-01
+--   ---
+
+--   # Your actual content starts here
+
+--   Origins:
+--   - Popularized by static site generators (Jekyll, Hugo, Gatsby)
+--   - Based on YAML syntax
+--   - Now widely supported by markdown tools
+
+
 local M = {}
 
 -- Extract gdoc_id from frontmatter
