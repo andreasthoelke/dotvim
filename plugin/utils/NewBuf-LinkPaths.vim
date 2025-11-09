@@ -196,8 +196,7 @@ func! ClipBoard_LinkPath_new( path_type )
 
   let linkpath = path . linkExt
   call SetClipboard(linkpath)
-  echom 'path:' path
-  echom 'ext:' linkExt
+  echom "Copied: " . path . linkExt
 endfunc
 
 func! ClipBoard_path_new( path_type, ... )
@@ -213,7 +212,11 @@ func! ClipBoard_path_new( path_type, ... )
   endif
 
   call SetClipboard(path)
-  echom path
+  echom "Copied: " . path
+  " Debug: verify it was set
+  " echom "Register \": " . @"
+  " echom "Register *: " . @*
+  " echom "Register +: " . @+
 endfunc
 
 
@@ -233,8 +236,7 @@ func! ClipBoard_LinePos_new( path_type )
 
   let linkpath = path . linkExt
   call SetClipboard(linkpath)
-  echom 'path:' path
-  echom 'ext:' linkExt
+  echom "Copied: " . path . linkExt
 endfunc
 
 
@@ -406,9 +408,14 @@ endfunction
 function! SetClipboard(text) abort
     " Set Vim's default register
     let @" = a:text
-    let @* = a:text  " Primary selection (Linux/X11)
-    let @+ = a:text  " System clipboard
-    call system('pbcopy', a:text)
+    let @* = a:text  " Primary selection (macOS system clipboard)
+    let @+ = a:text  " System clipboard (Linux/X11)
+
+    " For macOS, ensure pbcopy gets the text reliably
+    if has('mac') || has('macunix')
+        " Use echo -n to avoid adding newline, and properly escape
+        call system('echo -n ' . shellescape(a:text) . ' | pbcopy')
+    endif
 endfunction
 
 

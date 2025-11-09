@@ -1167,9 +1167,17 @@ use case: i could add more predifined patterns?
 ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
 
 ### Hard link example
+NOTE: I no longer use hard links - some apps break them!
+use symlinks instead:
+ln -s ~/.config/nvim/keymaps/vim-cheat-sheet.md ~/Documents/Notes/vim-cheat-sheet.md
+
+hardlink infos
 ln keymaps/vim-cheat-sheet.md ~/Documents/Notes
 ~/Documents/Notes
 keymaps/vim-cheat-sheet.md
+
+### hi there
+eins
 
 #### which file is a hardlink or original?
 I ran the following:
