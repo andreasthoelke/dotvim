@@ -369,6 +369,7 @@ local scala_interest_files = {
 function M.Search_collection_full()
   local opts = {
     cwd = vim.g.FolderSearch_Path,
+    additional_args = function(_opts) return {"-L"} end, -- Follow symlinks
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
@@ -381,6 +382,7 @@ function M.Search_collection_md_headers()
   local opts = {
     default_text = "# .*" ,
     cwd = vim.g.FolderSearch_Path,
+    additional_args = function(_opts) return {"-L"} end, -- Follow symlinks
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }

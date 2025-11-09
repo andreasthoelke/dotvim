@@ -602,6 +602,9 @@ cp ~/Documents/Proj/k_mindgraph/b_yf_n4/a_bnd_py_basic/.gitignore .
 git init
 git add *
 git commit -m 'initial commit'
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/d_livest_v4/.gitignore .
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/b_zero_ztunes/.gitignore .
+cp ~/Documents/Proj/k_mindgraph/i_sync_db/d_eff_livest/.gitignore .
 git add .gitignore
 git commit -m 'gitignore'
 
@@ -1449,6 +1452,9 @@ can stage/unstage files in dirvish
 :set noscrollbind
 
 ## git removing files
+git rm -r --cached docs/_archive
+git commit -m "chore: untrack docs/_archive"
+
 git rm -r --cached .bloop/
 git rm -r --cached .metals/
 
@@ -1835,6 +1841,9 @@ test things then get back using "git checkout main"
 git stash
 git checkout main
 git checkout cca8be8
+
+## git checkout a file from prev commit
+git checkout 4b643a6 -- exercises/JsPrinter.js
 
 ## topic: Git branch management recovery
 ~/.local/share/nvim/parrot/chats/2025-05-04.09-24-13.061.md
