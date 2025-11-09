@@ -19,10 +19,6 @@
 
 --   # Your actual content starts here
 
---   Origins:
---   - Popularized by static site generators (Jekyll, Hugo, Gatsby)
---   - Based on YAML syntax
---   - Now widely supported by markdown tools
 
 
 local M = {}
