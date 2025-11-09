@@ -545,8 +545,12 @@ func! GetPath_fromLine()
   " Support popular line link format: /Users/at/.config/nvim/plugin/config/telescope.lua:393: in function 'HighlightRange'
   if path =~ ':'
     let [path_sub; line_num] = path->split( ":" )
-    if filereadable( path_sub )
+    " Only process if we have a valid line number (non-empty and exists)
+    if filereadable( path_sub ) && len(line_num) > 0 && !empty(line_num[0])
       return path_sub . "‖:" . line_num[0]
+    elseif filereadable( path_sub )
+      " Path exists but no valid line number - just return the path
+      return path_sub
     endif
   endif
 

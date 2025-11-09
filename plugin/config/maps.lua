@@ -741,6 +741,9 @@ local project_notes = require('utils.project_notes')
 vim.keymap.set('n', '<leader>nv', function() project_notes.openNotes("vsplit ") end,
   { desc = 'Open project notes (vsplit)' })
 
+vim.keymap.set('n', '<leader>ni', function() project_notes.openNotes("edit") end,
+  { desc = 'Open project notes (vsplit)' })
+
 vim.keymap.set('n', '<leader>ns', function() project_notes.openNotes("split ") end,
   { desc = 'Open project notes (split)' })
 
