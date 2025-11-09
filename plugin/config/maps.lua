@@ -442,7 +442,7 @@ vim.keymap.set( 'n',
 -- alternative map for ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 vim.keymap.set( 'n',
   '<leader>gd', function()
-   require'git_commits_viewer'.Show({ num_of_commits = 5 })
+   require'git_commits_viewer'.Show({ num_of_commits = 8 })
   end, { desc = "Show last 5 git commits" } )
 
 vim.keymap.set( 'n',

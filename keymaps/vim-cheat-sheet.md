@@ -199,7 +199,7 @@ See: ### Agents Worktrees (AI & Assistants section) for full worktree agent work
 <leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
 <leader>cdM          - Change tab directory back to main branch/project root
 
-### Git Diff
+### Git Diff-view
 ,gd                  - Toggle MiniDiff overlay
 <leader><leader>gd   - Compare two files from consecutive lines (using git diff --no-index)
                        Place cursor on first file path, press map, uses current + next line
