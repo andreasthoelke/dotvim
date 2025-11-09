@@ -177,75 +177,23 @@ ge]/[                - Next/prev error
 gek                  - LSP hover
 gej                  - LSP signature help
 
-## Git Operations
+## Git Operations Quick Reference
+Updated 2025-11 with improved mnemonics. See "# git maps" section (line ~1375) for complete documentation.
 
-### Git Status & Log
-<leader>gd           - Git commits viewer (5 commits, shows file list with M/A/D/R100 status)
-<leader>gD           - Git file history viewer (5 commits for current file with git log --follow)
-<leader>ogl          - Git commits picker (telescope)
-<leader>ogL          - Git commits viewer (40 commits)
-<leader>ogS          - Git status (telescope)
-<leader><leader>gb   - Telescope git_branches
-<leader><leader>og   - FzfGFiles?
-<leader><leader>oG   - FzfGFiles?
+### Most Common Git Keymaps
+<leader>gc           - Git commits viewer (8 commits)
+<leader>gC           - Git commits viewer (40 commits)
+<leader>gf           - Git file history (current file, 15 commits)
+<leader>gF           - Git file history (current file, 40 commits)
+<leader>gd           - Toggle MiniDiff overlay (inline diff)
+<leader>gdf          - Compare two files from consecutive lines
+<leader>gdb          - Compare two git refs from consecutive lines
 
-### Git File History
-<leader><leader>ogl  - Vim-Diffview DiffviewFileHistory (current file)
-<leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
-
-### Git worktrees
+### Git Worktrees
 See: ### Agents Worktrees (AI & Assistants section) for full worktree agent workflow
-<leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
-<leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
-<leader>cdM          - Change tab directory back to main branch/project root
-
-### Git diff-view changes 2025-11
-  Git Commits & History (new mnemonic pattern):
-  - ,gd → <leader>gc - Git commits viewer (8 commits) — c = commits
-  - Added <leader>gC - Git commits viewer (40 commits) — C = more
-  - <leader>gD → <leader>gf - Git file history (15 commits) — f = file
-  - Added <leader>gF - Git file history (40 commits) — F = more
-
-  Git Diff Operations (clearer, more distinct):
-  - ,gd → <leader>gd - Toggle MiniDiff overlay — d = diff (now main prefix)
-  - <leader><leader>gd → <leader>gdf - Compare two files — df = diff files
-  - <localleader>gdd → <leader>gdb - Compare two refs — db = diff branches
-
-  Branch Comparisons (shorter localleader maps):
-  - <localleader>gdm → <localleader>gm - Compare with main
-  - <localleader>gdc → <localleader>gc - Compare with agent/claude
-  - <localleader>gdo → <localleader>go - Compare with agent/codex
-
-  Legacy/Telescope:
-  - <leader>ogL - Kept as legacy alias (marked to use <leader>gC instead)
-  - <leader>ogl - Kept as Telescope alternative picker
-
-### Git Diff-view
-Updated 2025-11 for better mnemonics (see also: ## git diff views)
-
-<leader>gd           - Toggle MiniDiff overlay (d = diff)
-<leader>gdf          - Compare two files from consecutive lines (df = diff files)
-                       Place cursor on first file path, press map, uses current + next line
-                       Uses git diff --no-index
-<leader>gdb          - Compare two git refs from consecutive lines (db = diff branches)
-                       Place cursor on first ref, press map, uses current + next line
-                       Shows file list with status (M/A/D/R100) and line counts
-                       Press 'p' on file to see diff for that file
-                       Press 'p' on header to see all changes between refs
-                       Falls back to last valid refs if empty/invalid lines
-                       Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
-<localleader>gc      - Compare current branch with agent/claude
-                       In main: shows main..agent/claude
-                       In _claude worktree: shows agent/claude..agent/claude (no diff)
-                       In _codex worktree: shows agent/codex..agent/claude
-<localleader>go      - Compare current branch with agent/codex
-                       In main: shows main..agent/codex
-                       In _claude worktree: shows agent/claude..agent/codex
-                       In _codex worktree: shows agent/codex..agent/codex (no diff)
-<localleader>gm      - Compare current branch with main
-                       In main: shows main..main (no diff)
-                       In _claude worktree: shows agent/claude..main
-                       In _codex worktree: shows agent/codex..main
+<leader>cdC          - Change tab directory to claude worktree
+<leader>cdO          - Change tab directory to codex worktree
+<leader>cdM          - Change tab directory back to main branch
 
 ### Gitsigns & MiniDiff
 <leader>gh           - change_base ~1
@@ -1432,58 +1380,44 @@ q                    - Close git diff viewer
 :GitDiffBranches ref1 ref2          - Compare two git refs (branches/commits/HEAD~1/tags)
 :GitDiffBufferMaps                  - Set up buffer keymaps for git diff navigation
 
-2024-11:
-ggs      - 'status' by showing diffs of all hunks
-<leader>ogs    - 'status' by showing diffs of all hunks
-<leader>ogS    - just the lines count changed per file! via git diff HEAD --stat
-                 ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Git_status_picker(op
+### Git Status & Staging
+<leader>ogs    - Git status with diffs of all hunks
+<leader>ogS    - Git status (line count per file) via git diff HEAD --stat
+<leader>ogg    - Fugitive status: 's' to stage, 'u' to unstage, 'cc' to commit
+<leader>ogc    - Fugitive commit message (use ,,w to save and close)
+<leader>oga    - Stage all & commit via fugitive
+<leader>gi     - (in dirvish) Add file to .gitignore
 
-ggl/<leader> - git log of the current file/all files
-<leader>ogl/<leader> - git log of the current file/all files
-<leader><leader>ogl/<leader> - file history (filtered by actual changes to files!) vim diff view
-, gl/<leader>   - (same) / git log of the current file/all files
-                  ~/.config/nvim/lua/utils/general.lua‖/functionˍM.Git_c
-           maps and layout conf:
-                  ~/.config/nvim/plugin/config/maps.lua‖/opts_gitstatˍ=ˍ{
-<leader>ogg    - commit with fugitive
-<leader>gi     - (in dirvish) add file (folder?) to .gitignore
+### Diffview Plugin
+<leader><leader>ogl  - DiffviewFileHistory (current file)
+<leader><leader>ogL  - DiffviewFileHistory (all files, shows involved files per commit)
 
+## Gitsigns & Hunk Navigation
+Workflow: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
 
-# new git workflow
-older:
-<leader>ogs    - 'status' by showing diffs of all hunks
-<leader>ogS    - just the lines count changed per file! via git diff HEAD --stat
-<leader>ogc    - git commit message via fugitive (use ,,w to save and close/ confirm commit)
-<leader>oga    - stage all & commit message via fugitive
-<leader>ogl/<leader>  - list of git commits (with date ago/telescope)
-                        maps: ~/.config/nvim/plugin/utils_general_maps.lua#/--%20Git%20picker
+### Hunk Operations
+]c / [c          - Next/prev hunk (change)
+]h / [h          - Next/prev hunk (alternative)
+]H / [H          - Jump to last/first hunk
+<leader>hp       - Preview hunk diff inline
+<leader>hr       - Reset hunk (from last commit, can undo/redo)
+<leader>hs       - Stage hunk
+<leader>hu       - Undo stage hunk
+<leader>gg       - Toggle gitsigns gutter
 
-## gitsigns
-workflow 2025-01: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
-, gd   - to show diff view in buffer (mini.diff)
-<leader>gd   - git_commits_viewer
-]c[c   - next/prev hunk
-<leader>hr   - reset the hunk! (taken from prev commit!)
-               can combine with simple undo/redo
-
-<leader>gg   - gitsigns gutter, only for unstaged changes
-]c[c         - navigate hunks
-<leader>hp   - preview a diff of the hunk inline. 
-<leader>hs/r - stage / reset a hunk. use S / R for the entire buffer
-<leader>hu   - undo stage hunk
+### File History Stepping
+<leader>g[       - Step back in file history (older commit, auto-jump to first change)
+<leader>g]       - Step forward in file history (newer commit, auto-jump to first change)
+<leader>g0       - Reset to HEAD comparison
+<leader>gh       - Compare with HEAD~1
+<leader>gH       - Compare with HEAD (base)
+<leader>g1       - Compare with HEAD~1
+<leader>g2       - Compare with HEAD~2
+<leader>g3       - Compare with HEAD~3
+<leader>g4       - Compare with HEAD~4
+<leader>g5       - Compare with HEAD~5
 
 ~/.config/nvim/plugin/utils-gitsigns.lua‖*Stagingˍgitˍhunks
-
-### other gitsigns maps
-<leader>gg    - toggle
-]c[c          - next/prev hunk
-<leader>hp    - show diff!!
-<leader>gh    - Gitsigns change_base ~1
-<leader>gH    - Gitsigns change_base
-<leader>g1    - Gitsigns change_base ~1
-<leader>g2    - Gitsigns change_base ~2
-<leader>g3    - Gitsigns change_base ~3
-<leader>g4    - Gitsigns change_base ~4
 
 
 
