@@ -322,6 +322,32 @@ end
 
 vim.keymap.set( 'n', '<leader>gs', Ntree_revealFile )
 
+-- Auto-reveal current file in neotree when switching windows or loading new buffer
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  group = vim.api.nvim_create_augroup("NeoTreeAutoReveal", { clear = true }),
+  callback = function()
+    vim.schedule(function()
+      local bufnr = vim.api.nvim_get_current_buf()
+      local buftype = vim.bo[bufnr].buftype
+      local filetype = vim.bo[bufnr].filetype
+
+      -- Skip special buffers
+      if buftype ~= "" or filetype == "neo-tree" then
+        return
+      end
+
+      -- Skip if buffer has no name
+      local bufname = vim.api.nvim_buf_get_name(bufnr)
+      if bufname == "" then
+        return
+      end
+
+      -- Call reveal function (silently fail if any issues)
+      pcall(Ntree_revealFile)
+    end)
+  end,
+})
+
 -- Ntree_revealFile("/Users/at/.config/nvim/notes/minor/some.txt")
 -- Ntree_revealFile("/Users/at/.config/nvim/notes/minor/some")
 
