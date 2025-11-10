@@ -443,6 +443,11 @@ local lualine_config = {
 
 require('lualine').setup( lualine_config )
 
+-- Refresh after setup to apply colorscheme highlights
+vim.schedule(function()
+  require('lualine').refresh()
+end)
+
 -- This shouldn't be needed. But sometimes the winbar update didn't happen.
 -- Add autocmd to refresh winbar on window focus change
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {

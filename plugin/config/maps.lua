@@ -441,7 +441,7 @@ vim.keymap.set( 'n',
 
 -- ─   Git Diff Operations                               ■
 
--- Toggle diff overlay (d = diff, most common operation)
+-- Toggle diff overlay (d = diff, most common operation
 vim.keymap.set( 'n',
   '<leader>gd', function()
     MiniDiff.toggle_overlay()
@@ -654,7 +654,6 @@ vim.keymap.set( 'n',
   ',,cl', function()
     vim.cmd'colorscheme munsell-blue-molokai_light_1'
     vim.g.is_dark_mode = 0  -- Update the global variable
-    os.execute("claude config set -g theme light")
     -- New terminals will automatically use the light theme
     Set_alacritty_bg('E3E6E9')
     vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')
@@ -665,7 +664,6 @@ vim.keymap.set( 'n',
     -- TODO: the dark theme seems to miss setting the tabs background
     vim.cmd'colorscheme munsell-blue-molokai'
     vim.g.is_dark_mode = 1  -- Update the global variable
-    os.execute("claude config set -g theme dark")
     -- New terminals will automatically use the dark theme
     Set_alacritty_bg('151719')
     vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')

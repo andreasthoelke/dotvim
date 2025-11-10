@@ -701,6 +701,14 @@ endfunc
 
 " Note: ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍStyleˍ&ˍcolorˍmaps
 
+" Refresh lualine and cursor when colorscheme changes
+augroup ColorschemeRefresh
+  autocmd!
+  " Only refresh if lualine is already loaded (avoid error during init)
+  autocmd ColorScheme * lua if package.loaded['lualine'] then require('lualine').refresh() end
+  autocmd ColorScheme * redraw!
+augroup END
+
 " if !exists('g:colors_name')
 let g:is_dark_mode = system("defaults read -g AppleInterfaceStyle 2>/dev/null") =~ 'Dark'
 " let g:is_dark_mode = 1
@@ -708,12 +716,10 @@ let g:is_dark_mode = system("defaults read -g AppleInterfaceStyle 2>/dev/null") 
 if is_dark_mode == 1
   set background=dark
   colorscheme munsell-blue-molokai
-  call system( "claude config set -g theme dark" )
   call T_DelayedCmd( "lua Set_alacritty_bg('151719')", 50 )
 else
   " set background=dark
   colorscheme munsell-blue-molokai_light_1
-  call system( "claude config set -g theme light" )
   call T_DelayedCmd( "lua Set_alacritty_bg('E3E6E9')", 50 )
 endif
   " The startup color theme - light during time
