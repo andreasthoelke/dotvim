@@ -630,7 +630,9 @@ hi(0, "SpellRare", { sp = "#000000", undercurl = true })
 hi(0, "StartifyEndOfBuffer", { fg = "#e3e6e9" })
 hi(0, "Statement", { ctermfg = 10, fg = "#4d8aa3" })
 hi(0, "StatusLine", { bg = "#ffffff", bold = true, fg = "#c5c7cd" })
-hi(0, "StatusLineNC", { bg = "#ffffff", bold = true, fg = "#2e2e34" })
+-- StatusLineNC bg changed from #ffffff to #e3e6e9 to match lualine inactive window bg
+-- Previously the white bg would bleed through lualine's theme for inactive windows
+hi(0, "StatusLineNC", { bg = "#e3e6e9", bold = true, fg = "#2e2e34" })
 hi(0, "StorageClass", { fg = "#4d8aa3" })
 -- hi(0, "String", { ctermfg = 10, fg = "#558476" })
 hi(0, "String", { ctermfg = 10, fg = "#3A9A7D" })
