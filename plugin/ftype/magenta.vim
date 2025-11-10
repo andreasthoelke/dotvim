@@ -59,9 +59,19 @@ func! MagentaBufferMaps()
 endfunc
 
 
-" NOTE these are common "columns" in gpt-5 output.
-" let g:Mgn_columnPttn = MakeOrPttn( ['\:', '→', '\,', '\.','\;'] )
-let g:Mgn_columnPttn = MakeOrPttn( ['\:', '→', '\,', '\-','\;'] )
+" ─   Markdown agent nav patterns                        ■
+
+let g:Mgn_columnPttn = MakeOrPttn( ['\:', '#','→', '\,', '\- ','\;'] )
+
+" let g:Mgn_MainStartPattern = '\v(# \zs|✏️.{-}in\s\`\zs)'
+" Require blank line before two-space section starts so mid-paragraph indents don't match
+let g:Mgn_MainStartPattern = '\v(#{1,3} \zs|• \zs|\n\n\zs  \zs\i|✅ \zs|⏺ \zs|^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|─ \zs)'
+" the *\S{-}\* patterns is searching vim help headlines
+
+let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|^─ \zs)'
+
+" ─^  Markdown agent nav patterns                        ▲
+
 
 
 func! Mgn_ColumnForw()
@@ -76,14 +86,6 @@ func! Mgn_ColumnBackw()
 endfunc
 
 
-" let g:Mgn_MainStartPattern = '\v(# \zs|✏️.{-}in\s\`\zs)'
-" Require blank line before two-space section starts so mid-paragraph indents don't match
-let g:Mgn_MainStartPattern = '\v(#{1,3} \zs|• \zs|\n\n\zs  \zs\i|✅ \zs|⏺ \zs|^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|─ \zs)'
-" the *\S{-}\* patterns is searching vim help headlines
-
-let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|─ \zs)'
-" let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^─ \zs)'
-" let g:Mgn_TopLevelPattern = '^# \zs'
 
 func! Mgn_MainStartBindingForw()
   normal! jj
