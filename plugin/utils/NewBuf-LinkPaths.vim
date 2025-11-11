@@ -413,8 +413,23 @@ function! SetClipboard(text) abort
 
     " For macOS, ensure pbcopy gets the text reliably
     if has('mac') || has('macunix')
-        " Use echo -n to avoid adding newline, and properly escape
-        call system('echo -n ' . shellescape(a:text) . ' | pbcopy')
+        " Use printf to avoid shell escaping issues, and write directly via stdin
+        call system('pbcopy', a:text)
+
+        " Verify it was copied successfully
+        if v:shell_error == 0
+            " Optional: verify by reading back
+            let l:verify = system('pbpaste')
+            if l:verify !=# a:text
+                echohl WarningMsg
+                echom "Warning: Clipboard verification failed"
+                echohl None
+            endif
+        else
+            echohl ErrorMsg
+            echom "Error: pbcopy failed with code " . v:shell_error
+            echohl None
+        endif
     endif
 endfunction
 

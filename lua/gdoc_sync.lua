@@ -24,15 +24,82 @@
 local M = {}
 
 -- Extract gdoc_id from frontmatter
+-- Handles both plain ID format and full URL format
 local function extract_gdoc_id()
     local lines = vim.api.nvim_buf_get_lines(0, 0, 20, false)
     for _, line in ipairs(lines) do
+        -- Try plain ID format first
         local id = line:match("^gdoc_id:%s*(%S+)")
         if id then
+            -- If it's a full URL, extract just the ID
+            local url_id = id:match("/d/([^/]+)")
+            if url_id then
+                return url_id
+            end
             return id
         end
     end
     return nil
+end
+
+-- Generate Google Docs URL from ID
+local function generate_gdoc_url(doc_id)
+    return string.format("https://docs.google.com/document/d/%s/edit", doc_id)
+end
+
+-- Ensure styled HTML link exists below frontmatter
+-- Returns true if link was added/updated, false if already present
+local function ensure_gdoc_link()
+    local doc_id = extract_gdoc_id()
+    if not doc_id then
+        return false
+    end
+
+    local lines = vim.api.nvim_buf_get_lines(0, 0, 30, false)
+    local frontmatter_end = nil
+    local link_line = nil
+    local in_frontmatter = false
+
+    -- Find frontmatter end and existing link
+    for i, line in ipairs(lines) do
+        if i == 1 and line == "---" then
+            in_frontmatter = true
+        elseif in_frontmatter and line == "---" then
+            frontmatter_end = i - 1  -- 0-indexed
+            in_frontmatter = false
+        elseif not in_frontmatter and line:match("📄 Google Doc") then
+            link_line = i - 1  -- 0-indexed
+            break
+        end
+    end
+
+    if not frontmatter_end then
+        return false
+    end
+
+    local url = generate_gdoc_url(doc_id)
+    local styled_link = string.format('<small><a href="%s">📄 Google Doc</a></small>', url)
+
+    -- If link exists, update it
+    if link_line then
+        vim.api.nvim_buf_set_lines(0, link_line, link_line + 1, false, {styled_link})
+        return true
+    end
+
+    -- Otherwise, insert it after frontmatter
+    -- Check if there's already a blank line after frontmatter
+    local insert_pos = frontmatter_end + 1
+    local next_line = lines[insert_pos + 1]
+
+    if next_line == "" then
+        -- Insert link and keep blank line
+        vim.api.nvim_buf_set_lines(0, insert_pos, insert_pos, false, {"", styled_link})
+    else
+        -- Insert blank line, link, and another blank line
+        vim.api.nvim_buf_set_lines(0, insert_pos, insert_pos, false, {"", styled_link, ""})
+    end
+
+    return true
 end
 
 -- Check if gdoc command is available
@@ -53,6 +120,9 @@ function M.push()
         return
     end
 
+    -- Ensure styled link exists before saving
+    ensure_gdoc_link()
+
     -- Save first
     vim.cmd('write')
 
@@ -67,6 +137,8 @@ function M.push()
             if exit_code == 0 then
                 -- Reload buffer to get updated frontmatter
                 vim.cmd('edit!')
+                -- Ensure link is present after reload
+                ensure_gdoc_link()
                 vim.notify("✓ Pushed to Google Docs", vim.log.levels.INFO)
             else
                 vim.notify("✗ Failed to push to Google Docs", vim.log.levels.ERROR)
@@ -117,6 +189,8 @@ function M.pull()
             if exit_code == 0 then
                 -- Reload buffer
                 vim.cmd('edit!')
+                -- Ensure link is present after reload
+                ensure_gdoc_link()
                 vim.notify("✓ Pulled from Google Docs", vim.log.levels.INFO)
             else
                 vim.notify("✗ Failed to pull from Google Docs", vim.log.levels.ERROR)
@@ -182,6 +256,15 @@ function M.list()
     })
 end
 
+-- Add or update the styled Google Doc link (public function)
+function M.update_link()
+    if ensure_gdoc_link() then
+        vim.notify("✓ Google Doc link updated", vim.log.levels.INFO)
+    else
+        vim.notify("No gdoc_id found in frontmatter", vim.log.levels.WARN)
+    end
+end
+
 -- Setup function to register keymaps
 function M.setup(opts)
   opts = opts or {}
@@ -223,6 +306,10 @@ function M.setup(opts)
 
   vim.api.nvim_create_user_command('GDocList', M.list, {
     desc = 'List recent Google Docs'
+  })
+
+  vim.api.nvim_create_user_command('GDocUpdateLink', M.update_link, {
+    desc = 'Add/update styled Google Doc link in current file'
   })
 
   return M

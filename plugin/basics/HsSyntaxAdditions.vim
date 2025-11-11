@@ -564,6 +564,9 @@ func! MarkdownSyntaxAdditions()
   syn region mkdCode start=/`/ end=/`/
   syn region mkdCode start=/``/ skip=/[^`]`[^`]/ end=/``/
 
+  " Conceal gdoc_id line in frontmatter
+  syntax match gdocIdLine '^gdoc_id:.*$' conceal cchar=*
+
   setlocal conceallevel=2
   setlocal concealcursor=ni
   " set foldmethod=marker
