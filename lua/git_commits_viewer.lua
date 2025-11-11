@@ -66,57 +66,70 @@ function M.TopLevBindingBackw()
 end
 
 
--- Store terminal buffer ID for cleanup
-local term_job_id = nil
-local prev_term_buf = nil
+-- Store terminal buffer ID for cleanup per tab
+local term_jobs = {}
+local prev_term_bufs = {}
+
+-- Helper to get current tab's window references
+local function get_tab_windows()
+  local tabpage = vim.api.nvim_get_current_tabpage()
+  local tab_wins = vim.t[tabpage]
+  if not tab_wins then
+    vim.t[tabpage] = {}
+    tab_wins = vim.t[tabpage]
+  end
+  return tab_wins, tabpage
+end
 
 function M.UpdateDiffView(commit_hash, filepath)
-
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  -- go to M.diff_win
-  vim.api.nvim_set_current_win(M.diff_win)
+  -- go to diff_win
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
+  local tab_wins, tabpage = get_tab_windows()
   if filepath then
     -- Escape filepath for shell to handle brackets and special characters
     local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-    term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. escaped_filepath)
+    term_jobs[tabpage] = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. escaped_filepath)
   else
-    term_job_id = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
+    term_jobs[tabpage] = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
   end
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
     -- delete prev_term_buf
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
 function M.UpdateDiffView_Untracked(filepath)
-
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  -- go to M.diff_win
-  vim.api.nvim_set_current_win(M.diff_win)
+  -- go to diff_win
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
+  local tab_wins, tabpage = get_tab_windows()
   if filepath then
     -- Escape filepath for shell to handle brackets and special characters
     local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-    term_job_id = vim.fn.termopen('git diff -- ' .. escaped_filepath)
+    term_jobs[tabpage] = vim.fn.termopen('git diff -- ' .. escaped_filepath)
   else
-    term_job_id = vim.fn.termopen('git diff')
+    term_jobs[tabpage] = vim.fn.termopen('git diff')
   end
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
     -- delete prev_term_buf
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
@@ -216,84 +229,91 @@ end
 
 
 function M.UpdateDiffView_FilesDiff(opts)
-
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  -- go to M.diff_win
-  vim.api.nvim_set_current_win(M.diff_win)
+  -- go to diff_win
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   -- set a custom filetype of 'gitdiff'
   vim.bo.filetype = 'gitdiff'
 
+  local tab_wins, tabpage = get_tab_windows()
   -- Escape filepaths for shell to handle brackets and special characters
   local escaped_file1 = "'" .. opts.diff_file1:gsub("'", "'\\'''") .. "'"
   local escaped_file2 = "'" .. opts.diff_file2:gsub("'", "'\\'''") .. "'"
-  term_job_id = vim.fn.termopen('git diff --no-index -- ' .. escaped_file1 .. ' ' .. escaped_file2)
+  term_jobs[tabpage] = vim.fn.termopen('git diff --no-index -- ' .. escaped_file1 .. ' ' .. escaped_file2)
 
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
     -- delete prev_term_buf
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
 function M.UpdateDiffView_BranchFile(branch1, branch2, filepath, status)
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_set_current_win(M.diff_win)
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   vim.bo.filetype = 'gitdiff'
 
+  local tab_wins, tabpage = get_tab_windows()
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-  term_job_id = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2 .. ' -- ' .. escaped_filepath)
+  term_jobs[tabpage] = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2 .. ' -- ' .. escaped_filepath)
 
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
 function M.UpdateDiffView_BranchAll(branch1, branch2)
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_set_current_win(M.diff_win)
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   vim.bo.filetype = 'gitdiff'
 
-  term_job_id = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2)
+  local tab_wins, tabpage = get_tab_windows()
+  term_jobs[tabpage] = vim.fn.termopen('git diff ' .. branch1 .. '..' .. branch2)
 
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
 function M.UpdateDiffView_WorktreeFile(worktree_path, filepath)
+  local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_set_current_win(M.diff_win)
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
   vim.cmd("enew")
   vim.bo.bufhidden = "hide"
   vim.bo.filetype = 'gitdiff'
 
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
+  local tab_wins, tabpage = get_tab_windows()
   local cmd = string.format(
     'git -C %s diff -- %s',
     vim.fn.shellescape(worktree_path),
     escaped_filepath
   )
-  term_job_id = vim.fn.termopen(cmd)
+  term_jobs[tabpage] = vim.fn.termopen(cmd)
 
   M.GitDiff_BufferMaps()
-  if prev_term_buf and vim.api.nvim_buf_is_valid(prev_term_buf) then
-    vim.api.nvim_buf_delete(prev_term_buf, { force = true })
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
   end
-  prev_term_buf = vim.fn.bufnr('%')
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
   vim.api.nvim_set_current_win(current_win)
 end
 
@@ -315,11 +335,12 @@ local function get_uncommitted_context()
 end
 
 local function update_view_from_lines(opts)
+  local tab_wins, tabpage = get_tab_windows()
 
   -- Kill previous terminal job if it exists
-  if term_job_id then
-    vim.fn.jobstop(term_job_id)
-    term_job_id = nil
+  if term_jobs[tabpage] then
+    vim.fn.jobstop(term_jobs[tabpage])
+    term_jobs[tabpage] = nil
   end
 
 
@@ -458,9 +479,6 @@ function M.Show( opts )
   local diff_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_win_set_buf(diff_win, diff_buf)
 
-  -- Store window reference for later use
-  M.diff_win = diff_win
-
   -- Show another temp buffer below for commits list
   vim.cmd('split')
   vim.cmd('resize 10')
@@ -468,8 +486,10 @@ function M.Show( opts )
   local commits_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(commits_win, commits_buf)
 
-  -- Store window reference for later use
-  M.commits_win = commits_win
+  -- Store window references in tab-local storage
+  local tab_wins, tabpage = get_tab_windows()
+  tab_wins.diff_win = diff_win
+  tab_wins.commits_win = commits_win
   vim.api.nvim_win_set_option(commits_win, 'wrap', false)
 
   if opts.diff_file1 then
@@ -504,7 +524,8 @@ function M.Show( opts )
   vim.keymap.set('n', 'p', function()
     update_view_from_lines(opts)
     -- set cursor to diff window
-    vim.api.nvim_set_current_win(M.diff_win)
+    local tab_wins = get_tab_windows()
+    vim.api.nvim_set_current_win(tab_wins.diff_win)
   end, { buffer = commits_buf, noremap = true })
 
   -- Add 'q' mapping to close both windows
@@ -777,19 +798,25 @@ function M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
 end
 
 function M.close_cleanup()
+  local tab_wins, tabpage = get_tab_windows()
+
   -- Close both windows
-  if vim.api.nvim_win_is_valid(M.diff_win) then
-    vim.api.nvim_win_close(M.diff_win, true)
+  if tab_wins.diff_win and vim.api.nvim_win_is_valid(tab_wins.diff_win) then
+    vim.api.nvim_win_close(tab_wins.diff_win, true)
   end
-  if vim.api.nvim_win_is_valid(M.commits_win) then
-    vim.api.nvim_win_close(M.commits_win, true)
+  if tab_wins.commits_win and vim.api.nvim_win_is_valid(tab_wins.commits_win) then
+    vim.api.nvim_win_close(tab_wins.commits_win, true)
   end
 
   -- Clean up terminal job if it exists
-  if term_job_id then
-    vim.fn.jobstop(term_job_id)
-    term_job_id = nil
+  if term_jobs[tabpage] then
+    vim.fn.jobstop(term_jobs[tabpage])
+    term_jobs[tabpage] = nil
   end
+
+  -- Clean up tab-local storage
+  tab_wins.diff_win = nil
+  tab_wins.commits_win = nil
 end
 
 function M.set_highlights()
