@@ -40,11 +40,90 @@ local function compute_worktree_paths(agent_key)
   -- (e.g., co-vis_claude -> co-vis)
   project_name = project_name:gsub('_claude$', ''):gsub('_codex$', ''):gsub('_gemini$', '')
 
+  local root_path = parent_dir .. '/' .. project_name
+
   return {
     name = project_name .. '_' .. agent_key,
     path = parent_dir .. '/' .. project_name .. '_' .. agent_key,
     branch = 'agent/' .. agent_key,
+    agent = agent_key,
+    root_path = root_path,
   }
+end
+
+local function get_root_main_commit(worktree)
+  if not worktree.root_path or vim.fn.isdirectory(worktree.root_path) == 0 then
+    return nil
+  end
+
+  local root = vim.fn.shellescape(worktree.root_path)
+  local cmd = string.format("git -C %s rev-parse main", root)
+  local result = vim.fn.system(cmd)
+
+  if vim.v.shell_error ~= 0 then
+    return nil
+  end
+
+  return vim.trim(result)
+end
+
+local function align_worktree_to_commit(worktree, commit, opts)
+  if not commit or commit == '' then
+    return false
+  end
+
+  local shell_path = vim.fn.shellescape(worktree.path)
+  local head_result = vim.fn.system(string.format("git -C %s rev-parse HEAD", shell_path))
+
+  if vim.v.shell_error ~= 0 then
+    vim.notify(
+      string.format("Error: Failed to read HEAD for %s:\n%s", worktree.name, head_result),
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+
+  local head_commit = vim.trim(head_result)
+  if head_commit == commit then
+    return true
+  end
+
+  if opts and opts.backup then
+    local tag_name =
+      string.format("%s-backup-%s", worktree.branch:gsub('/', '-'), os.date("%Y%m%d-%H%M%S"))
+    local tag_cmd = string.format("git -C %s tag %s %s", shell_path, tag_name, head_commit)
+    local tag_result = vim.fn.system(tag_cmd)
+
+    if vim.v.shell_error ~= 0 then
+      vim.notify(
+        string.format(
+          "Warning: Failed to create backup tag %s for %s:\n%s",
+          tag_name,
+          worktree.name,
+          tag_result
+        ),
+        vim.log.levels.WARN
+      )
+    else
+      vim.notify(
+        string.format("Created backup tag %s for %s", tag_name, worktree.name),
+        vim.log.levels.INFO
+      )
+    end
+  end
+
+  local reset_cmd = string.format("git -C %s reset --hard %s", shell_path, commit)
+  local reset_result = vim.fn.system(reset_cmd)
+
+  if vim.v.shell_error ~= 0 then
+    vim.notify(
+      string.format("Error: Failed to align %s to %s:\n%s", worktree.name, commit, reset_result),
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+
+  return true
 end
 
 -- Create worktree if it doesn't exist
@@ -130,6 +209,25 @@ local function rebase_worktree(worktree)
       string.format("Rebased %s against main", worktree.name),
       vim.log.levels.INFO
     )
+
+    local main_commit = get_root_main_commit(worktree)
+    if main_commit then
+      if align_worktree_to_commit(worktree, main_commit, { backup = true }) then
+        vim.notify(
+          string.format(
+            "Aligned %s with local main (%s)",
+            worktree.name,
+            main_commit:sub(1, 7)
+          ),
+          vim.log.levels.INFO
+        )
+      end
+    else
+      vim.notify(
+        string.format("Warning: Could not determine local main commit for %s", worktree.name),
+        vim.log.levels.WARN
+      )
+    end
   end
 end
 
@@ -144,43 +242,24 @@ function M.reset_worktree_to_main(agent_key)
     return false
   end
 
-  local path = vim.fn.shellescape(worktree.path)
-  local timestamp = os.date("%Y%m%d-%H%M%S")
-  local tag_name = "backup-" .. timestamp
-
-  -- Create backup tag
-  local tag_cmd = string.format("git -C %s tag %s", path, tag_name)
-  vim.fn.system(tag_cmd)
-
-  if vim.v.shell_error ~= 0 then
+  local main_commit = get_root_main_commit(worktree)
+  if not main_commit then
     vim.notify(
-      string.format("Warning: Failed to create backup tag in %s", worktree.name),
-      vim.log.levels.WARN
-    )
-  else
-    vim.notify(
-      string.format("Created backup tag '%s' in %s", tag_name, worktree.name),
-      vim.log.levels.INFO
-    )
-  end
-
-  -- Reset hard to main
-  local reset_cmd = string.format("git -C %s reset --hard main", path)
-  local reset_result = vim.fn.system(reset_cmd)
-
-  if vim.v.shell_error ~= 0 then
-    vim.notify(
-      string.format("Error: Failed to reset %s to main:\n%s", worktree.name, reset_result),
+      string.format("Error: Could not determine local main commit for %s", worktree.name),
       vim.log.levels.ERROR
     )
     return false
   end
 
-  vim.notify(
-    string.format("Reset %s to main", worktree.name),
-    vim.log.levels.INFO
-  )
-  return true
+  if align_worktree_to_commit(worktree, main_commit, { backup = true }) then
+    vim.notify(
+      string.format("Reset %s to main (%s)", worktree.name, main_commit:sub(1, 7)),
+      vim.log.levels.INFO
+    )
+    return true
+  end
+
+  return false
 end
 
 -- Reset all agent worktrees to main (with backup)
