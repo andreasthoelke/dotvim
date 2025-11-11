@@ -36,6 +36,10 @@ local function compute_worktree_paths(agent_key)
   local project_name = vim.fn.fnamemodify(current_cwd, ':t')
   local parent_dir = vim.fn.fnamemodify(current_cwd, ':h')
 
+  -- Strip agent suffix if we're already in a worktree
+  -- (e.g., co-vis_claude -> co-vis)
+  project_name = project_name:gsub('_claude$', ''):gsub('_codex$', ''):gsub('_gemini$', '')
+
   return {
     name = project_name .. '_' .. agent_key,
     path = parent_dir .. '/' .. project_name .. '_' .. agent_key,
