@@ -67,6 +67,41 @@ local function get_root_main_commit(worktree)
   return vim.trim(result)
 end
 
+local function run_rebase_via_worktrees_script(worktree)
+  local script_path = worktree.root_path .. "/process/scripts/agents/worktrees.sh"
+  if vim.fn.filereadable(script_path) == 0 then
+    return nil
+  end
+
+  local function run_once()
+    local cmd = string.format(
+      "cd %s && %s rebase %s",
+      vim.fn.shellescape(worktree.root_path),
+      vim.fn.shellescape(script_path),
+      vim.fn.shellescape(worktree.path)
+    )
+    local result = vim.fn.system(cmd)
+    local output = vim.trim(result)
+    local needs_retry = output:find("Rebase failed for", 1, true) ~= nil
+    return vim.v.shell_error == 0, needs_retry, output
+  end
+
+  local success, needs_retry, output = run_once()
+  local combined_output = output
+
+  if needs_retry then
+    local success_retry, _, retry_output = run_once()
+    combined_output =
+      (#combined_output > 0 and (combined_output .. "\n") or "") .. vim.trim(retry_output)
+    success = success_retry
+  end
+
+  return {
+    success = success,
+    message = combined_output
+  }
+end
+
 local function align_worktree_to_commit(worktree, commit, opts)
   if not commit or commit == '' then
     return false
@@ -165,6 +200,23 @@ end
 -- Rebase worktree against main (auto-commits WIP if needed)
 -- @param worktree table: Output from compute_worktree_paths
 local function rebase_worktree(worktree)
+  local script_result = run_rebase_via_worktrees_script(worktree)
+  if script_result then
+    local level = script_result.success and vim.log.levels.INFO or vim.log.levels.WARN
+    local message = script_result.message ~= "" and script_result.message
+      or "worktrees.sh rebase completed"
+    vim.notify(message, level)
+
+    if script_result.success then
+      local main_commit = get_root_main_commit(worktree)
+      if main_commit then
+        align_worktree_to_commit(worktree, main_commit, { backup = true })
+      end
+      return
+    end
+    -- Fall through to legacy flow if the helper script reported a failure despite running.
+  end
+
   local path = vim.fn.shellescape(worktree.path)
 
   -- Check if worktree has uncommitted changes
