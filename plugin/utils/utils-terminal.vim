@@ -93,13 +93,68 @@ func! RunTerm_showTerm()
 
 endfunc
 
+" Detect monorepo and determine dev command
+func! GetDevServerCommand()
+  let root = getcwd()
+  let cache_file = root . '/.vim_dev_command'
+
+  " Check cache first
+  if filereadable(cache_file)
+    return readfile(cache_file)[0]
+  endif
+
+  " Check for pnpm workspace
+  let is_monorepo = filereadable(root . '/pnpm-workspace.yaml')
+
+  if !is_monorepo
+    return 'npm run dev'
+  endif
+
+  " Try to find dev script in package.json
+  let pkg_json = root . '/package.json'
+  if filereadable(pkg_json)
+    let pkg_content = join(readfile(pkg_json), "\n")
+    let scripts_match = matchstr(pkg_content, '"scripts":\s*{[^}]*}')
+
+    " Look for common monorepo dev patterns
+    for pattern in ['dev:frontend', 'frontend:dev', 'dev:app', 'app:dev', 'dev:web', 'web:dev']
+      if scripts_match =~ '"' . pattern . '"'
+        let cmd = 'pnpm run ' . pattern
+        call writefile([cmd], cache_file)
+        return cmd
+      endif
+    endfor
+
+    " Check if any script uses --filter
+    let filter_match = matchstr(scripts_match, 'pnpm.*--filter\s\+\S\+')
+    if filter_match != ''
+      " Extract the script name that uses --filter
+      let script_pattern = '"\(\w\+\)":\s*"[^"]*' . escape(filter_match, '[]*.') . '[^"]*"'
+      let script_name = substitute(matchstr(scripts_match, script_pattern), '"\(\w\+\)".*', '\1', '')
+      if script_name != ''
+        let cmd = 'pnpm run ' . script_name
+        call writefile([cmd], cache_file)
+        return cmd
+      endif
+    endif
+  endif
+
+  " Prompt user
+  echo "Monorepo detected. Enter dev command (e.g., 'pnpm --filter frontend dev'):"
+  let cmd = input('Command: ', 'pnpm --filter frontend dev')
+  if cmd != ''
+    call writefile([cmd], cache_file)
+  endif
+  return cmd
+endfunc
+
 func! StartDevServer()
   if exists('g:Vite1TermID')
     " echo 'Vite1TermID is already running'
     call ReopenDevServer()
     return
   endif
-  let cmdline = 'npm run dev'
+  let cmdline = GetDevServerCommand()
   " echo "running cmd: " . cmdline
   exec "20new"
   let opts = { 'cwd': getcwd( winnr() ) }

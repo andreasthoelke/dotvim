@@ -27,5 +27,6 @@ rcmd/**/*
 
 .aider*
 .env
+.vim_dev_command
 
 keymaps/vim-cheat-sheet.md.backup
