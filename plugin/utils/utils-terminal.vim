@@ -38,6 +38,7 @@ nnoremap <silent><leader>gwj :call RunTerm_showTerm()<cr>
 nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
 nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
+nnoremap <silent><leader><leader>so :call ReopenDevServer()<cr>
 
 
 let g:direnv_keyword_ptn = '\v^(mono|livestore)\s'

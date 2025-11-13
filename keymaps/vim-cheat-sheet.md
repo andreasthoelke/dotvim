@@ -685,8 +685,14 @@ gew   - set identif (of detected type based on name), schema, query, varia, reso
 gef   - refetch the gql client
 
 ## vite dev server
-<leader><leader>sd   - runs 'npm run dev' in visible term, finds localhost:<port>, open url in chrom, hides terms buffer!
+<leader><leader>sd   - Start dev server (auto-detects npm/pnpm/monorepo, opens in Chrome, hides term)
+<leader><leader>sD   - Stop dev server
+<leader><leader>sr   - Restart dev server
+<leader><leader>so   - Reopen dev server terminal window
                        ~/.config/nvim/plugin/utils/utils-terminal.vim‖/StartDevServer()
+
+Monorepo support: Checks for pnpm-workspace.yaml, looks for common dev scripts,
+                  prompts if needed, caches choice in .vim_dev_command
 
 pnpm run dev
 glc/b   - on http://localhost:5173/
