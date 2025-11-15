@@ -164,6 +164,33 @@ local function format_llm_label(model_name, provider_name)
   return string.format("%s - %s", model_name, provider_name)
 end
 
+function _G.Parrot_chat_status_label()
+  local ok, parrot_config = pcall(require, "parrot.config")
+  if not ok or type(parrot_config.get_status_info) ~= "function" then
+    return ""
+  end
+
+  local ok_status, status_info = pcall(parrot_config.get_status_info)
+  if not ok_status or not status_info or not status_info.model then
+    return ""
+  end
+
+  local provider
+  if status_info.prov then
+    if status_info.is_chat then
+      provider = status_info.prov.chat
+    else
+      provider = status_info.prov.command
+    end
+  end
+
+  if provider and provider.name then
+    return format_llm_label(status_info.model, provider.name)
+  end
+
+  return status_info.model or ""
+end
+
 local function register_reasoning_commands()
   if vim.g.parrot_reasoning_commands_registered then
     return

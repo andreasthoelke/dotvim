@@ -103,6 +103,14 @@ local function inactiveWinbarColor()
   return 'LuLine_c'
 end
 
+local function is_parrot_chat_buffer()
+  local path = vim.fn.expand('%:p')
+  if not path or path == '' then
+    return false
+  end
+  return path:match('/parrot/chats/') ~= nil
+end
+
 
 
 -- TODO this is outdated since i'm now mostly using uv. 
@@ -347,6 +355,10 @@ local lualine_config = {
     },
     lualine_c = {
       {
+        'Parrot_chat_status_label()',
+        cond = is_parrot_chat_buffer,
+      },
+      {
         'Magenta_model()',
       },
     },
@@ -404,6 +416,10 @@ local lualine_config = {
       }
     },
     lualine_c = {
+      {
+        'Parrot_chat_status_label()',
+        cond = is_parrot_chat_buffer,
+      },
       {
         'Magenta_model()',
       },
