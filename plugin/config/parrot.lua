@@ -77,6 +77,25 @@ local function pin_openai_models(model_name)
   end)
 end
 
+local function force_openai_provider()
+  vim.schedule(function()
+    local ok, parrot_config = pcall(require, "parrot.config")
+    if not ok then
+      return
+    end
+    local handler = parrot_config.chat_handler
+    if not handler or type(handler.switch_provider) ~= "function" then
+      return
+    end
+    for _, is_chat in ipairs({ true, false }) do
+      local ok_switch, err = pcall(handler.switch_provider, handler, "openai", is_chat)
+      if not ok_switch and parrot_config.logger and parrot_config.logger.debug then
+        parrot_config.logger.debug("Failed to set openai provider", { chat = is_chat, error = err })
+      end
+    end
+  end)
+end
+
 local function get_parrot_openai_context()
   local ok, parrot_config = pcall(require, "parrot.config")
   if not ok then
@@ -881,6 +900,7 @@ require("parrot").setup(
 )
 
 pin_openai_models(OPENAI_PRIMARY_MODEL)
+force_openai_provider()
 register_reasoning_commands()
 refresh_winbar()
 
