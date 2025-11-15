@@ -468,6 +468,42 @@ vim.keymap.set( 'n',
    require'git_commits_viewer'.ShowBranches(branch1, branch2)
   end, { desc = "Compare two git refs from consecutive lines (branches/commits/HEAD~1)" } )
 
+-- Smart compare: auto-detect files/dirs vs git refs (dr = diff refs/paths)
+vim.keymap.set( 'n',
+  '<leader>gdr', function()
+    -- Try extracting paths first
+    local path1 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]
+    vim.cmd'normal! j'
+    local path2 = vim.split( vim.fn.GetPath_fromLine(), "‖", { plain = true })[1]
+    vim.cmd'normal! k'
+
+    -- Check if both are valid paths (files or directories)
+    local path1_is_file = vim.fn.filereadable(path1) == 1
+    local path1_is_dir = vim.fn.isdirectory(path1) == 1
+    local path2_is_file = vim.fn.filereadable(path2) == 1
+    local path2_is_dir = vim.fn.isdirectory(path2) == 1
+
+    if (path1_is_file or path1_is_dir) and (path2_is_file or path2_is_dir) then
+      -- Both are valid paths
+      if path1_is_dir and path2_is_dir then
+        -- Both are directories → use directory diff mode with file list
+        local opts = { diff_dir1 = path1, diff_dir2 = path2 }
+        require'git_commits_viewer'.Show(opts)
+      else
+        -- At least one is a file → use simple file diff mode
+        local opts = { diff_file1 = path1, diff_file2 = path2 }
+        require'git_commits_viewer'.Show(opts)
+      end
+    else
+      -- Not valid paths → treat as git refs
+      local ref1 = vim.fn.getline('.')
+      vim.cmd'normal! j'
+      local ref2 = vim.fn.getline('.')
+      vim.cmd'normal! k'
+      require'git_commits_viewer'.ShowBranches(ref1, ref2)
+    end
+  end, { desc = "Smart compare: auto-detect files/dirs vs git refs from consecutive lines" } )
+
 -- ─^  Git Diff Operations                               ▲
 
 

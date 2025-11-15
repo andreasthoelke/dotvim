@@ -166,6 +166,87 @@ function M.GetFilesInCommit(commit_hash)
 end
 -- require'git_commits_viewer'.GetFilesInCommit('424ee27')
 
+-- Find common path prefix and return shortened paths
+local function shorten_paths(path1, path2)
+  -- Split paths into components
+  local parts1 = vim.split(path1, "/", { plain = true })
+  local parts2 = vim.split(path2, "/", { plain = true })
+
+  -- Find common prefix
+  local common_idx = 0
+  for i = 1, math.min(#parts1, #parts2) do
+    if parts1[i] == parts2[i] then
+      common_idx = i
+    else
+      break
+    end
+  end
+
+  -- If we found a common root (at least one level), start from there
+  if common_idx > 0 then
+    local short1 = table.concat(vim.list_slice(parts1, common_idx, #parts1), "/")
+    local short2 = table.concat(vim.list_slice(parts2, common_idx, #parts2), "/")
+    return short1, short2
+  end
+
+  -- No common root, return as-is
+  return path1, path2
+end
+
+function M.GetFilesBetweenDirectories(dir1, dir2)
+  local files = {}
+
+  -- Use diff with recursive flag to compare directories
+  local cmd = string.format("diff -qr %s %s 2>/dev/null || true",
+    vim.fn.shellescape(dir1),
+    vim.fn.shellescape(dir2))
+  local handle = io.popen(cmd)
+  if not handle then return files end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  -- Parse diff output
+  for line in result:gmatch("[^\n]+") do
+    if line:match("^Files .* and .* differ$") then
+      -- Modified file
+      local file1, file2 = line:match("^Files (.-) and (.-) differ$")
+      if file1 and file2 then
+        local rel_path = file2:gsub("^" .. vim.pesc(dir2) .. "/?", "")
+        -- Get line count for this file
+        local line_count = M.get_changed_lines_count_between_dirs(file1, file2)
+        table.insert(files, string.format("    M %s %s", rel_path, line_count))
+      end
+    elseif line:match("^Only in " .. vim.pesc(dir1)) then
+      -- Deleted file (exists in dir1 but not dir2)
+      local subdir, filename = line:match("^Only in (.-): (.+)$")
+      if subdir and filename then
+        local rel_path = subdir:gsub("^" .. vim.pesc(dir1) .. "/?", "")
+        if rel_path ~= "" then
+          rel_path = rel_path .. "/" .. filename
+        else
+          rel_path = filename
+        end
+        table.insert(files, string.format("    D %s 0", rel_path))
+      end
+    elseif line:match("^Only in " .. vim.pesc(dir2)) then
+      -- Added file (exists in dir2 but not dir1)
+      local subdir, filename = line:match("^Only in (.-): (.+)$")
+      if subdir and filename then
+        local rel_path = subdir:gsub("^" .. vim.pesc(dir2) .. "/?", "")
+        if rel_path ~= "" then
+          rel_path = rel_path .. "/" .. filename
+        else
+          rel_path = filename
+        end
+        table.insert(files, string.format("    A %s 0", rel_path))
+      end
+    end
+  end
+
+  return files
+end
+
 function M.GetFilesBetweenBranches(branch1, branch2)
   local files = {}
 
@@ -317,6 +398,61 @@ function M.UpdateDiffView_WorktreeFile(worktree_path, filepath)
   vim.api.nvim_set_current_win(current_win)
 end
 
+function M.UpdateDiffView_DirectoryFile(dir1, dir2, filepath, status)
+  local tab_wins = get_tab_windows()
+  local current_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  vim.bo.filetype = 'gitdiff'
+
+  local tab_wins, tabpage = get_tab_windows()
+  local file1 = dir1 .. "/" .. filepath
+  local file2 = dir2 .. "/" .. filepath
+  local escaped_file1 = "'" .. file1:gsub("'", "'\\'''") .. "'"
+  local escaped_file2 = "'" .. file2:gsub("'", "'\\'''") .. "'"
+
+  -- Handle deleted/added files
+  if status == "D" then
+    -- File only exists in dir1
+    term_jobs[tabpage] = vim.fn.termopen('echo "File deleted: ' .. filepath .. '" && cat ' .. escaped_file1)
+  elseif status == "A" then
+    -- File only exists in dir2
+    term_jobs[tabpage] = vim.fn.termopen('echo "File added: ' .. filepath .. '" && cat ' .. escaped_file2)
+  else
+    -- Normal diff
+    term_jobs[tabpage] = vim.fn.termopen('git diff --no-index -- ' .. escaped_file1 .. ' ' .. escaped_file2)
+  end
+
+  M.GitDiff_BufferMaps()
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
+  end
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
+function M.UpdateDiffView_DirectoryAll(dir1, dir2)
+  local tab_wins = get_tab_windows()
+  local current_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(tab_wins.diff_win)
+  vim.cmd("enew")
+  vim.bo.bufhidden = "hide"
+  vim.bo.filetype = 'gitdiff'
+
+  local tab_wins, tabpage = get_tab_windows()
+  local escaped_dir1 = "'" .. dir1:gsub("'", "'\\'''") .. "'"
+  local escaped_dir2 = "'" .. dir2:gsub("'", "'\\'''") .. "'"
+  term_jobs[tabpage] = vim.fn.termopen('git diff --no-index -- ' .. escaped_dir1 .. ' ' .. escaped_dir2)
+
+  M.GitDiff_BufferMaps()
+  if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
+    vim.api.nvim_buf_delete(prev_term_bufs[tabpage], { force = true })
+  end
+  prev_term_bufs[tabpage] = vim.fn.bufnr('%')
+  vim.api.nvim_set_current_win(current_win)
+end
+
 
 -- Helper to find the uncommitted branch context by searching backwards
 local function get_uncommitted_context()
@@ -346,6 +482,25 @@ local function update_view_from_lines(opts)
 
   if opts.diff_file1 then
     M.UpdateDiffView_FilesDiff(opts)
+    return
+  end
+
+  if opts.diff_dir1 then
+    local line = vim.api.nvim_get_current_line()
+    -- Handle indented file lines
+    if line:match("^%s") and not line:match("^  •") then
+      local filepath, status
+      -- Extract status (first non-whitespace word after indentation)
+      status = line:match("^%s+(%S+)")
+      -- Regular files (format: "    M file.lua 42")
+      filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+      if filepath then
+        M.UpdateDiffView_DirectoryFile(opts.diff_dir1, opts.diff_dir2, filepath, status)
+      end
+      return
+    end
+    -- Handle directory header line
+    M.UpdateDiffView_DirectoryAll(opts.diff_dir1, opts.diff_dir2)
     return
   end
 
@@ -495,8 +650,18 @@ function M.Show( opts )
   if opts.diff_file1 then
     local info_lines = { opts.diff_file1, opts.diff_file2 }
     vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, info_lines)
+  elseif opts.diff_dir1 then
+    -- Shorten paths by finding common root
+    local short1, short2 = shorten_paths(opts.diff_dir1, opts.diff_dir2)
+    local dir_lines = { short1, short2 }
+    local files = M.GetFilesBetweenDirectories(opts.diff_dir1, opts.diff_dir2)
+    for _, file in ipairs(files) do
+      table.insert(dir_lines, file)
+    end
+    vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, dir_lines)
   elseif opts.diff_branch1 then
-    local branch_lines = { opts.diff_branch1 .. ".." .. opts.diff_branch2 }
+    -- Use two lines instead of ".." concatenation
+    local branch_lines = { opts.diff_branch1, opts.diff_branch2 }
     local files = M.GetFilesBetweenBranches(opts.diff_branch1, opts.diff_branch2)
     for _, file in ipairs(files) do
       table.insert(branch_lines, file)
@@ -527,6 +692,18 @@ function M.Show( opts )
     local tab_wins = get_tab_windows()
     vim.api.nvim_set_current_win(tab_wins.diff_win)
   end, { buffer = commits_buf, noremap = true })
+
+  -- Navigate and preview: move cursor down and update diff view
+  vim.keymap.set('n', '<c-j>', function()
+    vim.cmd('normal! j')
+    update_view_from_lines(opts)
+  end, { buffer = commits_buf, noremap = true, desc = 'Next item and preview diff' })
+
+  -- Navigate and preview: move cursor up and update diff view
+  vim.keymap.set('n', '<c-k>', function()
+    vim.cmd('normal! k')
+    update_view_from_lines(opts)
+  end, { buffer = commits_buf, noremap = true, desc = 'Previous item and preview diff' })
 
   -- Add 'q' mapping to close both windows
   vim.keymap.set('n', 'q', function()
@@ -605,7 +782,8 @@ function M.GetUntrackedChanges()
         line_count = M.get_changed_lines_count(file, "untracked")
       end
       -- Include status in output to match expected pattern in update_view_from_lines
-      local status_abbrev = status:match("^(%S+)")
+      -- Remove spaces from status (e.g., " M" becomes "M", "M " becomes "M")
+      local status_abbrev = status:gsub("%s", "")
       table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
     end
   end
@@ -782,6 +960,25 @@ end
 function M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
   local cmd = string.format("git diff --numstat %s..%s -- %s", branch1, branch2, escaped_filepath)
+
+  local handle = io.popen(cmd)
+  if not handle then return "0" end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  local added, deleted = result:match("(%d+)%s+(%d+)")
+  if added and deleted then
+    return tostring(tonumber(added) + tonumber(deleted))
+  end
+
+  return "0"
+end
+
+function M.get_changed_lines_count_between_dirs(file1, file2)
+  local escaped_file1 = "'" .. file1:gsub("'", "'\\'''") .. "'"
+  local escaped_file2 = "'" .. file2:gsub("'", "'\\'''") .. "'"
+  local cmd = string.format("git diff --no-index --numstat -- %s %s 2>/dev/null || true", escaped_file1, escaped_file2)
 
   local handle = io.popen(cmd)
   if not handle then return "0" end

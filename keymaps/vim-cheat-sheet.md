@@ -1365,11 +1365,29 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
                        Shows file list with status (M/A/D/R100) and line counts
                        Falls back to last valid refs if empty/invalid lines
                        Example refs: main, feature-branch, HEAD~2, abc123f, v1.0.0
+<leader>gdr          - Smart compare: auto-detects files/directories vs git refs
+                       Place cursor on first item, press map (uses current + next line)
+                       If both lines are valid directory paths → directory diff with file list
+                         Shows shortened paths on two lines (from common root), then file list
+                         Example: b_yf_n4/b_yf_basic/src
+                                  b_yf_n4/yfiles_eval/demos-ts/src
+                                      M file1.lua 25
+                                      A file2.lua 0
+                         Press 'p' on file to see that file's diff
+                         Press 'p' on either header line to see all changes
+                       If both are file paths → simple file diff mode
+                       Otherwise → treats as git refs/branches (shows on two lines)
+                         Example: main
+                                  agent/claude
+                                      M process/AGENTS.md 15
+                       Works with paths: /path/to/file, ./folder, ../other_folder
+                       Works with refs: main, feature-branch, HEAD~1, abc123f
 
 ### Branch Comparisons (localleader)
-<localleader>gm      - Compare current branch with main
-<localleader>gc      - Compare current branch with agent/claude
-<localleader>go      - Compare current branch with agent/codex
+<localleader>gdd     - Compare two git refs from consecutive lines (same as <leader>gdb)
+<localleader>gdm     - Compare current branch with main
+<localleader>gdc     - Compare current branch with agent/claude
+<localleader>gdo     - Compare current branch with agent/codex
 
 ### Telescope Pickers
 <leader>ogl          - Telescope: Git commits picker (alternative picker UI)
@@ -1378,8 +1396,10 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
 ### Git Diff Viewer Keybindings (inside viewer)
 p                    - Show diff for file/commit under cursor (stay in file list)
 P                    - Show diff for file/commit under cursor (jump to diff view)
+<c-j>                - Move to next item and preview diff (stay in file list)
+<c-k>                - Move to previous item and preview diff (stay in file list)
 q                    - Close git diff viewer
-<c-n>/<c-p>          - Navigate to next/previous commit or file change
+<c-n>/<c-p>          - Navigate to next/previous commit or file change (in diff view)
 
 ### User Commands
 :GitDiffFiles file1 file2           - Compare two files

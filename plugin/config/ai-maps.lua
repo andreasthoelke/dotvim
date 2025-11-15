@@ -88,12 +88,12 @@ end, { noremap = true, silent = true })
 -- Agent terminal management using lua/agents.lua
 -- Commands available: claude, codex, gemini, aider, etc.
 
-vim.g.agent_cmd = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
+vim.g.agent_cmd = "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
-    "codex --dangerously-bypass-approvals-and-sandbox ",
-    "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
+    "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
+    "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "cat -v ",
     "gemini ",
     "gemini -m gemini-flash-latest ",

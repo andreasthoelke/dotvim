@@ -107,16 +107,28 @@ func! GetDevServerCommand()
   " Check for pnpm workspace
   let is_monorepo = filereadable(root . '/pnpm-workspace.yaml')
 
-  if !is_monorepo
-    return 'npm run dev'
-  endif
-
-  " Try to find dev script in package.json
+  " Read package.json
   let pkg_json = root . '/package.json'
+  let pkg_content = ''
+  let scripts_match = ''
   if filereadable(pkg_json)
     let pkg_content = join(readfile(pkg_json), "\n")
     let scripts_match = matchstr(pkg_content, '"scripts":\s*{[^}]*}')
+  endif
 
+  if !is_monorepo
+    " Check for dev script, fallback to start
+    if scripts_match =~ '"dev"'
+      return 'npm run dev'
+    elseif scripts_match =~ '"start"'
+      return 'npm run start'
+    else
+      return 'npm run dev'
+    endif
+  endif
+
+  " Try to find dev script in package.json for monorepo
+  if pkg_content != ''
     " Look for common monorepo dev patterns
     for pattern in ['dev:frontend', 'frontend:dev', 'dev:app', 'app:dev', 'dev:web', 'web:dev']
       if scripts_match =~ '"' . pattern . '"'
