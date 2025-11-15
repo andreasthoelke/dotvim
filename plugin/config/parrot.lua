@@ -1,7 +1,4 @@
 
--- https://github.com/frankroeder/parrot.nvim
--- Commands:
--- https://github.com/frankroeder/parrot.nvim?tab=readme-ov-file#commands
 
 -- example hooks / prompts: https://github.com/jackfranklin/dotfiles/blob/90a88677f197705ac3381fd07d2d4772a5e2b92d/nvim/lua/jack/plugins/parrot-ai.lua#L4
 -- Full default config: ~/.config/nvim/plugged/parrot.nvim/lua/parrot/config.lua
@@ -20,6 +17,191 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
+local OPENAI_PRIMARY_MODEL = "gpt-5.1"
+local OPENAI_REASONING_DEFAULT = "medium"
+local OPENAI_REASONING_SYMBOLS = {
+  low = "L",
+  medium = "M",
+  high = "H",
+}
+
+local function refresh_winbar()
+  vim.schedule(function()
+    local ok, lualine = pcall(require, "lualine")
+    if ok and type(lualine.refresh) == "function" then
+      pcall(lualine.refresh, { place = { "winbar" } })
+    end
+  end)
+end
+
+-- The Parrot plugin persists the last selected model in state.json and will
+-- continue using that value even after the config is updated. This helper pins
+-- the OpenAI provider back to our preferred GPT-5.1 model whenever Neovim
+-- starts, so the UI and requests consistently use the intended model.
+local function pin_openai_models(model_name)
+  vim.schedule(function()
+    local ok, parrot_config = pcall(require, "parrot.config")
+    if not ok then
+      return
+    end
+    local handler = parrot_config.chat_handler
+    if not handler or not handler.state then
+      return
+    end
+    local state = handler.state
+    local provider = "openai"
+    if not state._state or not state._state[provider] then
+      return
+    end
+
+    local changed = false
+    for _, model_type in ipairs({ "chat", "command" }) do
+      local ok_get, current = pcall(state.get_model, state, provider, model_type)
+      if ok_get and current ~= model_name then
+        state:set_model(provider, model_name, model_type)
+        if state.file_state and state.file_state[provider] then
+          state.file_state[provider][model_type .. "_model"] = model_name
+        end
+        changed = true
+      end
+    end
+
+    if changed then
+      state:save()
+      if parrot_config.logger and parrot_config.logger.debug then
+        parrot_config.logger.debug(
+          string.format("Pinned %s chat/command models to %s via config override", provider, model_name)
+        )
+      end
+    end
+  end)
+end
+
+local function get_parrot_openai_context()
+  local ok, parrot_config = pcall(require, "parrot.config")
+  if not ok then
+    return nil
+  end
+  local handler = parrot_config.chat_handler
+  if not handler or not handler.providers or not handler.providers.openai then
+    return nil
+  end
+  return parrot_config, handler
+end
+
+local function get_openai_reasoning_level()
+  local parrot_config, handler = get_parrot_openai_context()
+  if not parrot_config then
+    return OPENAI_REASONING_DEFAULT
+  end
+  local params = handler.providers.openai.params
+  if not params or not params.chat then
+    return OPENAI_REASONING_DEFAULT
+  end
+  return params.chat.reasoning_effort or OPENAI_REASONING_DEFAULT
+end
+
+local function set_openai_reasoning(level)
+  local parrot_config, handler = get_parrot_openai_context()
+  if not parrot_config then
+    return false
+  end
+
+  local changed = false
+  local containers = {}
+  if handler.providers and handler.providers.openai then
+    table.insert(containers, handler.providers.openai)
+  end
+  if parrot_config.providers and parrot_config.providers.openai then
+    table.insert(containers, parrot_config.providers.openai)
+  end
+
+  for _, provider in ipairs(containers) do
+    if provider.params then
+      for _, mode in ipairs({ "chat", "command" }) do
+        provider.params[mode] = provider.params[mode] or {}
+        if provider.params[mode].reasoning_effort ~= level then
+          provider.params[mode].reasoning_effort = level
+          changed = true
+        end
+      end
+    end
+  end
+
+  if changed then
+    local msg = string.format("OpenAI reasoning effort set to %s", level)
+    if parrot_config.logger and parrot_config.logger.info then
+      parrot_config.logger.info(msg)
+    else
+      vim.notify(msg, vim.log.levels.INFO)
+    end
+    refresh_winbar()
+  end
+  return changed
+end
+
+local function toggle_openai_reasoning()
+  local current = get_openai_reasoning_level()
+  if current == "high" then
+    return set_openai_reasoning(OPENAI_REASONING_DEFAULT)
+  end
+  return set_openai_reasoning("high")
+end
+
+local function get_openai_reasoning_indicator()
+  local level = get_openai_reasoning_level()
+  return OPENAI_REASONING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+end
+
+local function format_llm_label(model_name, provider_name)
+  if provider_name == "openai" then
+    local indicator = get_openai_reasoning_indicator()
+    if indicator then
+      return string.format("%s:%s", model_name, indicator)
+    end
+    return model_name
+  end
+  return string.format("%s - %s", model_name, provider_name)
+end
+
+local function register_reasoning_commands()
+  if vim.g.parrot_reasoning_commands_registered then
+    return
+  end
+
+  local function wrap(cb)
+    return function()
+      local ok = cb()
+      if not ok then
+        vim.notify("Parrot reasoning controls unavailable", vim.log.levels.ERROR)
+      end
+    end
+  end
+
+  vim.api.nvim_create_user_command(
+    "PrtReasoningHigh",
+    wrap(function()
+      return set_openai_reasoning("high")
+    end),
+    { desc = "Parrot: set OpenAI reasoning effort to high" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtReasoningMedium",
+    wrap(function()
+      return set_openai_reasoning(OPENAI_REASONING_DEFAULT)
+    end),
+    { desc = "Parrot: set OpenAI reasoning effort to medium" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtReasoningToggle",
+    wrap(function()
+      return toggle_openai_reasoning()
+    end),
+    { desc = "Parrot: toggle OpenAI reasoning effort between medium and high" }
+  )
+
+  vim.g.parrot_reasoning_commands_registered = true
+end
 
 require("parrot").setup(
   {
@@ -77,16 +259,21 @@ require("parrot").setup(
         api_key = os.getenv("OPENAI_API_KEY"),
         endpoint = "https://api.openai.com/v1/chat/completions",
         model_endpoint = "https://api.openai.com/v1/models",
-        model = "gpt-5.1",
+        model = OPENAI_PRIMARY_MODEL,
         models = {
-          "gpt-5.1",
+          OPENAI_PRIMARY_MODEL,
           "gpt-5-mini",
           "gpt-4o",
           "gpt-4o-mini",
         },
         params = {
-          chat = { max_completion_tokens = 4096, reasoning_effort = "high" },
-          command = { max_completion_tokens = 4096, reasoning_effort = "medium" },
+          chat = { max_completion_tokens = 4096, reasoning_effort = OPENAI_REASONING_DEFAULT },
+          command = { max_completion_tokens = 4096, reasoning_effort = OPENAI_REASONING_DEFAULT },
+        },
+        topic = {
+          -- Use a fast non-reasoning model for topic summaries to avoid GPT-5 spinner issues
+          model = "gpt-4o-mini",
+          params = { max_completion_tokens = 100, temperature = 0.2 },
         },
         preprocess_payload = function(payload)
           for _, message in ipairs(payload.messages) do
@@ -250,6 +437,9 @@ require("parrot").setup(
     -- llm_prefix = "⌘ ",
     chat_user_prefix = "☼:",
     llm_prefix = "⌘:",
+    llm_label_formatter = function(model_name, provider_name)
+      return format_llm_label(model_name, provider_name)
+    end,
 
     chat_confirm_delete = false,
     online_model_selection = true,
@@ -310,6 +500,14 @@ require("parrot").setup(
 
 -- ─      Hooks                                        ──
     hooks = {
+
+      Status = function(prt, _)
+        local status_info = prt.get_status_info()
+        local provider = status_info.is_chat and status_info.prov.chat or status_info.prov.command
+        local provider_name = provider and provider.name or "?"
+        local model_label = provider and format_llm_label(status_info.model, provider.name) or status_info.model
+        prt.logger.info(string.format("Current provider: %s (%s)", provider_name, model_label))
+      end,
 
       ChatWithFileContext = function(prt, params)
         local chat_prompt = [[
@@ -655,6 +853,10 @@ require("parrot").setup(
   }
 )
 
+pin_openai_models(OPENAI_PRIMARY_MODEL)
+register_reasoning_commands()
+refresh_winbar()
+
 
       -- openai = {
       --   name = "openai",
@@ -710,5 +912,3 @@ require("parrot").setup(
       --     return payload
       --   end,
       -- },
-
-

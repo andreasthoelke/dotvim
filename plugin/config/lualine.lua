@@ -1,6 +1,3 @@
-
-
-
 vim.o.showtabline = 2
 
 
@@ -105,6 +102,7 @@ local function inactiveWinbarColor()
   end
   return 'LuLine_c'
 end
+
 
 
 -- TODO this is outdated since i'm now mostly using uv. 
@@ -459,4 +457,3 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
     end
   end
 })
-

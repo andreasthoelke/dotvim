@@ -101,3 +101,35 @@
   ...
 }
 ```
+
+---
+
+## 2025-11-16 Update — gpt-5.1 Pin + UX Playbook
+
+### Confusions Resolved
+- The UI showed **gpt-5** because `state.json` kept the previous `chat_model` even after updating the config. This is expected behavior in Parrot (state > config) but it was undocumented for us.
+- Selecting `gpt-5.1` in the picker did work, yet the persisted value was truncated back to `gpt-5`, so every restart silently reverted to the old model.
+- We now call `pin_openai_models("gpt-5.1")` right after `require("parrot").setup(...)`. On startup it patches both the in-memory state and `state.json` so chat+command always report `gpt-5.1` unless we deliberately change them.
+- OpenAI lacked a topic model, so `# topic: ?` stayed empty. We now assign `gpt-4o-mini` as the dedicated `topic.model` for the OpenAI provider, so topic summaries fill in regardless of the active provider (and the second spinner was removed to avoid double progress messages).
+- Chat buffers previously showed `⌘:[gpt-5.1 - openai]` only after the first response. We hooked Parrot's label rendering so it now displays `⌘:[gpt-5.1:M]` directly in each assistant block, dropping the redundant provider name.
+
+### Ideal Settings (2025-11-16)
+- `OPENAI_PRIMARY_MODEL = "gpt-5.1"` – edit once and reuse across the config.
+- Both chat + command use `reasoning_effort = "medium"` by default via `OPENAI_REASONING_DEFAULT`, giving a smart baseline that can still burst to high when needed.
+- Anthropic topic model: `claude-haiku-4-5-20251001` for lightweight summaries.
+- Keep `model_cache_expiry_hours = 48`; run `:PrtReloadCache openai` if OpenAI adds a newer build and the picker feels stale.
+
+### UX + Ops Checklist
+- To verify the active model, run `:PrtStatus` (or `lua =require('parrot').get_status_info()`). The OpenAI entry now appends `:M` or `:H` (one-letter indicator) after the model name to reflect the current reasoning effort.
+- Topic summaries populate for both Anthropic and OpenAI sessions (OpenAI now uses `gpt-4o-mini` for the short prompt), so `# topic:` updates once a response lands without manual edits or an extra spinner.
+- The persisted file lives at `~/.local/share/nvim/parrot/persisted/state.json`. If we need a clean slate, delete or archive it before reopening Neovim (remember Parrot will recreate it).
+- Model picker commands:
+  - `:PrtChatModel` updates chat mode.
+  - `:PrtModel` in a non-chat buffer updates the command model.
+  - Both are now safe to use; the pin reruns on startup to keep defaults aligned.
+- Reasoning effort quick toggles:
+  - `:PrtReasoningMedium` returns to the default smart mode.
+  - `:PrtReasoningHigh` or `:PrtReasoningToggle` temporarily boosts GPT-5.1 into the highest reasoning tier for both chat + command.
+  - The boost status is visible via `:PrtStatus` and automatically logged.
+- If we ever want to temporarily test another OpenAI model, set it via the picker; once finished, restart (or run the helper manually) to repin to gpt-5.1.
+- Log entries appear at **debug** level when the helper overwrites the persisted value—enable Parrot logging if you need confirmation.
