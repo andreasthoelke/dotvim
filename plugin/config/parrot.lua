@@ -68,17 +68,62 @@ require("parrot").setup(
         topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
       },
       openai = {
+        -- NOTE: When adding new models, be aware that the model picker may not correctly save
+        -- the full model name (e.g., selecting "gpt-5.1" may save as "gpt-5" in state file).
+        -- The persisted state file (~/.local/share/nvim/parrot/persisted/state.json) contains
+        -- chat_model and command_model that override config defaults. You may need to manually
+        -- edit the state file or delete it entirely to force using config defaults.
         name = "openai",
         api_key = os.getenv("OPENAI_API_KEY"),
         endpoint = "https://api.openai.com/v1/chat/completions",
         model_endpoint = "https://api.openai.com/v1/models",
-        model = "gpt-4o",
+        model = "gpt-5.1",
         models = {
+          "gpt-5.1",
+          "gpt-5-mini",
           "gpt-4o",
           "gpt-4o-mini",
-          "gpt-4-turbo",
-          "gpt-3.5-turbo",
         },
+        params = {
+          chat = { max_completion_tokens = 4096, reasoning_effort = "high" },
+          command = { max_completion_tokens = 4096, reasoning_effort = "medium" },
+        },
+        preprocess_payload = function(payload)
+          for _, message in ipairs(payload.messages) do
+            message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
+          end
+          -- Handle GPT-5 reasoning models
+          if payload.model and string.match(payload.model, "^gpt%-5") then
+            -- Remove system prompt (not supported by GPT-5)
+            if payload.messages[1] and payload.messages[1].role == "system" then
+              table.remove(payload.messages, 1)
+            end
+            -- Use reasoning_effort from params if provided, otherwise default to "high"
+            payload.reasoning_effort = payload.reasoning_effort or "high"
+            -- Set fixed values for unsupported parameters
+            payload.temperature = 1
+            payload.top_p = 1
+            payload.presence_penalty = 0
+            payload.frequency_penalty = 0
+            payload.logprobs = nil
+            payload.logit_bias = nil
+            payload.top_logprobs = nil
+          end
+          -- Handle o1/o3/o4 models
+          if payload.model and string.match(payload.model, "^o[134]") then
+            if payload.messages[1] and payload.messages[1].role == "system" then
+              table.remove(payload.messages, 1)
+            end
+            payload.temperature = 1
+            payload.top_p = 1
+            payload.presence_penalty = 0
+            payload.frequency_penalty = 0
+            payload.logprobs = nil
+            payload.logit_bias = nil
+            payload.top_logprobs = nil
+          end
+          return payload
+        end,
       },
       -- NOTE: needs GITHUB_TOKEN which somehow conflicts with the 'gh' app.
       -- github = {

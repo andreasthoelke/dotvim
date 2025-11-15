@@ -13,6 +13,7 @@ nnoremap <leader>glf :call ShowLocalWebFile( GetLineFromCursor() )<cr>
 " nnoremap <silent>glc :call LaunchChromium_withDefURL()<cr>
 nnoremap <silent>glc :call LaunchChromium_UrlOrPath()<cr>
 nnoremap <silent>glb :call LaunchChrome_UrlOrPath()<cr>
+nnoremap <silent>glr :call OpenInChromeRemoteDebug_UrlOrPath()<cr>
 nnoremap <silent>glv :call ViewInMpv( GetAbsFilePathInLine() )<cr>
 " nnoremap <silent><leader>glc :call LaunchChromium( 'http://localhost:3000' )<cr>:echo "Launching Chromium .."<cr>:call T_DelayedCmd( "echo ''", 2000 )<cr>
 " nnoremap <leader>glc :call LaunchChromium_setURL()<cr>
@@ -58,6 +59,25 @@ func! LaunchChrome_UrlOrPath()
    call ShowLocalWebFile( url )
  endif
  echo "Launching Chrome .."
+ call T_DelayedCmd( "echo ''", 2000 )
+endfunc
+
+func! OpenInChromeRemoteDebug_UrlOrPath()
+ let url = GetUrlFromLine( line('.') )
+ if url == ''
+   let url = GetAbsFilePathInLine()
+ endif
+
+ if url =~ "http" || url =~ "file"
+   " Launch with same flags as remote debug instance
+   " Chrome will open in existing instance since user-data-dir is already in use
+   call jobstart( g:chromeAppPath_rd . ' ' . shellescape( url ) )
+ else
+   " Handle local files
+   let pathAbs = fnamemodify( url, ':p' )
+   call jobstart( g:chromeAppPath_rd . ' ' . shellescape( 'file:///' . pathAbs ) )
+ endif
+ echo "Opening in Chrome (remote debug) .."
  call T_DelayedCmd( "echo ''", 2000 )
 endfunc
 
