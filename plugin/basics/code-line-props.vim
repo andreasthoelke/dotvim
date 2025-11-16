@@ -35,7 +35,10 @@ endfunc
 
 func! GetUrlFromLine ( lineNum )
   let str = matchstr(getline( a:lineNum ), '[a-z]*:\/\/[^ >,;"]*')
-  return ReplaceStringsInLines( [str], [["'", ""], ["\)", ""]] )[0]
+  let cleaned = ReplaceStringsInLines( [str], [["'", ""], ["\)", ""]] )[0]
+  " Remove trailing punctuation that often appears after markdown links
+  let cleaned = substitute(cleaned, '[.,;:!?]\+$', '', '')
+  return cleaned
 endfunc
 " GetUrlFromLine( line('.') +1 )
 " - [Paper](https://mui.com/material-ui/react-paper/)
