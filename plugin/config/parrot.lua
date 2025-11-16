@@ -899,6 +899,15 @@ require("parrot").setup(
   }
 )
 
+-- Suppress "Switched to provider" startup messages
+local parrot_logger = require("parrot.logger")
+local original_info = parrot_logger.info
+parrot_logger.info = function(msg)
+  if not msg:match("^Switched to provider:") then
+    original_info(msg)
+  end
+end
+
 pin_openai_models(OPENAI_PRIMARY_MODEL)
 force_openai_provider()
 register_reasoning_commands()
