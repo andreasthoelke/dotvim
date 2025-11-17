@@ -1384,10 +1384,10 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
                        Works with refs: main, feature-branch, HEAD~1, abc123f
 
 ### Branch Comparisons (localleader)
-<localleader>gdd     - Compare two git refs from consecutive lines (same as <leader>gdb)
-<localleader>gdm     - Compare current branch with main
-<localleader>gdc     - Compare current branch with agent/claude
-<localleader>gdo     - Compare current branch with agent/codex
+<localleader>gd     - Compare two git refs from consecutive lines (same as <leader>gdb)
+<localleader>gm     - Compare current branch with main
+<localleader>gc     - Compare current branch with agent/claude
+<localleader>go     - Compare current branch with agent/codex
 
 ### Telescope Pickers
 <leader>ogl          - Telescope: Git commits picker (alternative picker UI)
