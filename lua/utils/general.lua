@@ -1220,20 +1220,46 @@ function _G.Keymap_props(mode, lhs_map_string)
 
     if matching_map then
       -- Search lua files for the keymap definition
-      local cmd = string.format(
-        "rg --line-number --no-heading 'vim.api.nvim_set_keymap.*%s.*%s' ~/.config/nvim/",
-        vim.fn.escape(lhs_map_string, "^$()%.[]*+-?"), -- escape special regex chars
-        vim.fn.escape(matching_map.rhs or "", "^$()%.[]*+-?")
-      )
-      
-      local results = vim.fn.systemlist(cmd)
+      -- Handle special key notations like <localleader>, <leader>, etc.
+      local search_terms = {lhs_map_string}
+
+      -- Convert expanded keys back to their notation form
+      -- e.g., "\gm" -> "<localleader>gm", " gm" -> "<leader>gm"
+      if lhs_map_string:sub(1, 1) == "\\" then
+        table.insert(search_terms, "<localleader>" .. lhs_map_string:sub(2))
+      elseif lhs_map_string:sub(1, 1) == " " then
+        table.insert(search_terms, "<leader>" .. lhs_map_string:sub(2))
+      end
+
+      local results = {}
+      for _, search_term in ipairs(search_terms) do
+        local cmd = string.format(
+          "rg --line-number --no-heading -F %s ~/.config/nvim/ | grep -E 'keymap\\.set|nvim_set_keymap'",
+          vim.fn.shellescape(search_term)
+        )
+        results = vim.fn.systemlist(cmd)
+        if #results > 0 then
+          break
+        end
+      end
+
       if #results > 0 then
         -- Extract filename and line number from first result
-        local parts = vim.split(results[1], ":")
-        return {
-          filename = parts[1],
-          lnum = tonumber(parts[2])
-        }
+        -- Format: /path/to/file.lua:123:content
+        local first_result = results[1]
+        -- Find the second colon to separate path:line:content
+        local first_colon = first_result:find(":")
+        if first_colon then
+          local second_colon = first_result:find(":", first_colon + 1)
+          if second_colon then
+            local filename = first_result:sub(1, first_colon - 1)
+            local lnum_str = first_result:sub(first_colon + 1, second_colon - 1)
+            return {
+              filename = filename,
+              lnum = tonumber(lnum_str)
+            }
+          end
+        end
       end
     end
   end
