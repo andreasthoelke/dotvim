@@ -328,7 +328,9 @@ end
 -- ParrotChat_InThisTab_id()
 
 function _G.Avante_InThisTab_id()
-  local sidebar = require("avante").get()
+  local ok, avante = pcall(require, "avante")
+  if not ok then return nil end
+  local sidebar = avante.get()
   if not sidebar then return end
   if not sidebar:is_open() then return end
   return sidebar.input_container.winid

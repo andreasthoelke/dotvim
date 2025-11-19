@@ -1,10 +1,87 @@
 
 
 -- parrot
+-- avante
+-- codecompanion
+-- magenta
 -- claude code
--- agents & worktrees
+
+-- ─   AVANTE                                            ■
+-- ~/.config/nvim/plugin/config/avante.lua‖*ˍˍˍKeymaps
+
+-- c-g m   - add file (neo tree)
+
+-- AvanteAsk [question] [position]` | Ask AI about your code. Optional `position` set window position and `ask` enable/disable direct asking mode | `:AvanteAsk position=right Refactor this code here` |
+-- AvanteBuild`                     | Build dependencies for the project                                                                          | |
+-- AvanteChat`                      | Start a chat session with AI about your codebase. Default is `ask`=false                                    | |
+-- AvanteClear`                     | Clear the chat history                                                                                      | |
+-- AvanteEdit`                      | Edit the selected code blocks                                                                               | |
+-- AvanteFocus`                     | Switch focus to/from the sidebar                                                                            | |
+-- AvanteRefresh`                   | Refresh all Avante windows                                                                                  | |
+-- AvanteStop`                      | Stop the current AI request                                                                                 | |
+-- AvanteSwitchProvider`            | Switch AI provider (e.g. openai)                                                                            | |
+-- AvanteShowRepoMap`               | Show repo map for project's structure                                                                       | |
+-- AvanteToggle`                    | Toggle the Avante sidebar                                                                                   | |
+-- AvanteModels`                    | Show model list                                                                                             | |
+
+
+-- vim.keymap.set('n', '<c-g><leader>v', ':AvanteFocus<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>v', ':AvanteChatNew<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g><leader>v', ':AvanteChat<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>M', ':AvanteModel<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>h', ':AvanteHistory<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>H', ':CodeCompanionHistory<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>l', ':AvanteFocus<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g>v', ':AvanteToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g>c', ':AvanteStop<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-c>', ':AvanteStop<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<c-g><leader>c', ':AvanteClear<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<c-g><leader>P', ':AvanteSwitchProvider ', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<c-g><leader>P', function()
+  local feed    = vim.api.nvim_feedkeys
+  local t       = vim.api.nvim_replace_termcodes
+  feed(t(':AvanteSwitchProvider ', true, false, true), 'n', false)
+  feed(t("<Tab>", true, false, true), 't', false)
+end, { noremap = true, silent = true })
+
 
 vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
+
+-- Avante_is_open()
+
+-- HIGHLIGHTS
+-- local hi = vim.api.nvim_set_hl
+-- ~/.config/nvim/colors/munsell-blue-molokai_light_1.lua‖/hi(0,ˍ"NormalFloat",ˍ{ˍbgˍ=ˍ"#E
+-- ~/.config/nvim/plugged/avante.nvim/lua/avante/highlights.lua‖/localˍHighlightsˍ=ˍ{
+
+-- ─^  AVANTE                                            ▲
+
+
+
+-- ─   CODECOMPANION                                     ■
+-- In buffer keymaps: ~/.config/nvim/plugin/config/codecompanion.lua‖/keymapsˍ=ˍ{
+
+
+vim.keymap.set('n', '<c-g><leader>V', function()
+  local update = { display = { chat = { window = { layout = "vertical" } } } }
+  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( CodeCompanion_config ), update )
+  require("codecompanion").setup( config_updated )
+  require("codecompanion").chat()
+end, { noremap = true, silent = true })
+
+-- Open codecompanion chat with horizontal layout
+-- This keybinding changes the window layout configuration before opening the chat
+vim.keymap.set('n', '<c-g><leader>C', function()
+  local update = { display = { chat = { window = { layout = "horizontal" } } } }
+  local config_updated = vim.tbl_deep_extend("force", vim.deepcopy( CodeCompanion_config ), update )
+  require("codecompanion").setup( config_updated )
+  require("codecompanion").chat()
+end, { noremap = true, silent = true })
+
+
+-- ─^  CODECOMPANION                                     ▲
+
 
 -- Global keymaps for cycling presets
 vim.keymap.set('n', '<c-g><c-g>]', ':PrtNextPreset<CR>', { noremap = true, silent = true, desc = "Parrot: next model preset" })
@@ -428,6 +505,17 @@ vim.keymap.set( 'n',
 -- CLEAR/CANCEL - Send Ctrl-C to agent terminal in current tab
 vim.keymap.set( 'n',
   '<c-g>C', function()
+    local magenta_win = BufName_InThisTab_id("Magenta Input")
+
+    -- Handle Magenta input window separately
+    if magenta_win then
+      local current_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_set_current_win(magenta_win)
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, {})
+      vim.api.nvim_set_current_win(current_win)
+      return
+    end
+
     -- Find agent terminal job ID in current tab
     local job_id = require('agents').find_agent_terminal_in_tab()
     if not job_id then
@@ -546,6 +634,85 @@ end, { silent = true, desc = "tcd back to main from agent worktree" })
 
 
 -- ─^  AGENTS                                            ▲
+
+
+-- ─   Magenta                                           ■
+
+-- NOTE claude_send consistent maps:
+-- ~/.config/nvim/plugin/config/parrot-claude-code.lua‖/functionˍ_G.Claude_send(te
+
+-- Commands
+  -- "debug-prediction-message",
+  -- "profile",
+  -- "start-inline-edit",
+  -- "replay-inline-edit",
+  -- "toggle",
+  -- "new-thread",
+  -- "threads-overview",
+  -- "predict-edit",
+  -- "accept-prediction",
+  -- "dismiss-prediction",
+  -- local visual_commands =
+--   "start-inline-edit-selection",
+--   "replay-inline-edit-selection",
+--   "paste-selection",
+
+
+vim.keymap.set('n', '<c-g>l', function()
+  local magenta_win = BufName_InThisTab_id("Magenta Input")
+  if magenta_win then
+    vim.api.nvim_set_current_win(magenta_win)
+  end
+end, { desc = "Focus Magenta input" })
+
+
+-- ─   NEP edit prediction                               ■
+vim.keymap.set({'n', 'v'}, '<c-g><c-l><c-l>', function()
+  vim.cmd "Magenta predict-edit"
+end, { desc = "Magenta predict" })
+
+vim.keymap.set({'n', 'v'}, '<c-g><c-l>l', function()
+  vim.cmd "Magenta predict-edit"
+end, { desc = "Magenta predict" })
+
+vim.keymap.set('n', '<c-g><c-l><c-g>', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
+vim.keymap.set('n', '<c-g><c-l>g', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
+vim.keymap.set('n', '<c-g><c-l><cr>', function()
+  vim.cmd "Magenta accept-prediction"
+end, { desc = "Magenta accept" })
+
+vim.keymap.set('n', '<c-g><c-l>c', function()
+  vim.cmd "Magenta dismiss-prediction"
+end, { desc = "Magenta dismiss prediction" })
+
+vim.keymap.set('n', '<c-g><c-l><c-d>', function()
+  vim.cmd "Magenta debug-prediction-message"
+end, { desc = "Magenta debug prediction" })
+
+vim.keymap.set('n', '<c-g><c-l>d', function()
+  vim.cmd "Magenta debug-prediction-message"
+end, { desc = "Magenta debug prediction" })
+
+
+-- ─^  NEP edit prediction                               ▲
+
+
+vim.keymap.set( 'n',
+  ',sm', function()
+    require( 'plenary.reload' ).reload_module(
+      'magenta.nvim'
+    )
+    vim.cmd('luafile ~/.config/nvim/plugin/config/magenta.nvim.lua')
+  end )
+
+
+-- ─^  Magenta                                           ▲
 
 
 -- ─   PARROT                                            ■

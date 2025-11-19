@@ -1030,15 +1030,20 @@ require("neo-tree").setup({
       end,
 
       avante_add_files = function(state)
+        local ok, avante = pcall(require, 'avante')
+        if not ok then
+          vim.notify("Avante plugin not loaded", vim.log.levels.WARN)
+          return
+        end
         local node = state.tree:get_node()
         local filepath = node:get_id()
         local relative_path = require('avante.utils').relative_path(filepath)
-        local sidebar = require('avante').get()
+        local sidebar = avante.get()
         local open = sidebar:is_open()
         -- ensure avante sidebar is open
         if not open then
           require('avante.api').ask()
-          sidebar = require('avante').get()
+          sidebar = avante.get()
         end
         sidebar.file_selector:add_selected_file(relative_path)
         -- remove neo tree buffer
