@@ -94,8 +94,8 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
+    "caffeinate -i gemini --yolo ",
     "cat -v ",
-    "gemini ",
     "gemini -m gemini-flash-latest ",
     "gemini -m gemini-2.5-flash-image-preview ",
     "cd /Users/at/Documents/Proj/k_mindgraph/h_mcp/e_gemini && npm start ",

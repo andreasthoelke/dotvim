@@ -696,6 +696,21 @@ vim.keymap.set( 'n',
     -- New terminals will automatically use the light theme
     Set_alacritty_bg('E3E6E9')
     vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')
+    -- Clear neotree's cached numbered highlight groups and redraw
+    pcall(function()
+      -- Clear all numbered NeoTree highlight variants (e.g., NeoTreeFileName_60)
+      for _, hl in ipairs(vim.fn.getcompletion('NeoTree', 'highlight')) do
+        if hl:match('_%d+$') then
+          vim.cmd('highlight clear ' .. hl)
+        end
+      end
+      -- Redraw neotree windows
+      local manager = require('neo-tree.sources.manager')
+      local renderer = require('neo-tree.ui.renderer')
+      for _, state in pairs(manager.get_states()) do
+        renderer.redraw(state)
+      end
+    end)
   end, { desc = 'Switch to light theme' })
 
 vim.keymap.set( 'n',
@@ -706,6 +721,21 @@ vim.keymap.set( 'n',
     -- New terminals will automatically use the dark theme
     Set_alacritty_bg('151719')
     vim.cmd('luafile ~/.config/nvim/plugin/config/tabline_tabby.lua')
+    -- Clear neotree's cached numbered highlight groups and redraw
+    pcall(function()
+      -- Clear all numbered NeoTree highlight variants (e.g., NeoTreeFileName_60)
+      for _, hl in ipairs(vim.fn.getcompletion('NeoTree', 'highlight')) do
+        if hl:match('_%d+$') then
+          vim.cmd('highlight clear ' .. hl)
+        end
+      end
+      -- Redraw neotree windows
+      local manager = require('neo-tree.sources.manager')
+      local renderer = require('neo-tree.ui.renderer')
+      for _, state in pairs(manager.get_states()) do
+        renderer.redraw(state)
+      end
+    end)
   end, { desc = 'Switch to dark theme' })
 
 

@@ -133,3 +133,38 @@
   - The boost status is visible via `:PrtStatus` and automatically logged.
 - If we ever want to temporarily test another OpenAI model, set it via the picker; once finished, restart (or run the helper manually) to repin to gpt-5.1.
 - Log entries appear at **debug** level when the helper overwrites the persisted value—enable Parrot logging if you need confirmation.
+
+---
+
+## 2025-11-19 Update — Gemini 3 Model Non-Existent
+
+### Investigation: gemini-3-pro-preview
+**Date:** 2025-11-19
+
+**Issue:** Attempted to add and test "gemini-3-pro-preview" model based on user request to update to newest Gemini model.
+
+**Findings:**
+- Model "gemini-3-pro-preview" does **not exist** in Google's Gemini API as of this date
+- API calls with this model name hang indefinitely (timeout)
+- Cached models in state file show newest Gemini models are:
+  - `gemini-2.5-pro` series (various preview versions)
+  - `gemini-2.5-flash` series
+  - `gemini-2.0-*` series
+- No "gemini-3.*" models appear in the API's model list
+
+**Actions Taken:**
+1. Added "gemini-3-pro-preview" to config models list
+2. Created `TestGemini3` hook to test the model
+3. Test hung indefinitely on API call
+4. Verified model doesn't exist in cached models list
+5. **Cleaned up**: Removed non-existent model and test hook
+
+**Current Status:**
+- Reverted to using `gemini-2.5-pro` and `gemini-2.5-flash` as available models
+- No Gemini 3 models exist yet in the API
+
+**Recommendation:**
+- Monitor Google's Gemini API announcements for when Gemini 3 is released
+- Use online model selection (`:PrtChatModel`) to discover new models as they become available
+- Cached models list updates automatically based on `model_cache_expiry_hours` setting (currently 48 hours)
+- Can force refresh with `:PrtReloadCache gemini`

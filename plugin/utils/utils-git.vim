@@ -285,9 +285,9 @@ nnoremap <leader><leader>og :FzfGFiles?<cr>
 
 " GitV => now using Flog to show a git tree
 " nnoremap <leader><leader>gL :FzfPreviewGitLogs<cr>
-nnoremap <leader><leader>gL :CocCommand fzf-preview.GitLogs<cr>
+" nnoremap <leader><leader>gL :CocCommand fzf-preview.GitLogs<cr>
 " nnoremap <leader><leader>gL :Flogsplit<cr>
-nnoremap <leader><leader>gl :FzfCommits<cr>
+" nnoremap <leader><leader>gl :FzfCommits<cr>
 nnoremap <leader><leader>ogl :FzfBCommits<cr>
 " nnoremap <leader>oG :Flog<cr>
 " nnoremap <leader>oG :Gitv!<cr>

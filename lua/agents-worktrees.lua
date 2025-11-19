@@ -418,7 +418,7 @@ local function get_agent_command(agent_key)
   local commands = {
     claude = "env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     codex = "codex --dangerously-bypass-approvals-and-sandbox ",
-    gemini = "gemini -m gemini-flash-latest ",
+    gemini = "gemini --yolo ",
   }
   return commands[agent_key]
 end
