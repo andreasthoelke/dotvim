@@ -83,6 +83,11 @@ end, { noremap = true, silent = true })
 -- ─^  CODECOMPANION                                     ▲
 
 
+-- Global keymaps for cycling presets
+vim.keymap.set('n', '<c-g><c-g>]', ':PrtNextPreset<CR>', { noremap = true, silent = true, desc = "Parrot: next model preset" })
+vim.keymap.set('n', '<c-g><c-g>[', ':PrtPrevPreset<CR>', { noremap = true, silent = true, desc = "Parrot: previous model preset" })
+
+
 
 -- ─   AGENTS                                            ■
 -- Agent terminal management using lua/agents.lua

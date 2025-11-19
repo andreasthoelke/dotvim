@@ -373,15 +373,7 @@ local function register_reasoning_commands()
   )
 
   -- Register buffer keymaps for presets
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = "parrot",
-    callback = function()
-      local opts = { buffer = true, silent = true, desc = "Parrot: next model preset" }
-      vim.keymap.set("n", "]m", "<cmd>PrtNextPreset<cr>", opts)
-      opts.desc = "Parrot: previous model preset"
-      vim.keymap.set("n", "[m", "<cmd>PrtPrevPreset<cr>", opts)
-    end,
-  })
+
 
   vim.api.nvim_create_user_command(
     "PrtReasoningHigh",
