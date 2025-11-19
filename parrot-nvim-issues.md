@@ -168,3 +168,24 @@
 - Use online model selection (`:PrtChatModel`) to discover new models as they become available
 - Cached models list updates automatically based on `model_cache_expiry_hours` setting (currently 48 hours)
 - Can force refresh with `:PrtReloadCache gemini`
+
+---
+
+## 2025-11-19 Update — Gemini 3 Model Added (Re-attempt)
+
+### Configuration Update
+**Date:** 2025-11-19
+
+**Action:** Updated `parrot.nvim` config to include `gemini-3-pro-preview` based on fresh user report and documentation example.
+- Model: `gemini-3-pro-preview`
+- Provider: `gemini`
+- Status: Configuration updated, pending verification.
+
+**Note:** User provided `curl` example suggests the model endpoint is available.
+
+### Troubleshooting: Cache & Pinning
+- **Issue:** New model `gemini-3-pro-preview` did not appear in the selection dialog immediately.
+- **Cause:** Parrot.nvim caches model lists. A manual cache reload is required for new models to appear if they weren't previously known.
+- **Fix:** Run `:PrtReloadCache gemini` (ensure no trailing space in the command, as `gemini ` will fail).
+- **Configuration:** The startup logic has been updated to pin `gemini` and `gemini-3-pro-preview` by default, temporarily commenting out the OpenAI pin. This ensures the new model is selected on startup even if the state file has an older value.
+--- End of content ---

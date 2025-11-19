@@ -38,7 +38,7 @@ end
 -- continue using that value even after the config is updated. This helper pins
 -- the OpenAI provider back to our preferred GPT-5.1 model whenever Neovim
 -- starts, so the UI and requests consistently use the intended model.
-local function pin_openai_models(model_name)
+local function pin_provider_models(provider, model_name)
   vim.schedule(function()
     local ok, parrot_config = pcall(require, "parrot.config")
     if not ok then
@@ -49,7 +49,6 @@ local function pin_openai_models(model_name)
       return
     end
     local state = handler.state
-    local provider = "openai"
     if not state._state or not state._state[provider] then
       return
     end
@@ -77,7 +76,7 @@ local function pin_openai_models(model_name)
   end)
 end
 
-local function force_openai_provider()
+local function force_provider(provider_name)
   vim.schedule(function()
     local ok, parrot_config = pcall(require, "parrot.config")
     if not ok then
@@ -88,9 +87,9 @@ local function force_openai_provider()
       return
     end
     for _, is_chat in ipairs({ true, false }) do
-      local ok_switch, err = pcall(handler.switch_provider, handler, "openai", is_chat)
+      local ok_switch, err = pcall(handler.switch_provider, handler, provider_name, is_chat)
       if not ok_switch and parrot_config.logger and parrot_config.logger.debug then
-        parrot_config.logger.debug("Failed to set openai provider", { chat = is_chat, error = err })
+        parrot_config.logger.debug("Failed to set provider", { provider = provider_name, chat = is_chat, error = err })
       end
     end
   end)
@@ -397,8 +396,9 @@ require("parrot").setup(
       gemini = {
         name = "gemini",
         api_key = os.getenv "GEMINI_API_KEY",
-        model = "gemini-2.5-pro",
+        model = "gemini-3-pro-preview",
         models = {
+          "gemini-3-pro-preview",
           "gemini-2.5-pro",
           "gemini-2.5-flash",
         },
@@ -415,7 +415,7 @@ require("parrot").setup(
           command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192 },
         },
         topic = {
-          model = "gemini-1.5-flash",
+          model = "gemini-2.5-flash",
           params = { maxOutputTokens = 64 },
         },
         headers = function(self)
@@ -908,8 +908,10 @@ parrot_logger.info = function(msg)
   end
 end
 
-pin_openai_models(OPENAI_PRIMARY_MODEL)
-force_openai_provider()
+-- pin_provider_models("openai", OPENAI_PRIMARY_MODEL)
+pin_provider_models("gemini", "gemini-3-pro-preview")
+-- force_provider("openai")
+force_provider("gemini")
 register_reasoning_commands()
 refresh_winbar()
 
