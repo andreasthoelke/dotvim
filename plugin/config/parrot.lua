@@ -25,7 +25,7 @@ local OPENAI_REASONING_SYMBOLS = {
   high = "H",
 }
 
-local GEMINI_THINKING_DEFAULT = "high"
+local GEMINI_THINKING_DEFAULT = "low"
 local GEMINI_THINKING_SYMBOLS = {
   low = "L",
   high = "H",
@@ -299,11 +299,13 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
 }
-local current_preset_index = 1 -- Matches default startup state (Gemini High)
+local current_preset_index = 1
 
-local function next_preset()
-  current_preset_index = (current_preset_index % #PRESETS) + 1
-  local preset = PRESETS[current_preset_index]
+local function apply_preset(index)
+  local preset = PRESETS[index]
+  if not preset then
+    return
+  end
 
   -- 1. Pin model (ensure it's the selected one for the provider)
   pin_provider_models(preset.provider, preset.model)
@@ -312,12 +314,21 @@ local function next_preset()
   force_provider(preset.provider)
 
   -- 3. Set reasoning/thinking level
-  if preset.provider == "gemini" then
-    set_gemini_thinking(preset.level)
-  elseif preset.provider == "openai" then
-    set_openai_reasoning(preset.level)
-  end
+  -- Schedule this slightly later to ensure provider switch has completed
+  vim.schedule(function()
+    if preset.provider == "gemini" then
+      set_gemini_thinking(preset.level)
+    elseif preset.provider == "openai" then
+      set_openai_reasoning(preset.level)
+    end
+  end)
+end
 
+local function next_preset()
+  current_preset_index = (current_preset_index % #PRESETS) + 1
+  apply_preset(current_preset_index)
+  
+  local preset = PRESETS[current_preset_index]
   vim.notify(
     string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
     vim.log.levels.INFO
@@ -1061,10 +1072,8 @@ parrot_logger.info = function(msg)
   end
 end
 
--- pin_provider_models("openai", OPENAI_PRIMARY_MODEL)
-pin_provider_models("gemini", "gemini-3-pro-preview")
--- force_provider("openai")
-force_provider("gemini")
+-- Apply default startup preset
+apply_preset(current_preset_index)
 register_reasoning_commands()
 refresh_winbar()
 
