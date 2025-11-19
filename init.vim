@@ -38,21 +38,21 @@ Plug 'frankroeder/parrot.nvim'
 " https://github.com/dlants/magenta.nvim
 " Plug 'dlants/magenta.nvim', { 'do': 'npm install --frozen-lockfile' }
 " Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/b_mga', { 'do': 'npm install --frozen-lockfile' }
-Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/d_magenta', { 'do': 'npm install --frozen-lockfile' }
+" Plug '/Users/at/Documents/Proj/k_mindgraph/h_mcp/d_magenta', { 'do': 'npm install --frozen-lockfile' }
 " Plug('dlants/magenta.vim', {
 "   ['do'] = 'npm install --frozen-lockfile',
 " })
 
-Plug 'olimorris/codecompanion.nvim'
+" Plug 'olimorris/codecompanion.nvim'
 " Plug 'olimorris/codecompanion.nvim', { 'branch': 'feat/move-to-function-calling' }
 " move-to-function-calling
 
-Plug 'ravitemer/codecompanion-history.nvim'
+" Plug 'ravitemer/codecompanion-history.nvim'
 Plug 'Davidyz/VectorCode'
 
 " https://github.com/yetone/avante.nvim
 " Plug 'yetone/avante.nvim'
-Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
+" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make', 'source': 'true' }
 " Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
 " optional deps:
