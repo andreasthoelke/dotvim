@@ -25,6 +25,12 @@ local OPENAI_REASONING_SYMBOLS = {
   high = "H",
 }
 
+local GEMINI_THINKING_DEFAULT = "high"
+local GEMINI_THINKING_SYMBOLS = {
+  low = "L",
+  high = "H",
+}
+
 local function refresh_winbar()
   vim.schedule(function()
     local ok, lualine = pcall(require, "lualine")
@@ -95,16 +101,24 @@ local function force_provider(provider_name)
   end)
 end
 
-local function get_parrot_openai_context()
+local function get_parrot_provider_context(provider_name)
   local ok, parrot_config = pcall(require, "parrot.config")
   if not ok then
     return nil
   end
   local handler = parrot_config.chat_handler
-  if not handler or not handler.providers or not handler.providers.openai then
+  if not handler or not handler.providers or not handler.providers[provider_name] then
     return nil
   end
   return parrot_config, handler
+end
+
+local function get_parrot_openai_context()
+  return get_parrot_provider_context("openai")
+end
+
+local function get_parrot_gemini_context()
+  return get_parrot_provider_context("gemini")
 end
 
 local function get_openai_reasoning_level()
@@ -171,9 +185,79 @@ local function get_openai_reasoning_indicator()
   return OPENAI_REASONING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
 end
 
+local function get_gemini_thinking_level()
+  local parrot_config, handler = get_parrot_gemini_context()
+  if not parrot_config then
+    return GEMINI_THINKING_DEFAULT
+  end
+  local params = handler.providers.gemini.params
+  if not params or not params.chat then
+    return GEMINI_THINKING_DEFAULT
+  end
+  return params.chat.thinking_level or GEMINI_THINKING_DEFAULT
+end
+
+local function set_gemini_thinking(level)
+  local parrot_config, handler = get_parrot_gemini_context()
+  if not parrot_config then
+    return false
+  end
+
+  local changed = false
+  local containers = {}
+  if handler.providers and handler.providers.gemini then
+    table.insert(containers, handler.providers.gemini)
+  end
+  if parrot_config.providers and parrot_config.providers.gemini then
+    table.insert(containers, parrot_config.providers.gemini)
+  end
+
+  for _, provider in ipairs(containers) do
+    if provider.params then
+      for _, mode in ipairs({ "chat", "command" }) do
+        provider.params[mode] = provider.params[mode] or {}
+        if provider.params[mode].thinking_level ~= level then
+          provider.params[mode].thinking_level = level
+          changed = true
+        end
+      end
+    end
+  end
+
+  if changed then
+    local msg = string.format("Gemini thinking level set to %s", level)
+    if parrot_config.logger and parrot_config.logger.info then
+      parrot_config.logger.info(msg)
+    else
+      vim.notify(msg, vim.log.levels.INFO)
+    end
+    refresh_winbar()
+  end
+  return changed
+end
+
+local function toggle_gemini_thinking()
+  local current = get_gemini_thinking_level()
+  if current == "high" then
+    return set_gemini_thinking("low")
+  end
+  return set_gemini_thinking("high")
+end
+
+local function get_gemini_thinking_indicator()
+  local level = get_gemini_thinking_level()
+  return GEMINI_THINKING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+end
+
 local function format_llm_label(model_name, provider_name)
   if provider_name == "openai" then
     local indicator = get_openai_reasoning_indicator()
+    if indicator then
+      return string.format("%s:%s", model_name, indicator)
+    end
+    return model_name
+  elseif provider_name == "gemini" then
+    local indicator = get_gemini_thinking_indicator()
     if indicator then
       return string.format("%s:%s", model_name, indicator)
     end
@@ -209,6 +293,37 @@ function _G.Parrot_chat_status_label()
   return status_info.model or ""
 end
 
+local PRESETS = {
+  { provider = "gemini", model = "gemini-3-pro-preview", level = "low" },
+  { provider = "gemini", model = "gemini-3-pro-preview", level = "high" },
+  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
+  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
+}
+local current_preset_index = 1 -- Matches default startup state (Gemini High)
+
+local function next_preset()
+  current_preset_index = (current_preset_index % #PRESETS) + 1
+  local preset = PRESETS[current_preset_index]
+
+  -- 1. Pin model (ensure it's the selected one for the provider)
+  pin_provider_models(preset.provider, preset.model)
+
+  -- 2. Force provider
+  force_provider(preset.provider)
+
+  -- 3. Set reasoning/thinking level
+  if preset.provider == "gemini" then
+    set_gemini_thinking(preset.level)
+  elseif preset.provider == "openai" then
+    set_openai_reasoning(preset.level)
+  end
+
+  vim.notify(
+    string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
+    vim.log.levels.INFO
+  )
+end
+
 local function register_reasoning_commands()
   if vim.g.parrot_reasoning_commands_registered then
     return
@@ -222,6 +337,14 @@ local function register_reasoning_commands()
       end
     end
   end
+
+  vim.api.nvim_create_user_command(
+    "PrtNextPreset",
+    wrap(function()
+      return next_preset()
+    end),
+    { desc = "Parrot: cycle through model presets" }
+  )
 
   vim.api.nvim_create_user_command(
     "PrtReasoningHigh",
@@ -243,6 +366,28 @@ local function register_reasoning_commands()
       return toggle_openai_reasoning()
     end),
     { desc = "Parrot: toggle OpenAI reasoning effort between medium and high" }
+  )
+
+  vim.api.nvim_create_user_command(
+    "PrtGeminiThinkingHigh",
+    wrap(function()
+      return set_gemini_thinking("high")
+    end),
+    { desc = "Parrot: set Gemini thinking level to high" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtGeminiThinkingLow",
+    wrap(function()
+      return set_gemini_thinking("low")
+    end),
+    { desc = "Parrot: set Gemini thinking level to low" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtGeminiThinkingToggle",
+    wrap(function()
+      return toggle_gemini_thinking()
+    end),
+    { desc = "Parrot: toggle Gemini thinking level between low and high" }
   )
 
   vim.g.parrot_reasoning_commands_registered = true
@@ -411,8 +556,8 @@ require("parrot").setup(
           return { "https://generativelanguage.googleapis.com/v1beta/models?key=" .. self.api_key }
         end,
         params = {
-          chat = { temperature = 1.1, topP = 1, topK = 10, maxOutputTokens = 8192 },
-          command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192 },
+          chat = { temperature = 1.1, topP = 1, topK = 10, maxOutputTokens = 8192, thinking_level = GEMINI_THINKING_DEFAULT },
+          command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192, thinking_level = GEMINI_THINKING_DEFAULT },
         },
         topic = {
           model = "gemini-2.5-flash",
@@ -446,6 +591,14 @@ require("parrot").setup(
               maxOutputTokens = payload.max_tokens or payload.maxOutputTokens,
             },
           }
+          -- Handle Gemini 3 thinking models
+          if payload.thinking_level then
+            gemini_payload.generationConfig.thinkingConfig = {
+              thinkingLevel = payload.thinking_level,
+            }
+            -- Temporary debug print to verify payload
+            -- print("DEBUG: Sending Gemini Config:", vim.inspect(gemini_payload.generationConfig))
+          end
           if system_instruction then
             gemini_payload.systemInstruction = system_instruction
           end

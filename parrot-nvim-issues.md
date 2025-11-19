@@ -188,4 +188,12 @@
 - **Cause:** Parrot.nvim caches model lists. A manual cache reload is required for new models to appear if they weren't previously known.
 - **Fix:** Run `:PrtReloadCache gemini` (ensure no trailing space in the command, as `gemini ` will fail).
 - **Configuration:** The startup logic has been updated to pin `gemini` and `gemini-3-pro-preview` by default, temporarily commenting out the OpenAI pin. This ensures the new model is selected on startup even if the state file has an older value.
---- End of content ---
+
+### Thinking Level Controls
+- **Feature:** Implemented thinking level controls for Gemini 3 models (`thinkingConfig`).
+- **Defaults:** `thinking_level` set to `"high"`.
+- **Commands:**
+  - `:PrtGeminiThinkingHigh` - Set thinking level to high
+  - `:PrtGeminiThinkingLow` - Set thinking level to low
+  - `:PrtGeminiThinkingToggle` - Toggle between high and low
+- **Status Indicator:** The status label now appends `:H` (high) or `:L` (low) to the model name (e.g., `gemini-3-pro-preview:H`).
