@@ -324,15 +324,22 @@ local function apply_preset(index)
   end)
 end
 
-local function next_preset()
-  current_preset_index = (current_preset_index % #PRESETS) + 1
+local function cycle_preset(direction)
+  current_preset_index = current_preset_index + direction
+  if current_preset_index > #PRESETS then
+    current_preset_index = 1
+  elseif current_preset_index < 1 then
+    current_preset_index = #PRESETS
+  end
+
   apply_preset(current_preset_index)
-  
+
   local preset = PRESETS[current_preset_index]
   vim.notify(
     string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
     vim.log.levels.INFO
   )
+  return true
 end
 
 local function register_reasoning_commands()
@@ -352,10 +359,29 @@ local function register_reasoning_commands()
   vim.api.nvim_create_user_command(
     "PrtNextPreset",
     wrap(function()
-      return next_preset()
+      return cycle_preset(1)
     end),
-    { desc = "Parrot: cycle through model presets" }
+    { desc = "Parrot: cycle to next model preset" }
   )
+
+  vim.api.nvim_create_user_command(
+    "PrtPrevPreset",
+    wrap(function()
+      return cycle_preset(-1)
+    end),
+    { desc = "Parrot: cycle to previous model preset" }
+  )
+
+  -- Register buffer keymaps for presets
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "parrot",
+    callback = function()
+      local opts = { buffer = true, silent = true, desc = "Parrot: next model preset" }
+      vim.keymap.set("n", "]m", "<cmd>PrtNextPreset<cr>", opts)
+      opts.desc = "Parrot: previous model preset"
+      vim.keymap.set("n", "[m", "<cmd>PrtPrevPreset<cr>", opts)
+    end,
+  })
 
   vim.api.nvim_create_user_command(
     "PrtReasoningHigh",
