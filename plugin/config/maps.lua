@@ -518,6 +518,8 @@ local function get_current_branch_from_cwd()
     return 'agent/claude'
   elseif project_name:match('_codex$') then
     return 'agent/codex'
+  elseif project_name:match('_gemini$') then
+    return 'agent/gemini'
   else
     -- Get actual current branch
     local branch = vim.fn.system('git branch --show-current'):gsub('\n', '')
@@ -535,14 +537,20 @@ vim.keymap.set( 'n',
 vim.keymap.set( 'n',
   '<localleader>gc', function()
     local current_branch = get_current_branch_from_cwd()
-    require'git_commits_viewer'.ShowBranches('agent/claude', current_branch)
+    require'git_commits_viewer'.ShowBranches(current_branch, 'agent/claude')
   end, { desc = "Compare current branch with agent/claude" } )
 
 vim.keymap.set( 'n',
   '<localleader>go', function()
     local current_branch = get_current_branch_from_cwd()
-    require'git_commits_viewer'.ShowBranches('agent/codex', current_branch)
+    require'git_commits_viewer'.ShowBranches(current_branch, 'agent/codex')
   end, { desc = "Compare current branch with agent/codex" } )
+
+vim.keymap.set( 'n',
+  '<localleader>gg', function()
+    local current_branch = get_current_branch_from_cwd()
+    require'git_commits_viewer'.ShowBranches(current_branch, 'agent/gemini')
+  end, { desc = "Compare current branch with agent/gemini" } )
 
 -- ─^  Branch Comparisons (localleader)                  ▲
 

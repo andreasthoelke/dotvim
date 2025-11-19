@@ -391,6 +391,66 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunCodex', function(opts)
   require('agents-worktrees').run_agent_worktree("codex", opts.args)
 end, { nargs = '+', desc = "Run Codex worktree agent with prompt" })
 
+vim.api.nvim_create_user_command('AgentsWorktreesRunGemini', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGemini <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("gemini", opts.args)
+end, { nargs = '+', desc = "Run Gemini worktree agent with prompt" })
+
+-- Run specific combinations of agents
+vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeCodx', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaudeCodx <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  local aw = require('agents-worktrees')
+  aw.enabled_agents = {"claude", "codex"}
+  aw.run_agents_worktrees(opts.args)
+end, { nargs = '+', desc = "Run Claude + Codex worktree agents with prompt" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeGemini', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaudeGemini <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  local aw = require('agents-worktrees')
+  aw.enabled_agents = {"claude", "gemini"}
+  aw.run_agents_worktrees(opts.args)
+end, { nargs = '+', desc = "Run Claude + Gemini worktree agents with prompt" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunCodxGemini', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodxGemini <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  local aw = require('agents-worktrees')
+  aw.enabled_agents = {"codex", "gemini"}
+  aw.run_agents_worktrees(opts.args)
+end, { nargs = '+', desc = "Run Codex + Gemini worktree agents with prompt" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunAll', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunAll <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  local aw = require('agents-worktrees')
+  aw.enabled_agents = {"claude", "codex", "gemini"}
+  aw.run_agents_worktrees(opts.args)
+end, { nargs = '+', desc = "Run all 3 worktree agents (Claude + Codex + Gemini) with prompt" })
+
+-- Configure enabled agents
+vim.api.nvim_create_user_command('AgentsWorktreesEnable', function(opts)
+  local agents = vim.split(opts.args, '%s+')
+  if #agents == 0 then
+    vim.notify("Error: Agents required. Usage: :AgentsWorktreesEnable claude codex gemini", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').enabled_agents = agents
+  vim.notify("Enabled agents: " .. table.concat(agents, ", "), vim.log.levels.INFO)
+end, { nargs = '+', complete = function() return {"claude", "codex", "gemini"} end, desc = "Set which agents are enabled for multi-agent runs" })
+
 -- Reset worktrees to main
 vim.api.nvim_create_user_command('AgentsWorktreesResetAll', function()
   require('agents-worktrees').reset_all_worktrees_to_main()
@@ -404,6 +464,10 @@ vim.api.nvim_create_user_command('AgentsWorktreesResetCodex', function()
   require('agents-worktrees').reset_worktree_to_main("codex")
 end, { desc = "Reset Codex worktree to main (with backup)" })
 
+vim.api.nvim_create_user_command('AgentsWorktreesResetGemini', function()
+  require('agents-worktrees').reset_worktree_to_main("gemini")
+end, { desc = "Reset Gemini worktree to main (with backup)" })
+
 -- Setup worktrees (without running agents)
 vim.api.nvim_create_user_command('AgentsWorktreesSetupClaude', function()
   require('agents-worktrees').setup_worktree("claude")
@@ -412,6 +476,10 @@ end, { desc = "Setup Claude worktree (create if needed, rebase)" })
 vim.api.nvim_create_user_command('AgentsWorktreesSetupCodex', function()
   require('agents-worktrees').setup_worktree("codex")
 end, { desc = "Setup Codex worktree (create if needed, rebase)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesSetupGemini', function()
+  require('agents-worktrees').setup_worktree("gemini")
+end, { desc = "Setup Gemini worktree (create if needed, rebase)" })
 
 -- ─^  Worktree Agent Commands                          ▲
 
@@ -553,6 +621,10 @@ end, { silent = true, desc = "tcd to claude worktree" })
 vim.keymap.set('n', '<leader>cdO', function()
   tcd_to_worktree('codex')
 end, { silent = true, desc = "tcd to codex worktree" })
+
+vim.keymap.set('n', '<leader>cdG', function()
+  tcd_to_worktree('gemini')
+end, { silent = true, desc = "tcd to gemini worktree" })
 
 vim.keymap.set('n', '<leader>cdM', function()
   tcd_to_worktree('main')

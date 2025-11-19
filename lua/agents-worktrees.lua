@@ -1,6 +1,15 @@
 
 local M = {}
 
+-- ─   Configuration                                     ──
+
+-- Enabled agents for multi-agent execution
+-- Modify this table to enable/disable specific agents
+-- Example: M.enabled_agents = {"claude", "codex"}  -- disable gemini
+M.enabled_agents = {"claude", "codex", "gemini"}
+
+-- ─^  Configuration                                     ▲
+
 
 -- ─   Usage Examples                                   ──
 
@@ -13,6 +22,10 @@ local M = {}
 
 -- Run multiple agents in parallel:
 -- require('agents-worktrees').run_agents_worktrees("respond with 'hi'.")
+
+-- Disable specific agents at runtime:
+-- require('agents-worktrees').enabled_agents = {"claude", "codex"}  -- only claude + codex
+-- require('agents-worktrees').enabled_agents = {"gemini"}           -- only gemini
 
 -- Reset single agent worktree to main (with backup):
 -- require('agents-worktrees').reset_worktree_to_main("claude")
@@ -316,7 +329,7 @@ end
 
 -- Reset all agent worktrees to main (with backup)
 function M.reset_all_worktrees_to_main()
-  local agents = {"claude", "codex"}
+  local agents = {"claude", "codex", "gemini"}
   local success_count = 0
 
   for _, agent_key in ipairs(agents) do
@@ -351,6 +364,18 @@ end
 
 
 -- ─   Agent Tracking                                    ■
+
+-- Check if an agent is enabled in configuration
+-- @param agent_key string: Agent identifier
+-- @return boolean: true if agent is in enabled_agents list
+local function is_agent_enabled(agent_key)
+  for _, enabled in ipairs(M.enabled_agents) do
+    if enabled == agent_key then
+      return true
+    end
+  end
+  return false
+end
 
 -- Check if an agent is currently running
 -- @param agent_key string: Agent identifier
@@ -515,18 +540,30 @@ end
 -- Run multiple agents in parallel with the same prompt
 -- @param prompt string: The prompt to send to all agents
 function M.run_agents_worktrees(prompt)
-  local claude_running = is_agent_running("claude")
-  local codex_running = is_agent_running("codex")
+  -- Check enabled and running status for each agent
+  local claude_enabled = is_agent_enabled("claude")
+  local codex_enabled = is_agent_enabled("codex")
+  local gemini_enabled = is_agent_enabled("gemini")
 
-  -- If both agents are already running, just send prompts without switching tabs
-  if claude_running and codex_running then
+  local claude_running = claude_enabled and is_agent_running("claude")
+  local codex_running = codex_enabled and is_agent_running("codex")
+  local gemini_running = gemini_enabled and is_agent_running("gemini")
+
+  -- Check if all enabled agents are already running
+  local all_enabled_running = true
+  if claude_enabled and not claude_running then all_enabled_running = false end
+  if codex_enabled and not codex_running then all_enabled_running = false end
+  if gemini_enabled and not gemini_running then all_enabled_running = false end
+
+  if all_enabled_running then
     vim.notify("Sending prompt to existing agents", vim.log.levels.INFO)
-    send_to_existing_agent("claude", prompt)
-    send_to_existing_agent("codex", prompt)
+    if claude_enabled then send_to_existing_agent("claude", prompt) end
+    if codex_enabled then send_to_existing_agent("codex", prompt) end
+    if gemini_enabled then send_to_existing_agent("gemini", prompt) end
     return
   end
 
-  -- If only some agents are running, send to existing and create new ones
+  -- Send to existing enabled agents
   if claude_running then
     vim.notify("Sending to existing Claude agent", vim.log.levels.INFO)
     send_to_existing_agent("claude", prompt)
@@ -537,17 +574,23 @@ function M.run_agents_worktrees(prompt)
     send_to_existing_agent("codex", prompt)
   end
 
+  if gemini_running then
+    vim.notify("Sending to existing Gemini agent", vim.log.levels.INFO)
+    send_to_existing_agent("gemini", prompt)
+  end
+
   -- Save the original tab to return to it between agent creations
   local original_tab = vim.api.nvim_get_current_tabpage()
 
-  -- Create agents that aren't running
+  -- Create enabled agents that aren't running
   local created_claude = false
-  if not claude_running then
+  if claude_enabled and not claude_running then
     require('agents-worktrees').run_agent_worktree("claude", prompt)
     created_claude = true
   end
 
-  if not codex_running then
+  -- Create Codex after a delay (if enabled)
+  if codex_enabled and not codex_running then
     vim.defer_fn(function()
       -- If we didn't just create Claude, create Codex next to the original tab
       -- Otherwise, stay on the Claude tab so Codex is created to its right
@@ -556,17 +599,33 @@ function M.run_agents_worktrees(prompt)
       end
 
       require('agents-worktrees').run_agent_worktree("codex", prompt)
+    end, 1000)
+  end
+
+  -- Create Gemini after another delay (if enabled)
+  if gemini_enabled and not gemini_running then
+    vim.defer_fn(function()
+      -- Return to original tab before creating Gemini
+      -- This ensures consistent tab ordering
+      if not created_claude and not (codex_enabled and not codex_running) then
+        pcall(vim.api.nvim_set_current_tabpage, original_tab)
+      end
+
+      require('agents-worktrees').run_agent_worktree("gemini", prompt)
 
       -- Return to original tab after setting up all agents
       vim.defer_fn(function()
         pcall(vim.api.nvim_set_current_tabpage, original_tab)
       end, 500)
-    end, 1000)
-  elseif not claude_running then
-    -- If only claude was created, return to original tab
+    end, 2000)
+  elseif not (codex_enabled and not codex_running) and not (claude_enabled and not claude_running) then
+    -- If no agents were created, no need to return
+    return
+  elseif (codex_enabled and not codex_running) or (claude_enabled and not claude_running) then
+    -- Return to original tab after creating one or two agents
     vim.defer_fn(function()
       pcall(vim.api.nvim_set_current_tabpage, original_tab)
-    end, 500)
+    end, 1500)
   end
 end
 

@@ -71,20 +71,37 @@ Run Claude and Codex agents in parallel git worktrees with automatic sync.
 <c-g>wi              - Send inner selection to worktree agents (operator)
 
 #### Vim Commands
-:AgentsWorktreesRun <prompt>         - Run both Claude and Codex with prompt
-:AgentsWorktreesRunClaude <prompt>   - Run only Claude worktree agent
-:AgentsWorktreesRunCodex <prompt>    - Run only Codex worktree agent
 
-:AgentsWorktreesResetAll             - Reset both worktrees to main (with backup tag)
-:AgentsWorktreesResetClaude          - Reset Claude worktree to main (with backup)
-:AgentsWorktreesResetCodex           - Reset Codex worktree to main (with backup)
+##### Run Multi-Agent (respects enabled_agents config)
+:AgentsWorktreesRun <prompt>           - Run enabled agents with prompt
+:AgentsWorktreesRunAll <prompt>        - Run all 3 agents (Claude + Codex + Gemini)
+:AgentsWorktreesRunClaudeCodx <prompt> - Run Claude + Codex only
+:AgentsWorktreesRunClaudeGemini <...>  - Run Claude + Gemini only
+:AgentsWorktreesRunCodxGemini <...>    - Run Codex + Gemini only
 
-:AgentsWorktreesSetupClaude          - Setup Claude worktree (create/rebase)
-:AgentsWorktreesSetupCodex           - Setup Codex worktree (create/rebase)
+##### Run Single Agent
+:AgentsWorktreesRunClaude <prompt>     - Run only Claude worktree agent
+:AgentsWorktreesRunCodex <prompt>      - Run only Codex worktree agent
+:AgentsWorktreesRunGemini <prompt>     - Run only Gemini worktree agent
+
+##### Configure Enabled Agents
+:AgentsWorktreesEnable claude codex    - Set enabled agents (space-separated)
+
+##### Reset Worktrees to Main
+:AgentsWorktreesResetAll               - Reset all worktrees to main (with backup tag)
+:AgentsWorktreesResetClaude            - Reset Claude worktree to main (with backup)
+:AgentsWorktreesResetCodex             - Reset Codex worktree to main (with backup)
+:AgentsWorktreesResetGemini            - Reset Gemini worktree to main (with backup)
+
+##### Setup Worktrees (create/rebase without running)
+:AgentsWorktreesSetupClaude            - Setup Claude worktree (create/rebase)
+:AgentsWorktreesSetupCodex             - Setup Codex worktree (create/rebase)
+:AgentsWorktreesSetupGemini            - Setup Gemini worktree (create/rebase)
 
 #### Directory Navigation
 <leader>cdC          - Change tab directory to claude worktree (tcd to ../project_claude)
 <leader>cdO          - Change tab directory to codex worktree (tcd to ../project_codex)
+<leader>cdG          - Change tab directory to gemini worktree (tcd to ../project_gemini)
 
 #### How It Works
 - First <c-g>wp: Creates new tabs with agents, rebases worktrees to main
