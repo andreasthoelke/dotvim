@@ -226,11 +226,11 @@ local function set_gemini_thinking(level)
 
   if changed then
     local msg = string.format("Gemini thinking level set to %s", level)
-    if parrot_config.logger and parrot_config.logger.info then
-      parrot_config.logger.info(msg)
-    else
-      vim.notify(msg, vim.log.levels.INFO)
-    end
+--    if parrot_config.logger and parrot_config.logger.info then
+--      parrot_config.logger.info(msg)
+--    else
+--      vim.notify(msg, vim.log.levels.INFO)
+    -- end
     refresh_winbar()
   end
   return changed
@@ -335,10 +335,10 @@ local function cycle_preset(direction)
   apply_preset(current_preset_index)
 
   local preset = PRESETS[current_preset_index]
-  vim.notify(
-    string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
-    vim.log.levels.INFO
-  )
+--  vim.notify(
+--    string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
+--    vim.log.levels.INFO
+--  )
   return true
 end
 
