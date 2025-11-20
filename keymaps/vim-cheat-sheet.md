@@ -64,16 +64,26 @@ Run Claude and Codex agents in parallel git worktrees with automatic sync.
 ~/.config/nvim/plugin/config/ai-maps.lua‖*Worktreeˍagent
 
 #### Sending Text to Worktree Agents
-<c-g>wp              - Send paragraph to worktree agents (creates tabs on first run, reuses after)
-(v) <c-g>wp          - Send visual selection to worktree agents
-<c-g>wo              - Send linewise selection to worktree agents (operator)
-<c-g>w'              - Send clipboard to worktree agents
-<c-g>wi              - Send inner selection to worktree agents (operator)
+
+##### Resume Mode (lowercase w - skip rebase, continue existing work)
+<c-g>wp              - Send paragraph to worktree agents (resume)
+(v) <c-g>wp          - Send visual selection to worktree agents (resume)
+<c-g>wo              - Send linewise selection to worktree agents (resume, operator)
+<c-g>w'              - Send clipboard to worktree agents (resume)
+<c-g>wi              - Send inner selection to worktree agents (resume, operator)
+
+##### Reset Mode (uppercase W - rebase to main, fresh start)
+<c-g>Wp              - Send paragraph to worktree agents (reset/rebase)
+(v) <c-g>Wp          - Send visual selection to worktree agents (reset/rebase)
+<c-g>Wo              - Send linewise selection to worktree agents (reset/rebase, operator)
+<c-g>W'              - Send clipboard to worktree agents (reset/rebase)
+<c-g>Wi              - Send inner selection to worktree agents (reset/rebase, operator)
 
 #### Vim Commands
 
 ##### Run Multi-Agent (respects enabled_agents config)
-:AgentsWorktreesRun <prompt>           - Run enabled agents with prompt
+:AgentsWorktreesRun <prompt>           - Run enabled agents with prompt (reset/rebase)
+:AgentsWorktreesRunResume <prompt>     - Run enabled agents with prompt (resume mode)
 :AgentsWorktreesRunAll <prompt>        - Run all 3 agents (Claude + Codex + Gemini)
 :AgentsWorktreesRunClaudeCodx <prompt> - Run Claude + Codex only
 :AgentsWorktreesRunClaudeGemini <...>  - Run Claude + Gemini only

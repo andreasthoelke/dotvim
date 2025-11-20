@@ -539,7 +539,8 @@ end
 
 -- Run multiple agents in parallel with the same prompt
 -- @param prompt string: The prompt to send to all agents
-function M.run_agents_worktrees(prompt)
+-- @param skip_rebase boolean: If true, skip rebasing (resume existing work)
+function M.run_agents_worktrees(prompt, skip_rebase)
   -- Check enabled and running status for each agent
   local claude_enabled = is_agent_enabled("claude")
   local codex_enabled = is_agent_enabled("codex")
@@ -585,7 +586,7 @@ function M.run_agents_worktrees(prompt)
   -- Create enabled agents that aren't running
   local created_claude = false
   if claude_enabled and not claude_running then
-    require('agents-worktrees').run_agent_worktree("claude", prompt)
+    require('agents-worktrees').run_agent_worktree("claude", prompt, skip_rebase)
     created_claude = true
   end
 
@@ -598,7 +599,7 @@ function M.run_agents_worktrees(prompt)
         pcall(vim.api.nvim_set_current_tabpage, original_tab)
       end
 
-      require('agents-worktrees').run_agent_worktree("codex", prompt)
+      require('agents-worktrees').run_agent_worktree("codex", prompt, skip_rebase)
     end, 1000)
   end
 
@@ -611,7 +612,7 @@ function M.run_agents_worktrees(prompt)
         pcall(vim.api.nvim_set_current_tabpage, original_tab)
       end
 
-      require('agents-worktrees').run_agent_worktree("gemini", prompt)
+      require('agents-worktrees').run_agent_worktree("gemini", prompt, skip_rebase)
 
       -- Return to original tab after setting up all agents
       vim.defer_fn(function()

@@ -204,9 +204,14 @@ end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 -- ─   Send to Worktree Agents                          ──
 
--- Helper function to send text to worktree agents
+-- Helper function to send text to worktree agents (resume mode - skip rebase)
 local function send_to_worktree_agents(text)
-  require('agents-worktrees').run_agents_worktrees(text)
+  require('agents-worktrees').run_agents_worktrees(text, true)  -- skip_rebase = true
+end
+
+-- Helper function to send text to worktree agents (reset mode - force rebase)
+local function send_to_worktree_agents_reset(text)
+  require('agents-worktrees').run_agents_worktrees(text, false)  -- skip_rebase = false
 end
 
 -- Helper to get visual selection text for worktrees
@@ -231,7 +236,7 @@ function _G.SendVisualSelectionToWorktrees()
   send_to_worktree_agents(text)
 end
 
--- Helper to create operator function for worktrees
+-- Helper to create operator function for worktrees (resume mode)
 local function create_worktree_operator_func()
   return function(type)
     local start_pos, end_pos
@@ -255,7 +260,52 @@ local function create_worktree_operator_func()
   end
 end
 
--- PARAGRAPHS to worktree agents
+-- Reset mode helpers (with rebase)
+function _G.SendVisualSelectionToWorktreesReset()
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+  local lines = vim.fn.getline(start_pos[2], end_pos[2])
+
+  if #lines == 0 then
+    return
+  end
+
+  -- Adjust first and last line for partial selections
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+  else
+    lines[1] = string.sub(lines[1], start_pos[3])
+    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+  end
+
+  local text = table.concat(lines, "\n")
+  send_to_worktree_agents_reset(text)
+end
+
+local function create_worktree_operator_func_reset()
+  return function(type)
+    local start_pos, end_pos
+    if type == 'char' then
+      start_pos = vim.fn.getpos("'[")
+      end_pos = vim.fn.getpos("']")
+    elseif type == 'line' then
+      start_pos = vim.fn.getpos("'[")
+      end_pos = vim.fn.getpos("']")
+    else
+      return
+    end
+
+    local lines = vim.fn.getline(start_pos[2], end_pos[2])
+    if #lines == 0 then
+      return
+    end
+
+    local text = table.concat(lines, "\n")
+    send_to_worktree_agents_reset(text)
+  end
+end
+
+-- PARAGRAPHS to worktree agents (RESUME mode - lowercase w)
 vim.keymap.set('n', '<c-g>wp', function()
   local lines = GetParagraphLines()
   local text = table.concat(lines, "\n")
@@ -286,17 +336,57 @@ vim.keymap.set('n', '<c-g>wi', function()
   return 'g@'
 end, { expr = true, desc = "Operator to send text to worktree agents" })
 
+-- PARAGRAPHS to worktree agents (RESET mode - uppercase W)
+vim.keymap.set('n', '<c-g>Wp', function()
+  local lines = GetParagraphLines()
+  local text = table.concat(lines, "\n")
+  send_to_worktree_agents_reset(text)
+end, { desc = "Send paragraph to worktree agents (reset/rebase)" })
+
+-- VISUAL SELECTIONS to worktree agents (RESET mode)
+vim.keymap.set('x', '<c-g>Wp', ":<C-u>lua _G.SendVisualSelectionToWorktreesReset()<CR>",
+  { noremap = true, silent = true, desc = "Send visual selection to worktree agents (reset/rebase)" })
+
+-- LINEWISE SELECTIONS to worktree agents (RESET mode)
+vim.keymap.set('n', '<c-g>Wo', function()
+  _G.Worktree_linewise_func_reset = create_worktree_operator_func_reset()
+  vim.go.operatorfunc = 'v:lua.Worktree_linewise_func_reset'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to worktree agents (reset/rebase)" })
+
+-- CLIPBOARD to worktree agents (RESET mode)
+vim.keymap.set('n', "<c-g>W'", function()
+  local clipboard_text = vim.fn.getreg('"')
+  send_to_worktree_agents_reset(clipboard_text)
+end, { desc = "Send clipboard to worktree agents (reset/rebase)" })
+
+-- INNER SELECTIONS to worktree agents (RESET mode)
+vim.keymap.set('n', '<c-g>Wi', function()
+  _G.Worktree_operator_func_reset = create_worktree_operator_func_reset()
+  vim.go.operatorfunc = 'v:lua.Worktree_operator_func_reset'
+  return 'g@'
+end, { expr = true, desc = "Operator to send text to worktree agents (reset/rebase)" })
+
 
 -- ─   Worktree Agent Commands                          ──
 
--- Run agents with prompt
+-- Run agents with prompt (defaults to reset/rebase mode)
 vim.api.nvim_create_user_command('AgentsWorktreesRun', function(opts)
   if opts.args == "" then
     vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRun <prompt>", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agents_worktrees(opts.args)
-end, { nargs = '+', desc = "Run all worktree agents with prompt" })
+  require('agents-worktrees').run_agents_worktrees(opts.args, false)  -- reset mode
+end, { nargs = '+', desc = "Run all worktree agents with prompt (reset mode)" })
+
+-- Run agents with prompt (resume mode - skip rebase)
+vim.api.nvim_create_user_command('AgentsWorktreesRunResume', function(opts)
+  if opts.args == "" then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunResume <prompt>", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agents_worktrees(opts.args, true)  -- resume mode
+end, { nargs = '+', desc = "Run all worktree agents with prompt (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunClaude', function(opts)
   if opts.args == "" then
