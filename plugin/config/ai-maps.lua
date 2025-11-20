@@ -370,6 +370,33 @@ end, { expr = true, desc = "Operator to send text to worktree agents (reset/reba
 
 -- ─   Worktree Agent Commands                          ──
 
+-- Helper to get visual selection or args as prompt
+local function get_prompt_from_visual_or_args(opts)
+  -- If called with a range (visual selection)
+  if opts.range > 0 then
+    local start_pos = vim.fn.getpos("'<")
+    local end_pos = vim.fn.getpos("'>")
+    local lines = vim.fn.getline(start_pos[2], end_pos[2])
+
+    if #lines == 0 then
+      return nil
+    end
+
+    -- Adjust first and last line for partial selections
+    if #lines == 1 then
+      lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+    else
+      lines[1] = string.sub(lines[1], start_pos[3])
+      lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+    end
+
+    return table.concat(lines, "\n")
+  end
+
+  -- Otherwise use args
+  return opts.args ~= "" and opts.args or nil
+end
+
 -- Run agents with prompt (defaults to reset/rebase mode)
 vim.api.nvim_create_user_command('AgentsWorktreesRun', function(opts)
   if opts.args == "" then
@@ -389,28 +416,58 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunResume', function(opts)
 end, { nargs = '+', desc = "Run all worktree agents with prompt (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunClaude', function(opts)
-  if opts.args == "" then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaude <prompt>", vim.log.levels.ERROR)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaude <prompt> or visual select + :'<,'>AgentsWorktreesRunClaude", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("claude", opts.args)
-end, { nargs = '+', desc = "Run Claude worktree agent with prompt" })
+  require('agents-worktrees').run_agent_worktree("claude", prompt, false)  -- reset mode
+end, { nargs = '*', range = true, desc = "Run Claude worktree agent (reset mode)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeResume', function(opts)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaudeResume <prompt> or visual select + :'<,'>AgentsWorktreesRunClaudeResume", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("claude", prompt, true)  -- resume mode
+end, { nargs = '*', range = true, desc = "Run Claude worktree agent (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunCodex', function(opts)
-  if opts.args == "" then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodex <prompt>", vim.log.levels.ERROR)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodex <prompt> or visual select + :'<,'>AgentsWorktreesRunCodex", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("codex", opts.args)
-end, { nargs = '+', desc = "Run Codex worktree agent with prompt" })
+  require('agents-worktrees').run_agent_worktree("codex", prompt, false)  -- reset mode
+end, { nargs = '*', range = true, desc = "Run Codex worktree agent (reset mode)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunCodexResume', function(opts)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodexResume <prompt> or visual select + :'<,'>AgentsWorktreesRunCodexResume", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("codex", prompt, true)  -- resume mode
+end, { nargs = '*', range = true, desc = "Run Codex worktree agent (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunGemini', function(opts)
-  if opts.args == "" then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGemini <prompt>", vim.log.levels.ERROR)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGemini <prompt> or visual select + :'<,'>AgentsWorktreesRunGemini", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("gemini", opts.args)
-end, { nargs = '+', desc = "Run Gemini worktree agent with prompt" })
+  require('agents-worktrees').run_agent_worktree("gemini", prompt, false)  -- reset mode
+end, { nargs = '*', range = true, desc = "Run Gemini worktree agent (reset mode)" })
+
+vim.api.nvim_create_user_command('AgentsWorktreesRunGeminiResume', function(opts)
+  local prompt = get_prompt_from_visual_or_args(opts)
+  if not prompt then
+    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGeminiResume <prompt> or visual select + :'<,'>AgentsWorktreesRunGeminiResume", vim.log.levels.ERROR)
+    return
+  end
+  require('agents-worktrees').run_agent_worktree("gemini", prompt, true)  -- resume mode
+end, { nargs = '*', range = true, desc = "Run Gemini worktree agent (resume mode)" })
 
 -- Run specific combinations of agents
 vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeCodx', function(opts)

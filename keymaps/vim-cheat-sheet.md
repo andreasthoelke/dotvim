@@ -89,10 +89,21 @@ Run Claude and Codex agents in parallel git worktrees with automatic sync.
 :AgentsWorktreesRunClaudeGemini <...>  - Run Claude + Gemini only
 :AgentsWorktreesRunCodxGemini <...>    - Run Codex + Gemini only
 
-##### Run Single Agent
-:AgentsWorktreesRunClaude <prompt>     - Run only Claude worktree agent
-:AgentsWorktreesRunCodex <prompt>      - Run only Codex worktree agent
-:AgentsWorktreesRunGemini <prompt>     - Run only Gemini worktree agent
+##### Run Single Agent (Reset Mode)
+:AgentsWorktreesRunClaude <prompt>     - Run only Claude (reset/rebase)
+:AgentsWorktreesRunCodex <prompt>      - Run only Codex (reset/rebase)
+:AgentsWorktreesRunGemini <prompt>     - Run only Gemini (reset/rebase)
+(v) :'<,'>AgentsWorktreesRunClaude     - Run Claude with visual selection (reset)
+(v) :'<,'>AgentsWorktreesRunCodex      - Run Codex with visual selection (reset)
+(v) :'<,'>AgentsWorktreesRunGemini     - Run Gemini with visual selection (reset)
+
+##### Run Single Agent (Resume Mode)
+:AgentsWorktreesRunClaudeResume <...>  - Run only Claude (resume)
+:AgentsWorktreesRunCodexResume <...>   - Run only Codex (resume)
+:AgentsWorktreesRunGeminiResume <...>  - Run only Gemini (resume)
+(v) :'<,'>AgentsWorktreesRunClaudeResume  - Run Claude with visual selection (resume)
+(v) :'<,'>AgentsWorktreesRunCodexResume   - Run Codex with visual selection (resume)
+(v) :'<,'>AgentsWorktreesRunGeminiResume  - Run Gemini with visual selection (resume)
 
 ##### Configure Enabled Agents
 :AgentsWorktreesEnable claude codex    - Set enabled agents (space-separated)
