@@ -117,6 +117,9 @@ function M.createNote()
 
   local notePath = notesDir .. "/" .. filename
   vim.cmd("edit " .. notePath)
+
+  -- Write empty file so autosave can detect it
+  vim.cmd("write")
 end
 
 -- List all notes for current project using telescope
