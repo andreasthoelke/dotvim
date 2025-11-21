@@ -120,9 +120,12 @@ function M.UpdateDiffView_Untracked(filepath)
   if filepath then
     -- Escape filepath for shell to handle brackets and special characters
     local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-    term_jobs[tabpage] = vim.fn.termopen('git diff -- ' .. escaped_filepath)
+    -- For completely new untracked files, use git diff against /dev/null to show as additions
+    -- For modified tracked files, use regular git diff
+    term_jobs[tabpage] = vim.fn.termopen('git diff --no-index /dev/null ' .. escaped_filepath .. ' 2>/dev/null || git diff -- ' .. escaped_filepath)
   else
-    term_jobs[tabpage] = vim.fn.termopen('git diff')
+    -- Show git diff for all tracked changes
+    term_jobs[tabpage] = vim.fn.termopen('git diff HEAD')
   end
   M.GitDiff_BufferMaps()
   if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
@@ -492,8 +495,8 @@ local function update_view_from_lines(opts)
       local filepath, status
       -- Extract status (first non-whitespace word after indentation)
       status = line:match("^%s+(%S+)")
-      -- Regular files (format: "    M file.lua 42")
-      filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+      -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
+      filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
       if filepath then
         M.UpdateDiffView_DirectoryFile(opts.diff_dir1, opts.diff_dir2, filepath, status)
       end
@@ -513,10 +516,10 @@ local function update_view_from_lines(opts)
       status = line:match("^%s+(%S+)")
       -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
       if line:match("->") then
-        filepath = line:match("->%s+(.-)%s+%d+$")
+        filepath = line:match("->%s+(.-)%s+%S+$")
       else
-        -- Regular files (format: "    M file.lua 42")
-        filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+        -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
+        filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
       end
       if filepath then
         -- Check if this is an uncommitted change
@@ -552,10 +555,10 @@ local function update_view_from_lines(opts)
     local filepath
     -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
     if line:match("->") then
-      filepath = line:match("->%s+(.-)%s+%d+$")
+      filepath = line:match("->%s+(.-)%s+%S+$")
     else
-      -- Regular files (format: "    M file.lua 42")
-      filepath = line:match("^%s+%S+%s+(.-)%s+%d+$")
+      -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
+      filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
     end
     if filepath then
       -- Find commit hash or untracked by searching backwards for the next unindented line
@@ -775,16 +778,32 @@ function M.GetUntrackedChanges()
     local status, file = line:match("^(..) (.+)$")
     if file then
       local line_count
-      -- If status starts with '??', it's a new untracked file
+      -- If status starts with '??', it's a new untracked file or directory
       if status and status:match("^%?%?") then
-        line_count = "N"
+        -- Check if this is a directory (ends with /)
+        if file:match("/$") then
+          -- Expand directory to show individual files
+          local dir_handle = io.popen("find " .. vim.fn.shellescape(file) .. " -type f 2>/dev/null")
+          if dir_handle then
+            local dir_result = dir_handle:read("*a")
+            dir_handle:close()
+            for filepath in dir_result:gmatch("[^\n]+") do
+              table.insert(files, string.format("    %s %s %s", "??", filepath, "N"))
+            end
+          end
+        else
+          -- Regular file
+          line_count = "N"
+          local status_abbrev = status:gsub("%s", "")
+          table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
+        end
       else
         line_count = M.get_changed_lines_count(file, "untracked")
+        -- Include status in output to match expected pattern in update_view_from_lines
+        -- Remove spaces from status (e.g., " M" becomes "M", "M " becomes "M")
+        local status_abbrev = status:gsub("%s", "")
+        table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
       end
-      -- Include status in output to match expected pattern in update_view_from_lines
-      -- Remove spaces from status (e.g., " M" becomes "M", "M " becomes "M")
-      local status_abbrev = status:gsub("%s", "")
-      table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
     end
   end
 
