@@ -119,6 +119,54 @@ local function check_gdoc_available()
     return result and result ~= ""
 end
 
+-- Find markdown files containing a specific gdoc_id
+local function find_files_with_gdoc_id(doc_id, search_path)
+    search_path = search_path or vim.fn.getcwd()
+    local cmd = string.format('grep -r "gdoc_id: %s" %s --include="*.md" -l 2>/dev/null', doc_id, search_path)
+    local handle = io.popen(cmd)
+    if not handle then
+        return {}
+    end
+    local result = handle:read("*all")
+    handle:close()
+
+    local files = {}
+    for file in result:gmatch("[^\r\n]+") do
+        table.insert(files, file)
+    end
+    return files
+end
+
+-- Generate safe filename from title
+local function title_to_filename(title)
+    -- Replace spaces with underscores, remove special characters
+    local safe = title:gsub("%s+", "_"):gsub("[^%w_-]", ""):lower()
+    return safe .. ".md"
+end
+
+-- Get unique filepath, adding postfix if file exists
+local function get_unique_filepath(dir, filename)
+    local base = filename:match("(.+)%.md$")
+    local filepath = dir .. "/" .. filename
+    local counter = 1
+
+    while vim.fn.filereadable(filepath) == 1 do
+        filepath = dir .. "/" .. base .. "_" .. counter .. ".md"
+        counter = counter + 1
+    end
+
+    return filepath
+end
+
+-- Find existing file with same gdoc_id in directory
+local function find_existing_file_for_gdoc(doc_id, dir)
+    local files = find_files_with_gdoc_id(doc_id, dir)
+    if #files > 0 then
+        return files[1]
+    end
+    return nil
+end
+
 -- Push current buffer to Google Docs
 function M.push()
     if not check_gdoc_available() then
@@ -410,54 +458,6 @@ local function remove_gdoc_from_file(filepath)
     file:close()
 
     return true
-end
-
--- Find markdown files containing a specific gdoc_id
-local function find_files_with_gdoc_id(doc_id, search_path)
-    search_path = search_path or vim.fn.getcwd()
-    local cmd = string.format('grep -r "gdoc_id: %s" %s --include="*.md" -l 2>/dev/null', doc_id, search_path)
-    local handle = io.popen(cmd)
-    if not handle then
-        return {}
-    end
-    local result = handle:read("*all")
-    handle:close()
-
-    local files = {}
-    for file in result:gmatch("[^\r\n]+") do
-        table.insert(files, file)
-    end
-    return files
-end
-
--- Generate safe filename from title
-local function title_to_filename(title)
-    -- Replace spaces with underscores, remove special characters
-    local safe = title:gsub("%s+", "_"):gsub("[^%w_-]", ""):lower()
-    return safe .. ".md"
-end
-
--- Get unique filepath, adding postfix if file exists
-local function get_unique_filepath(dir, filename)
-    local base = filename:match("(.+)%.md$")
-    local filepath = dir .. "/" .. filename
-    local counter = 1
-
-    while vim.fn.filereadable(filepath) == 1 do
-        filepath = dir .. "/" .. base .. "_" .. counter .. ".md"
-        counter = counter + 1
-    end
-
-    return filepath
-end
-
--- Find existing file with same gdoc_id in directory
-local function find_existing_file_for_gdoc(doc_id, dir)
-    local files = find_files_with_gdoc_id(doc_id, dir)
-    if #files > 0 then
-        return files[1]
-    end
-    return nil
 end
 
 -- Create a new markdown file from a Google Doc

@@ -475,9 +475,14 @@ PlugUpdate neo-tree.nvim
 PlugPreUpdateInfos <autocomplete pluginname>
 
 # Google Docs markdown Sync using gdoc script
+~/.config/nvim/lua/gdoc_sync_README.md
 leader><leader>dp   - push markdown to gdocs
 leader><leader>df   - fetch markdown from gdocs (relates to the gdocs id in md frontformatter!)
 leader><leader>dl   - list recent Google Docs
+
+## GDocList buffer maps
+dd   - delete gdoc reference (untested)
+gd   - show a vim-diff of online vs local content
 
 gdoc --help
 gdoc pull 17TkoGbGHX3iyckiUKkly5GvfzIkc9Eb-F6UeTYDT9BQ mvd/agentic-workbench/notes/temp.md

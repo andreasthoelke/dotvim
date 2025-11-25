@@ -7,6 +7,9 @@ Integration for syncing markdown files with Google Docs, with clean UI and conce
 - ✅ Push/pull markdown files to/from Google Docs
 - ✅ Styled, concealed Google Doc links in markdown files
 - ✅ Interactive list of recent Google Docs with clickable URLs
+- ✅ Create local markdown files from any Google Doc
+- ✅ Diff view: compare local files with Google Doc content
+- ✅ Smart duplicate detection (same gdoc_id)
 - ✅ Remove integration with smart file search
 - ✅ Clean ANSI-stripped output
 
@@ -16,7 +19,9 @@ Integration for syncing markdown files with Google Docs, with clean UI and conce
 |---------|-------------|
 | `:GDocPush` | Push current markdown file to Google Docs |
 | `:GDocPull` | Pull Google Doc to current file |
-| `:GDocList` | List recent Google Docs (press `dd` to manage) |
+| `:GDocList` | List recent Google Docs (interactive buffer) |
+| `:GDocCreate <url\|id> [title]` | Create markdown file from Google Doc URL or ID |
+| `:GDocDiff <url\|id>` | Show diff between current file and Google Doc |
 | `:GDocUpdateLink` | Add/update styled Google Doc link |
 | `:GDocRemove` | Remove integration from current file |
 | `:GDocRemove!` | Open Google Doc in browser |
@@ -43,10 +48,23 @@ gdoc_id: 1ABC...XYZ
 
 When you run `:GDocList`, you get a split window with:
 - Clickable markdown links to all recent Google Docs
-- Press `dd` on any line to:
-  - **Remove from local files** - Searches current directory for markdown files with that gdoc_id and removes integration
-  - **Open in browser** - Opens the Google Doc
-  - **Cancel**
+- Files are created in the directory of the buffer that opened the list
+
+### Buffer-local keymaps
+
+| Key | Action |
+|-----|--------|
+| `<CR>` | Create/download markdown file from the Google Doc on current line |
+| `gd` | Show diff between local file and Google Doc (if local file exists) |
+| `dd` | Remove integration menu (remove from local / open in browser / cancel) |
+
+### Smart duplicate detection
+
+When pressing `<CR>` on a doc that already has a local file with the same `gdoc_id`:
+1. **Update from Google Docs** - Overwrites local file with remote content
+2. **Show diff** - Opens split diff view (local left, Google Doc right)
+3. **Open existing file** - Just opens the local file
+4. **Cancel**
 
 ## Default Keymaps
 
@@ -69,7 +87,9 @@ In markdown files (configured in setup):
 1. **Frontmatter**: YAML frontmatter stores the `gdoc_id` for sync operations
 2. **Styled Link**: HTML link provides clickable access in preview, concealed in editor
 3. **Smart Search**: When removing integration, searches directory tree for files with matching gdoc_id
-4. **Clean Output**: ANSI color codes stripped from `gdoc` script output
+4. **Duplicate Detection**: Before creating a file, checks if a local file already has that gdoc_id
+5. **Diff View**: Pulls Google Doc to temp file and opens Neovim's diff mode
+6. **Clean Output**: ANSI color codes stripped from `gdoc` script output
 
 ## Setup
 
