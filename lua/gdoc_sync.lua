@@ -244,6 +244,12 @@ function M.list()
         return
     end
 
+    -- Store the source directory from the current window before creating the list buffer
+    local source_dir = vim.fn.expand('%:p:h')
+    if source_dir == '' then
+        source_dir = vim.fn.getcwd()
+    end
+
     vim.notify("Fetching recent Google Docs...", vim.log.levels.INFO)
 
     local raw_output = {}
@@ -279,7 +285,11 @@ function M.list()
                 vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
                 vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
 
+                -- Store source directory as buffer variable
+                vim.api.nvim_buf_set_var(buf, 'gdoc_source_dir', source_dir)
+
                 -- Set up buffer-local keymaps
+                -- dd: Remove integration
                 vim.api.nvim_buf_set_keymap(buf, 'n', 'dd', '', {
                     noremap = true,
                     silent = true,
@@ -304,6 +314,43 @@ function M.list()
                     end
                 })
 
+                -- <CR>: Create/download markdown file from Google Doc
+                vim.api.nvim_buf_set_keymap(buf, 'n', '<CR>', '', {
+                    noremap = true,
+                    silent = true,
+                    callback = function()
+                        local line = vim.api.nvim_get_current_line()
+                        -- Extract title and doc_id from markdown link: - [title](url/d/ID/edit)
+                        local title = line:match("%[([^%]]+)%]")
+                        local doc_id = line:match("/d/([^/]+)/")
+                        if title and doc_id then
+                            local target_dir = vim.b.gdoc_source_dir or vim.fn.getcwd()
+                            M.create_from_gdoc(doc_id, title, target_dir)
+                        else
+                            vim.notify("No Google Doc link found on this line", vim.log.levels.WARN)
+                        end
+                    end
+                })
+
+                -- gd: Show diff for existing file (if any)
+                vim.api.nvim_buf_set_keymap(buf, 'n', 'gd', '', {
+                    noremap = true,
+                    silent = true,
+                    callback = function()
+                        local line = vim.api.nvim_get_current_line()
+                        local doc_id = line:match("/d/([^/]+)/")
+                        if doc_id then
+                            local target_dir = vim.b.gdoc_source_dir or vim.fn.getcwd()
+                            local existing_file = find_existing_file_for_gdoc(doc_id, target_dir)
+                            if existing_file then
+                                M.show_diff(doc_id, existing_file)
+                            else
+                                vim.notify("No local file found for this Google Doc", vim.log.levels.WARN)
+                            end
+                        end
+                    end
+                })
+
                 vim.api.nvim_buf_set_option(buf, 'modifiable', false)
 
                 -- Open in split
@@ -311,7 +358,7 @@ function M.list()
                 vim.api.nvim_win_set_buf(0, buf)
 
                 -- Show help message
-                vim.notify("Press 'dd' on a line to remove integration", vim.log.levels.INFO)
+                vim.notify("Keys: <CR> create/update file | gd show diff | dd remove integration", vim.log.levels.INFO)
             else
                 vim.notify("✗ Failed to list Google Docs", vim.log.levels.ERROR)
             end
@@ -381,6 +428,187 @@ local function find_files_with_gdoc_id(doc_id, search_path)
         table.insert(files, file)
     end
     return files
+end
+
+-- Generate safe filename from title
+local function title_to_filename(title)
+    -- Replace spaces with underscores, remove special characters
+    local safe = title:gsub("%s+", "_"):gsub("[^%w_-]", ""):lower()
+    return safe .. ".md"
+end
+
+-- Get unique filepath, adding postfix if file exists
+local function get_unique_filepath(dir, filename)
+    local base = filename:match("(.+)%.md$")
+    local filepath = dir .. "/" .. filename
+    local counter = 1
+
+    while vim.fn.filereadable(filepath) == 1 do
+        filepath = dir .. "/" .. base .. "_" .. counter .. ".md"
+        counter = counter + 1
+    end
+
+    return filepath
+end
+
+-- Find existing file with same gdoc_id in directory
+local function find_existing_file_for_gdoc(doc_id, dir)
+    local files = find_files_with_gdoc_id(doc_id, dir)
+    if #files > 0 then
+        return files[1]
+    end
+    return nil
+end
+
+-- Create a new markdown file from a Google Doc
+function M.create_from_gdoc(doc_id, title, target_dir)
+    if not check_gdoc_available() then
+        vim.notify("gdoc command not found. Make sure ~/.local/bin is in your PATH", vim.log.levels.ERROR)
+        return
+    end
+
+    target_dir = target_dir or vim.fn.getcwd()
+
+    -- Check if a file with this gdoc_id already exists
+    local existing_file = find_existing_file_for_gdoc(doc_id, target_dir)
+
+    if existing_file then
+        -- v2: File exists with same gdoc_id - prompt user
+        local choice = vim.fn.confirm(
+            string.format("File already exists for this doc:\n%s\n\nWhat would you like to do?",
+                vim.fn.fnamemodify(existing_file, ":~:.")),
+            "&Update from Google Docs\n&Show diff\n&Open existing file\n&Cancel",
+            4
+        )
+
+        if choice == 1 then
+            -- Update existing file
+            M.pull_to_file(doc_id, existing_file)
+        elseif choice == 2 then
+            -- Show diff
+            M.show_diff(doc_id, existing_file)
+        elseif choice == 3 then
+            -- Open existing file
+            vim.cmd('edit ' .. vim.fn.fnameescape(existing_file))
+        end
+        return
+    end
+
+    -- Generate filename and get unique path
+    local filename = title_to_filename(title)
+    local filepath = get_unique_filepath(target_dir, filename)
+
+    vim.notify(string.format("Creating %s from Google Docs...", vim.fn.fnamemodify(filepath, ":t")), vim.log.levels.INFO)
+
+    -- Run gdoc pull to create the file
+    vim.fn.jobstart({'gdoc', 'pull', doc_id, filepath}, {
+        on_exit = function(_, exit_code)
+            vim.schedule(function()
+                if exit_code == 0 then
+                    -- Open the new file
+                    vim.cmd('edit ' .. vim.fn.fnameescape(filepath))
+                    -- Ensure link is present
+                    ensure_gdoc_link()
+                    vim.notify(string.format("✓ Created %s", vim.fn.fnamemodify(filepath, ":~:.")), vim.log.levels.INFO)
+                else
+                    vim.notify("✗ Failed to create file from Google Docs", vim.log.levels.ERROR)
+                end
+            end)
+        end,
+        on_stderr = function(_, data)
+            if data then
+                for _, line in ipairs(data) do
+                    if line ~= "" then
+                        vim.notify(strip_ansi(line), vim.log.levels.WARN)
+                    end
+                end
+            end
+        end,
+    })
+end
+
+-- Pull to a specific file (for updating existing files)
+function M.pull_to_file(doc_id, filepath)
+    if not check_gdoc_available() then
+        vim.notify("gdoc command not found", vim.log.levels.ERROR)
+        return
+    end
+
+    vim.notify(string.format("Updating %s from Google Docs...", vim.fn.fnamemodify(filepath, ":t")), vim.log.levels.INFO)
+
+    vim.fn.jobstart({'gdoc', 'pull', doc_id, filepath}, {
+        on_exit = function(_, exit_code)
+            vim.schedule(function()
+                if exit_code == 0 then
+                    -- Open/reload the file
+                    local current_buf = vim.fn.bufnr(filepath)
+                    if current_buf ~= -1 then
+                        vim.api.nvim_buf_call(current_buf, function()
+                            vim.cmd('edit!')
+                        end)
+                    else
+                        vim.cmd('edit ' .. vim.fn.fnameescape(filepath))
+                    end
+                    ensure_gdoc_link()
+                    vim.notify(string.format("✓ Updated %s", vim.fn.fnamemodify(filepath, ":~:.")), vim.log.levels.INFO)
+                else
+                    vim.notify("✗ Failed to update from Google Docs", vim.log.levels.ERROR)
+                end
+            end)
+        end,
+        on_stderr = function(_, data)
+            if data then
+                for _, line in ipairs(data) do
+                    if line ~= "" then
+                        vim.notify(strip_ansi(line), vim.log.levels.WARN)
+                    end
+                end
+            end
+        end,
+    })
+end
+
+-- Show diff between Google Doc and local file
+function M.show_diff(doc_id, filepath)
+    if not check_gdoc_available() then
+        vim.notify("gdoc command not found", vim.log.levels.ERROR)
+        return
+    end
+
+    -- Create a temp file to pull the Google Doc content
+    local tempfile = vim.fn.tempname() .. ".md"
+
+    vim.notify("Fetching Google Doc for diff...", vim.log.levels.INFO)
+
+    vim.fn.jobstart({'gdoc', 'pull', doc_id, tempfile}, {
+        on_exit = function(_, exit_code)
+            vim.schedule(function()
+                if exit_code == 0 then
+                    -- Open diff view
+                    vim.cmd('edit ' .. vim.fn.fnameescape(filepath))
+                    vim.cmd('diffthis')
+                    vim.cmd('vsplit ' .. vim.fn.fnameescape(tempfile))
+                    vim.cmd('diffthis')
+                    -- Set temp buffer name for clarity
+                    vim.api.nvim_buf_set_name(0, "[Google Doc: " .. doc_id:sub(1, 8) .. "...]")
+                    vim.bo.buftype = 'nofile'
+                    vim.bo.bufhidden = 'wipe'
+                    vim.notify("Showing diff: local (left) vs Google Doc (right)", vim.log.levels.INFO)
+                else
+                    vim.notify("✗ Failed to fetch Google Doc for diff", vim.log.levels.ERROR)
+                end
+            end)
+        end,
+        on_stderr = function(_, data)
+            if data then
+                for _, line in ipairs(data) do
+                    if line ~= "" then
+                        vim.notify(strip_ansi(line), vim.log.levels.WARN)
+                    end
+                end
+            end
+        end,
+    })
 end
 
 -- Remove Google Docs integration from current file or by doc_id
@@ -473,6 +701,33 @@ function M.update_link()
     end
 end
 
+-- Create a new file from a Google Doc URL or ID
+-- Usage: :GDocCreate <url_or_id> [title]
+function M.create(url_or_id, title)
+    if not url_or_id or url_or_id == '' then
+        vim.notify("Usage: :GDocCreate <url_or_id> [title]", vim.log.levels.ERROR)
+        return
+    end
+
+    -- Extract doc_id from URL if provided
+    local doc_id = url_or_id:match("/d/([^/]+)") or url_or_id
+
+    -- Use provided title or prompt for one
+    if not title or title == '' then
+        title = vim.fn.input("Document title: ")
+        if title == '' then
+            title = "untitled_" .. doc_id:sub(1, 8)
+        end
+    end
+
+    local target_dir = vim.fn.expand('%:p:h')
+    if target_dir == '' then
+        target_dir = vim.fn.getcwd()
+    end
+
+    M.create_from_gdoc(doc_id, title, target_dir)
+end
+
 -- Setup function to register keymaps
 function M.setup(opts)
   opts = opts or {}
@@ -525,6 +780,32 @@ function M.setup(opts)
   end, {
     bang = true,
     desc = 'Remove Google Docs integration (use ! to open in browser instead)'
+  })
+
+  vim.api.nvim_create_user_command('GDocCreate', function(opts)
+    local args = vim.split(opts.args, '%s+', { trimempty = true })
+    local url_or_id = args[1]
+    local title = table.concat(vim.list_slice(args, 2), ' ')
+    M.create(url_or_id, title ~= '' and title or nil)
+  end, {
+    nargs = '+',
+    desc = 'Create markdown file from Google Doc URL or ID',
+    complete = function()
+      return {}
+    end,
+  })
+
+  vim.api.nvim_create_user_command('GDocDiff', function(opts)
+    local doc_id = opts.args:match("/d/([^/]+)") or opts.args
+    local filepath = vim.fn.expand('%:p')
+    if filepath == '' then
+      vim.notify("No file open to diff against", vim.log.levels.ERROR)
+      return
+    end
+    M.show_diff(doc_id, filepath)
+  end, {
+    nargs = 1,
+    desc = 'Show diff between current file and Google Doc',
   })
 
   return M
