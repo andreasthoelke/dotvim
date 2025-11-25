@@ -43,28 +43,14 @@ local function get_current_agent_worktree()
   return nil
 end
 
--- Send text to agent terminal (found dynamically in current tab) or other AI windows (Magenta, Parrot, Avante)
+-- Send text to agent terminal (found dynamically in current tab) or other AI windows (Parrot, Avante)
 function _G.Claude_send(text)
-  local magenta_win = BufName_InThisTab_id("Magenta Input")
-  -- local parrot_win = ParrotChat_InThisTab_id()
+  local parrot_win = ParrotChat_InThisTab_id()
   local avante_win = Avante_InThisTab_id()
   local current_win = vim.api.nvim_get_current_win()
   local not_in_parrot_win = current_win ~= parrot_win
   local not_in_avante_win = current_win ~= avante_win
   local using_gemini_cli = vim.g.agent_cmd ~= 'gemini'
-
-  if magenta_win then
-    if text == "\r" then
-      vim.cmd'Magenta send'
-      return
-    end
-    local lines = vim.fn.split(text, "\n")
-    -- jump to magenta input id
-    vim.api.nvim_set_current_win(magenta_win)
-    vim.api.nvim_put(lines, "l", false, false)
-    vim.api.nvim_set_current_win(current_win)
-    return
-  end
 
   if parrot_win and not_in_parrot_win then
     local lines = vim.fn.split(text, "\n")

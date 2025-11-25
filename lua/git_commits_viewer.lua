@@ -94,9 +94,11 @@ function M.UpdateDiffView(commit_hash, filepath)
   if filepath then
     -- Escape filepath for shell to handle brackets and special characters
     local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-    term_jobs[tabpage] = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash .. ' -- ' .. escaped_filepath)
+    -- Use git show which handles both regular and initial commits (no parent)
+    term_jobs[tabpage] = vim.fn.termopen('git show ' .. commit_hash .. ' -- ' .. escaped_filepath)
   else
-    term_jobs[tabpage] = vim.fn.termopen('git diff ' .. commit_hash .. '^ ' .. commit_hash)
+    -- Show all changes in the commit
+    term_jobs[tabpage] = vim.fn.termopen('git show ' .. commit_hash)
   end
   M.GitDiff_BufferMaps()
   if prev_term_bufs[tabpage] and vim.api.nvim_buf_is_valid(prev_term_bufs[tabpage]) then
@@ -138,13 +140,15 @@ end
 
 function M.GetFilesInCommit(commit_hash)
   local files = {}
-  local handle = io.popen("git show --pretty='' --name-status " .. commit_hash)
-  if not handle then return files end
 
-  local result = handle:read("*a")
-  handle:close()
+  -- Get status info (including renames) - skip numstat for speed
+  local status_handle = io.popen("git show --pretty='' --name-status " .. commit_hash .. " 2>/dev/null")
+  if not status_handle then return files end
+  local status_result = status_handle:read("*a")
+  status_handle:close()
 
-  for line in result:gmatch("[^\n]+") do
+  -- Process status output (no line counts for speed)
+  for line in status_result:gmatch("[^\n]+") do
     local status = line:match("^(%S+)")
     if status then
       local filepath, oldpath
@@ -152,14 +156,12 @@ function M.GetFilesInCommit(commit_hash)
       if status:match("^R") then
         oldpath, filepath = line:match("^%S+%s+(%S+)%s+(%S+)")
         if filepath and oldpath then
-          local line_count = M.get_changed_lines_count(filepath, commit_hash)
-          table.insert(files, string.format("    %s %s -> %s %s", status, oldpath, filepath, line_count))
+          table.insert(files, string.format("    %s %s -> %s", status, oldpath, filepath))
         end
       else
         filepath = line:match("^%S+%s+(.+)$")
         if filepath then
-          local line_count = M.get_changed_lines_count(filepath, commit_hash)
-          table.insert(files, string.format("    %s %s %s", status, filepath, line_count))
+          table.insert(files, string.format("    %s %s", status, filepath))
         end
       end
     end
@@ -495,8 +497,8 @@ local function update_view_from_lines(opts)
       local filepath, status
       -- Extract status (first non-whitespace word after indentation)
       status = line:match("^%s+(%S+)")
-      -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
-      filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
+      -- Regular files (format: "    M file.lua")
+      filepath = line:match("^%s+%S+%s+(.+)$")
       if filepath then
         M.UpdateDiffView_DirectoryFile(opts.diff_dir1, opts.diff_dir2, filepath, status)
       end
@@ -514,12 +516,12 @@ local function update_view_from_lines(opts)
       local filepath, status
       -- Extract status (first non-whitespace word after indentation)
       status = line:match("^%s+(%S+)")
-      -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
+      -- Check for renamed files (format: "    R100 old.lua -> new.lua")
       if line:match("->") then
-        filepath = line:match("->%s+(.-)%s+%S+$")
+        filepath = line:match("->%s+(.+)$")
       else
-        -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
-        filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
+        -- Regular files (format: "    M file.lua")
+        filepath = line:match("^%s+%S+%s+(.+)$")
       end
       if filepath then
         -- Check if this is an uncommitted change
@@ -553,12 +555,12 @@ local function update_view_from_lines(opts)
   -- Handle indented file lines
   if line:match("^%s") then
     local filepath
-    -- Check for renamed files (format: "    R100 old.lua -> new.lua 42")
+    -- Check for renamed files (format: "    R100 old.lua -> new.lua")
     if line:match("->") then
-      filepath = line:match("->%s+(.-)%s+%S+$")
+      filepath = line:match("->%s+(.+)$")
     else
-      -- Regular files (format: "    M file.lua 42" or "    ?? file.lua N")
-      filepath = line:match("^%s+%S+%s+(.-)%s+%S+$")
+      -- Regular files (format: "    M file.lua")
+      filepath = line:match("^%s+%S+%s+(.+)$")
     end
     if filepath then
       -- Find commit hash or untracked by searching backwards for the next unindented line
@@ -715,12 +717,7 @@ function M.Show( opts )
 
   M.set_highlights()
 
-  -- Initially show untracked changes if there are any
-  -- local untracked_files = M.GetUntrackedChanges()
-  -- if #untracked_files > 0 then
-    -- M.UpdateDiffView_Untracked()
-  -- end
-
+  -- Show initial diff view
   update_view_from_lines(opts)
 
   -- Add autocmd to close both windows when either is closed
@@ -788,21 +785,18 @@ function M.GetUntrackedChanges()
             local dir_result = dir_handle:read("*a")
             dir_handle:close()
             for filepath in dir_result:gmatch("[^\n]+") do
-              table.insert(files, string.format("    %s %s %s", "??", filepath, "N"))
+              table.insert(files, string.format("    %s %s", "??", filepath))
             end
           end
         else
-          -- Regular file
-          line_count = "N"
+          -- Regular file (no line counts for speed)
           local status_abbrev = status:gsub("%s", "")
-          table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
+          table.insert(files, string.format("    %s %s", status_abbrev, file))
         end
       else
-        line_count = M.get_changed_lines_count(file, "untracked")
-        -- Include status in output to match expected pattern in update_view_from_lines
-        -- Remove spaces from status (e.g., " M" becomes "M", "M " becomes "M")
+        -- Tracked but modified files (no line counts for speed)
         local status_abbrev = status:gsub("%s", "")
-        table.insert(files, string.format("    %s %s %s", status_abbrev, file, line_count))
+        table.insert(files, string.format("    %s %s", status_abbrev, file))
       end
     end
   end
@@ -862,8 +856,17 @@ function M.GetCommitLines(num_of_commits, file_filter)
       -- Format the line
       table.insert(lines, string.format("%s %s %s | %s", hash, time_ago, author_abbrev, message))
       local additional_lines = M.GetFilesInCommit( hash )
+
+      -- Limit files per commit to prevent performance issues with large commits
+      local max_files = 100
+      local file_count = 0
       for _, file in ipairs(additional_lines) do
+        if file_count >= max_files then
+          table.insert(lines, string.format("    ... and %d more files", #additional_lines - max_files))
+          break
+        end
         table.insert(lines, file)
+        file_count = file_count + 1
       end
     end
   end
@@ -948,16 +951,20 @@ end
 -- ─   Helpers                                          ──
 
 function M.get_changed_lines_count(filepath, githash)
+  -- NOTE: This is now only used for untracked files and special cases
+  -- Regular commits use the batch processing in GetFilesInCommit()
+
   -- Escape filepath for shell to handle brackets and special characters
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
 
   local cmd
   if githash and githash ~= "untracked" then
-    -- For regular commits
-    cmd = string.format("git diff --numstat %s^ %s -- %s", githash, githash, escaped_filepath)
+    -- For initial commits (no parent), compare against empty tree
+    -- Use git show which handles both regular and root commits
+    cmd = string.format("git show --numstat --format='' %s -- %s 2>/dev/null", githash, escaped_filepath)
   else
     -- For untracked changes
-    cmd = string.format("git diff --numstat -- %s", escaped_filepath)
+    cmd = string.format("git diff --numstat -- %s 2>/dev/null", escaped_filepath)
   end
 
   local handle = io.popen(cmd)
@@ -978,7 +985,7 @@ end
 
 function M.get_changed_lines_count_between_branches(filepath, branch1, branch2)
   local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-  local cmd = string.format("git diff --numstat %s..%s -- %s", branch1, branch2, escaped_filepath)
+  local cmd = string.format("git diff --numstat %s..%s -- %s 2>/dev/null", branch1, branch2, escaped_filepath)
 
   local handle = io.popen(cmd)
   if not handle then return "0" end
