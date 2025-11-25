@@ -11,6 +11,10 @@ local keymap = vim.keymap
 -- ─   ZenMode                                           ■
 -- -- NOTE i'm currently using ZenMode, not TrueZen! .. via the <leader>zm map
 -- https://github.com/folke/zen-mode.nvim
+-- WARNING: Don't update zen-mode.nvim! Local fixes applied in plugged/zen-mode.nvim:
+--   1. view.lua:213 - uncommented autocmd (fixes white cursor on empty lines in light mode)
+--   2. plugins.lua - custom Alacritty path
+--   Upstream has a bug: undefined ZenBorder highlight causes dark background in light mode
 
 require("zen-mode").setup({
   window = {
@@ -54,7 +58,7 @@ require("zen-mode").setup({
       -- statusline will be shown only if 'laststatus' == 3
       laststatus = 0, -- turn off the statusline in zen mode
     },
-    twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
+    twilight = { enabled = false }, -- enable to start Twilight when zen mode opens
     gitsigns = { enabled = false }, -- disables git signs
     tmux = { enabled = false }, -- disables the tmux statusline
     -- this will change the font size on kitty when in zen mode
