@@ -89,6 +89,8 @@ require("zen-mode").setup({
   end,
   -- callback where you can add custom code when the Zen window closes
   on_close = function()
+    -- Force terminal redraw to fix Alacritty cursor color caching on whitespace cells
+    vim.cmd('mode')
   end,
 })
 
