@@ -154,7 +154,8 @@ endfunc
 
 func! ViewInMpv( filePath )
   if a:filePath =~ "\.png" || a:filePath =~ "\.jpg"
-    exec 'silent !mpv --keep-open --loop-file=inf --image-display-duration=inf --geometry=700x0 ' . a:filePath
+    " exec 'silent !mpv --keep-open --loop-file=inf --image-display-duration=inf --geometry=700x0 ' . a:filePath
+    exec 'silent !mpv --keep-open --loop-file=inf --image-display-duration=inf ' . a:filePath
   else
     exec 'silent !mpv ' . a:filePath
   endif

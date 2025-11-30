@@ -60,7 +60,7 @@ Plug 'stevearc/dressing.nvim'
 Plug 'HakonHarnes/img-clip.nvim'
 
 " TODO, setup instead of copilot.vim? https://github.com/zbirenbaum/copilot.lua
-Plug 'zbirenbaum/copilot.lua'
+" Plug 'zbirenbaum/copilot.lua'
 
 Plug 'ravitemer/mcphub.nvim'
 " Plug 'ravitemer/mcphub.nvim', { 'branch': 'native-servers' }

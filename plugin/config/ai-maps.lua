@@ -77,6 +77,11 @@ vim.keymap.set( 'n', '<c-g><c-v>', function()
   require('agents').restore_agent_window('vsplit')
 end )
 
+-- Select from all running agent terminals across tabs
+vim.keymap.set('n', '<c-g>a', function()
+  require('agents').select_agent_terminal('vsplit')
+end, { desc = "Select agent terminal" })
+
 vim.keymap.set('n', '<c-g><c-j>', function()
   local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
   Claude_send(user_msg_content_str)

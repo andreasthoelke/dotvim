@@ -227,7 +227,53 @@ function M.list_agent_terminals()
   return terminals
 end
 
+-- ─   Cross-Tab Agent Selection                            ──
 
+-- Get all agent terminals across all tabs
+-- @return table: List of {tabnr, bufnr, job_id, command} for each agent terminal
+function M.get_all_agent_terminals()
+  local all = {}
+  for tabnr, info in pairs(M.agent_terminals) do
+    if vim.api.nvim_buf_is_valid(info.bufnr) then
+      table.insert(all, {
+        tabnr = tabnr,
+        bufnr = info.bufnr,
+        job_id = info.job_id,
+        command = info.command,
+      })
+    end
+  end
+  return all
+end
 
+-- Select and open an agent terminal in a new window
+-- @param window_type string: Window split type ('vsplit', 'hsplit', 'tabnew')
+function M.select_agent_terminal(window_type)
+  local terminals = M.get_all_agent_terminals()
+  if #terminals == 0 then
+    vim.notify("No agent terminals running", vim.log.levels.WARN)
+    return
+  end
+
+  vim.ui.select(terminals, {
+    prompt = "Select agent terminal:",
+    format_item = function(item)
+      return string.format("[Tab %d] %s (buf %d)", item.tabnr, item.command, item.bufnr)
+    end,
+  }, function(choice)
+    if not choice then return end
+
+    window_type = window_type or "vsplit"
+    if window_type == "vsplit" then
+      vim.cmd("vsplit")
+    elseif window_type == "hsplit" then
+      vim.cmd("split")
+    elseif window_type == "tabnew" then
+      vim.cmd("tabnew")
+    end
+
+    vim.api.nvim_win_set_buf(0, choice.bufnr)
+  end)
+end
 
 return M
