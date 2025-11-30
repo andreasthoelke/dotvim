@@ -813,7 +813,9 @@ hi! link Conceal Operator
 " Note: Cursor is shown with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
 " Not sure when this is unsed
-hi Cursor          guifg=#000000 guibg=#F8F8F0
+" hi Cursor          guifg=#000000 guibg=#F8F8F0
+" NOTE: this doesn't seem to have an effect:
+hi Cursor          guifg=NONE guibg=NONE gui=reverse
 " Only bg color seems to have an effect in nvim + Alacritty
 hi iCursor         guibg=#727272
 

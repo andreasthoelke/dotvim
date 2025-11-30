@@ -718,7 +718,18 @@ vnoremap $ g_
 " nnoremap <silent> ^ m'^
 nnoremap <silent> 0 m'0
 
-nnoremap zz m'zz
+" nnoremap zz m'zz<Cmd>silent! mode<CR>
+" nnoremap zt zt<Cmd>silent! mode<CR>
+" nnoremap zb zb<Cmd>silent! mode<CR>
+
+" Alacritty cursor color fix - workaround for cursor turning white after
+" scroll commands (zz/zt/zb) or <C-h> delete-to-previous-line when vertical
+" splits exist. The :mode command resets terminal state including cursor color.
+" nnoremap <silent> zz zz:mode<CR>
+nnoremap zz m'zz<Cmd>silent! mode<CR>
+nnoremap <silent> zt zt:mode<CR>
+nnoremap <silent> zb zb:mode<CR>
+inoremap <silent> <C-h> <C-h><Cmd>mode<CR>
 
 " Note L and H are used for Sneak
 noremap ,L L
