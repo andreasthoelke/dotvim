@@ -519,6 +519,16 @@ augroup END
 set noswapfile
 set cursorline
 
+" Alacritty cursor color fix - workaround for cursor turning white on certain
+" cells after scroll commands or backspace-to-previous-line in vertical splits.
+" nnoremap <silent> zz zz:mode<CR>
+" nnoremap <silent> zt zt:mode<CR>
+" nnoremap <silent> zb zb:mode<CR>
+" this works but causes a noticable 'bump' 
+" augroup AlacrittyInsertLeaveFix
+"   autocmd!
+"   autocmd InsertLeave * silent! mode
+" augroup END
 
 " augroup CursorLine
 "   au!
@@ -730,7 +740,7 @@ nnoremap zz m'zz<Cmd>silent! mode<CR>
 nnoremap <silent> zt zt:mode<CR>
 nnoremap <silent> zb zb:mode<CR>
 " inoremap <silent> <C-h> <C-h><Cmd>mode<CR>
-inoremap <silent> <C-h> <C-h><Cmd>call timer_start(10, {-> execute('mode')})<CR>
+" inoremap <silent> <C-h> <C-h><Cmd>call timer_start(10, {-> execute('mode')})<CR>
 
 " Note L and H are used for Sneak
 noremap ,L L
