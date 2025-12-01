@@ -547,6 +547,11 @@ func! MarkdownSyntaxAdditions()
   " call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
   " call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
 
+  syntax match Normal "->" conceal cchar=→
+  syntax match Normal "<-" conceal cchar=←
+  syntax match Normal '|v' conceal cchar=↓
+  syntax match Normal '|^' conceal cchar=↑
+
   " Fix: Clear vim-markdown plugin's syntax conceals to prevent corruption when
   " TypeScript files are open in splits. Since conceallevel is window-scoped (not
   " buffer-scoped), the markdown plugin's 'concealends' on ** and ` would activate
