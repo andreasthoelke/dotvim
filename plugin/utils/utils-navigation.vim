@@ -321,11 +321,6 @@ func! ScrollUpFromMiddle( lines )
 endfunc
 " call ScrollUpFromMiddle( 20 )
 
-" Move when using "c-d" (down) and "c-u" (up)
-set scroll=4
-
-nnoremap <c-y> 4<c-y>
-nnoremap <c-e> 4<c-e>
 
 nnoremap <C-j> jjj
 nnoremap <C-k> kkk

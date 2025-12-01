@@ -739,8 +739,17 @@ nnoremap <silent> 0 m'0
 nnoremap zz m'zz<Cmd>silent! mode<CR>
 nnoremap <silent> zt zt:mode<CR>
 nnoremap <silent> zb zb:mode<CR>
+
+
+" this doesn't stop the insert cursor from turning white. currently just living with it.
 " inoremap <silent> <C-h> <C-h><Cmd>mode<CR>
 " inoremap <silent> <C-h> <C-h><Cmd>call timer_start(10, {-> execute('mode')})<CR>
+
+" Move when using "c-d" (down) and "c-u" (up)
+set scroll=4
+
+nnoremap <silent> <c-y> 4<c-y>:mode<cr>
+nnoremap <silent> <c-e> 4<c-e>:mode<cr>
 
 " Note L and H are used for Sneak
 noremap ,L L
