@@ -729,7 +729,8 @@ nnoremap <silent> 0 m'0
 nnoremap zz m'zz<Cmd>silent! mode<CR>
 nnoremap <silent> zt zt:mode<CR>
 nnoremap <silent> zb zb:mode<CR>
-inoremap <silent> <C-h> <C-h><Cmd>mode<CR>
+" inoremap <silent> <C-h> <C-h><Cmd>mode<CR>
+inoremap <silent> <C-h> <C-h><Cmd>call timer_start(10, {-> execute('mode')})<CR>
 
 " Note L and H are used for Sneak
 noremap ,L L
@@ -881,6 +882,8 @@ let &t_SI = "\<Esc>]50;CursorShape=0\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 set termguicolors
+" Explicit guicursor with Cursor highlight to fix white cursor on empty lines
+set guicursor=n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor
 " set guicursor=n:block-iCursor
 " Option: Blinking cursor: (in ITerm only)
 " set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
