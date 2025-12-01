@@ -174,6 +174,20 @@ local function align_worktree_to_commit(worktree, commit, opts)
   return true
 end
 
+-- Prune stale worktree entries (directories that no longer exist)
+-- @return boolean: true if prune was successful
+local function prune_stale_worktrees()
+  local result = vim.fn.system("git worktree prune")
+  if vim.v.shell_error ~= 0 then
+    vim.notify(
+      string.format("Warning: Failed to prune stale worktrees:\n%s", result),
+      vim.log.levels.WARN
+    )
+    return false
+  end
+  return true
+end
+
 -- Create worktree if it doesn't exist
 -- @param worktree table: Output from compute_worktree_paths
 -- @return boolean: true if successful or already exists, false on error
@@ -181,6 +195,10 @@ local function ensure_worktree_exists(worktree)
   if vim.fn.isdirectory(worktree.path) ~= 0 then
     return true  -- Already exists
   end
+
+  -- Prune stale worktree entries before creating new ones
+  -- This handles cases where worktree directories were deleted but still registered
+  prune_stale_worktrees()
 
   vim.notify(
     string.format("Creating worktree %s on branch %s...", worktree.name, worktree.branch),
@@ -329,6 +347,9 @@ end
 
 -- Reset all agent worktrees to main (with backup)
 function M.reset_all_worktrees_to_main()
+  -- Prune stale worktree entries first
+  prune_stale_worktrees()
+
   local agents = {"claude", "codex", "gemini"}
   local success_count = 0
 

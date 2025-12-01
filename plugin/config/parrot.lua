@@ -31,6 +31,13 @@ local GEMINI_THINKING_SYMBOLS = {
   high = "H",
 }
 
+local CLAUDE_THINKING_DEFAULT = "low"
+local CLAUDE_THINKING_SYMBOLS = {
+  low = "L",
+  high = "H",
+}
+local CLAUDE_THINKING_BUDGET = 10000
+
 local function refresh_winbar()
   vim.schedule(function()
     local ok, lualine = pcall(require, "lualine")
@@ -249,6 +256,60 @@ local function get_gemini_thinking_indicator()
   return GEMINI_THINKING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
 end
 
+local function get_parrot_anthropic_context()
+  return get_parrot_provider_context("anthropic")
+end
+
+local function get_claude_thinking_level()
+  local parrot_config, handler = get_parrot_anthropic_context()
+  if not parrot_config then
+    return CLAUDE_THINKING_DEFAULT
+  end
+  local params = handler.providers.anthropic.params
+  if not params or not params.chat then
+    return CLAUDE_THINKING_DEFAULT
+  end
+  return params.chat.thinking_level or CLAUDE_THINKING_DEFAULT
+end
+
+local function set_claude_thinking(level)
+  local parrot_config, handler = get_parrot_anthropic_context()
+  if not parrot_config then
+    return false
+  end
+
+  local changed = false
+  local containers = {}
+  if handler.providers and handler.providers.anthropic then
+    table.insert(containers, handler.providers.anthropic)
+  end
+  if parrot_config.providers and parrot_config.providers.anthropic then
+    table.insert(containers, parrot_config.providers.anthropic)
+  end
+
+  for _, provider in ipairs(containers) do
+    if provider.params then
+      for _, mode in ipairs({ "chat", "command" }) do
+        provider.params[mode] = provider.params[mode] or {}
+        if provider.params[mode].thinking_level ~= level then
+          provider.params[mode].thinking_level = level
+          changed = true
+        end
+      end
+    end
+  end
+
+  if changed then
+    refresh_winbar()
+  end
+  return changed
+end
+
+local function get_claude_thinking_indicator()
+  local level = get_claude_thinking_level()
+  return CLAUDE_THINKING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+end
+
 local function format_llm_label(model_name, provider_name)
   if provider_name == "openai" then
     local indicator = get_openai_reasoning_indicator()
@@ -258,6 +319,12 @@ local function format_llm_label(model_name, provider_name)
     return model_name
   elseif provider_name == "gemini" then
     local indicator = get_gemini_thinking_indicator()
+    if indicator then
+      return string.format("%s:%s", model_name, indicator)
+    end
+    return model_name
+  elseif provider_name == "anthropic" then
+    local indicator = get_claude_thinking_indicator()
     if indicator then
       return string.format("%s:%s", model_name, indicator)
     end
@@ -298,6 +365,8 @@ local PRESETS = {
   { provider = "gemini", model = "gemini-3-pro-preview", level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
+  { provider = "anthropic", model = "claude-opus-4-5-20251101", level = "low" },
+  { provider = "anthropic", model = "claude-opus-4-5-20251101", level = "high" },
 }
 local current_preset_index = 1
 
@@ -320,6 +389,8 @@ local function apply_preset(index)
       set_gemini_thinking(preset.level)
     elseif preset.provider == "openai" then
       set_openai_reasoning(preset.level)
+    elseif preset.provider == "anthropic" then
+      set_claude_thinking(preset.level)
     end
   end)
 end
@@ -430,8 +501,8 @@ require("parrot").setup(
         endpoint = "https://api.anthropic.com/v1/messages",
         model_endpoint = "https://api.anthropic.com/v1/models",
         params = {
-          chat = { max_tokens = 4096 },
-          command = { max_tokens = 4096 },
+          chat = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
+          command = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
         },
         topic = {
           model = "claude-haiku-4-5-20251001",
@@ -454,13 +525,22 @@ require("parrot").setup(
             payload.system = payload.messages[1].content
             table.remove(payload.messages, 1)
           end
+          -- Handle extended thinking for Claude Opus 4.5
+          if payload.thinking_level == "high" and payload.model and payload.model:match("opus%-4%-5") then
+            payload.thinking = {
+              type = "enabled",
+              budget_tokens = CLAUDE_THINKING_BUDGET,
+            }
+          end
+          payload.thinking_level = nil  -- Remove custom param before sending to API
           return payload
         end,
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
         -- model = "claude-opus-4-20250514",
-        model = "claude-opus-4-1-20250805",
+        model = "claude-opus-4-5-20251101",
         models = {
+          "claude-opus-4-5-20251101",
           "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",
           "claude-sonnet-4-20250514",
