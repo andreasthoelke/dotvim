@@ -29,6 +29,11 @@ local function strip_ansi(str)
     return str:gsub("\27%[%d+;%d+m", ""):gsub("\27%[%d+m", "")
 end
 
+-- Clean up escaped periods in downloaded markdown (gdoc escapes . as \.)
+local function cleanup_downloaded_markdown()
+    vim.cmd([[%s/\\\././ge]])
+end
+
 -- Extract gdoc_id from frontmatter
 -- Handles both plain ID format and full URL format
 local function extract_gdoc_id()
@@ -507,6 +512,8 @@ function M.create_from_gdoc(doc_id, title, target_dir)
                 if exit_code == 0 then
                     -- Open the new file
                     vim.cmd('edit ' .. vim.fn.fnameescape(filepath))
+                    -- Clean up escaped periods from gdoc download
+                    cleanup_downloaded_markdown()
                     -- Ensure link is present
                     ensure_gdoc_link()
                     vim.notify(string.format("✓ Created %s", vim.fn.fnamemodify(filepath, ":~:.")), vim.log.levels.INFO)
@@ -545,9 +552,13 @@ function M.pull_to_file(doc_id, filepath)
                     if current_buf ~= -1 then
                         vim.api.nvim_buf_call(current_buf, function()
                             vim.cmd('edit!')
+                            -- Clean up escaped periods from gdoc download
+                            cleanup_downloaded_markdown()
                         end)
                     else
                         vim.cmd('edit ' .. vim.fn.fnameescape(filepath))
+                        -- Clean up escaped periods from gdoc download
+                        cleanup_downloaded_markdown()
                     end
                     ensure_gdoc_link()
                     vim.notify(string.format("✓ Updated %s", vim.fn.fnamemodify(filepath, ":~:.")), vim.log.levels.INFO)

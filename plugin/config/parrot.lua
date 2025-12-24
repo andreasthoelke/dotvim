@@ -17,7 +17,7 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
-local OPENAI_PRIMARY_MODEL = "gpt-5.1"
+local OPENAI_PRIMARY_MODEL = "gpt-5.2"
 local OPENAI_REASONING_DEFAULT = "medium"
 local OPENAI_REASONING_SYMBOLS = {
   low = "L",
@@ -561,6 +561,7 @@ require("parrot").setup(
         model = OPENAI_PRIMARY_MODEL,
         models = {
           OPENAI_PRIMARY_MODEL,
+          "gpt-5.1",
           "gpt-5-mini",
           "gpt-4o",
           "gpt-4o-mini",

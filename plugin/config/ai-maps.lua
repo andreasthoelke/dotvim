@@ -82,6 +82,11 @@ vim.keymap.set('n', '<c-g>a', function()
   require('agents').select_agent_terminal('vsplit')
 end, { desc = "Select agent terminal" })
 
+-- Toggle thinking mode in Claude Code
+vim.keymap.set('n', '<c-g>T', function()
+  require('agents').toggle_thinking()
+end, { desc = "Toggle Claude thinking mode" })
+
 vim.keymap.set('n', '<c-g><c-j>', function()
   local user_msg_content_str = ParrotBuf_GetLatestUserMessage()
   Claude_send(user_msg_content_str)

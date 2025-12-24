@@ -36,8 +36,13 @@ command! -range -nargs=* GitcommitQuick call GitCommitOverload(<q-args>)
 " nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch --verbose && echo "" && git status -sb' )<cr>
 " nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch && git log HEAD..origin/$(git branch --show-current) --oneline' )<cr>
 nnoremap <silent><leader><leader>gF :call System_Float( 'git fetch && echo "=== Local vs Remote ===" && git status -sb && echo "" && echo "=== Incoming Changes ===" && git log HEAD..@{u} --oneline 2>/dev/null \|\| echo "No incoming changes"' )<cr>
-" nnoremap <silent><leader><leader>gR :call System_Float( 'git pull --rebase' )<cr>
-nnoremap <silent><leader><leader>gR :call System_Float( 'git rebase -i origin/main' )<cr>
+
+" simple try first
+nnoremap <silent><leader><leader>gG :call TermOneShot( 'git pull' )<cr>
+nnoremap <silent><leader><leader>gr :call TermOneShot( 'git pull --rebase' )<cr>
+
+" for complex cases
+nnoremap <silent><leader><leader>gR :call TermOneShot( 'git rebase -i origin/main' )<cr>
 
 " git status:
 " nnoremap <leader>oG         :FzfPreviewGitStatus<cr>

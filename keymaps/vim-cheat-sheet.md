@@ -483,6 +483,7 @@ leader><leader>dl   - list recent Google Docs
 ## GDocList buffer maps
 dd   - delete gdoc reference (untested)
 gd   - show a vim-diff of online vs local content
+<CR> - Create/download markdown file from Google Doc
 
 gdoc --help
 gdoc pull 17TkoGbGHX3iyckiUKkly5GvfzIkc9Eb-F6UeTYDT9BQ mvd/agentic-workbench/notes/temp.md

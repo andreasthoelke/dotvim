@@ -148,6 +148,19 @@ end
 
 -- ─   Utility Functions                                 ──
 
+-- Toggle thinking mode in Claude Code (sends Shift+Tab escape sequence)
+-- @return boolean: true if successful, false otherwise
+function M.toggle_thinking()
+  local job_id = M.find_agent_terminal_in_tab()
+  if not job_id then
+    vim.notify("No agent terminal found", vim.log.levels.ERROR)
+    return false
+  end
+  -- Send Shift+Tab escape sequence (ESC [ Z)
+  vim.fn.chansend(job_id, "\x1b[Z")
+  return true
+end
+
 -- Check if an agent terminal exists in current tab
 -- @return boolean: true if an agent terminal exists
 function M.has_agent_terminal()

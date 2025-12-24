@@ -66,6 +66,11 @@ au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
 au ag BufWinEnter *.md,.mdx          call MarkdownSyntaxAdditions()
+" Syntax event fires after filetype is set, needed for parrot.nvim which resets
+" filetype=markdown on BufEnter (via prep_md), clearing our syntax conceals
+au ag Syntax markdown call MarkdownSyntaxAdditions()
+" WinEnter: parrot.nvim resets filetype on BufEnter; also conceallevel is window-local
+au ag WinEnter * if &ft == 'markdown' | call MarkdownSyntaxAdditions() | endif
 au ag BufWinEnter *.md,*.markdown,.mdx   call MarkdownBufferMaps()
 au ag FileType markdown,markdown.mdx,codecompanion,mcphub call MarkdownBufferMaps()
 
@@ -537,45 +542,24 @@ func! LuaSyntaxAdditions() " ■
 endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
-  " set syntax=markdown
-  " temp fix bc/ underscores are hidden with markdown syntax e.g. in ~/Documents/Proj/k_mindgraph/_plan/a_graph_sql/schema_.sql
-  " set syntax=js
+  " Use matchadd instead of syntax match - works even when treesitter is active
   call clearmatches()
-  " syntax match Normal '\`\`\`' conceal cchar=⊃
-  " call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
-  " call matchadd('Conceal', '^\`\`\`$', 12, -1, {'conceal': '˹'})
-  " call matchadd('Conceal', '^\`\`\`\i\i.*', 12, -1, {'conceal': '˻'})
-  " call matchadd('Conceal', '^\`\`\`_', 12, -1, {'conceal': '˻'})
-
-  syntax match Normal "->" conceal cchar=→
-  syntax match Normal "<-" conceal cchar=←
-  syntax match Normal '|v' conceal cchar=↓
-  syntax match Normal '|^' conceal cchar=↑
-
-  " Fix: Clear vim-markdown plugin's syntax conceals to prevent corruption when
-  " TypeScript files are open in splits. Since conceallevel is window-scoped (not
-  " buffer-scoped), the markdown plugin's 'concealends' on ** and ` would activate
-  " when TypeScript sets conceallevel=2, causing flickering conceals in markdown.
-  " We clear and recreate the syntax rules without conceal attributes.
-  silent! syntax clear mkdBold
-  silent! syntax clear mkdItalic
-  silent! syntax clear mkdBoldItalic
-  silent! syntax clear mkdCode
-  silent! syntax clear mkdCodeDelimiter
-
-  " Recreate them without conceal
-  syn region htmlItalic start="\%(^\|\s\)\zs\*\ze[^\\\*\t ]\%(\%([^*]\|\\\*\|\n\)*[^\\\*\t ]\)\?\*\_W" end="[^\\\*\t ]\zs\*\ze\_W" keepend contains=@Spell oneline
-  syn region htmlBold start="\%(^\|\s\)\zs\*\*\ze\S" end="\S\zs\*\*" keepend contains=@Spell oneline
-  syn region mkdCode start=/`/ end=/`/
-  syn region mkdCode start=/``/ skip=/[^`]`[^`]/ end=/``/
-
-  " Conceal gdoc_id line in frontmatter
-  syntax match gdocIdLine '^gdoc_id:.*$' conceal cchar=*
+  call matchadd('Conceal', '->', 10, -1, {'conceal': '→'})
+  call matchadd('Conceal', '<-', 10, -1, {'conceal': '←'})
+  call matchadd('Conceal', '|v', 10, -1, {'conceal': '↓'})
+  call matchadd('Conceal', '|\^', 10, -1, {'conceal': '↑'})
+  call matchadd('Conceal', '<<', 10, -1, {'conceal': '«'})
+  call matchadd('Conceal', '>>', 10, -1, {'conceal': '»'})
+  call matchadd('Conceal', '=>', 10, -1, {'conceal': '⇒'})
+  call matchadd('Conceal', 'rightarrow', 10, -1, {'conceal': '→'})
+  call matchadd('Conceal', '<=', 10, -1, {'conceal': '⇐'})
+  call matchadd('Conceal', '\$\\leftarrow\$', 10, -1, {'conceal': '←'})
+  call matchadd('Conceal', '^gdoc_id:.*$', 10, -1, {'conceal': '*'})
 
   setlocal conceallevel=2
   setlocal concealcursor=ni
-  " set foldmethod=marker
 endfunc
+
 
 func! VimScriptSyntaxAdditions ()
   call clearmatches()
