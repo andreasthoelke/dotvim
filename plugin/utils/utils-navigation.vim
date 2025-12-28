@@ -281,7 +281,7 @@ nnoremap <silent><leader>ep :t.<cr>
 " General: ----------------------------------------------------------
 
 " Exit insert mode
-inoremap <c-[> <esc>l
+inoremap <silent> <c-[> <esc>l:mode<CR>
 
 
 " General: ----------------------------------------------------------
