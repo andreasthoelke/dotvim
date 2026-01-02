@@ -55,7 +55,9 @@ endfunc
 func! RunTerm_parag_showFloat()
  let [startLine, endLine] = ParagraphStartEndLines()
  let lines = getline(startLine, endLine)
- let concat_cmd = join( lines, ' ' )
+ " echo lines
+ " return
+ let concat_cmd = join( lines, ' && ' )
  if concat_cmd =~ g:direnv_keyword_ptn | let concat_cmd = 'direnv exec . ' . concat_cmd | endif
  " let concat_cmd = join( lines, '\n' )
  call System_Float( concat_cmd )
