@@ -618,6 +618,17 @@ require('telescope').setup{
     -- config_key = value,
     path_display = { 'shorten' },
     hidden = true,  -- ISSUE: this doesn't have an effect. to show files like .gitignore use nnoremap <silent> go <cmd>Telescope find_files hidden=true<cr>
+    -- Include hidden files/dirs in live_grep (dirs starting with ".")
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--hidden",
+    },
     file_ignore_patterns = {
             '^.git/', '^node%_modules/', '^.npm/', 'dev.js', '%[Cc]ache/', '%-cache',
             '^scala-doc/', 'pnpm-lock.yaml',
