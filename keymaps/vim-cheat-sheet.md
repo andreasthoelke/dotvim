@@ -832,6 +832,10 @@ gd       - CURSOR-LSP-REFERENCE
     The NewBuf split maps of float tree windows create the split relative to the previous window. (see
     ~/.config/nvim/plugin/NewBuf-direction-maps.vim‖/IsInFloatWin()ˍ|ˍwincmdˍpˍ)
 
+# scrolling
+zt/b   - vertical scroll top/bottom
+zz     - vertical scroll center
+zl/h   - horizontal scrolling!
 
 # Window move
 window move is now e.g.:
