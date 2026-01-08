@@ -740,6 +740,36 @@ lspconfig.smithy_ls.setup ({
   flags = flags,
 })
 
+-- ─   SWLS (Semantic Web Language Server)               ──
+
+-- https://github.com/SemanticWebLanguageServer/swls
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.ttl", "*.turtle", "*.n3", "*.nt" },
+  callback = function() vim.cmd("setfiletype turtle") end,
+})
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.sparql", "*.rq" },
+  callback = function() vim.cmd("setfiletype sparql") end,
+})
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.jsonld" },
+  callback = function() vim.cmd("setfiletype jsonld") end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "turtle", "sparql", "jsonld" },
+  callback = function()
+    vim.lsp.start({
+      name = "swls",
+      cmd = { "swls" },
+      root_dir = vim.fn.getcwd(),
+      capabilities = capabilities,
+      on_attach = on_attach,
+      flags = flags,
+    })
+  end,
+})
+
 -- require'lspconfig'.smithy_ls.setup{
 --   capabilities = capabilities,
 --   on_attach = on_attach,
