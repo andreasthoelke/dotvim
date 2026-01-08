@@ -44,6 +44,7 @@ au ag BufNewFile,BufRead,WinNew *.graphql call GraphQLSyntaxAdditions()
 " au ag BufNewFile,BufRead,WinNew *.sql call SQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call EdgeQLSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.sql call Sql_bufferMaps()
+au ag BufNewFile,BufRead,WinNew *.ttl,*.turtle,*.n3,*.nt,*.sparql,*.rq,*.jsonld call Turtle_bufferMaps()
 
 " au ag BufNewFile,BufRead,WinNew *.sct set filetype=purescript_scratch | set syntax=purescript1
 au ag BufWinEnter *.sct set filetype=purescript_scratch | set syntax=lua | call LuaSyntaxAdditions()
