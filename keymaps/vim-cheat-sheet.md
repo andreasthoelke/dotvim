@@ -1621,6 +1621,15 @@ ToggleDiag
 <leader>lts   - toggle lsp diagnostic sign column
 :e!     - clear diagnostics cache (after changing 'rules' in eslint)
 
+### turle / llt sparql semantic
+  Available swls capabilities:
+  - hoverProvider - gek will work
+  - definitionProvider - gd will work
+  - referencesProvider - ger will work
+  - renameProvider - <leader>lr will work
+  - documentFormattingProvider - formatting works
+  - inlayHintProvider - inlay hints work
+
 ## Motions
 J/K    - same column index motion
 t/T    - bracket (in hs-motions) ~/.config/nvim/plugin/HsMotions.vim‖*Startˍofˍnext/prevˍbracket
