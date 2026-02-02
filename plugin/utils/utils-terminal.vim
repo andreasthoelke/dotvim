@@ -172,18 +172,25 @@ func! StartDevServer()
   endif
   let cmdline = GetDevServerCommand()
   " echo "running cmd: " . cmdline
-  exec "20new"
+  silent exec "20new"
   let opts = { 'cwd': getcwd( winnr() ) }
   let g:Vite1TermID = termopen( cmdline, opts )
   let g:Vite1TermBufNr = bufnr('%')  " Store the buffer number
+  silent! exec 'keepalt file dev-server'
 
   " Start Convex dev server if convex folder exists
   let convex_dir = getcwd() . '/convex'
   if isdirectory(convex_dir)
-    exec "20new"
-    let g:ConvexTermID = termopen( 'npx convex dev', opts )
+    silent exec "20new"
+    try
+      let g:ConvexTermID = termopen( 'npx convex dev', opts )
+    catch /E685/
+      " Ignore hash collision error - terminal still works
+    endtry
     let g:ConvexTermBufNr = bufnr('%')
-    wincmd p  " Return to previous window
+    silent! exec 'keepalt file convex-dev-server'
+    " Close this window (buffer stays open in background)
+    silent wincmd c
   endif
 
   call T_DelayedCmd( "call StartDevServer_resume()", 4000 )
@@ -192,9 +199,14 @@ endfunc
 
 
 func! StartDevServer_resume()
+  " Ensure we're reading from the dev server buffer
+  if !exists('g:Vite1TermBufNr') || !bufexists(g:Vite1TermBufNr)
+    echo 'Dev server buffer not found'
+    return
+  endif
 
-  " get the current buffer text
-  let currentBufferText = getline(1, '$')
+  " Get the buffer text from the dev server buffer specifically
+  let currentBufferText = getbufline(g:Vite1TermBufNr, 1, '$')
   " echo currentBufferText
   " ['', '> next-openai@0.0.0 dev', '> next dev', '', '   ▲ Next.js 15.3.3', '   - Local:        http://localhost:3000',
   " '   - Network:      http://192.168.2.124:3000', '   - Environments: .env.local', '', ' ✓ Starting...', '']
@@ -219,13 +231,19 @@ func! StartDevServer_resume()
   endif
   " echo port
 
-  normal G
-  " close the window without closing the terminal buffer
-  silent wincmd c
-  " call LaunchChromium( "http://localhost:5173/" )
-  " let isNextJsProject = filereadable( getcwd() . '/pyproject.toml' )
+  " Close the dev server window if it's visible
+  let winid = bufwinid(g:Vite1TermBufNr)
+  if winid != -1
+    call win_execute(winid, 'close')
+  endif
 
-  " let port = v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
+  " Close the Convex server window if it's visible
+  if exists('g:ConvexTermBufNr')
+    let convex_winid = bufwinid(g:ConvexTermBufNr)
+    if convex_winid != -1
+      call win_execute(convex_winid, 'close')
+    endif
+  endif
 
   call LaunchChrome_remoteDebug( "http://localhost:" . port )
 endfunc
