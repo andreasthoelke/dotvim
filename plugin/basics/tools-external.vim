@@ -445,6 +445,7 @@ func! LaunchChrome( url )
 endfunc
 " LaunchChrome( 'http://purescript.org' )
 
+command! -nargs=1 LaunchChromeRemoteDebug call LaunchChrome_remoteDebug(<q-args>)
 
 func! LaunchChrome_remoteDebug( url )
   exec "20new"

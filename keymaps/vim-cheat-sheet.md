@@ -1056,6 +1056,21 @@ Markbar config: ~/.config/nvim/plugin/setup-general.vim#/Marks.
        NOTE: that "`[" doesn't work bc/ of autosave:
 i'm now using [g to go to the insert start pos.  ~/.config/nvim/plugin/config/autosave.lua‖*InsertˍstartˍmarkˍFiX
 
+## TypeDB / tdb
+~/.config/nvim/plugin/ftype/typedb.vim
+
+c-t l - StartTypeDBServer
+c-t L - StopTypeDBServer
+c-t s - Tdb_selectSchema
+c-t c - Tdb_createDB
+c-t C - Tdb_clearDB
+c-t D - Tdb_deleteDB
+
+1. select schema
+l K   - view schema
+queries: e_tdb/b_use-cases/social-network/queries.tql
+
+
 ## vim tools_db / psql / SQL
 general db notes/faq: ~/Documents/Proj/g_edb_gql/m/h4s_simple/skunkdocs/a_skun.sql
 
@@ -2344,6 +2359,17 @@ glc   - is now smart to use either a url or a (relative) path in the line
         ~/.config/nvim/plugin/tools-external.vim‖/LaunchChromium_UrlOrPath()
 glv   - show videos or images using vmp
         ~/.config/nvim/plugin/tools-external.vim‖/ViewInMpv(ˍfileP
+
+### Chrome Remote Debug for Dev Tools MCP
+(this now somehow launches my default/normal Chrome profile. but that still works with CC!?)
+
+glr    - opens url or path in the Chrome remote debug browser (CC can see)
+         ~/.config/nvim/plugin/basics/tools-external.vim‖/OpenInChromeRemoteDebug_UrlOrPath()
+
+There's also a vim command: LaunchChromeRemoteDebug <url> for urls
+so I can put this into an .md file:
+LaunchChromeRemoteDebug https://www.arte.tv/de/videos/122735-000-A/the-girl-from-ipanema/
+
 
 ## chrome / chromium maps
 
