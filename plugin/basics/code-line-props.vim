@@ -726,6 +726,12 @@ endfunc
 func! ParagraphStartEndLines()
   let [lstart, cstart] = searchpos( '^$', 'nWb')
   let [lend, cend] = searchpos( '^$', 'nW')
+
+  " If no empty line found after cursor, use last line of buffer
+  if lend == 0
+    let lend = line('$') + 1
+  endif
+
   return [ lstart + 1, lend - 1 ]
 endfunc
 " echo ParagraphStartEndLines()
