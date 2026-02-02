@@ -39,6 +39,7 @@ nnoremap <silent><leader><leader>sd :call StartDevServer()<cr>
 nnoremap <silent><leader><leader>sD :call StopDevServer()<cr>
 nnoremap <silent><leader><leader>sr :call RestartDevServer()<cr>
 nnoremap <silent><leader><leader>so :call ReopenDevServer()<cr>
+nnoremap <silent><leader><leader>sc :call ReopenConvexServer()<cr>
 
 
 let g:direnv_keyword_ptn = '\v^(mono|livestore)\s'
@@ -176,6 +177,15 @@ func! StartDevServer()
   let g:Vite1TermID = termopen( cmdline, opts )
   let g:Vite1TermBufNr = bufnr('%')  " Store the buffer number
 
+  " Start Convex dev server if convex folder exists
+  let convex_dir = getcwd() . '/convex'
+  if isdirectory(convex_dir)
+    exec "20new"
+    let g:ConvexTermID = termopen( 'npx convex dev', opts )
+    let g:ConvexTermBufNr = bufnr('%')
+    wincmd p  " Return to previous window
+  endif
+
   call T_DelayedCmd( "call StartDevServer_resume()", 4000 )
 endfunc
 " v:lua.require('tools_external').Get_keyval('vite.config.ts', 'port')
@@ -226,7 +236,7 @@ func! ReopenDevServer()
     echo 'No dev server buffer exists. Run StartDevServer() first.'
     return
   endif
-  
+
   " Check if buffer still exists
   if !bufexists(g:Vite1TermBufNr)
     echo 'Dev server buffer was deleted. Run StartDevServer() again.'
@@ -236,7 +246,7 @@ func! ReopenDevServer()
     endif
     return
   endif
-  
+
   " Check if buffer is already visible in a window
   let winid = bufwinid(g:Vite1TermBufNr)
   if winid != -1
@@ -244,10 +254,36 @@ func! ReopenDevServer()
     echo 'Dev server window is already open'
     return
   endif
-  
+
   " Reopen the buffer in a new split
   exec "20split"
   exec "buffer " . g:Vite1TermBufNr
+endfunc
+
+func! ReopenConvexServer()
+  if !exists('g:ConvexTermBufNr')
+    echo 'No Convex server buffer exists.'
+    return
+  endif
+
+  if !bufexists(g:ConvexTermBufNr)
+    echo 'Convex server buffer was deleted.'
+    unlet g:ConvexTermBufNr
+    if exists('g:ConvexTermID')
+      unlet g:ConvexTermID
+    endif
+    return
+  endif
+
+  let winid = bufwinid(g:ConvexTermBufNr)
+  if winid != -1
+    call win_gotoid(winid)
+    echo 'Convex server window is already open'
+    return
+  endif
+
+  exec "20split"
+  exec "buffer " . g:ConvexTermBufNr
 endfunc
 
 func! StopDevServer ()
@@ -258,6 +294,14 @@ func! StopDevServer ()
   call jobstop( g:Vite1TermID )
   unlet g:Vite1TermID
   echo 'Vite1TermID closed!'
+
+  " Stop Convex dev server if running
+  if exists('g:ConvexTermID')
+    call jobstop( g:ConvexTermID )
+    unlet g:ConvexTermID
+    unlet g:ConvexTermBufNr
+    echo 'ConvexTermID closed!'
+  endif
 
   " Optionally closing the LaunchChrome_remoteDebug browser
   if exists('g:Chrome_remoteDebugID')
