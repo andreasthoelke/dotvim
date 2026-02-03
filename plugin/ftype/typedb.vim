@@ -138,8 +138,11 @@ endfunc
 
 func! Tdb_withTransactionLines( query_lines )
   let query_lines = a:query_lines
+  " Check if this is a function definition (starts with 'fun') - these are schema operations
+  let g:isFunDef = functional#findP( query_lines, {x-> x =~ '^\s*fun\s'} )
   " If a line is not a comment and contains a keyword its a read-write query. else a schema query.
-  let g:isRWTrans = functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(match|insert|update|put|delete|reduce)')} )
+  " But function definitions are schema operations even though they contain 'match'
+  let g:isRWTrans = g:isFunDef < 0 ? functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(match|insert|update|put|delete|reduce)')} ) : -1
   if g:isRWTrans
     let g:isJsonFetch = functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(fetch)')} )
   else

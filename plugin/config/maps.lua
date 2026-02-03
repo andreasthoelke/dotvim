@@ -882,4 +882,10 @@ vim.keymap.set('n', '<leader><leader>dl', gdoc_sync.list,
 -- ─^  Google Docs sync with markdown                    ▲
 
 
+-- ─   Claude Code paste cleanup                         ■
+
+require('utils.cc_paste').setup({ key = '<leader>cP' })
+
+-- ─^  Claude Code paste cleanup                         ▲
+
 
