@@ -1070,6 +1070,11 @@ c-t D - Tdb_deleteDB
 l K   - view schema
 queries: e_tdb/b_use-cases/social-network/queries.tql
 
+~/.config/nvim/plugin/ftype/typedb.vim‖*Maps
+geq   - linewise eval
+gep   - eval paragraph
+l geo - evel buffer
+
 
 ## vim tools_db / psql / SQL
 general db notes/faq: ~/Documents/Proj/g_edb_gql/m/h4s_simple/skunkdocs/a_skun.sql

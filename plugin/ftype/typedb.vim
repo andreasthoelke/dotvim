@@ -15,7 +15,13 @@ func! TypeDB_bufferMaps()
   call Scala_bufferMaps_shared()
 
   " nnoremap <silent><buffer> gej :call Tdb_eval_parag()<cr>
+
+  " IMPORTANT: notice these operator pending maps!
   lua Tdb_create_lineswise_maps()
+  " this seems to have been a previous version:
+  " nnoremap <silent><buffer> <leader>ge :let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+  " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
+
   nnoremap <silent><buffer> gee :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_range( line('.'), line('.') )<cr>
   nnoremap <silent><buffer> ,gee :let g:tdb_schema_mode="undefine"<cr>:call Tdb_eval_range( line('.'), line('.') )<cr>
 
@@ -26,11 +32,11 @@ func! TypeDB_bufferMaps()
   " nnoremap <silent><buffer> ,gej :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
   " nnoremap <silent><buffer> ,gei :let g:cmdAltMode=1<cr>:call Tdb_eval_parag()<cr>
 
-  nnoremap gq    m':let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
-  vnoremap gq :<c-u>let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
+  " not sure how this works/was intented?!
+  " nnoremap gq    m':let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:set opfunc=OperateOnSelText<cr>g@
+  " vnoremap gq :<c-u>let g:opContFn='Tdb_query_textObj'<cr>:let g:opContArgs=[]<cr>:call OperateOnSelText(visualmode(), 1)<cr>
 
-  " nnoremap <silent><buffer> <leader>ge :let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:set opfunc=Gen_opfuncAc<cr>g@
-  " vnoremap <silent><buffer> <leader>gei :<c-u>let g:opContFn='Tdb_eval_range'<cr>:let g:opContArgs=[v:true]<cr>:call Gen_opfuncAc('', 1)<cr>
+
   nnoremap <silent><buffer> <leader>geo :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_buffer()<cr>
 
   nnoremap <silent><buffer> <leader>K :call Tdb_show_schema()<cr>
