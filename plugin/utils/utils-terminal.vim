@@ -183,14 +183,16 @@ func! StartDevServer()
   if isdirectory(convex_dir)
     silent exec "20new"
     try
-      let g:ConvexTermID = termopen( 'npx convex dev', opts )
+      let g:ConvexTermID = termopen( 'npx convex dev --env-file .env.local', opts )
     catch /E685/
-      " Ignore hash collision error - terminal still works
+      " E685 hash collision - terminal still starts, get job ID from buffer
+      let g:ConvexTermID = getbufvar('%', 'terminal_job_id')
     endtry
     let g:ConvexTermBufNr = bufnr('%')
     silent! exec 'keepalt file convex-dev-server'
     " Close this window (buffer stays open in background)
     silent wincmd c
+    echo 'Convex dev server started'
   endif
 
   call T_DelayedCmd( "call StartDevServer_resume()", 4000 )
@@ -305,13 +307,14 @@ func! ReopenConvexServer()
 endfunc
 
 func! StopDevServer ()
-  if !exists('g:Vite1TermID')
-    echo 'Vite1TermID is not running'
-    return
+  let l:stopped_any = 0
+
+  if exists('g:Vite1TermID')
+    call jobstop( g:Vite1TermID )
+    unlet g:Vite1TermID
+    echo 'Vite1TermID closed!'
+    let l:stopped_any = 1
   endif
-  call jobstop( g:Vite1TermID )
-  unlet g:Vite1TermID
-  echo 'Vite1TermID closed!'
 
   " Stop Convex dev server if running
   if exists('g:ConvexTermID')
@@ -319,12 +322,18 @@ func! StopDevServer ()
     unlet g:ConvexTermID
     unlet g:ConvexTermBufNr
     echo 'ConvexTermID closed!'
+    let l:stopped_any = 1
   endif
 
   " Optionally closing the LaunchChrome_remoteDebug browser
   if exists('g:Chrome_remoteDebugID')
     call jobstop( g:Chrome_remoteDebugID )
     unlet g:Chrome_remoteDebugID
+    let l:stopped_any = 1
+  endif
+
+  if !l:stopped_any
+    echo 'No dev servers running'
   endif
 endfunc
 
