@@ -365,8 +365,8 @@ local PRESETS = {
   { provider = "gemini", model = "gemini-3-pro-preview", level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
-  { provider = "anthropic", model = "claude-opus-4-5-20251101", level = "low" },
-  { provider = "anthropic", model = "claude-opus-4-5-20251101", level = "high" },
+  { provider = "anthropic", model = "claude-opus-4-6", level = "low" },
+  { provider = "anthropic", model = "claude-opus-4-6", level = "high" },
 }
 local current_preset_index = 1
 
@@ -525,8 +525,8 @@ require("parrot").setup(
             payload.system = payload.messages[1].content
             table.remove(payload.messages, 1)
           end
-          -- Handle extended thinking for Claude Opus 4.5
-          if payload.thinking_level == "high" and payload.model and payload.model:match("opus%-4%-5") then
+          -- Handle extended thinking for Claude Opus 4.6
+          if payload.thinking_level == "high" and payload.model and payload.model:match("opus%-4%-6") then
             payload.thinking = {
               type = "enabled",
               budget_tokens = CLAUDE_THINKING_BUDGET,
@@ -538,9 +538,9 @@ require("parrot").setup(
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
         -- model = "claude-opus-4-20250514",
-        model = "claude-opus-4-5-20251101",
+        model = "claude-opus-4-6",
         models = {
-          "claude-opus-4-5-20251101",
+          "claude-opus-4-6",
           "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",
           "claude-sonnet-4-20250514",
