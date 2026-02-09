@@ -441,9 +441,9 @@ vim.keymap.set( 'n',
 
 -- ─   Git Diff Operations                               ■
 
--- Toggle diff overlay (d = diff, most common operation
+-- Toggle diff overlay (dd = diff display, most common operation)
 vim.keymap.set( 'n',
-  '<leader>gd', function()
+  '<leader>gdd', function()
     MiniDiff.toggle_overlay()
   end, { desc = 'Toggle git diff overlay (inline)' })
 

@@ -5,7 +5,7 @@ local M = {}
 local last_valid_refs = nil
 
 -- ─   -- Maps                                          ──
--- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gd',ˍfunction()
+-- ~/.config/nvim/plugin/config/maps.lua‖/'<leader>gdd',ˍfunction()
 -- ~/.config/nvim/plugin/config/maps.lua‖*ˍˍˍGitˍpickerˍmaps
 
 function M.GitDiff_BufferMaps()

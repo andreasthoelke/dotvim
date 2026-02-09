@@ -133,7 +133,7 @@ EOF
 
 " SEARCH FILES
 " in cwd
-nnoremap <leader>gsf <cmd>lua require('utils.general').Search_files('.', '')<cr>
+" nnoremap <leader>gsf <cmd>lua require('utils.general').Search_files('.', '')<cr>
 " The approach here seems to fuzzy match chars, regex is not supporte?
 " nnoremap gsf <cmd>lua require('utils.general').Search_files('.', '.lua')<cr>
 

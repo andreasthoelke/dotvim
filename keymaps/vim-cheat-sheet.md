@@ -1184,7 +1184,6 @@ https://grep.app/search
 
 gsf     - files in cwd sorted by most recently used (local)
 gsF     - files most recently used (global)
-<leader>gsf   - files in cwd not sorted (not sure that's needed?)
 
 gsd     - directory / folder names
 gsD     - file browser
@@ -1427,7 +1426,7 @@ Your Neovim is using git-conflict.nvim to render those merge conflict markers. H
 <leader>gF           - Git file history (current file, 40 commits) - F = more
 
 ### Git Diff Operations
-<leader>gd           - Toggle MiniDiff overlay (inline) - d = diff
+<leader>gdd          - Toggle MiniDiff overlay (inline) - dd = diff display
 <leader>gdf          - Compare two files from consecutive lines (git diff --no-index)
 <leader>gdb          - Compare two git refs from consecutive lines (branches/commits/HEAD~1)
                        Shows file list with status (M/A/D/R100) and line counts
