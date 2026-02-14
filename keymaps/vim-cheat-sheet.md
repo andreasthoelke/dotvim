@@ -921,19 +921,18 @@ echo v:lua.Util_is_subpath( getcwd(), expand('%:p') )
 
 ### neotree: copy, move & delete multiple files
 
-#### with quick move
-c     - to mark a file to be copied
-x     - to mark a file to be cut
-<leader>pp  - to copy or cut the selected files to the selected node
+#### with quick mark (one at a time, scattered selection)
+c     - mark file for copy (moves cursor down)
+x     - mark file for cut (moves cursor down)
+<leader>pp  - paste (execute copy/cut) at current node
 
-#### with visual select
-<c-v>   - to activate visual sel
-<leader>dd  - to delete sel files
-<leader>yy  - to copy sel files
-<leader>xx  - to cut sel files
-<leader>pp  - to copy or cut the selected files to the selected node
-
-note that delete is somewhat not consistent(..)
+#### with visual select (contiguous selection)
+<c-v>   - enter visual select (v/V are taken by split-open maps)
+          select lines with j/k, then:
+<leader>dd  - delete selected files
+<leader>yy  - copy selected files (mark for copy)
+<leader>xx  - cut selected files (mark for cut)
+<leader>pp  - paste marked files at current node
 
 
 
@@ -1498,7 +1497,7 @@ Workflow: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
 <leader>hu       - Undo stage hunk
 <leader>gg       - Toggle gitsigns gutter
 
-### File History Stepping
+### git diff File History Stepping
 <leader>g[       - Step back in file history (older commit, auto-jump to first change)
 <leader>g]       - Step forward in file history (newer commit, auto-jump to first change)
 <leader>g0       - Reset to HEAD comparison

@@ -884,7 +884,7 @@ vim.keymap.set('n', '<leader><leader>dl', gdoc_sync.list,
 
 -- ─   Claude Code paste cleanup                         ■
 
-require('utils.cc_paste').setup({ key = '<leader>cP' })
+require('utils.cc_paste').setup({ key = '<leader>cV' })
 
 -- ─^  Claude Code paste cleanup                         ▲
 
