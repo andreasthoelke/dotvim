@@ -68,16 +68,11 @@ func! OpenInChromeRemoteDebug_UrlOrPath()
    let url = GetAbsFilePathInLine()
  endif
 
- if url =~ "http" || url =~ "file"
-   " Launch with same flags as remote debug instance
-   " Chrome will open in existing instance since user-data-dir is already in use
-   call jobstart( g:chromeAppPath_rd . ' ' . shellescape( url ) )
- else
-   " Handle local files
-   let pathAbs = fnamemodify( url, ':p' )
-   call jobstart( g:chromeAppPath_rd . ' ' . shellescape( 'file:///' . pathAbs ) )
+ if !(url =~ "http" || url =~ "file")
+   let url = 'file:///' . fnamemodify( url, ':p' )
  endif
- echo "Opening in Chrome (remote debug) .."
+
+ call ChromeRemoteDebugOpenUrl(url)
  call T_DelayedCmd( "echo ''", 2000 )
 endfunc
 
@@ -406,6 +401,23 @@ let g:chromeAppPath =   "/Applications/Google Chrome.app/Contents/MacOS/Google C
 " let g:chromeAppPath_rd =   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --remote-debugging-port=9222 "
 " /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$HOME/.chrome-mcp-profile http://localhost:5173/
 let g:chromeAppPath_rd =  '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$HOME/.chrome-mcp-profile'
+let g:chromeRemoteDebugPort = 9222
+
+func! ChromeRemoteDebugOpenUrl(url)
+  " Check if remote debug Chrome is running with visible pages
+  let pages = trim(system('curl -s --connect-timeout 1 http://localhost:' . g:chromeRemoteDebugPort . '/json'))
+  if !v:shell_error && pages != '[ ]' && pages != '[]'
+    " Active instance with windows - open new tab via CDP
+    call system('curl -s -X PUT ' . shellescape('http://localhost:' . g:chromeRemoteDebugPort . '/json/new?' . a:url))
+    echo "Opened in Chrome (remote debug) via CDP"
+  else
+    " Not running or zombie - kill zombie if any, then launch fresh
+    call system("pkill -f chrome-mcp-profile 2>/dev/null")
+    call jobstart( g:chromeAppPath_rd . ' ' . shellescape( a:url ) )
+    echo "Launching Chrome (remote debug) .."
+  endif
+endfunc
+
 " let g:chromiumAppPath = "/Applications/Google\ Chrome.app/Contents/MacOS/Chromium"
 let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
 let g:chromiumAppPath3 = "/Applications/Chromium.app/Contents/MacOS/Chromium --remote-debugging-port=9222"
@@ -448,11 +460,8 @@ endfunc
 command! -nargs=1 LaunchChromeRemoteDebug call LaunchChrome_remoteDebug(<q-args>)
 
 func! LaunchChrome_remoteDebug( url )
-  exec "20new"
-  let opts = { 'cwd': getcwd( winnr() ) }
-  let g:Chrome_remoteDebugID = termopen( g:chromeAppPath_rd . ' ' . a:url, opts )
-  " close the window without closing the terminal buffer
-  silent wincmd c
+  call ChromeRemoteDebugOpenUrl(a:url)
+  call T_DelayedCmd( "echo ''", 2000 )
 endfunc
 " LaunchChrome_remoteDebug( 'http://localhost:5173/' )
 
