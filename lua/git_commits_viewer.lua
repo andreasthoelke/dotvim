@@ -678,9 +678,6 @@ function M.Show( opts )
     vim.api.nvim_buf_set_lines(commits_buf, 0, -1, false, commit_lines)
   end
 
-  -- Set a custom filetype
-  vim.api.nvim_buf_set_option(commits_buf, 'filetype', 'markdown')
-
   -- Set buffer options
   vim.api.nvim_buf_set_option(commits_buf, 'modifiable', true)
   vim.api.nvim_buf_set_option(commits_buf, 'buftype', 'nofile')
@@ -1061,10 +1058,9 @@ function M.set_highlights()
   vim.fn.matchadd('HponFolderSel', curr_folder .. "\\ze\\/", 11, -1)
   vim.fn.matchadd('HponFileSel', curr_filename .. "\\ze\\.", 11, -1)
 
-  -- NOTE: caution! this cmd needs " " at the end! so don't run "ll c l" ClearSpaces in this file!!
-  vim.cmd([[
-      syntax match Normal '/' conceal cchar= 
-      ]])
+  -- NOTE: '/' path separators are hidden via matchadd instead of syntax conceal
+  -- (syntax conceal cchar= can corrupt treesitter conceal in other windows of the same tab)
+  vim.fn.matchadd('Conceal', '/', 11, -1, {conceal = ' '})
 end
 
 function M.get_prev_line_commit_hash()

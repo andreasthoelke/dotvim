@@ -592,6 +592,13 @@ endfunc " ▲
 
 func! MarkdownSyntaxAdditions()
   " Use matchadd instead of syntax match - works even when treesitter is active
+  " Skip if already set up for this window (avoids clearmatches() disrupting treesitter conceal)
+  if get(w:, 'md_conceal_matches_set', 0)
+    setlocal conceallevel=2
+    setlocal concealcursor=ni
+    return
+  endif
+  let w:md_conceal_matches_set = 1
   call clearmatches()
   call matchadd('Conceal', '->', 10, -1, {'conceal': '→'})
   call matchadd('Conceal', '<-', 10, -1, {'conceal': '←'})
@@ -606,6 +613,11 @@ func! MarkdownSyntaxAdditions()
   call matchadd('Conceal', '<=', 10, -1, {'conceal': ''})
   call matchadd('Conceal', '\$\\leftarrow\$', 10, -1, {'conceal': ''})
   call matchadd('Conceal', '^gdoc_id:.*$', 10, -1, {'conceal': '*'})
+
+  " Conceal ** bold markers via matchadd (reliable fallback for treesitter @conceal
+  " which can drop out during window/redraw events)
+  call matchadd('Conceal', '\*\*\ze\S', 10, -1, {'conceal': ''})
+  call matchadd('Conceal', '\S\zs\*\*', 10, -1, {'conceal': ''})
 
 "   syntax match Normal '=>' conceal cchar=
 "   syntax match Normal '$\\rightarrow$' conceal cchar=
