@@ -370,6 +370,8 @@ func! GetPath_fromLine()
   let line_words = filter(line_words, 'v:val =~ "[./]"')
   " return line_words
   let path = line_words->sort('CompareLength')[-1]
+  " Strip trailing sentence punctuation (e.g. "file.md." or "file.md,")
+  let path = substitute(path, '[.,;!?]\+$', '', '')
   " return path
 
   " Support for http links
@@ -486,15 +488,15 @@ func! GetPath_fromLine()
   " Check for backtick-enclosed paths
   let backtick_match = matchstr(full_line, '`\zs[^`]*\ze`')
   if !empty(backtick_match)
-    let path = backtick_match
-    
-    if filereadable(path) || isdirectory(path)
-      return path
+    let candidate = backtick_match
+
+    if filereadable(candidate) || isdirectory(candidate)
+      return candidate
     endif
-    
+
     let current_folder = fnamemodify(expand('%:p'), ':h')
-    let folder_rel_path = current_folder . '/' . path
-    
+    let folder_rel_path = current_folder . '/' . candidate
+
     if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
       return folder_rel_path
     endif
@@ -503,15 +505,15 @@ func! GetPath_fromLine()
   " Check for double-quotes-enclosed paths
   let quotes_match = matchstr(full_line, '"\zs[^"]*\ze"')
   if !empty(quotes_match)
-    let path = quotes_match
-    
-    if filereadable(path) || isdirectory(path)
-      return path
+    let candidate = quotes_match
+
+    if filereadable(candidate) || isdirectory(candidate)
+      return candidate
     endif
-    
+
     let current_folder = fnamemodify(expand('%:p'), ':h')
-    let folder_rel_path = current_folder . '/' . path
-    
+    let folder_rel_path = current_folder . '/' . candidate
+
     if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
       return folder_rel_path
     endif
@@ -520,15 +522,15 @@ func! GetPath_fromLine()
   " Check for single-quotes-enclosed paths
   let single_quotes_match = matchstr(full_line, "'\\zs[^']*\\ze'")
   if !empty(single_quotes_match)
-    let path = single_quotes_match
-    
-    if filereadable(path) || isdirectory(path)
-      return path
+    let candidate = single_quotes_match
+
+    if filereadable(candidate) || isdirectory(candidate)
+      return candidate
     endif
-    
+
     let current_folder = fnamemodify(expand('%:p'), ':h')
-    let folder_rel_path = current_folder . '/' . path
-    
+    let folder_rel_path = current_folder . '/' . candidate
+
     if filereadable(folder_rel_path) || isdirectory(folder_rel_path)
       return folder_rel_path
     endif
