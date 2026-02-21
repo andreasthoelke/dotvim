@@ -361,8 +361,8 @@ function _G.Parrot_chat_status_label()
 end
 
 local PRESETS = {
-  { provider = "gemini", model = "gemini-3-pro-preview", level = "low" },
-  { provider = "gemini", model = "gemini-3-pro-preview", level = "high" },
+  { provider = "gemini", model = "gemini-3.1-pro-preview", level = "low" },
+  { provider = "gemini", model = "gemini-3.1-pro-preview", level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "low" },
@@ -651,8 +651,9 @@ require("parrot").setup(
       gemini = {
         name = "gemini",
         api_key = os.getenv "GEMINI_API_KEY",
-        model = "gemini-3-pro-preview",
+        model = "gemini-3.1-pro-preview",
         models = {
+          "gemini-3.1-pro-preview",
           "gemini-3-pro-preview",
           "gemini-2.5-pro",
           "gemini-2.5-flash",
