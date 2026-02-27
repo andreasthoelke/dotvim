@@ -297,26 +297,28 @@ func! ScrollOff( offset )
   if winline() < a:offset
     return
   endif
-  let scof = &scrolloff
+  let save_pos = getcurpos()
   exec 'set scrolloff=' . a:offset
-  redraw
   normal! kj
+  call setpos('.', save_pos)
   exec 'set scrolloff=8'
   " call T_DelayedCmd( 'set scrolloff=' . scof, 400 )
 endfunc
 " call ScrollOff( 20 )
 
 func! ScrollUp( lines )
-  call feedkeys( a:lines . "\<c-e>", 'nx')
+  execute "normal! " . a:lines . "\<c-e>"
 endfunc
 " call ScrollOffFix( 20 )
 
 
 func! ScrollUpFromMiddle( lines )
   if line('.') < 20 | return | endif
-  if winheight('%') >= 40
+  if winheight(0) >= 40
+    let save_pos = getcurpos()
     normal! zz
     call ScrollUp( a:lines )
+    call setpos('.', save_pos)
   endif
 endfunc
 " call ScrollUpFromMiddle( 20 )
@@ -339,4 +341,5 @@ nnoremap zH zt
 nnoremap zL zb
 
 " Scrolling: ------------------------
+
 

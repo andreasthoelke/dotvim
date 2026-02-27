@@ -861,6 +861,10 @@ vim.keymap.set('n', '<leader>nt', project_notes.createNote,
 -- vim.keymap.set('n', '<c-w>ps', project_notes.findNotes,
 --   { desc = 'Find project notes' })
 
+-- Open global notes file
+vim.keymap.set('n', '<leader>ng', function() vim.cmd('vsplit ' .. vim.fn.expand('~/Documents/Notes/general.md')) end,
+  { desc = 'Open global notes (vsplit)' })
+
 -- ─^  Project Notes                                    ▲
 
 
