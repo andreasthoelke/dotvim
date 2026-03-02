@@ -162,7 +162,24 @@ nnoremap <silent> ,cm :call Path_Float( '/Users/at/Documents/Notes' )<cr>:call D
 nnoremap <silent><leader>os :call Path_Float( '~/.config/nvim/keymaps/vim-cheat-sheet.md' )<cr>
 
 nnoremap <silent><leader>tO :call Path_Float( '~/Documents/Notes/todos-global.md' )<cr>
-nnoremap <silent><leader>to :call Path_Float( '/Users/at/Documents/Notes/todos-workflow.md' )<cr>
+
+nnoremap <leader>to :call TouchFileInParentDir()<cr>
+
+function! TouchFileInParentDir()
+  let l:current = expand('%:p')
+  if l:current == ''
+    let l:parent = getcwd() . '/'
+  else
+    let l:parent = fnamemodify(l:current, ':h') . '/'
+  endif
+  let l:rel_parent = fnamemodify(l:parent, ':~:.')
+  let l:filename = input('New file: ', l:rel_parent)
+  if l:filename == ''
+    return
+  endif
+  execute 'vsplit ' . fnameescape(l:filename)
+  write
+endfunction
 
 nnoremap <silent><leader>oex :call Path_Float( g:ExamplesPath )<cr>
 nnoremap <silent><leader>oel :call Path_Float( 'ExampleLinks.md' )<cr>
