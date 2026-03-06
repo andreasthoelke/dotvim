@@ -38,6 +38,12 @@
 - **Use dispatch_agent** for complex search patterns across multiple files
 - **Prefer concise responses** with minimal preamble or explanation unless explicitly requested
 
+## Plugins
+
+| Plugin | Notes | Details |
+|--------|-------|---------|
+| parrot.nvim | Patched local fork - read before updating models or pulling from upstream | `docs/parrot.md` |
+
 # Custom instructions (project local)
 
 - Don't unnecessarily restrict buffer properties unless there's a specific requirement

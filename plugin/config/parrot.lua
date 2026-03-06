@@ -17,12 +17,13 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
-local OPENAI_PRIMARY_MODEL = "gpt-5.2"
+local OPENAI_PRIMARY_MODEL = "gpt-5.4"
 local OPENAI_REASONING_DEFAULT = "medium"
 local OPENAI_REASONING_SYMBOLS = {
   low = "L",
   medium = "M",
   high = "H",
+  xhigh = "X",
 }
 
 local GEMINI_THINKING_DEFAULT = "low"
@@ -168,12 +169,6 @@ local function set_openai_reasoning(level)
   end
 
   if changed then
-    local msg = string.format("OpenAI reasoning effort set to %s", level)
-    if parrot_config.logger and parrot_config.logger.info then
-      parrot_config.logger.info(msg)
-    else
-      vim.notify(msg, vim.log.levels.INFO)
-    end
     refresh_winbar()
   end
   return changed
@@ -181,10 +176,13 @@ end
 
 local function toggle_openai_reasoning()
   local current = get_openai_reasoning_level()
-  if current == "high" then
+  if current == "medium" then
+    return set_openai_reasoning("high")
+  elseif current == "high" then
+    return set_openai_reasoning("xhigh")
+  else
     return set_openai_reasoning(OPENAI_REASONING_DEFAULT)
   end
-  return set_openai_reasoning("high")
 end
 
 local function get_openai_reasoning_indicator()
@@ -365,6 +363,7 @@ local PRESETS = {
   { provider = "gemini", model = "gemini-3.1-pro-preview", level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
+  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "low" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "high" },
 }
@@ -561,20 +560,46 @@ require("parrot").setup(
         model = OPENAI_PRIMARY_MODEL,
         models = {
           OPENAI_PRIMARY_MODEL,
+          "gpt-5.2",
           "gpt-5.1",
           "gpt-5-mini",
           "gpt-4o",
           "gpt-4o-mini",
         },
         params = {
-          chat = { max_completion_tokens = 4096, reasoning_effort = OPENAI_REASONING_DEFAULT },
-          command = { max_completion_tokens = 4096, reasoning_effort = OPENAI_REASONING_DEFAULT },
+          chat = { max_completion_tokens = 65536, reasoning_effort = OPENAI_REASONING_DEFAULT },
+          command = { max_completion_tokens = 65536, reasoning_effort = OPENAI_REASONING_DEFAULT },
         },
         topic = {
           -- Use a fast non-reasoning model for topic summaries to avoid GPT-5 spinner issues
           model = "gpt-4o-mini",
           params = { max_completion_tokens = 100, temperature = 0.2 },
         },
+        process_stdout = function(response)
+          if not response or response == "" then
+            return nil
+          end
+          local json_str = response:gsub("^data:%s*", "")
+          if json_str == "[DONE]" then
+            return nil
+          end
+          local success, decoded = pcall(vim.json.decode, json_str)
+          if success then
+            if decoded.error then
+              return nil
+            end
+            local logfile = (os.getenv("HOME") or "/tmp") .. "/.local/share/nvim/parrot_openai_debug.log"
+            local f = io.open(logfile, "a")
+            if f then
+              f:write(os.date("%H:%M:%S") .. " " .. json_str:sub(1, 500) .. "\n")
+              f:close()
+            end
+            if decoded.choices and decoded.choices[1] and decoded.choices[1].delta then
+              return decoded.choices[1].delta.content
+            end
+          end
+          return nil
+        end,
         preprocess_payload = function(payload)
           for _, message in ipairs(payload.messages) do
             message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
