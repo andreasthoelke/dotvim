@@ -1435,7 +1435,7 @@ let g:peekaboo_prefix = ','
 nnoremap <leader>" :Telescope registers<cr>
 
 " A yank in vim writes to the system clipboard, and a system copy is available to paste in vim. but gets overwritten at the first yank.
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 if !exists('g:vscode')
 

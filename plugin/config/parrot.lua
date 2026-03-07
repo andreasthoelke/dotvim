@@ -567,8 +567,8 @@ require("parrot").setup(
           "gpt-4o-mini",
         },
         params = {
-          chat = { max_completion_tokens = 65536, reasoning_effort = OPENAI_REASONING_DEFAULT },
-          command = { max_completion_tokens = 65536, reasoning_effort = OPENAI_REASONING_DEFAULT },
+          chat = { max_completion_tokens = 128000, reasoning_effort = OPENAI_REASONING_DEFAULT },
+          command = { max_completion_tokens = 128000, reasoning_effort = OPENAI_REASONING_DEFAULT },
         },
         topic = {
           -- Use a fast non-reasoning model for topic summaries to avoid GPT-5 spinner issues

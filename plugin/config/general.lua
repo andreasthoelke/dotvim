@@ -131,6 +131,19 @@ end
 -- )
 
 
+-- ─   Clipboard Debug                                  ■
+
+local clipboard_debug = require('utils.clipboard_debug')
+clipboard_debug.setup()
+
+-- <leader>yc  - show clipboard diagnostic (nvim registers vs pbpaste)
+-- <leader>ys  - force-sync pbpaste into nvim registers (workaround for stale cache)
+vim.keymap.set('n', '<leader>yc', clipboard_debug.check, { desc = 'Clipboard diagnostic' })
+vim.keymap.set('n', '<leader>ys', clipboard_debug.sync, { desc = 'Sync pbpaste into nvim registers' })
+
+-- ─^  Clipboard Debug                                  ▲
+
+
 function _G.Is_macos_dark_mode()
     local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
     local result = handle:read("*a")
