@@ -824,6 +824,9 @@ gd       - CURSOR-LSP-REFERENCE
 <leader>nt   - Create new / "touch" note
            ~/.config/nvim/plugin/config/maps.lua‖*ProjectˍNotes
 
+### global todos notes
+<leader>tO :call Path_Float( '~/Documents/Notes/todos-global.md' )
+
 ## newBuf from ntree
 \v \s  - split in prev window
     The NewBuf split maps of all non-float tree windows create the split relative to the tree window

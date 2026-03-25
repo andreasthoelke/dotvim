@@ -36,8 +36,12 @@ local CLAUDE_THINKING_DEFAULT = "low"
 local CLAUDE_THINKING_SYMBOLS = {
   low = "L",
   high = "H",
+  max = "X",
 }
-local CLAUDE_THINKING_BUDGET = 10000
+local CLAUDE_THINKING_BUDGETS = {
+  high = 10000,
+  max = 120000,
+}
 
 local function refresh_winbar()
   vim.schedule(function()
@@ -366,6 +370,7 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "low" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "high" },
+  { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
 }
 local current_preset_index = 1
 
@@ -525,11 +530,16 @@ require("parrot").setup(
             table.remove(payload.messages, 1)
           end
           -- Handle extended thinking for Claude Opus 4.6
-          if payload.thinking_level == "high" and payload.model and payload.model:match("opus%-4%-6") then
+          local budget = CLAUDE_THINKING_BUDGETS[payload.thinking_level]
+          if budget and payload.model and payload.model:match("opus%-4%-6") then
             payload.thinking = {
               type = "enabled",
-              budget_tokens = CLAUDE_THINKING_BUDGET,
+              budget_tokens = budget,
             }
+            -- max_tokens must be > budget_tokens, but <= 128000 (model limit)
+            if not payload.max_tokens or payload.max_tokens <= budget then
+              payload.max_tokens = math.min(budget + 16000, 128000)
+            end
           end
           payload.thinking_level = nil  -- Remove custom param before sending to API
           return payload
