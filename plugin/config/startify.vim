@@ -77,6 +77,7 @@ let g:startify_session_dir = stdpath('data') . '/sessions'
 
 nnoremap <silent><leader>st :Startify<cr>
 nnoremap <silent><leader>sT :tabnew<cr>:Startify<cr>
+nnoremap <silent><leader>sv :vnew<cr>:Startify<cr>
 nnoremap <silent><leader><leader>st :%bdelete!<bar>Startify<cr>
 
 " ─^  Startify Keymaps                                ▲
