@@ -18,9 +18,11 @@ vim.keymap.set('n', '<c-g><c-g>[', ':PrtPrevPreset<CR>', { noremap = true, silen
 
 vim.g.agent_cmd = "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
 
+    -- "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
+
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
-    "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
+    "caffeinate -i codex --full-auto ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "caffeinate -i gemini --yolo ",
     "cat -v ",

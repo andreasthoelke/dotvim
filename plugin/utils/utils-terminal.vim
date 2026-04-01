@@ -107,8 +107,9 @@ func! GetDevServerCommand()
     return readfile(cache_file)[0]
   endif
 
-  " Check for pnpm workspace
-  let is_monorepo = filereadable(root . '/pnpm-workspace.yaml')
+  " Detect package manager and workspace type
+  let is_pnpm = filereadable(root . '/pnpm-workspace.yaml') || filereadable(root . '/pnpm-lock.yaml')
+  let pkg_manager = is_pnpm ? 'pnpm' : 'npm'
 
   " Read package.json
   let pkg_json = root . '/package.json'
@@ -118,6 +119,9 @@ func! GetDevServerCommand()
     let pkg_content = join(readfile(pkg_json), "\n")
     let scripts_match = matchstr(pkg_content, '"scripts":\s*{[^}]*}')
   endif
+
+  " Treat pnpm workspaces or npm workspaces as monorepo
+  let is_monorepo = is_pnpm || (pkg_content =~ '"workspaces"')
 
   if !is_monorepo
     " Check for dev script, fallback to start
@@ -133,9 +137,9 @@ func! GetDevServerCommand()
   " Try to find dev script in package.json for monorepo
   if pkg_content != ''
     " Look for common monorepo dev patterns
-    for pattern in ['dev:frontend', 'frontend:dev', 'dev:app', 'app:dev', 'dev:web', 'web:dev']
+    for pattern in ['dev:frontend', 'frontend:dev', 'dev:app', 'app:dev', 'dev:web', 'web:dev', 'workbench:dev', 'dev:workbench']
       if scripts_match =~ '"' . pattern . '"'
-        let cmd = 'pnpm run ' . pattern
+        let cmd = pkg_manager . ' run ' . pattern
         call writefile([cmd], cache_file)
         return cmd
       endif
@@ -148,7 +152,7 @@ func! GetDevServerCommand()
       let script_pattern = '"\(\w\+\)":\s*"[^"]*' . escape(filter_match, '[]*.') . '[^"]*"'
       let script_name = substitute(matchstr(scripts_match, script_pattern), '"\(\w\+\)".*', '\1', '')
       if script_name != ''
-        let cmd = 'pnpm run ' . script_name
+        let cmd = pkg_manager . ' run ' . script_name
         call writefile([cmd], cache_file)
         return cmd
       endif
@@ -156,8 +160,9 @@ func! GetDevServerCommand()
   endif
 
   " Prompt user
-  echo "Monorepo detected. Enter dev command (e.g., 'pnpm --filter frontend dev'):"
-  let cmd = input('Command: ', 'pnpm --filter frontend dev')
+  let default_prompt = pkg_manager ==# 'pnpm' ? 'pnpm --filter frontend dev' : 'npm run dev'
+  echo "Monorepo detected. Enter dev command:"
+  let cmd = input('Command: ', default_prompt)
   if cmd != ''
     call writefile([cmd], cache_file)
   endif
