@@ -390,6 +390,85 @@ function M.Search_collection_md_headers()
   require('telescope.builtin').live_grep(opts)
 end
 
+function M.Search_dir_md_headers()
+  local from_neotree = vim.bo.filetype == "neo-tree"
+  local search_root
+  if from_neotree then
+    local manager = require("neo-tree.sources.manager")
+    local state = manager.get_state_for_window()
+    if state and state.tree then
+      local node = state.tree:get_node()
+      if node and node.path then
+        if node.type == "directory" then
+          search_root = node.path
+        else
+          search_root = vim.fn.fnamemodify(node.path, ":h")
+        end
+      end
+    end
+  end
+  search_root = search_root or vim.fn.expand('%:p:h')
+
+  local prev_win = (function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.bo[buf].filetype ~= 'neo-tree' and vim.bo[buf].buftype == '' then
+        return win
+      end
+    end
+    return vim.fn.win_getid(vim.fn.winnr('#'))
+  end)()
+
+  local function abs_filepath(entry)
+    return vim.fn.fnameescape(search_root .. "/" .. entry.filename)
+  end
+
+  local opts = {
+    default_text = "^#{1,6} .*",
+    cwd = search_root,
+    glob_pattern = "*.md",
+    additional_args = function(_opts) return {"-L", "-i"} end, -- Follow symlinks, case insensitive
+    prompt_title = "MD Headers (dir)",
+    attach_mappings = function(prompt_bufnr, map)
+      local action_state = require("telescope.actions.state")
+      local actions = require("telescope.actions")
+      local open_in_prev = function()
+        local entry = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if entry and vim.api.nvim_win_is_valid(prev_win) then
+          vim.api.nvim_set_current_win(prev_win)
+          local lnum = entry.lnum or 0
+          vim.cmd(lnum > 0 and ("edit +" .. lnum .. " " .. abs_filepath(entry))
+                            or  ("edit " .. abs_filepath(entry)))
+        end
+      end
+      map("i", "<C-w>p", open_in_prev)
+      map("n", "<C-w>p", open_in_prev)
+      if from_neotree then
+        local open_vsplit = function()
+          local entry = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+          if entry then
+            if vim.api.nvim_win_is_valid(prev_win) then
+              vim.api.nvim_set_current_win(prev_win)
+            end
+            local lnum = entry.lnum or 0
+            vim.cmd(lnum > 0 and ("vsplit +" .. lnum .. " " .. abs_filepath(entry))
+                              or  ("vsplit " .. abs_filepath(entry)))
+          end
+        end
+        map("i", "<C-w>v", open_vsplit)
+        map("n", "<C-w>v", open_vsplit)
+      end
+      return true
+    end,
+  }
+  local posOpts = Float_dynAnchorWidth()
+  local layout_opts = { layout_config = { vertical = posOpts } }
+  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  require('telescope.builtin').live_grep(opts)
+end
+
 function M.Search_collection_aichat_topics()
   local opts = {
     default_text = "# topic:.*" ,

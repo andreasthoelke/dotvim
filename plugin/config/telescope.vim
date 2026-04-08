@@ -86,6 +86,7 @@ nnoremap ,sa <cmd>Telescope live_grep glob_pattern=*.scala<cr>
 " nnoremap ,scr <cmd>Telescope live_grep search_dirs=/Users/at/Documents/Notes<cr>
 nnoremap ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
+nnoremap ,sdh <cmd>lua require('utils.general').Search_dir_md_headers()<cr>
 
 " AI CHATS
 nnoremap <leader>sfc <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '# .*')<cr>

@@ -735,8 +735,8 @@ gef   - refetch the gql client
 <leader><leader>so   - Reopen dev server terminal window
                        ~/.config/nvim/plugin/utils/utils-terminal.vim‖/StartDevServer()
 
-Monorepo support: Checks for pnpm-workspace.yaml, looks for common dev scripts,
-                  prompts if needed, caches choice in .vim_dev_command
+Workspace support: Detects pnpm/npm workspaces, looks for common dev scripts,
+                   prompts if needed, caches choice in .vim_dev (key=value)
 
 pnpm run dev
 glc/b   - on http://localhost:5173/
@@ -1206,12 +1206,27 @@ gsD     - file browser
 <leader>slH   - Local md headings
 <leader>slc   - Local comment texts
 
+## Markdown Search
+
+Search scope is controlled by which map you use:
+
+| map   | scope                          | filter        |
+|-------|--------------------------------|---------------|
+| ,sdh  | parent folder of current file  | *.md, all heading levels, case insensitive |
+| ,sch  | active collection (FolderSearch_Path) | all files, # .* |
+| ,scr  | active collection (FolderSearch_Path) | all files, full grep |
+
+- Set active collection: `,cp` then `<leader>p`
+- Default collection: `~/Documents/Notes/`
+- `^# ` anchors to H1 headings only; ,sch uses `# .*` (matches anywhere in line)
+
 ## COLLECTION search 
 could deprecate this, bc/ hardly used?
 use case: i could add more predifined patterns?
 ,cp then <leader>p  - to set search folder
 ,scr <cmd>lua require('utils.general').Search_collection_full()<cr>
 ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<cr>
+,sdh <cmd>lua require('utils.general').Search_dir_md_headers()<cr>
 
 ### Hard link example
 NOTE: I no longer use hard links - some apps break them!
