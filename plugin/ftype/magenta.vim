@@ -3,7 +3,7 @@
 " ~/.local/share/nvim/parrot/chats/2025-07-29.12-13-51.md
 " call MagentaBufferMaps()
 
-func! MagentaBufferMaps()
+func! MarkdownNavMaps()
   " set syntax=markdown
   " call MarkdownSyntaxAdditions()
 
@@ -55,7 +55,39 @@ func! MagentaBufferMaps()
   nnoremap <silent><buffer>]b :call MD_BoldNext()<cr>
   nnoremap <silent><buffer>[b :call MD_BoldPrev()<cr>
 
+  nnoremap <silent><buffer> ( :call Md_MvLineStart()<cr>
+  nnoremap <silent><buffer> ) :call Md_MvNextLineStart()<cr>
 
+
+endfunc
+
+
+func! Md_SkipLinePrefix()
+  " Skip leading markers to land on first significant word:
+  "   ## Heading  ->  Heading
+  "   - item      ->  item
+  "   > quote     ->  quote
+  "   1. item     ->  item
+  let c = GetCharAtCursor()
+  if c == '#'
+    call search('^#\+\s*\zs\S', 'c')
+  elseif c =~ '[-*>]'
+    normal! w
+  elseif c =~ '\d'
+    call search('^\d\+\.\s*\zs\S', 'c')
+  endif
+endfunc
+
+func! Md_MvLineStart()
+  normal! m'
+  normal! ^
+  call Md_SkipLinePrefix()
+endfunc
+
+func! Md_MvNextLineStart()
+  normal! m'
+  normal! j^
+  call Md_SkipLinePrefix()
 endfunc
 
 

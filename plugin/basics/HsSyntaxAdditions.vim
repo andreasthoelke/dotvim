@@ -58,9 +58,6 @@ au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 " au ag BufNewFile,BufRead,WinNew *.lua call LuaSyntaxAdditions()
 au ag BufWinEnter *.lua call LuaSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
-" TODO migrate to using FileType?
-" au ag FileType python call PythonSyntaxAdditions()
-" au ag BufNewFile,BufRead,WinNew *.yaml call PythonSyntaxAdditions()
 
 " au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
@@ -75,9 +72,13 @@ au ag WinEnter * if &ft == 'markdown' | call MarkdownSyntaxAdditions() | endif
 au ag BufWinEnter *.md,*.markdown,.mdx   call MarkdownBufferMaps()
 au ag FileType markdown,markdown.mdx,codecompanion,mcphub call MarkdownBufferMaps()
 
+au ag BufWinEnter *.yaml,*.yml          call YamlSyntaxAdditions()
+au ag BufWinEnter *.yaml,*.yml          call YamlBufferMaps()
+au ag FileType yaml                     call YamlBufferMaps()
+
 " au ag BufWinEnter * if &ft == "neotest-summary" | call NeotestBufferMaps() | endif
 
-au ag BufWinEnter * if &ft == "magenta" | call MagentaBufferMaps() | endif
+au ag BufWinEnter * if &ft == "magenta" | call MarkdownNavMaps() | endif
 
 au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
