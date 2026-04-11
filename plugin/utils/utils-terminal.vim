@@ -97,14 +97,44 @@ func! RunTerm_showTerm()
 
 endfunc
 
+" Read a key from .vim_dev (key=value format)
+func! ReadVimDev(root, key)
+  let cfg = a:root . '/.vim_dev'
+  if !filereadable(cfg) | return '' | endif
+  for line in readfile(cfg)
+    let m = matchlist(line, '^\(\w\+\)=\(.*\)$')
+    if !empty(m) && m[1] ==# a:key | return m[2] | endif
+  endfor
+  return ''
+endfunc
+
+" Write/update a key in .vim_dev
+func! WriteVimDev(root, key, value)
+  let cfg = a:root . '/.vim_dev'
+  let lines = filereadable(cfg) ? readfile(cfg) : []
+  let found = 0
+  let out = []
+  for line in lines
+    let m = matchlist(line, '^\(\w\+\)=')
+    if !empty(m) && m[1] ==# a:key
+      call add(out, a:key . '=' . a:value)
+      let found = 1
+    else
+      call add(out, line)
+    endif
+  endfor
+  if !found | call add(out, a:key . '=' . a:value) | endif
+  call writefile(out, cfg)
+endfunc
+
 " Detect monorepo and determine dev command
 func! GetDevServerCommand()
   let root = getcwd()
-  let cache_file = root . '/.vim_dev_command'
 
   " Check cache first
-  if filereadable(cache_file)
-    return readfile(cache_file)[0]
+  let cached = ReadVimDev(root, 'command')
+  if cached != ''
+    return cached
   endif
 
   " Detect package manager and workspace type
@@ -140,7 +170,7 @@ func! GetDevServerCommand()
     for pattern in ['dev:frontend', 'frontend:dev', 'dev:app', 'app:dev', 'dev:web', 'web:dev', 'workbench:dev', 'dev:workbench']
       if scripts_match =~ '"' . pattern . '"'
         let cmd = pkg_manager . ' run ' . pattern
-        call writefile([cmd], cache_file)
+        call WriteVimDev(root, 'command', cmd)
         return cmd
       endif
     endfor
@@ -153,7 +183,7 @@ func! GetDevServerCommand()
       let script_name = substitute(matchstr(scripts_match, script_pattern), '"\(\w\+\)".*', '\1', '')
       if script_name != ''
         let cmd = pkg_manager . ' run ' . script_name
-        call writefile([cmd], cache_file)
+        call WriteVimDev(root, 'command', cmd)
         return cmd
       endif
     endif
@@ -164,7 +194,7 @@ func! GetDevServerCommand()
   echo "Monorepo detected. Enter dev command:"
   let cmd = input('Command: ', default_prompt)
   if cmd != ''
-    call writefile([cmd], cache_file)
+    call WriteVimDev(root, 'command', cmd)
   endif
   return cmd
 endfunc
@@ -252,7 +282,12 @@ func! StartDevServer_resume()
     endif
   endif
 
-  call LaunchChrome_remoteDebug( "http://localhost:" . port )
+  let url = "http://localhost:" . port
+  if ReadVimDev(getcwd(), 'browser') =~# 'default'
+    call jobstart(['open', url])
+  else
+    call LaunchChrome_remoteDebug(url)
+  endif
 endfunc
 
 
