@@ -2,18 +2,20 @@
 " ─   Syntax additions                                   ■
 
 func! YamlSyntaxAdditions()
-  if get(w:, 'yaml_conceal_matches_set', 0)
-    setlocal conceallevel=2
-    setlocal concealcursor=ni
-    return
+  " A reused split window can keep stale yaml state from a previous buffer.
+  " Refresh only yaml-owned matches instead of relying on a one-time flag.
+  if exists('w:yaml_conceal_match_ids')
+    for id in w:yaml_conceal_match_ids
+      silent! call matchdelete(id)
+    endfor
   endif
-  let w:yaml_conceal_matches_set = 1
-  call clearmatches()
-  call matchadd('Conceal', '->', 10, -1, {'conceal': '→'})
-  call matchadd('Conceal', '<-', 10, -1, {'conceal': '←'})
-  call matchadd('Conceal', '=>', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '<<', 10, -1, {'conceal': '«'})
-  call matchadd('Conceal', '>>', 10, -1, {'conceal': '»'})
+  let w:yaml_conceal_match_ids = []
+
+  call add(w:yaml_conceal_match_ids, matchadd('Conceal', '->', 10, -1, {'conceal': '→'}))
+  call add(w:yaml_conceal_match_ids, matchadd('Conceal', '<-', 10, -1, {'conceal': '←'}))
+  call add(w:yaml_conceal_match_ids, matchadd('Conceal', '=>', 10, -1, {'conceal': ''}))
+  call add(w:yaml_conceal_match_ids, matchadd('Conceal', '<<', 10, -1, {'conceal': '«'}))
+  call add(w:yaml_conceal_match_ids, matchadd('Conceal', '>>', 10, -1, {'conceal': '»'}))
   setlocal conceallevel=2
   setlocal concealcursor=ni
 endfunc

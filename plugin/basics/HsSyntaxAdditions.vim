@@ -592,33 +592,49 @@ endfunc " ▲
 " endfunc
 
 func! MarkdownSyntaxAdditions()
-  " Use matchadd instead of syntax match - works even when treesitter is active
-  " Skip if already set up for this window (avoids clearmatches() disrupting treesitter conceal)
-  if get(w:, 'md_conceal_matches_set', 0)
-    setlocal conceallevel=2
-    setlocal concealcursor=ni
-    return
+  " Windows get reused across filetypes after split-open flows like
+  " <c-w><leader>v. Track only our own match ids so markdown can rebuild
+  " cleanly without clobbering unrelated window-local matches.
+  if exists('w:md_conceal_match_ids')
+    for id in w:md_conceal_match_ids
+      silent! call matchdelete(id)
+    endfor
   endif
-  let w:md_conceal_matches_set = 1
-  call clearmatches()
-  call matchadd('Conceal', '->', 10, -1, {'conceal': '→'})
-  call matchadd('Conceal', '<-', 10, -1, {'conceal': '←'})
-  call matchadd('Conceal', '|v', 10, -1, {'conceal': '↓'})
-  call matchadd('Conceal', '|V', 10, -1, {'conceal': '▼'})
-  call matchadd('Conceal', '|\^', 10, -1, {'conceal': '↑'})
-  call matchadd('Conceal', '<<', 10, -1, {'conceal': '«'})
-  call matchadd('Conceal', '>>', 10, -1, {'conceal': '»'})
-  call matchadd('Conceal', '=>', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '\\=\\>', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '\$\\rightarrow\$', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '<=', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '\$\\leftarrow\$', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '^gdoc_id:.*$', 10, -1, {'conceal': '*'})
+  let w:md_conceal_match_ids = []
+
+  " Fix: clear vim-markdown's syntax conceals so TypeScript/yaml windows that
+  " enable conceallevel do not suddenly activate markdown's concealends for
+  " ** and ` when the window gets reused.
+  silent! syntax clear mkdBold
+  silent! syntax clear mkdItalic
+  silent! syntax clear mkdBoldItalic
+  silent! syntax clear mkdCode
+  silent! syntax clear mkdCodeDelimiter
+
+  " Recreate them without conceal.
+  syn region htmlItalic start="\%(^\|\s\)\zs\*\ze[^\\\*\t ]\%(\%([^*]\|\\\*\|\n\)*[^\\\*\t ]\)\?\*\_W" end="[^\\\*\t ]\zs\*\ze\_W" keepend contains=@Spell oneline
+  syn region htmlBold start="\%(^\|\s\)\zs\*\*\ze\S" end="\S\zs\*\*" keepend contains=@Spell oneline
+  syn region mkdCode start=/`/ end=/`/
+  syn region mkdCode start=/``/ skip=/[^`]`[^`]/ end=/``/
+
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '->', 10, -1, {'conceal': '→'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '<-', 10, -1, {'conceal': '←'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '|v', 10, -1, {'conceal': '↓'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '|V', 10, -1, {'conceal': '▼'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '|\^', 10, -1, {'conceal': '↑'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '<<', 10, -1, {'conceal': '«'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '>>', 10, -1, {'conceal': '»'}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '=>', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '\\=\\>', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '\$\\rightarrow\$', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '<=', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '\$\\leftarrow\$', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '^gdoc_id:.*$', 10, -1, {'conceal': '*'}))
 
   " Conceal ** bold markers via matchadd (reliable fallback for treesitter @conceal
   " which can drop out during window/redraw events)
-  call matchadd('Conceal', '\*\*\ze\S', 10, -1, {'conceal': ''})
-  call matchadd('Conceal', '\S\zs\*\*', 10, -1, {'conceal': ''})
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '\*\*\ze\S', 10, -1, {'conceal': ''}))
+  call add(w:md_conceal_match_ids, matchadd('Conceal', '\S\zs\*\*', 10, -1, {'conceal': ''}))
 
 "   syntax match Normal '=>' conceal cchar=
 "   syntax match Normal '$\\rightarrow$' conceal cchar=
