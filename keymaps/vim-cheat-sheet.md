@@ -728,6 +728,19 @@ gei         - refetches the currentl set identif
 gew   - set identif (of detected type based on name), schema, query, varia, resolver, ect
 gef   - refetch the gql client
 
+## (experimental) Agent/CC process management
+**`~/.vim/plugin/utils/utils-procs.vim`** - adds `:Procs` command:
+- Opens an fzf picker showing all vite and chrome-debug processes with PID, CPU%, mem%, and full command
+- `Tab` to multi-select, `Enter` to kill selected, `ctrl-a` to select all
+- Works across all projects, not just the current one - useful when the hook didn't run or for other stray processes
+
+**`~/.claude/hooks/stop-cleanup.sh`** - runs async on every Claude session stop:
+- Kills any Chrome instance with `--user-data-dir=/tmp/chrome-debug` in its args (always Claude-created)
+- Kills vite processes whose cwd matches the Claude session's `$PWD` - so it only kills processes in the current project, not your other running dev servers
+- Emits a `systemMessage` listing what it killed, visible in the Claude UI
+
+
+
 ## vite dev server
 <leader><leader>sd   - Start dev server (auto-detects npm/pnpm/monorepo, opens in Chrome, hides term)
 <leader><leader>sD   - Stop dev server

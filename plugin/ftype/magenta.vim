@@ -1,7 +1,7 @@
 
 " example file
 " ~/.local/share/nvim/parrot/chats/2025-07-29.12-13-51.md
-" call MagentaBufferMaps()
+" call MarkdownNavMaps()
 
 func! MarkdownNavMaps()
   " set syntax=markdown

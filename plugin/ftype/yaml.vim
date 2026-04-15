@@ -58,11 +58,11 @@ endfunc
 
 " ─   Motions                                            ■
 
-" <c-n>/<c-p>: top-level keys (canvas:) + named list items (- id: siren)
-" - branch 1: any non-whitespace-led key at col 0 with a colon
-" - branch 2: list items whose key is 'id'; \zs positions cursor at 'id', not '-'
-" Non-very-magic: ^ inside \( at start of alternative = start-of-line
-let g:Yaml_MainStartPattern = '\(^\S[^:# \t]*:\|\s*-\s\+\zsid:\)'
+" <c-n>/<c-p>: top-level keys + section nodes + named list items
+" - branch 1: top-level key at col 0 (canvas:, remnant:)
+" - branch 2: indented key preceded by blank line (knot:, veils:) - skips properties like fragment:
+" - branch 3: list items with 'id' key (- id: siren); \zs at 'id', not '-'
+let g:Yaml_MainStartPattern = '\(^\S[^:# \t]*:\|\n\s*\n\s\+\zs\w[^:# \t]*:\|\s*-\s\+\zsid:\)'
 
 " <leader><c-n>/<c-p>: top-level keys only (canvas:, ambient:, nodes:)
 let g:Yaml_TopLevelPattern = '^\S[^:# \t]*:'

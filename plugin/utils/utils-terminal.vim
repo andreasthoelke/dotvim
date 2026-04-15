@@ -563,7 +563,7 @@ function! OnTermOpen()
   " Activate AgentsBufferMaps for Claude Code and other agent terminals
   let bufname = expand('%')
   if bufname =~? '\v(claude|codex|gemini|agent)'
-    call MagentaBufferMaps()
+    call MarkdownNavMaps()
   endif
 endfunction
 

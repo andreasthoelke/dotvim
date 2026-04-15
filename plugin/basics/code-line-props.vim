@@ -346,6 +346,27 @@ func! GetFullLine_OrFromCursor()
 endfunc
 
 " A path or url is often the longest word in a line
+func! SplitFilepathAndLineSuffix(path)
+  let path_parts = split(a:path, ':')
+
+  if len(path_parts) >= 3
+    let maybe_col = path_parts[-1]
+    let maybe_line = path_parts[-2]
+    if maybe_line =~ '^\d\+$' && maybe_col =~ '^\d\+$'
+      return [join(path_parts[0 : len(path_parts) - 3], ':'), ':' . maybe_line . ':' . maybe_col]
+    endif
+  endif
+
+  if len(path_parts) >= 2
+    let maybe_line = path_parts[-1]
+    if maybe_line =~ '^\d\+$'
+      return [join(path_parts[0 : len(path_parts) - 2], ':'), ':' . maybe_line]
+    endif
+  endif
+
+  return [a:path, '']
+endfunc
+
 func! GetPath_fromLine()
   let full_line = trim(getline('.'))
   " Remove markdown bold/italic markers to avoid matching them
@@ -413,9 +434,12 @@ func! GetPath_fromLine()
     else
       let path = ghpath
     endif
+    let [path, line_link] = SplitFilepathAndLineSuffix(path)
     " return path
     if len(ghmatches[3])
       return path . "‖:" . ghmatches[3]
+    elseif !empty(line_link)
+      return path . "‖" . line_link
     else
       return path
     endif
@@ -428,6 +452,7 @@ func! GetPath_fromLine()
   if !empty(markdown_match)
     let filepath = markdown_match[1]
     let heading = get(markdown_match, 2, '')
+    let [filepath, line_link] = SplitFilepathAndLineSuffix(filepath)
     
     " Remove the # from the heading
     if !empty(heading)
@@ -480,6 +505,8 @@ func! GetPath_fromLine()
       let heading_text = map(heading_parts, 'toupper(v:val[0]) . v:val[1:]')
       let heading_text = join(heading_text, ' ')
       return path . '‖/# ' . heading_text
+    elseif !empty(line_link)
+      return path . '‖' . line_link
     else
       return path
     endif
@@ -741,6 +768,4 @@ endfunc
 func! WrapWith(inner, around)
   return a:around . a:inner . a:around
 endfunc
-
-
 
