@@ -109,7 +109,7 @@ function M.UpdateDiffView(commit_hash, filepath)
   vim.api.nvim_set_current_win(current_win)
 end
 
-function M.UpdateDiffView_Untracked(filepath)
+function M.UpdateDiffView_Untracked(filepath, status)
   local tab_wins = get_tab_windows()
   local current_win = vim.api.nvim_get_current_win()
   -- go to diff_win
@@ -120,11 +120,24 @@ function M.UpdateDiffView_Untracked(filepath)
   vim.bo.filetype = 'gitdiff'
   local tab_wins, tabpage = get_tab_windows()
   if filepath then
-    -- Escape filepath for shell to handle brackets and special characters
-    local escaped_filepath = "'" .. filepath:gsub("'", "'\\'''") .. "'"
-    -- For completely new untracked files, use git diff against /dev/null to show as additions
-    -- For modified tracked files, use regular git diff
-    term_jobs[tabpage] = vim.fn.termopen('git diff --no-index /dev/null ' .. escaped_filepath .. ' 2>/dev/null || git diff -- ' .. escaped_filepath)
+    local escaped_filepath = vim.fn.shellescape(filepath)
+    local diff_cmd
+
+    if status == "??" then
+      -- Only compare against /dev/null for truly untracked files.
+      diff_cmd = string.format(
+        "git diff --no-index -- /dev/null %s 2>/dev/null || true",
+        escaped_filepath
+      )
+    else
+      -- Match the summary view by diffing the tracked file against HEAD.
+      diff_cmd = string.format(
+        "git diff HEAD -- %s",
+        escaped_filepath
+      )
+    end
+
+    term_jobs[tabpage] = vim.fn.termopen(diff_cmd)
   else
     -- Show git diff for all tracked changes
     term_jobs[tabpage] = vim.fn.termopen('git diff HEAD')
@@ -555,6 +568,7 @@ local function update_view_from_lines(opts)
   -- Handle indented file lines
   if line:match("^%s") then
     local filepath
+    local status = line:match("^%s+(%S+)")
     -- Check for renamed files (format: "    R100 old.lua -> new.lua")
     if line:match("->") then
       filepath = line:match("->%s+(.+)$")
@@ -568,7 +582,7 @@ local function update_view_from_lines(opts)
 
       if prev_word == "untracked" then
         -- For untracked changes, run git diff without commit hash
-        M.UpdateDiffView_Untracked(filepath)
+        M.UpdateDiffView_Untracked(filepath, status)
       elseif prev_word then
         -- For regular commits
         M.UpdateDiffView(prev_word, filepath)
@@ -1084,7 +1098,6 @@ end
 
 
 return M
-
 
 
 

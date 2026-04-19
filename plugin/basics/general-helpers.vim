@@ -186,8 +186,11 @@ nnoremap <silent><leader>oel :call Path_Float( 'ExampleLinks.md' )<cr>
 nnoremap <silent><leader>op :call Path_Float( 'package.json' )<cr>
 nnoremap <silent><leader>oi :call Path_Float( '.gitignore' )<cr>
 nnoremap <silent><leader>or :call Path_Float( 'README.md' )<cr>
-nnoremap <silent><leader>oc :call Path_Float( 'CLAUDE.md' )<cr>
-nnoremap <silent><leader>oC :call Path_Float( '~/.claude/CLAUDE.md' )<cr>
+nnoremap <silent><leader>oc :call Path_Float( 'AGENTS.md' )<cr>
+
+" nnoremap <silent><leader>oC :call Path_Float( '~/.claude/' )<cr>
+nnoremap <silent><leader>oC :call v:lua.Ntree_openFloat( '~/.config/' )<cr>
+
 nnoremap <silent><leader>oev :call Path_Float( '.env' )<cr>
 
 " nnoremap <silent><leader><leader>oc :call Path_Float( '~/.local/share/nvim/parrot/chats' )<cr>:call DirvishSortByModified()<cr>

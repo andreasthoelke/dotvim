@@ -510,14 +510,13 @@ end
 -- Ntree_rightOpen
 -- vim.api.nvim_tabpage_list_wins( 2 )
 
-function _G.Ntree_openFloat()
-  local prevWindow = vim.api.nvim_get_current_win()
+function _G.Ntree_openFloat(folder_path)
   local posOpts = FloatOpts_inOtherWinColumn()
   posOpts.width = math.floor( posOpts.width / 2.0 )
   local bufid = vim.api.nvim_create_buf( false, true )
 
   local reveal_file = vim.fn.expand( "%:p" )
-  local cwd = vim.fn.getcwd( vim.fn.winnr() )
+  local cwd = folder_path or vim.fn.getcwd( vim.fn.winnr() )
 
   local floating_winId = vim.api.nvim_open_win( bufid, false, posOpts )
   vim.g['floating_win'] = floating_winId
@@ -527,19 +526,9 @@ function _G.Ntree_openFloat()
 end
 
 function _G.Ntree_openFloat_parentFolder()
-  local prevWindow = vim.api.nvim_get_current_win()
-  local posOpts = FloatOpts_inOtherWinColumn()
-  posOpts.width = math.floor( posOpts.width / 2.0 )
-  local bufid = vim.api.nvim_create_buf( false, true )
-
   local reveal_file = vim.fn.expand( "%:p" )
   local parentFolderPath = vim.fn.ParentFolder( reveal_file )  --  if a directory this will get the parent folder of the directory!
-
-  local floating_winId = vim.api.nvim_open_win( bufid, false, posOpts )
-  vim.g['floating_win'] = floating_winId
-  vim.api.nvim_set_current_win(floating_winId)
-  Ntree_launch( reveal_file, parentFolderPath )
-  -- vim.api.nvim_set_current_win( prevWindow )
+  Ntree_openFloat( parentFolderPath )
 end
 
 
@@ -1399,7 +1388,6 @@ require("neo-tree").setup({
 
 
 -- ─^  Config                                            ▲
-
 
 
 

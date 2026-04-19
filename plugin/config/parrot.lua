@@ -18,30 +18,15 @@
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
 local OPENAI_PRIMARY_MODEL = "gpt-5.4"
+-- API-native level labels are used directly in the UI to avoid confusion
+-- between providers (e.g., OpenAI "xhigh" vs Anthropic "max").
 local OPENAI_REASONING_DEFAULT = "medium"
-local OPENAI_REASONING_SYMBOLS = {
-  low = "L",
-  medium = "M",
-  high = "H",
-  xhigh = "X",
-}
 
 local GEMINI_THINKING_DEFAULT = "low"
-local GEMINI_THINKING_SYMBOLS = {
-  low = "L",
-  high = "H",
-}
 
+-- Claude effort levels (API-native strings): low, medium, high, xhigh, max
+-- xhigh is Opus 4.7 only; max is Opus 4.6/4.7 + Sonnet 4.6.
 local CLAUDE_THINKING_DEFAULT = "low"
-local CLAUDE_THINKING_SYMBOLS = {
-  low = "L",
-  high = "H",
-  max = "X",
-}
-local CLAUDE_THINKING_BUDGETS = {
-  high = 10000,
-  max = 120000,
-}
 
 local function refresh_winbar()
   vim.schedule(function()
@@ -190,8 +175,7 @@ local function toggle_openai_reasoning()
 end
 
 local function get_openai_reasoning_indicator()
-  local level = get_openai_reasoning_level()
-  return OPENAI_REASONING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+  return get_openai_reasoning_level()
 end
 
 local function get_gemini_thinking_level()
@@ -254,8 +238,7 @@ local function toggle_gemini_thinking()
 end
 
 local function get_gemini_thinking_indicator()
-  local level = get_gemini_thinking_level()
-  return GEMINI_THINKING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+  return get_gemini_thinking_level()
 end
 
 local function get_parrot_anthropic_context()
@@ -308,8 +291,7 @@ local function set_claude_thinking(level)
 end
 
 local function get_claude_thinking_indicator()
-  local level = get_claude_thinking_level()
-  return CLAUDE_THINKING_SYMBOLS[level] or (level and level:sub(1, 1):upper()) or nil
+  return get_claude_thinking_level()
 end
 
 local function format_llm_label(model_name, provider_name)
@@ -368,9 +350,8 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-6", level = "low" },
-  { provider = "anthropic", model = "claude-opus-4-6", level = "high" },
-  { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
+  { provider = "anthropic", model = "claude-opus-4-7", level = "xhigh" },
+  { provider = "anthropic", model = "claude-opus-4-7", level = "max" },
 }
 local current_preset_index = 1
 
@@ -529,26 +510,36 @@ require("parrot").setup(
             payload.system = payload.messages[1].content
             table.remove(payload.messages, 1)
           end
-          -- Handle extended thinking for Claude Opus 4.6
-          local budget = CLAUDE_THINKING_BUDGETS[payload.thinking_level]
-          if budget and payload.model and payload.model:match("opus%-4%-6") then
+          -- Adaptive thinking for Opus 4.6/4.7 and Sonnet 4.6. Opus 4.7 rejects
+          -- thinking.type="enabled" + budget_tokens; adaptive is the only mode.
+          -- Effort is set via output_config.effort.
+          local level = payload.thinking_level
+          local model = payload.model
+          if model and (model:match("opus%-4%-[67]") or model:match("sonnet%-4%-6")) then
             payload.thinking = {
-              type = "enabled",
-              budget_tokens = budget,
+              type = "adaptive",
+              -- 4.7 defaults display to "omitted"; opt into summarized to keep thinking text visible.
+              display = "summarized",
             }
-            -- max_tokens must be > budget_tokens, but <= 128000 (model limit)
-            if not payload.max_tokens or payload.max_tokens <= budget then
-              payload.max_tokens = math.min(budget + 16000, 128000)
+            if level then
+              payload.output_config = { effort = level }
+            end
+            -- At xhigh/max, Anthropic recommends >=64k max_tokens so the model has headroom.
+            if level == "xhigh" or level == "max" then
+              if not payload.max_tokens or payload.max_tokens < 64000 then
+                payload.max_tokens = 64000
+              end
             end
           end
-          payload.thinking_level = nil  -- Remove custom param before sending to API
+          payload.thinking_level = nil  -- strip custom param before sending to API
           return payload
         end,
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
         -- model = "claude-opus-4-20250514",
-        model = "claude-opus-4-6",
+        model = "claude-opus-4-7",
         models = {
+          "claude-opus-4-7",
           "claude-opus-4-6",
           "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",

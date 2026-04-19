@@ -1528,7 +1528,7 @@ Workflow: ~/.config/nvim/plugin/config/maps.lua‖*Gitsigns
 <leader>hu       - Undo stage hunk
 <leader>gg       - Toggle gitsigns gutter
 
-### git diff File History Stepping
+## git diff File History Stepping
 <leader>g[       - Step back in file history (older commit, auto-jump to first change)
 <leader>g]       - Step forward in file history (newer commit, auto-jump to first change)
 <leader>g0       - Reset to HEAD comparison
