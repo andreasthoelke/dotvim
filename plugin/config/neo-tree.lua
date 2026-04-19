@@ -222,8 +222,16 @@ function _G.Util_is_subpath( parentPath, maybeChildPath )
   return utils.is_subpath(parentPath, maybeChildPath)
 end
 
+local function ntree_normalize_dir(path)
+  if path == nil or path == "" then
+    return path
+  end
+  return vim.fn.fnamemodify(vim.fn.expand(path), ":p")
+end
+
 -- Opens a new tree.
 function _G.Ntree_launch( focus_path, root_path )
+  root_path = ntree_normalize_dir(root_path)
   if (not utils.is_subpath(root_path, focus_path)) or (vim.fn.filereadable(focus_path) == 0) then
     tree_exec({
       position = "current",
@@ -516,7 +524,7 @@ function _G.Ntree_openFloat(folder_path)
   local bufid = vim.api.nvim_create_buf( false, true )
 
   local reveal_file = vim.fn.expand( "%:p" )
-  local cwd = folder_path or vim.fn.getcwd( vim.fn.winnr() )
+  local cwd = ntree_normalize_dir(folder_path) or vim.fn.getcwd( vim.fn.winnr() )
 
   local floating_winId = vim.api.nvim_open_win( bufid, false, posOpts )
   vim.g['floating_win'] = floating_winId
@@ -1388,7 +1396,6 @@ require("neo-tree").setup({
 
 
 -- ─^  Config                                            ▲
-
 
 
 

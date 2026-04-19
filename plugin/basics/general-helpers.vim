@@ -189,7 +189,7 @@ nnoremap <silent><leader>or :call Path_Float( 'README.md' )<cr>
 nnoremap <silent><leader>oc :call Path_Float( 'AGENTS.md' )<cr>
 
 " nnoremap <silent><leader>oC :call Path_Float( '~/.claude/' )<cr>
-nnoremap <silent><leader>oC :call v:lua.Ntree_openFloat( '~/.config/' )<cr>
+nnoremap <silent><leader>oC :call v:lua.Ntree_openFloat( '~/.config/claude' )<cr>
 
 nnoremap <silent><leader>oev :call Path_Float( '.env' )<cr>
 
