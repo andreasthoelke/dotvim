@@ -80,7 +80,7 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 
-let g:Vim_columnPttn = MakeOrPttn( ['\:', '\;', '\#', '-', '—', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+let g:Vim_columnPttn = MakeOrPttn( ['\:', '\;', '\#', '-', '—', '─', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 " let g:Vim_columnPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 
 func! Vim_ColumnForw()

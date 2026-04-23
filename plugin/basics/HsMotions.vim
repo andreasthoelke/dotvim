@@ -696,7 +696,7 @@ nnoremap <silent> I :call ColumnForw()<cr>
 nnoremap <silent> Y :call ColumnBackw()<cr>
 
 func! ColumnForw()
-  call SearchSkipSC( g:ColumnPttn, 'W' )
+  call SearchSkipSC( g:columnPttn, 'W' )
   normal w
   let chrs = Get2CharsFromCursor()
   if chrs == '$('
@@ -710,7 +710,7 @@ endfunc
 
 func! ColumnBackw()
   normal bh
-  call SearchSkipSC( g:ColumnPttn, 'bW' )
+  call SearchSkipSC( g:columnPttn, 'bW' )
   normal w
   let chrs = Get2CharsFromCursor()
   if chrs == '$('
