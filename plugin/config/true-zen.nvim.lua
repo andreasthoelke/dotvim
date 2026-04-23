@@ -86,9 +86,13 @@ require("zen-mode").setup({
   },
   -- callback where you can add custom code when the Zen window opens
   on_open = function(win)
+    vim.g.zen_mode = true
+    vim.g.zen_mode_win = win
   end,
   -- callback where you can add custom code when the Zen window closes
   on_close = function()
+    vim.g.zen_mode = false
+    vim.g.zen_mode_win = nil
     -- Force terminal redraw to fix Alacritty cursor color caching on whitespace cells
     vim.cmd('mode')
   end,
@@ -114,8 +118,6 @@ vim.g.zen_mode = false
 
 keymap.set('n', '<leader>zm', function()
   vim.cmd('ZenMode')
-  -- toggle global var
-  vim.g.zen_mode = not vim.g.zen_mode
 end, { noremap = true })
 
 
@@ -225,5 +227,4 @@ require'true-zen'.setup(
     },
   }
 )
-
 

@@ -53,6 +53,10 @@ func! JS_bufferMaps()
 
   nnoremap <silent><buffer> I :call TS_ColumnForw()<cr>
   nnoremap <silent><buffer> Y :call TS_ColumnBackw()<cr>
+  nnoremap <silent><buffer> ]t :call TS_CommaItemStartForw()<cr>
+  nnoremap <silent><buffer> [t :call TS_CommaItemStartBackw()<cr>
+  xnoremap <silent><buffer> ]t <esc>:call ChangeVisSel(function('TS_CommaItemStartForw'))<cr>
+  xnoremap <silent><buffer> [t <esc>:call ChangeVisSel(function('TS_CommaItemStartBackw'))<cr>
 
   nnoremap <silent><buffer> [b            :call JS_MvEndOfPrevBlock()<cr>
   " " find a new map if I actually use this:
@@ -184,6 +188,33 @@ func! JS_bufferMaps()
   nnoremap <silent><buffer> <leader>lr :lua vim.lsp.buf.rename()<cr>
 
 
+endfunc
+
+func! TS_CommaItemStartForw()
+  normal! l
+  if GetCharAtCursor() == ','
+    normal! h
+  endif
+  call FlipToPairChar('')
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
+  if sLine
+    call setpos('.', [0, sLine, sCol, 0] )
+    normal! w
+  endif
+endfunc
+
+func! TS_CommaItemStartBackw()
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  if !sLine
+    return
+  endif
+
+  call setpos('.', [0, sLine, sCol, 0] )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  if sLine
+    call setpos('.', [0, sLine, sCol, 0] )
+    normal! w
+  endif
 endfunc
 
 func! JS_MvEndOfBlock()
@@ -711,4 +742,3 @@ func! HotspotBackw()
 endfunc
 
 " ─^  Hotspot motions                                    ▲
-

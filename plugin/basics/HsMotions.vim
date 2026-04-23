@@ -1150,13 +1150,14 @@ func! CommaItemStartForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
-  " Find delimiter on the same bracket level, skip matches in Strings
+  " Find a comma delimiter on the same bracket level.
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
   " Test this: I may want to use this in comments and strings?!
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)', '}\|\]\|)', 'nW' )
-  " echo sLine . '-' . sCol
-  call setpos('.', [0, sLine, sCol, 0] )
-  normal! w
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW' )
+  if sLine
+    call setpos('.', [0, sLine, sCol, 0] )
+    normal! w
+  endif
   return
   if sLine && sLine < (oLine + 5)
     call setpos('.', [0, sLine, sCol, 0] )
@@ -1173,17 +1174,19 @@ endfunc " ▲
 " Testing this with ~/Documents/Architecture/examples/gql1/server/po2.ts#/builder.queryType.{
 func! CommaItemStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
-  " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
-  " Find delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
-  call setpos('.', [0, sLine, sCol, 0] )
+  " Move backward to the previous item start in a comma-separated list.
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  if sLine
+    call setpos('.', [0, sLine, sCol, 0] )
+  endif
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
-  "NOTE the added (,|;) instead of just "," (also see above) which is needed to go back with [t.
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
 
-  call setpos('.', [0, sLine, sCol, 0] )
-  normal! w
+  if sLine
+    call setpos('.', [0, sLine, sCol, 0] )
+    normal! w
+  endif
   return
   if sLine && sLine > (oLine - 5)
     call setpos('.', [0, sLine, sCol, 0] )
@@ -1593,6 +1596,4 @@ endfunc
 " imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
 " imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 " CamelCaseMotion: ------------------------------------------------------
-
-
 

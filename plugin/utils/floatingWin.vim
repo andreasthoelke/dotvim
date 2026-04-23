@@ -116,25 +116,42 @@ func! FloatWin_close ()
 endfunc
 
 lua << EOF
-function FloatWin_close ()
-  if vim.g.zen_mode == true then 
-    if vim.api.nvim_win_is_valid( vim.g['floatWin_win'] ) then
-      vim.api.nvim_win_close(vim.g['floatWin_win'], false)
-    end
-    return 
+local function is_float_win(win)
+  if type(win) ~= "number" or not vim.api.nvim_win_is_valid(win) then
+    return false
   end
 
+  local ok, config = pcall(vim.api.nvim_win_get_config, win)
+  return ok and config.relative ~= nil and config.relative ~= ""
+end
+
+local function is_zen_mode_win(win)
+  if vim.g.zen_mode_win == win then
+    return true
+  end
+
+  local ok, view = pcall(require, "zen-mode.view")
+  if not ok then
+    return false
+  end
+
+  return view.win == win or view.bg_win == win
+end
+
+local function close_float_win(win)
+  if is_float_win(win) and not is_zen_mode_win(win) then
+    pcall(vim.api.nvim_win_close, win, false)
+  end
+end
+
+function FloatWin_close ()
   ReverseColors_clear()
-  require("neo-tree.sources.common.preview").hide()
+  pcall(function()
+    require("neo-tree.sources.common.preview").hide()
+  end)
 
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_is_valid(win) then
-      local config = vim.api.nvim_win_get_config(win)
-      if config.relative ~= "" then
-        vim.api.nvim_win_close(win, false)
-        -- print('Closing window', win)
-      end
-    end
+    close_float_win(win)
   end
 end
 EOF
@@ -517,6 +534,4 @@ func! GetFileTypeFromBufText ( lines )
     return 'typescript'
   endif
 endfunc
-
-
 
