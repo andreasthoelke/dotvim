@@ -57,6 +57,10 @@ func! VScriptToolsBufferMaps()
 
   nnoremap <silent><buffer> I :call Vim_ColonForw()<cr>
   nnoremap <silent><buffer> Y :call Vim_ColonBackw()<cr>
+  onoremap <silent><buffer> I <cmd>call Vim_ColonForw()<cr>
+  onoremap <silent><buffer> Y <cmd>call Vim_ColonBackw()<cr>
+  xnoremap <silent><buffer> I <esc><cmd>call ChangeVisSel(function('Vim_ColonForw'))<cr>
+  xnoremap <silent><buffer> Y <esc><cmd>call ChangeVisSel(function('Vim_ColonBackw'))<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(27)<cr>

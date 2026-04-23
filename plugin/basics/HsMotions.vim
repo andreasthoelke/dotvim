@@ -1153,7 +1153,7 @@ func! CommaItemStartForw() " ■
   " Find delimiter on the same bracket level, skip matches in Strings
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
   " Test this: I may want to use this in comments and strings?!
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|=\)', '}\|\]\|)', 'nW' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)', '}\|\]\|)', 'nW' )
   " echo sLine . '-' . sCol
   call setpos('.', [0, sLine, sCol, 0] )
   normal! w
@@ -1175,12 +1175,12 @@ func! CommaItemStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
   " Find delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|=\)', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   call setpos('.', [0, sLine, sCol, 0] )
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   "NOTE the added (,|;) instead of just "," (also see above) which is needed to go back with [t.
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|=\)\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '\(,\|\;\|[.!?:]\*\{1,2}\ze\_s\|\.\ze\_s\|?\ze\_s\|!\ze\_s\|:\ze\_s\|\-\ze\_s\|—\ze\_s\|=\)\|{\|\[\|(\|<', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
 
   call setpos('.', [0, sLine, sCol, 0] )
   normal! w
@@ -1298,6 +1298,7 @@ endfunc
 nnoremap <silent> <leader>]t :call BracketEndForw()<cr>
 nnoremap <silent> ]T :call BracketEndForw()<cr>
 vnoremap <silent> ]T <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
+onoremap <silent> ]T <cmd>call BracketEndForw()<cr>
 " Test: t]Ti,<space>JS<esc>
 " allLanguages = [ Haskell, Agda abc,  Idris, PureScript ]
 func! BracketEndForw()

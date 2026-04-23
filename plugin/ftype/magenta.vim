@@ -37,6 +37,17 @@ func! MarkdownNavMaps()
 " ─     Motions                                         ──
   nnoremap <silent><buffer> I :call Mgn_ColumnForw()<cr>
   nnoremap <silent><buffer> Y :call Mgn_ColumnBackw()<cr>
+  onoremap <silent><buffer> I <cmd>call Mgn_ColumnForw()<cr>
+  onoremap <silent><buffer> Y <cmd>call Mgn_ColumnBackw()<cr>
+  xnoremap <silent><buffer> I <esc><cmd>call ChangeVisSel(function('Mgn_ColumnForw'))<cr>
+  xnoremap <silent><buffer> Y <esc><cmd>call ChangeVisSel(function('Mgn_ColumnBackw'))<cr>
+
+  " Clause text object: select up to next ", " "; " ": " "! " "? " or " - "
+  " ic = inner clause (exclusive of separator), ac = around clause (inclusive)
+  onoremap <silent><buffer> ic <cmd>call MD_ClauseObj('i')<cr>
+  xnoremap <silent><buffer> ic <cmd>call MD_ClauseObj('i')<cr>
+  onoremap <silent><buffer> ac <cmd>call MD_ClauseObj('a')<cr>
+  xnoremap <silent><buffer> ac <cmd>call MD_ClauseObj('a')<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Mgn_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Mgn_MainStartBindingForw()<cr>:call ScrollOff(27)<cr>
@@ -148,4 +159,31 @@ func! Mgn_TopLevBindingBackw()
     normal! kk
     call search( g:Mgn_TopLevelPattern, 'W' )
   endif
+endfunc
+
+" Clause text object: span from current position to next ", " / "; " / " - "
+" mode: 'i' = inner (stop before separator), 'a' = around (include separator + space)
+let g:MD_clausePttn = '\(,\s\|;\s\|:\s\|!\s\|?\s\|\s-\s\)'
+func! MD_ClauseObj(mode)
+  let l:startLine = line('.')
+  let l:startCol  = col('.')
+  " Find end: search forward for separator on current line
+  let [l:eLine, l:eCol] = searchpos(g:MD_clausePttn, 'nW')
+  if l:eLine == 0 || l:eLine != l:startLine
+    " No separator on this line: fall back to end of line
+    let l:eLine = l:startLine
+    let l:eCol  = col('$') - 1
+    let l:endCol = l:eCol
+  else
+    if a:mode ==# 'a'
+      " include the ", " / "; " — two chars; " - " is three
+      let l:matchStr = matchstr(getline(l:eLine)[l:eCol-1:], g:MD_clausePttn)
+      let l:endCol = l:eCol + strlen(l:matchStr) - 1
+    else
+      let l:endCol = l:eCol - 1
+    endif
+  endif
+  call setpos("'<", [0, l:startLine, l:startCol, 0])
+  call setpos("'>", [0, l:eLine,      l:endCol,  0])
+  normal! `<v`>
 endfunc
