@@ -55,12 +55,12 @@ func! VScriptToolsBufferMaps()
   " Untested
   " nnoremap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
 
-  nnoremap <silent><buffer> I :call Vim_ColonForw()<cr>
-  nnoremap <silent><buffer> Y :call Vim_ColonBackw()<cr>
-  onoremap <silent><buffer> I <cmd>call Vim_ColonForw()<cr>
-  onoremap <silent><buffer> Y <cmd>call Vim_ColonBackw()<cr>
-  xnoremap <silent><buffer> I <esc><cmd>call ChangeVisSel(function('Vim_ColonForw'))<cr>
-  xnoremap <silent><buffer> Y <esc><cmd>call ChangeVisSel(function('Vim_ColonBackw'))<cr>
+  nnoremap <silent><buffer> I :call Vim_ColumnForw()<cr>
+  nnoremap <silent><buffer> Y :call Vim_ColumnBackw()<cr>
+  onoremap <silent><buffer> I <cmd>call Vim_ColumnForw()<cr>
+  onoremap <silent><buffer> Y <cmd>call Vim_ColumnBackw()<cr>
+  xnoremap <silent><buffer> I <esc><cmd>call ChangeVisSel(function('Vim_ColumnForw'))<cr>
+  xnoremap <silent><buffer> Y <esc><cmd>call ChangeVisSel(function('Vim_ColumnBackw'))<cr>
 
   nnoremap <silent><buffer> <c-p>         :call Vim_MainStartBindingBackw()<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n>         :call Vim_MainStartBindingForw()<cr>:call ScrollOff(27)<cr>
@@ -80,19 +80,19 @@ func! VScriptToolsBufferMaps()
 endfunc
 
 
-let g:Vim_colonPttn = MakeOrPttn( ['\:', '\;', '\#', '-', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
-" let g:Vim_colonPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+let g:Vim_columnPttn = MakeOrPttn( ['\:', '\;', '\#', '-', '—', '=', '\$', '\sor\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
+" let g:Vim_columnPttn = MakeOrPttn( ['\:', '\#', '-', '=\s', 'or\s', '?', 'and\s', 'not\s', '\.\.', 'if\s', 'elseif', 'then\s', 'return'] )
 
-func! Vim_ColonForw()
-  " call SearchSkipSC( g:Vim_colonPttn, 'W' )
-  call search( g:Vim_colonPttn, 'eW' )
+func! Vim_ColumnForw()
+  " call SearchSkipSC( g:Vim_columnPttn, 'W' )
+  call search( g:Vim_columnPttn, 'eW' )
   " 'e' move to the end of the match, making sure the normal w jumps to after the column seperator
   call Vim_ColgoFistWord()
 endfunc
 
-func! Vim_ColonBackw()
+func! Vim_ColumnBackw()
   normal bh
-  call SearchSkipSC( g:Vim_colonPttn, 'bW' )
+  call SearchSkipSC( g:Vim_columnPttn, 'bW' )
   call Vim_ColgoFistWord()
 endfunc
 

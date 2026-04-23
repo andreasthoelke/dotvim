@@ -66,7 +66,7 @@ endfunc
 let g:topLevPttn = '^[^ -]'
 let g:anyCharsNotBracketOrEqu = '[^=(]+'
 
-" Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside (). '\_s' => whitespace or blank lines
+" Top level Haskell type signature. May the column in a new line. Exclues column after = and inside (). '\_s' => whitespace or blank lines
 " let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
 
 let g:topLevTypeSig = '^\i\+\s\:\:'
@@ -104,7 +104,7 @@ let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do'
 " Typescript and Purescript:
 let g:lineHotspotsPttn = MakeOrPttn( ['=', '=\>'] )
 " Scala -> now in tools_scala
-let g:colonPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'then', 'else', '\$'] )
+let g:columnPttn = MakeOrPttn( ['\:\s', '\/\/', '*>', '-', '=', 'then', 'else', '\$'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
@@ -692,11 +692,11 @@ let g:hlAreaID = 0
 " nnoremap <silent> ,k :call FnAreaBackw()<cr>
 
 " Column movement:
-nnoremap <silent> I :call ColonForw()<cr>
-nnoremap <silent> Y :call ColonBackw()<cr>
+nnoremap <silent> I :call ColumnForw()<cr>
+nnoremap <silent> Y :call ColumnBackw()<cr>
 
-func! ColonForw()
-  call SearchSkipSC( g:colonPttn, 'W' )
+func! ColumnForw()
+  call SearchSkipSC( g:ColumnPttn, 'W' )
   normal w
   let chrs = Get2CharsFromCursor()
   if chrs == '$('
@@ -708,9 +708,9 @@ func! ColonForw()
 
 endfunc
 
-func! ColonBackw()
+func! ColumnBackw()
   normal bh
-  call SearchSkipSC( g:colonPttn, 'bW' )
+  call SearchSkipSC( g:ColumnPttn, 'bW' )
   normal w
   let chrs = Get2CharsFromCursor()
   if chrs == '$('
