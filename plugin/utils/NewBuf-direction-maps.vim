@@ -247,13 +247,68 @@ endfunc
 
 " ─   Browse folder with neo-tree                       ──
 
+func! FindNearestExistingPath(path) abort
+  let l:path = expand(a:path)
+
+  if empty(l:path)
+    return ''
+  endif
+
+  if filereadable(l:path) || isdirectory(l:path)
+    return l:path
+  endif
+
+  let l:parent = fnamemodify(l:path, ':h')
+  while !empty(l:parent) && l:parent !=# l:path
+    if isdirectory(l:parent) || filereadable(l:parent)
+      return l:parent
+    endif
+    let l:path = l:parent
+    let l:parent = fnamemodify(l:path, ':h')
+  endwhile
+
+  return ''
+endfunc
+
+func! NotifyWarn(msg) abort
+  call luaeval('vim.notify(_A, vim.log.levels.WARN)', a:msg)
+endfunc
+
+func! OpenMissingPathFallback(missing_path, direction) abort
+  let l:fallback = FindNearestExistingPath(a:missing_path)
+
+  if empty(l:fallback)
+    call NotifyWarn("Path not found: " . fnamemodify(a:missing_path, ':~'))
+    return v:false
+  endif
+
+  let l:display_missing = fnamemodify(a:missing_path, ':~')
+  let l:display_fallback = fnamemodify(l:fallback, ':~')
+  call NotifyWarn("Path not found: " . l:display_missing . "\nShowing nearest existing folder: " . l:display_fallback)
+
+  let l:cmd = NewBufCmds(l:fallback)[ a:direction ]
+  exec l:cmd
+  call v:lua.Ntree_launch(l:fallback, l:fallback)
+  return v:true
+endfunc
+
 
 func! Browse_FolderLinePath( direction )
   let [direction; maybeBg ] = a:direction->split('_')
   let [path; _maybeLinkExt] = GetPath_fromLine()->split('‖')
+  let path = expand(path)
+
+  if !isdirectory(path)
+    let path = FindNearestExistingPath(path)
+  endif
+
+  if empty(path)
+    call NotifyWarn("Path not found: " . fnamemodify(expand(GetPath_fromLine()->split('‖')[0]), ':~'))
+    return
+  endif
+
   let cmd = NewBufCmds( path )[ direction ] 
   exec cmd
-  let path = expand( path )
   call v:lua.Ntree_launch( path, path ) 
 endfunc
 " call Browse_FolderLinePath('down')
@@ -376,6 +431,12 @@ endfunc
 
 func! NewBuf_fromClipPath( direction )
   let [path; maybeLinkExt] = @*->split('‖')
+
+  if !filereadable(expand(path)) && !isdirectory(expand(path))
+    call OpenMissingPathFallback(path, a:direction)
+    return
+  endif
+
   let cmd = NewBufCmds( path )[ a:direction ] 
   " if IsInFloatWin() | wincmd c | endif
   exec cmd
@@ -390,6 +451,11 @@ func! NewBuf_fromLinePath( direction )
     call LaunchChrome( maybeLinkExt[0] )
     return
   endif 
+
+  if !filereadable(expand(path)) && !isdirectory(expand(path))
+    call OpenMissingPathFallback(path, a:direction)
+    return
+  endif
 
   " echo path
   " echo maybeLinkExt
@@ -513,9 +579,6 @@ endfunc
 func! Exec( cmd )
   exec a:cmd
 endfunc
-
-
-
 
 
 

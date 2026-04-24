@@ -108,7 +108,7 @@ endfunc
 
 " ─   Markdown agent nav patterns                        ■
 
-let g:Mgn_columnPttn = MakeOrPttn( ['\:', '#','→', '\,', '\- ', '—', '–', '─', '\;'] )
+let g:Mgn_columnPttn = MakeOrPttn( ['\:', '#','→', '\,', '\- ', '—', '–', '─', '\;', '[.!?]["'')\]]*\s'] )
 
 " let g:Mgn_MainStartPattern = '\v(# \zs|✏️.{-}in\s\`\zs)'
 " Require blank line before two-space section starts so mid-paragraph indents don't match
