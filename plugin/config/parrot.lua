@@ -21,6 +21,7 @@ local OPENAI_PRIMARY_MODEL = "gpt-5.5"
 -- API-native level labels are used directly in the UI to avoid confusion
 -- between providers (e.g., OpenAI "xhigh" vs Anthropic "max").
 local OPENAI_REASONING_DEFAULT = "medium"
+local image_paths = require("utils.image_paths")
 
 local GEMINI_THINKING_DEFAULT = "low"
 
@@ -176,6 +177,46 @@ end
 
 local function get_openai_reasoning_indicator()
   return get_openai_reasoning_level()
+end
+
+local function current_buffer_dir()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return nil
+  end
+  local name = vim.api.nvim_buf_get_name(bufnr)
+  if name == "" then
+    return nil
+  end
+  return vim.fn.fnamemodify(name, ":p:h")
+end
+
+local function convert_openai_user_images(payload)
+  local buffer_dir = current_buffer_dir()
+  for _, message in ipairs(payload.messages or {}) do
+    if message.role == "user" and type(message.content) == "string" then
+      local text, images = image_paths.extract_image_paths(message.content, buffer_dir)
+      if #images > 0 then
+        local blocks = {}
+        local attached = 0
+        if text ~= "" then
+          table.insert(blocks, { type = "text", text = text })
+        end
+        for _, path in ipairs(images) do
+          local data_url, err = image_paths.data_url(path)
+          if data_url then
+            table.insert(blocks, { type = "image_url", image_url = { url = data_url } })
+            attached = attached + 1
+          elseif err then
+            vim.notify("Parrot image attach failed: " .. err, vim.log.levels.WARN)
+          end
+        end
+        if attached > 0 then
+          message.content = blocks
+        end
+      end
+    end
+  end
 end
 
 local function get_gemini_thinking_level()
@@ -604,8 +645,11 @@ require("parrot").setup(
         end,
         preprocess_payload = function(payload)
           for _, message in ipairs(payload.messages) do
-            message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
+            if type(message.content) == "string" then
+              message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
+            end
           end
+          convert_openai_user_images(payload)
           -- Handle GPT-5 reasoning models
           if payload.model and string.match(payload.model, "^gpt%-5") then
             -- Remove system prompt (not supported by GPT-5)
