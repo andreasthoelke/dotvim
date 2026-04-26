@@ -305,7 +305,8 @@ function _G.ParrotChat_InThisTab_id()
   for _, win in ipairs(windows) do
     local buf = vim.api.nvim_win_get_buf(win)
     local bufname = vim.api.nvim_buf_get_name(buf)
-    if bufname:match("parrot/chats") then
+    -- Match both /parrot/chats/ (text) and /parrot/img-chats/ (image-gen).
+    if bufname:match("/parrot/[^/]*chats/") then
       return win
     end
   end

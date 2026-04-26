@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   callback = function(ev)
     local path = vim.api.nvim_buf_get_name(ev.buf)
     if image_chat.is_image_chat_path(path) then
-      vim.keymap.set({ "n", "i" }, "<c-i><cr>", "<cmd>PrtImgSubmit<cr>",
+      vim.keymap.set({ "n", "i" }, "<c-w><cr>", "<cmd>PrtImgSubmit<cr>",
         { buffer = ev.buf, silent = true, desc = "Submit image-gen chat" })
     end
   end,

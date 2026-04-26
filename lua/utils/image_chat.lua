@@ -27,8 +27,14 @@ local CHAT_DIR = vim.fn.expand("~/.local/share/nvim/parrot/img-chats")
 local INPUT_MARKER = "☼:"
 local OUTPUT_MARKER_PREFIX = "⌘:["
 
-local MODEL = "gpt-5.5"
+-- API_MODEL is what the shell script sends to OpenAI (defaults to gpt-5.5
+-- via OPENAI_MODEL env). DISPLAY_MODEL is the user-facing name shown in the
+-- buffer marker and winbar.
+local DISPLAY_MODEL = "image-2"
 local FORMAT = "jpeg"
+
+-- Tracks an in-flight request so the winbar label can show an elapsed counter.
+local pending_start = nil
 
 local PRESETS = {
   { quality = "auto",   size = "1024x1024" },
@@ -52,7 +58,7 @@ local function refresh_winbar()
 end
 
 local function preset_label(p)
-  return string.format("%s:%s@%s", MODEL, p.quality, p.size)
+  return string.format("%s:%s@%s", DISPLAY_MODEL, p.quality, p.size)
 end
 
 function M.current_preset()
@@ -60,7 +66,12 @@ function M.current_preset()
 end
 
 function M.current_preset_label()
-  return preset_label(M.current_preset())
+  local label = preset_label(M.current_preset())
+  if pending_start then
+    local elapsed = math.floor(vim.uv.hrtime() / 1e9 - pending_start)
+    return string.format("%s ... %ds", label, elapsed)
+  end
+  return label
 end
 
 function M.next_preset()
@@ -212,6 +223,9 @@ function M.submit()
   )
   maybe_update_topic(bufnr, prompt)
 
+  pending_start = math.floor(vim.uv.hrtime() / 1e9)
+  refresh_winbar()
+
   image_gen.run_async({
     prompt = prompt,
     quality = preset.quality,
@@ -219,6 +233,8 @@ function M.submit()
     format = FORMAT,
     previous_id = previous_id,
   }, function(parsed, err)
+    pending_start = nil
+    refresh_winbar()
     if err then
       vim.notify("image-gen failed: " .. err, vim.log.levels.ERROR)
       return
