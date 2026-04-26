@@ -17,7 +17,7 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
-local OPENAI_PRIMARY_MODEL = "gpt-5.4"
+local OPENAI_PRIMARY_MODEL = "gpt-5.5"
 -- API-native level labels are used directly in the UI to avoid confusion
 -- between providers (e.g., OpenAI "xhigh" vs Anthropic "max").
 local OPENAI_REASONING_DEFAULT = "medium"
@@ -561,6 +561,7 @@ require("parrot").setup(
         model = OPENAI_PRIMARY_MODEL,
         models = {
           OPENAI_PRIMARY_MODEL,
+          "gpt-5.4",
           "gpt-5.2",
           "gpt-5.1",
           "gpt-5-mini",
