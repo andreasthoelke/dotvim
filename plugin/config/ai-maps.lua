@@ -10,6 +10,12 @@ vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<c-g><c-g>]', ':PrtNextPreset<CR>', { noremap = true, silent = true, desc = "Parrot: next model preset" })
 vim.keymap.set('n', '<c-g><c-g>[', ':PrtPrevPreset<CR>', { noremap = true, silent = true, desc = "Parrot: previous model preset" })
 
+-- Image-gen chat: open and cycle presets (analogous to <c-g> for parrot).
+vim.keymap.set('n', '<c-i>v', ':PrtImgChatNew vsplit<CR>', { noremap = true, silent = true, desc = "Image-gen: new chat (vsplit)" })
+vim.keymap.set('n', '<c-i>s', ':PrtImgChatNew split<CR>',  { noremap = true, silent = true, desc = "Image-gen: new chat (split)" })
+vim.keymap.set('n', '<c-i><c-i>]', ':PrtImgNextPreset<CR>', { noremap = true, silent = true, desc = "Image-gen: next preset" })
+vim.keymap.set('n', '<c-i><c-i>[', ':PrtImgPrevPreset<CR>', { noremap = true, silent = true, desc = "Image-gen: previous preset" })
+
 
 
 -- ─   AGENTS                                            ■
