@@ -508,8 +508,15 @@ function M.Search_in_folder(folder_path, default_text)
   local opts = {
     -- default_text = "# topic:.*" ,
     default_text = default_text,
-    cwd = folder_path,
   }
+  if type(folder_path) == "table" then
+    -- Multiple folders: live_grep accepts search_dirs (expanded absolute paths).
+    local dirs = {}
+    for _, p in ipairs(folder_path) do table.insert(dirs, vim.fn.expand(p)) end
+    opts.search_dirs = dirs
+  else
+    opts.cwd = folder_path
+  end
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
   opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )

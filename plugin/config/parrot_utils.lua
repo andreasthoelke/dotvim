@@ -28,7 +28,12 @@ end
 
 
 function _G.ShowParrotChatsView()
-  local folder_path = "~/.local/share/nvim/parrot/chats"
+  -- Search both text chats and image-gen chats; sorting is by filename so they
+  -- interleave by date naturally.
+  local folder_paths = {
+    "~/.local/share/nvim/parrot/chats",
+    "~/.local/share/nvim/parrot/img-chats",
+  }
   -- File paths example: /Users/at/.local/share/nvim/parrot/chats/2025-03-02.08-58-38.406.md
   -- Topics examples (this is the first line of the file):
   -- # topic: TypeScript: Types, Tools, Innovation
@@ -41,9 +46,14 @@ function _G.ShowParrotChatsView()
   vim.api.nvim_set_current_win(floating_winId)
   vim.api.nvim_buf_set_option(bufnr, 'buftype', 'nofile')
 
-  -- Expand the path and get files
-  local expanded_path = vim.fn.expand(folder_path)
-  local files = vim.fn.glob(expanded_path .. "/*.md", false, true)
+  -- Collect *.md from each folder.
+  local files = {}
+  for _, fp in ipairs(folder_paths) do
+    local expanded = vim.fn.expand(fp)
+    for _, f in ipairs(vim.fn.glob(expanded .. "/*.md", false, true)) do
+      table.insert(files, f)
+    end
+  end
 
   -- Sort files by name (which includes timestamp)
   table.sort(files, function(a, b) return a > b end)

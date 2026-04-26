@@ -89,8 +89,8 @@ nnoremap ,sch <cmd>lua require('utils.general').Search_collection_md_headers()<c
 nnoremap ,sdh <cmd>lua require('utils.general').Search_dir_md_headers()<cr>
 
 " AI CHATS
-nnoremap <leader>sfc <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '# .*')<cr>
-nnoremap <leader>sfC <cmd>lua require('utils.general').Search_in_folder('~/.local/share/nvim/parrot/chats', '')<cr>
+nnoremap <leader>sfc <cmd>lua require('utils.general').Search_in_folder({'~/.local/share/nvim/parrot/chats','~/.local/share/nvim/parrot/img-chats'}, '# .*')<cr>
+nnoremap <leader>sfC <cmd>lua require('utils.general').Search_in_folder({'~/.local/share/nvim/parrot/chats','~/.local/share/nvim/parrot/img-chats'}, '')<cr>
 nnoremap <leader>sfa <cmd>AvanteHistory<cr>
 
 " NOTES
