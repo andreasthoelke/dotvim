@@ -155,6 +155,62 @@ local function read_pending_prompt(lines, marker_line)
   return vim.trim(table.concat(out, "\n"))
 end
 
+-- True if `token` ends in .jpg/.jpeg/.png (case-insensitive).
+local function looks_like_image(token)
+  local lower = token:lower()
+  return lower:match("%.jpe?g$") ~= nil or lower:match("%.png$") ~= nil
+end
+
+-- Strip common surrounding punctuation from a token (parens, brackets,
+-- markdown link syntax, trailing commas/periods).
+local function strip_token_punct(token)
+  return token:gsub("^[%(%[<\"'`!]+", ""):gsub("[%)%]>\"'`,.;:!?]+$", "")
+end
+
+-- Resolve a candidate image path token. Tries: ~ expansion, absolute, relative
+-- to cwd, relative to buffer's parent dir. Returns absolute readable path or nil.
+local function resolve_image_path(token, buffer_dir)
+  local expanded = vim.fn.expand(token)
+  local candidates = {}
+  if expanded:sub(1, 1) == "/" then
+    table.insert(candidates, expanded)
+  else
+    table.insert(candidates, vim.fn.fnamemodify(expanded, ":p"))
+    if buffer_dir and buffer_dir ~= "" then
+      table.insert(candidates, vim.fn.fnamemodify(buffer_dir .. "/" .. expanded, ":p"))
+    end
+  end
+  for _, c in ipairs(candidates) do
+    if vim.fn.filereadable(c) == 1 then
+      return c
+    end
+  end
+  return nil
+end
+
+-- Scan prompt for image-path tokens. Returns (cleaned_prompt, resolved_paths).
+-- Resolved tokens are removed from the prompt; unresolved tokens stay as text.
+local function extract_image_paths(prompt, buffer_dir)
+  local resolved = {}
+  local seen = {}
+  for token in prompt:gmatch("%S+") do
+    local stripped = strip_token_punct(token)
+    if looks_like_image(stripped) then
+      local abs = resolve_image_path(stripped, buffer_dir)
+      if abs and not seen[abs] then
+        table.insert(resolved, abs)
+        seen[abs] = true
+        -- Remove the original (unstripped) token from the prompt.
+        prompt = prompt:gsub(vim.pesc(token), "", 1)
+      end
+    end
+  end
+  -- Collapse whitespace left behind by removed tokens.
+  prompt = prompt:gsub("[ \t]+", " "):gsub(" ?\n ?", "\n")
+  prompt = vim.trim(prompt)
+  return prompt, resolved
+end
+
 -- Update the `# topic:` line (first line) if it's still the placeholder "?".
 local function maybe_update_topic(bufnr, prompt)
   local first = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
@@ -207,20 +263,28 @@ function M.submit()
     return
   end
 
-  local prompt = read_pending_prompt(lines, marker_line)
-  if prompt == "" then
+  local raw_prompt = read_pending_prompt(lines, marker_line)
+  if raw_prompt == "" then
     vim.notify("image-gen: prompt is empty", vim.log.levels.ERROR)
     return
+  end
+
+  -- Detect and resolve any .jpg/.jpeg/.png paths in the prompt; resolved tokens
+  -- are stripped out of the text and uploaded as input_images.
+  local buffer_dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:h")
+  local prompt, input_images = extract_image_paths(raw_prompt, buffer_dir)
+  if prompt == "" and #input_images > 0 then
+    -- All text was paths. Provide a sensible fallback so the model has something.
+    prompt = "edit"
   end
 
   local previous_id = find_previous_response_id(lines, marker_line - 1)
   local preset = M.current_preset()
   local label = preset_label(preset)
 
-  vim.notify(
-    string.format("image-gen: %s (%s)...", previous_id and "iterating" or "generating", label),
-    vim.log.levels.INFO
-  )
+  local mode = previous_id and "iterating" or "generating"
+  if #input_images > 0 then mode = mode .. "+" .. #input_images .. "img" end
+  vim.notify(string.format("image-gen: %s (%s)...", mode, label), vim.log.levels.INFO)
   maybe_update_topic(bufnr, prompt)
 
   pending_start = math.floor(vim.uv.hrtime() / 1e9)
@@ -232,6 +296,7 @@ function M.submit()
     size = preset.size,
     format = FORMAT,
     previous_id = previous_id,
+    input_images = input_images,
   }, function(parsed, err)
     pending_start = nil
     refresh_winbar()
@@ -250,6 +315,12 @@ function M.submit()
       "## response_id",
       parsed.response_id or "",
     }
+    if #input_images > 0 then
+      vim.list_extend(out, { "", "## inputs" })
+      for _, p in ipairs(input_images) do
+        table.insert(out, p)
+      end
+    end
     if revised ~= "" then
       vim.list_extend(out, { "", "## revised", revised })
     end

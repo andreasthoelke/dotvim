@@ -23,6 +23,12 @@ local function build_args(opts)
     table.insert(args, "--out-dir")
     table.insert(args, opts.out_dir)
   end
+  if opts.input_images then
+    for _, p in ipairs(opts.input_images) do
+      table.insert(args, "--input-image")
+      table.insert(args, p)
+    end
+  end
   return args
 end
 
