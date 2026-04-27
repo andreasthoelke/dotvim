@@ -47,26 +47,26 @@ local on_attach = function(client, bnr)
   -- Now a buffer map in tools_rescript.vim
   -- buf_map(bnr, 'n', 'ger', '<cmd>lua vim.lsp.buf.references()<CR>')
   buf_map(bnr, 'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>')
-  buf_map(bnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
-  buf_map(bnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+  buf_map(bnr, 'n', '[d', '<cmd>lua vim.diagnostic.jump({ count = -1 })<CR>')
+  buf_map(bnr, 'n', ']d', '<cmd>lua vim.diagnostic.jump({ count = 1 })<CR>')
   buf_map(bnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>')
-  buf_map(bnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+  buf_map(bnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.format({ async = false })<CR>')
 
   buf_map(bnr, 'n', '<space>?', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
-  vim.cmd [[ command! LspFormat execute 'lua vim.lsp.buf.formatting()' ]]
+  vim.cmd [[ command! LspFormat execute 'lua vim.lsp.buf.format({ async = false })' ]]
 
   vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
   vim.cmd("command! LspDocSymbols lua require('telescope.builtin').lsp_document_symbols()")
-  vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
+  vim.cmd("command! LspFormatting lua vim.lsp.buf.format({ async = false })")
   vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
   vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
   vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
   vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
   vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
   vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
-  vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
-  vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
+  vim.cmd("command! LspDiagPrev lua vim.diagnostic.jump({ count = -1 })")
+  vim.cmd("command! LspDiagNext lua vim.diagnostic.jump({ count = 1 })")
   vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
   vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
   -- buf_map(bnr, "n", "gd", ":LspDef<CR>")
@@ -80,8 +80,8 @@ local on_attach = function(client, bnr)
   -- buf_map(bnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
 
 
-  if client.server_capabilities.document_formatting then
-      vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+  if client:supports_method('textDocument/formatting') then
+      vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = false })")
   end
 
   if client.server_capabilities.documentSymbolProvider then
@@ -91,14 +91,7 @@ local on_attach = function(client, bnr)
 
 end
 
--- setting a global (for all lsp clients) handler. seems to work!
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    update_in_insert = false,
-    -- reportUnusedVariable = false,
-    -- disableSelfClsNotAccessed = true,
-  }
-)
+-- Global diagnostic behavior is configured with vim.diagnostic.config() below.
 
 vim.lsp.handlers["$/progress"] = function(_, result, ctx)
   local client = vim.lsp.get_client_by_id(ctx.client_id)
@@ -128,8 +121,12 @@ local border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
 
 -- LSP settings (for overriding per client)
 local handlers =  {
-  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
-  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+  ["textDocument/hover"] = function(err, result, ctx)
+    return vim.lsp.handlers.hover(err, result, ctx, { border = border })
+  end,
+  ["textDocument/signatureHelp"] = function(err, result, ctx)
+    return vim.lsp.handlers.signature_help(err, result, ctx, { border = border })
+  end,
 }
 
 local handler_filterDiagnSeverity = {
@@ -253,10 +250,10 @@ end
 lspconfig.pyright.setup({
   capabilities = capabilities,
   on_attach = function(client, bufnr)
-    client.server_capabilities.document_formatting = false
-    client.server_capabilities.document_range_formatting = false
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
     if client.server_capabilities.inlayHintProvider then
-      vim.lsp.inlay_hint.enable(bufnr, true)
+      vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     end
     on_attach(client, bufnr)
   end,
@@ -372,8 +369,8 @@ lspconfig.ts_ls.setup({
   },
   on_attach = function(client, bufnr)
     local bufopts = { noremap=true, silent=true, buffer=bufnr }
-    client.server_capabilities.document_formatting = false
-    client.server_capabilities.document_range_formatting = false
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
     -- local ts_utils = require("nvim-lsp-ts-utils")
     -- ts_utils.setup({})
     -- ts_utils.setup_client(client)
@@ -609,14 +606,6 @@ lspconfig.bashls.setup({
   -- no effect?
   -- handlers = handler_filterDiagnSeverity,
   -- handlers = handler_BASH_filterDiagnCodes,
-  -- not sure if this has an effect either?
-  handlers = {
-   ["textDocument/publishDiagnostics"] = vim.lsp.with(
-     vim.lsp.diagnostic.on_publish_diagnostics, {
-       severity_sort = true,
-     }
-   ),
- },
 })
 
 
@@ -856,8 +845,6 @@ vim.api.nvim_create_autocmd("FileType", {
 --     }),
 --   },
 -- })
-
-
 
 
 

@@ -758,12 +758,12 @@ vim.keymap.set( 'n',
 
 vim.keymap.set( 'n',
   ']d', function()
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump({ count = 1 })
   end, { desc = 'Go to next diagnostic' })
 
 vim.keymap.set( 'n',
   '[d', function()
-    vim.diagnostic.goto_prev()
+    vim.diagnostic.jump({ count = -1 })
   end, { desc = 'Go to previous diagnostic' })
 
 
@@ -891,5 +891,4 @@ vim.keymap.set('n', '<leader><leader>dl', gdoc_sync.list,
 require('utils.cc_paste').setup({ key = '<leader>cV' })
 
 -- ─^  Claude Code paste cleanup                         ▲
-
 

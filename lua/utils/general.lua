@@ -32,7 +32,7 @@ function _G.PrintMessages( cnt )
     return
   end
   local recentHist = vim.list_slice( hist, #hist - cnt, #hist )
-  local msgsFlat = vim.tbl_flatten( vim.tbl_map( function(el) return el.message end , recentHist ) )
+  local msgsFlat = vim.iter( vim.tbl_map( function(el) return el.message end , recentHist ) ):flatten():totable()
   -- local reversedList = vim.fn.reverse( msgsFlat )
   -- local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
   local seperatedList = vim.fn.insert( msgsFlat, "_ ", 1 )
@@ -1670,7 +1670,6 @@ end
 
 
 return M
-
 
 
 

@@ -667,8 +667,60 @@ call plug#end()
 
 lua << EOF
 
--- could use this area.
--- ~/.config/nvim/plugin/setup-general.lua‖:515
+-- Compatibility shims for plugins that still call old Nvim APIs.
+-- Keep this before runtime plugin/config files are loaded.
+if vim.iter then
+  rawset(vim, 'tbl_flatten', function(tbl)
+    return vim.iter(tbl):flatten():totable()
+  end)
+end
+
+if vim.hl then
+  rawset(vim, 'highlight', vim.hl)
+end
+
+local validate = vim.validate
+local legacy_validate_types = {
+  b = 'boolean',
+  c = 'callable',
+  f = 'function',
+  n = 'number',
+  s = 'string',
+  t = 'table',
+  u = 'userdata',
+}
+
+local function normalize_validator(validator)
+  if type(validator) == 'string' then
+    return legacy_validate_types[validator] or validator
+  end
+
+  if type(validator) == 'table' then
+    return vim.tbl_map(normalize_validator, validator)
+  end
+
+  return validator
+end
+
+rawset(vim, 'validate', function(name, value, validator, optional, message)
+  if type(name) ~= 'table' or value ~= nil or validator ~= nil then
+    return validate(name, value, normalize_validator(validator), optional, message)
+  end
+
+  local keys = vim.tbl_keys(name)
+  table.sort(keys)
+
+  for _, key in ipairs(keys) do
+    local spec = name[key]
+    local optional_or_message = spec[3]
+    local normalized_validator = normalize_validator(spec[2])
+    if type(optional_or_message) == 'boolean' then
+      validate(key, spec[1], normalized_validator, optional_or_message, spec[4])
+    else
+      validate(key, spec[1], normalized_validator, optional_or_message)
+    end
+  end
+end)
 
 EOF
 
@@ -753,4 +805,3 @@ if exists('g:vscode')
 else
     " ordinary Neovim
 endif
-
