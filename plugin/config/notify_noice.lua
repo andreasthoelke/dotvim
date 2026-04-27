@@ -197,7 +197,17 @@ local noice_config = {
   ---@type NoiceConfigViews
   views = {}, ---@see section on views
   ---@type NoiceRouteConfig[]
-  routes = {}, --- @see section on routes
+  routes = {
+    {
+      filter = {
+        any = {
+          { event = "notify", find = "Did not detect DSR response" },
+          { event = "msg_show", find = "Did not detect DSR response" },
+        },
+      },
+      opts = { skip = true },
+    },
+  }, --- @see section on routes
   ---@type table<string, NoiceFilter>
   status = {}, --- @see section on statusline components
   ---@type NoiceFormatOptions
@@ -267,6 +277,15 @@ require("notify").setup(
   }
 )
 
+local notify = vim.notify
+vim.notify = function(message, level, opts)
+  if type(message) == "string" and message:find("Did not detect DSR response", 1, true) then
+    return
+  end
+
+  return notify(message, level, opts)
+end
+
 -- local banned_messages = { "clipboard" }
 
 -- vim.notify = function (msg, ...)
@@ -287,5 +306,4 @@ require("notify").setup(
 --     _old_notify("ab", level, opts)
 --   end
 -- end
-
 

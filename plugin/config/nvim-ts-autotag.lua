@@ -9,9 +9,18 @@
 --   }
 -- })
 
--- require('nvim-ts-autotag').setup({
---   opts = {}
--- })
+-- ts-autotag.nvim's InsertLeavePre callback can be triggered in transient
+-- buffers like Telescope, where get_parser() succeeds with nil in Nvim 0.12.
+local rename_tag = require('ts-autotag.rename_tag')
+local maybe_rename_tag = rename_tag.maybe_rename_tag
+rename_tag.maybe_rename_tag = function(bufnr)
+  local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+  if not ok or not parser then
+    return
+  end
+
+  return maybe_rename_tag(bufnr)
+end
 
 require('ts-autotag').setup({
   opening_node_types = {
@@ -66,6 +75,5 @@ require('ts-autotag').setup({
     },
   },
 })
-
 
 
