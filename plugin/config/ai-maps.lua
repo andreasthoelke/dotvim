@@ -1,5 +1,3 @@
-
-
 -- parrot
 -- claude code
 -- agents & worktrees
@@ -7,14 +5,20 @@
 vim.keymap.set('n', '<c-g>h', ':MCPHub<CR>', { noremap = true, silent = true })
 
 -- Global keymaps for cycling presets
-vim.keymap.set('n', '<c-g><c-g>]', ':PrtNextPreset<CR>', { noremap = true, silent = true, desc = "Parrot: next model preset" })
-vim.keymap.set('n', '<c-g><c-g>[', ':PrtPrevPreset<CR>', { noremap = true, silent = true, desc = "Parrot: previous model preset" })
+vim.keymap.set('n', '<c-g><c-g>]', ':PrtNextPreset<CR>',
+  { noremap = true, silent = true, desc = "Parrot: next model preset" })
+vim.keymap.set('n', '<c-g><c-g>[', ':PrtPrevPreset<CR>',
+  { noremap = true, silent = true, desc = "Parrot: previous model preset" })
 
 -- Image-gen chat: nested under <c-g> because <c-i> collides with <Tab> in terminals.
-vim.keymap.set('n', '<c-g>iv', ':PrtImgChatNew vsplit<CR>', { noremap = true, silent = true, desc = "Image-gen: new chat (vsplit)" })
-vim.keymap.set('n', '<c-g>is', ':PrtImgChatNew split<CR>',  { noremap = true, silent = true, desc = "Image-gen: new chat (split)" })
-vim.keymap.set('n', '<c-g>i]', ':PrtImgNextPreset<CR>',     { noremap = true, silent = true, desc = "Image-gen: next preset" })
-vim.keymap.set('n', '<c-g>i[', ':PrtImgPrevPreset<CR>',     { noremap = true, silent = true, desc = "Image-gen: previous preset" })
+vim.keymap.set('n', '<c-g>iv', ':PrtImgChatNew vsplit<CR>',
+  { noremap = true, silent = true, desc = "Image-gen: new chat (vsplit)" })
+vim.keymap.set('n', '<c-g>is', ':PrtImgChatNew split<CR>',
+  { noremap = true, silent = true, desc = "Image-gen: new chat (split)" })
+vim.keymap.set('n', '<c-g>i]', ':PrtImgNextPreset<CR>',
+  { noremap = true, silent = true, desc = "Image-gen: next preset" })
+vim.keymap.set('n', '<c-g>i[', ':PrtImgPrevPreset<CR>',
+  { noremap = true, silent = true, desc = "Image-gen: previous preset" })
 
 
 
@@ -24,11 +28,12 @@ vim.keymap.set('n', '<c-g>i[', ':PrtImgPrevPreset<CR>',     { noremap = true, si
 
 vim.g.agent_cmd = "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions "
 
-    -- "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
+-- "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
 
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "caffeinate -i codex --full-auto ",
+    "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "caffeinate -i gemini --yolo ",
     "cat -v ",
@@ -72,18 +77,18 @@ end)
 -- Each tab can have one active agent terminal, found dynamically by searching the current tab
 -- Always creates NEW terminal (no resume logic)
 
-vim.keymap.set( 'n', '<c-g>V', function()
+vim.keymap.set('n', '<c-g>V', function()
   require('agents').open_agent(vim.g['agent_cmd'], 'vsplit')
-end )
+end)
 
-vim.keymap.set( 'n', '<c-g>S', function()
+vim.keymap.set('n', '<c-g>S', function()
   require('agents').open_agent(vim.g['agent_cmd'], 'hsplit')
-end )
+end)
 
 -- Restore agent terminal window if accidentally closed
-vim.keymap.set( 'n', '<c-g><c-v>', function()
+vim.keymap.set('n', '<c-g><c-v>', function()
   require('agents').restore_agent_window('vsplit')
-end )
+end)
 
 -- Select from all running agent terminals across tabs
 vim.keymap.set('n', '<c-g>a', function()
@@ -179,7 +184,8 @@ end)
 vim.keymap.set('x', '<c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(false)<CR>", { noremap = true, silent = true })
 
 -- VISUAL SELECTIONS with markup
-vim.keymap.set('x', '<leader><c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(true)<CR>", { noremap = true, silent = true })
+vim.keymap.set('x', '<leader><c-g>p', ":<C-u>lua _G.SendVisualSelectionToClaude(true)<CR>",
+  { noremap = true, silent = true })
 
 -- LINEWISE SELECTIONS
 vim.keymap.set('n', '<c-g>o', function()
@@ -228,12 +234,12 @@ end, { expr = true, desc = "Operator to send text to Claude with markup" })
 
 -- Helper function to send text to worktree agents (resume mode - skip rebase)
 local function send_to_worktree_agents(text)
-  require('agents-worktrees').run_agents_worktrees(text, true)  -- skip_rebase = true
+  require('agents-worktrees').run_agents_worktrees(text, true) -- skip_rebase = true
 end
 
 -- Helper function to send text to worktree agents (reset mode - force rebase)
 local function send_to_worktree_agents_reset(text)
-  require('agents-worktrees').run_agents_worktrees(text, false)  -- skip_rebase = false
+  require('agents-worktrees').run_agents_worktrees(text, false) -- skip_rebase = false
 end
 
 -- Helper to get visual selection text for worktrees
@@ -425,7 +431,7 @@ vim.api.nvim_create_user_command('AgentsWorktreesRun', function(opts)
     vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRun <prompt>", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agents_worktrees(opts.args, false)  -- reset mode
+  require('agents-worktrees').run_agents_worktrees(opts.args, false) -- reset mode
 end, { nargs = '+', desc = "Run all worktree agents with prompt (reset mode)" })
 
 -- Run agents with prompt (resume mode - skip rebase)
@@ -434,61 +440,73 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunResume', function(opts)
     vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunResume <prompt>", vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agents_worktrees(opts.args, true)  -- resume mode
+  require('agents-worktrees').run_agents_worktrees(opts.args, true) -- resume mode
 end, { nargs = '+', desc = "Run all worktree agents with prompt (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunClaude', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaude <prompt> or visual select + :'<,'>AgentsWorktreesRunClaude", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunClaude <prompt> or visual select + :'<,'>AgentsWorktreesRunClaude",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("claude", prompt, false)  -- reset mode
+  require('agents-worktrees').run_agent_worktree("claude", prompt, false) -- reset mode
 end, { nargs = '*', range = true, desc = "Run Claude worktree agent (reset mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeResume', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunClaudeResume <prompt> or visual select + :'<,'>AgentsWorktreesRunClaudeResume", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunClaudeResume <prompt> or visual select + :'<,'>AgentsWorktreesRunClaudeResume",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("claude", prompt, true)  -- resume mode
+  require('agents-worktrees').run_agent_worktree("claude", prompt, true) -- resume mode
 end, { nargs = '*', range = true, desc = "Run Claude worktree agent (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunCodex', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodex <prompt> or visual select + :'<,'>AgentsWorktreesRunCodex", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunCodex <prompt> or visual select + :'<,'>AgentsWorktreesRunCodex",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("codex", prompt, false)  -- reset mode
+  require('agents-worktrees').run_agent_worktree("codex", prompt, false) -- reset mode
 end, { nargs = '*', range = true, desc = "Run Codex worktree agent (reset mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunCodexResume', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunCodexResume <prompt> or visual select + :'<,'>AgentsWorktreesRunCodexResume", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunCodexResume <prompt> or visual select + :'<,'>AgentsWorktreesRunCodexResume",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("codex", prompt, true)  -- resume mode
+  require('agents-worktrees').run_agent_worktree("codex", prompt, true) -- resume mode
 end, { nargs = '*', range = true, desc = "Run Codex worktree agent (resume mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunGemini', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGemini <prompt> or visual select + :'<,'>AgentsWorktreesRunGemini", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunGemini <prompt> or visual select + :'<,'>AgentsWorktreesRunGemini",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("gemini", prompt, false)  -- reset mode
+  require('agents-worktrees').run_agent_worktree("gemini", prompt, false) -- reset mode
 end, { nargs = '*', range = true, desc = "Run Gemini worktree agent (reset mode)" })
 
 vim.api.nvim_create_user_command('AgentsWorktreesRunGeminiResume', function(opts)
   local prompt = get_prompt_from_visual_or_args(opts)
   if not prompt then
-    vim.notify("Error: Prompt required. Usage: :AgentsWorktreesRunGeminiResume <prompt> or visual select + :'<,'>AgentsWorktreesRunGeminiResume", vim.log.levels.ERROR)
+    vim.notify(
+      "Error: Prompt required. Usage: :AgentsWorktreesRunGeminiResume <prompt> or visual select + :'<,'>AgentsWorktreesRunGeminiResume",
+      vim.log.levels.ERROR)
     return
   end
-  require('agents-worktrees').run_agent_worktree("gemini", prompt, true)  -- resume mode
+  require('agents-worktrees').run_agent_worktree("gemini", prompt, true) -- resume mode
 end, { nargs = '*', range = true, desc = "Run Gemini worktree agent (resume mode)" })
 
 -- Run specific combinations of agents
@@ -498,7 +516,7 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeCodx', function(opts)
     return
   end
   local aw = require('agents-worktrees')
-  aw.enabled_agents = {"claude", "codex"}
+  aw.enabled_agents = { "claude", "codex" }
   aw.run_agents_worktrees(opts.args)
 end, { nargs = '+', desc = "Run Claude + Codex worktree agents with prompt" })
 
@@ -508,7 +526,7 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunClaudeGemini', function(opts
     return
   end
   local aw = require('agents-worktrees')
-  aw.enabled_agents = {"claude", "gemini"}
+  aw.enabled_agents = { "claude", "gemini" }
   aw.run_agents_worktrees(opts.args)
 end, { nargs = '+', desc = "Run Claude + Gemini worktree agents with prompt" })
 
@@ -518,7 +536,7 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunCodxGemini', function(opts)
     return
   end
   local aw = require('agents-worktrees')
-  aw.enabled_agents = {"codex", "gemini"}
+  aw.enabled_agents = { "codex", "gemini" }
   aw.run_agents_worktrees(opts.args)
 end, { nargs = '+', desc = "Run Codex + Gemini worktree agents with prompt" })
 
@@ -528,20 +546,26 @@ vim.api.nvim_create_user_command('AgentsWorktreesRunAll', function(opts)
     return
   end
   local aw = require('agents-worktrees')
-  aw.enabled_agents = {"claude", "codex", "gemini"}
+  aw.enabled_agents = { "claude", "codex", "gemini" }
   aw.run_agents_worktrees(opts.args)
 end, { nargs = '+', desc = "Run all 3 worktree agents (Claude + Codex + Gemini) with prompt" })
 
 -- Configure enabled agents
 vim.api.nvim_create_user_command('AgentsWorktreesEnable', function(opts)
-  local agents = vim.split(opts.args, '%s+')
-  if #agents == 0 then
-    vim.notify("Error: Agents required. Usage: :AgentsWorktreesEnable claude codex gemini", vim.log.levels.ERROR)
-    return
-  end
-  require('agents-worktrees').enabled_agents = agents
-  vim.notify("Enabled agents: " .. table.concat(agents, ", "), vim.log.levels.INFO)
-end, { nargs = '+', complete = function() return {"claude", "codex", "gemini"} end, desc = "Set which agents are enabled for multi-agent runs" })
+    local agents = vim.split(opts.args, '%s+')
+    if #agents == 0 then
+      vim.notify("Error: Agents required. Usage: :AgentsWorktreesEnable claude codex gemini", vim.log.levels.ERROR)
+      return
+    end
+    require('agents-worktrees').enabled_agents = agents
+    vim.notify("Enabled agents: " .. table.concat(agents, ", "), vim.log.levels.INFO)
+  end,
+  {
+    nargs = '+',
+    complete = function() return { "claude", "codex", "gemini" } end,
+    desc =
+    "Set which agents are enabled for multi-agent runs"
+  })
 
 -- Reset worktrees to main
 vim.api.nvim_create_user_command('AgentsWorktreesResetAll', function()
@@ -577,7 +601,7 @@ end, { desc = "Setup Gemini worktree (create if needed, rebase)" })
 
 
 -- RUN/ENTER - Send Enter key to agent terminal in current tab
-vim.keymap.set( 'n',
+vim.keymap.set('n',
   '<c-g><cr>', function()
     -- Find agent terminal job ID in current tab
     local job_id = require('agents').find_agent_terminal_in_tab()
@@ -592,10 +616,10 @@ vim.keymap.set( 'n',
 
     -- Send Enter directly via channel (works for all agents)
     -- vim.fn.chansend(job_id, "\r")
-  end )
+  end)
 
 -- CLEAR/CANCEL - Send Ctrl-C to agent terminal in current tab
-vim.keymap.set( 'n',
+vim.keymap.set('n',
   '<c-g>C', function()
     -- Find agent terminal job ID in current tab
     local job_id = require('agents').find_agent_terminal_in_tab()
@@ -606,10 +630,10 @@ vim.keymap.set( 'n',
 
     -- Send Ctrl-C directly via channel (works for all agents)
     vim.fn.chansend(job_id, string.char(3))
-  end )
+  end)
 
 
-vim.keymap.set( 'n',
+vim.keymap.set('n',
   '<c-g>D', function()
     -- print("Closing / deleting agent!")
     -- Claude_send("/exit")
@@ -630,7 +654,7 @@ vim.keymap.set( 'n',
     -- Wait longer for graceful shutdown, then check if it's still alive
     vim.defer_fn(function()
       -- Only force kill if the job is still running after 5 seconds
-      if vim.fn.jobwait({job_id}, 0)[1] == -1 then
+      if vim.fn.jobwait({ job_id }, 0)[1] == -1 then
         -- Job still running, something went wrong
         vim.fn.jobstop(job_id)
       end
@@ -638,32 +662,31 @@ vim.keymap.set( 'n',
       -- After job has exited (or been killed), delete the buffer
       vim.defer_fn(function()
         if vim.api.nvim_buf_is_valid(bufnr) then
-          pcall(vim.api.nvim_buf_delete, bufnr, {force = true})
+          pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
         end
       end, 500)
     end, 4000)
-
-  end )
+  end)
 
 
 -- MAKE COMMIT .. thorough commit messages
-vim.keymap.set( 'n',
+vim.keymap.set('n',
   '<c-g>mc', function()
     print("Prefer ll gc!")
     Claude_send("Make a commit.")
     vim.defer_fn(function()
-      Claude_send( "\r" )
+      Claude_send("\r")
     end, 100)
-  end )
+  end)
 
 -- Clear chat
-vim.keymap.set( 'n',
+vim.keymap.set('n',
   '<c-g>,c', function()
     Claude_send("/clear")
     vim.defer_fn(function()
-      Claude_send( "\r" )
+      Claude_send("\r")
     end, 100)
-  end )
+  end)
 
 
 -- ─   Worktree Directory Navigation                     ──
@@ -772,6 +795,3 @@ vim.keymap.set('v', '<leader><c-g>lc', ':LLMVisualClaude<CR>', { desc = 'LLM Cla
 vim.keymap.set('v', '<c-g>T', ':LLMTopic<CR>', { desc = 'Quick topic summary', silent = true })
 
 -- ─^  LLM Visual Selection Integration                  ▲
-
-
-
