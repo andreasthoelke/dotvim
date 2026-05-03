@@ -34,10 +34,10 @@ vim.g.agent_cmd = "caffeinate -i codex --dangerously-bypass-approvals-and-sandbo
 vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
-    "caffeinate -i codex --full-auto ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
     "caffeinate -i gemini --yolo ",
     "cat -v ",
+    "caffeinate -i codex --full-auto ",
     "caffeinate -i codex resume --dangerously-bypass-approvals-and-sandbox ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --resume --dangerously-skip-permissions ",
     "caffeinate -i gemini --resume --yolo ",

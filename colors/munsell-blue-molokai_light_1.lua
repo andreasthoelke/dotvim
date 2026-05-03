@@ -629,9 +629,9 @@ hi(0, "SpellLocal", { sp = "#036363", undercurl = true })
 hi(0, "SpellRare", { sp = "#000000", undercurl = true })
 hi(0, "StartifyEndOfBuffer", { fg = "#e3e6e9" })
 hi(0, "Statement", { ctermfg = 10, fg = "#4d8aa3" })
-hi(0, "StatusLine", { bg = "#ffffff", bold = true, fg = "#c5c7cd" })
--- StatusLineNC bg changed from #ffffff to #e3e6e9 to match lualine inactive window bg
--- Previously the white bg would bleed through lualine's theme for inactive windows
+hi(0, "StatusLine", { bg = "#e3e6e9", bold = true, fg = "#c5c7cd" })
+-- StatusLine backgrounds match lualine's light theme fill so rounded separators
+-- don't show a white edge before lualine refreshes on startup.
 hi(0, "StatusLineNC", { bg = "#e3e6e9", bold = true, fg = "#2e2e34" })
 hi(0, "StorageClass", { fg = "#4d8aa3" })
 -- hi(0, "String", { ctermfg = 10, fg = "#558476" })
@@ -1148,7 +1148,7 @@ hi(0, "lualine_transitional_lualine_a_inactive_to_lualine_b_19_command", { bg = 
 hi(0, "lualine_transitional_lualine_a_inactive_to_lualine_b_19_insert", { bg = "#e3e6e9", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_inactive_to_lualine_b_19_normal", { bg = "#e9ecef", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_inactive_to_lualine_c_inactive", { bg = "#e3e6e9", fg = "#abb4bc" })
-hi(0, "lualine_transitional_lualine_a_normal_to_StatusLine", { bg = "#ffffff", fg = "#252f33" })
+hi(0, "lualine_transitional_lualine_a_normal_to_StatusLine", { bg = "#e3e6e9", fg = "#252f33" })
 hi(0, "lualine_transitional_lualine_a_normal_to_lualine_b_16", { bg = "#e9ecef", fg = "#252f33" })
 hi(0, "lualine_transitional_lualine_b_inactive_to_lualine_c_inactive", { bg = "#e3e6e9", fg = "#d3dade" })
 hi(0, "lualine_x_diff_added_command", { bg = "#e3e6e9", fg = "#bfd1d6" })
