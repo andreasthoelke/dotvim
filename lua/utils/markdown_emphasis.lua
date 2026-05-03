@@ -101,13 +101,29 @@ local function remove_span_at_cursor(buf, row, col, marker)
   local marker_len = #marker
   local search_start = 1
 
+  local function find_marker(start)
+    while true do
+      local first, last = line:find(marker, start, true)
+      if not first then
+        return nil
+      end
+
+      if marker ~= "*"
+          or (line:sub(first - 1, first - 1) ~= "*" and line:sub(last + 1, last + 1) ~= "*") then
+        return first, last
+      end
+
+      start = last + 1
+    end
+  end
+
   while true do
-    local open_first, open_last = line:find(marker, search_start, true)
+    local open_first, open_last = find_marker(search_start)
     if not open_first then
       return false
     end
 
-    local close_first, close_last = line:find(marker, open_last + 1, true)
+    local close_first, close_last = find_marker(open_last + 1)
     if not close_first then
       return false
     end

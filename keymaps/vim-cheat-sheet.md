@@ -1139,10 +1139,13 @@ connections / settings
 # markdown
 
 new:
-- ,b toggles *word* on the current word.
+- ,b - bold current word/count/selection with **...**
 - 2,b toggles *two words*.
 - Visual selection + ,b toggles *selection*.
-- ,B does the same with **double-star bold**.
+- ,,b - unbold the **...** span under cursor
+- ,B - italic/current word/count/selection with *...*
+- ,,B - unitalic the *...* span under cursor
+- ,i - also italic, same as ,B
 
 
 ## markdown / ai-chat motions
