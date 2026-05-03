@@ -5,6 +5,10 @@ local action_utils = require("telescope.actions.utils")
 local action_state = require "telescope.actions.state"
 local resume = require("telescope.builtin").resume
 local action_set = require "telescope.actions.set"
+local conf_values = require("telescope.config").values
+local from_entry = require("telescope.from_entry")
+local Path = require("plenary.path")
+local previewers = require("telescope.previewers")
 -- deprecated:
 -- local trouble = require("trouble.providers.telescope")
 local easypick = require("easypick")
@@ -24,6 +28,153 @@ local add_to_trouble = require("trouble.sources.telescope").add
 
 
 -- ─   Helpers                                          ──
+
+local function set_telescope_preview_highlights()
+  local search = vim.api.nvim_get_hl(0, { name = "Search", link = false })
+  local incsearch = vim.api.nvim_get_hl(0, { name = "IncSearch", link = false })
+  local preview_line = {}
+  local preview_match = { underline = true }
+
+  if search.bg ~= nil then
+    preview_line.bg = search.bg
+    preview_match.bg = search.bg
+  end
+
+  if search.fg ~= nil then
+    preview_match.fg = search.fg
+  elseif incsearch.fg ~= nil then
+    preview_match.fg = incsearch.fg
+  end
+
+  vim.api.nvim_set_hl(0, "TelescopePreviewLine", preview_line)
+  vim.api.nvim_set_hl(0, "TelescopePreviewMatch", preview_match)
+end
+
+local custom_grep_preview_ns = vim.api.nvim_create_namespace("custom_telescope_grep_preview")
+
+local function get_grep_match_end_col(entry, opts)
+  if entry.col == nil or entry.text == nil then
+    return nil
+  end
+
+  local query = action_state.get_current_line()
+  if query == "" then
+    query = opts.search or opts.default_text or ""
+  end
+
+  local start_col = math.max(entry.col - 1, 0)
+  local line = entry.text
+  local tail = line:sub(start_col + 1)
+
+  query = tostring(query or "")
+  if query == "" then
+    query = tail:match("^[%w_%-]+") or tail:match("^%S+") or ""
+  end
+
+  if query == "" then
+    return nil
+  end
+
+  local literal_at_col = line:sub(start_col + 1, start_col + #query)
+  local match_len = #query
+
+  if literal_at_col ~= query then
+    local literal_start, literal_end = tail:find(query, 1, true)
+    if literal_start == 1 then
+      match_len = literal_end
+    else
+      local word = tail:match("^[%w_%-]+") or tail:match("^%S+")
+      if word ~= nil and word ~= "" then
+        match_len = #word
+      end
+    end
+  end
+
+  return math.min(#line, start_col + math.max(match_len, 1))
+end
+
+local function custom_grep_previewer(opts)
+  opts = opts or {}
+  local cwd = opts.cwd or vim.loop.cwd()
+
+  local function jump_to_line(self, bufnr, entry)
+    pcall(vim.api.nvim_buf_clear_namespace, bufnr, custom_grep_preview_ns, 0, -1)
+
+    if entry.lnum and entry.lnum > 0 then
+      local lnum, lnend = entry.lnum - 1, (entry.lnend or entry.lnum) - 1
+
+      for i = lnum, lnend do
+        pcall(vim.api.nvim_buf_add_highlight, bufnr, custom_grep_preview_ns, "TelescopePreviewLine", i, 0, -1)
+      end
+
+      local match_end_col = get_grep_match_end_col(entry, opts)
+      if entry.col ~= nil and match_end_col ~= nil then
+        pcall(
+          vim.api.nvim_buf_add_highlight,
+          bufnr,
+          custom_grep_preview_ns,
+          "TelescopePreviewMatch",
+          lnum,
+          math.max(entry.col - 1, 0),
+          match_end_col
+        )
+      end
+
+      local middle_ln = math.floor(lnum + (lnend - lnum) / 2)
+      pcall(vim.api.nvim_win_set_cursor, self.state.winid, { middle_ln + 1, 0 })
+      if bufnr ~= nil then
+        vim.api.nvim_buf_call(bufnr, function()
+          vim.cmd "norm! zz"
+        end)
+      end
+    end
+  end
+
+  return previewers.new_buffer_previewer({
+    title = "Grep Preview",
+    dyn_title = function(_, entry)
+      local path = from_entry.path(entry, false, false)
+      return path and Path:new(path):normalize(cwd) or ""
+    end,
+
+    get_buffer_by_name = function(_, entry)
+      return from_entry.path(entry, false, false)
+    end,
+
+    define_preview = function(self, entry)
+      local has_buftype = entry.bufnr
+          and vim.api.nvim_buf_is_valid(entry.bufnr)
+          and vim.api.nvim_buf_get_option(entry.bufnr, "buftype") ~= ""
+        or false
+      local path
+
+      if not has_buftype then
+        path = from_entry.path(entry, true, false)
+        if path == nil or path == "" then
+          return
+        end
+      end
+
+      if entry.bufnr and has_buftype then
+        local lines = vim.api.nvim_buf_get_lines(entry.bufnr, 0, -1, false)
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+        vim.schedule(function()
+          jump_to_line(self, self.state.bufnr, entry)
+        end)
+      else
+        conf_values.buffer_previewer_maker(path, self.state.bufnr, {
+          bufname = self.state.bufname,
+          winid = self.state.winid,
+          preview = opts.preview,
+          callback = function(bufnr)
+            jump_to_line(self, bufnr, entry)
+          end,
+          file_encoding = opts.file_encoding,
+        })
+      end
+    end,
+  })
+end
 
 local append_to_history = function(prompt_bufnr)
   action_state
@@ -612,12 +763,30 @@ end
 
 -- ─   Config                                            ■
 
+set_telescope_preview_highlights()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("custom_telescope_preview_highlights", { clear = true }),
+  callback = set_telescope_preview_highlights,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("custom_telescope_preview_wrap", { clear = true }),
+  pattern = "TelescopePreviewerLoaded",
+  callback = function()
+    vim.wo.wrap = true
+    vim.wo.linebreak = true
+    vim.wo.breakindent = true
+  end,
+})
+
 -- Note these default maps https://github.com/nvim-telescope/telescope.nvim\#default-mappings
 require('telescope').setup{
   defaults = {
     -- config_key = value,
     path_display = { 'shorten' },
     hidden = true,  -- ISSUE: this doesn't have an effect. to show files like .gitignore use nnoremap <silent> go <cmd>Telescope find_files hidden=true<cr>
+    grep_previewer = custom_grep_previewer,
     -- Include hidden files/dirs in live_grep (dirs starting with ".")
     vimgrep_arguments = {
       "rg",
@@ -1188,8 +1357,4 @@ vim.keymap.set( 'n',
 
 
 return M
-
-
-
-
 
