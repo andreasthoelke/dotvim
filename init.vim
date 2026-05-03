@@ -1,3 +1,5 @@
+set guifont=MonoLisa\ Nerd\ Font:h12.5
+
 filetype plugin indent on
 
 " vim-plug:

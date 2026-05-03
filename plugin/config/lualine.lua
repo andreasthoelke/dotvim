@@ -471,12 +471,54 @@ local lualine_config = {
 }
 
 
+local function apply_neovide_lualine_visibility()
+  if not vim.g.neovide then
+    return
+  end
+
+  local active_bg = "#d6dde1"
+  local inactive_bg = "#dde3e6"
+  local active_fg = "#4d6974"
+  local inactive_fg = "#6f8088"
+
+  vim.opt.laststatus = 2
+  vim.opt.cmdheight = 0
+
+  vim.api.nvim_set_hl(0, "StatusLine", { bg = active_bg, fg = active_fg, bold = true })
+  vim.api.nvim_set_hl(0, "StatusLineNC", { bg = inactive_bg, fg = inactive_fg, bold = true })
+  vim.api.nvim_set_hl(0, "lualine_transparent", { bg = active_bg, fg = active_fg, nocombine = true })
+  vim.api.nvim_set_hl(0, "WinSeparator", { bg = inactive_bg, fg = "#8aa0a8" })
+
+  vim.api.nvim_set_hl(0, "LuLine_c", { bg = active_bg, fg = active_fg })
+  vim.api.nvim_set_hl(0, "LuLine_x", { bg = active_bg, fg = active_fg })
+  vim.api.nvim_set_hl(0, "LuLine_z", { bg = active_bg, fg = active_fg })
+  vim.api.nvim_set_hl(0, "LuLine_c_i", { bg = inactive_bg, fg = inactive_fg })
+  vim.api.nvim_set_hl(0, "LuLine_x_i", { bg = inactive_bg, fg = inactive_fg })
+  vim.api.nvim_set_hl(0, "LuLine_z_i", { bg = inactive_bg, fg = inactive_fg })
+end
+
+apply_neovide_lualine_visibility()
+
 require('lualine').setup( lualine_config )
+
+apply_neovide_lualine_visibility()
 
 -- Refresh after setup to apply colorscheme highlights
 vim.schedule(function()
+  apply_neovide_lualine_visibility()
   require('lualine').refresh()
 end)
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = function()
+    vim.schedule(function()
+      apply_neovide_lualine_visibility()
+      if package.loaded['lualine'] then
+        require('lualine').refresh()
+      end
+    end)
+  end,
+})
 
 -- This shouldn't be needed. But sometimes the winbar update didn't happen.
 -- Add autocmd to refresh winbar on window focus change
