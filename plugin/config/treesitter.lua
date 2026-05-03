@@ -88,6 +88,7 @@ require('nvim-treesitter.configs').setup {
   },
   indent = {
     enable = true,
+    disable = { "markdown" },
   },
   -- context_commentstring = {
   --   enable = true
@@ -223,4 +224,3 @@ vim.treesitter.language.register("css", "sass")
 vim.keymap.set('n', '<leader>vab', 'ggVG', { noremap = true, silent = true, desc = "Select entire buffer" })
 
 -- require("plugins.markdown-fold")
-

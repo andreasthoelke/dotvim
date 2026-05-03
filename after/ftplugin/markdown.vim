@@ -12,6 +12,11 @@ setlocal tabstop=2
 setlocal softtabstop=2
 setlocal shiftwidth=2
 
+" Treesitter's Markdown indentexpr treats two-space indentation as a place to
+" reset indentation. Keep plain note-taking indentation sticky on Enter.
+setlocal autoindent
+setlocal indentexpr=
+
 function! s:EnsureTwoSpaceCodeBlockHighlight() abort
   if hlexists('@markup.raw.block.markdown')
     highlight! link MarkdownTwoSpaceCodeBlock @markup.raw.block.markdown
