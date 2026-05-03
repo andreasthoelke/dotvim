@@ -1137,6 +1137,14 @@ connections / settings
 ~/Documents/Proj/g_edb_gql/m/h4s_simple/skunkdocs/a_skun.sql‖/psqlˍpostgresql://jimmy:banana@
 
 # markdown
+
+new:
+- ,b toggles *word* on the current word.
+- 2,b toggles *two words*.
+- Visual selection + ,b toggles *selection*.
+- ,B does the same with **double-star bold**.
+
+
 ## markdown / ai-chat motions
 <leader>n/p   - top level next/prev
 ~/.config/nvim/plugin/ftype/vim_lua_md.vim‖/NOTE:ˍjumpingˍtoˍmainˍdefi

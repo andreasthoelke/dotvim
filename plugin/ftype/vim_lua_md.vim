@@ -28,6 +28,12 @@ func! MarkdownBufferMaps()
   " Navigation maps shared with parrot/AI chat buffers (defined in magenta.vim)
   " Includes: <leader>ot (Outline), gs;/gs: (search), ]b/[b (bold), <c-n>/<c-p> (section nav)
   call MarkdownNavMaps()
+
+  nnoremap <silent><buffer> ,b <cmd>lua require('utils.markdown_emphasis').toggle_word('**')<cr>
+  xnoremap <silent><buffer> ,b :<c-u>lua require('utils.markdown_emphasis').toggle_visual('**')<cr>
+  nnoremap <silent><buffer> ,B <cmd>lua require('utils.markdown_emphasis').remove_span_at_cursor('**')<cr>
+  nnoremap <silent><buffer> ,i <cmd>lua require('utils.markdown_emphasis').toggle_word('*')<cr>
+  xnoremap <silent><buffer> ,i :<c-u>lua require('utils.markdown_emphasis').toggle_visual('*')<cr>
 endfunc
 
 
@@ -169,8 +175,5 @@ func! Vim_ColgoFistWord()
   endif
 endfunc
 " GetCharAtCursor()
-
-
-
 
 
