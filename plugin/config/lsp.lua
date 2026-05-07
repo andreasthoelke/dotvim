@@ -392,6 +392,36 @@ lspconfig.ts_ls.setup({
   -- filetypes = { "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
 })
 
+local function get_typescript_sdk(root_dir)
+  local local_tsdk = root_dir .. "/node_modules/typescript/lib"
+  if vim.fn.isdirectory(local_tsdk) == 1 then
+    return local_tsdk
+  end
+
+  local npm_root = vim.fn.trim(vim.fn.system("npm root -g"))
+  if vim.v.shell_error == 0 and npm_root ~= "" then
+    local global_tsdk = npm_root .. "/typescript/lib"
+    if vim.fn.isdirectory(global_tsdk) == 1 then
+      return global_tsdk
+    end
+  end
+end
+
+lspconfig.astro.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = flags,
+  init_options = {
+    typescript = {},
+  },
+  on_new_config = function(new_config, new_root_dir)
+    local tsdk = get_typescript_sdk(new_root_dir)
+    if tsdk then
+      new_config.init_options.typescript.tsdk = tsdk
+    end
+  end,
+})
+
 
 -- lspconfig.purescriptls.setup ({
 --   capabilities = capabilities,
@@ -845,6 +875,4 @@ vim.api.nvim_create_autocmd("FileType", {
 --     }),
 --   },
 -- })
-
-
 

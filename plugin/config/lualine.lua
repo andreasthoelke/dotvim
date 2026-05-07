@@ -1,5 +1,7 @@
 vim.o.showtabline = 2
 
+require("config.devicons").setup()
+
 
 local function Theme_grbox2()
   return {

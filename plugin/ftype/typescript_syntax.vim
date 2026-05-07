@@ -12,12 +12,16 @@ func! TsSyntaxAdditions ()
 
   " Make sure strings and comments are defined AFTER your match
   " This way, they will override your match inside strings/comments
-  syntax region String start=/"/ end=/"/ contains=@Spell
-  syntax region String start=/'/ end=/'/ contains=@Spell
-  syntax region String start=/`/ end=/`/ contains=@Spell,TSInterpolation
+  silent! syntax clear String
+  silent! syntax clear Comment
 
-  syntax region Comment start=/\/\// end=/$/
-  syntax region Comment start=/\/\*/ end=/\*\//
+  syntax region String start=/"/ skip=/\\"/ end=/"/ contains=@Spell oneline
+  syntax region String start=/'/ skip=/\\'/ end=/'/ contains=@Spell oneline
+  syntax region String start=/`/ skip=/\\`/ end=/`/ contains=@Spell,TSInterpolation
+
+  syntax match Comment /^\s*\/\/.*$/ contains=@Spell
+  syntax match Comment /\s\zs\/\/.*$/ contains=@Spell
+  syntax region Comment start=/\/\*\%(\s\|\*\)/ end=/\*\//
 
   syntax match Normal 'import\s' conceal cchar=⁝
 
@@ -408,7 +412,4 @@ func! TsSyntaxAdditions ()
   call matchadd('BlackBG', '.*─\^.*', 10)
 
 endfunc
-
-
-
 

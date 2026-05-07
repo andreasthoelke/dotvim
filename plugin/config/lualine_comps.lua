@@ -1,6 +1,7 @@
 
 local f = require 'utils.functional'
 local fun = require 'utils.fun'
+require("config.devicons").setup()
 local devicons = require'nvim-web-devicons'
 
 function _G.getDevIcon(filename, filetype, extension)
@@ -329,7 +330,6 @@ function _G.Status_filename_icon()
 end
 
 -- Status_filename_icon()
-
 
 
 
