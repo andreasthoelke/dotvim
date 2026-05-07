@@ -157,36 +157,58 @@ local tree_manager = require 'neo-tree.sources.manager'
 
 
 function _G.FilesInTab( tabid )
-  local fileData = vim.iter( ipairs( vim.api.nvim_tabpage_list_wins( tabid ) ) )
-    :map( function(winnr, winid)
-      return { winnr = winnr, winid = winid, bid = vim.api.nvim_win_get_buf( winid ) }
-    end)
-    :filter( function(win)
-      return     vim.fn.win_gettype(win.winid) == ""
-      -- and vim.bo[win.bid].buftype == ""
-      -- Allow only normal windows and normal buftypes.
-    end)
-    :map( function(win)
-    local filetype = vim.api.nvim_buf_get_option( win.bid, 'filetype' )
-    local fname =
-      filetype == 'neo-tree'
-      and tree_manager.get_state_for_window( win.winid ).path
-      or vim.api.nvim_buf_get_name( win.bid )
-    return { fname = fname, bufid = win.bid, winid = win.winid, winnr = win.winnr }
-  end)
+  local wins = {}
 
-  -- NOTE: sadly these iterators are very mutable/stateful. i could try to refactor to lua.fun?!
-  local fileDataNormal = vim.iter( fileData:totable() ):filter( function(win)
-    local filetype = vim.api.nvim_buf_get_option( win.bufid, 'filetype' )
-    return filetype ~= 'neo-tree'
+  for winnr, winid in ipairs( vim.api.nvim_tabpage_list_wins( tabid ) ) do
+    wins[#wins + 1] = {
+      winnr = winnr,
+      winid = winid,
+      bid = vim.api.nvim_win_get_buf( winid ),
+    }
+  end
+
+  table.sort( wins, function( a, b )
+    return a.winnr < b.winnr
   end )
 
-  fileData =
-    #fileDataNormal:totable() > 0
-    and fileDataNormal
-    or fileData
+  local fileData = {}
+  for _, win in ipairs( wins ) do
+    local filetype = vim.bo[win.bid].filetype
+    local isNormalFile = vim.bo[win.bid].buftype == "" and vim.api.nvim_buf_get_name( win.bid ) ~= ""
 
-  return f.itToSet( fileData )
+    -- Allow only normal file buffers, plus neo-tree path labels. Special and
+    -- unnamed buffers should not create secondary split labels in the tabline.
+    if vim.fn.win_gettype(win.winid) == ""
+        and filetype ~= 'startify'
+        and (filetype == 'neo-tree' or isNormalFile)
+    then
+      local fname =
+        filetype == 'neo-tree'
+        and tree_manager.get_state_for_window( win.winid ).path
+        or vim.api.nvim_buf_get_name( win.bid )
+
+      fileData[#fileData + 1] = { fname = fname, bufid = win.bid, winid = win.winid, winnr = win.winnr }
+    end
+  end
+
+  local normalFileData = vim.tbl_filter( function(win)
+    return vim.bo[win.bufid].filetype ~= 'neo-tree'
+  end, fileData )
+
+  if #normalFileData > 0 then
+    fileData = normalFileData
+  end
+
+  local deduped = {}
+  local seenNames = {}
+  for _, win in ipairs( fileData ) do
+    if not seenNames[win.fname] then
+      seenNames[win.fname] = true
+      deduped[#deduped + 1] = win
+    end
+  end
+
+  return deduped
 end
 
 -- FilesInTab( vim.api.nvim_get_current_tabpage() )
@@ -330,12 +352,6 @@ function _G.Status_filename_icon()
 end
 
 -- Status_filename_icon()
-
-
-
-
-
-
 
 
 

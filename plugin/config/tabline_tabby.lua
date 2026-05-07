@@ -17,7 +17,6 @@ local extract = require('tabby.module.highlight').extract
 local tab_name = require('tabby.feature.tab_name')
 
 local hl_tabline_fill = extract( 'lualine_c_normal' )
-local Normal = extract( 'Normal' )
 local hl_tabline = extract( 'lualine_b_normal' )
 local hl_tabline_b_i = extract( 'lualine_b_inactive' )
 local hl_c1 = extract( 'LuLine_Tabs_in' )
@@ -334,7 +333,7 @@ function _G.Tab_GenLabel( tabid )
   local fileWins = mainFile_shortName or ""
   if #tabFiles > 1 then
     local secondFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( tabFiles[#tabFiles].fname, ':t:r' ) )
-    fileWins = fileWins .. "▕ " .. secondFile_shortName
+    fileWins = fileWins .. " | " .. secondFile_shortName
   end
 
   return iconKey, folderStr, fileWins, mainFile_projectRoot
@@ -391,7 +390,7 @@ function _G.Tab_GenLabel_bak( tabid )
   local fileWins = mainFile_shortName or ""
   if #tabFiles > 1 then
     local secondFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( tabFiles[#tabFiles].fname, ':t:r' ) )
-    fileWins = fileWins .. "▕ " .. secondFile_shortName
+    fileWins = fileWins .. " | " .. secondFile_shortName
   end
 
   return iconKey, folder, fileWins
@@ -443,13 +442,13 @@ function _G.Tab_render( tab, line )
   local colorIcon = { icon, hl = { fg = Hl_Tab_icon_ac_inac.fg, bg = Hl_Tab_ac_inac.bg } }
 
   return {
-    line.sep('', Hl_Tab_ac_inac, Normal),
+    line.sep('', Hl_Tab_ac_inac, hl_tabline_fill),
     -- line.sep( left_separator, Hl_Tab_ac_inac, Normal),
 
     colorIcon,
     labelRest,
 
-    line.sep('', Hl_Tab_ac_inac, Normal),
+    line.sep('', Hl_Tab_ac_inac, hl_tabline_fill),
     -- line.sep( right_separator, Hl_Tab_ac_inac, Normal),
 
     hl = Hl_Tab_ac_inac,
@@ -464,22 +463,14 @@ local render = function( line )
   return {
     { " ", hl = hl_tabline_fill },
     line.tabs().foreach( function(tab) return Tab_render(tab, line) end ),
-    line.spacer(),
+    { line.spacer(), hl = hl_tabline_fill },
     { " ", hl = hl_tabline_fill },
+    hl = hl_tabline_fill,
   }
 end
 
 
 require('tabby.tabline').set( render, {} )
-
-
-
-
-
-
-
-
-
 
 
 
