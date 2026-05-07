@@ -83,9 +83,14 @@ function _G.Status_shortenFilename( filename )
   -- Reassemble the shortened components in camelCase
   local shortenedFilename = table.concat(shortenedComponents, "")
 
-  -- If many components are involved, some components can be omitted in the result
+  -- For long names keep first two and last two components so that pairs like
+  -- afterStuctureBranchLast / afterStuctureSomeLast don't collapse onto the
+  -- same abbreviation.
   if #shortenedComponents > 3 then
-    shortenedFilename = shortenedComponents[1] .. shortenedComponents[2] .. shortenedComponents[#shortenedComponents]
+    shortenedFilename = shortenedComponents[1]
+      .. shortenedComponents[2]
+      .. shortenedComponents[#shortenedComponents - 1]
+      .. shortenedComponents[#shortenedComponents]
   end
 
   return shortenedFilename

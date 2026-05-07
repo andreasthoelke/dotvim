@@ -10,6 +10,20 @@ function M.setup()
     return
   end
 
+  -- ⚠ NEOVIDE GLYPH WARNING ⚠
+  -- Some unicode glyphs (notably non-Nerd-Font symbols whose cell width Neovim
+  -- and Neovide disagree on) cause persistent flicker and stale trailing cells
+  -- in the tabline, winbar, and even buffer text. Symptoms we hit:
+  --   - Tabline: artifact near the right rounded separator after :e in a split
+  --   - Winbar:  the last char of the previous window's LSP symbol stays put
+  --              when switching to a window with a shorter/empty symbol
+  -- Root cause was a single glyph (⚍ U+268D) used as the mdx icon. Replacing
+  -- it with a well-behaved glyph fixed both issues without any redraw hooks.
+  -- When trying a new icon here, prefer Nerd Font glyphs or simple ASCII-ish
+  -- symbols. If you see flicker or stale cells after a change, suspect the
+  -- glyph first - run :lua Tab_diag() (defined in plugin/config/tabline_tabby.lua)
+  -- to confirm the rendered string is clean and the issue is purely visual.
+
   -- local quiet_icon_color = "#9aa7ab"
   local quiet_icon_color = "#668793"
   local quiet_icon_color_sepcial = "#6b9ea6"
@@ -33,15 +47,14 @@ function M.setup()
     name = "Markdown",
   }
   local md_icon = {
-    icon = "⚌",
+    icon = "=",
     color = quiet_icon_color,
     cterm_color = quiet_icon_cterm_color,
     name = "Md",
   }
 
   local mdx_icon = {
-    icon = "⚍",
-    -- icon = "☱",
+    icon = "◌",
     color = quiet_icon_color,
     cterm_color = quiet_icon_cterm_color,
     name = "Md",

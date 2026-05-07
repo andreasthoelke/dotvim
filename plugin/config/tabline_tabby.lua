@@ -413,6 +413,28 @@ local right_separator = ""  -- powerline symbol
 -- or
 local right_separator = ""  -- slightly different powerline
 
+-- ─   Separator style (diagnostic toggle)               ──
+-- Toggle Tab_separator_style at runtime to test if the visual artifact is
+-- glyph-related (Neovide stale-cell rendering of the rounded glyphs).
+--   "round" (default) -> rounded powerline (fallback to existing glyphs)
+--   "ascii"           -> '[' ']'
+--   "space"           -> ' ' ' '   (no separator at all, just bg color edges)
+_G.Tab_separator_style = _G.Tab_separator_style or "round"
+
+local function tab_seps()
+  local style = _G.Tab_separator_style
+  if style == "ascii" then return "[", "]" end
+  if style == "space" then return " ", " " end
+  return "\xee\x82\xb6", "\xee\x82\xb4"
+end
+
+function _G.Tab_separator_cycle()
+  local order = { round = "ascii", ascii = "space", space = "round" }
+  _G.Tab_separator_style = order[_G.Tab_separator_style] or "round"
+  require('tabby').update()
+  print("Tab_separator_style = " .. _G.Tab_separator_style)
+end
+
 function _G.Tab_render( tab, line )
 
   local isHidden = f.contains( tab.id, Tabs_hidden )
@@ -441,14 +463,16 @@ function _G.Tab_render( tab, line )
   -- local colorIcon = { icon, hl = { fg = iconColor, bg = Hl_Tab_ac_inac.bg } }
   local colorIcon = { icon, hl = { fg = Hl_Tab_icon_ac_inac.fg, bg = Hl_Tab_ac_inac.bg } }
 
+  local lsep, rsep = tab_seps()
+
   return {
-    line.sep('', Hl_Tab_ac_inac, hl_tabline_fill),
+    line.sep(lsep, Hl_Tab_ac_inac, hl_tabline_fill),
     -- line.sep( left_separator, Hl_Tab_ac_inac, Normal),
 
     colorIcon,
     labelRest,
 
-    line.sep('', Hl_Tab_ac_inac, hl_tabline_fill),
+    line.sep(rsep, Hl_Tab_ac_inac, hl_tabline_fill),
     -- line.sep( right_separator, Hl_Tab_ac_inac, Normal),
 
     hl = Hl_Tab_ac_inac,
@@ -473,8 +497,74 @@ end
 require('tabby.tabline').set( render, {} )
 
 
+-- ─   Diagnostic                                         ──
+-- :lua Tab_diag()             -- snapshot every tab plus the rendered tabline
+-- :lua Tab_diag_collisions()  -- list filenames whose abbreviations collide
+-- :lua Tab_separator_cycle()  -- cycle round → ascii → space → round
 
+local function strip_stl( s )
+  s = s:gsub('%%#[^#]*#', '')
+  s = s:gsub('%%[0-9]+T', '')
+  s = s:gsub('%%T', '')
+  s = s:gsub('%%[0-9]+X', '')
+  s = s:gsub('%%X', '')
+  s = s:gsub('%%=', '|=|')
+  return s
+end
 
+function _G.Tab_diag()
+  print('=== Tab_diag @ ' .. os.date('%H:%M:%S') .. ' ===')
+  print('separator_style: ' .. tostring(_G.Tab_separator_style))
+  for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
+    local persistedIcon, persistedRest = persist_get(tabid)
+    local genIcon, genFolder, genFiles = Tab_GenLabel(tabid)
+    local files = FilesInTab(tabid)
+    print(string.format('-- tab %d (id=%d, current=%s)',
+      vim.api.nvim_tabpage_get_number(tabid), tabid,
+      tostring(tabid == vim.api.nvim_get_current_tabpage())))
+    print(string.format('  persisted: icon=%q rest=%q',
+      tostring(persistedIcon), tostring(persistedRest)))
+    print(string.format('  generated: icon=%q folder=%q fileWins=%q',
+      tostring(genIcon), tostring(genFolder), tostring(genFiles)))
+    if #files > 0 then
+      print('  files:')
+      for _, fd in ipairs(files) do
+        local short = Status_shortenFilename(vim.fn.fnamemodify(fd.fname, ':t:r'))
+        print(string.format('    winnr=%d  %s  short=%q',
+          fd.winnr, vim.fn.fnamemodify(fd.fname, ':t'), short))
+      end
+    end
+  end
+  local rendered = vim.fn['TabbyRenderTabline']()
+  local stripped = strip_stl(rendered)
+  print('rendered (raw len=' .. #rendered .. '):')
+  print(rendered)
+  print('rendered (visible, strdisplaywidth=' .. vim.fn.strdisplaywidth(stripped) .. '):')
+  print(stripped)
+end
+
+function _G.Tab_diag_collisions()
+  local seen = {}
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(b) and vim.bo[b].buftype == '' then
+      local fname = vim.api.nvim_buf_get_name(b)
+      if fname ~= '' then
+        local stem = vim.fn.fnamemodify(fname, ':t:r')
+        local short = Status_shortenFilename(stem)
+        seen[short] = seen[short] or {}
+        table.insert(seen[short], stem)
+      end
+    end
+  end
+  local any = false
+  for short, names in pairs(seen) do
+    if #names > 1 then
+      any = true
+      print(string.format('COLLISION %q -> %s', short, table.concat(names, ', ')))
+    end
+  end
+  if not any then print('no abbreviation collisions among loaded buffers') end
+end
 
 
 
