@@ -33,7 +33,10 @@ function M.setup()
     name = "Markdown",
   }
   local md_icon = {
-    icon = "",
+    -- icon = "ᴍ",
+    -- icon = "𝑚",
+    icon = "⚌",
+    -- icon = "☱",
     color = quiet_icon_color,
     cterm_color = quiet_icon_cterm_color,
     name = "Md",
@@ -44,6 +47,13 @@ function M.setup()
     color = quiet_icon_color,
     cterm_color = quiet_icon_cterm_color,
     name = "Astro",
+  }
+
+  local css_icon = {
+    icon = "»",
+    color = quiet_icon_color,
+    cterm_color = quiet_icon_cterm_color,
+    name = "CSS",
   }
 
   local prettier_config_icon = {
@@ -67,6 +77,7 @@ function M.setup()
       override = overrides,
       override_by_extension = {
         astro = astro_icon,
+        css = css_icon,
         markdown = markdown_icon,
         md = md_icon,
         yaml = yaml_icon,
