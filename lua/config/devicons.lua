@@ -33,14 +33,20 @@ function M.setup()
     name = "Markdown",
   }
   local md_icon = {
-    -- icon = "ᴍ",
-    -- icon = "𝑚",
     icon = "⚌",
+    color = quiet_icon_color,
+    cterm_color = quiet_icon_cterm_color,
+    name = "Md",
+  }
+
+  local mdx_icon = {
+    icon = "⚍",
     -- icon = "☱",
     color = quiet_icon_color,
     cterm_color = quiet_icon_cterm_color,
     name = "Md",
   }
+
 
   local astro_icon = {
     icon = "⩔",
@@ -80,6 +86,7 @@ function M.setup()
         css = css_icon,
         markdown = markdown_icon,
         md = md_icon,
+        mdx = mdx_icon,
         yaml = yaml_icon,
         yml = yml_icon,
       },

@@ -1,5 +1,6 @@
 
 local lspconfig = require 'lspconfig'
+local lspconfig_util = require 'lspconfig.util'
 local Path = require "plenary.path"
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
@@ -354,7 +355,7 @@ local function custom_handler_filter_interfaceDefs(err, result, ctx, config)
     return
   end
 
-  vim.lsp.util.jump_to_location(locations[1], 'utf-8')
+  vim.lsp.util.show_document(locations[1], 'utf-8', { focus = true })
 end
 
 
@@ -421,7 +422,6 @@ lspconfig.astro.setup({
     end
   end,
 })
-
 
 -- lspconfig.purescriptls.setup ({
 --   capabilities = capabilities,
@@ -694,26 +694,43 @@ lspconfig.jsonls.setup({
 -- table.insert(runtime_path, "lua/?/init.lua")
 
 
+local nvim_config = vim.fn.stdpath("config")
+local lua_ls_library = {
+  vim.env.VIMRUNTIME .. "/lua",
+  vim.env.VIMRUNTIME .. "/lua/vim/lsp",
+  nvim_config .. "/lua",
+}
+
 -- TODO: lua_ls works nicely as is. however there are a lot of warnings in my config which spam the trouble list which i don't know how to filter.
 lspconfig.lua_ls.setup {
   capabilities = capabilities,
+  root_dir = function(fname)
+    if vim.startswith(vim.fs.normalize(fname), vim.fs.normalize(nvim_config)) then
+      return nvim_config
+    end
+    return lspconfig_util.root_pattern(".luarc.json", ".luarc.jsonc", ".git")(fname)
+      or lspconfig_util.path.dirname(fname)
+  end,
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
   end,
   settings = {
     Lua = {
+      runtime = {
+        version = 'LuaJIT',
+      },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
         globals = { 'vim' },
       },
       workspace = {
-        -- Make the server aware of Neovim runtime files
-        -- library = vim.api.nvim_get_runtime_file("", true),
         checkThirdParty = false,
-        library = vim.list_extend(
-          vim.api.nvim_get_runtime_file("", true),
-          { "${3rd}/luassert/library" }
-        ),
+        library = lua_ls_library,
+        maxPreload = 2000,
+        preloadFileSize = 500,
+      },
+      telemetry = {
+        enable = false,
       },
       window = {
         progressBar = false
@@ -875,4 +892,3 @@ vim.api.nvim_create_autocmd("FileType", {
 --     }),
 --   },
 -- })
-

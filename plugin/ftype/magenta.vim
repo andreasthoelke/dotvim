@@ -119,6 +119,16 @@ let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|^─ \zs)'
 
 " ─^  Markdown agent nav patterns                        ▲
 
+func! Mgn_MainStartPatternForBuffer()
+  if &ft == 'markdown.mdx'
+    let mdx_heading_pattern = '^\#{1,6}\s+\zs'
+    let mdx_tag_pattern = '^\s*\<(/)?\zs([A-Z][A-Za-z0-9_.:-]*|psychological|economic|cultural|future)'
+    return '\v(' . mdx_heading_pattern . '|' . mdx_tag_pattern . ')'
+  endif
+
+  return g:Mgn_MainStartPattern
+endfunc
+
 
 
 func! Mgn_ColumnForw()
@@ -135,18 +145,27 @@ endfunc
 
 
 func! Mgn_MainStartBindingForw()
-  normal! jj
-  call search( g:Mgn_MainStartPattern, 'W' )
+  if &ft == 'markdown.mdx'
+    normal! j
+  else
+    normal! jj
+  endif
+  call search( Mgn_MainStartPatternForBuffer(), 'W' )
   " call ScrollUp(5)
   call ScrollUpFromMiddle( 7 )
   " normal! <c-e><c-e><c-e>
 endfunc
 
 func! Mgn_MainStartBindingBackw()
-  normal! ^kk
-  call search( g:Mgn_MainStartPattern, 'bW' )
-  normal! kk
-  call search( g:Mgn_MainStartPattern, 'W' )
+  if &ft == 'markdown.mdx'
+    normal! ^k
+    call search( Mgn_MainStartPatternForBuffer(), 'bW' )
+  else
+    normal! ^kk
+    call search( Mgn_MainStartPatternForBuffer(), 'bW' )
+    normal! kk
+    call search( Mgn_MainStartPatternForBuffer(), 'W' )
+  endif
   call ScrollUpFromMiddle( 7 )
   " call ScrollUp(5)
 endfunc

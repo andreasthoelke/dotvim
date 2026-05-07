@@ -63,14 +63,18 @@ au ag BufNewFile,BufRead,WinNew *.py call PythonSyntaxAdditions()
 au ag BufWinEnter *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.vim,*.lua,*.txt,.zshrc,*.bak call VScriptToolsBufferMaps()
 
-au ag BufWinEnter *.md,.mdx          call MarkdownSyntaxAdditions()
+au ag BufWinEnter *.md,*.mdx          call MarkdownSyntaxAdditions()
+au ag BufWinEnter *.mdx               call MdxSyntaxAdditions()
 " Syntax event fires after filetype is set, needed for parrot.nvim which resets
 " filetype=markdown on BufEnter (via prep_md), clearing our syntax conceals
 au ag Syntax markdown call MarkdownSyntaxAdditions()
 " WinEnter: parrot.nvim resets filetype on BufEnter; also conceallevel is window-local
 au ag WinEnter * if &ft == 'markdown' | call MarkdownSyntaxAdditions() | endif
-au ag BufWinEnter *.md,*.markdown,.mdx   call MarkdownBufferMaps()
+au ag WinEnter * if &ft == 'markdown.mdx' | call MarkdownSyntaxAdditions() | call MdxSyntaxAdditions() | endif
+au ag BufWinEnter *.md,*.markdown,*.mdx   call MarkdownBufferMaps()
 au ag FileType markdown,markdown.mdx,codecompanion,mcphub call MarkdownBufferMaps()
+au ag FileType markdown.mdx              call MarkdownSyntaxAdditions()
+au ag FileType markdown.mdx              call MdxSyntaxAdditions()
 
 au ag BufWinEnter *.yaml,*.yml          call YamlSyntaxAdditions()
 au ag BufWinEnter *.yaml,*.yml          call YamlBufferMaps()
@@ -640,6 +644,34 @@ func! MarkdownSyntaxAdditions()
 "   syntax match Normal '$\\rightarrow$' conceal cchar=
 "   syntax match Normal '<=' conceal cchar=
 "   syntax match Normal '$\leftarrow$' conceal cchar=
+
+  setlocal conceallevel=2
+  setlocal concealcursor=ni
+endfunc
+
+func! MdxSyntaxAdditions()
+  if exists('w:mdx_conceal_match_ids')
+    for id in w:mdx_conceal_match_ids
+      silent! call matchdelete(id)
+    endfor
+  endif
+  let w:mdx_conceal_match_ids = []
+
+  highlight MdxLensAwareTag guifg=#35758A ctermfg=30
+  highlight MdxLensAwareText guifg=#28383D ctermfg=237
+
+  " Keep MDX Markdown-first: only touch JSX/HTML punctuation, not TS keywords.
+  let l:mdx_tag_name = '[A-Za-z][A-Za-z0-9_.:-]*'
+
+  call add(w:mdx_conceal_match_ids, matchadd('MdxLensAwareTag', '</\?' . l:mdx_tag_name . '\%(\s\_[^>]*\)\?>', 140))
+  call add(w:mdx_conceal_match_ids, matchadd('MdxLensAwareText', '<\(' . l:mdx_tag_name . '\)\%(\s\_[^>]*\)\?>\_s*\zs\_.\{-}\ze\_s*</\1>', 130))
+
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '<\ze' . l:mdx_tag_name, 170, -1, {'conceal': '‹'}))
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '</\ze' . l:mdx_tag_name, 170, -1, {'conceal': '‹'}))
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '/>', 180, -1, {'conceal': '˗'}))
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '\%(<\/\?' . l:mdx_tag_name . '\%(\s\_[^>]*\)\?\)\zs>', 170, -1, {'conceal': ''}))
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '\s\zsclassName\ze=', 10, -1, {'conceal': '◇'}))
+  call add(w:mdx_conceal_match_ids, matchadd('Conceal', '\s\zsstyle\ze=', 10, -1, {'conceal': '◈'}))
 
   setlocal conceallevel=2
   setlocal concealcursor=ni

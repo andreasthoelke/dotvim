@@ -58,7 +58,7 @@ hi(0, "@lsp.typemod.method.definition", { link = "Function" })
 -- hi(0, "@lsp.typemod.variable.local.typescript", { link = "Special" })
 
 -- ─   New Colors                                        ■
--- NOTE: the corresponding *dark* highlight groups in colors/munsell-blue-molokai.vim-- 
+-- NOTE: the corresponding *dark* highlight groups in colors/munsell-blue-molokai.vim--
 -- just a nice color! { fg = "#B8766E" })
 -- gold! fg = "#898861" })
 -- below is a darker pale derivative
@@ -691,7 +691,7 @@ hi(0, "fnWireframe", { bg = "#ededed", fg = "#79a8b7" })
 hi(0, "hsTopLevelBind", { bg = "#ededed", fg = "#096c84" })
 hi(0, "hsTypeComment", { link = "Comment" })
 hi(0, "hsTypeVarComment", { fg = "#a3a78a" })
-hi(0, "htmlBold", { fg = "#35758a" })
+hi(0, "htmlBold", { fg = "#35758A" })
 hi(0, "htmlBoldItalic", { bold = true, italic = true })
 hi(0, "htmlBoldUnderline", { bold = true, underline = true })
 hi(0, "htmlBoldUnderlineItalic", { bold = true, italic = true, underline = true })
@@ -1135,9 +1135,12 @@ hi(0, "lualine_transitional_lualine_a_17_DevIconLua_0_inactive_to_StatusLineNC",
 hi(0, "lualine_transitional_lualine_a_17_DevIconLua_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_17_DevIconMd_0_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_17_DevIconMd_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
-hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_5_6_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
-hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_5_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
-hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
+hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_5_6_inactive_to_StatusLineNC",
+  { bg = "#ffffff", fg = "#abb4bc" })
+hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_5_inactive_to_StatusLineNC",
+  { bg = "#ffffff", fg = "#abb4bc" })
+hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_4_inactive_to_StatusLineNC",
+  { bg = "#ffffff", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_3_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_2_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })
 hi(0, "lualine_transitional_lualine_a_17_DevIconTxt_0_1_inactive_to_StatusLineNC", { bg = "#ffffff", fg = "#abb4bc" })

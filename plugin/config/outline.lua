@@ -238,11 +238,14 @@ require("outline").setup(
     },
 
     providers = {
-      priority = { 'lsp', 'coc', 'markdown', 'norg', 'man' },
+      priority = { 'mdx', 'lsp', 'coc', 'markdown', 'norg', 'man' },
       -- Configuration for each provider (3rd party providers are supported)
       lsp = {
         -- Lsp client names to ignore
         blacklist_clients = {},
+      },
+      mdx = {
+        filetypes = {'markdown.mdx', 'mdx'},
       },
       markdown = {
         -- List of supported ft's to use the markdown provider
@@ -322,5 +325,4 @@ require("outline").setup(
     },
   }
 )
-
 

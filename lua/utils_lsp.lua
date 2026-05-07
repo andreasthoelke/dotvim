@@ -25,14 +25,20 @@ local utilsg = require 'utils.general'
 
 
 vim.keymap.set( 'n', '<leader>lds', function()
-  putt( vim.lsp.diagnostic.get_line_diagnostics() )
+  local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
+  putt( vim.diagnostic.get(0, { lnum = line_nr }) )
 end)
 
 
 local function get_available_client(method)
-  for id, client in pairs(vim.lsp.buf_get_clients()) do
-    if client['resolved_capabilities'][method] == true then
-      return id
+  local capability_by_name = {
+    document_symbol = "documentSymbolProvider",
+    workspace_symbol = "workspaceSymbolProvider",
+  }
+  local capability = capability_by_name[method] or method
+  for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+    if client.server_capabilities and client.server_capabilities[capability] then
+      return client.id
     end
   end
   return 0
@@ -143,7 +149,7 @@ function M.workspace_symbol(query)
 end
 
 function M.diagnostic_buffer()
-  local res = vim.lsp.diagnostic.get(0)
+  local res = vim.diagnostic.get(0)
   if res == nil then
     return nil
   end
@@ -211,7 +217,19 @@ end
 
 
 function M.diagnostic_all()
-  local raw_result = vim.lsp.diagnostic.get_all()
+  local diagnostics = vim.diagnostic.get()
+  if diagnostics == nil then
+    return nil
+  end
+  local raw_result = {}
+  for _, diagnostic in ipairs(diagnostics) do
+    local bufnr = diagnostic.bufnr
+    if bufnr ~= nil then
+      diagnostic.bufnr = nil
+      raw_result[bufnr] = raw_result[bufnr] or {}
+      table.insert(raw_result[bufnr], diagnostic)
+    end
+  end
   if raw_result == nil then
     return nil
   end
@@ -247,8 +265,6 @@ end
 
 
 return M
-
-
 
 
 
