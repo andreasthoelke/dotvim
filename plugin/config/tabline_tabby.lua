@@ -326,7 +326,11 @@ function _G.Tab_GenLabel( tabid )
     local _, folderName = utils.split_path( mainFile_projectRoot )
     folderStr = "↘ " .. Status_shortenFilename( folderName )
   else
-    folderStr = vim.fn.fnamemodify( vim.fs.dirname( mainFile ) or "", ':t' )
+    local mainFileParent = vim.fs.dirname( mainFile ) or ""
+    folderStr =
+      mainFileParent == globalCwd
+      and "‖"
+      or vim.fn.fnamemodify( mainFileParent, ':t' )
   end
 
   local mainFile_shortName = Status_shortenFilename( vim.fn.fnamemodify( mainFile, ':t:r' ) )
@@ -565,7 +569,6 @@ function _G.Tab_diag_collisions()
   end
   if not any then print('no abbreviation collisions among loaded buffers') end
 end
-
 
 
 
