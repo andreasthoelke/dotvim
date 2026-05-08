@@ -625,6 +625,51 @@ local handler_BASH_filterDiagnCodes = {
 }
 
 
+local function load_project_yaml_schemas(root_dir)
+  local config_path = root_dir .. "/.nvim-yaml-schemas.json"
+  if vim.fn.filereadable(config_path) ~= 1 then
+    return nil
+  end
+
+  local ok, contents = pcall(vim.fn.readfile, config_path)
+  if not ok then
+    vim.notify("Could not read " .. config_path, vim.log.levels.WARN)
+    return nil
+  end
+
+  local ok_decode, decoded = pcall(vim.json.decode, table.concat(contents, "\n"))
+  if not ok_decode or type(decoded) ~= "table" then
+    vim.notify("Could not parse " .. config_path, vim.log.levels.WARN)
+    return nil
+  end
+
+  return decoded
+end
+
+local function merge_project_yaml_schemas(new_config, new_root_dir)
+  local project = load_project_yaml_schemas(new_root_dir)
+  if not project then
+    return
+  end
+
+  new_config.settings = new_config.settings or {}
+  new_config.settings.yaml = new_config.settings.yaml or {}
+
+  if project.schemaStore ~= nil then
+    new_config.settings.yaml.schemaStore = new_config.settings.yaml.schemaStore or {}
+    new_config.settings.yaml.schemaStore.enable = project.schemaStore
+    new_config.settings.yaml.schemaStore.url = new_config.settings.yaml.schemaStore.url or ""
+  end
+
+  if type(project.schemas) == "table" then
+    new_config.settings.yaml.schemas = new_config.settings.yaml.schemas or {}
+    for schema, glob in pairs(project.schemas) do
+      new_config.settings.yaml.schemas[schema] = glob
+    end
+  end
+end
+
+
 -- https://github.com/bash-lsp/bash-language-server
 -- -- TODO: filter all the warnings about double quotes, ect.
 -- this is now done via ~/.shellcheckrc
@@ -643,6 +688,7 @@ lspconfig.bashls.setup({
 lspconfig.yamlls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
+  on_new_config = merge_project_yaml_schemas,
   flags = flags,
   settings = {
     yaml = {
