@@ -231,7 +231,7 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'and\zeThen' conceal cchar=~
   syntax match Normal 'Then\ze\W' conceal cchar=➚
   syntax match Normal 'pipe' conceal cchar=→
-  syntax match Normal 'flow' conceal cchar=⇾
+  " syntax match Normal 'flow' conceal cchar=⇾
   syntax match Normal 'i => i' conceal cchar=»
   syntax match Normal 'concat' conceal cchar=◇
   syntax match Normal 'combine' conceal cchar=◇
@@ -249,14 +249,14 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'x => x\ze\.' conceal cchar=_
 
   " EdgeDB query builder object: e.select() or event in DOM e.target.value
-  syntax match Normal "\s\zse\." conceal cchar=᛫
-  syntax match Normal "\s\zstrue" conceal cchar=᛫
+  " syntax match Normal "\s\zse\." conceal cchar=᛫
+  " syntax match Normal "\s\zstrue" conceal cchar=᛫
   " syntax match Normal "ilike" conceal cchar=∼
   " syntax match Normal "like" conceal cchar=∼
-  syntax match Normal "order_by\:" conceal cchar=ꜛ
-  syntax match Normal "filter\:" conceal cchar=≚
-  syntax match Normal "\.\.\." conceal cchar=…
-  syntax match Normal "\*\/" conceal
+  " syntax match Normal "order_by\:" conceal cchar=ꜛ
+  " syntax match Normal "filter\:" conceal cchar=≚
+  " syntax match Normal "\.\.\." conceal cchar=…
+  " syntax match Normal "\*\/" conceal
 
 
   syntax match Normal 'JSX.Element' conceal cchar=⊃
@@ -266,15 +266,15 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'e\.target\.value' conceal cchar=⊍
 
   " XState
-  syntax match Normal 'states\:' conceal cchar=Ⲷ
-  syntax match Normal '\s\zson\:' conceal cchar=󰑫
-  syntax match Normal 'events\:' conceal cchar=󰖩
-  syntax match Normal 'target\:' conceal cchar=→
-  syntax match Normal 'context\:' conceal cchar=
-  syntax match Normal 'initial\:' conceal cchar=⟣
-  syntax match Normal 'actions\:' conceal cchar=⪾
-  syntax match Normal 'actors\:' conceal cchar=♺
-  syntax match Normal 'assign' conceal cchar=↗
+  " syntax match Normal 'states\:' conceal cchar=Ⲷ
+  " syntax match Normal '\s\zson\:' conceal cchar=󰑫
+  " syntax match Normal 'events\:' conceal cchar=󰖩
+  " syntax match Normal 'target\:' conceal cchar=→
+  " syntax match Normal 'context\:' conceal cchar=
+  " syntax match Normal 'initial\:' conceal cchar=⟣
+  " syntax match Normal 'actions\:' conceal cchar=⪾
+  " syntax match Normal 'actors\:' conceal cchar=♺
+  " syntax match Normal 'assign' conceal cchar=↗
 
 
 " ─   Effect                                            ──
