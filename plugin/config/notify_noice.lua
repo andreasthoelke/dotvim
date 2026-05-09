@@ -247,6 +247,17 @@ local noice_config1 = {
 require("noice").setup( noice_config )
 -- require("noice").setup()
 
+function _G.NoiceClearSearchCount()
+  local ok_msg, msg = pcall(require, "noice.ui.msg")
+  local ok_manager, manager = pcall(require, "noice.message.manager")
+  local ok_router, router = pcall(require, "noice.message.router")
+  if not (ok_msg and ok_manager and ok_router) then return end
+
+  local search_count = msg.get("msg_show", "search_count")
+  pcall(manager.remove, search_count)
+  pcall(router.update)
+end
+
 function _G.Lsp_MD_docs()
   vim.lsp.util.convert_input_to_markdown_lines = true
   vim.lsp.util.stylize_markdown = true
@@ -306,4 +317,3 @@ end
 --     _old_notify("ab", level, opts)
 --   end
 -- end
-

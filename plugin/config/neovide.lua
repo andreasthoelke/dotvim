@@ -44,7 +44,7 @@ vim.g.neovide_padding_bottom = 0
 vim.g.neovide_padding_left = 0
 vim.g.neovide_padding_right = 0
 
-vim.g.neovide_remember_window_size = false
+vim.g.neovide_remember_window_size = true
 
 -- vim.g.neovide_cursor_animation_length = 0.0021
 vim.g.neovide_cursor_animation_length = 0

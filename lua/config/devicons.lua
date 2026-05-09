@@ -98,6 +98,7 @@ function M.setup()
         astro = astro_icon,
         css = css_icon,
         markdown = markdown_icon,
+        toml = prettier_config_icon,
         md = md_icon,
         mdx = mdx_icon,
         yaml = yaml_icon,

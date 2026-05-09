@@ -626,7 +626,7 @@ local handler_BASH_filterDiagnCodes = {
 
 
 local function load_project_yaml_schemas(root_dir)
-  local config_path = root_dir .. "/.nvim-yaml-schemas.json"
+  local config_path = root_dir .. "/.nvim/yaml-schemas.json"
   if vim.fn.filereadable(config_path) ~= 1 then
     return nil
   end

@@ -83,10 +83,10 @@ let g:ag_highlight=1
 " ─   Search next                                       ──
 " Select, deselect. Similar to "*" / "#"
 nnoremap <silent> ga :call HiSearchCursorWord()<cr>
-nnoremap <silent> g- m':set nohlsearch<cr>
+nnoremap <silent> g- m':nohlsearch<cr>:lua if _G.NoiceClearSearchCount then _G.NoiceClearSearchCount() end<cr>
 
 " NOTE: my "escape" map escapes hlsearch and float win which is ok in most cases. but sometimes i have to use g- to only escape hlsearch and leave the float win open.
-nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
+nnoremap <silent> <c-[> m':nohlsearch<cr>:lua if _G.NoiceClearSearchCount then _G.NoiceClearSearchCount() end<cr>:call FloatWin_close()<cr>
 
 " Don't add seach next/prev to the jumplist
 nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
@@ -495,7 +495,6 @@ nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><E
 " nnoremap <leader>sn :echo col([line('.'),'$'])<CR>
 nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
 " Vim will insert a newline (<CR>) followed by a number of spaces (<C-R>=repeat(' ',...)) equal to the difference between the column number of the end of the previous line (col([line('.')-1,'$'])) and the current column number (col('.'))
-
 
 
 
