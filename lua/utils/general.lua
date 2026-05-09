@@ -1,4 +1,3 @@
-
 local f = require 'utils.functional'
 local fun = require 'utils.fun'
 local action_state = require "telescope.actions.state"
@@ -16,43 +15,46 @@ function M.makeScratch()
   api.nvim_command('enew') -- equivalent to :enew
   -- vim.bo[0].buftype=nofile -- set the current buffer's (buffer 0) buftype to nofile
   -- vim.bo[0].bufhidden=hide
-  vim.bo[0].swapfile=false
+  vim.bo[0].swapfile = false
 end
 
 function M.esc(cmd)
   return vim.api.nvim_replace_termcodes(cmd, true, false, true)
 end
+
 -- require'utils.general'.esc( vim.fn.getcwd() )
 
 
-function _G.PrintMessages( cnt )
+function _G.PrintMessages(cnt)
   local hist = require 'notify'.history()
   if #hist == 0 then
-    print( "No messages to show!" )
+    print("No messages to show!")
     return
   end
-  local recentHist = vim.list_slice( hist, #hist - cnt, #hist )
-  local msgsFlat = vim.iter( vim.tbl_map( function(el) return el.message end , recentHist ) ):flatten():totable()
+  local recentHist = vim.list_slice(hist, #hist - cnt, #hist)
+  local msgsFlat = vim.iter(vim.tbl_map(function(el) return el.message end, recentHist)):flatten():totable()
   -- local reversedList = vim.fn.reverse( msgsFlat )
   -- local seperatedList = vim.fn.insert( reversedList, "_ ", 1 )
-  local seperatedList = vim.fn.insert( msgsFlat, "_ ", 1 )
-  vim.g['floatWin_win'] = vim.fn.FloatingSmallNew( seperatedList )
+  local seperatedList = vim.fn.insert(msgsFlat, "_ ", 1)
+  vim.g['floatWin_win'] = vim.fn.FloatingSmallNew(seperatedList)
   vim.wo.wrap = true
   vim.fn.FloatWin_FitWidthHeight()
   vim.fn.Scala_bufferMaps_shared()
-  vim.cmd( 'wincmd p' )
+  vim.cmd('wincmd p')
 end
+
 -- PrintMessages()
 -- require 'notify'.history()
 -- vim.wo.wrap = true
 
 function _G.LuaModuleName()
   -- Get module name from current file path.
-  vim.fs.basename( vim.fn.expand('%:p:t') )
-  vim.fs.dirname( vim.fn.expand('%:p') )
-  vim.iter( vim.fs.parents( vim.fn.expand('%:p') ) )
-  return vim.fn.expand('%:t:r') 
+  vim.fs.basename(vim.fn.expand('%:p:t'))
+  vim.fs.dirname(vim.fn.expand('%:p'))
+  vim.iter(vim.fs.parents(vim.fn.expand('%:p')))
+  return vim.fn.expand('%:t:r')
 end
+
 -- LuaModuleName()
 
 function _G.put(...)
@@ -66,42 +68,42 @@ function _G.put(...)
   return ...
 end
 
-function _G.iteratorToSting( it )
+function _G.iteratorToSting(it)
   local st = ""
   for v in it do
-    st = st .. '\n' .. tostring( v )
+    st = st .. '\n' .. tostring(v)
   end
   return st
 end
 
-function _G.printToString( value )
+function _G.printToString(value)
   local pval
-  if type( value ) == "function" then
-    pval = iteratorToSting( value )
-  elseif type( value ) == "number" then
-    pval = tostring( value )
-  elseif type( value ) == "boolean" then
-    pval = tostring( value )
-  elseif tostring( value ) == "<generator>" then
-    pval = printToString( fun.totable( value ) )
-  elseif vim.tbl_get( value, 'param' ) then
-    pval = fun.foldl( function( acc, el ) return acc .. '\n' .. el end, "", value )
-  elseif vim.tbl_get( value, '_head' ) then
-    pval = printToString( value:totable() )
-  elseif vim.tbl_get( value, 'next' ) then
-    pval = printToString( value:totable() )
-  elseif type( value ) == "table" then
-    pval = #value .. '\n' .. vim.inspect( value )
+  if type(value) == "function" then
+    pval = iteratorToSting(value)
+  elseif type(value) == "number" then
+    pval = tostring(value)
+  elseif type(value) == "boolean" then
+    pval = tostring(value)
+  elseif tostring(value) == "<generator>" then
+    pval = printToString(fun.totable(value))
+  elseif vim.tbl_get(value, 'param') then
+    pval = fun.foldl(function(acc, el) return acc .. '\n' .. el end, "", value)
+  elseif vim.tbl_get(value, '_head') then
+    pval = printToString(value:totable())
+  elseif vim.tbl_get(value, 'next') then
+    pval = printToString(value:totable())
+  elseif type(value) == "table" then
+    pval = #value .. '\n' .. vim.inspect(value)
   else
-    pval = vim.inspect( value )
+    pval = vim.inspect(value)
   end
   return pval
 end
 
-function _G.putt( value, title )
-  local pval = printToString( value )
-  vim.notify( pval, "info", {
-    title = title or type( value ),
+function _G.putt(value, title)
+  local pval = printToString(value)
+  vim.notify(pval, "info", {
+    title = title or type(value),
     timeout = 400000,
     on_open = function(win)
       local buf = vim.api.nvim_win_get_buf(win)
@@ -148,13 +150,12 @@ function _G.stline()
   local align_section = '%='
   local percentage_through_file = '%p%%'
   return string.format(
-      '%s%s%s',
-      filepath,
-      align_section,
-      percentage_through_file
+    '%s%s%s',
+    filepath,
+    align_section,
+    percentage_through_file
   )
 end
-
 
 function M.Tablelength(T)
   local count = 0
@@ -162,9 +163,8 @@ function M.Tablelength(T)
   return count
 end
 
-
 -- -- filtering the vim bufferlist
--- vim.api.nvim_list_bufs() 
+-- vim.api.nvim_list_bufs()
 -- unpack( vim.api.nvim_list_bufs() )
 -- math.max( 4, 8, 1 )
 -- math.max( unpack( vim.api.nvim_list_bufs() ) )
@@ -172,7 +172,7 @@ end
 -- vim.fn.fnamemodify(vim.api.nvim_buf_get_name(4), ":p:t")
 
 local my_make_entry = {}
-local devicons = require"nvim-web-devicons"
+local devicons = require "nvim-web-devicons"
 local entry_display = require("telescope.pickers.entry_display")
 local actions = require "telescope.actions"
 
@@ -181,7 +181,7 @@ local vmap = vim.tbl_map
 
 function my_make_entry.gen_from_buffer_like_leaderf(opts)
   opts = opts or {}
-  local default_icons, _ = devicons.get_icon("file", "", {default = true})
+  local default_icons, _ = devicons.get_icon("file", "", { default = true })
 
   local bufnrs = vfilter(function(b)
     return 1 == vim.fn.buflisted(b)
@@ -211,11 +211,11 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
 
   local make_display = function(entry)
     return displayer {
-      {entry.bufnr, "TelescopeResultsNumber"},
-      {entry.indicator, "TelescopeResultsComment"},
-      {entry.devicons, entry.devicons_highlight},
+      { entry.bufnr,     "TelescopeResultsNumber" },
+      { entry.indicator, "TelescopeResultsComment" },
+      { entry.devicons,  entry.devicons_highlight },
       entry.file_name,
-      {entry.dir_name, "Comment"}
+      { entry.dir_name, "Comment" }
     }
   end
 
@@ -254,8 +254,6 @@ function my_make_entry.gen_from_buffer_like_leaderf(opts)
   end
 end
 
-
-
 function M.fileView()
   require("telescope.builtin").buffers({
     entry_maker = my_make_entry.gen_from_buffer_like_leaderf(),
@@ -275,11 +273,10 @@ function M.fileView1()
   -- local opts = {}
   local opts = {
     attach_mappings = function(prompt_bufnr, map)
-
-    action_set.select:replace( function()
+      action_set.select:replace(function()
         local entry = actions_state.get_selected_entry()
         -- put( entry )
-        vim.pretty_print( entry )
+        vim.pretty_print(entry)
       end
       )
       -- action_set.select:enhance {
@@ -293,16 +290,17 @@ function M.fileView1()
       --     end,
       --   }
 
-        -- replace( function()
-        -- local entry = actions_state.get_selected_entry()
-        -- put( entry.lnum )
+      -- replace( function()
+      -- local entry = actions_state.get_selected_entry()
+      -- put( entry.lnum )
       -- end
       -- )
-    return true
+      return true
     end
   }
   require("telescope.builtin").find_files(opts)
 end
+
 -- require'utils.general'.fileView1()
 
 
@@ -310,6 +308,7 @@ end
 function M.fileViewB()
   require("telescope").extensions.file_browser.file_browser()
 end
+
 -- require'utils.general'.fileViewB()
 
 
@@ -319,8 +318,9 @@ function M.Search_greparg()
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
     theme = 'dropdown',
-  } )
+  })
 end
+
 -- require'utils.general'.Search_greparg()
 
 -- https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
@@ -369,28 +369,31 @@ local scala_interest_files = {
 function M.Search_collection_full()
   local opts = {
     cwd = vim.g.FolderSearch_Path,
-    additional_args = function(_opts) return {"-L"} end, -- Follow symlinks
+    additional_args = function(_opts) return { "-L" } end, -- Follow symlinks
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
-
 
 function M.Search_collection_md_headers()
   local opts = {
-    default_text = "# .*" ,
+    default_text = "# .*",
     cwd = vim.g.FolderSearch_Path,
-    additional_args = function(_opts) return {"-L"} end, -- Follow symlinks
+    additional_args = function(_opts) return { "-L" } end, -- Follow symlinks
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
 
-function M.Search_dir_md_headers()
+local dir_heading_rx =
+    [[[#:].*]]
+-- TODO: this should cover more important text labels like html headings, p elements.
+
+local function dir_search_root()
   local from_neotree = vim.bo.filetype == "neo-tree"
   local search_root
   if from_neotree then
@@ -407,102 +410,169 @@ function M.Search_dir_md_headers()
       end
     end
   end
-  search_root = search_root or vim.fn.expand('%:p:h')
+  if not search_root then
+    local current_path = vim.fn.expand('%:p')
+    if current_path ~= "" then
+      if vim.fn.isdirectory(current_path) == 1 then
+        search_root = current_path
+      else
+        search_root = vim.fn.fnamemodify(current_path, ":h")
+      end
+    end
+  end
+  search_root = search_root or vim.fn.getcwd(0)
+  search_root = vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(search_root), ":p"))
 
-  local prev_win = (function()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
+  local target_win = (function()
+    local function is_file_window(win)
+      if not vim.api.nvim_win_is_valid(win) then
+        return false
+      end
       local buf = vim.api.nvim_win_get_buf(win)
-      if vim.bo[buf].filetype ~= 'neo-tree' and vim.bo[buf].buftype == '' then
+      return vim.bo[buf].filetype ~= 'neo-tree' and vim.bo[buf].buftype == ''
+    end
+
+    local previous_win = vim.fn.win_getid(vim.fn.winnr('#'))
+    if is_file_window(previous_win) then
+      return previous_win
+    end
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if is_file_window(win) then
         return win
       end
     end
-    return vim.fn.win_getid(vim.fn.winnr('#'))
+    return previous_win
   end)()
 
-  local function abs_filepath(entry)
-    return vim.fn.fnameescape(search_root .. "/" .. entry.filename)
+  return search_root, target_win
+end
+
+local function is_abs_path(path)
+  return path:sub(1, 1) == "/" or path:match("^%a:[/\\]") ~= nil
+end
+
+local function dir_search_entry_path(search_root, entry)
+  if not entry then
+    return nil
   end
 
+  local path = entry.filename or entry.path
+  if not path and type(entry.value) == "string" then
+    path = entry.value:match("^([^:]+):%d+:%d+:") or entry.value
+  end
+  if not path or path == "" then
+    return nil
+  end
+
+  path = vim.fn.expand(path)
+  if not is_abs_path(path) then
+    path = search_root .. "/" .. path
+  end
+  return vim.fs.normalize(vim.fn.fnamemodify(path, ":p"))
+end
+
+local function dir_search_open(command, search_root, target_win, entry)
+  local filepath = dir_search_entry_path(search_root, entry)
+  if not filepath then
+    return
+  end
+
+  if vim.api.nvim_win_is_valid(target_win) then
+    vim.api.nvim_set_current_win(target_win)
+  end
+
+  local lnum = tonumber(entry.lnum) or 0
+  vim.cmd(command
+    .. (lnum > 0 and (" +" .. lnum) or "")
+    .. " "
+    .. vim.fn.fnameescape(filepath))
+
+  local col = tonumber(entry.col) or 0
+  if lnum > 0 and col > 0 then
+    pcall(vim.api.nvim_win_set_cursor, 0, { lnum, col - 1 })
+  end
+end
+
+local function search_dir_contents(default_text, prompt_title)
+  local search_root, target_win = dir_search_root()
+
   local opts = {
-    default_text = "^#{1,6} .*",
+    default_text = default_text or "",
     cwd = search_root,
-    glob_pattern = "*.md",
-    additional_args = function(_opts) return {"-L", "-i"} end, -- Follow symlinks, case insensitive
-    prompt_title = "MD Headers (dir)",
+    additional_args = function(_opts) return { "-L", "-i" } end, -- Follow symlinks, case insensitive
+    prompt_title = prompt_title,
     attach_mappings = function(prompt_bufnr, map)
       local action_state = require("telescope.actions.state")
       local actions = require("telescope.actions")
       local open_in_prev = function()
         local entry = action_state.get_selected_entry()
         actions.close(prompt_bufnr)
-        if entry and vim.api.nvim_win_is_valid(prev_win) then
-          vim.api.nvim_set_current_win(prev_win)
-          local lnum = entry.lnum or 0
-          vim.cmd(lnum > 0 and ("edit +" .. lnum .. " " .. abs_filepath(entry))
-                            or  ("edit " .. abs_filepath(entry)))
-        end
+        dir_search_open("edit", search_root, target_win, entry)
       end
       map("i", "<C-w>p", open_in_prev)
       map("n", "<C-w>p", open_in_prev)
-      if from_neotree then
-        local open_vsplit = function()
-          local entry = action_state.get_selected_entry()
-          actions.close(prompt_bufnr)
-          if entry then
-            if vim.api.nvim_win_is_valid(prev_win) then
-              vim.api.nvim_set_current_win(prev_win)
-            end
-            local lnum = entry.lnum or 0
-            vim.cmd(lnum > 0 and ("vsplit +" .. lnum .. " " .. abs_filepath(entry))
-                              or  ("vsplit " .. abs_filepath(entry)))
-          end
-        end
-        map("i", "<C-w>v", open_vsplit)
-        map("n", "<C-w>v", open_vsplit)
+      local open_vsplit = function()
+        local entry = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        dir_search_open("vsplit", search_root, target_win, entry)
       end
+      map("i", "<C-w>v", open_vsplit)
+      map("n", "<C-w>v", open_vsplit)
+      map("i", "<C-v>", open_vsplit)
+      map("n", "<C-v>", open_vsplit)
       return true
     end,
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
+end
+
+function M.Search_dir_full_text()
+  search_dir_contents("", "Text (dir)")
+end
+
+function M.Search_dir_headings()
+  search_dir_contents(dir_heading_rx, "Headings (dir)")
+end
+
+function M.Search_dir_md_headers()
+  M.Search_dir_headings()
 end
 
 function M.Search_collection_aichat_topics()
   local opts = {
-    default_text = "# topic:.*" ,
+    default_text = "# topic:.*",
     cwd = "~/.local/share/nvim/parrot/chats",
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
 
 function M.Search_current_buffer_md_headers()
   local opts = {
-    default_text = "# " ,
+    default_text = "# ",
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').current_buffer_fuzzy_find(opts)
 end
 
-
 function M.Search_cwd_md_headers()
   local opts = {
-    default_text = "# .*" ,
-    cwd = vim.fn.getcwd( vim.fn.winnr() ),
+    default_text = "# .*",
+    cwd = vim.fn.getcwd(vim.fn.winnr()),
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
-
-
 
 function M.Search_in_folder(folder_path, default_text)
   local opts = {
@@ -519,7 +589,7 @@ function M.Search_in_folder(folder_path, default_text)
   end
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
 
@@ -531,7 +601,7 @@ function M.Search_files(folder_path, default_text)
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').find_files(opts)
 end
 
@@ -543,7 +613,7 @@ function M.Search_folders(folder_path, default_text)
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').find_files(opts)
 end
 
@@ -554,7 +624,7 @@ function M.Search_file_browser(folder_path, default_text)
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require("telescope").extensions.file_browser.file_browser(opts)
 end
 
@@ -566,10 +636,9 @@ function M.Search_frequent_recent_files(folder_path, workspace)
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require("telescope").extensions.frecency.frecency(opts)
 end
-
 
 -- vim.bo.commentstring
 -- vim.bo.comments
@@ -578,10 +647,10 @@ function _G.GetCommentPatterns()
   -- Get the comment strings for the current buffer
   local commentstring = vim.bo.commentstring
   local comments = vim.bo.comments
-  
+
   -- Initialize patterns table
   local patterns = {}
-  
+
   -- Add the commentstring pattern (handles single-line comments)
   if commentstring and commentstring ~= "" then
     local pattern = commentstring:gsub("%%s", ".*")
@@ -597,6 +666,7 @@ function _G.GetCommentPatterns()
     return ""
   end
 end
+
 -- GetCommentPatterns()
 
 function M.Search_folder_comments(folder_path)
@@ -609,16 +679,15 @@ function M.Search_folder_comments(folder_path)
   }
   local posOpts = Float_dynAnchorWidth()
   local layout_opts = { layout_config = { vertical = posOpts } }
-  opts = vim.tbl_extend( 'keep', opts or {}, layout_opts )
+  opts = vim.tbl_extend('keep', opts or {}, layout_opts)
   require('telescope.builtin').live_grep(opts)
 end
-
 
 function M.Search_patternfiles()
   require('telescope.builtin').live_grep({
     glob_pattern = scala_patterns_files,
     cwd = scala_parent_dir,
-  } )
+  })
 end
 
 function M.Search_comments()
@@ -627,7 +696,7 @@ function M.Search_comments()
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
     -- path_display = { "smart" },
-  } )
+  })
 end
 
 function M.Search_headers()
@@ -635,7 +704,7 @@ function M.Search_headers()
     default_text = scala_header_rx,
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
-  } )
+  })
 end
 
 function M.Search_typeSign()
@@ -643,9 +712,8 @@ function M.Search_typeSign()
     default_text = scala_multilineSignatures,
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
-  } )
+  })
 end
-
 
 function M.Search_gs()
   require('telescope.builtin').live_grep({
@@ -653,7 +721,7 @@ function M.Search_gs()
     search = "List",
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
-  } )
+  })
 end
 
 -- vim.keymap.set( 'n',
@@ -672,16 +740,16 @@ function _G.Search_gs()
     search = "List",
     glob_pattern = scala_interest_files,
     cwd = scala_parent_dir,
-  } )
+  })
 end
 
-function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
+function _G.Search_mainPatterns(searchScope, pattern, initCursorMode)
   local paths =
-    searchScope == 'global'
-      and { vim.fn.getcwd( vim.fn.winnr() ), "~/Documents/Notes/" }
+      searchScope == 'global'
+      and { vim.fn.getcwd(vim.fn.winnr()), "~/Documents/Notes/" }
       or searchScope == 'file'
-         and { vim.fn.expand('%:p') }
-         or  { vim.fn.getcwd( vim.fn.winnr() ) }
+      and { vim.fn.expand('%:p') }
+      or { vim.fn.getcwd(vim.fn.winnr()) }
 
   if not pattern then
     if searchScope == 'global' then
@@ -698,29 +766,29 @@ function _G.Search_mainPatterns( searchScope, pattern, initCursorMode )
     elseif vim.fn.expand("%:e") == "ts" then
       pattern = vim.fn.JS_TopLevPattern()
       if searchScope == 'cwd' then
-        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+        paths = { vim.fn.getcwd(vim.fn.winnr()) }
       end
     elseif vim.fn.expand("%:e") == "js" then
       pattern = vim.fn.JS_TopLevPattern()
       if searchScope == 'cwd' then
-        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+        paths = { vim.fn.getcwd(vim.fn.winnr()) }
       end
     elseif vim.fn.expand("%:e") == "py" then
       pattern = [[(class|def|# ─ )\s.*]]
       if searchScope == 'cwd' then
-        paths = { vim.fn.getcwd( vim.fn.winnr() ) }
+        paths = { vim.fn.getcwd(vim.fn.winnr()) }
       end
     else
       pattern = [[(^#|\*).*]]
     end
   end
 
-  Telesc_launch( 'live_grep', {
+  Telesc_launch('live_grep', {
     initial_mode = initCursorMode or "insert",
     default_text = pattern,
     -- additional_args = function(_opts) return {"--hidden"} end,
     search_dirs = paths,
-  } )
+  })
 
   -- require('telescope.builtin').live_grep({
   --   initial_mode = initCursorMode or "insert",
@@ -734,19 +802,20 @@ end
 -- Telesc_launch( 'live_grep', { default_text = 'hi' } )
 
 function _G.Search_selection()
-  Telesc_launch( 'grep_string', {
+  Telesc_launch('grep_string', {
     initial_mode = 'normal',
     word_match = "-w",
-  } )
+  })
 end
 
-function _G.Search_ast( pattern )
-  require 'telescope'.extensions.ast_grep.ast_grep( Telesc_dynPosOpts_ext( {
+function _G.Search_ast(pattern)
+  require 'telescope'.extensions.ast_grep.ast_grep(Telesc_dynPosOpts_ext({
     initial_mode = "normal",
     default_text = pattern,
     -- search_dirs = paths,
   }))
 end
+
 -- Search_ast( 'if $$$ then $$$ return {$$$} end' )
 
 
@@ -766,13 +835,13 @@ function M.Resources(opts)
   pickers.new {
     results_title = "Resources",
     -- Run an external command and show the results in the finder window
-    finder = finders.new_oneshot_job({"terraform", "show"}),
+    finder = finders.new_oneshot_job({ "terraform", "show" }),
     sorter = sorters.get_fuzzy_file(),
     previewer = previewers.new_buffer_previewer {
       define_preview = function(self, entry, status)
         -- Execute another command using the highlighted entry
         return require('telescope.previewers.utils').job_maker(
-          {"terraform", "state", "list", entry.value},
+          { "terraform", "state", "list", entry.value },
           self.state.bufnr,
           {
             callback = function(bufnr, content)
@@ -786,27 +855,25 @@ function M.Resources(opts)
   }:find()
 end
 
-
-
 function M.Git_diff_stat(opts)
   opts = opts or {}
   opts.entry_maker = function(entry)
-      local split = vim.split(entry, [[|]])
-      local rel_filepath = split[1]:gsub("%s+", "")
-      local gstat = vim.F.if_nil( split[2], "" ):gsub("%s+", "")
-      local abs_filepath = vim.fn.getcwd( vim.fn.winnr() ) .. "/" .. rel_filepath
-      -- local wordCount = vim.fn.systemlist( 'wc ' .. abs_filepath .. " | awk '{print $1}'")[1]
-      local wc_output = vim.fn.systemlist( "wc " .. abs_filepath .. " | awk {'print $1 \":\" $2'}" )[1]
-      local wc_list = vim.split( wc_output, ":" )
-      local line_num = tonumber(split[2])
-      -- local gstat = vim.fn.systemlist( 'git diff HEAD --stat ' .. entry )[1]
-      return {
-        -- display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
-        value = abs_filepath,
-        display = "li:" .. wc_list[1] .. " | wo:" .. wc_list[2] .. " | " .. rel_filepath .. " | " .. gstat,
-        ordinal = rel_filepath, -- this is for sorting?
-      }
-    end
+    local split = vim.split(entry, [[|]])
+    local rel_filepath = split[1]:gsub("%s+", "")
+    local gstat = vim.F.if_nil(split[2], ""):gsub("%s+", "")
+    local abs_filepath = vim.fn.getcwd(vim.fn.winnr()) .. "/" .. rel_filepath
+    -- local wordCount = vim.fn.systemlist( 'wc ' .. abs_filepath .. " | awk '{print $1}'")[1]
+    local wc_output = vim.fn.systemlist("wc " .. abs_filepath .. " | awk {'print $1 \":\" $2'}")[1]
+    local wc_list = vim.split(wc_output, ":")
+    local line_num = tonumber(split[2])
+    -- local gstat = vim.fn.systemlist( 'git diff HEAD --stat ' .. entry )[1]
+    return {
+      -- display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
+      value = abs_filepath,
+      display = "li:" .. wc_list[1] .. " | wo:" .. wc_list[2] .. " | " .. rel_filepath .. " | " .. gstat,
+      ordinal = rel_filepath, -- this is for sorting?
+    }
+  end
 
   pickers.new(opts, {
     prompt_title = "git diff --stat",
@@ -815,22 +882,23 @@ function M.Git_diff_stat(opts)
       -- "git", "ls-files", "--exclude-standard", "--cached"
       -- 'git', 'diff', 'HEAD', '--stat'
       'git', 'diff', 'HEAD', '--stat'
-    }, opts ),
+    }, opts),
 
     sorter = conf.generic_sorter(opts),
     -- previewer = conf.grep_previewer(opts),
 
-    attach_mappings = function( prompt_bufnr )
+    attach_mappings = function(prompt_bufnr)
       actions.select_default:replace(function()
-        actions.close( prompt_bufnr )
+        actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        vim.pretty_print( selection )
+        vim.pretty_print(selection)
       end)
       return true
     end,
 
   }):find()
 end
+
 -- require('utils.general').Git_diff_stat()
 
 
@@ -845,11 +913,11 @@ function M.Colors(opts)
     entry_maker = function(entry)
       local split = vim.split(entry, ":")
       local rel_filepath = split[1]
-      local abs_filepath = vim.fn.getcwd( vim.fn.winnr() ) .. "/" .. rel_filepath
+      local abs_filepath = vim.fn.getcwd(vim.fn.winnr()) .. "/" .. rel_filepath
       local line_num = tonumber(split[2])
       return {
         value = 43,
-        display = split[1] .. "|" .. split[2] .. "|" .. split[3].. "|" .. split[4]  ,
+        display = split[1] .. "|" .. split[2] .. "|" .. split[3] .. "|" .. split[4],
         ordinal = 4,
       }
 
@@ -874,7 +942,7 @@ function M.Colors(opts)
       --   lnum = line_num,
       -- }
     end
-    }
+  }
 
   pickers.new(opts, {
     prompt_title = "colors",
@@ -901,7 +969,7 @@ function M.Colors(opts)
     -- finder = finders.new_oneshot_job({ "rg", "scala" }, opts ),
     finder = finders.new_oneshot_job({
       "rg", "scala", "--line-number", "--column", "--with-filename"
-    }, opts ),
+    }, opts),
 
     sorter = conf.generic_sorter(opts),
     -- previewer = conf.grep_previewer(opts),
@@ -949,20 +1017,20 @@ end
 -- Now the following is possible. This means that actions a2 will be executed
 -- after action a1. You can chain as many actions as you want.
 -- local action = mod.a1 + mod.a2
--- action(bufnr) 
+-- action(bufnr)
 
 local make_entry = require "telescope.make_entry"
 local tpat = "plugin/*.vim"
 -- local scapa = "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/"
 local scglo = {
-        "-g", "**/AZioHttp/*.md",
-        "-g", "**/BZioHttp/*.scala",
+  "-g", "**/AZioHttp/*.md",
+  "-g", "**/BZioHttp/*.scala",
 }
 
 
-function M.Concat(t1,t2)
-  for i=1,#t2 do
-    t1[#t1+1] = t2[i]
+function M.Concat(t1, t2)
+  for i = 1, #t2 do
+    t1[#t1 + 1] = t2[i]
   end
   return t1
 end
@@ -975,7 +1043,7 @@ end
 -- accessed  Sort by the last accessed time on a file. Always single-threaded.
 -- created   Sort by the creation time on a file. Always single-threaded.
 
--- require('utils.general').Concat({4,3}, {8, 9})  
+-- require('utils.general').Concat({4,3}, {8, 9})
 -- require('plenary.tbl').apply_defaults( {1, 2}, {4, 5} )
 -- vim.fn.join( {3,4}, 1 )
 -- vim.g.FolderSearch_Path
@@ -986,13 +1054,13 @@ end
 -- M.abb = {3, 4, 5}
 -- require'utils.general'.abb[1]
 
-function _G.FocusLine_Delayed( lineNum )
+function _G.FocusLine_Delayed(lineNum)
   local lineCmd = "norm! " .. lineNum .. "gg"
-  vim.fn.call( 'T_DelayedCmd', { lineCmd, 100 } )
-  vim.fn.call( 'T_DelayedCmd', { "norm! zz", 110 } )
+  vim.fn.call('T_DelayedCmd', { lineCmd, 100 })
+  vim.fn.call('T_DelayedCmd', { "norm! zz", 110 })
 end
 
-function _G.LoadAndFocusLine_Delayed( filePath, lineNum )
+function _G.LoadAndFocusLine_Delayed(filePath, lineNum)
   local loadCmd = "edit " .. filePath
   local lineCmd = "norm! " .. lineNum .. "gg"
   -- vim.fn.call( 'T_DelayedCmd', { loadCmd, 2000 } )
@@ -1001,36 +1069,35 @@ function _G.LoadAndFocusLine_Delayed( filePath, lineNum )
   -- vim.fn.call( 'T_DelayedCmd', { "norm! zz", 900 } )
 end
 
-
 function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
   opts = opts or {}
   opts.entry_maker = make_entry.gen_from_vimgrep()
   -- opts.default_text = [[def\s.*]]
   local rg_baseArgs = { 'rg',
-        rgx_query,
-        '--line-number', '--column',
-        -- '--with-filename',
-        '--multiline', '--case-sensitive',
-        -- '--max-depth', "1",
-        '--sort', 'accessed', '-L', -- -L = traverse symlinks
-        -- '--regexp', 'pcre2'
-    }
-  local rg_cmd = M.Concat( M.Concat( rg_baseArgs, globs ), paths )
+    rgx_query,
+    '--line-number', '--column',
+    -- '--with-filename',
+    '--multiline', '--case-sensitive',
+    -- '--max-depth', "1",
+    '--sort', 'accessed', '-L', -- -L = traverse symlinks
+    -- '--regexp', 'pcre2'
+  }
+  local rg_cmd = M.Concat(M.Concat(rg_baseArgs, globs), paths)
 
-  opts = Telesc_dynPosOpts_ext( opts )
+  opts = Telesc_dynPosOpts_ext(opts)
   pickers.new(opts, {
-    prompt_title = 'rx sel',
-    finder    = finders.new_oneshot_job( rg_cmd, opts ),
-    sorter    = conf.generic_sorter(opts),
-    previewer = conf.grep_previewer(opts),
-    attach_mappings = function( prompt_bufnr )
+    prompt_title    = 'rx sel',
+    finder          = finders.new_oneshot_job(rg_cmd, opts),
+    sorter          = conf.generic_sorter(opts),
+    previewer       = conf.grep_previewer(opts),
+    attach_mappings = function(prompt_bufnr)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        vim.cmd.edit( selection.filename )
-         -- autocmd BufReadPost * lua require'nvim-tree'.refresh()
+        vim.cmd.edit(selection.filename)
+        -- autocmd BufReadPost * lua require'nvim-tree'.refresh()
         -- workaround, see below
-        FocusLine_Delayed( selection.lnum )
+        FocusLine_Delayed(selection.lnum)
         -- LoadAndFocusLine_Delayed( selection.filename, selection.lnum )
         -- vim.pretty_print( selection )
       end)
@@ -1038,6 +1105,7 @@ function M.RgxSelect_Picker(opts, rgx_query, globs, paths)
     end,
   }):find()
 end
+
 -- ISSUE: -- i tried these to prevent "invlid buffer id" of first load
 -- local bufid = vim.fn.bufadd( selection.filename )
 --   vim.api.nvim_win_set_cursor( winHand, { selection.lnum, 0 })
@@ -1050,15 +1118,15 @@ function M.RgxSelect_Picker_bak(opts, rgx_query, parent_dir, globs)
   opts.entry_maker = make_entry.gen_from_vimgrep()
   local rg_cmd = M.Concat(
     { "rg",
-        rgx_query,
-        "--line-number", "--column", "--with-filename",
-        "--multiline", "--case-sensitive",
-        parent_dir,
-    }, globs )
+      rgx_query,
+      "--line-number", "--column", "--with-filename",
+      "--multiline", "--case-sensitive",
+      parent_dir,
+    }, globs)
 
   pickers.new(opts, {
     prompt_title = "rx sel",
-    finder = finders.new_oneshot_job( rg_cmd, opts ),
+    finder = finders.new_oneshot_job(rg_cmd, opts),
     sorter = conf.generic_sorter(opts),
     previewer = conf.grep_previewer(opts),
     attach_mappings = function(prompt_bufnr, map)
@@ -1083,18 +1151,18 @@ function M.RgxSelect_Picker_testPaths(opts, rgx_query, globs)
   -- but not with this telescope lua syntax!
   -- having one parent dir with multiple sub-folder globs (like -- "-g", "**/AZioHttp/*.scala") almost(!) works; however
   -- a sub-folder glob referring to the current working dir returns no results.
-    { "rg",
-        rgx_query,
-        "--line-number", "--column", "--with-filename",
-        "--multiline", "--case-sensitive",
-        -- "-g", "*Example.scala",
-        "-g", "*s.scala",
-        -- "-g", "**/AZioHttp/*.scala",
-        -- "-g", "**/BZioHttp/*.scala",
-        "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/",
-        "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/",
-        -- "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/",
-    }
+  { "rg",
+    rgx_query,
+    "--line-number", "--column", "--with-filename",
+    "--multiline", "--case-sensitive",
+    -- "-g", "*Example.scala",
+    "-g", "*s.scala",
+    -- "-g", "**/AZioHttp/*.scala",
+    -- "-g", "**/BZioHttp/*.scala",
+    "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/AZioHttp/",
+    "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/BZioHttp/",
+    -- "/Users/at/Documents/Server-Dev/effect-ts_zio/a_scala3/",
+  }
 
   -- local rg_cmd = M.Concat(
   --   { "rg",
@@ -1105,7 +1173,7 @@ function M.RgxSelect_Picker_testPaths(opts, rgx_query, globs)
 
   pickers.new(opts, {
     prompt_title = "rx sel",
-    finder = finders.new_oneshot_job( rg_cmd, opts ),
+    finder = finders.new_oneshot_job(rg_cmd, opts),
     sorter = conf.generic_sorter(opts),
     previewer = conf.grep_previewer(opts),
     attach_mappings = function(prompt_bufnr, map)
@@ -1132,16 +1200,17 @@ M.fwatch_handle = nil
 function M.WatchFile_start()
   local filename = vim.fn.expand('%')
   local winID = vim.fn.win_getid()
-  vim.pretty_print( filename, winID )
-  M.fwatch_handle = fwatch.watch( filename, {
+  vim.pretty_print(filename, winID)
+  M.fwatch_handle = fwatch.watch(filename, {
     on_event = function()
       -- WARNING: vim.schedule is needed, else nvim will hand in a lua loop.
-      vim.schedule( function ()
+      vim.schedule(function()
         vim.api.nvim_call_function('win_execute', { winID, 'edit' })
-      end )
+      end)
     end
   })
 end
+
 -- require('utils.general').WatchFile()
 -- vim.api.nvim_get_current_win()
 -- vim.fn.win_getid()
@@ -1153,20 +1222,21 @@ end
 -- vim.fn.call( 'T_DelayedCmd', {'echo "hi there"', 1000} )
 
 function M.WatchFile_stop()
-  fwatch.unwatch( M.fwatch_handle )
-  print( 'Stopped watching file!' )
+  fwatch.unwatch(M.fwatch_handle)
+  print('Stopped watching file!')
 end
 
+vim.keymap.set('n',
+  '<leader>fw', function()
+    require('utils.general')
+        .WatchFile_start()
+  end)
 
-vim.keymap.set( 'n',
-  '<leader>fw', function() require( 'utils.general' )
-  .WatchFile_start()
-  end )
-
-vim.keymap.set( 'n',
-  '<leader>fW', function() require( 'utils.general' )
-  .WatchFile_stop()
-  end )
+vim.keymap.set('n',
+  '<leader>fW', function()
+    require('utils.general')
+        .WatchFile_stop()
+  end)
 
 
 -- ─   Git commits picker                               ──
@@ -1188,10 +1258,10 @@ local function GitCopyFileFromCommit_sel_action(prompt_bufnr, map)
     local filename = vim.fn.expand('%')
     local filename_root = vim.fn.expand('%:r')
     local filename_extension = vim.fn.expand('%:e')
-    local newfilename = filename_root.."_"..selection.value.."."..filename_extension
+    local newfilename = filename_root .. "_" .. selection.value .. "." .. filename_extension
     -- git show 97853e3:z_patterns.scala > z_patterns_ab.scala
     -- TEMP: debug
-    vim.pretty_print( selection )
+    vim.pretty_print(selection)
     -- vim.cmd([[!git show ]]..selection.value.. [[:]]..filename..[[ > ]]..newfilename )
   end)
   return true
@@ -1200,7 +1270,7 @@ end
 -- this works
 -- git -c core.pager=delta -c delta.side-by-side=false diff HEAD^ -- ./lua/utils/general.lua
 -- theres a small issue with it sometimes using an outer git repo if thats active in vim. but i can fall back to using ll ogl
-function M.Git_commits_picker( opts, filepath )
+function M.Git_commits_picker(opts, filepath)
   opts = opts or {}
 
   -- opts = f.merge( opts, {initial_mode='normal', layout_strategy='vertical', layout_config = {height=0.99, width=0.99} } )
@@ -1240,18 +1310,19 @@ function M.Git_commits_picker( opts, filepath )
   -- - `<C-r>h`: resets current branch to selected commit using hard mode
 end
 
-
 local opts_1 = { initial_mode = 'normal' }
 
-vim.keymap.set( 'n',
-  ',gl', function() require( 'utils.general' )
-  .Git_commits_picker( opts_1, vim.fn.expand('%') )
-  end )
+vim.keymap.set('n',
+  ',gl', function()
+    require('utils.general')
+        .Git_commits_picker(opts_1, vim.fn.expand('%'))
+  end)
 
-vim.keymap.set( 'n',
-  ',gL', function() require( 'utils.general' )
-  .Git_commits_picker( opts_1 )
-  end )
+vim.keymap.set('n',
+  ',gL', function()
+    require('utils.general')
+        .Git_commits_picker(opts_1)
+  end)
 
 
 
@@ -1269,7 +1340,6 @@ function M.IndexOf(array, value)
   end
   return nil
 end
-
 
 function _G.MapInfo(str)
   local mapInfo = vim.api.nvim_get_keymap('n')
@@ -1307,7 +1377,7 @@ function _G.Keymap_props(mode, lhs_map_string)
     if matching_map then
       -- Search lua files for the keymap definition
       -- Handle special key notations like <localleader>, <leader>, etc.
-      local search_terms = {lhs_map_string}
+      local search_terms = { lhs_map_string }
 
       -- Convert expanded keys back to their notation form
       -- e.g., "\gm" -> "<localleader>gm", " gm" -> "<leader>gm"
@@ -1373,6 +1443,7 @@ function _G.Keymap_props(mode, lhs_map_string)
     lnum = tonumber(lineVal)
   }
 end
+
 -- require('utils.general').Keymap_props("n", "<space>vm")
 -- require('utils.general').Keymap_props("n", ":DiffClipboard>")
 -- require('utils.general').Keymap_props("n", "gei")
@@ -1382,15 +1453,15 @@ end
 -- require'telescope.builtin'.live_grep({previewer = require'telescope.previewers'.vim_buffer_vimgrep, highlights = true})
 -- require('telescope.config').values.grep_previewer
 
-local function keymap_select_action( prompt_bufnr )
+local function keymap_select_action(prompt_bufnr)
   actions.select_default:replace(function()
     actions.close(prompt_bufnr)
     local selection = action_state.get_selected_entry()
     -- vim.pretty_print( selection )
-    local keymap_props = Keymap_props( selection.mode, selection.lhs )
+    local keymap_props = Keymap_props(selection.mode, selection.lhs)
     -- vim.pretty_print( keymap_props )
     if keymap_props.filename ~= "lua" then
-      vim.cmd( "vnew " .. keymap_props.filename )
+      vim.cmd("vnew " .. keymap_props.filename)
     end
     if keymap_props.lnum ~= nil then
       vim.api.nvim_win_set_cursor(0, { keymap_props.lnum, 0 })
@@ -1401,10 +1472,10 @@ local function keymap_select_action( prompt_bufnr )
 end
 
 -- attach/overwrite an extra picker action map only for this picker/usecase
-function M.examp_keymap_picker( opts )
+function M.examp_keymap_picker(opts)
   opts = opts or {}
   opts.attach_mappings = keymap_select_action
-  require('telescope.builtin').keymaps( opts )
+  require('telescope.builtin').keymaps(opts)
 end
 
 -- require('utils.general').examp_keymap_picker()
@@ -1427,7 +1498,7 @@ end
 -- vim.api.nvim_win_set_cursor( 0, { 910, 10 } )
 
 
-local function examp2( prompt_bufnr )
+local function examp2(prompt_bufnr)
   actions.select_default:replace(function()
     -- actions.close(prompt_bufnr)
     local selection = action_state.get_selected_entry()
@@ -1438,7 +1509,7 @@ local function examp2( prompt_bufnr )
     -- vim.fn.writefile( {vim.inspect( selection )}, "output2.txt" )
     -- vim.print( selection )
     -- vim.notify( vim.inspect( selection ) )
-    putt( selection, 'selection' )
+    putt(selection, 'selection')
 
     -- write the contents of the selection table to a file output.txt in the cwd.
     -- printTable( selection )
@@ -1448,10 +1519,10 @@ end
 
 -- require('utils.general').examp2()
 
-function M.examp2( opts )
+function M.examp2(opts)
   opts = opts or {}
   opts.attach_mappings = examp2
-  require('telescope.builtin').jumplist( opts )
+  require('telescope.builtin').jumplist(opts)
 end
 
 -- print(vim.inspect(vim.api.nvim_get_mode()))
@@ -1463,7 +1534,6 @@ end
 local Path = require "plenary.path"
 
 function M.get_open_filelist(cwd)
-
   local bufnrs = vim.tbl_filter(function(b)
     if 1 ~= vim.fn.buflisted(b) then
       return false
@@ -1506,13 +1576,13 @@ function M.Git_status_picker(opts)
   opts = opts or {}
 
   -- NOTE: By by default all commands should use the cwd of the current window!
-  opts.cwd = vim.fn.getcwd( vim.fn.winnr() )
+  opts.cwd = vim.fn.getcwd(vim.fn.winnr())
 
   opts.previewer = previewers.new_termopen_previewer({
     -- dyn_title = function(_, entry) return entry.value end,
     dyn_title = function(_, entry)
       -- PATTERN: run any synchronous shell command on a line entry.
-      return vim.fn.systemlist( "git -C " .. opts.cwd .. " diff HEAD --stat " .. entry.path )[1]
+      return vim.fn.systemlist("git -C " .. opts.cwd .. " diff HEAD --stat " .. entry.path)[1]
       -- return entry.status
     end,
     get_command = function(entry)
@@ -1547,20 +1617,19 @@ function M.Git_status_picker(opts)
   builtin.git_status(opts)
 end
 
-
 -- vim.fn.getcwd( vim.fn.winnr() )
 
 function M.Git_status_picker_bak(opts)
   opts = opts or {}
 
   -- NOTE: By by default all commands should use the cwd of the current window!
-  opts.cwd = vim.fn.getcwd( vim.fn.winnr() )
+  opts.cwd = vim.fn.getcwd(vim.fn.winnr())
 
   opts.previewer = previewers.new_termopen_previewer({
     -- dyn_title = function(_, entry) return entry.value end,
     dyn_title = function(_, entry)
       -- PATTERN: run any synchronous shell command on a line entry.
-      return vim.fn.systemlist( 'git diff HEAD --stat ' .. entry.path )[1]
+      return vim.fn.systemlist('git diff HEAD --stat ' .. entry.path)[1]
       -- return entry.status
     end,
     get_command = function(entry)
@@ -1607,7 +1676,7 @@ function M.Git_diff_to_master(opts)
     -- dyn_title = function(_, entry) return entry.value end,
     dyn_title = function(_, entry)
       -- PATTERN: run any synchronous shell command on a line entry.
-      return vim.fn.systemlist( 'git diff ..main --stat ' .. entry.path )[1]
+      return vim.fn.systemlist('git diff ..main --stat ' .. entry.path)[1]
       -- return entry.status
     end,
     get_command = function(entry)
@@ -1647,11 +1716,11 @@ local delta2 = previewers.new_termopen_previewer {
     -- You can get the AM things in entry.status. So we are displaying file if entry.status == '??' or 'A '
     -- just do an if and return a different command
     if entry.status == '??' or 'A ' then
-      return {'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path}
+      return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.path }
     end
     -- note we can't use pipes
     -- this command is for git_commits and git_bcommits
-    return {'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!'}
+    return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!' }
   end
 }
 
@@ -1670,15 +1739,3 @@ end
 
 
 return M
-
-
-
-
-
-
-
-
-
-
-
-

@@ -20,6 +20,8 @@ local flags = {
   debounce_text_changes = 150,
 }
 
+local lsp_format_group = vim.api.nvim_create_augroup("UserLspFormatOnSave", { clear = false })
+
 -- these are currently not used for scala or null_ls. see maps here
 -- ~/.config/nvim/plugin/utils_general_maps.lua#/--%20also%20at.
 
@@ -82,7 +84,14 @@ local on_attach = function(client, bnr)
 
 
   if client:supports_method('textDocument/formatting') then
-      vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = false })")
+    vim.api.nvim_clear_autocmds({ group = lsp_format_group, buffer = bnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = lsp_format_group,
+      buffer = bnr,
+      callback = function()
+        vim.lsp.buf.format({ async = false })
+      end,
+    })
   end
 
   if client.server_capabilities.documentSymbolProvider then
@@ -758,6 +767,8 @@ lspconfig.lua_ls.setup {
       or lspconfig_util.path.dirname(fname)
   end,
   on_attach = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
     on_attach(client, bufnr)
   end,
   settings = {
