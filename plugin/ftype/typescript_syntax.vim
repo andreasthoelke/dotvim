@@ -79,10 +79,10 @@ func! TsSyntaxAdditions ()
   syntax match Normal 'notNull()' conceal cchar=!
   syntax match Normal 'primaryKey' conceal cchar=◉
   syntax match Normal 'primaryKey()' conceal cchar=◉
-  syntax match Normal 'from' conceal cchar=⊚
+  " syntax match Normal 'from' conceal cchar=⊚
   " syntax match Normal 'fields' conceal cchar=⊚
-  syntax match Normal 'fields' conceal cchar=◈
-  syntax match Normal 'references' conceal cchar=⟹
+  " syntax match Normal 'fields' conceal cchar=◈
+  " syntax match Normal 'references' conceal cchar=⟹
   syntax match Normal 'relations/ze/s' conceal cchar=⟹
   syntax match Normal 'one\ze(' conceal cchar=⊃
   syntax match Normal 'many\ze(' conceal cchar=⫖

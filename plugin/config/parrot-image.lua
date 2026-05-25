@@ -26,6 +26,13 @@ vim.api.nvim_create_user_command("PrtImgPrevPreset", function()
   image_chat.prev_preset()
 end, { desc = "Cycle to previous image-gen preset" })
 
+vim.api.nvim_create_user_command("PrtImgCount", function(args)
+  image_chat.set_count(args.args)
+end, {
+  nargs = "?",
+  desc = "Set image count for the next image-gen submissions",
+})
+
 -- Winbar status label: shown by lualine when buffer is an image-gen chat.
 function _G.Parrot_image_status_label()
   return image_chat.current_preset_label()

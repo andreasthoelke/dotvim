@@ -15,6 +15,10 @@ local function build_args(opts)
     table.insert(args, "--format")
     table.insert(args, opts.format)
   end
+  if opts.n then
+    table.insert(args, "--n")
+    table.insert(args, tostring(opts.n))
+  end
   if opts.previous_id and opts.previous_id ~= "" then
     table.insert(args, "--previous-id")
     table.insert(args, opts.previous_id)
@@ -34,12 +38,20 @@ end
 
 local function parse_result(result)
   if result.code ~= 0 then
-    local err = result.stderr ~= "" and result.stderr or "image-gen.sh failed"
+    local err = result.stderr ~= "" and vim.trim(result.stderr) or "image-gen.sh failed"
+    if result.signal and result.signal ~= 0 then
+      err = string.format("%s (signal %s)", err, result.signal)
+    elseif result.code then
+      err = string.format("%s (exit %s)", err, result.code)
+    end
     return nil, err
   end
   local ok, parsed = pcall(vim.json.decode, result.stdout)
   if not ok or type(parsed) ~= "table" or not parsed.path then
     return nil, "bad JSON: " .. tostring(result.stdout)
+  end
+  if type(parsed.paths) ~= "table" then
+    parsed.paths = { parsed.path }
   end
   return parsed, nil
 end

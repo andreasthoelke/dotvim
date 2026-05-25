@@ -16,8 +16,8 @@
 --   ☼:
 --   <next prompt>
 --
--- Submission is parsed from the last `☼:` block; response_id for iteration is
--- the most recent `## response_id` value above that block.
+-- Submission is parsed from the last `☼:` block. For follow-up turns, the most
+-- recent generated image above the prompt is sent as an edit input.
 
 local image_gen = require("utils.image_gen")
 local image_paths = require("utils.image_paths")
@@ -28,26 +28,33 @@ local CHAT_DIR = vim.fn.expand("~/.local/share/nvim/parrot/img-chats")
 local INPUT_MARKER = "☼:"
 local OUTPUT_MARKER_PREFIX = "⌘:["
 
--- API_MODEL is what the shell script sends to OpenAI (defaults to gpt-5.5
--- via OPENAI_MODEL env). DISPLAY_MODEL is the user-facing name shown in the
--- buffer marker and winbar.
+-- The shell script sends requests to the Images API with IMAGE_GEN_MODEL
+-- defaulting to gpt-image-2. DISPLAY_MODEL keeps the compact chat label.
 local DISPLAY_MODEL = "image-2"
-local FORMAT = "jpeg"
+local FORMAT = "png"
 
 -- Tracks an in-flight request so the winbar label can show an elapsed counter.
 local pending_start = nil
+local pending_by_buf = {}
 
 local PRESETS = {
-  { quality = "auto",   size = "1024x1024" },
-  { quality = "low",    size = "1024x1024" },
-  { quality = "medium", size = "1024x1024" },
   { quality = "high",   size = "1024x1024" },
-  { quality = "auto",   size = "auto" },
-  { quality = "low",    size = "auto" },
-  { quality = "medium", size = "auto" },
+  { quality = "medium", size = "1024x1024" },
+  { quality = "low",    size = "1024x1024" },
+  { quality = "auto",   size = "1024x1024" },
   { quality = "high",   size = "auto" },
+  { quality = "medium", size = "auto" },
+  { quality = "low",    size = "auto" },
+  { quality = "auto",   size = "auto" },
 }
 local current_preset_index = 1
+
+local function image_count()
+  local n = tonumber(vim.env.IMAGE_GEN_N or "1") or 1
+  if n < 1 then return 1 end
+  if n > 10 then return 10 end
+  return math.floor(n)
+end
 
 local function refresh_winbar()
   vim.schedule(function()
@@ -59,7 +66,12 @@ local function refresh_winbar()
 end
 
 local function preset_label(p)
-  return string.format("%s:%s@%s", DISPLAY_MODEL, p.quality, p.size)
+  local label = string.format("%s:%s@%s", DISPLAY_MODEL, p.quality, p.size)
+  local n = image_count()
+  if n > 1 then
+    label = string.format("%s x%d", label, n)
+  end
+  return label
 end
 
 function M.current_preset()
@@ -86,6 +98,16 @@ function M.prev_preset()
   current_preset_index = current_preset_index - 1
   if current_preset_index < 1 then current_preset_index = #PRESETS end
   vim.notify("image-gen preset: " .. M.current_preset_label(), vim.log.levels.INFO)
+  refresh_winbar()
+end
+
+function M.set_count(n)
+  n = tonumber(n) or 1
+  n = math.floor(n)
+  if n < 1 then n = 1 end
+  if n > 10 then n = 10 end
+  vim.env.IMAGE_GEN_N = tostring(n)
+  vim.notify("image-gen count: " .. n, vim.log.levels.INFO)
   refresh_winbar()
 end
 
@@ -128,19 +150,22 @@ local function find_last_input_marker(lines)
   return nil
 end
 
--- Returns the response_id from the most recent `## response_id` heading at or
--- before line `up_to`, or nil. The id is the next non-empty line after the
--- heading.
-local function find_previous_response_id(lines, up_to)
+local function find_previous_image_path(lines, up_to)
   for i = up_to, 1, -1 do
-    if lines[i]:match("^##%s+response_id%s*$") then
-      for j = i + 1, math.min(#lines, i + 4) do
-        local t = vim.trim(lines[j])
-        if t ~= "" then return t end
-      end
+    local path = lines[i]:match("^%s*!%[[^%]]*%]%(([^)]+)%)%s*$")
+    if path and vim.fn.filereadable(path) == 1 then
+      return path
     end
   end
   return nil
+end
+
+local function append_unique(list, value)
+  if not value or value == "" then return end
+  for _, existing in ipairs(list) do
+    if existing == value then return end
+  end
+  table.insert(list, value)
 end
 
 -- Pull the user prompt: lines after the last `☼:`, up to end of buffer.
@@ -200,6 +225,10 @@ end
 -- Submit: parse current buffer, call image-gen, append output + next ☼: marker.
 function M.submit()
   local bufnr = vim.api.nvim_get_current_buf()
+  if pending_by_buf[bufnr] then
+    vim.notify("image-gen: request already running for this buffer", vim.log.levels.WARN)
+    return
+  end
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   local marker_line = find_last_input_marker(lines)
@@ -223,15 +252,19 @@ function M.submit()
     prompt = "edit"
   end
 
-  local previous_id = find_previous_response_id(lines, marker_line - 1)
+  local previous_image = find_previous_image_path(lines, marker_line - 1)
+  if #input_images == 0 then
+    append_unique(input_images, previous_image)
+  end
   local preset = M.current_preset()
   local label = preset_label(preset)
 
-  local mode = previous_id and "iterating" or "generating"
+  local mode = previous_image and #input_images > 0 and "editing" or "generating"
   if #input_images > 0 then mode = mode .. "+" .. #input_images .. "img" end
   vim.notify(string.format("image-gen: %s (%s)...", mode, label), vim.log.levels.INFO)
   maybe_update_topic(bufnr, prompt)
 
+  pending_by_buf[bufnr] = true
   pending_start = math.floor(vim.uv.hrtime() / 1e9)
   refresh_winbar()
 
@@ -240,9 +273,10 @@ function M.submit()
     quality = preset.quality,
     size = preset.size,
     format = FORMAT,
-    previous_id = previous_id,
+    n = image_count(),
     input_images = input_images,
   }, function(parsed, err)
+    pending_by_buf[bufnr] = nil
     pending_start = nil
     refresh_winbar()
     if err then
@@ -255,11 +289,10 @@ function M.submit()
     local out = {
       "",
       OUTPUT_MARKER_PREFIX .. label .. "]",
-      string.format("![%s](%s)", alt, parsed.path),
-      "",
-      "## response_id",
-      parsed.response_id or "",
     }
+    for _, path in ipairs(parsed.paths or { parsed.path }) do
+      table.insert(out, string.format("![%s](%s)", alt, path))
+    end
     if #input_images > 0 then
       vim.list_extend(out, { "", "## inputs" })
       for _, p in ipairs(input_images) do
@@ -275,7 +308,11 @@ function M.submit()
     vim.api.nvim_buf_call(bufnr, function() vim.cmd("silent! write") end)
     local new_total = vim.api.nvim_buf_line_count(bufnr)
     pcall(vim.api.nvim_win_set_cursor, 0, { new_total, 0 })
-    vim.notify("image-gen: " .. parsed.path, vim.log.levels.INFO)
+    if parsed.paths and #parsed.paths > 1 then
+      vim.notify(string.format("image-gen: %d images", #parsed.paths), vim.log.levels.INFO)
+    else
+      vim.notify("image-gen: " .. parsed.path, vim.log.levels.INFO)
+    end
   end)
 end
 
