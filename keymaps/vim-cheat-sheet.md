@@ -1733,6 +1733,9 @@ b/B    - beginning of word/Word
 \e     - end of word
 (,ge   - end of word) .. shadowed
 
+H/M/L  - move to top/middle/bottom visible screen line
+,H/,L  - preserved H/L motions when bare H/L are used by Sneak
+
 
 [op]ii  - inside indent block (linewise delete, change, yank)
 [op]ai  - outer indent block (linewise delete, change, yank)
@@ -1741,6 +1744,10 @@ outdated?
 <leader>od  - open dirvish in float!
 
 ## indenting lines
+>>          - indent current line by shiftwidth (2 spaces here)
+>j          - indent current and next line
+>}          - indent to paragraph end
+>{motion}   - indent motion range
 ,,al/j/}    - indent lines to the current cursor horz pos
 
 ## pasting from (past) registers
