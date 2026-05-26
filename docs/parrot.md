@@ -1,7 +1,8 @@
 # parrot.nvim Notes
 
 Upstream: [frankroeder/parrot.nvim](https://github.com/frankroeder/parrot.nvim)
-Local path: `plugged/parrot.nvim`
+Runtime path: `~/.vim/plugged/parrot.nvim`
+Mirror checkout: `plugged/parrot.nvim`
 Config: `plugin/config/parrot.lua`
 
 ## Local patches (as of 2026-03-06, upstream at `34bff8b`)
