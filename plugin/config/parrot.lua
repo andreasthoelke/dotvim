@@ -809,8 +809,8 @@ require("parrot").setup(
     },
 
     system_prompt = {
-      chat = "You are an AI assistant",
-      command = "You are an AI assistant",
+      chat = "",
+      command = "",
     },
 
     -- cmd_prefix = "P",

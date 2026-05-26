@@ -26,6 +26,12 @@ This is a patched local fork - do not blindly pull from upstream.
 - Each provider also has a `model` (default) and `models` (list) field in the `require("parrot").setup()` call.
 - Update both `PRESETS` and the provider config when adding a new model.
 
+### Prompt assembly debug
+- In a Parrot chat buffer, `<c-w><leader><cr>` writes `.parrot-prompt-debug-*.md` to the current working directory without calling the model.
+- The debug file includes the assembled messages and provider payload after context expansion, so it can be used to confirm exactly what `@file:`, `@folder:`, `@directory:`, and `@buffer:` references send to the API.
+- Context tags can be used inline or as full-line commands. Inline tags are replaced in place with a relative-path header and the referenced content, preserving surrounding prose flow.
+- The default `system_prompt` is intentionally blank in `plugin/config/parrot.lua`; add a per-chat `- system:` header when a conversation needs one.
+
 ### OpenAI / GPT reasoning models
 - `max_completion_tokens` must be large (currently 65536) - at high/xhigh reasoning effort, reasoning tokens consume the budget leaving nothing for visible output. Symptoms: request "completes" but no text appears.
 - A custom `process_stdout` with debug logging is defined for the OpenAI provider - can be removed once stable.
