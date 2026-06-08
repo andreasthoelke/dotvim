@@ -26,7 +26,7 @@ local image_paths = require("utils.image_paths")
 local GEMINI_THINKING_DEFAULT = "low"
 
 -- Claude effort levels (API-native strings): low, medium, high, xhigh, max
--- xhigh is Opus 4.7 only; max is Opus 4.6/4.7 + Sonnet 4.6.
+-- xhigh is Opus 4.8 only; max is Opus 4.6/4.8 + Sonnet 4.6.
 local CLAUDE_THINKING_DEFAULT = "low"
 
 local function refresh_winbar()
@@ -391,8 +391,8 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-7", level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-7", level = "max" },
+  { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
+  { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
 }
 local current_preset_index = 1
 
@@ -551,22 +551,27 @@ require("parrot").setup(
             payload.system = payload.messages[1].content
             table.remove(payload.messages, 1)
           end
-          -- Adaptive thinking for Opus 4.6/4.7 and Sonnet 4.6. Opus 4.7 rejects
+          -- Adaptive thinking for Opus 4.6/4.8 and Sonnet 4.6. Opus 4.8 rejects
           -- thinking.type="enabled" + budget_tokens; adaptive is the only mode.
           -- Effort is set via output_config.effort.
           local level = payload.thinking_level
           local model = payload.model
-          if model and (model:match("opus%-4%-[67]") or model:match("sonnet%-4%-6")) then
+          if model and (model:match("opus%-4%-[68]") or model:match("sonnet%-4%-6")) then
             payload.thinking = {
               type = "adaptive",
-              -- 4.7 defaults display to "omitted"; opt into summarized to keep thinking text visible.
+              -- 4.8 defaults display to "omitted"; opt into summarized to keep thinking text visible.
               display = "summarized",
             }
             if level then
               payload.output_config = { effort = level }
             end
-            -- At xhigh/max, Anthropic recommends >=64k max_tokens so the model has headroom.
-            if level == "xhigh" or level == "max" then
+            -- Give high-effort runs enough output budget for adaptive thinking,
+            -- tool calls, and the visible answer.
+            if level == "max" then
+              if not payload.max_tokens or payload.max_tokens < 128000 then
+                payload.max_tokens = 128000
+              end
+            elseif level == "xhigh" then
               if not payload.max_tokens or payload.max_tokens < 64000 then
                 payload.max_tokens = 64000
               end
@@ -578,9 +583,9 @@ require("parrot").setup(
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
         -- model = "claude-opus-4-20250514",
-        model = "claude-opus-4-7",
+        model = "claude-opus-4-8",
         models = {
-          "claude-opus-4-7",
+          "claude-opus-4-8",
           "claude-opus-4-6",
           "claude-opus-4-1-20250805",
           "claude-opus-4-20250514",

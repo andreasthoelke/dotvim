@@ -33,8 +33,7 @@ local OUTPUT_MARKER_PREFIX = "⌘:["
 local DISPLAY_MODEL = "image-2"
 local FORMAT = "png"
 
--- Tracks an in-flight request so the winbar label can show an elapsed counter.
-local pending_start = nil
+-- Tracks in-flight requests per buffer so each winbar can show its own timer.
 local pending_by_buf = {}
 
 local PRESETS = {
@@ -78,10 +77,12 @@ function M.current_preset()
   return PRESETS[current_preset_index]
 end
 
-function M.current_preset_label()
+function M.current_preset_label(bufnr)
   local label = preset_label(M.current_preset())
-  if pending_start then
-    local elapsed = math.floor(vim.uv.hrtime() / 1e9 - pending_start)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local pending = pending_by_buf[bufnr]
+  if pending then
+    local elapsed = math.floor(vim.uv.hrtime() / 1e9 - pending.started_at)
     return string.format("%s ... %ds", label, elapsed)
   end
   return label
@@ -264,8 +265,9 @@ function M.submit()
   vim.notify(string.format("image-gen: %s (%s)...", mode, label), vim.log.levels.INFO)
   maybe_update_topic(bufnr, prompt)
 
-  pending_by_buf[bufnr] = true
-  pending_start = math.floor(vim.uv.hrtime() / 1e9)
+  pending_by_buf[bufnr] = {
+    started_at = math.floor(vim.uv.hrtime() / 1e9),
+  }
   refresh_winbar()
 
   image_gen.run_async({
@@ -277,7 +279,6 @@ function M.submit()
     input_images = input_images,
   }, function(parsed, err)
     pending_by_buf[bufnr] = nil
-    pending_start = nil
     refresh_winbar()
     if err then
       vim.notify("image-gen failed: " .. err, vim.log.levels.ERROR)

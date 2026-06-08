@@ -35,7 +35,12 @@ end, {
 
 -- Winbar status label: shown by lualine when buffer is an image-gen chat.
 function _G.Parrot_image_status_label()
-  return image_chat.current_preset_label()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local winid = tonumber(vim.g.statusline_winid)
+  if winid and vim.api.nvim_win_is_valid(winid) then
+    bufnr = vim.api.nvim_win_get_buf(winid)
+  end
+  return image_chat.current_preset_label(bufnr)
 end
 
 -- Helper used as a lualine `cond`.

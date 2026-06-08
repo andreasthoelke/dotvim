@@ -1758,6 +1758,7 @@ outdated?
 ## textobject and treesitter motions
 not yet tested, working: 2024-01
 ~/.config/nvim/plugin/config/treesitter.lua‖/lsp_interop
+ie/ae       - comma element inner/around. e.g. die/dae on: hello there, eins, zwei, drei, the end.
 
 ## hop / sneak motion commands
 ,j/k    - jump to line forward/back (works in visual mode!)

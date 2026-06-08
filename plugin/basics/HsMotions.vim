@@ -1214,13 +1214,89 @@ endfunc
 
 
 " ─   Comma textobjects                                  ■
+onoremap <silent> ae :<c-u>call CommaElement_VisSel_Around()<cr>
+xnoremap <silent> ae :<c-u>call CommaElement_VisSel_Around()<cr>
+onoremap <silent> ie :<c-u>call CommaElement_VisSel_Inside()<cr>
+xnoremap <silent> ie :<c-u>call CommaElement_VisSel_Inside()<cr>
 onoremap <silent> It :<c-u>call CommaItem_VisSel_Around()<cr>
 vnoremap <silent> It :<c-u>call CommaItem_VisSel_Around()<cr>o
 " onoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>
 " vnoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>o
+" Test: dae/die on: hello there, eins, zwei, drei, the end.
 " Test: cat, yat, vat, vit, vit<o>
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 " TODO: with the cursor on "abc" and then yat it will copy "Idris"/the next item
+
+func! s:TrimCommaElementStart(line, startIdx, endIdx)
+  let l:startIdx = a:startIdx
+  while l:startIdx < a:endIdx && strpart(a:line, l:startIdx, 1) =~# '\s'
+    let l:startIdx += 1
+  endwhile
+  return l:startIdx
+endfunc
+
+func! s:TrimCommaElementEnd(line, startIdx, endIdx)
+  let l:endIdx = a:endIdx
+  while l:endIdx > a:startIdx && strpart(a:line, l:endIdx - 1, 1) =~# '\s'
+    let l:endIdx -= 1
+  endwhile
+  return l:endIdx
+endfunc
+
+func! s:CommaElementRange(kind)
+  let l:line = getline('.')
+  let l:lineLen = strlen(l:line)
+  let l:cursorIdx = col('.') - 1
+
+  let l:prevComma = strridx(strpart(l:line, 0, l:cursorIdx), ',')
+  let l:nextComma = match(l:line, ',', l:cursorIdx)
+
+  if l:prevComma < 0 && l:nextComma < 0
+    return []
+  endif
+
+  let l:itemStart = l:prevComma < 0 ? 0 : l:prevComma + 1
+  let l:itemEnd = l:nextComma < 0 ? l:lineLen : l:nextComma
+  let l:innerStart = s:TrimCommaElementStart(l:line, l:itemStart, l:itemEnd)
+  let l:innerEnd = s:TrimCommaElementEnd(l:line, l:innerStart, l:itemEnd)
+
+  if a:kind ==# 'inside'
+    return [line('.'), l:innerStart + 1, line('.'), l:innerEnd]
+  endif
+
+  if l:nextComma >= 0
+    let l:outerStart = l:innerStart
+    let l:outerEnd = l:nextComma + 1
+    while l:outerEnd < l:lineLen && strpart(l:line, l:outerEnd, 1) =~# '\s'
+      let l:outerEnd += 1
+    endwhile
+  else
+    let l:outerStart = l:prevComma
+    let l:outerEnd = l:innerEnd
+  endif
+
+  return [line('.'), l:outerStart + 1, line('.'), l:outerEnd]
+endfunc
+
+func! s:SetCommaElementSelection(kind)
+  let l:range = s:CommaElementRange(a:kind)
+  if empty(l:range)
+    return
+  endif
+
+  let [l:sLine, l:sCol, l:eLine, l:eCol] = l:range
+  call setpos("'<", [0, l:sLine, l:sCol, 0])
+  call setpos("'>", [0, l:eLine, l:eCol, 0])
+  normal! gv
+endfunc
+
+func! CommaElement_VisSel_Around()
+  call s:SetCommaElementSelection('around')
+endfunc
+
+func! CommaElement_VisSel_Inside()
+  call s:SetCommaElementSelection('inside')
+endfunc
 
 func! CommaItem_VisSel_Around()
   normal! m'
@@ -1596,4 +1672,3 @@ endfunc
 " imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
 " imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 " CamelCaseMotion: ------------------------------------------------------
-
