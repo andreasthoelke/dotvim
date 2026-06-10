@@ -393,6 +393,9 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
+  { provider = "anthropic", model = "claude-fabel-5", level = "high" },
+  { provider = "anthropic", model = "claude-fabel-5", level = "xhigh" },
+  { provider = "anthropic", model = "claude-fabel-5", level = "max" },
 }
 local current_preset_index = 1
 
@@ -585,6 +588,7 @@ require("parrot").setup(
         -- model = "claude-opus-4-20250514",
         model = "claude-opus-4-8",
         models = {
+          "claude-fabel-5",
           "claude-opus-4-8",
           "claude-opus-4-6",
           "claude-opus-4-1-20250805",
