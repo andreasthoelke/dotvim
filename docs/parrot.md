@@ -39,8 +39,9 @@ This is a patched local fork - do not blindly pull from upstream.
 - Reasoning effort toggle cycles: medium -> high -> xhigh -> medium.
 
 ### Anthropic / Claude
-- Adaptive thinking is enabled for Claude Opus 4.6/4.8 and Sonnet 4.6 in `preprocess_payload`.
-- `thinking_level` is sent as `output_config.effort`; Opus 4.8 uses adaptive thinking rather than budget tokens.
+- The selectable Claude models use adaptive thinking in `preprocess_payload`.
+- `thinking_level` is sent as `output_config.effort`; adaptive models use effort rather than budget tokens.
+- Direct effort commands: `:PrtClaudeThinkingLow`, `:PrtClaudeThinkingHigh`, `:PrtClaudeThinkingXHigh`, `:PrtClaudeThinkingMax`.
 
 ### Gemini
 - Thinking level is passed via `generationConfig.thinkingConfig.thinkingLevel` in `preprocess_payload`.

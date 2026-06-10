@@ -26,7 +26,6 @@ local image_paths = require("utils.image_paths")
 local GEMINI_THINKING_DEFAULT = "low"
 
 -- Claude effort levels (API-native strings): low, medium, high, xhigh, max
--- xhigh is Opus 4.8 only; max is Opus 4.6/4.8 + Sonnet 4.6.
 local CLAUDE_THINKING_DEFAULT = "low"
 
 local function refresh_winbar()
@@ -386,16 +385,16 @@ function _G.Parrot_chat_status_label()
 end
 
 local PRESETS = {
-  { provider = "gemini", model = "gemini-3.1-pro-preview", level = "low" },
+  -- { provider = "gemini", model = "gemini-3.1-pro-preview", level = "low" },
   { provider = "gemini", model = "gemini-3.1-pro-preview", level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
-  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
+  -- { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
-  { provider = "anthropic", model = "claude-fabel-5", level = "high" },
-  { provider = "anthropic", model = "claude-fabel-5", level = "xhigh" },
-  { provider = "anthropic", model = "claude-fabel-5", level = "max" },
+  -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
+  -- { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
+  -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
+  -- { provider = "anthropic", model = "claude-fable-5", level = "xhigh" },
+  { provider = "anthropic", model = "claude-fable-5", level = "max" },
 }
 local current_preset_index = 1
 
@@ -519,6 +518,35 @@ local function register_reasoning_commands()
     { desc = "Parrot: toggle Gemini thinking level between low and high" }
   )
 
+  vim.api.nvim_create_user_command(
+    "PrtClaudeThinkingLow",
+    wrap(function()
+      return set_claude_thinking("low")
+    end),
+    { desc = "Parrot: set Claude thinking effort to low" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtClaudeThinkingHigh",
+    wrap(function()
+      return set_claude_thinking("high")
+    end),
+    { desc = "Parrot: set Claude thinking effort to high" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtClaudeThinkingXHigh",
+    wrap(function()
+      return set_claude_thinking("xhigh")
+    end),
+    { desc = "Parrot: set Claude thinking effort to xhigh" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtClaudeThinkingMax",
+    wrap(function()
+      return set_claude_thinking("max")
+    end),
+    { desc = "Parrot: set Claude thinking effort to max" }
+  )
+
   vim.g.parrot_reasoning_commands_registered = true
 end
 
@@ -554,20 +582,17 @@ require("parrot").setup(
             payload.system = payload.messages[1].content
             table.remove(payload.messages, 1)
           end
-          -- Adaptive thinking for Opus 4.6/4.8 and Sonnet 4.6. Opus 4.8 rejects
-          -- thinking.type="enabled" + budget_tokens; adaptive is the only mode.
-          -- Effort is set via output_config.effort.
+          -- The Anthropic models selected here use adaptive thinking. Keep the
+          -- config controlled by our custom thinking_level param, then strip it
+          -- before sending the API request.
           local level = payload.thinking_level
-          local model = payload.model
-          if model and (model:match("opus%-4%-[68]") or model:match("sonnet%-4%-6")) then
+          if level then
             payload.thinking = {
               type = "adaptive",
-              -- 4.8 defaults display to "omitted"; opt into summarized to keep thinking text visible.
+              -- New adaptive models default display to "omitted"; opt into summarized.
               display = "summarized",
             }
-            if level then
-              payload.output_config = { effort = level }
-            end
+            payload.output_config = { effort = level }
             -- Give high-effort runs enough output budget for adaptive thinking,
             -- tool calls, and the visible answer.
             if level == "max" then
@@ -588,13 +613,9 @@ require("parrot").setup(
         -- model = "claude-opus-4-20250514",
         model = "claude-opus-4-8",
         models = {
-          "claude-fabel-5",
+          "claude-fable-5",
           "claude-opus-4-8",
           "claude-opus-4-6",
-          "claude-opus-4-1-20250805",
-          "claude-opus-4-20250514",
-          "claude-sonnet-4-20250514",
-          "claude-haiku-4-5-20251001",
         },
         topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
       },
