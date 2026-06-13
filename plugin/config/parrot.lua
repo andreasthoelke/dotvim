@@ -391,7 +391,7 @@ local PRESETS = {
   -- { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
-  -- { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
+  { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "xhigh" },
   { provider = "anthropic", model = "claude-fable-5", level = "max" },
