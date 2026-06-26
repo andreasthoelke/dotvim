@@ -82,6 +82,22 @@ function M.setup()
     name = "PrettierConfig",
   }
 
+  local vite_config_icon = {
+    icon = "V",
+    color = "#FFA800",
+    cterm_color = "214",
+    name = "ViteConfig",
+  }
+
+  local vite_config_icons = {
+    ["vite.config.cjs"] = vite_config_icon,
+    ["vite.config.cts"] = vite_config_icon,
+    ["vite.config.js"] = vite_config_icon,
+    ["vite.config.mjs"] = vite_config_icon,
+    ["vite.config.mts"] = vite_config_icon,
+    ["vite.config.ts"] = vite_config_icon,
+  }
+
   local overrides = {
     astro = astro_icon,
     markdown = markdown_icon,
@@ -89,6 +105,12 @@ function M.setup()
     yaml = yaml_icon,
     yml = yml_icon,
     [".prettierrc.js"] = prettier_config_icon,
+    ["vite.config.cjs"] = vite_config_icon,
+    ["vite.config.cts"] = vite_config_icon,
+    ["vite.config.js"] = vite_config_icon,
+    ["vite.config.mjs"] = vite_config_icon,
+    ["vite.config.mts"] = vite_config_icon,
+    ["vite.config.ts"] = vite_config_icon,
   }
 
   if devicons.has_loaded and not devicons.has_loaded() then
@@ -106,10 +128,22 @@ function M.setup()
       },
       override_by_filename = {
         [".prettierrc.js"] = prettier_config_icon,
+        ["vite.config.cjs"] = vite_config_icon,
+        ["vite.config.cts"] = vite_config_icon,
+        ["vite.config.js"] = vite_config_icon,
+        ["vite.config.mjs"] = vite_config_icon,
+        ["vite.config.mts"] = vite_config_icon,
+        ["vite.config.ts"] = vite_config_icon,
       },
     })
   else
     devicons.set_icon(overrides)
+    local icons_by_filename = devicons.get_icons_by_filename and devicons.get_icons_by_filename()
+    if icons_by_filename then
+      for filename, icon in pairs(vite_config_icons) do
+        icons_by_filename[filename] = icon
+      end
+    end
   end
 end
 

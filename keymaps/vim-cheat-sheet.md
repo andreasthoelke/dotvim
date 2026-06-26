@@ -749,6 +749,7 @@ gef   - refetch the gql client
                        ~/.config/nvim/plugin/utils/utils-terminal.vim‖/StartDevServer()
 
 Workspace support: Detects pnpm/npm workspaces, looks for common dev scripts,
+                   supports shallow package.json apps like studio/runtime,
                    prompts if needed, caches choice in .vim_dev (key=value)
 
 pnpm run dev

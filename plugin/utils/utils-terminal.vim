@@ -127,22 +127,50 @@ func! WriteVimDev(root, key, value)
   call writefile(out, cfg)
 endfunc
 
+" Find the package.json that should own the dev server.
+func! FindDevServerRoot(root)
+  if filereadable(a:root . '/package.json')
+    return a:root
+  endif
+
+  " Prefer the common app layout before falling back to any shallow package.
+  let preferred = a:root . '/studio/runtime/package.json'
+  if filereadable(preferred)
+    return fnamemodify(preferred, ':h')
+  endif
+
+  for pattern in ['*/runtime/package.json', '*/package.json', '*/*/package.json']
+    for pkg_json in sort(globpath(a:root, pattern, v:false, v:true))
+      if pkg_json !~# '/\(node_modules\|\.git\)/'
+        return fnamemodify(pkg_json, ':h')
+      endif
+    endfor
+  endfor
+
+  return a:root
+endfunc
+
 " Detect monorepo and determine dev command
-func! GetDevServerCommand()
+func! GetDevServerSpec()
   let root = getcwd()
+  let dev_root = FindDevServerRoot(root)
 
   " Check cache first
   let cached = ReadVimDev(root, 'command')
   if cached != ''
-    return cached
+    let cached_cwd = ReadVimDev(root, 'cwd')
+    if cached_cwd != ''
+      let dev_root = substitute(fnamemodify(root . '/' . cached_cwd, ':p'), '/$', '', '')
+    endif
+    return { 'command': cached, 'cwd': dev_root, 'root': root }
   endif
 
   " Detect package manager and workspace type
-  let is_pnpm = filereadable(root . '/pnpm-workspace.yaml') || filereadable(root . '/pnpm-lock.yaml')
+  let is_pnpm = filereadable(root . '/pnpm-workspace.yaml') || filereadable(root . '/pnpm-lock.yaml') || filereadable(dev_root . '/pnpm-lock.yaml')
   let pkg_manager = is_pnpm ? 'pnpm' : 'npm'
 
   " Read package.json
-  let pkg_json = root . '/package.json'
+  let pkg_json = dev_root . '/package.json'
   let pkg_content = ''
   let scripts_match = ''
   if filereadable(pkg_json)
@@ -151,16 +179,16 @@ func! GetDevServerCommand()
   endif
 
   " Treat pnpm workspaces or npm workspaces as monorepo
-  let is_monorepo = is_pnpm || (pkg_content =~ '"workspaces"')
+  let is_monorepo = (dev_root ==# root) && (is_pnpm || (pkg_content =~ '"workspaces"'))
 
   if !is_monorepo
     " Check for dev script, fallback to start
     if scripts_match =~ '"dev"'
-      return 'npm run dev'
+      return { 'command': pkg_manager . ' run dev', 'cwd': dev_root, 'root': root }
     elseif scripts_match =~ '"start"'
-      return 'npm run start'
+      return { 'command': pkg_manager . ' run start', 'cwd': dev_root, 'root': root }
     else
-      return 'npm run dev'
+      return { 'command': pkg_manager . ' run dev', 'cwd': dev_root, 'root': root }
     endif
   endif
 
@@ -171,7 +199,8 @@ func! GetDevServerCommand()
       if scripts_match =~ '"' . pattern . '"'
         let cmd = pkg_manager . ' run ' . pattern
         call WriteVimDev(root, 'command', cmd)
-        return cmd
+        if dev_root !=# root | call WriteVimDev(root, 'cwd', fnamemodify(dev_root, ':~:.')) | endif
+        return { 'command': cmd, 'cwd': dev_root, 'root': root }
       endif
     endfor
 
@@ -184,7 +213,8 @@ func! GetDevServerCommand()
       if script_name != ''
         let cmd = pkg_manager . ' run ' . script_name
         call WriteVimDev(root, 'command', cmd)
-        return cmd
+        if dev_root !=# root | call WriteVimDev(root, 'cwd', fnamemodify(dev_root, ':~:.')) | endif
+        return { 'command': cmd, 'cwd': dev_root, 'root': root }
       endif
     endif
   endif
@@ -195,8 +225,13 @@ func! GetDevServerCommand()
   let cmd = input('Command: ', default_prompt)
   if cmd != ''
     call WriteVimDev(root, 'command', cmd)
+    if dev_root !=# root | call WriteVimDev(root, 'cwd', fnamemodify(dev_root, ':~:.')) | endif
   endif
-  return cmd
+  return { 'command': cmd, 'cwd': dev_root, 'root': root }
+endfunc
+
+func! GetDevServerCommand()
+  return GetDevServerSpec().command
 endfunc
 
 func! StartDevServer()
@@ -205,16 +240,19 @@ func! StartDevServer()
     call ReopenDevServer()
     return
   endif
-  let cmdline = GetDevServerCommand()
+  let dev_server = GetDevServerSpec()
+  let cmdline = dev_server.command
+  let dev_root = dev_server.cwd
   " echo "running cmd: " . cmdline
   silent exec "20new"
-  let opts = { 'cwd': getcwd( winnr() ) }
+  let opts = { 'cwd': dev_root }
   let g:Vite1TermID = termopen( cmdline, opts )
   let g:Vite1TermBufNr = bufnr('%')  " Store the buffer number
+  let g:Vite1TermCwd = dev_root
   silent! exec 'keepalt file dev-server'
 
   " Start Convex dev server if convex folder exists
-  let convex_dir = getcwd() . '/convex'
+  let convex_dir = dev_root . '/convex'
   if isdirectory(convex_dir)
     silent exec "20new"
     try
@@ -660,7 +698,6 @@ let Cbs1 = {
       \ 'on_stderr': function('OnEv1'),
       \ 'on_exit': function('OnEv1')
       \ }
-
 
 
 
