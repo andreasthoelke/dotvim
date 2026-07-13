@@ -2383,7 +2383,7 @@ IDEA: could add a vis-sel as selective context for aider.
 <leader>oi    - .gitignore
 <leader><leader>oc    - parrot ai chats
 
-TODO should this be more consitent with harpoon?
+TODO should this be more consistent with harpoon?
 
 # Harpoon file list manager
 ~/.config/nvim/plugin/config/harpoon.lua

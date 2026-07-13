@@ -17,11 +17,14 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
-local OPENAI_PRIMARY_MODEL = "gpt-5.5"
+local OPENAI_PRIMARY_MODEL = "gpt-5.6-sol"
 -- API-native level labels are used directly in the UI to avoid confusion
 -- between providers (e.g., OpenAI "xhigh" vs Anthropic "max").
-local OPENAI_REASONING_DEFAULT = "medium"
+local OPENAI_REASONING_DEFAULT = "xhigh"
+local OPENAI_RESPONSES_PROVIDER = "openai_responses"
+local OPENAI_RESPONSES_REASONING_DEFAULT = "max"
 local image_paths = require("utils.image_paths")
+local openai_responses = require("ai.openai_responses")
 
 local GEMINI_THINKING_DEFAULT = "low"
 
@@ -37,10 +40,9 @@ local function refresh_winbar()
   end)
 end
 
--- The Parrot plugin persists the last selected model in state.json and will
--- continue using that value even after the config is updated. This helper pins
--- the OpenAI provider back to our preferred GPT-5.1 model whenever Neovim
--- starts, so the UI and requests consistently use the intended model.
+-- The Parrot plugin persists selected models in state.json. This helper pins
+-- each preset's provider back to the configured model so the UI and requests
+-- stay aligned with the preset after restarts.
 local function pin_provider_models(provider, model_name)
   vim.schedule(function()
     local ok, parrot_config = pcall(require, "parrot.config")
@@ -110,39 +112,35 @@ local function get_parrot_provider_context(provider_name)
   return parrot_config, handler
 end
 
-local function get_parrot_openai_context()
-  return get_parrot_provider_context("openai")
-end
-
 local function get_parrot_gemini_context()
   return get_parrot_provider_context("gemini")
 end
 
-local function get_openai_reasoning_level()
-  local parrot_config, handler = get_parrot_openai_context()
+local function get_provider_reasoning_level(provider_name, default)
+  local parrot_config, handler = get_parrot_provider_context(provider_name)
   if not parrot_config then
-    return OPENAI_REASONING_DEFAULT
+    return default
   end
-  local params = handler.providers.openai.params
+  local params = handler.providers[provider_name].params
   if not params or not params.chat then
-    return OPENAI_REASONING_DEFAULT
+    return default
   end
-  return params.chat.reasoning_effort or OPENAI_REASONING_DEFAULT
+  return params.chat.reasoning_effort or default
 end
 
-local function set_openai_reasoning(level)
-  local parrot_config, handler = get_parrot_openai_context()
+local function set_provider_reasoning(provider_name, level)
+  local parrot_config, handler = get_parrot_provider_context(provider_name)
   if not parrot_config then
     return false
   end
 
   local changed = false
   local containers = {}
-  if handler.providers and handler.providers.openai then
-    table.insert(containers, handler.providers.openai)
+  if handler.providers and handler.providers[provider_name] then
+    table.insert(containers, handler.providers[provider_name])
   end
-  if parrot_config.providers and parrot_config.providers.openai then
-    table.insert(containers, parrot_config.providers.openai)
+  if parrot_config.providers and parrot_config.providers[provider_name] then
+    table.insert(containers, parrot_config.providers[provider_name])
   end
 
   for _, provider in ipairs(containers) do
@@ -163,19 +161,24 @@ local function set_openai_reasoning(level)
   return changed
 end
 
-local function toggle_openai_reasoning()
-  local current = get_openai_reasoning_level()
-  if current == "medium" then
-    return set_openai_reasoning("high")
-  elseif current == "high" then
-    return set_openai_reasoning("xhigh")
-  else
-    return set_openai_reasoning(OPENAI_REASONING_DEFAULT)
-  end
+local function get_openai_reasoning_level()
+  return get_provider_reasoning_level("openai", OPENAI_REASONING_DEFAULT)
+end
+
+local function set_openai_reasoning(level)
+  return set_provider_reasoning("openai", level)
 end
 
 local function get_openai_reasoning_indicator()
   return get_openai_reasoning_level()
+end
+
+local function get_openai_responses_reasoning_level()
+  return get_provider_reasoning_level(OPENAI_RESPONSES_PROVIDER, OPENAI_RESPONSES_REASONING_DEFAULT)
+end
+
+local function set_openai_responses_reasoning(level)
+  return set_provider_reasoning(OPENAI_RESPONSES_PROVIDER, level)
 end
 
 local function current_buffer_dir()
@@ -214,6 +217,14 @@ local function convert_openai_user_images(payload)
           message.content = blocks
         end
       end
+    end
+  end
+end
+
+local function remove_system_messages(messages)
+  for index = #(messages or {}), 1, -1 do
+    if messages[index].role == "system" then
+      table.remove(messages, index)
     end
   end
 end
@@ -341,6 +352,12 @@ local function format_llm_label(model_name, provider_name)
       return string.format("%s:%s", model_name, indicator)
     end
     return model_name
+  elseif provider_name == OPENAI_RESPONSES_PROVIDER then
+    local indicator = get_openai_responses_reasoning_level()
+    if indicator then
+      return string.format("%s:%s", model_name, indicator)
+    end
+    return model_name
   elseif provider_name == "gemini" then
     local indicator = get_gemini_thinking_indicator()
     if indicator then
@@ -385,11 +402,10 @@ function _G.Parrot_chat_status_label()
 end
 
 local PRESETS = {
-  -- { provider = "gemini", model = "gemini-3.1-pro-preview", level = "low" },
-  { provider = "gemini", model = "gemini-3.1-pro-preview", level = "high" },
-  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "medium" },
-  -- { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "high" },
-  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = "xhigh" },
+  -- Keep Chat Completions/xhigh as the startup default. Responses/max is a
+  -- separate provider so it can be selected without breaking Chat fallback.
+  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = OPENAI_REASONING_DEFAULT },
+  { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
@@ -417,10 +433,23 @@ local function apply_preset(index)
       set_gemini_thinking(preset.level)
     elseif preset.provider == "openai" then
       set_openai_reasoning(preset.level)
+    elseif preset.provider == OPENAI_RESPONSES_PROVIDER then
+      set_openai_responses_reasoning(preset.level)
     elseif preset.provider == "anthropic" then
       set_claude_thinking(preset.level)
     end
   end)
+end
+
+local function select_preset(provider_name)
+  for index, preset in ipairs(PRESETS) do
+    if preset.provider == provider_name then
+      current_preset_index = index
+      apply_preset(index)
+      return true
+    end
+  end
+  return false
 end
 
 local function cycle_preset(direction)
@@ -432,12 +461,6 @@ local function cycle_preset(direction)
   end
 
   apply_preset(current_preset_index)
-
-  local preset = PRESETS[current_preset_index]
---  vim.notify(
---    string.format("Switched to preset: %s %s (%s)", preset.provider, preset.model, preset.level),
---    vim.log.levels.INFO
---  )
   return true
 end
 
@@ -471,31 +494,20 @@ local function register_reasoning_commands()
     { desc = "Parrot: cycle to previous model preset" }
   )
 
-  -- Register buffer keymaps for presets
-
-
   vim.api.nvim_create_user_command(
-    "PrtReasoningHigh",
+    "PrtReasoningXHigh",
     wrap(function()
-      return set_openai_reasoning("high")
+      return select_preset("openai")
     end),
-    { desc = "Parrot: set OpenAI reasoning effort to high" }
+    { desc = "Parrot: select OpenAI Chat Completions with xhigh reasoning" }
   )
   vim.api.nvim_create_user_command(
-    "PrtReasoningMedium",
+    "PrtReasoningMax",
     wrap(function()
-      return set_openai_reasoning(OPENAI_REASONING_DEFAULT)
+      return select_preset(OPENAI_RESPONSES_PROVIDER)
     end),
-    { desc = "Parrot: set OpenAI reasoning effort to medium" }
+    { desc = "Parrot: select OpenAI Responses with max reasoning" }
   )
-  vim.api.nvim_create_user_command(
-    "PrtReasoningToggle",
-    wrap(function()
-      return toggle_openai_reasoning()
-    end),
-    { desc = "Parrot: toggle OpenAI reasoning effort between medium and high" }
-  )
-
   vim.api.nvim_create_user_command(
     "PrtGeminiThinkingHigh",
     wrap(function()
@@ -632,12 +644,8 @@ require("parrot").setup(
         model = OPENAI_PRIMARY_MODEL,
         models = {
           OPENAI_PRIMARY_MODEL,
-          "gpt-5.4",
-          "gpt-5.2",
-          "gpt-5.1",
-          "gpt-5-mini",
-          "gpt-4o",
-          "gpt-4o-mini",
+          "gpt-5.6-terra",
+          "gpt-5.6-luna",
         },
         params = {
           chat = { max_completion_tokens = 128000, reasoning_effort = OPENAI_REASONING_DEFAULT },
@@ -648,31 +656,6 @@ require("parrot").setup(
           model = "gpt-4o-mini",
           params = { max_completion_tokens = 100, temperature = 0.2 },
         },
-        process_stdout = function(response)
-          if not response or response == "" then
-            return nil
-          end
-          local json_str = response:gsub("^data:%s*", "")
-          if json_str == "[DONE]" then
-            return nil
-          end
-          local success, decoded = pcall(vim.json.decode, json_str)
-          if success then
-            if decoded.error then
-              return nil
-            end
-            local logfile = (os.getenv("HOME") or "/tmp") .. "/.local/share/nvim/parrot_openai_debug.log"
-            local f = io.open(logfile, "a")
-            if f then
-              f:write(os.date("%H:%M:%S") .. " " .. json_str:sub(1, 500) .. "\n")
-              f:close()
-            end
-            if decoded.choices and decoded.choices[1] and decoded.choices[1].delta then
-              return decoded.choices[1].delta.content
-            end
-          end
-          return nil
-        end,
         preprocess_payload = function(payload)
           for _, message in ipairs(payload.messages) do
             if type(message.content) == "string" then
@@ -682,12 +665,11 @@ require("parrot").setup(
           convert_openai_user_images(payload)
           -- Handle GPT-5 reasoning models
           if payload.model and string.match(payload.model, "^gpt%-5") then
-            -- Remove system prompt (not supported by GPT-5)
-            if payload.messages[1] and payload.messages[1].role == "system" then
-              table.remove(payload.messages, 1)
-            end
-            -- Use reasoning_effort from params if provided, otherwise default to "high"
-            payload.reasoning_effort = payload.reasoning_effort or "high"
+            -- Intentionally discard per-chat system headers. This config uses
+            -- user messages only for GPT-5, even where the API supports more
+            -- privileged instruction roles.
+            remove_system_messages(payload.messages)
+            payload.reasoning_effort = payload.reasoning_effort or OPENAI_REASONING_DEFAULT
             -- Set fixed values for unsupported parameters
             payload.temperature = 1
             payload.top_p = 1
@@ -699,9 +681,7 @@ require("parrot").setup(
           end
           -- Handle o1/o3/o4 models
           if payload.model and string.match(payload.model, "^o[134]") then
-            if payload.messages[1] and payload.messages[1].role == "system" then
-              table.remove(payload.messages, 1)
-            end
+            remove_system_messages(payload.messages)
             payload.temperature = 1
             payload.top_p = 1
             payload.presence_penalty = 0
@@ -713,6 +693,25 @@ require("parrot").setup(
           return payload
         end,
       },
+      [OPENAI_RESPONSES_PROVIDER] = openai_responses.provider({
+        name = OPENAI_RESPONSES_PROVIDER,
+        api_key = os.getenv("OPENAI_API_KEY"),
+        models = { OPENAI_PRIMARY_MODEL },
+        reasoning_effort = OPENAI_RESPONSES_REASONING_DEFAULT,
+        max_output_tokens = 128000,
+        drop_system = true,
+        -- Parrot already resends the full transcript on every request, so this
+        -- adapter stays stateless rather than storing unused response objects.
+        store = false,
+        prepare_payload = function(payload)
+          convert_openai_user_images(payload)
+          return payload
+        end,
+        topic = {
+          model = "gpt-5.6-luna",
+          params = { max_output_tokens = 100, reasoning_effort = "none" },
+        },
+      }),
       -- NOTE: needs GITHUB_TOKEN which somehow conflicts with the 'gh' app.
       -- github = {
       --   name = "github",
@@ -1277,59 +1276,3 @@ end
 apply_preset(current_preset_index)
 register_reasoning_commands()
 refresh_winbar()
-
-
-      -- openai = {
-      --   name = "openai",
-      --   api_key = os.getenv("OPENAI_API_KEY"),
-      --   endpoint = "https://api.openai.com/v1/chat/completions",
-      --   model_endpoint = "https://api.openai.com/v1/models",
-      --   model = "gpt-5",
-      --   models = {
-      --     "gpt-5",
-      --     "gpt-5-mini",
-      --     "gpt-4o",
-      --   },
-      --   params = {
-      --     chat = { max_completion_tokens = 4096 },
-      --     command = { max_completion_tokens = 4096 },
-      --   },
-      --   --   Claude: .. | /Users/at/.local/share/nvim/parrot/chats/2025-10-07.21-24-16.md
-      --   -- ADD THIS: Custom preprocessing for GPT-5
-      --   preprocess_payload = function(payload)
-      --     for _, message in ipairs(payload.messages) do
-      --       message.content = message.content:gsub("^%s*(.-)%s*$", "%1")
-      --     end
-      --     -- Handle GPT-5 reasoning models (same restrictions as o1/o3/o4)
-      --     if payload.model and string.match(payload.model, "^gpt%-5") then
-      --       -- Remove system prompt (not supported by GPT-5)
-      --       if payload.messages[1] and payload.messages[1].role == "system" then
-      --         table.remove(payload.messages, 1)
-      --       end
-      --       -- Set extended thinking
-      --       payload.reasoning_effort = "high"
-      --       -- Set fixed values for unsupported parameters
-      --       payload.temperature = 1
-      --       payload.top_p = 1
-      --       payload.presence_penalty = 0
-      --       payload.frequency_penalty = 0
-      --       payload.logprobs = nil
-      --       payload.logit_bias = nil
-      --       payload.top_logprobs = nil
-      --     end
-      --     -- Handle o1/o3/o4 models (from plugin defaults)
-      --     if payload.model and string.match(payload.model, "^o[134]") then
-      --       if payload.messages[1] and payload.messages[1].role == "system" then
-      --         table.remove(payload.messages, 1)
-      --       end
-      --       payload.temperature = 1
-      --       payload.top_p = 1
-      --       payload.presence_penalty = 0
-      --       payload.frequency_penalty = 0
-      --       payload.logprobs = nil
-      --       payload.logit_bias = nil
-      --       payload.top_logprobs = nil
-      --     end
-      --     return payload
-      --   end,
-      -- },

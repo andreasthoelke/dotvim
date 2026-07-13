@@ -106,6 +106,8 @@
 
 ## 2025-11-16 Update — gpt-5.1 Pin + UX Playbook
 
+> Historical record only. Current operational settings and commands are in `docs/parrot.md`.
+
 ### Confusions Resolved
 - The UI showed **gpt-5** because `state.json` kept the previous `chat_model` even after updating the config. This is expected behavior in Parrot (state > config) but it was undocumented for us.
 - Selecting `gpt-5.1` in the picker did work, yet the persisted value was truncated back to `gpt-5`, so every restart silently reverted to the old model.
@@ -120,18 +122,15 @@
 - Keep `model_cache_expiry_hours = 48`; run `:PrtReloadCache openai` if OpenAI adds a newer build and the picker feels stale.
 
 ### UX + Ops Checklist
-- To verify the active model, run `:PrtStatus` (or `lua =require('parrot').get_status_info()`). The OpenAI entry now appends `:M` or `:H` (one-letter indicator) after the model name to reflect the current reasoning effort.
-- Topic summaries populate for both Anthropic and OpenAI sessions (OpenAI now uses `gpt-4o-mini` for the short prompt), so `# topic:` updates once a response lands without manual edits or an extra spinner.
+- To verify the active model, run `:PrtStatus` (or `lua =require('parrot').get_status_info()`). Current OpenAI labels use the full `xhigh` or `max` effort name.
+- Topic summaries use `gpt-4o-mini` for OpenAI Chat Completions and `gpt-5.6-luna` for the Responses provider.
 - The persisted file lives at `~/.local/share/nvim/parrot/persisted/state.json`. If we need a clean slate, delete or archive it before reopening Neovim (remember Parrot will recreate it).
 - Model picker commands:
   - `:PrtChatModel` updates chat mode.
   - `:PrtModel` in a non-chat buffer updates the command model.
-  - Both are now safe to use; the pin reruns on startup to keep defaults aligned.
-- Reasoning effort quick toggles:
-  - `:PrtReasoningMedium` returns to the default smart mode.
-  - `:PrtReasoningHigh` or `:PrtReasoningToggle` temporarily boosts GPT-5.1 into the highest reasoning tier for both chat + command.
-  - The boost status is visible via `:PrtStatus` and automatically logged.
-- If we ever want to temporarily test another OpenAI model, set it via the picker; once finished, restart (or run the helper manually) to repin to gpt-5.1.
+  - Presets repin their configured model when selected and at startup.
+- The old medium/high/toggle commands from this 2025 setup have been retired. Current direct selectors are documented in `docs/parrot.md`: `:PrtReasoningXHigh` uses Chat Completions and `:PrtReasoningMax` uses the separate Responses provider.
+- A model selected temporarily through the picker is repinned to the preset's configured model the next time that preset is applied.
 - Log entries appear at **debug** level when the helper overwrites the persisted value—enable Parrot logging if you need confirmation.
 
 ---
