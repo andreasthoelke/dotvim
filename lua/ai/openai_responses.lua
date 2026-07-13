@@ -3,6 +3,8 @@
 -- so the regular OpenAI provider can remain on /v1/chat/completions.
 
 local M = {}
+local usage_by_model = {}
+local last_usage = nil
 
 local function trim(value)
 	if type(value) ~= "string" then
@@ -203,6 +205,74 @@ local function collect_output_text(response)
 	return table.concat(chunks)
 end
 
+local function capture_usage(response)
+	if type(response) ~= "table" or type(response.usage) ~= "table" then
+		return nil
+	end
+
+	local usage = response.usage
+	local input_details = type(usage.input_tokens_details) == "table" and usage.input_tokens_details or {}
+	local output_details = type(usage.output_tokens_details) == "table" and usage.output_tokens_details or {}
+	local captured = {
+		response_id = response.id,
+		model = response.model,
+		status = response.status,
+		input_tokens = usage.input_tokens or 0,
+		cached_tokens = input_details.cached_tokens or 0,
+		cache_write_tokens = input_details.cache_write_tokens or 0,
+		output_tokens = usage.output_tokens or 0,
+		reasoning_tokens = output_details.reasoning_tokens or 0,
+		total_tokens = usage.total_tokens or 0,
+		captured_at = os.time(),
+	}
+
+	last_usage = captured
+	if type(captured.model) == "string" and captured.model ~= "" then
+		usage_by_model[captured.model] = captured
+	end
+	return captured
+end
+
+---Return the latest Responses usage counters, optionally for a model. A prefix
+---match handles APIs that return a dated model revision rather than the alias.
+---@param model? string
+---@return table|nil
+function M.get_last_usage(model)
+	if not model or model == "" then
+		return last_usage and vim.deepcopy(last_usage) or nil
+	end
+
+	if usage_by_model[model] then
+		return vim.deepcopy(usage_by_model[model])
+	end
+
+	local best = nil
+	for response_model, usage in pairs(usage_by_model) do
+		if response_model:sub(1, #model) == model and (not best or usage.captured_at > best.captured_at) then
+			best = usage
+		end
+	end
+	return best and vim.deepcopy(best) or nil
+end
+
+---@param usage table
+---@return string
+function M.format_usage(usage)
+	local input_tokens = usage.input_tokens or 0
+	local cached_tokens = usage.cached_tokens or 0
+	local percentage = input_tokens > 0 and (cached_tokens / input_tokens * 100) or 0
+	return string.format(
+		"OpenAI Responses cache (%s): input %d, cache read %d (%.1f%%), cache write %d, output %d, reasoning %d",
+		usage.model or "unknown model",
+		input_tokens,
+		cached_tokens,
+		percentage,
+		usage.cache_write_tokens or 0,
+		usage.output_tokens or 0,
+		usage.reasoning_tokens or 0
+	)
+end
+
 local function decode_event(response)
 	if type(response) ~= "string" or response == "" then
 		return nil
@@ -248,19 +318,27 @@ function M.process_stdout(response)
 	end
 
 	if decoded.type == "response.failed" then
+		capture_usage(decoded.response)
 		local err = decoded.response and decoded.response.error or decoded
 		log("error", "OpenAI Responses request failed: " .. error_message(err))
 		return nil
 	end
 
 	if decoded.type == "response.incomplete" then
+		capture_usage(decoded.response)
 		local details = decoded.response and decoded.response.incomplete_details or decoded.incomplete_details
 		log("warning", "OpenAI Responses request incomplete: " .. error_message(details or "unknown reason"))
 		return nil
 	end
 
+	if decoded.type == "response.completed" and type(decoded.response) == "table" then
+		capture_usage(decoded.response)
+		return nil
+	end
+
 	-- This also makes the adapter usable if streaming is disabled externally.
 	if decoded.object == "response" then
+		capture_usage(decoded)
 		local text = collect_output_text(decoded)
 		return text ~= "" and text or nil
 	end

@@ -39,11 +39,19 @@ This is a patched local fork - do not blindly pull from upstream.
 - `:PrtReasoningMax` selects the separate `openai_responses` provider (`/v1/responses`) with nested `reasoning = { effort = "max" }`.
 - The preset cycle contains Sol/xhigh, Sol/max, and the configured Claude max presets. Gemini remains available through `:PrtProvider`, but is intentionally not in the preset cycle.
 - The Responses adapter is `lua/ai/openai_responses.lua`. It translates Parrot's `messages` payload to `input`, converts image blocks, maps token/reasoning fields, and parses `response.output_text.delta` SSE events.
-- The Responses provider is stateless (`store = false`) because Parrot resends the complete visible transcript instead of chaining response IDs.
+- The Responses provider is stateless (`store = false`) because Parrot resends the complete visible transcript instead of chaining response IDs. Stateless requests still qualify for OpenAI prompt caching.
 - Chat Completions currently rejects Sol `max` and reports `xhigh` as its highest supported value; do not put `max` in the regular `openai` provider.
 - `ultra` is not an API reasoning level. It is a four-agent product mode; API developers need the Responses API multi-agent beta to build an ultra-like workflow.
 - The token ceiling is 128000 (`max_completion_tokens` for Chat, `max_output_tokens` for Responses); reasoning tokens can otherwise consume the budget and leave nothing visible.
 - The old raw-stream debug writer was removed. It was unbounded and could record prompt/output text. The existing `~/.local/share/nvim/parrot_openai_debug.log` is not deleted automatically, but no longer grows from Parrot requests.
+
+### Caches and Responses state
+- The startup `Updating model cache` notices are only Parrot refreshing provider model-ID lists. The local config refreshes those lists every 30 days (`model_cache_expiry_hours = 720`); this is unrelated to inference or prompt caching.
+- OpenAI prompt caching applies automatically to eligible exact prefixes of at least 1024 tokens. GPT-5.6 cache writes cost more than uncached input, while cache reads reduce cost and latency.
+- Sol/max chat requests include a stable `prompt_cache_key` derived from a hash of the chat file path. This improves cache routing without sending the local path, and exact-prefix matching prevents stale cache reuse after an earlier message is edited.
+- The default implicit breakpoint is used for chats, which suits Parrot's append-only full-transcript payload. One-off commands and Luna topic summaries use explicit mode with no breakpoints, disabling cache writes that are unlikely to be reused.
+- `:PrtResponsesCacheStatus` shows the latest Sol request's API-reported input, cache-read, cache-write, output, and reasoning token counts. These statistics are session-local and become available after a Responses request completes.
+- Response-ID chaining and persisted reasoning are intentionally not enabled. They do not remove billing for prior input, would retain response objects server-side for 30 days, and need transcript-fingerprint invalidation for edited/retried/branched Markdown chats. The current setup keeps the Markdown transcript authoritative and `store = false`.
 
 ### Anthropic / Claude
 - The selectable Claude models use adaptive thinking in `preprocess_payload`.

@@ -229,6 +229,42 @@ local function remove_system_messages(messages)
   end
 end
 
+local function is_current_parrot_chat()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return false, nil
+  end
+  local name = vim.api.nvim_buf_get_name(bufnr)
+  if name == "" then
+    return false, nil
+  end
+
+  local ok_config, parrot_config = pcall(require, "parrot.config")
+  local ok_utils, parrot_utils = pcall(require, "parrot.utils")
+  local chat_dir = ok_config and parrot_config.options and parrot_config.options.chat_dir or nil
+  if not ok_utils or not chat_dir then
+    return false, name
+  end
+  return parrot_utils.is_chat(bufnr, name, chat_dir), name
+end
+
+local function configure_responses_prompt_cache(payload)
+  local is_chat, chat_path = is_current_parrot_chat()
+  if payload.model == OPENAI_PRIMARY_MODEL and is_chat and chat_path then
+    -- A stable per-chat key improves GPT-5.6 cache routing without disclosing
+    -- the local filename. Exact-prefix matching still prevents stale reuse if
+    -- an earlier message is edited.
+    local identity = table.concat({ OPENAI_RESPONSES_PROVIDER, payload.model, vim.fn.fnamemodify(chat_path, ":p") }, "\0")
+    payload.prompt_cache_key = "parrot:" .. vim.fn.sha256(identity):sub(1, 48)
+    payload.prompt_cache_options = nil -- default implicit breakpoint on the latest message
+  else
+    -- Commands and one-off topic summaries rarely reuse an exact prefix. On
+    -- GPT-5.6, explicit mode with no breakpoint disables paid cache writes.
+    payload.prompt_cache_key = nil
+    payload.prompt_cache_options = { mode = "explicit" }
+  end
+end
+
 local function get_gemini_thinking_level()
   local parrot_config, handler = get_parrot_gemini_context()
   if not parrot_config then
@@ -509,6 +545,18 @@ local function register_reasoning_commands()
     { desc = "Parrot: select OpenAI Responses with max reasoning" }
   )
   vim.api.nvim_create_user_command(
+    "PrtResponsesCacheStatus",
+    function()
+      local usage = openai_responses.get_last_usage(OPENAI_PRIMARY_MODEL)
+      if not usage then
+        vim.notify("No completed GPT-5.6 Sol Responses request in this Neovim session", vim.log.levels.INFO)
+        return
+      end
+      vim.notify(openai_responses.format_usage(usage), vim.log.levels.INFO)
+    end,
+    { desc = "Parrot: show the latest OpenAI Responses prompt-cache usage" }
+  )
+  vim.api.nvim_create_user_command(
     "PrtGeminiThinkingHigh",
     wrap(function()
       return set_gemini_thinking("high")
@@ -564,6 +612,9 @@ end
 
 require("parrot").setup(
   {
+    -- Refresh provider model-ID lists roughly once per month instead of using
+    -- Parrot's 48-hour default. This does not affect OpenAI prompt caching.
+    model_cache_expiry_hours = 30 * 24,
     providers = {
       anthropic = {
         name = "anthropic",
@@ -705,6 +756,7 @@ require("parrot").setup(
         store = false,
         prepare_payload = function(payload)
           convert_openai_user_images(payload)
+          configure_responses_prompt_cache(payload)
           return payload
         end,
         topic = {
