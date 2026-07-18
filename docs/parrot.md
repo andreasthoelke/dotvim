@@ -5,7 +5,7 @@ Runtime path: `~/.vim/plugged/parrot.nvim`
 Mirror checkout: `plugged/parrot.nvim`
 Config: `plugin/config/parrot.lua`
 
-## Local patches (as of 2026-03-06, upstream at `34bff8b`)
+## Local patches (updated 2026-07-18; last compared with upstream at `34bff8b`)
 
 This is a patched local fork - do not blindly pull from upstream.
 
@@ -13,6 +13,7 @@ This is a patched local fork - do not blindly pull from upstream.
 - **`15split` instead of `split`** in `open_buf` for the split target.
 - **Custom `generate_chat_filename()`**: collision-safe filename generation (later upstreamed in `064b392` but local version predates it).
 - **Cache behavior**: local diverges from upstream on `cache_expiry_hours` logic in `state.lua` and `multi_provider.lua`.
+- **Protect active queries during cleanup**: long-running reasoning requests remain registered until curl exits; only completed query records older than the cleanup age can be removed.
 
 ## Pulling from upstream
 

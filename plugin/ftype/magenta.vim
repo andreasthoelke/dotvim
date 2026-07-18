@@ -116,8 +116,9 @@ let g:Mgn_columnPttn = MakeOrPttn( ['\:', '#','→', '\,', '\- ', '—', '–', 
 let g:Mgn_MainStartPattern = '\v(#{1,3} \zs|• \zs|\n\n\zs  \zs\i|✅ \zs|⏺ \zs|^# \zs|› \zs|☼\:\zs|⌘\:\zs|─ \zs)'
 " the *\S{-}\* patterns is searching vim help headlines
 
+let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|☼\:\zs|⌘\:\zs|^─ \zs)'
 " let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^---|☼\:\zs|⌘\:\zs|^─ \zs)'
-let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^## \zs|☼\:\zs|⌘\:\zs|^─ \zs)'
+" let g:Mgn_TopLevelPattern = '\v(^# \zs|› \zs|^## \zs|☼\:\zs|⌘\:\zs|^─ \zs)'
 
 " ─^  Markdown agent nav patterns                        ▲
 
