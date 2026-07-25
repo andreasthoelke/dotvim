@@ -5,7 +5,7 @@ Runtime path: `~/.vim/plugged/parrot.nvim`
 Mirror checkout: `plugged/parrot.nvim`
 Config: `plugin/config/parrot.lua`
 
-## Local patches (updated 2026-07-18; last compared with upstream at `34bff8b`)
+## Local patches (updated 2026-07-25; last compared with upstream at `34bff8b`)
 
 This is a patched local fork - do not blindly pull from upstream.
 
@@ -59,6 +59,8 @@ This is a patched local fork - do not blindly pull from upstream.
 ### Anthropic / Claude
 - The selectable Claude models use adaptive thinking in `preprocess_payload`.
 - `thinking_level` is sent as `output_config.effort`; adaptive models use effort rather than budget tokens.
+- The preset cycle orders Claude Opus 4.8/max, Claude Opus 5/max, then Claude Fable 5/max. Opus 5 uses API model ID `claude-opus-5`; `max` is its highest reasoning effort and the 128k output ceiling leaves room for thinking plus visible text.
+- Anthropic requests retry standard transient HTTP failures twice, including 429 throttling and common 5xx responses. Provider errors are recorded on their own query, and a recovered attempt clears that error when visible text arrives, so parallel requests do not leak failure state into one another or misreport an API error as a textless successful response.
 - Direct effort commands: `:PrtClaudeThinkingLow`, `:PrtClaudeThinkingHigh`, `:PrtClaudeThinkingXHigh`, `:PrtClaudeThinkingMax`.
 
 ### Gemini

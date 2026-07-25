@@ -444,6 +444,7 @@ local PRESETS = {
   { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
+  { provider = "anthropic", model = "claude-opus-5", level = "max" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "xhigh" },
   { provider = "anthropic", model = "claude-fable-5", level = "max" },
@@ -620,6 +621,9 @@ require("parrot").setup(
         name = "anthropic",
         endpoint = "https://api.anthropic.com/v1/messages",
         model_endpoint = "https://api.anthropic.com/v1/models",
+        -- Retry curl's standard transient HTTP failures. --fail-with-body also
+        -- makes a final non-2xx response reach Parrot's error path.
+        curl_params = { "--fail-with-body", "--retry", "2", "--retry-delay", "1" },
         params = {
           chat = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
           command = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
@@ -676,8 +680,9 @@ require("parrot").setup(
         -- model = "claude-opus-4-20250514",
         model = "claude-opus-4-8",
         models = {
-          "claude-fable-5",
           "claude-opus-4-8",
+          "claude-opus-5",
+          "claude-fable-5",
           "claude-opus-4-6",
         },
         topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",
