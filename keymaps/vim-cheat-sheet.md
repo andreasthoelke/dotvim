@@ -345,6 +345,7 @@ VSS                  - Wrap with triple single quotes
 
 ### Paste Operations
 p/P                  - Paste and return cursor to original position
+<leader>cV           - Paste cleaned agent/Claude output (join soft-wrapped lines, fix indentation/whitespace)
 <leader>"            - Show registers (Telescope)
 "0p                  - Paste from previous yank register
 

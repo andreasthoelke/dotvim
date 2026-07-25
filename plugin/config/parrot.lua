@@ -907,7 +907,10 @@ require("parrot").setup(
     online_model_selection = true,
 
 -- ─   Keymaps buffer                                   ──
-    chat_shortcut_respond = { modes = { "n", "i", "v", "x" }, shortcut = "<c-w><cr>" },
+    -- Visual-mode ChatRespond sends only the selected line range, which can
+    -- silently turn a full chat into a tiny request. Keep the shortcut on the
+    -- two modes that always submit the complete conversation.
+    chat_shortcut_respond = { modes = { "n", "i" }, shortcut = "<c-w><cr>" },
     chat_shortcut_delete = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>d" },
     chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
     -- Chat clear

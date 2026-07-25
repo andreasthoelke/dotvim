@@ -33,6 +33,7 @@ This is a patched local fork - do not blindly pull from upstream.
 - The debug file includes the assembled messages and provider payload after context expansion, so it can be used to confirm exactly what `@file:`, `@folder:`, `@directory:`, and `@buffer:` references send to the API.
 - Context tags can be used inline or as full-line commands. Inline tags are replaced in place with a relative-path header and the referenced content, preserving surrounding prose flow.
 - The default `system_prompt` is intentionally blank. Both OpenAI providers also discard a per-chat `- system:` header by design; this setup uses ordinary user messages rather than privileged system/developer instructions.
+- The `<c-w><cr>` respond shortcut is intentionally mapped only in normal and insert mode. Parrot interprets a visual-mode invocation as a ranged request and sends only the selected chat lines; use an explicit ranged `:PrtChatRespond` only when that behavior is intended.
 
 ### OpenAI / GPT reasoning models
 - GPT-5.6 Sol via Chat Completions is the startup default, using `xhigh` reasoning.
@@ -40,6 +41,7 @@ This is a patched local fork - do not blindly pull from upstream.
 - `:PrtReasoningMax` selects the separate `openai_responses` provider (`/v1/responses`) with nested `reasoning = { effort = "max" }`.
 - The preset cycle contains Sol/xhigh, Sol/max, and the configured Claude max presets. Gemini remains available through `:PrtProvider`, but is intentionally not in the preset cycle.
 - The Responses adapter is `lua/ai/openai_responses.lua`. It translates Parrot's `messages` payload to `input`, converts image blocks, maps token/reasoning fields, and parses `response.output_text.delta` SSE events.
+- The adapter also reconciles `output_text.done`, `output_item.done`, and terminal response snapshots, recovering visible text when a stream omits deltas without duplicating normal delta output. Reconciliation is isolated by Parrot query ID so simultaneous chats cannot share stream state. `response.completed`, `response.incomplete`, and `response.failed` are authoritative job boundaries: Parrot finalizes curl when one arrives instead of waiting forever for a delayed EOF. A genuinely textless request now warns and removes the pending assistant marker, restoring the user turn for a clean retry instead of silently appending another user turn.
 - The Responses provider is stateless (`store = false`) because Parrot resends the complete visible transcript instead of chaining response IDs. Stateless requests still qualify for OpenAI prompt caching.
 - Chat Completions currently rejects Sol `max` and reports `xhigh` as its highest supported value; do not put `max` in the regular `openai` provider.
 - `ultra` is not an API reasoning level. It is a four-agent product mode; API developers need the Responses API multi-agent beta to build an ultra-like workflow.
@@ -51,7 +53,7 @@ This is a patched local fork - do not blindly pull from upstream.
 - OpenAI prompt caching applies automatically to eligible exact prefixes of at least 1024 tokens. GPT-5.6 cache writes cost more than uncached input, while cache reads reduce cost and latency.
 - Sol/max chat requests include a stable `prompt_cache_key` derived from a hash of the chat file path. This improves cache routing without sending the local path, and exact-prefix matching prevents stale cache reuse after an earlier message is edited.
 - The default implicit breakpoint is used for chats, which suits Parrot's append-only full-transcript payload. One-off commands and Luna topic summaries use explicit mode with no breakpoints, disabling cache writes that are unlikely to be reused.
-- `:PrtResponsesCacheStatus` shows the latest Sol request's API-reported input, cache-read, cache-write, output, and reasoning token counts. These statistics are session-local and become available after a Responses request completes.
+- `:PrtResponsesCacheStatus` shows the latest Sol request's API status, input, cache-read, cache-write, output, and reasoning token counts, plus the number of visible response characters Parrot received. These statistics are session-local and become available after a terminal Responses event.
 - Response-ID chaining and persisted reasoning are intentionally not enabled. They do not remove billing for prior input, would retain response objects server-side for 30 days, and need transcript-fingerprint invalidation for edited/retried/branched Markdown chats. The current setup keeps the Markdown transcript authoritative and `store = false`.
 
 ### Anthropic / Claude
