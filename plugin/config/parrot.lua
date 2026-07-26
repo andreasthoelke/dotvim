@@ -621,9 +621,6 @@ require("parrot").setup(
         name = "anthropic",
         endpoint = "https://api.anthropic.com/v1/messages",
         model_endpoint = "https://api.anthropic.com/v1/models",
-        -- Retry curl's standard transient HTTP failures. --fail-with-body also
-        -- makes a final non-2xx response reach Parrot's error path.
-        curl_params = { "--fail-with-body", "--retry", "2", "--retry-delay", "1" },
         params = {
           chat = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
           command = { max_tokens = 16000, thinking_level = CLAUDE_THINKING_DEFAULT },
@@ -660,13 +657,10 @@ require("parrot").setup(
               display = "summarized",
             }
             payload.output_config = { effort = level }
-            -- Give high-effort runs enough output budget for adaptive thinking,
-            -- tool calls, and the visible answer.
-            if level == "max" then
-              if not payload.max_tokens or payload.max_tokens < 128000 then
-                payload.max_tokens = 128000
-              end
-            elseif level == "xhigh" then
+            -- Anthropic counts adaptive thinking and visible text together
+            -- against max_tokens. 64k is their documented starting point for
+            -- xhigh/max runs and limits the worst case of a runaway completion.
+            if level == "max" or level == "xhigh" then
               if not payload.max_tokens or payload.max_tokens < 64000 then
                 payload.max_tokens = 64000
               end

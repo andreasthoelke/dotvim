@@ -5,7 +5,7 @@ Runtime path: `~/.vim/plugged/parrot.nvim`
 Mirror checkout: `plugged/parrot.nvim`
 Config: `plugin/config/parrot.lua`
 
-## Local patches (updated 2026-07-25; last compared with upstream at `34bff8b`)
+## Local patches (updated 2026-07-26; last compared with upstream at `34bff8b`)
 
 This is a patched local fork - do not blindly pull from upstream.
 
@@ -13,7 +13,10 @@ This is a patched local fork - do not blindly pull from upstream.
 - **`15split` instead of `split`** in `open_buf` for the split target.
 - **Custom `generate_chat_filename()`**: collision-safe filename generation (later upstreamed in `064b392` but local version predates it).
 - **Cache behavior**: local diverges from upstream on `cache_expiry_hours` logic in `state.lua` and `multi_provider.lua`.
-- **Protect active queries during cleanup**: long-running reasoning requests remain registered until curl exits; only completed query records older than the cleanup age can be removed.
+- **Protect active queries during cleanup** (`3cc0ee0`): long-running reasoning requests remain registered until curl exits; only completed query records older than the cleanup age can be removed.
+- **Per-query stream state** (`3cc0ee0`): provider stream handlers receive the Parrot query ID so simultaneous chats cannot share response reconciliation state.
+- **Terminal and empty-response recovery** (`3cc0ee0`): terminal Responses events finalize their curl job; a genuinely textless response removes the pending assistant marker and restores the user turn for retry.
+- **Safe attached-context fences** (`7a27fa3`): `@file:`, `@buffer:`, and directory attachments use an outer backtick fence longer than every backtick run inside the attachment. Markdown files containing their own fenced code blocks therefore remain one bounded context block.
 
 ## Pulling from upstream
 
@@ -32,6 +35,8 @@ This is a patched local fork - do not blindly pull from upstream.
 - In a Parrot chat buffer, `<c-w><leader><cr>` writes `.parrot-prompt-debug-*.md` to the current working directory without calling the model.
 - The debug file includes the assembled messages and provider payload after context expansion, so it can be used to confirm exactly what `@file:`, `@folder:`, `@directory:`, and `@buffer:` references send to the API.
 - Context tags can be used inline or as full-line commands. Inline tags are replaced in place with a relative-path header and the referenced content, preserving surrounding prose flow.
+- Attached context is rendered as a named fenced block at the position of the tag. Put long `@file:`/`@folder:` references before the actual instruction when task adherence matters, so the expanded payload ends with the task rather than with source prose that resembles a document continuation.
+- The context renderer dynamically lengthens its outer backtick fence when the attached content contains backticks. Do not simplify it back to a fixed triple-backtick fence: Markdown attachments commonly contain triple-backtick blocks of their own.
 - The default `system_prompt` is intentionally blank. Both OpenAI providers also discard a per-chat `- system:` header by design; this setup uses ordinary user messages rather than privileged system/developer instructions.
 - The `<c-w><cr>` respond shortcut is intentionally mapped only in normal and insert mode. Parrot interprets a visual-mode invocation as a ranged request and sends only the selected chat lines; use an explicit ranged `:PrtChatRespond` only when that behavior is intended.
 
@@ -59,9 +64,28 @@ This is a patched local fork - do not blindly pull from upstream.
 ### Anthropic / Claude
 - The selectable Claude models use adaptive thinking in `preprocess_payload`.
 - `thinking_level` is sent as `output_config.effort`; adaptive models use effort rather than budget tokens.
-- The preset cycle orders Claude Opus 4.8/max, Claude Opus 5/max, then Claude Fable 5/max. Opus 5 uses API model ID `claude-opus-5`; `max` is its highest reasoning effort and the 128k output ceiling leaves room for thinking plus visible text.
-- Anthropic requests retry standard transient HTTP failures twice, including 429 throttling and common 5xx responses. Provider errors are recorded on their own query, and a recovered attempt clears that error when visible text arrives, so parallel requests do not leak failure state into one another or misreport an API error as a textless successful response.
+- The preset cycle orders Claude Opus 4.8/max, Claude Opus 5/max, then Claude Fable 5/max. Anthropic curl-level retries remain disabled because retrying a streaming request below Parrot's query lifecycle can concatenate or misclassify attempts.
+- `max` and `xhigh` requests use a 64k `max_tokens` ceiling. Anthropic counts hidden thinking and visible response text together against this hard limit and recommends 64k as a starting point for deep-effort runs. `effort = "max"` remains the highest reasoning setting; the ceiling bounds total output rather than lowering the effort signal. See the official [effort](https://platform.claude.com/docs/en/build-with-claude/effort) and [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking) documentation.
 - Direct effort commands: `:PrtClaudeThinkingLow`, `:PrtClaudeThinkingHigh`, `:PrtClaudeThinkingXHigh`, `:PrtClaudeThinkingMax`.
+
+### Fable 5 investigation (2026-07-26)
+
+Observed local chat buffers:
+
+- `~/.local/share/nvim/parrot/chats/2026-07-26.nkf6.md`: Fable/max answered an inline 16kB design document as a shallow continuation.
+- `~/.local/share/nvim/parrot/chats/2026-07-26.ifnu.md`: another inline run continued author-like prose for more than six minutes until stopped.
+- `~/.local/share/nvim/parrot/chats/2026-07-26.l6ql.md`: the behavior persisted after removing Opus 5 and Anthropic curl retries. The prompt's only instruction was at the beginning, while its final tokens were a short, continuation-shaped Markdown table.
+- `~/.local/share/nvim/parrot/chats/2026-07-26.cmn4.md`: loading nearly the same material through `@file:docs/57-brief.md` produced a coherent, grounded response after a normal thinking delay. The attachment was labeled and fenced, and that source version omitted the dangling final table.
+- `~/.local/share/nvim/parrot/chats/2026-07-26.xs2z.md`: Opus 5/max answered the original inline material well, showing that stronger instruction following could recover the distant task even when the prompt boundary was weak.
+
+Conclusions and handoff guidance:
+
+- The buffer role markers, UTF-8 encoding, and Markdown fences were valid. Parrot sent one user message, no system prompt, and the expected `claude-fable-5` payload with adaptive thinking plus `output_config.effort = "max"`.
+- Fast visible output is not proof that `max` was lost. Effort is a behavioral signal; a continuation-shaped prompt can still make Fable immediately continue source prose. The former 128k output ceiling then gave that mistaken trajectory excessive room.
+- The Opus 5 model entry did not cause the Fable behavior: the failure reproduced while Opus 5 was removed, and Opus 5 is now restored without curl-level retries.
+- For long reference material, use a fresh chat, put context tags first, and place a specific task after them. Explicitly say that attached material is reference context rather than text to continue. State the desired abstraction level, limits, tradeoffs, and response structure when quality matters.
+- Do not retry a failed streaming Anthropic request inside curl. A future automatic retry should be application-level, use a new query lifecycle, and occur only when the failed attempt produced no visible content. Never append two transport attempts into one assistant turn.
+- When investigating prompt assembly, use the prompt-debug shortcut instead of issuing a paid request. Do not reuse a malformed assistant turn in the next test because Parrot will correctly send it back as assistant history.
 
 ### Gemini
 - Thinking level is passed via `generationConfig.thinkingConfig.thinkingLevel` in `preprocess_payload`.
