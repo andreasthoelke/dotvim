@@ -1219,6 +1219,15 @@ gsD     - file browser
 ## Folderˍsearchˍmapsˍ2025-03 - search text in folders
 ~/.config/nvim/plugin/config/telescope.vim‖*Folderˍsearchˍmapsˍ2025-03
 
+## neotree search
+,sdr       Full-text grep within the directory represented by the Neo-tree / neotree node, or the current buffer’s parent directory
+,sdh       Heading search within that same directory scope
+gsg        Telescope live_grep using the current window/CWD
+gsf        Frecency search for files in the CWD workspace
+gsd        Directory-name search from the CWD
+gsD        File browser from the CWD
+
+
 <leader>sff   - find directory shows a dirvish folder
 <leader>sfb   - browse to a Proj folder first, then search it's content
 
