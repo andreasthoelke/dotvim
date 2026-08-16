@@ -42,8 +42,12 @@ func! TypeQLSyntaxAdditions() " ■
   " New type get a default highlight of Indentifier. This will be overridded in the coming lines in case we know the base type entity, relation or attribute.
   syntax match Identifier '[a-zA-Z0-9_-]\+\ze\ssub\s'
 
+  " A relation instance is identified by the `, links` clause following its
+  " type.  The `isa` keyword rules below route it to this group as well.
+  syntax match TdbRelation '\<isa\s\+\zs[a-zA-Z0-9_-]\+\ze,\s*\<links\>'
+
   syntax match TdbEntity '^entity\s\zs[a-zA-Z0-9_-]\+'
-  syntax match TdbEntity 'isa\s\zs[a-zA-Z0-9_-]\+'
+  syntax match TdbEntity 'isa\s\zs\%([a-zA-Z0-9_-]\+,\s*\<links\>\)\@![a-zA-Z0-9_-]\+'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\ssub\sentity'
   syntax match TdbEntity '[a-zA-Z0-9_-]\+\ze\splays\s'
 
@@ -81,7 +85,9 @@ func! TypeQLSyntaxAdditions() " ■
   syntax match TdbOwns '\<\(owns\|has\)\>' nextgroup=TdbAttribute skipwhite conceal cchar=⬥
   syntax match TdbAttribute '[a-zA-Z0-9_-]\+' contained
 
-  syntax match TdbEntityWord '\<\(entity\|isa\)\>' nextgroup=TdbEntity skipwhite conceal cchar=▢
+  syntax match TdbEntityWord '\<entity\>' nextgroup=TdbEntity skipwhite conceal cchar=▢
+  syntax match TdbEntityWord '\<isa\>\ze\s\+\%([a-zA-Z0-9_-]\+,\s*\<links\>\)\@!' nextgroup=TdbEntity skipwhite conceal cchar=▢
+  syntax match TdbRelationWord '\<isa\>\ze\s\+[a-zA-Z0-9_-]\+,\s*\<links\>' nextgroup=TdbRelation skipwhite conceal cchar=⊃
   syntax match TdbRelationWord '\<relation\>' nextgroup=TdbRelation skipwhite conceal cchar=⊃
   syntax match TdbRelation '[a-zA-Z0-9_-]\+' contained
 
@@ -195,4 +201,3 @@ func! TypeQLSyntaxAdditions() " ■
 
 
 endfunc " ▲
-
