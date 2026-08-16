@@ -577,8 +577,11 @@ endfunc
 
 " ─   Motions                                           ──
 
-" NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(plays|entity|relation|attribute|match|insert|fun)\s\zs\i'
+" Match the binding/name following a top-level TypeQL clause.  Query clauses
+" commonly put their first `$binding` on the following line, hence `\_s` (which
+" also matches a line break) and the explicit literal `$` alternative.
+" Anchoring the clause keeps prose in `#` comments out of these motions.
+let g:Tdb_MainStartPattern = '\v^\s*(plays|entity|relation|attribute|match|insert|fun)>\_s+\zs(\$|\i)'
 let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions|# ─|# ═)'
 
 func! Tdb_TopLevBindingForw()
@@ -607,21 +610,19 @@ endfunc
 
 
 func! Tdb_MainStartBindingForw()
+  let curPos = getpos('.')
   normal! }
-  call search( g:Tdb_MainStartPattern, 'W' )
-  normal! {
-  normal! j
-  call Tdb_skipcomment()
-  call search( g:Tdb_MainStartPattern, 'W' )
+  if !search( g:Tdb_MainStartPattern, 'W' )
+    call setpos('.', curPos)
+  endif
 endfunc
 
 func! Tdb_MainStartBindingBackw()
+  let curPos = getpos('.')
   normal! {
-  call search( g:Tdb_MainStartPattern, 'bW' )
-  normal! {
-  normal! j
-  call Tdb_skipcommentUp()
-  call search( g:Tdb_MainStartPattern, 'W' )
+  if !search( g:Tdb_MainStartPattern, 'bW' )
+    call setpos('.', curPos)
+  endif
 endfunc
 
 
@@ -696,5 +697,4 @@ endfunc
 
 
 " ─^  TDB Services                                       ▲
-
 
