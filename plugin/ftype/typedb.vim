@@ -582,7 +582,7 @@ endfunc
 " also matches a line break) and the explicit literal `$` alternative.
 " Anchoring the clause keeps prose in `#` comments out of these motions.
 let g:Tdb_MainStartPattern = '\v^\s*(plays|entity|relation|attribute|match|insert|fun)>\_s+\zs(\$|\i)'
-let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions|# ─|# ═)'
+let g:Tdb_TopLevPattern = '\v(define|# Entities|# Relations|# Attributes|# Functions|# ─|# ═)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )

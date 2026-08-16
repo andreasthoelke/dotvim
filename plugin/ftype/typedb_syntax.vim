@@ -119,6 +119,7 @@ func! TypeQLSyntaxAdditions() " ■
   " syntax match Normal 'sub' conceal cchar=⟀
   syntax match Normal 'sub\ze\s' conceal cchar=󰁂
   syntax match Normal 'plays\ze\s' conceal cchar=
+  syntax match Normal 'links\ze\s' conceal cchar=⊃
   " syntax match Normal 'entity' conceal cchar=▢
   " syntax match Normal 'relation' conceal cchar=⊃ 
 
@@ -138,6 +139,7 @@ func! TypeQLSyntaxAdditions() " ■
 
   syntax match Normal '\s\zsas\ze\s' conceal cchar=« 
   syntax match Normal 'value' conceal cchar=⫐ 
+  syntax match Normal '@values' conceal cchar=⫐ 
   syntax match Normal 'abstract' conceal cchar=◈ 
   syntax match Normal 'boolean' conceal cchar=B 
   syntax match Normal 'string' conceal cchar=S 

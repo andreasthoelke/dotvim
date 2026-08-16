@@ -86,7 +86,7 @@ function! DB_putInsertQuery() abort
   call setline(1, lines)
 endfunction
 
-nnoremap <silent> <leader>Dip :call DB_putInsertQuery()<cr>
+" nnoremap <silent> <leader>Dip :call DB_putInsertQuery()<cr>
 
 " autocmd FileType sql nnoremap <buffer><leader>i :call <sid>populate_query()
 
