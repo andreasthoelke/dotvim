@@ -35,6 +35,9 @@ vim.keymap.set('n', '<c-g><c-g>o', function()
   local options = {
     "caffeinate -i codex --dangerously-bypass-approvals-and-sandbox ",
     "caffeinate -i env -u ANTHROPIC_API_KEY claude --dangerously-skip-permissions ",
+    "caffeinate -i env -u ANTHROPIC_API_KEY ccall --dangerously-skip-permissions ",
+    "caffeinate -i env -u ANTHROPIC_API_KEY ccgh --dangerously-skip-permissions ",
+    "caffeinate -i env -u ANTHROPIC_API_KEY ccdt --dangerously-skip-permissions ",
     "caffeinate -i gemini --yolo ",
     "cat -v ",
     "caffeinate -i codex --full-auto ",

@@ -443,7 +443,7 @@ local PRESETS = {
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = OPENAI_REASONING_DEFAULT },
   { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-8", level = "max" },
+  { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
   { provider = "anthropic", model = "claude-opus-5", level = "max" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
   -- { provider = "anthropic", model = "claude-fable-5", level = "xhigh" },
@@ -672,7 +672,7 @@ require("parrot").setup(
 
         api_key = os.getenv "ANTHROPIC_API_KEY",
         -- model = "claude-opus-4-20250514",
-        model = "claude-opus-4-8",
+        model = "claude-opus-4-6",
         models = {
           "claude-opus-4-8",
           "claude-opus-5",

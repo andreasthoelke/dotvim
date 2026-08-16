@@ -40,6 +40,7 @@ func! TypeDB_bufferMaps()
   nnoremap <silent><buffer> <leader>geo :let g:tdb_schema_mode="define"<cr>:call Tdb_eval_buffer()<cr>
 
   nnoremap <silent><buffer> <leader>K :call Tdb_show_schema()<cr>
+  nnoremap <silent><buffer> <leader>D :call Tdb_show_data()<cr>
 
   nnoremap <silent><buffer> get :call Tdb_describe_object( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> gec :call Tdb_query_objCount( expand('<cWORD>') )<cr>
@@ -140,13 +141,21 @@ func! Tdb_withTransactionLines( query_lines )
   let query_lines = a:query_lines
   " Check if this is a function definition (starts with 'fun') - these are schema operations
   let g:isFunDef = functional#findP( query_lines, {x-> x =~ '^\s*fun\s'} )
-  " If a line is not a comment and contains a keyword its a read-write query. else a schema query.
+  " If a line is not a comment and STARTS WITH a keyword its a read-write query. else a schema query.
   " But function definitions are schema operations even though they contain 'match'
-  let g:isRWTrans = g:isFunDef < 0 ? functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(match|insert|update|put|delete|reduce)')} ) : -1
-  if g:isRWTrans
-    let g:isJsonFetch = functional#findP( query_lines, {x-> !(x =~ '^# ') && (x =~ '\v(fetch)')} )
+  " NOTE: the keyword must be anchored at the line start AND word-bounded ('>' in \v).
+  " Without that, 'putative_father' matches 'put' and a define block is sent as a write.
+  " NOTE: the comment test allows indented and bare '#' lines, not just '^# '.
+  let g:isRWTrans = g:isFunDef < 0 ? functional#findP( query_lines, {x-> !(x =~ '^\s*#') && (x =~ '\v^\s*(match|insert|update|put|delete|reduce)>')} ) : -1
+  " Does this query CHANGE data? A read-only match/fetch/reduce does not, so the
+  " data census only has to be rebuilt for insert/delete/update/put.
+  let g:isDataMutation = functional#findP( query_lines, {x-> !(x =~ '^\s*#') && (x =~ '\v^\s*(insert|update|put|delete)>')} )
+  " NOTE: compare with >= 0 — a bare `if g:isRWTrans` is false when the keyword
+  " sits on line 0 of the paragraph, which silently loses the json highlighting.
+  if g:isRWTrans >= 0
+    let g:isJsonFetch = functional#findP( query_lines, {x-> !(x =~ '^\s*#') && (x =~ '\v<fetch>')} )
   else
-    let g:isJsonFetch = v:false
+    let g:isJsonFetch = -1
   endif
   " echo g:isRWTrans
   if g:isRWTrans < 0
@@ -338,7 +347,7 @@ func! Tdb_filterResLines( resLines )
 
   let resLines = resLines[:resCountLn-1]
 
-  if g:isJsonFetch > 0
+  if g:isJsonFetch >= 0
     let resLines = ["objs: " . resCnt] + resLines
   else
     let resLines = ["rows: " . resCnt] + resLines
@@ -358,6 +367,12 @@ func! Tdb_runQueryShow ( query_lines )
     call Tdb_update_ShowCurrentSchemaFile()
   endif
 
+  " Update the data census after anything that can change instances: writes,
+  " and `undefine` (which drops the instances of whatever it removes).
+  if g:isDataMutation >= 0 || (g:isRWTrans < 0 && g:tdb_schema_mode == 'undefine')
+    call Tdb_update_ShowCurrentDataFile()
+  endif
+
   let resLines = Tdb_filterResLines( resLines )
 
   call Tdb_showLines( resLines )
@@ -368,7 +383,62 @@ func! Tdb_update_ShowCurrentSchemaFile()
   let schemaLines = Tdb_sort_schemaLines( schemaLines )
   let [_, schemaPath] = Tdb_localPath()
   call writefile( schemaLines, schemaPath )
+  call Tdb_reloadIfVisible( schemaPath )
 endfunc
+
+
+" ─   Data census                                        ■
+
+" temp/schema_<db>.tql says what CAN exist; temp/data_<db>.tql says what DOES.
+" Keep either in a vsplit — they are rewritten and reloaded in place after every
+" query that could have changed them.
+
+" Resolved against the cwd, like Tdb_localPath(). Override per project if needed.
+let g:tdb_census_cmd = get( g:, 'tdb_census_cmd', 'bin/tql-census' )
+
+func! Tdb_dataPath()
+  if !isdirectory('temp')
+    call mkdir('temp', 'p')
+  endif
+  return 'temp/data_' . g:typedb_active_schema . '.tql'
+endfunc
+
+func! Tdb_update_ShowCurrentDataFile()
+  if !filereadable( g:tdb_census_cmd )
+    return
+  endif
+  call system( g:tdb_census_cmd . ' ' . shellescape( g:typedb_active_schema ) )
+  call Tdb_reloadIfVisible( Tdb_dataPath() )
+endfunc
+
+func! Tdb_show_data()
+  call Tdb_update_ShowCurrentDataFile()
+  if !filereadable( g:tdb_census_cmd )
+    echo 'no census helper at ' . g:tdb_census_cmd
+    return
+  endif
+  call Path_Float( Tdb_dataPath() )
+endfunc
+
+" Reload a generated file in place if it is on screen, without stealing focus.
+func! Tdb_reloadIfVisible( path )
+  let l:bufnr = bufnr( a:path )
+  if l:bufnr <= 0
+    return
+  endif
+  let l:winid = bufwinid( l:bufnr )
+  if l:winid == -1
+    return
+  endif
+  let l:back = win_getid()
+  call win_gotoid( l:winid )
+  let l:pos = getcurpos()
+  silent! edit!
+  call setpos( '.', l:pos )
+  call win_gotoid( l:back )
+endfunc
+
+" ─^  Data census                                        ▲
 
 func! Tdb_sort_schemaLines( input_lines )
   let input_lines = a:input_lines
@@ -468,7 +538,7 @@ func! Tdb_showLines ( lines )
   let g:floatWin_win = FloatingSmallNew ( a:lines, 'cursor' )
   normal gg
   call TypeQLSyntaxAdditions()
-  if (g:isJsonFetch > 0) && !g:tdb_error
+  if (g:isJsonFetch >= 0) && !g:tdb_error
     set syntax=json
   endif
   call FloatWin_FitWidthHeight()
@@ -508,8 +578,8 @@ endfunc
 " ─   Motions                                           ──
 
 " NOTE: jumping to main definitions relies on empty lines (no hidden white spaces). this is bc/ of the '}' motion. could write a custom motion to improve this.
-let g:Tdb_MainStartPattern = '\v(plays|entity|relation|attribute|fun)\s\zs\i'
-let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions)'
+let g:Tdb_MainStartPattern = '\v(plays|entity|relation|attribute|match|insert|fun)\s\zs\i'
+let g:Tdb_TopLevPattern = '\v(define|Entities|Relations|Attributes|Functions|# ─|# ═)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )

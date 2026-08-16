@@ -1075,6 +1075,7 @@ i'm now using [g to go to the insert start pos.  ~/.config/nvim/plugin/config/au
 
 ## TypeDB / tdb
 ~/.config/nvim/plugin/ftype/typedb.vim
+~/Documents/Notes/proj/_archive/e_tdb/general.md
 
 c-t l - StartTypeDBServer
 c-t L - StopTypeDBServer
