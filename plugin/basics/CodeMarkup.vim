@@ -56,6 +56,8 @@ nnoremap <silent> q :call HeadingForw()<cr>:call ScrollOff(27)<cr>
 " nnoremap œ :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
+  " the next line is mostly to support a heading like: [typeql - pts project]: # ─ 2c ─ The abstract 
+  normal! j
   call search( g:headingPttn, 'W' )
   " call ScrollUpFromMiddle( 10 )
   " Issue: I used 20 as a convenient offset form the middle - but that prevented proper movement when window is split
@@ -67,6 +69,7 @@ nnoremap <silent> Q :call HeadingBackw()<cr>:call ScrollOff(10)<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()
   call search( g:headingPttn, 'bW' )
+  normal (
   " call ScrollUpFromMiddle( 10 )
 endfunc
 
