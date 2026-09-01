@@ -1086,6 +1086,7 @@ c-t D - Tdb_deleteDB
 
 1. select schema
 l K   - view schema
+l D   - show data
 queries: e_tdb/b_use-cases/social-network/queries.tql
 
 ~/.config/nvim/plugin/ftype/typedb.vim‖*Maps

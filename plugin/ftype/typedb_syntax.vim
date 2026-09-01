@@ -103,10 +103,11 @@ func! TypeQLSyntaxAdditions() " ■
 
   " syntax match Normal 'match' conceal cchar=❙
   syntax match Normal 'match' conceal cchar=❙
+  syntax match Normal '\<isa!\ze\s' conceal cchar=▣
   syntax match Normal 'select' conceal cchar=▣
   syntax match Normal 'insert' conceal cchar=◢
   syntax match Normal 'update' conceal cchar=◪
-  syntax match Normal 'put' conceal cchar=▼
+  syntax match Normal 'put\ze\s' conceal cchar=▼
   syntax match Normal 'delete' conceal cchar=◙
   syntax match Normal 'fetch' conceal cchar=↑
   syntax match Normal 'reduce' conceal cchar=▬
@@ -130,6 +131,8 @@ func! TypeQLSyntaxAdditions() " ■
   " syntax match Normal 'relation' conceal cchar=⊃ 
 
   syntax match Normal '@card' conceal cchar=⁝ 
+  syntax match Normal '@doc' conceal cchar=⁝ 
+  syntax match Normal '@meta' conceal cchar=⁝ 
   syntax match Normal '@key' conceal cchar=✱
   syntax match Normal '@unique' conceal cchar=Ⲵ
   syntax match Normal '@regex' conceal cchar=⋳

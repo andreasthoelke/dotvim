@@ -412,6 +412,8 @@ func! Tdb_update_ShowCurrentDataFile()
 endfunc
 
 func! Tdb_show_data()
+  " Issue: This sometimes opens the schema file in the Float. but i can't
+  " reproduce it yet.
   call Tdb_update_ShowCurrentDataFile()
   if !filereadable( g:tdb_census_cmd )
     echo 'no census helper at ' . g:tdb_census_cmd
@@ -581,8 +583,13 @@ endfunc
 " commonly put their first `$binding` on the following line, hence `\_s` (which
 " also matches a line break) and the explicit literal `$` alternative.
 " Anchoring the clause keeps prose in `#` comments out of these motions.
-let g:Tdb_MainStartPattern = '\v^\s*(plays|entity|relation|attribute|match|insert|fun)>\_s+\zs(\$|\i)'
-let g:Tdb_TopLevPattern = '\v(define|# Entities|# Relations|# Attributes|# Functions|# ─|# ═)'
+" let g:Tdb_MainStartPattern = '\v^\s*(entity|relation|attribute|match|insert|fun)>\_s+\zs(\$|\i)'
+
+" see: ~/.local/share/nvim/parrot/chats/2026-08-19.0j7r.md
+let g:Tdb_MainStartPattern =
+      \ '\v^\s*((entity|relation|attribute|match|insert|fun)>\_s+\zs(\$\i*|\i+)|\zs\$\i+)'
+
+let g:Tdb_TopLevPattern = '\v(define|# Entities|# Relations|# Attributes|# Functions|# ─|# ═|# --)'
 
 func! Tdb_TopLevBindingForw()
   call search( g:Tdb_TopLevPattern, 'W' )

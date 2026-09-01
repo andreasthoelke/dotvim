@@ -89,3 +89,4 @@ Conclusions and handoff guidance:
 
 ### Gemini
 - Thinking level is passed via `generationConfig.thinkingConfig.thinkingLevel` in `preprocess_payload`.
+- Gemini 3.6 Flash is available as a `high`-thinking preset; the model supports `minimal`, `low`, `medium`, and `high` (`medium` is its API default).

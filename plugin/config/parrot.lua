@@ -442,6 +442,7 @@ local PRESETS = {
   -- separate provider so it can be selected without breaking Chat fallback.
   { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = OPENAI_REASONING_DEFAULT },
   { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
+  { provider = "gemini", model = "gemini-3.6-flash", level = "high" },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
   { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
   { provider = "anthropic", model = "claude-opus-5", level = "max" },
@@ -804,6 +805,7 @@ require("parrot").setup(
         api_key = os.getenv "GEMINI_API_KEY",
         model = "gemini-3.1-pro-preview",
         models = {
+          "gemini-3.6-flash",
           "gemini-3.1-pro-preview",
           "gemini-3-pro-preview",
           "gemini-2.5-pro",
