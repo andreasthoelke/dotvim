@@ -444,11 +444,12 @@ local PRESETS = {
   { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
   { provider = "gemini", model = "gemini-3.6-flash", level = "high" },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
-  { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
-  { provider = "anthropic", model = "claude-opus-5", level = "max" },
-  -- { provider = "anthropic", model = "claude-fable-5", level = "high" },
-  -- { provider = "anthropic", model = "claude-fable-5", level = "xhigh" },
-  { provider = "anthropic", model = "claude-fable-5", level = "max" },
+  -- { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
+  -- { provider = "anthropic", model = "claude-opus-5", level = "max" },
+  -- { provider = "anthropic", model = "claude-fable-5-1", level = "high" },
+  -- { provider = "anthropic", model = "claude-fable-5-1", level = "xhigh" },
+  { provider = "anthropic", model = "claude-fable-5-1", level = "high" },
+  { provider = "anthropic", model = "claude-fable-5-1", level = "max" },
 }
 local current_preset_index = 1
 
@@ -677,7 +678,7 @@ require("parrot").setup(
         models = {
           "claude-opus-4-8",
           "claude-opus-5",
-          "claude-fable-5",
+          "claude-fable-5-1",
           "claude-opus-4-6",
         },
         topic_prompt = "You only respond with up to 5 words to summarize the past conversation.",

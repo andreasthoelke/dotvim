@@ -64,7 +64,7 @@ This is a patched local fork - do not blindly pull from upstream.
 ### Anthropic / Claude
 - The selectable Claude models use adaptive thinking in `preprocess_payload`.
 - `thinking_level` is sent as `output_config.effort`; adaptive models use effort rather than budget tokens.
-- The preset cycle orders Claude Opus 4.8/max, Claude Opus 5/max, then Claude Fable 5/max. Anthropic curl-level retries remain disabled because retrying a streaming request below Parrot's query lifecycle can concatenate or misclassify attempts.
+- The preset cycle includes Claude Opus 4.6/max, Claude Opus 5/max, and Claude Fable 5.1/max. Anthropic curl-level retries remain disabled because retrying a streaming request below Parrot's query lifecycle can concatenate or misclassify attempts.
 - `max` and `xhigh` requests use a 64k `max_tokens` ceiling. Anthropic counts hidden thinking and visible response text together against this hard limit and recommends 64k as a starting point for deep-effort runs. `effort = "max"` remains the highest reasoning setting; the ceiling bounds total output rather than lowering the effort signal. See the official [effort](https://platform.claude.com/docs/en/build-with-claude/effort) and [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking) documentation.
 - Direct effort commands: `:PrtClaudeThinkingLow`, `:PrtClaudeThinkingHigh`, `:PrtClaudeThinkingXHigh`, `:PrtClaudeThinkingMax`.
 
