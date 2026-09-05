@@ -17,16 +17,25 @@
 
 -- TODO show the current model selected in the winbar? lua putt( require("parrot.config").get_status_info() )
 
-local OPENAI_PRIMARY_MODEL = "gpt-5.6-sol"
+local OPENAI_ASTRA_MODEL = "gpt-6-astra"
+-- GPT-6 Astra is wired in below, but this key does not have rollout access as
+-- of 2026-09-04. Keep Sol as the non-breaking startup model until it does.
+local OPENAI_STARTUP_MODEL = "gpt-5.6-sol"
 -- API-native level labels are used directly in the UI to avoid confusion
 -- between providers (e.g., OpenAI "xhigh" vs Anthropic "max").
 local OPENAI_REASONING_DEFAULT = "xhigh"
 local OPENAI_RESPONSES_PROVIDER = "openai_responses"
 local OPENAI_RESPONSES_REASONING_DEFAULT = "max"
+local OPENAI_RESPONSES_CHAT_MODELS = {
+  [OPENAI_ASTRA_MODEL] = true,
+  [OPENAI_STARTUP_MODEL] = true,
+}
 local image_paths = require("utils.image_paths")
 local openai_responses = require("ai.openai_responses")
 
-local GEMINI_THINKING_DEFAULT = "low"
+local GEMINI_PRIMARY_MODEL = "gemini-3.8-flash"
+local GEMINI_THINKING_DEFAULT = "high"
+local GEMINI_MAX_OUTPUT_TOKENS = 65536
 
 -- Claude effort levels (API-native strings): low, medium, high, xhigh, max
 local CLAUDE_THINKING_DEFAULT = "low"
@@ -250,8 +259,8 @@ end
 
 local function configure_responses_prompt_cache(payload)
   local is_chat, chat_path = is_current_parrot_chat()
-  if payload.model == OPENAI_PRIMARY_MODEL and is_chat and chat_path then
-    -- A stable per-chat key improves GPT-5.6 cache routing without disclosing
+  if OPENAI_RESPONSES_CHAT_MODELS[payload.model] and is_chat and chat_path then
+    -- A stable per-chat key improves cache routing without disclosing
     -- the local filename. Exact-prefix matching still prevents stale reuse if
     -- an earlier message is edited.
     local identity = table.concat({ OPENAI_RESPONSES_PROVIDER, payload.model, vim.fn.fnamemodify(chat_path, ":p") }, "\0")
@@ -438,11 +447,12 @@ function _G.Parrot_chat_status_label()
 end
 
 local PRESETS = {
-  -- Keep Chat Completions/xhigh as the startup default. Responses/max is a
-  -- separate provider so it can be selected without breaking Chat fallback.
-  { provider = "openai", model = OPENAI_PRIMARY_MODEL, level = OPENAI_REASONING_DEFAULT },
-  { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_PRIMARY_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
-  { provider = "gemini", model = "gemini-3.6-flash", level = "high" },
+  -- Keep the available Sol/xhigh path as the startup default during Astra's
+  -- rollout. Astra/max is ready to select through the Responses provider.
+  { provider = "openai", model = OPENAI_STARTUP_MODEL, level = OPENAI_REASONING_DEFAULT },
+  { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_ASTRA_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
+  { provider = OPENAI_RESPONSES_PROVIDER, model = OPENAI_STARTUP_MODEL, level = OPENAI_RESPONSES_REASONING_DEFAULT },
+  { provider = "gemini", model = GEMINI_PRIMARY_MODEL, level = GEMINI_THINKING_DEFAULT },
   -- { provider = "anthropic", model = "claude-opus-4-8", level = "xhigh" },
   -- { provider = "anthropic", model = "claude-opus-4-6", level = "max" },
   -- { provider = "anthropic", model = "claude-opus-5", level = "max" },
@@ -480,9 +490,9 @@ local function apply_preset(index)
   end)
 end
 
-local function select_preset(provider_name)
+local function select_preset(provider_name, model_name)
   for index, preset in ipairs(PRESETS) do
-    if preset.provider == provider_name then
+    if preset.provider == provider_name and (not model_name or preset.model == model_name) then
       current_preset_index = index
       apply_preset(index)
       return true
@@ -543,16 +553,30 @@ local function register_reasoning_commands()
   vim.api.nvim_create_user_command(
     "PrtReasoningMax",
     wrap(function()
-      return select_preset(OPENAI_RESPONSES_PROVIDER)
+      return select_preset(OPENAI_RESPONSES_PROVIDER, OPENAI_ASTRA_MODEL)
     end),
-    { desc = "Parrot: select OpenAI Responses with max reasoning" }
+    { desc = "Parrot: select GPT-6 Astra Responses with max reasoning" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtGPT6Max",
+    wrap(function()
+      return select_preset(OPENAI_RESPONSES_PROVIDER, OPENAI_ASTRA_MODEL)
+    end),
+    { desc = "Parrot: select GPT-6 Astra Responses with max reasoning" }
+  )
+  vim.api.nvim_create_user_command(
+    "PrtSolMax",
+    wrap(function()
+      return select_preset(OPENAI_RESPONSES_PROVIDER, OPENAI_STARTUP_MODEL)
+    end),
+    { desc = "Parrot: select GPT-5.6 Sol Responses with max reasoning" }
   )
   vim.api.nvim_create_user_command(
     "PrtResponsesCacheStatus",
     function()
-      local usage = openai_responses.get_last_usage(OPENAI_PRIMARY_MODEL)
+      local usage = openai_responses.get_last_usage()
       if not usage then
-        vim.notify("No completed GPT-5.6 Sol Responses request in this Neovim session", vim.log.levels.INFO)
+        vim.notify("No completed OpenAI Responses request in this Neovim session", vim.log.levels.INFO)
         return
       end
       vim.notify(openai_responses.format_usage(usage), vim.log.levels.INFO)
@@ -693,9 +717,10 @@ require("parrot").setup(
         api_key = os.getenv("OPENAI_API_KEY"),
         endpoint = "https://api.openai.com/v1/chat/completions",
         model_endpoint = "https://api.openai.com/v1/models",
-        model = OPENAI_PRIMARY_MODEL,
+        model = OPENAI_STARTUP_MODEL,
         models = {
-          OPENAI_PRIMARY_MODEL,
+          OPENAI_STARTUP_MODEL,
+          OPENAI_ASTRA_MODEL,
           "gpt-5.6-terra",
           "gpt-5.6-luna",
         },
@@ -715,14 +740,26 @@ require("parrot").setup(
             end
           end
           convert_openai_user_images(payload)
-          -- Handle GPT-5 reasoning models
-          if payload.model and string.match(payload.model, "^gpt%-5") then
+          local is_gpt6 = payload.model and string.match(payload.model, "^gpt%-6")
+          local is_gpt5 = payload.model and string.match(payload.model, "^gpt%-5")
+          if is_gpt6 or is_gpt5 then
             -- Intentionally discard per-chat system headers. This config uses
-            -- user messages only for GPT-5, even where the API supports more
-            -- privileged instruction roles.
+            -- user messages only for GPT reasoning models, even where the API
+            -- supports more privileged instruction roles.
             remove_system_messages(payload.messages)
             payload.reasoning_effort = payload.reasoning_effort or OPENAI_REASONING_DEFAULT
-            -- Set fixed values for unsupported parameters
+          end
+          if is_gpt6 then
+            -- GPT-6 rejects sampling and log-probability controls entirely.
+            payload.temperature = nil
+            payload.top_p = nil
+            payload.presence_penalty = nil
+            payload.frequency_penalty = nil
+            payload.logprobs = nil
+            payload.logit_bias = nil
+            payload.top_logprobs = nil
+          elseif is_gpt5 then
+            -- Keep the accepted fixed values used by the GPT-5 family.
             payload.temperature = 1
             payload.top_p = 1
             payload.presence_penalty = 0
@@ -748,7 +785,7 @@ require("parrot").setup(
       [OPENAI_RESPONSES_PROVIDER] = openai_responses.provider({
         name = OPENAI_RESPONSES_PROVIDER,
         api_key = os.getenv("OPENAI_API_KEY"),
-        models = { OPENAI_PRIMARY_MODEL },
+        models = { OPENAI_ASTRA_MODEL, OPENAI_STARTUP_MODEL },
         reasoning_effort = OPENAI_RESPONSES_REASONING_DEFAULT,
         max_output_tokens = 128000,
         drop_system = true,
@@ -804,9 +841,9 @@ require("parrot").setup(
       gemini = {
         name = "gemini",
         api_key = os.getenv "GEMINI_API_KEY",
-        model = "gemini-3.1-pro-preview",
+        model = GEMINI_PRIMARY_MODEL,
         models = {
-          "gemini-3.6-flash",
+          GEMINI_PRIMARY_MODEL,
           "gemini-3.1-pro-preview",
           "gemini-3-pro-preview",
           "gemini-2.5-pro",
@@ -821,8 +858,20 @@ require("parrot").setup(
           return { "https://generativelanguage.googleapis.com/v1beta/models?key=" .. self.api_key }
         end,
         params = {
-          chat = { temperature = 1.1, topP = 1, topK = 10, maxOutputTokens = 8192, thinking_level = GEMINI_THINKING_DEFAULT },
-          command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192, thinking_level = GEMINI_THINKING_DEFAULT },
+          chat = {
+            temperature = 1.1,
+            topP = 1,
+            topK = 10,
+            maxOutputTokens = GEMINI_MAX_OUTPUT_TOKENS,
+            thinking_level = GEMINI_THINKING_DEFAULT,
+          },
+          command = {
+            temperature = 0.8,
+            topP = 1,
+            topK = 10,
+            maxOutputTokens = GEMINI_MAX_OUTPUT_TOKENS,
+            thinking_level = GEMINI_THINKING_DEFAULT,
+          },
         },
         topic = {
           model = "gemini-2.5-flash",
@@ -851,11 +900,13 @@ require("parrot").setup(
           local gemini_payload = {
             contents = contents,
             generationConfig = {
-              temperature = payload.temperature,
-              topP = payload.topP or payload.top_p,
               maxOutputTokens = payload.max_tokens or payload.maxOutputTokens,
             },
           }
+          if payload.model ~= GEMINI_PRIMARY_MODEL then
+            gemini_payload.generationConfig.temperature = payload.temperature
+            gemini_payload.generationConfig.topP = payload.topP or payload.top_p
+          end
           -- Handle Gemini 3 thinking models
           if payload.thinking_level then
             gemini_payload.generationConfig.thinkingConfig = {

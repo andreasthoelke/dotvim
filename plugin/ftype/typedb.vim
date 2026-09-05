@@ -51,7 +51,11 @@ func! TypeDB_bufferMaps()
   nnoremap <silent><buffer> gsK :call Tdb_showObjectFields( expand('<cWORD>') )<cr>
   nnoremap <silent><buffer> gsk :call Tdb_showObjectFieldsWT( expand('<cWORD>') )<cr>
 
-  nnoremap <silent><buffer> ,,gsd :call Tdb_queryDeleteObject( expand('<cWORD>') )<cr>
+  nnoremap <silent><buffer> <leader>dd :call Tdb_remove_panel_record()<cr>
+  nnoremap <silent><buffer> <leader>da :call Tdb_detach_panel_attribute()<cr>
+  nnoremap <silent><buffer> <leader>dr :call Tdb_refresh_panel()<cr>
+  " Keep the old spelling as an alias for the contextual panel command.
+  nnoremap <silent><buffer> ,,gsd :call Tdb_remove_panel_record()<cr>
 
   " nnoremap <silent><buffer> gsK :silent call TdbReplPost( '\d object ' . expand('<cWORD>') )<cr>
 
@@ -368,7 +372,7 @@ func! Tdb_runQueryShow ( query_lines )
   endif
 
   " Update the data census after anything that can change instances: writes,
-  " and `undefine` (which drops the instances of whatever it removes).
+  " and `undefine` when the schema operation succeeds.
   if g:isDataMutation >= 0 || (g:isRWTrans < 0 && g:tdb_schema_mode == 'undefine')
     call Tdb_update_ShowCurrentDataFile()
   endif
@@ -421,6 +425,159 @@ func! Tdb_show_data()
   endif
   call Path_Float( Tdb_dataPath() )
 endfunc
+
+" ─   Contextual panel removal                           ■
+
+" Find the project helper from a generated panel, without relying on the
+" current working directory (or on g:typedb_active_schema).
+func! Tdb_remove_helper(panel)
+  let l:override = get(g:, 'tdb_remove_cmd', '')
+  if l:override !=# ''
+    return l:override
+  endif
+  let l:dir = fnamemodify(a:panel, ':h')
+  while l:dir !=# fnamemodify(l:dir, ':h')
+    let l:candidate = l:dir . '/bin/tql-remove'
+    if filereadable(l:candidate)
+      return l:candidate
+    endif
+    let l:dir = fnamemodify(l:dir, ':h')
+  endwhile
+  return ''
+endfunc
+
+func! Tdb_panel_kind(panel)
+  let l:name = fnamemodify(a:panel, ':t')
+  if l:name =~# '^data_.\+\.tql$'
+    return 'data'
+  elseif l:name =~# '^schema_.\+\.tql$'
+    return 'schema'
+  endif
+  return ''
+endfunc
+
+func! Tdb_remove_json(args)
+  let l:lines = systemlist(a:args)
+  let l:raw = join(l:lines, "\n")
+  if v:shell_error != 0
+    let l:obj = {}
+    try | let l:obj = json_decode(l:raw) | catch | endtry
+    let l:msg = get(l:obj, 'error', l:raw)
+    throw empty(l:msg) ? 'tql-remove failed' : l:msg
+  endif
+  try
+    return json_decode(l:raw)
+  catch
+    throw 'tql-remove returned invalid JSON: ' . l:raw
+  endtry
+endfunc
+
+func! Tdb_remove_panel_preview(attribute_iid)
+  let l:panel = expand('%:p')
+  if &modified
+    echohl ErrorMsg | echom 'Save the generated panel before removing a record' | echohl None
+    return {}
+  endif
+  if Tdb_panel_kind(l:panel) ==# ''
+    echohl ErrorMsg | echom 'Removal is available only in temp/data_*.tql or temp/schema_*.tql panels' | echohl None
+    return {}
+  endif
+  let l:helper = Tdb_remove_helper(l:panel)
+  if l:helper ==# ''
+    echohl ErrorMsg | echom 'Could not find bin/tql-remove for this panel' | echohl None
+    return {}
+  endif
+  let l:args = [l:helper, '--panel', l:panel, '--line', string(line('.'))]
+  if a:attribute_iid !=# ''
+    call extend(l:args, ['--attribute', a:attribute_iid])
+  endif
+  try
+    return Tdb_remove_json(l:args)
+  catch
+    echohl ErrorMsg | echom v:exception | echohl None
+    return {}
+  endtry
+endfunc
+
+func! Tdb_remove_confirm_and_apply(preview, ...)
+  let l:db = get(a:preview, 'database', '?')
+  let l:summary = get(a:preview, 'summary', 'selected record')
+  let l:query = get(a:preview, 'query', '')
+  let l:transaction = get(a:preview, 'transaction', 'write')
+  let l:message = l:db . ': ' . l:summary . "\n" . l:transaction . " TypeQL:\n" . l:query
+  if confirm(l:message, "&Delete\n&Cancel", 2) != 1
+    echom 'canceled'
+    return
+  endif
+  let l:panel = a:0 >= 1 ? a:1 : expand('%:p')
+  let l:target_line = a:0 >= 2 ? a:2 : line('.')
+  let l:args = Tdb_remove_apply_args(a:preview, l:panel, l:target_line)
+  try
+    let l:result = Tdb_remove_json(l:args)
+    for l:path in get(l:result, 'refresh_paths', [])
+      call Tdb_reloadIfVisible(l:path)
+    endfor
+    echom get(l:result, 'summary', 'Record removed')
+    if get(l:result, 'warning', '') !=# ''
+      echohl WarningMsg | echom 'Removal warning: ' . l:result.warning | echohl None
+    endif
+  catch
+    echohl ErrorMsg | echom 'Removal failed: ' . v:exception | echohl None
+  endtry
+endfunc
+
+func! Tdb_remove_apply_args(preview, panel, target_line)
+  let l:args = [Tdb_remove_helper(a:panel), '--panel', a:panel, '--line', string(a:target_line), '--apply', string(get(a:preview, 'token', ''))]
+  if get(a:preview, 'attribute_iid', '') !=# ''
+    call extend(l:args, ['--attribute', a:preview.attribute_iid])
+  endif
+  return l:args
+endfunc
+
+func! Tdb_remove_panel_record()
+  let l:origin_panel = expand('%:p')
+  let l:origin_line = line('.')
+  let l:preview = Tdb_remove_panel_preview('')
+  if !empty(l:preview)
+    call Tdb_remove_confirm_and_apply(l:preview, l:origin_panel, l:origin_line)
+  endif
+endfunc
+
+func! Tdb_detach_panel_attribute()
+  " The actual chooser lives in typedb.lua so it uses vim.ui.select.
+  lua Tdb_select_remove_attribute()
+endfunc
+
+command! TdbRemove call Tdb_remove_panel_record()
+command! TdbDetachAttribute call Tdb_detach_panel_attribute()
+
+func! Tdb_refresh_panel()
+  let l:panel = expand('%:p')
+  if &modified
+    echohl ErrorMsg | echom 'Save the generated panel before refreshing it' | echohl None
+    return
+  endif
+  if Tdb_panel_kind(l:panel) ==# ''
+    echohl ErrorMsg | echom 'Refresh is available only in temp/data_*.tql or temp/schema_*.tql panels' | echohl None
+    return
+  endif
+  let l:helper = Tdb_remove_helper(l:panel)
+  if l:helper ==# ''
+    echohl ErrorMsg | echom 'Could not find bin/tql-remove for this panel' | echohl None
+    return
+  endif
+  try
+    let l:result = Tdb_remove_json([l:helper, '--panel', l:panel, '--refresh'])
+    for l:path in get(l:result, 'refresh_paths', [])
+      call Tdb_reloadIfVisible(l:path)
+    endfor
+    echom 'Panel refreshed for ' . get(l:result, 'database', 'its database')
+  catch
+    echohl ErrorMsg | echom 'Panel refresh failed: ' . v:exception | echohl None
+  endtry
+endfunc
+
+command! TdbRefreshPanel call Tdb_refresh_panel()
 
 " Reload a generated file in place if it is on screen, without stealing focus.
 func! Tdb_reloadIfVisible( path )
@@ -532,7 +689,7 @@ func! Tdb_sort_schemaLines( input_lines )
 
   " Combine the lists in the desired order: entities, relations, and then attributes,
   " with a separator comment block before the attributes.
-  return ["# " . g:typedb_active_schema, count_info_e, count_info_r, count_info_a, count_info_f, '', '# Entities', ''] + l:entity_lines + ['', '', '# Relations', ''] + l:relation_lines + ['', '', '# Attributes', ''] + l:attribute_lines + ['', '', '# Functions', ''] + l:fun_lines + ['', '']
+  return ["# " . g:typedb_active_schema, count_info_e, count_info_r, count_info_a, count_info_f, '', '# ─ Entities ' . repeat('─', 66), ''] + l:entity_lines + ['', '', '# ─ Relations ' . repeat('─', 65), ''] + l:relation_lines + ['', '', '# ─ Attributes ' . repeat('─', 64), ''] + l:attribute_lines + ['', '', '# ─ Functions ' . repeat('─', 65), ''] + l:fun_lines + ['', '']
 endfunc
 
 
@@ -704,4 +861,3 @@ endfunc
 
 
 " ─^  TDB Services                                       ▲
-

@@ -82,4 +82,34 @@ function Tdb_make_linewise_func()
   end
 end
 
-
+-- Choose one owned attribute from the contextual panel preview.  The preview
+-- remains read-only until the common single confirmation in Vimscript.
+function _G.Tdb_select_remove_attribute()
+  local origin_panel = vim.fn.expand('%:p')
+  local origin_line = vim.fn.line('.')
+  local preview = vim.fn.Tdb_remove_panel_preview('')
+  if not preview or vim.tbl_isempty(preview) then return end
+  local attrs = preview.attributes or {}
+  if #attrs == 0 then
+    vim.notify('No owned attributes on the selected record', vim.log.levels.INFO)
+    return
+  end
+  local labels = {}
+  for _, attr in ipairs(attrs) do
+    table.insert(labels, attr.label or attr.iid or '?')
+  end
+  vim.ui.select(labels, { prompt = 'Detach attribute:' }, function(_, index)
+    if index then
+      local selected = attrs[index]
+      if vim.fn.expand('%:p') ~= origin_panel or vim.fn.line('.') ~= origin_line or vim.bo.modified then
+        vim.notify('Removal canceled: panel, line, or buffer changed while choosing an attribute', vim.log.levels.WARN)
+        return
+      end
+      local attr_preview = vim.fn.Tdb_remove_panel_preview(selected.iid or '')
+      if attr_preview and not vim.tbl_isempty(attr_preview) then
+        attr_preview.attribute_iid = selected.iid or ''
+        vim.fn.Tdb_remove_confirm_and_apply(attr_preview, origin_panel, origin_line)
+      end
+    end
+  end)
+end

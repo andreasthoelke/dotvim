@@ -41,24 +41,24 @@ This is a patched local fork - do not blindly pull from upstream.
 - The `<c-w><cr>` respond shortcut is intentionally mapped only in normal and insert mode. Parrot interprets a visual-mode invocation as a ranged request and sends only the selected chat lines; use an explicit ranged `:PrtChatRespond` only when that behavior is intended.
 
 ### OpenAI / GPT reasoning models
-- GPT-5.6 Sol via Chat Completions is the startup default, using `xhigh` reasoning.
-- `:PrtReasoningXHigh` selects the regular `openai` provider (`/v1/chat/completions`) with flat `reasoning_effort = "xhigh"`.
-- `:PrtReasoningMax` selects the separate `openai_responses` provider (`/v1/responses`) with nested `reasoning = { effort = "max" }`.
-- The preset cycle contains Sol/xhigh, Sol/max, and the configured Claude max presets. Gemini remains available through `:PrtProvider`, but is intentionally not in the preset cycle.
+- GPT-6 Astra (`gpt-6-astra`) is integrated through the Responses API at `max`, its highest reasoning level. `:PrtReasoningMax` and `:PrtGPT6Max` select it.
+- This API key still returned `model_not_found` for Astra on 2026-09-04 during the staged rollout, so GPT-5.6 Sol via Chat Completions remains the non-breaking startup default at `xhigh` for now.
+- `:PrtSolMax` selects Sol through the separate `openai_responses` provider with nested `reasoning = { effort = "max" }`; `:PrtReasoningXHigh` selects the regular `openai` provider with flat `reasoning_effort = "xhigh"`.
+- The preset cycle contains Sol/xhigh, Astra/max, Sol/max, Gemini 3.8 Flash/high, and the configured Fable presets.
 - The Responses adapter is `lua/ai/openai_responses.lua`. It translates Parrot's `messages` payload to `input`, converts image blocks, maps token/reasoning fields, and parses `response.output_text.delta` SSE events.
 - The adapter also reconciles `output_text.done`, `output_item.done`, and terminal response snapshots, recovering visible text when a stream omits deltas without duplicating normal delta output. Reconciliation is isolated by Parrot query ID so simultaneous chats cannot share stream state. `response.completed`, `response.incomplete`, and `response.failed` are authoritative job boundaries: Parrot finalizes curl when one arrives instead of waiting forever for a delayed EOF. A genuinely textless request now warns and removes the pending assistant marker, restoring the user turn for a clean retry instead of silently appending another user turn.
 - The Responses provider is stateless (`store = false`) because Parrot resends the complete visible transcript instead of chaining response IDs. Stateless requests still qualify for OpenAI prompt caching.
-- Chat Completions currently rejects Sol `max` and reports `xhigh` as its highest supported value; do not put `max` in the regular `openai` provider.
-- `ultra` is not an API reasoning level. It is a four-agent product mode; API developers need the Responses API multi-agent beta to build an ultra-like workflow.
+- Astra supports `low`, `medium`, `high`, `xhigh`, and `max`; it does not support `none`. Chat Completions is supported, but Astra tool calling requires Responses. Parrot has no agent/tool loop, so this integration intentionally uses the model's single-agent `max` reasoning path.
+- Chat Completions currently rejects Sol `max` and reports `xhigh` as its highest supported value; do not put `max` in the regular `openai` provider. GPT-6 Chat requests also remove `temperature`, `top_p`, and log-probability controls as required by the API.
 - The token ceiling is 128000 (`max_completion_tokens` for Chat, `max_output_tokens` for Responses); reasoning tokens can otherwise consume the budget and leave nothing visible.
 - The old raw-stream debug writer was removed. It was unbounded and could record prompt/output text. The existing `~/.local/share/nvim/parrot_openai_debug.log` is not deleted automatically, but no longer grows from Parrot requests.
 
 ### Caches and Responses state
 - The startup `Updating model cache` notices are only Parrot refreshing provider model-ID lists. The local config refreshes those lists every 30 days (`model_cache_expiry_hours = 720`); this is unrelated to inference or prompt caching.
-- OpenAI prompt caching applies automatically to eligible exact prefixes of at least 1024 tokens. GPT-5.6 cache writes cost more than uncached input, while cache reads reduce cost and latency.
-- Sol/max chat requests include a stable `prompt_cache_key` derived from a hash of the chat file path. This improves cache routing without sending the local path, and exact-prefix matching prevents stale cache reuse after an earlier message is edited.
+- OpenAI prompt caching applies to eligible exact prefixes of at least 1024 tokens on GPT-5.6 and later. Cache writes cost more than uncached input, while cache reads reduce cost and latency.
+- Astra/max and Sol/max chat requests include a stable `prompt_cache_key` derived from a hash of the chat file path. This improves cache routing without sending the local path, and exact-prefix matching prevents stale cache reuse after an earlier message is edited.
 - The default implicit breakpoint is used for chats, which suits Parrot's append-only full-transcript payload. One-off commands and Luna topic summaries use explicit mode with no breakpoints, disabling cache writes that are unlikely to be reused.
-- `:PrtResponsesCacheStatus` shows the latest Sol request's API status, input, cache-read, cache-write, output, and reasoning token counts, plus the number of visible response characters Parrot received. These statistics are session-local and become available after a terminal Responses event.
+- `:PrtResponsesCacheStatus` shows the latest Astra or Sol Responses request's API status, input, cache-read, cache-write, output, and reasoning token counts, plus the number of visible response characters Parrot received. These statistics are session-local and become available after a terminal Responses event.
 - Response-ID chaining and persisted reasoning are intentionally not enabled. They do not remove billing for prior input, would retain response objects server-side for 30 days, and need transcript-fingerprint invalidation for edited/retried/branched Markdown chats. The current setup keeps the Markdown transcript authoritative and `store = false`.
 
 ### Anthropic / Claude
@@ -89,4 +89,5 @@ Conclusions and handoff guidance:
 
 ### Gemini
 - Thinking level is passed via `generationConfig.thinkingConfig.thinkingLevel` in `preprocess_payload`.
-- Gemini 3.6 Flash is available as a `high`-thinking preset; the model supports `minimal`, `low`, `medium`, and `high` (`medium` is its API default).
+- Gemini 3.8 Flash is the Gemini default and a `high`-thinking preset. It supports `low`, `medium`, and `high` (`medium` is the API default); `minimal` is rejected.
+- Gemini 3.8 requests omit the deprecated `temperature`, `top_p`, and `top_k` sampling controls and use the model's 65,536-token output limit.

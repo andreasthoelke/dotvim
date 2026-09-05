@@ -168,7 +168,7 @@ function M.preprocess_payload(payload, opts)
 	translated.max_completion_tokens = nil
 
 	-- These are Chat Completions controls and are either unsupported or not
-	-- useful for GPT-5.6 reasoning requests through Responses.
+	-- useful for GPT-5.6-and-later reasoning requests through Responses.
 	translated.temperature = nil
 	translated.top_p = nil
 	translated.presence_penalty = nil
@@ -176,6 +176,17 @@ function M.preprocess_payload(payload, opts)
 	translated.logprobs = nil
 	translated.logit_bias = nil
 	translated.top_logprobs = nil
+
+	local is_gpt6 = type(translated.model) == "string" and translated.model:match("^gpt%-6")
+	if is_gpt6 and type(translated.include) == "table" then
+		local include = {}
+		for _, value in ipairs(translated.include) do
+			if value ~= "message.output_text.logprobs" then
+				table.insert(include, value)
+			end
+		end
+		translated.include = #include > 0 and include or nil
+	end
 
 	if opts.drop_system then
 		-- Keep the user's intentional no-system-instructions policy even if a
